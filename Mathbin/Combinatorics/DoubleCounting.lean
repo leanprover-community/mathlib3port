@@ -27,26 +27,26 @@ and `t`.
 -/
 
 
-open Finset Function
+open Finsetₓ Function
 
 open BigOperators
 
 /-! ### Bipartite graph -/
 
 
-namespace Finset
+namespace Finsetₓ
 
 section Bipartite
 
-variable {α β : Type _} (r : α → β → Prop) (s : Finset α) (t : Finset β) (a a' : α) (b b' : β) [DecidablePred (r a)]
+variable {α β : Type _} (r : α → β → Prop) (s : Finsetₓ α) (t : Finsetₓ β) (a a' : α) (b b' : β) [DecidablePred (r a)]
   [∀ a, Decidable (r a b)] {m n : ℕ}
 
 /-- Elements of `s` which are "below" `b` according to relation `r`. -/
-def bipartiteBelow : Finset α :=
+def bipartiteBelow : Finsetₓ α :=
   s.filter fun a => r a b
 
 /-- Elements of `t` which are "above" `a` according to relation `r`. -/
-def bipartiteAbove : Finset β :=
+def bipartiteAbove : Finsetₓ β :=
   t.filter (r a)
 
 theorem bipartite_below_swap : t.bipartiteBelow (swap r) a = t.bipartiteAbove r a :=
@@ -91,5 +91,5 @@ theorem card_mul_eq_card_mul [∀ a b, Decidable (r a b)] (hm : ∀ a ∈ s, (t.
 
 end Bipartite
 
-end Finset
+end Finsetₓ
 

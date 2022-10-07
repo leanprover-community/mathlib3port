@@ -58,9 +58,7 @@ theorem op_ring_equiv_op_C_mul_X_pow (r : R) (n : ℕ) : opRingEquiv R (op (c r 
 @[simp]
 theorem op_ring_equiv_symm_monomial (n : ℕ) (r : Rᵐᵒᵖ) :
     (opRingEquiv R).symm (monomial n r) = op (monomial n (unop r)) :=
-  (opRingEquiv R).Injective
-    (by
-      simp )
+  (opRingEquiv R).Injective (by simp)
 
 @[simp]
 theorem op_ring_equiv_symm_C (a : Rᵐᵒᵖ) : (opRingEquiv R).symm (c a) = op (c (unop a)) :=
@@ -91,7 +89,7 @@ theorem support_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).Support = 
 
 @[simp]
 theorem nat_degree_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).natDegree = (unop p).natDegree := by
-  by_cases' p0 : p = 0
+  by_cases p0:p = 0
   · simp only [p0, _root_.map_zero, nat_degree_zero, unop_zero]
     
   · simp only [p0, nat_degree_eq_support_max', Ne.def, AddEquivClass.map_eq_zero_iff, not_false_iff,

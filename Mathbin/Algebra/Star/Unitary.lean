@@ -26,26 +26,19 @@ unitary
 -/
 def unitary (R : Type _) [Monoidₓ R] [StarSemigroup R] : Submonoid R where
   Carrier := { U | star U * U = 1 ∧ U * star U = 1 }
-  one_mem' := by
-    simp only [mul_oneₓ, and_selfₓ, Set.mem_set_of_eq, star_one]
+  one_mem' := by simp only [mul_oneₓ, and_selfₓ, Set.mem_set_of_eq, star_one]
   mul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ => by
     refine' ⟨_, _⟩
     · calc
-        star (U * B) * (U * B) = star B * star U * U * B := by
-          simp only [mul_assoc, star_mul]
-        _ = star B * (star U * U) * B := by
-          rw [← mul_assoc]
-        _ = 1 := by
-          rw [hA₁, mul_oneₓ, hB₁]
+        star (U * B) * (U * B) = star B * star U * U * B := by simp only [mul_assoc, star_mul]
+        _ = star B * (star U * U) * B := by rw [← mul_assoc]
+        _ = 1 := by rw [hA₁, mul_oneₓ, hB₁]
         
       
     · calc
-        U * B * star (U * B) = U * B * (star B * star U) := by
-          rw [star_mul]
-        _ = U * (B * star B) * star U := by
-          simp_rw [← mul_assoc]
-        _ = 1 := by
-          rw [hB₂, mul_oneₓ, hA₂]
+        U * B * star (U * B) = U * B * (star B * star U) := by rw [star_mul]
+        _ = U * (B * star B) * star U := by simp_rw [← mul_assoc]
+        _ = 1 := by rw [hB₂, mul_oneₓ, hA₂]
         
       
 
@@ -69,9 +62,7 @@ theorem mul_star_self_of_mem {U : R} (hU : U ∈ unitary R) : U * star U = 1 :=
   hU.2
 
 theorem star_mem {U : R} (hU : U ∈ unitary R) : star U ∈ unitary R :=
-  ⟨by
-    rw [star_star, mul_star_self_of_mem hU], by
-    rw [star_star, star_mul_self_of_mem hU]⟩
+  ⟨by rw [star_star, mul_star_self_of_mem hU], by rw [star_star, star_mul_self_of_mem hU]⟩
 
 @[simp]
 theorem star_mem_iff {U : R} : star U ∈ unitary R ↔ U ∈ unitary R :=

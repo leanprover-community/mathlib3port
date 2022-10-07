@@ -60,9 +60,7 @@ instance [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] : IsCentralScalar M (Opt
 
 @[to_additive]
 instance [HasFaithfulSmul M α] : HasFaithfulSmul M (Option α) :=
-  ⟨fun x y h =>
-    eq_of_smul_eq_smul fun b : α => by
-      injection h (some b)⟩
+  ⟨fun x y h => eq_of_smul_eq_smul fun b : α => by injection h (some b)⟩
 
 end HasSmul
 

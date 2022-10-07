@@ -140,11 +140,9 @@ end
 has strict initial objects. -/
 theorem has_strict_initial_objects_of_initial_is_strict [HasInitial C] (h : ∀ (A) (f : A ⟶ ⊥_ C), IsIso f) :
     HasStrictInitialObjects C :=
-  { out := fun I A f hI => by
+  { out := fun I A f hI =>
       haveI := h A (f ≫ hI.to _)
-      exact
-        ⟨⟨hI.to _ ≫ inv (f ≫ hI.to (⊥_ C)), by
-            rw [← assoc, is_iso.hom_inv_id], hI.hom_ext _ _⟩⟩ }
+      ⟨⟨hI.to _ ≫ inv (f ≫ hI.to (⊥_ C)), by rw [← assoc, is_iso.hom_inv_id], hI.hom_ext _ _⟩⟩ }
 
 end StrictInitial
 
@@ -178,7 +176,7 @@ theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I
 
 variable {J : Type v} [SmallCategory J]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If all but one object in a diagram is strict terminal, the the limit is isomorphic to the
 said object via `limit.π`. -/
 theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
@@ -215,7 +213,7 @@ theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
     
   · ext
     rw [assoc, limit.lift_π]
-    dsimp' only
+    dsimp only
     split_ifs
     · cases h
       rw [id_comp, eq_to_hom_refl]
@@ -246,11 +244,9 @@ end
 has strict terminal objects. -/
 theorem has_strict_terminal_objects_of_terminal_is_strict (I : C) (h : ∀ (A) (f : I ⟶ A), IsIso f) :
     HasStrictTerminalObjects C :=
-  { out := fun I' A f hI' => by
+  { out := fun I' A f hI' =>
       haveI := h A (hI'.from _ ≫ f)
-      exact
-        ⟨⟨inv (hI'.from I ≫ f) ≫ hI'.from I, hI'.hom_ext _ _, by
-            rw [assoc, is_iso.inv_hom_id]⟩⟩ }
+      ⟨⟨inv (hI'.from I ≫ f) ≫ hI'.from I, hI'.hom_ext _ _, by rw [assoc, is_iso.inv_hom_id]⟩⟩ }
 
 end StrictTerminal
 

@@ -80,14 +80,10 @@ def mapBinaryBicone {X Y : C} (b : BinaryBicone X Y) : BinaryBicone (F.obj X) (F
   snd := F.map b.snd
   inl := F.map b.inl
   inr := F.map b.inr
-  inl_fst' := by
-    rw [← F.map_comp, b.inl_fst, F.map_id]
-  inl_snd' := by
-    rw [← F.map_comp, b.inl_snd, F.map_zero]
-  inr_fst' := by
-    rw [← F.map_comp, b.inr_fst, F.map_zero]
-  inr_snd' := by
-    rw [← F.map_comp, b.inr_snd, F.map_id]
+  inl_fst' := by rw [← F.map_comp, b.inl_fst, F.map_id]
+  inl_snd' := by rw [← F.map_comp, b.inl_snd, F.map_zero]
+  inr_fst' := by rw [← F.map_comp, b.inr_fst, F.map_zero]
+  inr_snd' := by rw [← F.map_comp, b.inr_snd, F.map_id]
 
 end Map
 
@@ -126,7 +122,7 @@ end Bicone
 /-- A functor `F` preserves finite biproducts if it preserves biproducts of shape `J` whenever
     `J` is a fintype. -/
 class PreservesFiniteBiproducts (F : C ⥤ D) [PreservesZeroMorphisms F] where
-  preserves : ∀ {J : Type} [Fintype J], PreservesBiproductsOfShape J F
+  preserves : ∀ {J : Type} [Fintypeₓ J], PreservesBiproductsOfShape J F
 
 attribute [instance] preserves_finite_biproducts.preserves
 
@@ -150,8 +146,8 @@ def preservesBiproductsShrink (F : C ⥤ D) [PreservesZeroMorphisms F] [hp : Pre
 
 instance (priority := 100) preservesFiniteBiproductsOfPreservesBiproducts (F : C ⥤ D) [PreservesZeroMorphisms F]
     [PreservesBiproducts.{w₁} F] :
-    PreservesFiniteBiproducts F where preserves := fun J _ => by
-    letI := preservesBiproductsShrink.{0} F <;> infer_instance
+    PreservesFiniteBiproducts
+      F where preserves := fun J _ => by letI := preservesBiproductsShrink.{0} F <;> infer_instance
 
 /-- A functor `F` preserves binary biproducts of `X` and `Y` if `F` maps every bilimit bicone over
     `X` and `Y` to a bilimit bicone over `F.obj X` and `F.obj Y`. -/
@@ -167,9 +163,7 @@ def isBinaryBilimitOfPreserves {X Y : C} (F : C ⥤ D) [PreservesZeroMorphisms F
 /-- A functor `F` preserves binary biproducts if it preserves the binary biproduct of `X` and `Y`
     for all `X` and `Y`. -/
 class PreservesBinaryBiproducts (F : C ⥤ D) [PreservesZeroMorphisms F] where
-  preserves : ∀ {X Y : C}, PreservesBinaryBiproduct X Y F := by
-    run_tac
-      tactic.apply_instance
+  preserves : ∀ {X Y : C}, PreservesBinaryBiproduct X Y F := by infer_instance
 
 /-- A functor that preserves biproducts of a pair preserves binary biproducts. -/
 def preservesBinaryBiproductOfPreservesBiproduct (F : C ⥤ D) [PreservesZeroMorphisms F] (X Y : C)
@@ -317,8 +311,7 @@ variable [PreservesZeroMorphisms F]
     the biproduct, see `preserves_binary_biproduct_of_mono_biprod_comparison`. -/
 @[simp, reassoc]
 theorem biprod_comparison'_comp_biprod_comparison :
-    biprodComparison' F X Y ≫ biprodComparison F X Y = 𝟙 (F.obj X ⊞ F.obj Y) := by
-  ext <;> simp [← functor.map_comp]
+    biprodComparison' F X Y ≫ biprodComparison F X Y = 𝟙 (F.obj X ⊞ F.obj Y) := by ext <;> simp [← functor.map_comp]
 
 /-- `biprod_comparison F X Y` is a split epi. -/
 @[simps]
@@ -388,16 +381,14 @@ section BinaryBicone
 variable (X Y : C) [HasBinaryBiproduct X Y] [PreservesBinaryBiproduct X Y F] {W : C}
 
 theorem biprod.map_lift_map_biprod (f : W ⟶ X) (g : W ⟶ Y) :
-    F.map (biprod.lift f g) ≫ (F.mapBiprod X Y).Hom = biprod.lift (F.map f) (F.map g) := by
-  ext <;> simp [← F.map_comp]
+    F.map (biprod.lift f g) ≫ (F.mapBiprod X Y).Hom = biprod.lift (F.map f) (F.map g) := by ext <;> simp [← F.map_comp]
 
 theorem biprod.lift_map_biprod (f : W ⟶ X) (g : W ⟶ Y) :
     biprod.lift (F.map f) (F.map g) ≫ (F.mapBiprod X Y).inv = F.map (biprod.lift f g) := by
   rw [← biprod.map_lift_map_biprod, category.assoc, iso.hom_inv_id, category.comp_id]
 
 theorem biprod.map_biprod_inv_map_desc (f : X ⟶ W) (g : Y ⟶ W) :
-    (F.mapBiprod X Y).inv ≫ F.map (biprod.desc f g) = biprod.desc (F.map f) (F.map g) := by
-  ext <;> simp [← F.map_comp]
+    (F.mapBiprod X Y).inv ≫ F.map (biprod.desc f g) = biprod.desc (F.map f) (F.map g) := by ext <;> simp [← F.map_comp]
 
 theorem biprod.map_biprod_hom_desc (f : X ⟶ W) (g : Y ⟶ W) :
     (F.mapBiprod X Y).Hom ≫ biprod.desc (F.map f) (F.map g) = F.map (biprod.desc f g) := by
@@ -417,9 +408,9 @@ variable [Preadditive C] [Preadditive D] (F : C ⥤ D) [PreservesZeroMorphisms F
 
 namespace Limits
 
-section Fintype
+section Fintypeₓ
 
-variable {J : Type} [Fintype J]
+variable {J : Type} [Fintypeₓ J]
 
 attribute [local tidy] tactic.discrete_cases
 
@@ -431,9 +422,7 @@ def preservesProductOfPreservesBiproduct {f : J → C} [PreservesBiproduct f F] 
     IsLimit.ofIsoLimit
         ((IsLimit.postcomposeInvEquiv (Discrete.compNatIsoDiscrete _ _) _).symm
           (isBilimitOfPreserves F (biconeIsBilimitOfLimitConeOfIsLimit hc)).IsLimit) <|
-      Cones.ext (Iso.refl _)
-        (by
-          tidy)
+      Cones.ext (Iso.refl _) (by tidy)
 
 section
 
@@ -456,9 +445,7 @@ def preservesBiproductOfPreservesProduct {f : J → C} [PreservesLimit (Discrete
       IsLimit.ofIsoLimit
           ((IsLimit.postcomposeHomEquiv (Discrete.compNatIsoDiscrete _ _) (F.mapCone b.toCone)).symm
             (isLimitOfPreserves F hb.IsLimit)) <|
-        Cones.ext (Iso.refl _)
-          (by
-            tidy)
+        Cones.ext (Iso.refl _) (by tidy)
 
 /-- If the (product-like) biproduct comparison for `F` and `f` is a monomorphism, then `F`
     preserves the biproduct of `f`. For the converse, see `map_biproduct`. -/
@@ -481,8 +468,7 @@ def preservesBiproductOfMonoBiproductComparison {f : J → C} [HasBiproduct f] [
     preserves the biproduct of `F` and `f`. For the converse, see `map_biproduct`. -/
 def preservesBiproductOfEpiBiproductComparison' {f : J → C} [HasBiproduct f] [HasBiproduct (F.obj ∘ f)]
     [Epi (biproductComparison' F f)] : PreservesBiproduct f F := by
-  haveI : epi (split_epi_biproduct_comparison F f).section_ := by
-    simpa
+  haveI : epi (split_epi_biproduct_comparison F f).section_ := by simpa
   haveI : is_iso (biproduct_comparison F f) := is_iso.of_epi_section' (split_epi_biproduct_comparison F f)
   apply preserves_biproduct_of_mono_biproduct_comparison
 
@@ -499,9 +485,7 @@ def preservesCoproductOfPreservesBiproduct {f : J → C} [PreservesBiproduct f F
     IsColimit.ofIsoColimit
         ((IsColimit.precomposeHomEquiv (Discrete.compNatIsoDiscrete _ _) _).symm
           (isBilimitOfPreserves F (biconeIsBilimitOfColimitCoconeOfIsColimit hc)).IsColimit) <|
-      Cocones.ext (Iso.refl _)
-        (by
-          tidy)
+      Cocones.ext (Iso.refl _) (by tidy)
 
 section
 
@@ -524,16 +508,14 @@ def preservesBiproductOfPreservesCoproduct {f : J → C} [PreservesColimit (Disc
       IsColimit.ofIsoColimit
           ((IsColimit.precomposeInvEquiv (Discrete.compNatIsoDiscrete _ _) (F.mapCocone b.toCocone)).symm
             (isColimitOfPreserves F hb.IsColimit)) <|
-        Cocones.ext (Iso.refl _)
-          (by
-            tidy)
+        Cocones.ext (Iso.refl _) (by tidy)
 
 /-- A functor between preadditive categories that preserves (zero morphisms and) finite coproducts
     preserves finite biproducts. -/
 def preservesBiproductsOfShapeOfPreservesCoproductsOfShape [PreservesColimitsOfShape (Discrete J) F] :
     PreservesBiproductsOfShape J F where preserves := fun f => preservesBiproductOfPreservesCoproduct F
 
-end Fintype
+end Fintypeₓ
 
 /-- A functor between preadditive categories that preserves (zero morphisms and) binary biproducts
     preserves binary products. -/
@@ -579,8 +561,7 @@ def preservesBinaryBiproductOfMonoBiprodComparison {X Y : C} [HasBinaryBiproduct
   have :
     prod_comparison F X Y =
       (F.map_iso (biprod.iso_prod X Y)).inv ≫ biprod_comparison F X Y ≫ (biprod.iso_prod _ _).Hom :=
-    by
-    ext <;> simp [← functor.map_comp]
+    by ext <;> simp [← functor.map_comp]
   haveI : is_iso (biprod_comparison F X Y) := is_iso_of_mono_of_is_split_epi _
   haveI : is_iso (prod_comparison F X Y) := by
     rw [this]
@@ -592,8 +573,7 @@ def preservesBinaryBiproductOfMonoBiprodComparison {X Y : C} [HasBinaryBiproduct
     `F` preserves the biproduct of `X` and `Y`. For the converse, see `map_biprod`. -/
 def preservesBinaryBiproductOfEpiBiprodComparison' {X Y : C} [HasBinaryBiproduct X Y]
     [HasBinaryBiproduct (F.obj X) (F.obj Y)] [Epi (biprodComparison' F X Y)] : PreservesBinaryBiproduct X Y F := by
-  haveI : epi (split_epi_biprod_comparison F X Y).section_ := by
-    simpa
+  haveI : epi (split_epi_biprod_comparison F X Y).section_ := by simpa
   haveI : is_iso (biprod_comparison F X Y) := is_iso.of_epi_section' (split_epi_biprod_comparison F X Y)
   apply preserves_binary_biproduct_of_mono_biprod_comparison
 

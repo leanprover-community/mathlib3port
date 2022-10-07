@@ -19,9 +19,9 @@ namespace QuadraticForm
 
 open BigOperators
 
-open Finset
+open Finsetₓ
 
-variable {ι : Type _} [Fintype ι]
+variable {ι : Type _} [Fintypeₓ ι]
 
 /-- The isometry between a weighted sum of squares on the complex numbers and the
 sum of squares, i.e. `weighted_sum_squares` with weights 1 or 0. -/
@@ -40,7 +40,7 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
   have hsum :
     (∑ i : ι, v i • ((is_unit_iff_ne_zero.2 <| hw' i).Unit : ℂ) • (Pi.basisFun ℂ ι) i) j = v j • w j ^ -(1 / 2 : ℂ) :=
     by
-    rw [Finset.sum_apply, sum_eq_single j, Pi.basis_fun_apply, IsUnit.unit_spec, LinearMap.std_basis_apply,
+    rw [Finsetₓ.sum_apply, sum_eq_single j, Pi.basis_fun_apply, IsUnit.unit_spec, LinearMap.std_basis_apply,
       Pi.smul_apply, Pi.smul_apply, Function.update_same, smul_eq_mul, smul_eq_mul, smul_eq_mul, mul_oneₓ]
     intro i _ hij
     rw [Pi.basis_fun_apply, LinearMap.std_basis_apply, Pi.smul_apply, Pi.smul_apply, Function.update_noteq hij.symm,
@@ -52,17 +52,14 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
   split_ifs
   · simp only [h, zero_smul, zero_mul]
     
-  have hww' : w' j = w j := by
-    simp only [w, dif_neg h, Units.coe_mk0]
+  have hww' : w' j = w j := by simp only [w, dif_neg h, Units.coe_mk0]
   simp only [hww', one_mulₓ]
   change v j * v j = ↑(w j) * (v j * ↑(w j) ^ -(1 / 2 : ℂ) * (v j * ↑(w j) ^ -(1 / 2 : ℂ)))
   suffices v j * v j = w j ^ -(1 / 2 : ℂ) * w j ^ -(1 / 2 : ℂ) * w j * v j * v j by
     rw [this]
     ring
-  rw [← Complex.cpow_add _ _ (w j).ne_zero,
-    show -(1 / 2 : ℂ) + -(1 / 2) = -1 by
-      simp [← two_mul],
-    Complex.cpow_neg_one, inv_mul_cancel (w j).ne_zero, one_mulₓ]
+  rw [← Complex.cpow_add _ _ (w j).ne_zero, show -(1 / 2 : ℂ) + -(1 / 2) = -1 by simp [← two_mul], Complex.cpow_neg_one,
+    inv_mul_cancel (w j).ne_zero, one_mulₓ]
 
 /-- The isometry between a weighted sum of squares on the complex numbers and the
 sum of squares, i.e. `weighted_sum_squares` with weight `λ i : ι, 1`. -/

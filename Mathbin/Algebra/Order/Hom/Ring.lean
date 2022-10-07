@@ -41,10 +41,10 @@ you should parametrize over `(F : Type*) [order_ring_hom_class F α β] (f : F)`
 When you extend this structure, make sure to extend `order_ring_hom_class`. -/
 structure OrderRingHom (α β : Type _) [NonAssocSemiringₓ α] [Preorderₓ α] [NonAssocSemiringₓ β] [Preorderₓ β] extends
   α →+* β where
-  monotone' : Monotone to_fun
+  monotone' : Monotoneₓ to_fun
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident order_ring_hom.to_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident order_ring_hom.to_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- mathport name: «expr →+*o »
 infixl:25 " →+*o " => OrderRingHom
 
@@ -64,7 +64,7 @@ infixl:25 " ≃+*o " => OrderRingIso
 You should extend this typeclass when you extend `order_ring_hom`. -/
 class OrderRingHomClass (F : Type _) (α β : outParam <| Type _) [NonAssocSemiringₓ α] [Preorderₓ α]
   [NonAssocSemiringₓ β] [Preorderₓ β] extends RingHomClass F α β where
-  Monotone (f : F) : Monotone f
+  Monotone (f : F) : Monotoneₓ f
 
 /-- `order_ring_iso_class F α β` states that `F` is a type of ordered semiring isomorphisms.
 You should extend this class when you extend `order_ring_iso`. -/
@@ -120,8 +120,7 @@ def toOrderMonoidWithZeroHom (f : α →+*o β) : α →*₀o β :=
 
 instance : OrderRingHomClass (α →+*o β) α β where
   coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
-    obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
+  coe_injective' := fun f g h => by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
   map_mul := fun f => f.map_mul'
   map_one := fun f => f.map_one'
   map_add := fun f => f.map_add'
@@ -239,11 +238,7 @@ theorem cancel_right {f₁ f₂ : β →+*o γ} {g : α →+*o β} (hg : Surject
   ⟨fun h => ext <| hg.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {f : β →+*o γ} {g₁ g₂ : α →+*o β} (hf : Injective f) : f.comp g₁ = f.comp g₂ ↔ g₁ = g₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hf <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hf <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end Preorderₓ
 
@@ -346,8 +341,7 @@ variable {α}
 /-- The inverse of an ordered ring isomorphism as an ordered ring isomorphism. -/
 @[symm]
 protected def symm (e : α ≃+*o β) : β ≃+*o α :=
-  ⟨e.toRingEquiv.symm, fun a b => by
-    erw [← map_le_map_iff e, e.1.apply_symm_apply, e.1.apply_symm_apply]⟩
+  ⟨e.toRingEquiv.symm, fun a b => by erw [← map_le_map_iff e, e.1.apply_symm_apply, e.1.apply_symm_apply]⟩
 
 /-- See Note [custom simps projection] -/
 def Simps.symmApply (e : α ≃+*o β) : β → α :=
@@ -401,8 +395,7 @@ theorem coe_to_order_ring_hom_refl : (OrderRingIso.refl α : α →+*o α) = Ord
   rfl
 
 theorem to_order_ring_hom_injective : Injective (toOrderRingHom : α ≃+*o β → α →+*o β) := fun f g h =>
-  FunLike.coe_injective <| by
-    convert FunLike.ext'_iff.1 h
+  FunLike.coe_injective <| by convert FunLike.ext'_iff.1 h
 
 end NonAssocSemiringₓ
 

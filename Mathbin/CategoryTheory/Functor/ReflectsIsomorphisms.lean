@@ -44,14 +44,9 @@ theorem is_iso_of_reflects_iso {A B : C} (f : A ⟶ B) (F : C ⥤ D) [IsIso (F.m
   ReflectsIsomorphisms.reflects F f
 
 instance (priority := 100) of_full_and_faithful (F : C ⥤ D) [Full F] [Faithful F] :
-    ReflectsIsomorphisms F where reflects := fun X Y f i =>
-    ⟨⟨F.preimage (inv (F.map f)),
-        ⟨F.map_injective
-            (by
-              simp ),
-          F.map_injective
-            (by
-              simp )⟩⟩⟩
+    ReflectsIsomorphisms
+      F where reflects := fun X Y f i =>
+    ⟨⟨F.preimage (inv (F.map f)), ⟨F.map_injective (by simp), F.map_injective (by simp)⟩⟩⟩
 
 instance (F : C ⥤ D) (G : D ⥤ E) [ReflectsIsomorphisms F] [ReflectsIsomorphisms G] : ReflectsIsomorphisms (F ⋙ G) :=
   ⟨fun _ _ f (hf : IsIso (G.map _)) => by

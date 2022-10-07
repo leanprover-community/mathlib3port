@@ -58,28 +58,27 @@ Note: this is a custom inductive type rather than `nonempty (fintype s)`
 so that it won't be frozen as a local instance. -/
 @[protected]
 inductive Finite (s : Set α) : Prop
-  | intro : Fintype s → Finite
+  | intro : Fintypeₓ s → Finite
 
 -- The `protected` attribute does not take effect within the same namespace block.
 end Set
 
 namespace Set
 
-theorem finite_def {s : Set α} : s.Finite ↔ Nonempty (Fintype s) :=
+theorem finite_def {s : Set α} : s.Finite ↔ Nonempty (Fintypeₓ s) :=
   ⟨fun ⟨h⟩ => ⟨h⟩, fun ⟨h⟩ => ⟨h⟩⟩
 
 alias finite_def ↔ finite.nonempty_fintype _
 
-theorem finite_coe_iff {s : Set α} : Finite s ↔ s.Finite := by
-  rw [finite_iff_nonempty_fintype, finite_def]
+theorem finite_coe_iff {s : Set α} : Finite s ↔ s.Finite := by rw [finite_iff_nonempty_fintype, finite_def]
 
 /-- Constructor for `set.finite` using a `finite` instance. -/
 theorem to_finite (s : Set α) [Finite s] : s.Finite :=
   finite_coe_iff.mp ‹_›
 
 /-- Construct a `finite` instance for a `set` from a `finset` with the same elements. -/
-protected theorem Finite.of_finset {p : Set α} (s : Finset α) (H : ∀ x, x ∈ s ↔ x ∈ p) : p.Finite :=
-  ⟨Fintype.ofFinset s H⟩
+protected theorem Finite.of_finset {p : Set α} (s : Finsetₓ α) (H : ∀ x, x ∈ s ↔ x ∈ p) : p.Finite :=
+  ⟨Fintypeₓ.ofFinset s H⟩
 
 /-- Projection of `set.finite` to its `finite` instance.
 This is intended to be used with dot notation.
@@ -92,26 +91,23 @@ This is the `fintype` projection for a `set.finite`.
 
 Note that because `finite` isn't a typeclass, this definition will not fire if it
 is made into an instance -/
-noncomputable def Finite.fintype {s : Set α} (h : s.Finite) : Fintype s :=
+noncomputable def Finite.fintype {s : Set α} (h : s.Finite) : Fintypeₓ s :=
   h.nonempty_fintype.some
 
 /-- Using choice, get the `finset` that represents this `set.` -/
-noncomputable def Finite.toFinset {s : Set α} (h : s.Finite) : Finset α :=
+noncomputable def Finite.toFinset {s : Set α} (h : s.Finite) : Finsetₓ α :=
   @Set.toFinset _ _ h.Fintype
 
-theorem Finite.exists_finset {s : Set α} (h : s.Finite) : ∃ s' : Finset α, ∀ a : α, a ∈ s' ↔ a ∈ s := by
+theorem Finite.exists_finset {s : Set α} (h : s.Finite) : ∃ s' : Finsetₓ α, ∀ a : α, a ∈ s' ↔ a ∈ s := by
   cases h
   exact ⟨s.to_finset, fun _ => mem_to_finset⟩
 
-theorem Finite.exists_finset_coe {s : Set α} (h : s.Finite) : ∃ s' : Finset α, ↑s' = s := by
+theorem Finite.exists_finset_coe {s : Set α} (h : s.Finite) : ∃ s' : Finsetₓ α, ↑s' = s := by
   cases h
   exact ⟨s.to_finset, s.coe_to_finset⟩
 
 /-- Finite sets can be lifted to finsets. -/
-instance : CanLift (Set α) (Finset α) where
-  coe := coe
-  cond := Set.Finite
-  prf := fun s hs => hs.exists_finset_coe
+instance : CanLift (Set α) (Finsetₓ α) coe Set.Finite where prf := fun s hs => hs.exists_finset_coe
 
 /-- A set is infinite if it is not finite.
 
@@ -144,34 +140,38 @@ theorem Finite.mem_to_finset {s : Set α} (h : s.Finite) {a : α} : a ∈ h.toFi
 
 @[simp]
 theorem Finite.nonempty_to_finset {s : Set α} (h : s.Finite) : h.toFinset.Nonempty ↔ s.Nonempty := by
-  rw [← Finset.coe_nonempty, finite.coe_to_finset]
+  rw [← Finsetₓ.coe_nonempty, finite.coe_to_finset]
 
 @[simp]
 theorem Finite.coe_sort_to_finset {s : Set α} (h : s.Finite) : (h.toFinset : Type _) = s := by
-  rw [← Finset.coe_sort_coe _, h.coe_to_finset]
+  rw [← Finsetₓ.coe_sort_coe _, h.coe_to_finset]
 
 @[simp]
 theorem finite_empty_to_finset (h : (∅ : Set α).Finite) : h.toFinset = ∅ := by
-  rw [← Finset.coe_inj, h.coe_to_finset, Finset.coe_empty]
+  rw [← Finsetₓ.coe_inj, h.coe_to_finset, Finsetₓ.coe_empty]
+
+@[simp]
+theorem finite_univ_to_finset [Fintypeₓ α] (h : (Set.Univ : Set α).Finite) : h.toFinset = Finsetₓ.univ :=
+  Finsetₓ.ext <| by simp
 
 @[simp]
 theorem Finite.to_finset_inj {s t : Set α} {hs : s.Finite} {ht : t.Finite} : hs.toFinset = ht.toFinset ↔ s = t := by
-  simp only [← Finset.coe_inj, finite.coe_to_finset]
+  simp only [← Finsetₓ.coe_inj, finite.coe_to_finset]
 
-theorem subset_to_finset_iff {s : Finset α} {t : Set α} (ht : t.Finite) : s ⊆ ht.toFinset ↔ ↑s ⊆ t := by
-  rw [← Finset.coe_subset, ht.coe_to_finset]
+theorem subset_to_finset_iff {s : Finsetₓ α} {t : Set α} (ht : t.Finite) : s ⊆ ht.toFinset ↔ ↑s ⊆ t := by
+  rw [← Finsetₓ.coe_subset, ht.coe_to_finset]
 
 @[simp]
 theorem finite_to_finset_eq_empty_iff {s : Set α} {h : s.Finite} : h.toFinset = ∅ ↔ s = ∅ := by
-  simp only [← Finset.coe_inj, finite.coe_to_finset, Finset.coe_empty]
+  simp only [← Finsetₓ.coe_inj, finite.coe_to_finset, Finsetₓ.coe_empty]
 
 @[simp, mono]
 theorem Finite.to_finset_subset {hs : s.Finite} {ht : t.Finite} : hs.toFinset ⊆ ht.toFinset ↔ s ⊆ t := by
-  simp only [← Finset.coe_subset, finite.coe_to_finset]
+  simp only [← Finsetₓ.coe_subset, finite.coe_to_finset]
 
 @[simp, mono]
 theorem Finite.to_finset_ssubset {hs : s.Finite} {ht : t.Finite} : hs.toFinset ⊂ ht.toFinset ↔ s ⊂ t := by
-  simp only [← Finset.coe_ssubset, finite.coe_to_finset]
+  simp only [← Finsetₓ.coe_ssubset, finite.coe_to_finset]
 
 end FiniteToFinset
 
@@ -183,117 +183,96 @@ Every instance here should have a corresponding `set.finite` constructor in the 
 
 section FintypeInstances
 
-instance fintypeUniv [Fintype α] : Fintype (@Univ α) :=
-  Fintype.ofEquiv α (Equivₓ.Set.univ α).symm
+instance fintypeUniv [Fintypeₓ α] : Fintypeₓ (@Univ α) :=
+  Fintypeₓ.ofEquiv α (Equivₓ.Set.univ α).symm
 
 /-- If `(set.univ : set α)` is finite then `α` is a finite type. -/
-noncomputable def fintypeOfFiniteUniv (H : (Univ : Set α).Finite) : Fintype α :=
-  @Fintype.ofEquiv _ (Univ : Set α) H.Fintype (Equivₓ.Set.univ _)
+noncomputable def fintypeOfFiniteUniv (H : (Univ : Set α).Finite) : Fintypeₓ α :=
+  @Fintypeₓ.ofEquiv _ (Univ : Set α) H.Fintype (Equivₓ.Set.univ _)
 
-instance fintypeUnion [DecidableEq α] (s t : Set α) [Fintype s] [Fintype t] : Fintype (s ∪ t : Set α) :=
-  Fintype.ofFinset (s.toFinset ∪ t.toFinset) <| by
-    simp
+instance fintypeUnion [DecidableEq α] (s t : Set α) [Fintypeₓ s] [Fintypeₓ t] : Fintypeₓ (s ∪ t : Set α) :=
+  Fintypeₓ.ofFinset (s.toFinset ∪ t.toFinset) <| by simp
 
-instance fintypeSep (s : Set α) (p : α → Prop) [Fintype s] [DecidablePred p] : Fintype ({ a ∈ s | p a } : Set α) :=
-  Fintype.ofFinset (s.toFinset.filter p) <| by
-    simp
+instance fintypeSep (s : Set α) (p : α → Prop) [Fintypeₓ s] [DecidablePred p] : Fintypeₓ ({ a ∈ s | p a } : Set α) :=
+  Fintypeₓ.ofFinset (s.toFinset.filter p) <| by simp
 
-instance fintypeInter (s t : Set α) [DecidableEq α] [Fintype s] [Fintype t] : Fintype (s ∩ t : Set α) :=
-  Fintype.ofFinset (s.toFinset ∩ t.toFinset) <| by
-    simp
+instance fintypeInter (s t : Set α) [DecidableEq α] [Fintypeₓ s] [Fintypeₓ t] : Fintypeₓ (s ∩ t : Set α) :=
+  Fintypeₓ.ofFinset (s.toFinset ∩ t.toFinset) <| by simp
 
 /-- A `fintype` instance for set intersection where the left set has a `fintype` instance. -/
-instance fintypeInterOfLeft (s t : Set α) [Fintype s] [DecidablePred (· ∈ t)] : Fintype (s ∩ t : Set α) :=
-  Fintype.ofFinset (s.toFinset.filter (· ∈ t)) <| by
-    simp
+instance fintypeInterOfLeft (s t : Set α) [Fintypeₓ s] [DecidablePred (· ∈ t)] : Fintypeₓ (s ∩ t : Set α) :=
+  Fintypeₓ.ofFinset (s.toFinset.filter (· ∈ t)) <| by simp
 
 /-- A `fintype` instance for set intersection where the right set has a `fintype` instance. -/
-instance fintypeInterOfRight (s t : Set α) [Fintype t] [DecidablePred (· ∈ s)] : Fintype (s ∩ t : Set α) :=
-  Fintype.ofFinset (t.toFinset.filter (· ∈ s)) <| by
-    simp [and_comm]
+instance fintypeInterOfRight (s t : Set α) [Fintypeₓ t] [DecidablePred (· ∈ s)] : Fintypeₓ (s ∩ t : Set α) :=
+  Fintypeₓ.ofFinset (t.toFinset.filter (· ∈ s)) <| by simp [and_comm]
 
 /-- A `fintype` structure on a set defines a `fintype` structure on its subset. -/
-def fintypeSubset (s : Set α) {t : Set α} [Fintype s] [DecidablePred (· ∈ t)] (h : t ⊆ s) : Fintype t := by
+def fintypeSubset (s : Set α) {t : Set α} [Fintypeₓ s] [DecidablePred (· ∈ t)] (h : t ⊆ s) : Fintypeₓ t := by
   rw [← inter_eq_self_of_subset_right h]
   apply Set.fintypeInterOfLeft
 
-instance fintypeDiff [DecidableEq α] (s t : Set α) [Fintype s] [Fintype t] : Fintype (s \ t : Set α) :=
-  Fintype.ofFinset (s.toFinset \ t.toFinset) <| by
-    simp
+instance fintypeDiff [DecidableEq α] (s t : Set α) [Fintypeₓ s] [Fintypeₓ t] : Fintypeₓ (s \ t : Set α) :=
+  Fintypeₓ.ofFinset (s.toFinset \ t.toFinset) <| by simp
 
-instance fintypeDiffLeft (s t : Set α) [Fintype s] [DecidablePred (· ∈ t)] : Fintype (s \ t : Set α) :=
+instance fintypeDiffLeft (s t : Set α) [Fintypeₓ s] [DecidablePred (· ∈ t)] : Fintypeₓ (s \ t : Set α) :=
   Set.fintypeSep s (· ∈ tᶜ)
 
-instance fintypeUnionₓ [DecidableEq α] [Fintype (Plift ι)] (f : ι → Set α) [∀ i, Fintype (f i)] : Fintype (⋃ i, f i) :=
-  Fintype.ofFinset (Finset.univ.bUnion fun i : Plift ι => (f i.down).toFinset) <| by
-    simp
+instance fintypeUnionₓ [DecidableEq α] [Fintypeₓ (Plift ι)] (f : ι → Set α) [∀ i, Fintypeₓ (f i)] :
+    Fintypeₓ (⋃ i, f i) :=
+  Fintypeₓ.ofFinset (Finsetₓ.univ.bUnion fun i : Plift ι => (f i.down).toFinset) <| by simp
 
-instance fintypeSUnion [DecidableEq α] {s : Set (Set α)} [Fintype s] [H : ∀ t : s, Fintype (t : Set α)] :
-    Fintype (⋃₀s) := by
+instance fintypeSUnion [DecidableEq α] {s : Set (Set α)} [Fintypeₓ s] [H : ∀ t : s, Fintypeₓ (t : Set α)] :
+    Fintypeₓ (⋃₀s) := by
   rw [sUnion_eq_Union]
   exact @Set.fintypeUnionₓ _ _ _ _ _ H
 
 /-- A union of sets with `fintype` structure over a set with `fintype` structure has a `fintype`
 structure. -/
-def fintypeBUnion [DecidableEq α] {ι : Type _} (s : Set ι) [Fintype s] (t : ι → Set α) (H : ∀ i ∈ s, Fintype (t i)) :
-    Fintype (⋃ x ∈ s, t x) :=
-  Fintype.ofFinset
-      (s.toFinset.attach.bUnion fun x => by
-        haveI :=
-          H x
-            (by
-              simpa using x.property)
-        exact (t x).toFinset) <|
-    by
-    simp
+def fintypeBUnion [DecidableEq α] {ι : Type _} (s : Set ι) [Fintypeₓ s] (t : ι → Set α) (H : ∀ i ∈ s, Fintypeₓ (t i)) :
+    Fintypeₓ (⋃ x ∈ s, t x) :=
+  Fintypeₓ.ofFinset
+      (s.toFinset.attach.bUnion fun x =>
+        haveI := H x (by simpa using x.property)
+        (t x).toFinset) <|
+    by simp
 
-instance fintypeBUnion' [DecidableEq α] {ι : Type _} (s : Set ι) [Fintype s] (t : ι → Set α) [∀ i, Fintype (t i)] :
-    Fintype (⋃ x ∈ s, t x) :=
-  Fintype.ofFinset (s.toFinset.bUnion fun x => (t x).toFinset) <| by
-    simp
+instance fintypeBUnion' [DecidableEq α] {ι : Type _} (s : Set ι) [Fintypeₓ s] (t : ι → Set α) [∀ i, Fintypeₓ (t i)] :
+    Fintypeₓ (⋃ x ∈ s, t x) :=
+  Fintypeₓ.ofFinset (s.toFinset.bUnion fun x => (t x).toFinset) <| by simp
 
 /-- If `s : set α` is a set with `fintype` instance and `f : α → set β` is a function such that
 each `f a`, `a ∈ s`, has a `fintype` structure, then `s >>= f` has a `fintype` structure. -/
-def fintypeBind {α β} [DecidableEq β] (s : Set α) [Fintype s] (f : α → Set β) (H : ∀ a ∈ s, Fintype (f a)) :
-    Fintype (s >>= f) :=
+def fintypeBind {α β} [DecidableEq β] (s : Set α) [Fintypeₓ s] (f : α → Set β) (H : ∀ a ∈ s, Fintypeₓ (f a)) :
+    Fintypeₓ (s >>= f) :=
   Set.fintypeBUnion s f H
 
-instance fintypeBind' {α β} [DecidableEq β] (s : Set α) [Fintype s] (f : α → Set β) [H : ∀ a, Fintype (f a)] :
-    Fintype (s >>= f) :=
+instance fintypeBind' {α β} [DecidableEq β] (s : Set α) [Fintypeₓ s] (f : α → Set β) [H : ∀ a, Fintypeₓ (f a)] :
+    Fintypeₓ (s >>= f) :=
   Set.fintypeBUnion' s f
 
-instance fintypeEmpty : Fintype (∅ : Set α) :=
-  Fintype.ofFinset ∅ <| by
-    simp
+instance fintypeEmpty : Fintypeₓ (∅ : Set α) :=
+  Fintypeₓ.ofFinset ∅ <| by simp
 
-instance fintypeSingleton (a : α) : Fintype ({a} : Set α) :=
-  Fintype.ofFinset {a} <| by
-    simp
+instance fintypeSingleton (a : α) : Fintypeₓ ({a} : Set α) :=
+  Fintypeₓ.ofFinset {a} <| by simp
 
-instance fintypePure : ∀ a : α, Fintype (pure a : Set α) :=
+instance fintypePure : ∀ a : α, Fintypeₓ (pure a : Set α) :=
   Set.fintypeSingleton
 
 /-- A `fintype` instance for inserting an element into a `set` using the
 corresponding `insert` function on `finset`. This requires `decidable_eq α`.
 There is also `set.fintype_insert'` when `a ∈ s` is decidable. -/
-instance fintypeInsert (a : α) (s : Set α) [DecidableEq α] [Fintype s] : Fintype (insert a s : Set α) :=
-  Fintype.ofFinset (insert a s.toFinset) <| by
-    simp
+instance fintypeInsert (a : α) (s : Set α) [DecidableEq α] [Fintypeₓ s] : Fintypeₓ (insert a s : Set α) :=
+  Fintypeₓ.ofFinset (insert a s.toFinset) <| by simp
 
 /-- A `fintype` structure on `insert a s` when inserting a new element. -/
-def fintypeInsertOfNotMem {a : α} (s : Set α) [Fintype s] (h : a ∉ s) : Fintype (insert a s : Set α) :=
-  Fintype.ofFinset
-      ⟨a ::ₘ s.toFinset.1,
-        s.toFinset.Nodup.cons
-          (by
-            simp [h])⟩ <|
-    by
-    simp
+def fintypeInsertOfNotMem {a : α} (s : Set α) [Fintypeₓ s] (h : a ∉ s) : Fintypeₓ (insert a s : Set α) :=
+  Fintypeₓ.ofFinset ⟨a ::ₘ s.toFinset.1, s.toFinset.Nodup.cons (by simp [h])⟩ <| by simp
 
 /-- A `fintype` structure on `insert a s` when inserting a pre-existing element. -/
-def fintypeInsertOfMem {a : α} (s : Set α) [Fintype s] (h : a ∈ s) : Fintype (insert a s : Set α) :=
-  Fintype.ofFinset s.toFinset <| by
-    simp [h]
+def fintypeInsertOfMem {a : α} (s : Set α) [Fintypeₓ s] (h : a ∈ s) : Fintypeₓ (insert a s : Set α) :=
+  Fintypeₓ.ofFinset s.toFinset <| by simp [h]
 
 /-- The `set.fintype_insert` instance requires decidable equality, but when `a ∈ s`
 is decidable for this particular `a` we can still get a `fintype` instance by using
@@ -303,66 +282,60 @@ This instance pre-dates `set.fintype_insert`, and it is less efficient.
 When `decidable_mem_of_fintype` is made a local instance, then this instance would
 override `set.fintype_insert` if not for the fact that its priority has been
 adjusted. See Note [lower instance priority]. -/
-instance (priority := 100) fintypeInsert' (a : α) (s : Set α) [Decidable <| a ∈ s] [Fintype s] :
-    Fintype (insert a s : Set α) :=
+instance (priority := 100) fintypeInsert' (a : α) (s : Set α) [Decidable <| a ∈ s] [Fintypeₓ s] :
+    Fintypeₓ (insert a s : Set α) :=
   if h : a ∈ s then fintypeInsertOfMem s h else fintypeInsertOfNotMem s h
 
-instance fintypeImage [DecidableEq β] (s : Set α) (f : α → β) [Fintype s] : Fintype (f '' s) :=
-  Fintype.ofFinset (s.toFinset.Image f) <| by
-    simp
+instance fintypeImage [DecidableEq β] (s : Set α) (f : α → β) [Fintypeₓ s] : Fintypeₓ (f '' s) :=
+  Fintypeₓ.ofFinset (s.toFinset.Image f) <| by simp
 
 /-- If a function `f` has a partial inverse and sends a set `s` to a set with `[fintype]` instance,
 then `s` has a `fintype` structure as well. -/
-def fintypeOfFintypeImage (s : Set α) {f : α → β} {g} (I : IsPartialInv f g) [Fintype (f '' s)] : Fintype s :=
-  (Fintype.ofFinset ⟨_, (f '' s).toFinset.2.filterMap g <| injective_of_partial_inv_rightₓ I⟩) fun a => by
+def fintypeOfFintypeImage (s : Set α) {f : α → β} {g} (I : IsPartialInv f g) [Fintypeₓ (f '' s)] : Fintypeₓ s :=
+  (Fintypeₓ.ofFinset ⟨_, (f '' s).toFinset.2.filterMap g <| injective_of_partial_inv_rightₓ I⟩) fun a => by
     suffices (∃ b x, f x = b ∧ g b = some a ∧ x ∈ s) ↔ a ∈ s by
       simpa [exists_and_distrib_left.symm, And.comm, And.left_comm, And.assoc]
     rw [exists_swap]
-    suffices (∃ x, x ∈ s ∧ g (f x) = some a) ↔ a ∈ s by
-      simpa [And.comm, And.left_comm, And.assoc]
+    suffices (∃ x, x ∈ s ∧ g (f x) = some a) ↔ a ∈ s by simpa [And.comm, And.left_comm, And.assoc]
     simp [I _, (injective_of_partial_inv I).eq_iff]
 
-instance fintypeRange [DecidableEq α] (f : ι → α) [Fintype (Plift ι)] : Fintype (Range f) :=
-  Fintype.ofFinset (Finset.univ.Image <| f ∘ Plift.down) <| by
-    simp [equiv.plift.exists_congr_left]
+instance fintypeRange [DecidableEq α] (f : ι → α) [Fintypeₓ (Plift ι)] : Fintypeₓ (Range f) :=
+  Fintypeₓ.ofFinset (Finsetₓ.univ.Image <| f ∘ Plift.down) <| by simp [equiv.plift.exists_congr_left]
 
-instance fintypeMap {α β} [DecidableEq β] : ∀ (s : Set α) (f : α → β) [Fintype s], Fintype (f <$> s) :=
+instance fintypeMap {α β} [DecidableEq β] : ∀ (s : Set α) (f : α → β) [Fintypeₓ s], Fintypeₓ (f <$> s) :=
   Set.fintypeImage
 
-instance fintypeLtNat (n : ℕ) : Fintype { i | i < n } :=
-  Fintype.ofFinset (Finset.range n) <| by
-    simp
+instance fintypeLtNat (n : ℕ) : Fintypeₓ { i | i < n } :=
+  Fintypeₓ.ofFinset (Finsetₓ.range n) <| by simp
 
-instance fintypeLeNat (n : ℕ) : Fintype { i | i ≤ n } := by
-  simpa [Nat.lt_succ_iffₓ] using Set.fintypeLtNat (n + 1)
+instance fintypeLeNat (n : ℕ) : Fintypeₓ { i | i ≤ n } := by simpa [Nat.lt_succ_iff] using Set.fintypeLtNat (n + 1)
 
 /-- This is not an instance so that it does not conflict with the one
 in src/order/locally_finite. -/
-def Nat.fintypeIio (n : ℕ) : Fintype (Iio n) :=
+def Nat.fintypeIio (n : ℕ) : Fintypeₓ (Iio n) :=
   Set.fintypeLtNat n
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-instance fintypeProd (s : Set α) (t : Set β) [Fintype s] [Fintype t] : Fintype (s ×ˢ t : Set (α × β)) :=
-  Fintype.ofFinset (s.toFinset ×ˢ t.toFinset) <| by
-    simp
+instance fintypeProd (s : Set α) (t : Set β) [Fintypeₓ s] [Fintypeₓ t] : Fintypeₓ (s ×ˢ t : Set (α × β)) :=
+  Fintypeₓ.ofFinset (s.toFinset ×ˢ t.toFinset) <| by simp
 
 /-- `image2 f s t` is `fintype` if `s` and `t` are. -/
-instance fintypeImage2 [DecidableEq γ] (f : α → β → γ) (s : Set α) (t : Set β) [hs : Fintype s] [ht : Fintype t] :
-    Fintype (Image2 f s t : Set γ) := by
+instance fintypeImage2 [DecidableEq γ] (f : α → β → γ) (s : Set α) (t : Set β) [hs : Fintypeₓ s] [ht : Fintypeₓ t] :
+    Fintypeₓ (Image2 f s t : Set γ) := by
   rw [← image_prod]
   apply Set.fintypeImage
 
-instance fintypeSeq [DecidableEq β] (f : Set (α → β)) (s : Set α) [Fintype f] [Fintype s] : Fintype (f.seq s) := by
+instance fintypeSeq [DecidableEq β] (f : Set (α → β)) (s : Set α) [Fintypeₓ f] [Fintypeₓ s] : Fintypeₓ (f.seq s) := by
   rw [seq_def]
   apply Set.fintypeBUnion'
 
-instance fintypeSeq' {α β : Type u} [DecidableEq β] (f : Set (α → β)) (s : Set α) [Fintype f] [Fintype s] :
-    Fintype (f <*> s) :=
+instance fintypeSeq' {α β : Type u} [DecidableEq β] (f : Set (α → β)) (s : Set α) [Fintypeₓ f] [Fintypeₓ s] :
+    Fintypeₓ (f <*> s) :=
   Set.fintypeSeq f s
 
-instance fintypeMemFinset (s : Finset α) : Fintype { a | a ∈ s } :=
-  Finset.fintypeCoeSort s
+instance fintypeMemFinset (s : Finsetₓ α) : Fintypeₓ { a | a ∈ s } :=
+  Finsetₓ.fintypeCoeSort s
 
 end FintypeInstances
 
@@ -371,19 +344,19 @@ end Set
 /-! ### Finset -/
 
 
-namespace Finset
+namespace Finsetₓ
 
 /-- Gives a `set.finite` for the `finset` coerced to a `set`.
 This is a wrapper around `set.to_finite`. -/
-theorem finite_to_set (s : Finset α) : (s : Set α).Finite :=
+theorem finite_to_set (s : Finsetₓ α) : (s : Set α).Finite :=
   Set.to_finite _
 
 @[simp]
-theorem finite_to_set_to_finset (s : Finset α) : s.finite_to_set.toFinset = s := by
+theorem finite_to_set_to_finset (s : Finsetₓ α) : s.finite_to_set.toFinset = s := by
   ext
   rw [Set.Finite.mem_to_finset, mem_coe]
 
-end Finset
+end Finsetₓ
 
 namespace Multiset
 
@@ -436,7 +409,7 @@ instance finite_sep (s : Set α) (p : α → Prop) [Finite s] : Finite ({ a ∈ 
   infer_instance
 
 protected theorem subset (s : Set α) {t : Set α} [Finite s] (h : t ⊆ s) : Finite t := by
-  rw [eq_sep_of_subset h]
+  rw [← sep_eq_of_subset h]
   infer_instance
 
 instance finite_inter_of_right (s t : Set α) [Finite t] : Finite (s ∩ t : Set α) :=
@@ -449,7 +422,7 @@ instance finite_diff (s t : Set α) [Finite s] : Finite (s \ t : Set α) :=
   Finite.Set.subset s (diff_subset s t)
 
 instance finite_range (f : ι → α) [Finite ι] : Finite (Range f) := by
-  haveI := Fintype.ofFinite (Plift ι)
+  haveI := Fintypeₓ.ofFinite (Plift ι)
   infer_instance
 
 instance finite_Union [Finite ι] (f : ι → Set α) [∀ i, Finite (f i)] : Finite (⋃ i, f i) := by
@@ -634,7 +607,7 @@ theorem Finite.map {α β} {s : Set α} : ∀ f : α → β, s.Finite → (f <$>
 theorem Finite.of_finite_image {s : Set α} {f : α → β} (h : (f '' s).Finite) (hi : Set.InjOn f s) : s.Finite := by
   cases h
   exact
-    ⟨Fintype.ofInjective (fun a => (⟨f a.1, mem_image_of_mem f a.2⟩ : f '' s)) fun a b eq =>
+    ⟨Fintypeₓ.ofInjective (fun a => (⟨f a.1, mem_image_of_mem f a.2⟩ : f '' s)) fun a b eq =>
         Subtype.eq <| hi a.2 b.2 <| Subtype.ext_iff_val.1 Eq⟩
 
 theorem Finite.of_preimage {f : α → β} {s : Set β} (h : (f ⁻¹' s).Finite) (hf : Surjective f) : s.Finite :=
@@ -673,31 +646,31 @@ theorem Finite.seq {f : Set (α → β)} {s : Set α} (hf : f.Finite) (hs : s.Fi
 theorem Finite.seq' {α β : Type u} {f : Set (α → β)} {s : Set α} (hf : f.Finite) (hs : s.Finite) : (f <*> s).Finite :=
   hf.seq hs
 
-theorem finite_mem_finset (s : Finset α) : { a | a ∈ s }.Finite :=
+theorem finite_mem_finset (s : Finsetₓ α) : { a | a ∈ s }.Finite :=
   to_finite _
 
 theorem Subsingleton.finite {s : Set α} (h : s.Subsingleton) : s.Finite :=
   h.induction_on finite_empty finite_singleton
 
-theorem exists_finite_iff_finset {p : Set α → Prop} : (∃ s : Set α, s.Finite ∧ p s) ↔ ∃ s : Finset α, p ↑s :=
+theorem exists_finite_iff_finset {p : Set α → Prop} : (∃ s : Set α, s.Finite ∧ p s) ↔ ∃ s : Finsetₓ α, p ↑s :=
   ⟨fun ⟨s, hs, hps⟩ => ⟨hs.toFinset, hs.coe_to_finset.symm ▸ hps⟩, fun ⟨s, hs⟩ => ⟨s, s.finite_to_set, hs⟩⟩
 
 /-- There are finitely many subsets of a given finite set -/
 theorem Finite.finite_subsets {α : Type u} {a : Set α} (h : a.Finite) : { b | b ⊆ a }.Finite :=
-  ⟨(Fintype.ofFinset ((Finset.powerset h.toFinset).map Finset.coeEmb.1)) fun s => by
+  ⟨(Fintypeₓ.ofFinset ((Finsetₓ.powerset h.toFinset).map Finsetₓ.coeEmb.1)) fun s => by
       simpa [← @exists_finite_iff_finset α fun t => t ⊆ a ∧ t = s, subset_to_finset_iff, ← And.assoc] using h.subset⟩
 
 /-- Finite product of finite sets is finite -/
 theorem Finite.pi {δ : Type _} [Finite δ] {κ : δ → Type _} {t : ∀ d, Set (κ d)} (ht : ∀ d, (t d).Finite) :
     (Pi Univ t).Finite := by
   cases nonempty_fintype δ
-  lift t to ∀ d, Finset (κ d) using ht
+  lift t to ∀ d, Finsetₓ (κ d) using ht
   classical
-  rw [← Fintype.coe_pi_finset]
-  apply Finset.finite_to_set
+  rw [← Fintypeₓ.coe_pi_finset]
+  apply Finsetₓ.finite_to_set
 
 /-- A finite union of finsets is finite. -/
-theorem union_finset_finite_of_range_finite (f : α → Finset β) (h : (Range f).Finite) : (⋃ a, (f a : Set β)).Finite :=
+theorem union_finset_finite_of_range_finite (f : α → Finsetₓ β) (h : (Range f).Finite) : (⋃ a, (f a : Set β)).Finite :=
   by
   rw [← bUnion_range]
   exact h.bUnion fun y hy => y.finite_to_set
@@ -724,27 +697,24 @@ theorem finite_union {s t : Set α} : (s ∪ t).Finite ↔ s.Finite ∧ t.Finite
 theorem finite_image_iff {s : Set α} {f : α → β} (hi : InjOn f s) : (f '' s).Finite ↔ s.Finite :=
   ⟨fun h => h.of_finite_image hi, Finite.image _⟩
 
-theorem univ_finite_iff_nonempty_fintype : (Univ : Set α).Finite ↔ Nonempty (Fintype α) :=
+theorem univ_finite_iff_nonempty_fintype : (Univ : Set α).Finite ↔ Nonempty (Fintypeₓ α) :=
   ⟨fun h => ⟨fintypeOfFiniteUniv h⟩, fun ⟨_i⟩ => finite_univ⟩
 
 @[simp]
 theorem Finite.to_finset_singleton {a : α} (ha : ({a} : Set α).Finite := finite_singleton _) : ha.toFinset = {a} :=
-  Finset.ext <| by
-    simp
+  Finsetₓ.ext <| by simp
 
 @[simp]
 theorem Finite.to_finset_insert [DecidableEq α] {s : Set α} {a : α} (hs : (insert a s).Finite) :
     hs.toFinset = insert a (hs.Subset <| subset_insert _ _).toFinset :=
-  Finset.ext <| by
-    simp
+  Finsetₓ.ext <| by simp
 
 theorem Finite.to_finset_insert' [DecidableEq α] {a : α} {s : Set α} (hs : s.Finite) :
     (hs.insert a).toFinset = insert a hs.toFinset :=
   Finite.to_finset_insert _
 
 theorem Finite.fin_embedding {s : Set α} (h : s.Finite) : ∃ (n : ℕ)(f : Finₓ n ↪ α), Range f = s :=
-  ⟨_, (Fintype.equivFin (h.toFinset : Set α)).symm.asEmbedding, by
-    simp ⟩
+  ⟨_, (Fintypeₓ.equivFin (h.toFinset : Set α)).symm.asEmbedding, by simp⟩
 
 theorem Finite.fin_param {s : Set α} (h : s.Finite) : ∃ (n : ℕ)(f : Finₓ n → α), Injective f ∧ Range f = s :=
   let ⟨n, f, hf⟩ := h.fin_embedding
@@ -766,9 +736,7 @@ theorem forall_finite_image_eval_iff {δ : Type _} [Finite δ] {κ : δ → Type
 theorem finite_subset_Union {s : Set α} (hs : s.Finite) {ι} {t : ι → Set α} (h : s ⊆ ⋃ i, t i) :
     ∃ I : Set ι, I.Finite ∧ s ⊆ ⋃ i ∈ I, t i := by
   cases hs
-  choose f hf using
-    show ∀ x : s, ∃ i, x.1 ∈ t i by
-      simpa [subset_def] using h
+  choose f hf using show ∀ x : s, ∃ i, x.1 ∈ t i by simpa [subset_def] using h
   refine' ⟨range f, finite_range f, fun x hx => _⟩
   rw [bUnion_range, mem_Union]
   exact ⟨⟨x, hx⟩, hf _⟩
@@ -791,11 +759,11 @@ theorem eq_finite_Union_of_finite_subset_Union {ι} {s : ι → Set α} {t : Set
 @[elabAsElim]
 theorem Finite.induction_on {C : Set α → Prop} {s : Set α} (h : s.Finite) (H0 : C ∅)
     (H1 : ∀ {a s}, a ∉ s → Set.Finite s → C s → C (insert a s)) : C s := by
-  lift s to Finset α using h
-  induction' s using Finset.cons_induction_on with a s ha hs
-  · rwa [Finset.coe_empty]
+  lift s to Finsetₓ α using h
+  induction' s using Finsetₓ.cons_induction_on with a s ha hs
+  · rwa [Finsetₓ.coe_empty]
     
-  · rw [Finset.coe_cons]
+  · rw [Finsetₓ.coe_cons]
     exact @H1 a s ha (Set.to_finite _) hs
     
 
@@ -850,72 +818,65 @@ end
 /-! ### Cardinality -/
 
 
-theorem empty_card : Fintype.card (∅ : Set α) = 0 :=
+theorem empty_card : Fintypeₓ.card (∅ : Set α) = 0 :=
   rfl
 
 @[simp]
-theorem empty_card' {h : Fintype.{u} (∅ : Set α)} : @Fintype.card (∅ : Set α) h = 0 :=
-  Eq.trans
-    (by
-      congr )
-    empty_card
+theorem empty_card' {h : Fintypeₓ.{u} (∅ : Set α)} : @Fintypeₓ.card (∅ : Set α) h = 0 :=
+  Eq.trans (by congr ) empty_card
 
-theorem card_fintype_insert_of_not_mem {a : α} (s : Set α) [Fintype s] (h : a ∉ s) :
-    @Fintype.card _ (fintypeInsertOfNotMem s h) = Fintype.card s + 1 := by
-  rw [fintype_insert_of_not_mem, Fintype.card_of_finset] <;> simp [Finset.card, to_finset] <;> rfl
+theorem card_fintype_insert_of_not_mem {a : α} (s : Set α) [Fintypeₓ s] (h : a ∉ s) :
+    @Fintypeₓ.card _ (fintypeInsertOfNotMem s h) = Fintypeₓ.card s + 1 := by
+  rw [fintype_insert_of_not_mem, Fintypeₓ.card_of_finset] <;> simp [Finsetₓ.card, to_finset] <;> rfl
 
 @[simp]
-theorem card_insert {a : α} (s : Set α) [Fintype s] (h : a ∉ s) {d : Fintype.{u} (insert a s : Set α)} :
-    @Fintype.card _ d = Fintype.card s + 1 := by
-  rw [← card_fintype_insert_of_not_mem s h] <;> congr
+theorem card_insert {a : α} (s : Set α) [Fintypeₓ s] (h : a ∉ s) {d : Fintypeₓ.{u} (insert a s : Set α)} :
+    @Fintypeₓ.card _ d = Fintypeₓ.card s + 1 := by rw [← card_fintype_insert_of_not_mem s h] <;> congr
 
-theorem card_image_of_inj_on {s : Set α} [Fintype s] {f : α → β} [Fintype (f '' s)]
-    (H : ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y) : Fintype.card (f '' s) = Fintype.card s :=
+theorem card_image_of_inj_on {s : Set α} [Fintypeₓ s] {f : α → β} [Fintypeₓ (f '' s)]
+    (H : ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y) : Fintypeₓ.card (f '' s) = Fintypeₓ.card s :=
   haveI := Classical.propDecidable
   calc
-    Fintype.card (f '' s) = (s.to_finset.image f).card :=
-      Fintype.card_of_finset' _
-        (by
-          simp )
+    Fintypeₓ.card (f '' s) = (s.to_finset.image f).card := Fintypeₓ.card_of_finset' _ (by simp)
     _ = s.to_finset.card :=
-      Finset.card_image_of_inj_on fun x hx y hy hxy => H x (mem_to_finset.1 hx) y (mem_to_finset.1 hy) hxy
-    _ = Fintype.card s := (Fintype.card_of_finset' _ fun a => mem_to_finset).symm
+      Finsetₓ.card_image_of_inj_on fun x hx y hy hxy => H x (mem_to_finset.1 hx) y (mem_to_finset.1 hy) hxy
+    _ = Fintypeₓ.card s := (Fintypeₓ.card_of_finset' _ fun a => mem_to_finset).symm
     
 
-theorem card_image_of_injective (s : Set α) [Fintype s] {f : α → β} [Fintype (f '' s)] (H : Function.Injective f) :
-    Fintype.card (f '' s) = Fintype.card s :=
+theorem card_image_of_injective (s : Set α) [Fintypeₓ s] {f : α → β} [Fintypeₓ (f '' s)] (H : Function.Injective f) :
+    Fintypeₓ.card (f '' s) = Fintypeₓ.card s :=
   card_image_of_inj_on fun _ _ _ _ h => H h
 
 @[simp]
-theorem card_singleton (a : α) : Fintype.card ({a} : Set α) = 1 :=
-  Fintype.card_of_subsingleton _
+theorem card_singleton (a : α) : Fintypeₓ.card ({a} : Set α) = 1 :=
+  Fintypeₓ.card_of_subsingleton _
 
-theorem card_lt_card {s t : Set α} [Fintype s] [Fintype t] (h : s ⊂ t) : Fintype.card s < Fintype.card t :=
-  (Fintype.card_lt_of_injective_not_surjective (Set.inclusion h.1) (Set.inclusion_injective h.1)) fun hst =>
+theorem card_lt_card {s t : Set α} [Fintypeₓ s] [Fintypeₓ t] (h : s ⊂ t) : Fintypeₓ.card s < Fintypeₓ.card t :=
+  (Fintypeₓ.card_lt_of_injective_not_surjective (Set.inclusion h.1) (Set.inclusion_injective h.1)) fun hst =>
     (ssubset_iff_subset_ne.1 h).2 (eq_of_inclusion_surjective hst)
 
-theorem card_le_of_subset {s t : Set α} [Fintype s] [Fintype t] (hsub : s ⊆ t) : Fintype.card s ≤ Fintype.card t :=
-  Fintype.card_le_of_injective (Set.inclusion hsub) (Set.inclusion_injective hsub)
+theorem card_le_of_subset {s t : Set α} [Fintypeₓ s] [Fintypeₓ t] (hsub : s ⊆ t) : Fintypeₓ.card s ≤ Fintypeₓ.card t :=
+  Fintypeₓ.card_le_of_injective (Set.inclusion hsub) (Set.inclusion_injective hsub)
 
-theorem eq_of_subset_of_card_le {s t : Set α} [Fintype s] [Fintype t] (hsub : s ⊆ t)
-    (hcard : Fintype.card t ≤ Fintype.card s) : s = t :=
+theorem eq_of_subset_of_card_le {s t : Set α} [Fintypeₓ s] [Fintypeₓ t] (hsub : s ⊆ t)
+    (hcard : Fintypeₓ.card t ≤ Fintypeₓ.card s) : s = t :=
   (eq_or_ssubset_of_subset hsub).elim id fun h => absurd hcard <| not_le_of_ltₓ <| card_lt_card h
 
-theorem card_range_of_injective [Fintype α] {f : α → β} (hf : Injective f) [Fintype (Range f)] :
-    Fintype.card (Range f) = Fintype.card α :=
-  Eq.symm <| Fintype.card_congr <| Equivₓ.ofInjective f hf
+theorem card_range_of_injective [Fintypeₓ α] {f : α → β} (hf : Injective f) [Fintypeₓ (Range f)] :
+    Fintypeₓ.card (Range f) = Fintypeₓ.card α :=
+  Eq.symm <| Fintypeₓ.card_congr <| Equivₓ.ofInjective f hf
 
-theorem Finite.card_to_finset {s : Set α} [Fintype s] (h : s.Finite) : h.toFinset.card = Fintype.card s := by
-  rw [← Finset.card_attach, Finset.attach_eq_univ, ← Fintype.card]
-  refine' Fintype.card_congr (Equivₓ.setCongr _)
+theorem Finite.card_to_finset {s : Set α} [Fintypeₓ s] (h : s.Finite) : h.toFinset.card = Fintypeₓ.card s := by
+  rw [← Finsetₓ.card_attach, Finsetₓ.attach_eq_univ, ← Fintypeₓ.card]
+  refine' Fintypeₓ.card_congr (Equivₓ.setCongr _)
   ext x
   show x ∈ h.to_finset ↔ x ∈ s
   simp
 
-theorem card_ne_eq [Fintype α] (a : α) [Fintype { x : α | x ≠ a }] :
-    Fintype.card { x : α | x ≠ a } = Fintype.card α - 1 := by
+theorem card_ne_eq [Fintypeₓ α] (a : α) [Fintypeₓ { x : α | x ≠ a }] :
+    Fintypeₓ.card { x : α | x ≠ a } = Fintypeₓ.card α - 1 := by
   haveI := Classical.decEq α
-  rw [← to_finset_card, to_finset_ne_eq_erase, Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ]
+  rw [← to_finset_card, to_finset_ne_eq_erase, Finsetₓ.card_erase_of_mem (Finsetₓ.mem_univ _), Finsetₓ.card_univ]
 
 /-! ### Infinite sets -/
 
@@ -932,27 +893,22 @@ theorem infinite_coe_iff {s : Set α} : Infinite s ↔ s.Infinite :=
 alias infinite_coe_iff ↔ _ infinite.to_subtype
 
 /-- Embedding of `ℕ` into an infinite set. -/
-noncomputable def Infinite.natEmbedding (s : Set α) (h : s.Infinite) : ℕ ↪ s := by
+noncomputable def Infinite.natEmbedding (s : Set α) (h : s.Infinite) : ℕ ↪ s :=
   haveI := h.to_subtype
-  exact Infinite.natEmbedding s
+  Infinite.natEmbedding s
 
-theorem Infinite.exists_subset_card_eq {s : Set α} (hs : s.Infinite) (n : ℕ) : ∃ t : Finset α, ↑t ⊆ s ∧ t.card = n :=
-  ⟨((Finset.range n).map (hs.natEmbedding _)).map (Embedding.subtype _), by
-    simp ⟩
+theorem Infinite.exists_subset_card_eq {s : Set α} (hs : s.Infinite) (n : ℕ) : ∃ t : Finsetₓ α, ↑t ⊆ s ∧ t.card = n :=
+  ⟨((Finsetₓ.range n).map (hs.natEmbedding _)).map (Embedding.subtype _), by simp⟩
 
 theorem Infinite.nonempty {s : Set α} (h : s.Infinite) : s.Nonempty :=
   let a := Infinite.natEmbedding s h 37
   ⟨a.1, a.2⟩
 
 theorem infinite_of_finite_compl [Infinite α] {s : Set α} (hs : sᶜ.Finite) : s.Infinite := fun h =>
-  Set.infinite_univ
-    (by
-      simpa using hs.union h)
+  Set.infinite_univ (by simpa using hs.union h)
 
 theorem Finite.infinite_compl [Infinite α] {s : Set α} (hs : s.Finite) : sᶜ.Infinite := fun h =>
-  Set.infinite_univ
-    (by
-      simpa using hs.union h)
+  Set.infinite_univ (by simpa using hs.union h)
 
 protected theorem Infinite.mono {s t : Set α} (h : s ⊆ t) : s.Infinite → t.Infinite :=
   mt fun ht => ht.Subset h
@@ -989,12 +945,11 @@ theorem infinite_of_injective_forall_mem [Infinite α] {s : Set β} {f : α → 
 
 theorem Infinite.exists_nat_lt {s : Set ℕ} (hs : s.Infinite) (n : ℕ) : ∃ m ∈ s, n < m :=
   let ⟨m, hm⟩ := (hs.diff <| Set.finite_le_nat n).Nonempty
-  ⟨m, by
-    simpa using hm⟩
+  ⟨m, by simpa using hm⟩
 
-theorem Infinite.exists_not_mem_finset {s : Set α} (hs : s.Infinite) (f : Finset α) : ∃ a ∈ s, a ∉ f :=
+theorem Infinite.exists_not_mem_finset {s : Set α} (hs : s.Infinite) (f : Finsetₓ α) : ∃ a ∈ s, a ∉ f :=
   let ⟨a, has, haf⟩ := (hs.diff (to_finite f)).Nonempty
-  ⟨a, has, fun h => haf <| Finset.mem_coe.1 h⟩
+  ⟨a, has, fun h => haf <| Finsetₓ.mem_coe.1 h⟩
 
 /-! ### Order properties -/
 
@@ -1028,7 +983,7 @@ theorem exists_max_image [LinearOrderₓ β] (s : Set α) (f : α → β) (h1 : 
 
 theorem exists_lower_bound_image [hα : Nonempty α] [LinearOrderₓ β] (s : Set α) (f : α → β) (h : s.Finite) :
     ∃ a : α, ∀ b ∈ s, f a ≤ f b := by
-  by_cases' hs : Set.Nonempty s
+  by_cases hs:Set.Nonempty s
   · exact
       let ⟨x₀, H, hx₀⟩ := Set.exists_min_image s f h hs
       ⟨x₀, fun x hx => hx₀ x hx⟩
@@ -1038,7 +993,7 @@ theorem exists_lower_bound_image [hα : Nonempty α] [LinearOrderₓ β] (s : Se
 
 theorem exists_upper_bound_image [hα : Nonempty α] [LinearOrderₓ β] (s : Set α) (f : α → β) (h : s.Finite) :
     ∃ a : α, ∀ b ∈ s, f b ≤ f a := by
-  by_cases' hs : Set.Nonempty s
+  by_cases hs:Set.Nonempty s
   · exact
       let ⟨x₀, H, hx₀⟩ := Set.exists_max_image s f h hs
       ⟨x₀, fun x hx => hx₀ x hx⟩
@@ -1047,7 +1002,7 @@ theorem exists_upper_bound_image [hα : Nonempty α] [LinearOrderₓ β] (s : Se
     
 
 theorem Finite.supr_binfi_of_monotone {ι ι' α : Type _} [Preorderₓ ι'] [Nonempty ι'] [IsDirected ι' (· ≤ ·)]
-    [Order.Frame α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α} (hf : ∀ i ∈ s, Monotone (f i)) :
+    [Order.Frame α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α} (hf : ∀ i ∈ s, Monotoneₓ (f i)) :
     (⨆ j, ⨅ i ∈ s, f i j) = ⨅ i ∈ s, ⨆ j, f i j := by
   revert hf
   refine' hs.induction_on _ _
@@ -1061,67 +1016,67 @@ theorem Finite.supr_binfi_of_monotone {ι ι' α : Type _} [Preorderₓ ι'] [No
     
 
 theorem Finite.supr_binfi_of_antitone {ι ι' α : Type _} [Preorderₓ ι'] [Nonempty ι'] [IsDirected ι' (swap (· ≤ ·))]
-    [Order.Frame α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α} (hf : ∀ i ∈ s, Antitone (f i)) :
+    [Order.Frame α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α} (hf : ∀ i ∈ s, Antitoneₓ (f i)) :
     (⨆ j, ⨅ i ∈ s, f i j) = ⨅ i ∈ s, ⨆ j, f i j :=
   @Finite.supr_binfi_of_monotone ι ι'ᵒᵈ α _ _ _ _ _ hs _ fun i hi => (hf i hi).dual_left
 
 theorem Finite.infi_bsupr_of_monotone {ι ι' α : Type _} [Preorderₓ ι'] [Nonempty ι'] [IsDirected ι' (swap (· ≤ ·))]
-    [Order.Coframe α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α} (hf : ∀ i ∈ s, Monotone (f i)) :
+    [Order.Coframe α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α} (hf : ∀ i ∈ s, Monotoneₓ (f i)) :
     (⨅ j, ⨆ i ∈ s, f i j) = ⨆ i ∈ s, ⨅ j, f i j :=
   hs.supr_binfi_of_antitone fun i hi => (hf i hi).dual_right
 
 theorem Finite.infi_bsupr_of_antitone {ι ι' α : Type _} [Preorderₓ ι'] [Nonempty ι'] [IsDirected ι' (· ≤ ·)]
-    [Order.Coframe α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α} (hf : ∀ i ∈ s, Antitone (f i)) :
+    [Order.Coframe α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α} (hf : ∀ i ∈ s, Antitoneₓ (f i)) :
     (⨅ j, ⨆ i ∈ s, f i j) = ⨆ i ∈ s, ⨅ j, f i j :=
   hs.supr_binfi_of_monotone fun i hi => (hf i hi).dual_right
 
 theorem _root_.supr_infi_of_monotone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [Nonempty ι'] [IsDirected ι' (· ≤ ·)]
-    [Order.Frame α] {f : ι → ι' → α} (hf : ∀ i, Monotone (f i)) : (⨆ j, ⨅ i, f i j) = ⨅ i, ⨆ j, f i j := by
+    [Order.Frame α] {f : ι → ι' → α} (hf : ∀ i, Monotoneₓ (f i)) : (⨆ j, ⨅ i, f i j) = ⨅ i, ⨆ j, f i j := by
   simpa only [infi_univ] using finite_univ.supr_binfi_of_monotone fun i hi => hf i
 
 theorem _root_.supr_infi_of_antitone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [Nonempty ι']
-    [IsDirected ι' (swap (· ≤ ·))] [Order.Frame α] {f : ι → ι' → α} (hf : ∀ i, Antitone (f i)) :
+    [IsDirected ι' (swap (· ≤ ·))] [Order.Frame α] {f : ι → ι' → α} (hf : ∀ i, Antitoneₓ (f i)) :
     (⨆ j, ⨅ i, f i j) = ⨅ i, ⨆ j, f i j :=
   @supr_infi_of_monotone ι ι'ᵒᵈ α _ _ _ _ _ _ fun i => (hf i).dual_left
 
 theorem _root_.infi_supr_of_monotone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [Nonempty ι']
-    [IsDirected ι' (swap (· ≤ ·))] [Order.Coframe α] {f : ι → ι' → α} (hf : ∀ i, Monotone (f i)) :
+    [IsDirected ι' (swap (· ≤ ·))] [Order.Coframe α] {f : ι → ι' → α} (hf : ∀ i, Monotoneₓ (f i)) :
     (⨅ j, ⨆ i, f i j) = ⨆ i, ⨅ j, f i j :=
   supr_infi_of_antitone fun i => (hf i).dual_right
 
 theorem _root_.infi_supr_of_antitone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [Nonempty ι'] [IsDirected ι' (· ≤ ·)]
-    [Order.Coframe α] {f : ι → ι' → α} (hf : ∀ i, Antitone (f i)) : (⨅ j, ⨆ i, f i j) = ⨆ i, ⨅ j, f i j :=
+    [Order.Coframe α] {f : ι → ι' → α} (hf : ∀ i, Antitoneₓ (f i)) : (⨅ j, ⨆ i, f i j) = ⨆ i, ⨅ j, f i j :=
   supr_infi_of_monotone fun i => (hf i).dual_right
 
 /-- An increasing union distributes over finite intersection. -/
 theorem Union_Inter_of_monotone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [IsDirected ι' (· ≤ ·)] [Nonempty ι']
-    {s : ι → ι' → Set α} (hs : ∀ i, Monotone (s i)) : (⋃ j : ι', ⋂ i : ι, s i j) = ⋂ i : ι, ⋃ j : ι', s i j :=
+    {s : ι → ι' → Set α} (hs : ∀ i, Monotoneₓ (s i)) : (⋃ j : ι', ⋂ i : ι, s i j) = ⋂ i : ι, ⋃ j : ι', s i j :=
   supr_infi_of_monotone hs
 
 /-- A decreasing union distributes over finite intersection. -/
 theorem Union_Inter_of_antitone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [IsDirected ι' (swap (· ≤ ·))] [Nonempty ι']
-    {s : ι → ι' → Set α} (hs : ∀ i, Antitone (s i)) : (⋃ j : ι', ⋂ i : ι, s i j) = ⋂ i : ι, ⋃ j : ι', s i j :=
+    {s : ι → ι' → Set α} (hs : ∀ i, Antitoneₓ (s i)) : (⋃ j : ι', ⋂ i : ι, s i j) = ⋂ i : ι, ⋃ j : ι', s i j :=
   supr_infi_of_antitone hs
 
 /-- An increasing intersection distributes over finite union. -/
 theorem Inter_Union_of_monotone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [IsDirected ι' (swap (· ≤ ·))] [Nonempty ι']
-    {s : ι → ι' → Set α} (hs : ∀ i, Monotone (s i)) : (⋂ j : ι', ⋃ i : ι, s i j) = ⋃ i : ι, ⋂ j : ι', s i j :=
+    {s : ι → ι' → Set α} (hs : ∀ i, Monotoneₓ (s i)) : (⋂ j : ι', ⋃ i : ι, s i j) = ⋃ i : ι, ⋂ j : ι', s i j :=
   infi_supr_of_monotone hs
 
 /-- A decreasing intersection distributes over finite union. -/
 theorem Inter_Union_of_antitone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [IsDirected ι' (· ≤ ·)] [Nonempty ι']
-    {s : ι → ι' → Set α} (hs : ∀ i, Antitone (s i)) : (⋂ j : ι', ⋃ i : ι, s i j) = ⋃ i : ι, ⋂ j : ι', s i j :=
+    {s : ι → ι' → Set α} (hs : ∀ i, Antitoneₓ (s i)) : (⋂ j : ι', ⋃ i : ι, s i j) = ⋃ i : ι, ⋂ j : ι', s i j :=
   infi_supr_of_antitone hs
 
 theorem Union_pi_of_monotone {ι ι' : Type _} [LinearOrderₓ ι'] [Nonempty ι'] {α : ι → Type _} {I : Set ι}
-    {s : ∀ i, ι' → Set (α i)} (hI : I.Finite) (hs : ∀ i ∈ I, Monotone (s i)) :
+    {s : ∀ i, ι' → Set (α i)} (hI : I.Finite) (hs : ∀ i ∈ I, Monotoneₓ (s i)) :
     (⋃ j : ι', I.pi fun i => s i j) = I.pi fun i => ⋃ j, s i j := by
   simp only [pi_def, bInter_eq_Inter, preimage_Union]
   haveI := hI.fintype
   exact Union_Inter_of_monotone fun i j₁ j₂ h => preimage_mono <| hs i i.2 h
 
 theorem Union_univ_pi_of_monotone {ι ι' : Type _} [LinearOrderₓ ι'] [Nonempty ι'] [Finite ι] {α : ι → Type _}
-    {s : ∀ i, ι' → Set (α i)} (hs : ∀ i, Monotone (s i)) :
+    {s : ∀ i, ι' → Set (α i)} (hs : ∀ i, Monotoneₓ (s i)) :
     (⋃ j : ι', Pi Univ fun i => s i j) = Pi Univ fun i => ⋃ j, s i j :=
   Union_pi_of_monotone finite_univ fun i _ => hs i
 
@@ -1140,7 +1095,7 @@ theorem Finite.exists_maximal_wrt [PartialOrderₓ β] (f : α → β) (s : Set 
     simp [h]
     
   rcases ih h with ⟨b, hb, ih⟩
-  by_cases' f b ≤ f a
+  by_cases f b ≤ f a
   · refine' ⟨a, Set.mem_insert _ _, fun c hc hac => le_antisymmₓ hac _⟩
     rcases Set.mem_insert_iff.1 hc with (rfl | hcs)
     · rfl
@@ -1167,10 +1122,7 @@ protected theorem Finite.bdd_above (hs : s.Finite) : BddAbove s :=
 /-- A finite union of sets which are all bounded above is still bounded above.-/
 theorem Finite.bdd_above_bUnion {I : Set β} {S : β → Set α} (H : I.Finite) :
     BddAbove (⋃ i ∈ I, S i) ↔ ∀ i ∈ I, BddAbove (S i) :=
-  Finite.induction_on H
-    (by
-      simp only [bUnion_empty, bdd_above_empty, ball_empty_iff])
-    fun a s ha _ hs => by
+  Finite.induction_on H (by simp only [bUnion_empty, bdd_above_empty, ball_empty_iff]) fun a s ha _ hs => by
     simp only [bUnion_insert, ball_insert_iff, bdd_above_union, hs]
 
 theorem infinite_of_not_bdd_above : ¬BddAbove s → s.Infinite := by
@@ -1202,17 +1154,17 @@ end
 
 end Set
 
-namespace Finset
+namespace Finsetₓ
 
 /-- A finset is bounded above. -/
-protected theorem bdd_above [SemilatticeSup α] [Nonempty α] (s : Finset α) : BddAbove (↑s : Set α) :=
+protected theorem bdd_above [SemilatticeSup α] [Nonempty α] (s : Finsetₓ α) : BddAbove (↑s : Set α) :=
   s.finite_to_set.BddAbove
 
 /-- A finset is bounded below. -/
-protected theorem bdd_below [SemilatticeInf α] [Nonempty α] (s : Finset α) : BddBelow (↑s : Set α) :=
+protected theorem bdd_below [SemilatticeInf α] [Nonempty α] (s : Finsetₓ α) : BddBelow (↑s : Set α) :=
   s.finite_to_set.BddBelow
 
-end Finset
+end Finsetₓ
 
 /-- If a set `s` does not contain any elements between any pair of elements `x, z ∈ s` with `x ≤ z`
 (i.e if given `x, y, z ∈ s` such that `x ≤ y ≤ z`, then `y` is either `x` or `z`), then `s` is
@@ -1227,21 +1179,14 @@ theorem Set.finite_of_forall_between_eq_endpoints {α : Type _} [LinearOrderₓ 
   let x := f 0
   let y := f 1
   let z := f 2
-  have :=
-    h x (hts x.2) y (hts y.2) z (hts z.2)
-      (f.monotone <| by
-        decide)
-      (f.monotone <| by
-        decide)
-  have key₁ : (0 : Finₓ 3) ≠ 1 := by
-    decide
-  have key₂ : (1 : Finₓ 3) ≠ 2 := by
-    decide
+  have := h x (hts x.2) y (hts y.2) z (hts z.2) (f.monotone <| by decide) (f.monotone <| by decide)
+  have key₁ : (0 : Finₓ 3) ≠ 1 := by decide
+  have key₂ : (1 : Finₓ 3) ≠ 2 := by decide
   cases this
-  · dsimp' only [x, y]  at this
+  · dsimp only [x, y] at this
     exact key₁ (f.injective <| Subtype.coe_injective this)
     
-  · dsimp' only [y, z]  at this
+  · dsimp only [y, z] at this
     exact key₂ (f.injective <| Subtype.coe_injective this)
     
 

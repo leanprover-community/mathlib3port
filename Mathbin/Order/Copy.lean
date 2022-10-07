@@ -26,23 +26,21 @@ def BoundedOrder.copy {h : LE α} {h' : LE α} (c : @BoundedOrder α h') (top : 
     (bot : α) (eq_bot : bot = @BoundedOrder.bot α _ c) (le_eq : ∀ x y : α, (@LE.le α h) x y ↔ x ≤ y) :
     @BoundedOrder α h := by
   refine' { top, bot.. }
-  all_goals
-    abstract 
-      subst_vars
-      cases c
-      simp_rw [le_eq]
-      assumption
+  all_goals abstract 
+    subst_vars
+    cases c
+    simp_rw [le_eq]
+    assumption
 
 /-- A function to create a provable equal copy of a lattice
 with possibly different definitional equalities. -/
 def Lattice.copy (c : Lattice α) (le : α → α → Prop) (eq_le : le = @Lattice.Le α c) (sup : α → α → α)
     (eq_sup : sup = @Lattice.sup α c) (inf : α → α → α) (eq_inf : inf = @Lattice.inf α c) : Lattice α := by
   refine' { le, sup, inf.. }
-  all_goals
-    abstract 
-      subst_vars
-      cases c
-      assumption
+  all_goals abstract 
+    subst_vars
+    cases c
+    assumption
 
 /-- A function to create a provable equal copy of a distributive lattice
 with possibly different definitional equalities. -/
@@ -50,11 +48,10 @@ def DistribLattice.copy (c : DistribLattice α) (le : α → α → Prop) (eq_le
     (sup : α → α → α) (eq_sup : sup = @DistribLattice.sup α c) (inf : α → α → α)
     (eq_inf : inf = @DistribLattice.inf α c) : DistribLattice α := by
   refine' { le, sup, inf.. }
-  all_goals
-    abstract 
-      subst_vars
-      cases c
-      assumption
+  all_goals abstract 
+    subst_vars
+    cases c
+    assumption
 
 /-- A function to create a provable equal copy of a complete lattice
 with possibly different definitional equalities. -/
@@ -66,11 +63,10 @@ def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop) (eq_
   refine'
     { Lattice.copy (@CompleteLattice.toLattice α c) le eq_le sup eq_sup inf eq_inf with le, top, bot, sup, inf, sup,
       inf.. }
-  all_goals
-    abstract 
-      subst_vars
-      cases c
-      assumption
+  all_goals abstract 
+    subst_vars
+    cases c
+    assumption
 
 /-- A function to create a provable equal copy of a frame with possibly different definitional
 equalities. -/
@@ -82,11 +78,10 @@ def Frame.copy (c : Frame α) (le : α → α → Prop) (eq_le : le = @Frame.Le 
     { CompleteLattice.copy (@frame.to_complete_lattice α c) le eq_le top eq_top bot eq_bot sup eq_sup inf eq_inf Sup
         eq_Sup Inf eq_Inf with
       le, top, bot, sup, inf, sup, inf.. }
-  all_goals
-    abstract 
-      subst_vars
-      cases c
-      assumption
+  all_goals abstract 
+    subst_vars
+    cases c
+    assumption
 
 /-- A function to create a provable equal copy of a coframe with possibly different definitional
 equalities. -/
@@ -98,11 +93,10 @@ def Coframe.copy (c : Coframe α) (le : α → α → Prop) (eq_le : le = @Cofra
     { CompleteLattice.copy (@coframe.to_complete_lattice α c) le eq_le top eq_top bot eq_bot sup eq_sup inf eq_inf Sup
         eq_Sup Inf eq_Inf with
       le, top, bot, sup, inf, sup, inf.. }
-  all_goals
-    abstract 
-      subst_vars
-      cases c
-      assumption
+  all_goals abstract 
+    subst_vars
+    cases c
+    assumption
 
 /-- A function to create a provable equal copy of a complete distributive lattice
 with possibly different definitional equalities. -/
@@ -126,9 +120,8 @@ def ConditionallyCompleteLattice.copy (c : ConditionallyCompleteLattice α) (le 
     (eq_Sup : Sup = @ConditionallyCompleteLattice.supₓ α c) (Inf : Set α → α)
     (eq_Inf : Inf = @ConditionallyCompleteLattice.infₓ α c) : ConditionallyCompleteLattice α := by
   refine' { le, sup, inf, sup, inf.. }
-  all_goals
-    abstract 
-      subst_vars
-      cases c
-      assumption
+  all_goals abstract 
+    subst_vars
+    cases c
+    assumption
 

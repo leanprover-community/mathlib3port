@@ -65,7 +65,7 @@ def mk' (v : { v : V // v ≠ 0 }) : ℙ K V :=
 
 @[simp]
 theorem mk'_eq_mk (v : { v : V // v ≠ 0 }) : mk' K v = mk K v v.2 := by
-  dsimp' [mk, mk']
+  dsimp [mk, mk']
   congr 1
   simp
 
@@ -84,7 +84,7 @@ theorem rep_nonzero (v : ℙ K V) : v.rep ≠ 0 :=
 
 @[simp]
 theorem mk_rep (v : ℙ K V) : mk K v.rep v.rep_nonzero = v := by
-  dsimp' [mk, Projectivization.rep]
+  dsimp [mk, Projectivization.rep]
   simp
 
 open FiniteDimensional
@@ -149,10 +149,7 @@ theorem submodule_injective : Function.Injective (Projectivization.submodule : �
   rw [← mk_rep v, ← mk_rep u]
   apply Quotientₓ.sound'
   obtain ⟨a, ha⟩ := h u.rep (Submodule.mem_span_singleton_self _)
-  have : a ≠ 0 := fun c =>
-    u.rep_nonzero
-      (by
-        simpa [c] using ha.symm)
+  have : a ≠ 0 := fun c => u.rep_nonzero (by simpa [c] using ha.symm)
   use Units.mk0 a this, ha
 
 variable (K V)
@@ -177,7 +174,7 @@ noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K 
         revert x
         erw [← Set.ext_iff]
         ext x
-        dsimp' [-SetLike.mem_coe]
+        dsimp [-SetLike.mem_coe]
         rw [Submodule.span_singleton_eq_range]
         refine' ⟨fun hh => _, _⟩
         · obtain ⟨c, hc⟩ := h ⟨x, hh⟩
@@ -196,15 +193,13 @@ noncomputable def mk'' (H : Submodule K V) (h : finrank K H = 1) : ℙ K V :=
 
 @[simp]
 theorem submodule_mk'' (H : Submodule K V) (h : finrank K H = 1) : (mk'' H h).Submodule = H := by
-  suffices (equiv_submodule K V) (mk'' H h) = ⟨H, h⟩ by
-    exact congr_arg coe this
-  dsimp' [mk'']
+  suffices (equiv_submodule K V) (mk'' H h) = ⟨H, h⟩ by exact congr_arg coe this
+  dsimp [mk'']
   simp
 
 @[simp]
 theorem mk''_submodule (v : ℙ K V) : mk'' v.Submodule v.finrank_submodule = v :=
-  show (equivSubmodule K V).symm (equivSubmodule K V _) = _ by
-    simp
+  show (equivSubmodule K V).symm (equivSubmodule K V _) = _ by simp
 
 section Map
 
@@ -212,17 +207,11 @@ variable {L W : Type _} [Field L] [AddCommGroupₓ W] [Module L W]
 
 /-- An injective semilinear map of vector spaces induces a map on projective spaces. -/
 def map {σ : K →+* L} (f : V →ₛₗ[σ] W) (hf : Function.Injective f) : ℙ K V → ℙ L W :=
-  Quotientₓ.map'
-    (fun v =>
-      ⟨f v, fun c =>
-        v.2
-          (hf
-            (by
-              simp [c]))⟩)
+  Quotientₓ.map' (fun v => ⟨f v, fun c => v.2 (hf (by simp [c]))⟩)
     (by
       rintro ⟨u, hu⟩ ⟨v, hv⟩ ⟨a, ha⟩
       use Units.map σ.to_monoid_hom a
-      dsimp'  at ha⊢
+      dsimp at ha⊢
       erw [← f.map_smulₛₗ, ha])
 
 /-- Mapping with respect to a semilinear map over an isomorphism of fields yields
@@ -232,13 +221,12 @@ theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (
   intro u v h
   rw [← u.mk_rep, ← v.mk_rep] at *
   apply Quotientₓ.sound'
-  dsimp' [map, mk]  at h
+  dsimp [map, mk] at h
   simp only [Quotientₓ.eq'] at h
   obtain ⟨a, ha⟩ := h
   use Units.map τ.to_monoid_hom a
-  dsimp'  at ha⊢
-  have : (a : L) = σ (τ a) := by
-    rw [RingHomInvPair.comp_apply_eq₂]
+  dsimp at ha⊢
+  have : (a : L) = σ (τ a) := by rw [RingHomInvPair.comp_apply_eq₂]
   change (a : L) • f v.rep = f u.rep at ha
   rw [this, ← f.map_smulₛₗ] at ha
   exact hf ha

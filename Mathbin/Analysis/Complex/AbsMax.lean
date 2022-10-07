@@ -192,10 +192,8 @@ theorem norm_eq_on_closed_ball_of_is_max_on {f : E → F} {z : E} {r : ℝ} (hd 
     
   set e : ℂ → E := line_map z w
   have hde : Differentiable ℂ e := (differentiable_id.smul_const (w - z)).AddConst z
-  suffices ∥(f ∘ e) (1 : ℂ)∥ = ∥(f ∘ e) (0 : ℂ)∥ by
-    simpa [e]
-  have hr : dist (1 : ℂ) 0 = 1 := by
-    simp
+  suffices ∥(f ∘ e) (1 : ℂ)∥ = ∥(f ∘ e) (0 : ℂ)∥ by simpa [e]
+  have hr : dist (1 : ℂ) 0 = 1 := by simp
   have hball : maps_to e (ball 0 1) (ball z r) := by
     refine' ((lipschitz_with_line_map z w).maps_to_ball (mt nndist_eq_zero.1 hne) 0 1).mono subset.rfl _
     simpa only [line_map_apply_zero, mul_oneₓ, coe_nndist] using ball_subset_ball hw
@@ -287,8 +285,7 @@ theorem eq_on_of_is_preconnected_of_is_max_on_norm {f : E → F} {U : Set E} {c 
   have H₁ : ∥f x∥ = ∥f c∥ := norm_eq_on_of_is_preconnected_of_is_max_on hc ho hd hcU hm hx
   have H₂ : ∥f x + f c∥ = ∥f c + f c∥ :=
     norm_eq_on_of_is_preconnected_of_is_max_on hc ho (hd.AddConst _) hcU hm.norm_add_self hx
-  eq_of_norm_eq_of_norm_add_eq H₁ <| by
-    simp only [H₂, same_ray.rfl.norm_add, H₁]
+  eq_of_norm_eq_of_norm_add_eq H₁ <| by simp only [H₂, same_ray.rfl.norm_add, H₁]
 
 /-- **Maximum modulus principle** on a connected set. Let `U` be a (pre)connected open set in a
 complex normed space.  Let `f : E → F` be a function that is complex differentiable on `U` and is
@@ -309,8 +306,7 @@ theorem eq_of_is_max_on_of_ball_subset {f : E → F} {s : Set E} {z w : E} (hd :
     (hz : IsMaxOn (norm ∘ f) s z) (hsub : Ball z (dist w z) ⊆ s) : f w = f z :=
   have H₁ : ∥f w∥ = ∥f z∥ := norm_eq_norm_of_is_max_on_of_ball_subset hd hz hsub
   have H₂ : ∥f w + f z∥ = ∥f z + f z∥ := norm_eq_norm_of_is_max_on_of_ball_subset (hd.AddConst _) hz.norm_add_self hsub
-  eq_of_norm_eq_of_norm_add_eq H₁ <| by
-    simp only [H₂, same_ray.rfl.norm_add, H₁]
+  eq_of_norm_eq_of_norm_add_eq H₁ <| by simp only [H₂, same_ray.rfl.norm_add, H₁]
 
 /-- **Maximum modulus principle** on a closed ball. Suppose that a function `f : E → F` from a
 normed complex space to a strictly convex normed complex space has the following properties:
@@ -358,7 +354,7 @@ theorem exists_mem_frontier_is_max_on_norm [FiniteDimensional ℂ E] {f : E → 
   have hc : IsCompact (Closure U) := hb.is_compact_closure
   obtain ⟨w, hwU, hle⟩ : ∃ w ∈ Closure U, IsMaxOn (norm ∘ f) (Closure U) w
   exact hc.exists_forall_ge hne.closure hd.continuous_on.norm
-  rw [closure_eq_interior_union_frontier, mem_union_eq] at hwU
+  rw [closure_eq_interior_union_frontier, mem_union] at hwU
   cases hwU
   rotate_left
   · exact ⟨w, hwU, hle⟩
@@ -374,7 +370,7 @@ theorem exists_mem_frontier_is_max_on_norm [FiniteDimensional ℂ E] {f : E → 
 `∥f z∥ ≤ C` for any `z ∈ frontier U`, then the same is true for any `z ∈ closure U`. -/
 theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : Bounded U) (hd : DiffContOnCl ℂ f U)
     {C : ℝ} (hC : ∀ z ∈ Frontier U, ∥f z∥ ≤ C) {z : E} (hz : z ∈ Closure U) : ∥f z∥ ≤ C := by
-  rw [closure_eq_self_union_frontier, union_comm, mem_union_eq] at hz
+  rw [closure_eq_self_union_frontier, union_comm, mem_union] at hz
   cases hz
   · exact hC z hz
     
@@ -387,12 +383,10 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
   have hL : AntilipschitzWith (nndist z w)⁻¹ e := antilipschitz_with_line_map hne.symm
   replace hd : DiffContOnCl ℂ (f ∘ e) (e ⁻¹' U)
   exact hd.comp hde.diff_cont_on_cl (maps_to_preimage _ _)
-  have h₀ : (0 : ℂ) ∈ e ⁻¹' U := by
-    simpa only [e, mem_preimage, line_map_apply_zero]
+  have h₀ : (0 : ℂ) ∈ e ⁻¹' U := by simpa only [e, mem_preimage, line_map_apply_zero]
   rcases exists_mem_frontier_is_max_on_norm (hL.bounded_preimage hU) ⟨0, h₀⟩ hd with ⟨ζ, hζU, hζ⟩
   calc
-    ∥f z∥ = ∥f (e 0)∥ := by
-      simp only [e, line_map_apply_zero]
+    ∥f z∥ = ∥f (e 0)∥ := by simp only [e, line_map_apply_zero]
     _ ≤ ∥f (e ζ)∥ := hζ (subset_closure h₀)
     _ ≤ C := hC _ (hde.continuous.frontier_preimage_subset _ hζU)
     

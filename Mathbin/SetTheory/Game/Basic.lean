@@ -319,19 +319,14 @@ theorem right_moves_mul_cases {x y : Pgame} (k) {P : (x * y).RightMoves → Prop
   · apply hr
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 theorem quot_mul_comm : ∀ x y : Pgame.{u}, ⟦x * y⟧ = ⟦y * x⟧
   | mk xl xr xL xR, mk yl yr yL yR => by
     refine'
       quot_eq_of_mk_quot_eq (Equivₓ.sumCongr (Equivₓ.prodComm _ _) (Equivₓ.prodComm _ _))
         ((Equivₓ.sumComm _ _).trans (Equivₓ.sumCongr (Equivₓ.prodComm _ _) (Equivₓ.prodComm _ _))) _ _
-    all_goals
-      rintro (⟨i, j⟩ | ⟨i, j⟩) <;> dsimp' <;> rw [quot_mul_comm, quot_mul_comm (mk xl xr xL xR)]
-    any_goals {
-    }
-    any_goals {
-    }
+    all_goals rintro (⟨i, j⟩ | ⟨i, j⟩) <;> dsimp <;> rw [quot_mul_comm, quot_mul_comm (mk xl xr xL xR)]
+    any_goals rw [quot_mul_comm (xL i), add_commₓ]
+    any_goals rw [quot_mul_comm (xR i), add_commₓ]
 
 /-- `x * y` is equivalent to `y * x`. -/
 theorem mul_comm_equiv (x y : Pgame) : x * y ≈ y * x :=
@@ -384,10 +379,10 @@ theorem quot_neg_mul : ∀ x y : Pgame, ⟦-x * y⟧ = -⟦x * y⟧
     let y := mk yl yr yL yR
     refine' quot_eq_of_mk_quot_eq _ _ _ _
     · fconstructor <;>
-        rintro (⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim(config := { max_depth := 4 }) [Sum.inl, Sum.inr, Prod.mk]
+        rintro (⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim (config := { max_depth := 4 }) [Sum.inl, Sum.inr, Prod.mk]
       
     · fconstructor <;>
-        rintro (⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim(config := { max_depth := 4 }) [Sum.inl, Sum.inr, Prod.mk]
+        rintro (⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim (config := { max_depth := 4 }) [Sum.inl, Sum.inr, Prod.mk]
       
     · rintro (⟨i, j⟩ | ⟨i, j⟩)
       · change ⟦-xR i * y + -x * yL j - -xR i * yL j⟧ = ⟦-(xR i * y + x * yL j - xR i * yL j)⟧
@@ -415,8 +410,7 @@ theorem quot_neg_mul : ∀ x y : Pgame, ⟦-x * y⟧ = -⟦x * y⟧
       
 
 @[simp]
-theorem quot_mul_neg (x y : Pgame) : ⟦x * -y⟧ = -⟦x * y⟧ := by
-  rw [quot_mul_comm, quot_neg_mul, quot_mul_comm]
+theorem quot_mul_neg (x y : Pgame) : ⟦x * -y⟧ = -⟦x * y⟧ := by rw [quot_mul_comm, quot_neg_mul, quot_mul_comm]
 
 @[simp]
 theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ + ⟦x * z⟧
@@ -426,10 +420,10 @@ theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
     let z := mk zl zr zL zR
     refine' quot_eq_of_mk_quot_eq _ _ _ _
     · fconstructor
-      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> solve_by_elim(config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> solve_by_elim (config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
         
       · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;>
-          solve_by_elim(config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
+          solve_by_elim (config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
         
       · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> rfl
         
@@ -437,10 +431,10 @@ theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
         
       
     · fconstructor
-      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> solve_by_elim(config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> solve_by_elim (config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
         
       · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;>
-          solve_by_elim(config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
+          solve_by_elim (config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
         
       · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> rfl
         
@@ -506,16 +500,26 @@ theorem quot_right_distrib_sub (x y z : Pgame) : ⟦(y - z) * x⟧ = ⟦y * x⟧
   change ⟦(y + -z) * x⟧ = ⟦y * x⟧ + -⟦z * x⟧
   rw [quot_right_distrib, quot_neg_mul]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 @[simp]
 theorem quot_mul_one : ∀ x : Pgame, ⟦x * 1⟧ = ⟦x⟧
   | mk xl xr xL xR => by
     let x := mk xl xr xL xR
     refine' quot_eq_of_mk_quot_eq _ _ _ _
-    any_goals {
-    }
-    all_goals
-      rintro (⟨i, ⟨⟩⟩ | ⟨i, ⟨⟩⟩)
+    any_goals
+    fconstructor
+    · rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩)
+      assumption
+      
+    · intro i
+      try exact Sum.inl (i, PUnit.unit)
+      try exact Sum.inr (i, PUnit.unit)
+      
+    · rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩)
+      rfl
+      
+    · exact fun i => rfl
+      
+    all_goals rintro (⟨i, ⟨⟩⟩ | ⟨i, ⟨⟩⟩)
     · change ⟦xL i * 1 + x * 0 - xL i * 0⟧ = ⟦xL i⟧
       simp [quot_mul_one]
       
@@ -528,8 +532,7 @@ theorem mul_one_equiv (x : Pgame) : x * 1 ≈ x :=
   Quotientₓ.exact <| quot_mul_one _
 
 @[simp]
-theorem quot_one_mul (x : Pgame) : ⟦1 * x⟧ = ⟦x⟧ := by
-  rw [quot_mul_comm, quot_mul_one x]
+theorem quot_one_mul (x : Pgame) : ⟦1 * x⟧ = ⟦x⟧ := by rw [quot_mul_comm, quot_mul_one x]
 
 /-- `1 * x` is equivalent to `x`. -/
 theorem one_mul_equiv (x : Pgame) : 1 * x ≈ x :=
@@ -543,10 +546,10 @@ theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
     refine' quot_eq_of_mk_quot_eq _ _ _ _
     · fconstructor
       · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;>
-          solve_by_elim(config := { max_depth := 7 }) [Sum.inl, Sum.inr, Prod.mk]
+          solve_by_elim (config := { max_depth := 7 }) [Sum.inl, Sum.inr, Prod.mk]
         
       · rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;>
-          solve_by_elim(config := { max_depth := 7 }) [Sum.inl, Sum.inr, Prod.mk]
+          solve_by_elim (config := { max_depth := 7 }) [Sum.inl, Sum.inr, Prod.mk]
         
       · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> rfl
         
@@ -555,10 +558,10 @@ theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
       
     · fconstructor
       · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;>
-          solve_by_elim(config := { max_depth := 7 }) [Sum.inl, Sum.inr, Prod.mk]
+          solve_by_elim (config := { max_depth := 7 }) [Sum.inl, Sum.inr, Prod.mk]
         
       · rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;>
-          solve_by_elim(config := { max_depth := 7 }) [Sum.inl, Sum.inr, Prod.mk]
+          solve_by_elim (config := { max_depth := 7 }) [Sum.inl, Sum.inr, Prod.mk]
         
       · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> rfl
         
@@ -633,8 +636,7 @@ inductive InvTy (l r : Type u) : Bool → Type u
   | right₂ : r → inv_ty true → inv_ty true
 
 instance (l r : Type u) [IsEmpty l] [IsEmpty r] : IsEmpty (InvTy l r true) :=
-  ⟨by
-    rintro (_ | _ | _ | a | a) <;> exact isEmptyElim a⟩
+  ⟨by rintro (_ | _ | _ | a | a) <;> exact isEmptyElim a⟩
 
 instance (l r : Type u) : Inhabited (InvTy l r false) :=
   ⟨InvTy.zero⟩
@@ -644,8 +646,7 @@ instance uniqueInvTy (l r : Type u) [IsEmpty l] [IsEmpty r] : Unique (InvTy l r 
     uniq := by
       rintro (a | a | a)
       rfl
-      all_goals
-        exact isEmptyElim a }
+      all_goals exact isEmptyElim a }
 
 /-- Because the two halves of the definition of `inv` produce more elements
 of each side, we have to define the two families inductively.
@@ -663,8 +664,7 @@ theorem inv_val_is_empty {l r : Type u} {b} (L R IHl IHr) (i : InvTy l r b) [IsE
   cases' i with a _ a _ a _ a
   · rfl
     
-  all_goals
-    exact isEmptyElim a
+  all_goals exact isEmptyElim a
 
 /-- The inverse of a positive surreal number `x = {L | R}` is
 given by `x⁻¹ = {0,
@@ -697,7 +697,7 @@ def inv'Zero : inv' 0 ≡r 1 := by
     
   · simp
     
-  · dsimp'
+  · dsimp
     infer_instance
     
 
@@ -710,7 +710,7 @@ def inv'One : inv' 1 ≡r (1 : Pgame.{u}) := by
   have : IsEmpty { i : PUnit.{u + 1} // (0 : Pgame.{u}) < 0 } := by
     rw [lt_self_iff_falseₓ]
     infer_instance
-  refine' ⟨_, _, fun i => _, IsEmpty.elim _⟩ <;> dsimp'
+  refine' ⟨_, _, fun i => _, IsEmpty.elim _⟩ <;> dsimp
   · apply Equivₓ.equivPunit
     
   · apply Equivₓ.equivOfIsEmpty

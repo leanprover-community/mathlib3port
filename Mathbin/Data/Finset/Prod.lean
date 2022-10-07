@@ -25,23 +25,23 @@ open Multiset
 
 variable {α β γ : Type _}
 
-namespace Finset
+namespace Finsetₓ
 
 /-! ### prod -/
 
 
 section Prod
 
-variable {s s' : Finset α} {t t' : Finset β} {a : α} {b : β}
+variable {s s' : Finsetₓ α} {t t' : Finsetₓ β} {a : α} {b : β}
 
 /-- `product s t` is the set of pairs `(a, b)` such that `a ∈ s` and `b ∈ t`. -/
-protected def product (s : Finset α) (t : Finset β) : Finset (α × β) :=
+protected def product (s : Finsetₓ α) (t : Finsetₓ β) : Finsetₓ (α × β) :=
   ⟨_, s.Nodup.product t.Nodup⟩
 
 -- mathport name: finset.product
 infixr:82
   " ×ˢ " =>-- This notation binds more strongly than (pre)images, unions and intersections.
-  Finset.product
+  Finsetₓ.product
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -61,11 +61,11 @@ theorem mk_mem_product (ha : a ∈ s) (hb : b ∈ t) : (a, b) ∈ s ×ˢ t :=
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, norm_cast]
-theorem coe_product (s : Finset α) (t : Finset β) : (↑(s ×ˢ t) : Set (α × β)) = s ×ˢ t :=
-  Set.ext fun x => Finset.mem_product
+theorem coe_product (s : Finsetₓ α) (t : Finsetₓ β) : (↑(s ×ˢ t) : Set (α × β)) = s ×ˢ t :=
+  Set.ext fun x => Finsetₓ.mem_product
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem subset_product [DecidableEq α] [DecidableEq β] {s : Finset (α × β)} :
+theorem subset_product [DecidableEq α] [DecidableEq β] {s : Finsetₓ (α × β)} :
     s ⊆ s.Image Prod.fst ×ˢ s.Image Prod.snd := fun p hp => mem_product.2 ⟨mem_image_of_mem _ hp, mem_image_of_mem _ hp⟩
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -84,14 +84,14 @@ theorem product_subset_product_right (ht : t ⊆ t') : s ×ˢ t ⊆ s ×ˢ t' :=
   product_subset_product (Subset.refl _) ht
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem product_eq_bUnion [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
+theorem product_eq_bUnion [DecidableEq α] [DecidableEq β] (s : Finsetₓ α) (t : Finsetₓ β) :
     s ×ˢ t = s.bUnion fun a => t.Image fun b => (a, b) :=
   ext fun ⟨x, y⟩ => by
     simp only [mem_product, mem_bUnion, mem_image, exists_propₓ, Prod.mk.inj_iffₓ, And.left_comm,
       exists_and_distrib_leftₓ, exists_eq_right, exists_eq_left]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem product_eq_bUnion_right [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
+theorem product_eq_bUnion_right [DecidableEq α] [DecidableEq β] (s : Finsetₓ α) (t : Finsetₓ β) :
     s ×ˢ t = t.bUnion fun b => s.Image fun a => (a, b) :=
   ext fun ⟨x, y⟩ => by
     simp only [mem_product, mem_bUnion, mem_image, exists_propₓ, Prod.mk.inj_iffₓ, And.left_comm,
@@ -100,14 +100,14 @@ theorem product_eq_bUnion_right [DecidableEq α] [DecidableEq β] (s : Finset α
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- See also `finset.sup_product_left`. -/
 @[simp]
-theorem product_bUnion [DecidableEq γ] (s : Finset α) (t : Finset β) (f : α × β → Finset γ) :
+theorem product_bUnion [DecidableEq γ] (s : Finsetₓ α) (t : Finsetₓ β) (f : α × β → Finsetₓ γ) :
     (s ×ˢ t).bUnion f = s.bUnion fun a => t.bUnion fun b => f (a, b) := by
   classical
   simp_rw [product_eq_bUnion, bUnion_bUnion, image_bUnion]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem card_product (s : Finset α) (t : Finset β) : card (s ×ˢ t) = card s * card t :=
+theorem card_product (s : Finsetₓ α) (t : Finsetₓ β) : card (s ×ˢ t) = card s * card t :=
   Multiset.card_product _ _
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -119,7 +119,7 @@ theorem filter_product (p : α → Prop) (q : β → Prop) [DecidablePred p] [De
   exact and_and_and_comm (a ∈ s) (b ∈ t) (p a) (q b)
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q : β → Prop) [DecidablePred p]
+theorem filter_product_card (s : Finsetₓ α) (t : Finsetₓ β) (p : α → Prop) (q : β → Prop) [DecidablePred p]
     [DecidablePred q] :
     ((s ×ˢ t).filter fun x : α × β => p x.1 ↔ q x.2).card =
       (s.filter p).card * (t.filter q).card + (s.filter (Not ∘ p)).card * (t.filter (Not ∘ q)).card :=
@@ -132,8 +132,7 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
     constructor <;> intro h <;> use h.1
     simp only [Function.comp_app, and_selfₓ, h.2, em (q b)]
     cases h.2 <;>
-      · try
-          simp at h_1
+      · try simp at h_1
         simp [h_1]
         
     
@@ -147,12 +146,12 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
     
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem empty_product (t : Finset β) : (∅ : Finset α) ×ˢ t = ∅ :=
+theorem empty_product (t : Finsetₓ β) : (∅ : Finsetₓ α) ×ˢ t = ∅ :=
   rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem product_empty (s : Finset α) : s ×ˢ (∅ : Finset β) = ∅ :=
-  eq_empty_of_forall_not_mem fun x h => (Finset.mem_product.1 h).2
+theorem product_empty (s : Finsetₓ α) : s ×ˢ (∅ : Finsetₓ β) = ∅ :=
+  eq_empty_of_forall_not_mem fun x h => (Finsetₓ.mem_product.1 h).2
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Nonempty.product (hs : s.Nonempty) (ht : t.Nonempty) : (s ×ˢ t).Nonempty :=
@@ -177,13 +176,13 @@ theorem nonempty_product : (s ×ˢ t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem product_eq_empty {s : Finset α} {t : Finset β} : s ×ˢ t = ∅ ↔ s = ∅ ∨ t = ∅ := by
+theorem product_eq_empty {s : Finsetₓ α} {t : Finsetₓ β} : s ×ˢ t = ∅ ↔ s = ∅ ∨ t = ∅ := by
   rw [← not_nonempty_iff_eq_empty, nonempty_product, not_and_distrib, not_nonempty_iff_eq_empty,
     not_nonempty_iff_eq_empty]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem singleton_product {a : α} : ({a} : Finset α) ×ˢ t = t.map ⟨Prod.mk a, Prod.mk.inj_leftₓ _⟩ := by
+theorem singleton_product {a : α} : ({a} : Finsetₓ α) ×ˢ t = t.map ⟨Prod.mk a, Prod.mk.inj_leftₓ _⟩ := by
   ext ⟨x, y⟩
   simp [And.left_comm, eq_comm]
 
@@ -194,7 +193,7 @@ theorem product_singleton {b : β} : s ×ˢ {b} = s.map ⟨fun i => (i, b), Prod
   simp [And.left_comm, eq_comm]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem singleton_product_singleton {a : α} {b : β} : ({a} : Finset α) ×ˢ ({b} : Finset β) = {(a, b)} := by
+theorem singleton_product_singleton {a : α} {b : β} : ({a} : Finsetₓ α) ×ˢ ({b} : Finsetₓ β) = {(a, b)} := by
   simp only [product_singleton, Function.Embedding.coe_fn_mk, map_singleton]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -217,7 +216,7 @@ end Prod
 
 section Diag
 
-variable (s t : Finset α) [DecidableEq α]
+variable (s t : Finsetₓ α) [DecidableEq α]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given a finite set `s`, the diagonal, `s.diag` is the set of pairs of the form `(a, a)` for
@@ -251,7 +250,7 @@ theorem diag_card : (diag s).card = s.card := by
     exact fun x1 h1 x2 h2 h3 => (Prod.mk.inj h3).1
   ext ⟨a₁, a₂⟩
   rw [mem_diag]
-  constructor <;> intro h <;> rw [Finset.mem_image] at *
+  constructor <;> intro h <;> rw [Finsetₓ.mem_image] at *
   · use a₁, h.1, prod.mk.inj_iff.mpr ⟨rfl, h.2⟩
     
   · rcases h with ⟨a, h1, h2⟩
@@ -263,7 +262,7 @@ theorem diag_card : (diag s).card = s.card := by
 @[simp]
 theorem off_diag_card : (offDiag s).card = s.card * s.card - s.card := by
   suffices (diag s).card + (off_diag s).card = s.card * s.card by
-    nth_rw 2[← s.diag_card]
+    nth_rw 2 [← s.diag_card]
     simp only [diag_card] at *
     rw [tsub_eq_of_eq_add_rev]
     rw [this]
@@ -271,11 +270,11 @@ theorem off_diag_card : (offDiag s).card = s.card * s.card - s.card := by
   apply filter_card_add_filter_neg_card_eq_card
 
 @[simp]
-theorem diag_empty : (∅ : Finset α).diag = ∅ :=
+theorem diag_empty : (∅ : Finsetₓ α).diag = ∅ :=
   rfl
 
 @[simp]
-theorem off_diag_empty : (∅ : Finset α).offDiag = ∅ :=
+theorem off_diag_empty : (∅ : Finsetₓ α).offDiag = ∅ :=
   rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -319,10 +318,9 @@ theorem off_diag_union (h : Disjoint s t) : (s ∪ t).offDiag = s.offDiag ∪ t.
 variable (a : α)
 
 @[simp]
-theorem off_diag_singleton : ({a} : Finset α).offDiag = ∅ := by
-  simp [← Finset.card_eq_zero]
+theorem off_diag_singleton : ({a} : Finsetₓ α).offDiag = ∅ := by simp [← Finsetₓ.card_eq_zero]
 
-theorem diag_singleton : ({a} : Finset α).diag = {(a, a)} := by
+theorem diag_singleton : ({a} : Finsetₓ α).diag = {(a, a)} := by
   rw [← product_sdiff_off_diag, off_diag_singleton, sdiff_empty, singleton_product_singleton]
 
 theorem diag_insert : (insert a s).diag = insert (a, a) s.diag := by
@@ -336,5 +334,5 @@ theorem off_diag_insert (has : a ∉ s) : (insert a s).offDiag = s.offDiag ∪ {
 
 end Diag
 
-end Finset
+end Finsetₓ
 

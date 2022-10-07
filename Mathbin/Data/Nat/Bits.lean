@@ -68,8 +68,7 @@ def binaryRecFromOne {C : ℕ → Sort _} (z₀ : C 0) (z₁ : C 1) (f : ∀ b n
     else f b n h' ih
 
 @[simp]
-theorem zero_bits : bits 0 = [] := by
-  simp [Nat.bits]
+theorem zero_bits : bits 0 = [] := by simp [Nat.bits]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
@@ -92,8 +91,7 @@ theorem one_bits : Nat.bits 1 = [true] := by
   convert bit1_bits 0
   simp
 
-example : bits 3423 = [true, true, true, true, true, false, true, false, true, false, true, true] := by
-  norm_num
+example : bits 3423 = [true, true, true, true, true, false, true, false, true, false, true, true] := by norm_num
 
 theorem bodd_eq_bits_head (n : ℕ) : n.bodd = n.bits.head := by
   induction' n using Nat.binaryRec' with b n h ih

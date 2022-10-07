@@ -165,18 +165,12 @@ def AndKind.cmp (p q : AndKind) : Ordering := by
 /-- A comparator for propositions. (There should really be a derive handler for this.) -/
 def Prop.cmp (p q : Prop) : Ordering := by
   induction' p with _ ap _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ generalizing q <;> cases q
-  case'' var, var =>
-    exact cmp p q
-  case'' True, True =>
-    exact Eq
-  case'' False, False =>
-    exact Eq
-  case'' and', and' : aq q₁ q₂ =>
-    exact (ap.cmp aq).orElse ((p₁ q₁).orElse (p₂ q₂))
-  case'' Or, Or : q₁ q₂ =>
-    exact (p₁ q₁).orElse (p₂ q₂)
-  case'' imp, imp : q₁ q₂ =>
-    exact (p₁ q₁).orElse (p₂ q₂)
+  case var.var => exact cmp p q
+  case true.true => exact Eq
+  case false.false => exact Eq
+  case and'.and' aq q₁ q₂ => exact (ap.cmp aq).orElse ((p₁ q₁).orElse (p₂ q₂))
+  case or.or q₁ q₂ => exact (p₁ q₁).orElse (p₂ q₂)
+  case imp.imp q₁ q₂ => exact (p₁ q₁).orElse (p₂ q₂)
   exacts[lt, lt, lt, lt, lt, Gt, lt, lt, lt, lt, Gt, Gt, lt, lt, lt, Gt, Gt, Gt, lt, lt, Gt, Gt, Gt, Gt, lt, Gt, Gt, Gt,
     Gt, Gt]
 
@@ -237,7 +231,8 @@ inductive Proof-- ⊢ A, causes failure during reconstruction
   | decidable_elim (classical : Bool) (p₁ x : Name) (p₂ p₃ : proof) : proof-- classical = ff: (p: decidable A) ⊢ A ∨ ¬A
 -- classical = tt: (p: Prop) ⊢ p ∨ ¬p
 
-  | em (classical : Bool) (p : Name) :
+  |
+  em (classical : Bool) (p : Name) :
     proof-- The variable x here names the variable that will be used in the elaborated proof
 -- (p: ((x:A) → B) → C) ⊢ B → C
 

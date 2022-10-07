@@ -56,9 +56,7 @@ instance : QuasiSober X.Carrier := by
 
 /-- A scheme `X` is reduced if all `𝒪ₓ(U)` are reduced. -/
 class IsReduced : Prop where
-  component_reduced : ∀ U, IsReduced (X.Presheaf.obj (op U)) := by
-    run_tac
-      tactic.apply_instance
+  component_reduced : ∀ U, IsReduced (X.Presheaf.obj (op U)) := by infer_instance
 
 attribute [instance] is_reduced.component_reduced
 
@@ -97,9 +95,9 @@ theorem is_reduced_of_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImm
 instance {R : CommRingₓₓ} [H : IsReduced R] : IsReduced (Scheme.spec.obj <| op R) := by
   apply (config := { instances := false }) is_reduced_of_stalk_is_reduced
   intro x
-  dsimp'
+  dsimp
   have : _root_.is_reduced (CommRingₓₓ.of <| Localization.AtPrime (PrimeSpectrum.asIdeal x)) := by
-    dsimp'
+    dsimp
     infer_instance
   exact
     is_reduced_of_injective (structure_sheaf.stalk_iso R x).Hom
@@ -114,11 +112,11 @@ theorem affine_is_reduced_iff (R : CommRingₓₓ) : IsReduced (Scheme.spec.obj 
     infer_instance
   exact is_reduced_of_injective (to_Spec_Γ R) (as_iso <| to_Spec_Γ R).commRingIsoToRingEquiv.Injective
 
-theorem is_reduced_of_is_affine_is_reduced [IsAffine X] [h : IsReduced (X.Presheaf.obj (op ⊤))] : IsReduced X := by
-  have : IsReduced (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) := by
+theorem is_reduced_of_is_affine_is_reduced [IsAffine X] [h : IsReduced (X.Presheaf.obj (op ⊤))] : IsReduced X :=
+  haveI : IsReduced (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) := by
     rw [affine_is_reduced_iff]
     exact h
-  exact is_reduced_of_open_immersion X.iso_Spec.hom
+  is_reduced_of_open_immersion X.iso_Spec.hom
 
 /-- To show that a statement `P` holds for all open subsets of all schemes, it suffices to show that
 1. In any scheme `X`, if `P` holds for an open cover of `U`, then `P` holds for `U`.
@@ -212,19 +210,13 @@ theorem basic_open_eq_bot_iff {X : Scheme} [IsReduced X] {U : Opens X.Carrier} (
 /-- A scheme `X` is integral if its carrier is nonempty,
 and `𝒪ₓ(U)` is an integral domain for each `U ≠ ∅`. -/
 class IsIntegral : Prop where
-  Nonempty : Nonempty X.Carrier := by
-    run_tac
-      tactic.apply_instance
-  component_integral : ∀ (U : Opens X.Carrier) [Nonempty U], IsDomain (X.Presheaf.obj (op U)) := by
-    run_tac
-      tactic.apply_instance
+  Nonempty : Nonempty X.Carrier := by infer_instance
+  component_integral : ∀ (U : Opens X.Carrier) [Nonempty U], IsDomain (X.Presheaf.obj (op U)) := by infer_instance
 
 attribute [instance] is_integral.component_integral is_integral.nonempty
 
 instance [h : IsIntegral X] : IsDomain (X.Presheaf.obj (op ⊤)) :=
-  @IsIntegral.component_integral _ _
-    (by
-      simp )
+  @IsIntegral.component_integral _ _ (by simp)
 
 instance (priority := 900) is_reduced_of_is_integral [IsIntegral X] : IsReduced X := by
   constructor
@@ -235,8 +227,7 @@ instance (priority := 900) is_reduced_of_is_integral [IsIntegral X] : IsReduced 
     change _root_.is_reduced (X.sheaf.val.obj (op U))
     infer_instance
     
-  · haveI : Nonempty U := by
-      simpa
+  · haveI : Nonempty U := by simpa
     infer_instance
     
 
@@ -263,10 +254,7 @@ instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.Carri
   · ext x
     constructor
     · rintro ⟨hS, hT⟩
-      cases
-        h₁
-          (show x ∈ ⊤ by
-            trivial)
+      cases h₁ (show x ∈ ⊤ by trivial)
       exacts[hS h, hT h]
       
     · intro x
@@ -313,7 +301,7 @@ instance {R : CommRingₓₓ} [H : IsDomain R] : IsIntegral (Scheme.spec.obj <| 
   apply (config := { instances := false }) is_integral_of_is_irreducible_is_reduced
   · infer_instance
     
-  · dsimp' [Spec.Top_obj]
+  · dsimp [Spec.Top_obj]
     infer_instance
     
 
@@ -323,11 +311,11 @@ theorem affine_is_integral_iff (R : CommRingₓₓ) : IsIntegral (Scheme.spec.ob
     fun h => inferInstance⟩
 
 theorem is_integral_of_is_affine_is_domain [IsAffine X] [Nonempty X.Carrier] [h : IsDomain (X.Presheaf.obj (op ⊤))] :
-    IsIntegral X := by
-  have : IsIntegral (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) := by
+    IsIntegral X :=
+  haveI : IsIntegral (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) := by
     rw [affine_is_integral_iff]
     exact h
-  exact is_integral_of_open_immersion X.iso_Spec.hom
+  is_integral_of_open_immersion X.iso_Spec.hom
 
 theorem map_injective_of_is_integral [IsIntegral X] {U V : Opens X.Carrier} (i : U ⟶ V) [H : Nonempty U] :
     Function.Injective (X.Presheaf.map i.op) := by

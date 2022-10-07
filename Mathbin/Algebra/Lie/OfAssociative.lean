@@ -67,11 +67,9 @@ instance (priority := 100) ofAssociativeRing : LieRing A where
   lie_add := by
     simp only [Ringₓ.lie_def, right_distrib, left_distrib, sub_eq_add_neg, add_commₓ, add_left_commₓ, forall_const,
       eq_self_iff_true, neg_add_rev]
-  lie_self := by
-    simp only [Ringₓ.lie_def, forall_const, sub_self]
+  lie_self := by simp only [Ringₓ.lie_def, forall_const, sub_self]
   leibniz_lie := fun x y z => by
-    repeat'
-      rw [Ringₓ.lie_def]
+    repeat' rw [Ringₓ.lie_def]
     noncomm_ring
 
 theorem of_associative_ring_bracket (x y : A) : ⁅x, y⁆ = x * y - y * x :=
@@ -102,8 +100,7 @@ def LieRingModule.ofAssociativeModule : LieRingModule A M where
   bracket := (· • ·)
   add_lie := add_smul
   lie_add := smul_add
-  leibniz_lie := by
-    simp [LieRing.of_associative_ring_bracket, sub_smul, mul_smul, sub_add_cancel]
+  leibniz_lie := by simp [LieRing.of_associative_ring_bracket, sub_smul, mul_smul, sub_add_cancel]
 
 attribute [local instance] LieRingModule.ofAssociativeModule
 
@@ -119,7 +116,8 @@ variable {R : Type u} [CommRingₓ R] [Algebra R A]
 /-- An associative algebra gives rise to a Lie algebra by taking the bracket to be the ring
 commutator. -/
 instance (priority := 100) LieAlgebra.ofAssociativeAlgebra :
-    LieAlgebra R A where lie_smul := fun t x y => by
+    LieAlgebra R
+      A where lie_smul := fun t x y => by
     rw [LieRing.of_associative_ring_bracket, LieRing.of_associative_ring_bracket, Algebra.mul_smul_comm,
       Algebra.smul_mul_assoc, smul_sub]
 
@@ -157,8 +155,7 @@ functorial. -/
 def toLieHom : A →ₗ⁅R⁆ B :=
   { f.toLinearMap with
     map_lie' := fun x y =>
-      show f ⁅x, y⁆ = ⁅f x, f y⁆ by
-        simp only [LieRing.of_associative_ring_bracket, AlgHom.map_sub, AlgHom.map_mul] }
+      show f ⁅x, y⁆ = ⁅f x, f y⁆ by simp only [LieRing.of_associative_ring_bracket, AlgHom.map_sub, AlgHom.map_mul] }
 
 instance : Coe (A →ₐ[R] B) (A →ₗ⁅R⁆ B) :=
   ⟨toLieHom⟩
@@ -253,8 +250,7 @@ theorem coe_map_to_endomorphism_le : (N : Submodule R M).map (LieModule.toEndomo
 variable (N x)
 
 theorem to_endomorphism_comp_subtype_mem (m : M) (hm : m ∈ N) :
-    (toEndomorphism R L M x).comp (N : Submodule R M).Subtype ⟨m, hm⟩ ∈ N := by
-  simpa using N.lie_mem hm
+    (toEndomorphism R L M x).comp (N : Submodule R M).Subtype ⟨m, hm⟩ ∈ N := by simpa using N.lie_mem hm
 
 @[simp]
 theorem to_endomorphism_restrict_eq_to_endomorphism (h := N.to_endomorphism_comp_subtype_mem x) :
@@ -327,9 +323,7 @@ variable (e : A₁ ≃ₐ[R] A₂)
 
 /-- An equivalence of associative algebras is an equivalence of associated Lie algebras. -/
 def toLieEquiv : A₁ ≃ₗ⁅R⁆ A₂ :=
-  { e.toLinearEquiv with toFun := e.toFun,
-    map_lie' := fun x y => by
-      simp [LieRing.of_associative_ring_bracket] }
+  { e.toLinearEquiv with toFun := e.toFun, map_lie' := fun x y => by simp [LieRing.of_associative_ring_bracket] }
 
 @[simp]
 theorem to_lie_equiv_apply (x : A₁) : e.toLieEquiv x = e x :=

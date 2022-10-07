@@ -15,7 +15,9 @@ bounded linear map between Banach spaces has a bounded inverse.
 -/
 
 
-open Function Metric Set Filter Finset
+open Function Metric Set Filter Finsetₓ
+
+open LinearMap (range ker)
 
 open Classical TopologicalSpace BigOperators Nnreal
 
@@ -89,30 +91,17 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
   rcases this with ⟨n, a, ε, ⟨εpos, H⟩⟩
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
   refine' ⟨(ε / 2)⁻¹ * ∥c∥ * 2 * n, _, fun y => _⟩
-  · refine'
-      mul_nonneg
-        (mul_nonneg (mul_nonneg _ (norm_nonneg _))
-          (by
-            norm_num))
-        _
-    exacts[inv_nonneg.2
-        (div_nonneg (le_of_ltₓ εpos)
-          (by
-            norm_num)),
-      n.cast_nonneg]
+  · refine' mul_nonneg (mul_nonneg (mul_nonneg _ (norm_nonneg _)) (by norm_num)) _
+    exacts[inv_nonneg.2 (div_nonneg (le_of_ltₓ εpos) (by norm_num)), n.cast_nonneg]
     
-  · by_cases' hy : y = 0
+  · by_cases hy:y = 0
     · use 0
       simp [hy]
       
     · rcases rescale_to_shell hc (half_pos εpos) hy with ⟨d, hd, ydlt, leyd, dinv⟩
       let δ := ∥d∥ * ∥y∥ / 4
-      have δpos : 0 < δ :=
-        div_pos (mul_pos (norm_pos_iff.2 hd) (norm_pos_iff.2 hy))
-          (by
-            norm_num)
-      have : a + d • y ∈ ball a ε := by
-        simp [dist_eq_norm, lt_of_le_of_ltₓ ydlt.le (half_lt_self εpos)]
+      have δpos : 0 < δ := div_pos (mul_pos (norm_pos_iff.2 hd) (norm_pos_iff.2 hy)) (by norm_num)
+      have : a + d • y ∈ ball a ε := by simp [dist_eq_norm, lt_of_le_of_ltₓ ydlt.le (half_lt_self εpos)]
       rcases Metric.mem_closure_iff.1 (H this) _ δpos with ⟨z₁, z₁im, h₁⟩
       rcases(mem_image _ _ _).1 z₁im with ⟨x₁, hx₁, xz₁⟩
       rw [← xz₁] at h₁
@@ -144,12 +133,9 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
           
       have J : ∥f (d⁻¹ • x) - y∥ ≤ 1 / 2 * ∥y∥ :=
         calc
-          ∥f (d⁻¹ • x) - y∥ = ∥d⁻¹ • f x - (d⁻¹ * d) • y∥ := by
-            rwa [f.map_smul _, inv_mul_cancel, one_smul]
-          _ = ∥d⁻¹ • (f x - d • y)∥ := by
-            rw [mul_smul, smul_sub]
-          _ = ∥d∥⁻¹ * ∥f x - d • y∥ := by
-            rw [norm_smul, norm_inv]
+          ∥f (d⁻¹ • x) - y∥ = ∥d⁻¹ • f x - (d⁻¹ * d) • y∥ := by rwa [f.map_smul _, inv_mul_cancel, one_smul]
+          _ = ∥d⁻¹ • (f x - d • y)∥ := by rw [mul_smul, smul_sub]
+          _ = ∥d∥⁻¹ * ∥f x - d • y∥ := by rw [norm_smul, norm_inv]
           _ ≤ ∥d∥⁻¹ * (2 * δ) := by
             apply mul_le_mul_of_nonneg_left I
             rw [inv_nonneg]
@@ -160,14 +146,12 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
           _ = ∥y∥ / 2 := by
             rw [inv_mul_cancel, one_mulₓ]
             simp [norm_eq_zero, hd]
-          _ = 1 / 2 * ∥y∥ := by
-            ring
+          _ = 1 / 2 * ∥y∥ := by ring
           
       rw [← dist_eq_norm] at J
       have K : ∥d⁻¹ • x∥ ≤ (ε / 2)⁻¹ * ∥c∥ * 2 * ↑n * ∥y∥ :=
         calc
-          ∥d⁻¹ • x∥ = ∥d∥⁻¹ * ∥x₁ - x₂∥ := by
-            rw [norm_smul, norm_inv]
+          ∥d⁻¹ • x∥ = ∥d∥⁻¹ * ∥x₁ - x₂∥ := by rw [norm_smul, norm_inv]
           _ ≤ (ε / 2)⁻¹ * ∥c∥ * ∥y∥ * (n + n) := by
             refine' mul_le_mul dinv _ (norm_nonneg _) _
             · exact le_transₓ (norm_sub_le _ _) (add_le_add (le_of_ltₓ hx₁) (le_of_ltₓ hx₂))
@@ -175,8 +159,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
             · apply mul_nonneg (mul_nonneg _ (norm_nonneg _)) (norm_nonneg _)
               exact inv_nonneg.2 (le_of_ltₓ (half_pos εpos))
               
-          _ = (ε / 2)⁻¹ * ∥c∥ * 2 * ↑n * ∥y∥ := by
-            ring
+          _ = (ε / 2)⁻¹ * ∥c∥ * 2 * ↑n * ∥y∥ := by ring
           
       exact ⟨d⁻¹ • x, J, K⟩
       
@@ -200,9 +183,7 @@ theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x,
     intro y
     rw [← dist_eq_norm, dist_comm]
     exact (hg y).1
-  refine'
-    ⟨2 * C + 1, by
-      linarith, fun y => _⟩
+  refine' ⟨2 * C + 1, by linarith, fun y => _⟩
   have hnle : ∀ n : ℕ, ∥(h^[n]) y∥ ≤ (1 / 2) ^ n * ∥y∥ := by
     intro n
     induction' n with n IH
@@ -220,18 +201,11 @@ theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x,
     apply le_transₓ (hg _).2 _
     calc
       C * ∥(h^[n]) y∥ ≤ C * ((1 / 2) ^ n * ∥y∥) := mul_le_mul_of_nonneg_left (hnle n) C0
-      _ = (1 / 2) ^ n * (C * ∥y∥) := by
-        ring
+      _ = (1 / 2) ^ n * (C * ∥y∥) := by ring
       
   have sNu : Summable fun n => ∥u n∥ := by
     refine' summable_of_nonneg_of_le (fun n => norm_nonneg _) ule _
-    exact
-      Summable.mul_right _
-        (summable_geometric_of_lt_1
-          (by
-            norm_num)
-          (by
-            norm_num))
+    exact Summable.mul_right _ (summable_geometric_of_lt_1 (by norm_num) (by norm_num))
   have su : Summable u := summable_of_summable_norm sNu
   let x := tsum u
   have x_ineq : ∥x∥ ≤ (2 * C + 1) * ∥y∥ :=
@@ -239,21 +213,19 @@ theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x,
       ∥x∥ ≤ ∑' n, ∥u n∥ := norm_tsum_le_tsum_norm sNu
       _ ≤ ∑' n, (1 / 2) ^ n * (C * ∥y∥) := tsum_le_tsum ule sNu (Summable.mul_right _ summable_geometric_two)
       _ = (∑' n, (1 / 2) ^ n) * (C * ∥y∥) := tsum_mul_right
-      _ = 2 * C * ∥y∥ := by
-        rw [tsum_geometric_two, mul_assoc]
+      _ = 2 * C * ∥y∥ := by rw [tsum_geometric_two, mul_assoc]
       _ ≤ 2 * C * ∥y∥ + ∥y∥ := le_add_of_nonneg_right (norm_nonneg y)
-      _ = (2 * C + 1) * ∥y∥ := by
-        ring
+      _ = (2 * C + 1) * ∥y∥ := by ring
       
-  have fsumeq : ∀ n : ℕ, f (∑ i in Finset.range n, u i) = y - (h^[n]) y := by
+  have fsumeq : ∀ n : ℕ, f (∑ i in Finsetₓ.range n, u i) = y - (h^[n]) y := by
     intro n
     induction' n with n IH
     · simp [f.map_zero]
       
     · rw [sum_range_succ, f.map_add, IH, iterate_succ', sub_add]
       
-  have : tendsto (fun n => ∑ i in Finset.range n, u i) at_top (𝓝 x) := su.has_sum.tendsto_sum_nat
-  have L₁ : tendsto (fun n => f (∑ i in Finset.range n, u i)) at_top (𝓝 (f x)) := (f.continuous.tendsto _).comp this
+  have : tendsto (fun n => ∑ i in Finsetₓ.range n, u i) at_top (𝓝 x) := su.has_sum.tendsto_sum_nat
+  have L₁ : tendsto (fun n => f (∑ i in Finsetₓ.range n, u i)) at_top (𝓝 (f x)) := (f.continuous.tendsto _).comp this
   simp only [fsumeq] at L₁
   have L₂ : tendsto (fun n => y - (h^[n]) y) at_top (𝓝 (y - 0)) := by
     refine' tendsto_const_nhds.sub _
@@ -276,8 +248,7 @@ protected theorem is_open_map (surj : Surjective f) : IsOpenMap f := by
   rcases is_open_iff.1 hs x xs with ⟨ε, εpos, hε⟩
   refine' ⟨ε / C, div_pos εpos Cpos, fun z hz => _⟩
   rcases hC (z - y) with ⟨w, wim, wnorm⟩
-  have : f (x + w) = z := by
-    rw [f.map_add, wim, fxy, add_sub_cancel'_right]
+  have : f (x + w) = z := by rw [f.map_add, wim, fxy, add_sub_cancel'_right]
   rw [← this]
   have : x + w ∈ ball x ε :=
     calc
@@ -313,7 +284,7 @@ theorem closure_preimage (hsurj : Surjective f) (s : Set F) : Closure (f ⁻¹' 
 theorem frontier_preimage (hsurj : Surjective f) (s : Set F) : Frontier (f ⁻¹' s) = f ⁻¹' Frontier s :=
   ((f.IsOpenMap hsurj).preimage_frontier_eq_frontier_preimage f.Continuous s).symm
 
-theorem exists_nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
+theorem exists_nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F) (hsurj : LinearMap.range f = ⊤) :
     ∃ fsymm : NonlinearRightInverse f, 0 < fsymm.nnnorm := by
   choose C hC fsymm h using exists_preimage_norm_le _ (linear_map.range_eq_top.mp hsurj)
   use { toFun := fsymm, nnnorm := ⟨C, hC.lt.le⟩, bound' := fun y => (h y).2, right_inv' := fun y => (h y).1 }
@@ -323,11 +294,11 @@ theorem exists_nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F) (hsurj
 controlled right inverse. In general, it is not possible to ensure that such a right inverse
 is linear (take for instance the map from `E` to `E/F` where `F` is a closed subspace of `E`
 without a closed complement. Then it doesn't have a continuous linear right inverse.) -/
-noncomputable irreducible_def nonlinearRightInverseOfSurjective (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
+noncomputable irreducible_def nonlinearRightInverseOfSurjective (f : E →L[𝕜] F) (hsurj : LinearMap.range f = ⊤) :
   NonlinearRightInverse f :=
   Classical.choose (exists_nonlinear_right_inverse_of_surjective f hsurj)
 
-theorem nonlinear_right_inverse_of_surjective_nnnorm_pos (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
+theorem nonlinear_right_inverse_of_surjective_nnnorm_pos (f : E →L[𝕜] F) (hsurj : LinearMap.range f = ⊤) :
     0 < (nonlinearRightInverseOfSurjective f hsurj).nnnorm := by
   rw [nonlinear_right_inverse_of_surjective]
   exact Classical.choose_spec (exists_nonlinear_right_inverse_of_surjective f hsurj)
@@ -371,28 +342,28 @@ variable [CompleteSpace E]
 
 /-- Convert a bijective continuous linear map `f : E →L[𝕜] F` from a Banach space to a normed space
 to a continuous linear equivalence. -/
-noncomputable def ofBijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : E ≃L[𝕜] F :=
+noncomputable def ofBijective (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj : LinearMap.range f = ⊤) : E ≃L[𝕜] F :=
   (LinearEquiv.ofBijective (↑f) (LinearMap.ker_eq_bot.mp hinj)
         (LinearMap.range_eq_top.mp hsurj)).toContinuousLinearEquivOfContinuous
     f.Continuous
 
 @[simp]
-theorem coe_fn_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) :
+theorem coe_fn_of_bijective (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj : LinearMap.range f = ⊤) :
     ⇑(ofBijective f hinj hsurj) = f :=
   rfl
 
-theorem coe_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : ↑(ofBijective f hinj hsurj) = f :=
-  by
+theorem coe_of_bijective (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj : LinearMap.range f = ⊤) :
+    ↑(ofBijective f hinj hsurj) = f := by
   ext
   rfl
 
 @[simp]
-theorem of_bijective_symm_apply_apply (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) (x : E) :
+theorem of_bijective_symm_apply_apply (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj : LinearMap.range f = ⊤) (x : E) :
     (ofBijective f hinj hsurj).symm (f x) = x :=
   (ofBijective f hinj hsurj).symm_apply_apply x
 
 @[simp]
-theorem of_bijective_apply_symm_apply (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) (y : F) :
+theorem of_bijective_apply_symm_apply (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj : LinearMap.range f = ⊤) (y : F) :
     f ((ofBijective f hinj hsurj).symm y) = y :=
   (ofBijective f hinj hsurj).apply_symm_apply y
 
@@ -406,8 +377,8 @@ variable [CompleteSpace E]
 `continuous_linear_map.closed_complemented_range_of_is_compl_of_ker_eq_bot`.
 
 This is `f.coprod G.subtypeL` as an `continuous_linear_equiv`. -/
-noncomputable def coprodSubtypeLEquivOfIsCompl (f : E →L[𝕜] F) {G : Submodule 𝕜 F} (h : IsCompl f.range G)
-    [CompleteSpace G] (hker : f.ker = ⊥) : (E × G) ≃L[𝕜] F :=
+noncomputable def coprodSubtypeLEquivOfIsCompl (f : E →L[𝕜] F) {G : Submodule 𝕜 F} (h : IsCompl (LinearMap.range f) G)
+    [CompleteSpace G] (hker : ker f = ⊥) : (E × G) ≃L[𝕜] F :=
   ContinuousLinearEquiv.ofBijective (f.coprod G.subtypeL)
     (by
       rw [ker_coprod_of_disjoint_range]
@@ -416,21 +387,22 @@ noncomputable def coprodSubtypeLEquivOfIsCompl (f : E →L[𝕜] F) {G : Submodu
       · rw [Submodule.range_subtypeL]
         exact h.disjoint
         )
-    (by
-      simp only [range_coprod, h.sup_eq_top, Submodule.range_subtypeL])
+    (by simp only [range_coprod, h.sup_eq_top, Submodule.range_subtypeL])
 
-theorem range_eq_map_coprod_subtypeL_equiv_of_is_compl (f : E →L[𝕜] F) {G : Submodule 𝕜 F} (h : IsCompl f.range G)
-    [CompleteSpace G] (hker : f.ker = ⊥) :
-    f.range =
+theorem range_eq_map_coprod_subtypeL_equiv_of_is_compl (f : E →L[𝕜] F) {G : Submodule 𝕜 F}
+    (h : IsCompl (LinearMap.range f) G) [CompleteSpace G] (hker : ker f = ⊥) :
+    LinearMap.range f =
       ((⊤ : Submodule 𝕜 E).Prod (⊥ : Submodule 𝕜 G)).map (f.coprodSubtypeLEquivOfIsCompl h hker : E × G →ₗ[𝕜] F) :=
   by
   rw [coprod_subtypeL_equiv_of_is_compl, _root_.coe_coe, ContinuousLinearEquiv.coe_of_bijective, coe_coprod,
-    LinearMap.coprod_map_prod, Submodule.map_bot, sup_bot_eq, Submodule.map_top, range]
+    LinearMap.coprod_map_prod, Submodule.map_bot, sup_bot_eq, Submodule.map_top]
+  rfl
 
 /- TODO: remove the assumption `f.ker = ⊥` in the next lemma, by using the map induced by `f` on
 `E / f.ker`, once we have quotient normed spaces. -/
-theorem closed_complemented_range_of_is_compl_of_ker_eq_bot (f : E →L[𝕜] F) (G : Submodule 𝕜 F) (h : IsCompl f.range G)
-    (hG : IsClosed (G : Set F)) (hker : f.ker = ⊥) : IsClosed (f.range : Set F) := by
+theorem closed_complemented_range_of_is_compl_of_ker_eq_bot (f : E →L[𝕜] F) (G : Submodule 𝕜 F)
+    (h : IsCompl (LinearMap.range f) G) (hG : IsClosed (G : Set F)) (hker : ker f = ⊥) :
+    IsClosed (LinearMap.range f : Set F) := by
   haveI : CompleteSpace G := hG.complete_space_coe
   let g := coprod_subtypeL_equiv_of_is_compl f h hker
   rw [congr_arg coe (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
@@ -445,7 +417,7 @@ variable [CompleteSpace E] (g : E →ₗ[𝕜] F)
 
 /-- The **closed graph theorem** : a linear map between two Banach spaces whose graph is closed
 is continuous. -/
-theorem LinearMap.continuous_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) : Continuous g := by
+theorem LinearMap.continuous_of_is_closed_graph (hg : IsClosed (g.Graph : Set <| E × F)) : Continuous g := by
   letI : CompleteSpace g.graph := complete_space_coe_iff_is_complete.mpr hg.is_complete
   let φ₀ : E →ₗ[𝕜] E × F := linear_map.id.prod g
   have : Function.LeftInverse Prod.fst φ₀ := fun x => rfl
@@ -472,16 +444,16 @@ variable {g}
 namespace ContinuousLinearMap
 
 /-- Upgrade a `linear_map` to a `continuous_linear_map` using the **closed graph theorem**. -/
-def ofIsClosedGraph (hg : IsClosed (g.graph : Set <| E × F)) : E →L[𝕜] F where
+def ofIsClosedGraph (hg : IsClosed (g.Graph : Set <| E × F)) : E →L[𝕜] F where
   toLinearMap := g
   cont := g.continuous_of_is_closed_graph hg
 
 @[simp]
-theorem coe_fn_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) :
+theorem coe_fn_of_is_closed_graph (hg : IsClosed (g.Graph : Set <| E × F)) :
     ⇑(ContinuousLinearMap.ofIsClosedGraph hg) = g :=
   rfl
 
-theorem coe_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) :
+theorem coe_of_is_closed_graph (hg : IsClosed (g.Graph : Set <| E × F)) :
     ↑(ContinuousLinearMap.ofIsClosedGraph hg) = g := by
   ext
   rfl

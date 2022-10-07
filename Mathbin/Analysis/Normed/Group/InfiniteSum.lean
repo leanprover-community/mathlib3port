@@ -30,13 +30,13 @@ infinite series, absolute convergence, normed group
 
 open Classical BigOperators TopologicalSpace Nnreal
 
-open Finset Filter Metric
+open Finsetₓ Filter Metric
 
 variable {ι α E F : Type _} [SeminormedAddCommGroup E] [SeminormedAddCommGroup F]
 
 theorem cauchy_seq_finset_iff_vanishing_norm {f : ι → E} :
-    (CauchySeq fun s : Finset ι => ∑ i in s, f i) ↔
-      ∀ ε > (0 : ℝ), ∃ s : Finset ι, ∀ t, Disjoint t s → ∥∑ i in t, f i∥ < ε :=
+    (CauchySeq fun s : Finsetₓ ι => ∑ i in s, f i) ↔
+      ∀ ε > (0 : ℝ), ∃ s : Finsetₓ ι, ∀ t, Disjoint t s → ∥∑ i in t, f i∥ < ε :=
   by
   rw [cauchy_seq_finset_iff_vanishing, nhds_basis_ball.forall_iff]
   · simp only [ball_zero_eq, Set.mem_set_of_eq]
@@ -46,7 +46,7 @@ theorem cauchy_seq_finset_iff_vanishing_norm {f : ι → E} :
     
 
 theorem summable_iff_vanishing_norm [CompleteSpace E] {f : ι → E} :
-    Summable f ↔ ∀ ε > (0 : ℝ), ∃ s : Finset ι, ∀ t, Disjoint t s → ∥∑ i in t, f i∥ < ε := by
+    Summable f ↔ ∀ ε > (0 : ℝ), ∃ s : Finsetₓ ι, ∀ t, Disjoint t s → ∥∑ i in t, f i∥ < ε := by
   rw [summable_iff_cauchy_seq_finset, cauchy_seq_finset_iff_vanishing_norm]
 
 theorem cauchy_seq_finset_of_norm_bounded_eventually {f : ι → E} {g : ι → ℝ} (hg : Summable g)
@@ -65,7 +65,7 @@ theorem cauchy_seq_finset_of_norm_bounded_eventually {f : ι → E} {g : ι → 
     
 
 theorem cauchy_seq_finset_of_norm_bounded {f : ι → E} (g : ι → ℝ) (hg : Summable g) (h : ∀ i, ∥f i∥ ≤ g i) :
-    CauchySeq fun s : Finset ι => ∑ i in s, f i :=
+    CauchySeq fun s : Finsetₓ ι => ∑ i in s, f i :=
   cauchy_seq_finset_of_norm_bounded_eventually hg <| eventually_of_forall h
 
 /-- A version of the **direct comparison test** for conditionally convergent series.
@@ -84,13 +84,13 @@ theorem cauchy_seq_range_of_norm_bounded {f : ℕ → E} (g : ℕ → ℝ) (hg :
     
 
 theorem cauchy_seq_finset_of_summable_norm {f : ι → E} (hf : Summable fun a => ∥f a∥) :
-    CauchySeq fun s : Finset ι => ∑ a in s, f a :=
+    CauchySeq fun s : Finsetₓ ι => ∑ a in s, f a :=
   cauchy_seq_finset_of_norm_bounded _ hf fun i => le_rflₓ
 
 /-- If a function `f` is summable in norm, and along some sequence of finsets exhausting the space
 its sum is converging to a limit `a`, then this holds along all finsets, i.e., `f` is summable
 with sum `a`. -/
-theorem has_sum_of_subseq_of_summable {f : ι → E} (hf : Summable fun a => ∥f a∥) {s : α → Finset ι} {p : Filter α}
+theorem has_sum_of_subseq_of_summable {f : ι → E} (hf : Summable fun a => ∥f a∥) {s : α → Finsetₓ ι} {p : Filter α}
     [NeBot p] (hs : Tendsto s p atTop) {a : E} (ha : Tendsto (fun b => ∑ i in s b, f i) p (𝓝 a)) : HasSum f a :=
   tendsto_nhds_of_cauchy_seq_of_subseq (cauchy_seq_finset_of_summable_norm hf) hs ha
 
@@ -114,7 +114,7 @@ summable, and for all `i`, `∥f i∥ ≤ g i`, then `∥∑' i, f i∥ ≤ ∑'
 assume that `∑' i, f i` is summable, and it might not be the case if `α` is not a complete space. -/
 theorem tsum_of_norm_bounded {f : ι → E} {g : ι → ℝ} {a : ℝ} (hg : HasSum g a) (h : ∀ i, ∥f i∥ ≤ g i) :
     ∥∑' i : ι, f i∥ ≤ a := by
-  by_cases' hf : Summable f
+  by_cases hf:Summable f
   · exact hf.has_sum.norm_le_of_bounded hg h
     
   · rw [tsum_eq_zero_of_not_summable hf, norm_zero]
@@ -150,8 +150,7 @@ theorem summable_of_norm_bounded_eventually {f : ι → E} (g : ι → ℝ) (hg 
   summable_iff_cauchy_seq_finset.2 <| cauchy_seq_finset_of_norm_bounded_eventually hg h
 
 theorem summable_of_nnnorm_bounded {f : ι → E} (g : ι → ℝ≥0) (hg : Summable g) (h : ∀ i, ∥f i∥₊ ≤ g i) : Summable f :=
-  summable_of_norm_bounded (fun i => (g i : ℝ)) (Nnreal.summable_coe.2 hg) fun i => by
-    exact_mod_cast h i
+  summable_of_norm_bounded (fun i => (g i : ℝ)) (Nnreal.summable_coe.2 hg) fun i => by exact_mod_cast h i
 
 theorem summable_of_summable_norm {f : ι → E} (hf : Summable fun a => ∥f a∥) : Summable f :=
   summable_of_norm_bounded _ hf fun i => le_rflₓ

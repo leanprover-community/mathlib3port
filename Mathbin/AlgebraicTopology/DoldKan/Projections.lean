@@ -115,19 +115,13 @@ theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFa
   · unfold P
     simp only [comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply, comp_id, ← assoc, hq v.of_succ,
       add_right_eq_selfₓ]
-    by_cases' hqn : n < q
+    by_cases hqn:n < q
     · exact v.of_succ.comp_Hσ_eq_zero hqn
       
     · cases' Nat.Le.dest (not_lt.mp hqn) with a ha
-      have hnaq : n = a + q := by
-        linarith
+      have hnaq : n = a + q := by linarith
       simp only [v.of_succ.comp_Hσ_eq hnaq, neg_eq_zero, ← assoc]
-      have eq :=
-        v
-          ⟨a, by
-            linarith⟩
-          (by
-            simp only [hnaq, Finₓ.coe_mk, Nat.succ_eq_add_one, add_assocₓ])
+      have eq := v ⟨a, by linarith⟩ (by simp only [hnaq, Finₓ.coe_mk, Nat.succ_eq_add_one, add_assocₓ])
       simp only [Finₓ.succ_mk] at eq
       simp only [Eq, zero_comp]
       
@@ -165,7 +159,7 @@ def natTransP (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapComp
   naturality' := fun X Y f => by
     induction' q with q hq
     · unfold P
-      dsimp' only [alternating_face_map_complex]
+      dsimp only [alternating_face_map_complex]
       rw [id_comp, comp_id]
       
     · unfold P

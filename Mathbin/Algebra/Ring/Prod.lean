@@ -123,8 +123,7 @@ theorem snd_comp_prod : (snd S T).comp (f.Prod g) = g :=
   ext fun x => rfl
 
 theorem prod_unique (f : R →ₙ+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
-  ext fun x => by
-    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.etaₓ]
+  ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.etaₓ]
 
 end Prod
 
@@ -198,8 +197,7 @@ theorem snd_comp_prod : (snd S T).comp (f.Prod g) = g :=
   ext fun x => rfl
 
 theorem prod_unique (f : R →+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
-  ext fun x => by
-    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.etaₓ]
+  ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.etaₓ]
 
 end Prod
 
@@ -259,36 +257,27 @@ variable (R S) [Subsingleton S]
 def prodZeroRing : R ≃+* R × S where
   toFun := fun x => (x, 0)
   invFun := Prod.fst
-  map_add' := by
-    simp
-  map_mul' := by
-    simp
+  map_add' := by simp
+  map_mul' := by simp
   left_inv := fun x => rfl
-  right_inv := fun x => by
-    cases x <;> simp
+  right_inv := fun x => by cases x <;> simp
 
 /-- A ring `R` is isomorphic to `S × R` when `S` is the zero ring -/
 @[simps]
 def zeroRingProd : R ≃+* S × R where
   toFun := fun x => (0, x)
   invFun := Prod.snd
-  map_add' := by
-    simp
-  map_mul' := by
-    simp
+  map_add' := by simp
+  map_mul' := by simp
   left_inv := fun x => rfl
-  right_inv := fun x => by
-    cases x <;> simp
+  right_inv := fun x => by cases x <;> simp
 
 end RingEquiv
 
 /-- The product of two nontrivial rings is not a domain -/
 theorem false_of_nontrivial_of_product_domain (R S : Type _) [Ringₓ R] [Ringₓ S] [IsDomain (R × S)] [Nontrivial R]
     [Nontrivial S] : False := by
-  have :=
-    IsDomain.eq_zero_or_eq_zero_of_mul_eq_zero
-      (show ((0 : R), (1 : S)) * (1, 0) = 0 by
-        simp )
+  have := IsDomain.eq_zero_or_eq_zero_of_mul_eq_zero (show ((0 : R), (1 : S)) * (1, 0) = 0 by simp)
   rw [Prod.mk_eq_zero, Prod.mk_eq_zero] at this
   rcases this with (⟨_, h⟩ | ⟨h, _⟩)
   · exact zero_ne_one h.symm

@@ -27,7 +27,7 @@ universe u v w
 
 open Classical BigOperators Polynomial
 
-open Finset
+open Finsetₓ
 
 namespace Polynomial
 
@@ -53,8 +53,7 @@ theorem separable_one : (1 : R[X]).Separable :=
   is_coprime_one_left
 
 @[nontriviality]
-theorem separable_of_subsingleton [Subsingleton R] (f : R[X]) : f.Separable := by
-  simp [separable]
+theorem separable_of_subsingleton [Subsingleton R] (f : R[X]) : f.Separable := by simp [separable]
 
 theorem separable_X_add_C (a : R) : (X + c a).Separable := by
   rw [separable_def, derivative_add, derivative_X, derivative_C, add_zeroₓ]
@@ -131,7 +130,7 @@ theorem multiplicity_le_one_of_separable {p q : R[X]} (hq : ¬IsUnit q) (hsep : 
 theorem Separable.squarefree {p : R[X]} (hsep : Separable p) : Squarefree p := by
   rw [multiplicity.squarefree_iff_multiplicity_le_one p]
   intro f
-  by_cases' hunit : IsUnit f
+  by_cases hunit:IsUnit f
   · exact Or.inr hunit
     
   exact Or.inl (multiplicity_le_one_of_separable hunit hsep)
@@ -149,27 +148,27 @@ theorem Separable.mul {f g : R[X]} (hf : f.Separable) (hg : g.Separable) (h : Is
   rw [separable_def, derivative_mul]
   exact ((hf.mul_right h).add_mul_left_right _).mul_left ((h.symm.mul_right hg).mul_add_right_right _)
 
-theorem separable_prod' {ι : Sort _} {f : ι → R[X]} {s : Finset ι} :
+theorem separable_prod' {ι : Sort _} {f : ι → R[X]} {s : Finsetₓ ι} :
     (∀ x ∈ s, ∀ y ∈ s, x ≠ y → IsCoprime (f x) (f y)) → (∀ x ∈ s, (f x).Separable) → (∏ x in s, f x).Separable :=
-  (Finset.induction_on s fun _ _ => separable_one) fun a s has ih h1 h2 => by
-    simp_rw [Finset.forall_mem_insert, forall_and_distrib] at h1 h2
+  (Finsetₓ.induction_on s fun _ _ => separable_one) fun a s has ih h1 h2 => by
+    simp_rw [Finsetₓ.forall_mem_insert, forall_and_distrib] at h1 h2
     rw [prod_insert has]
     exact
       h2.1.mul (ih h1.2.2 h2.2)
         (IsCoprime.prod_right fun i his => h1.1.2 i his <| Ne.symm <| ne_of_mem_of_not_memₓ his has)
 
-theorem separable_prod {ι : Sort _} [Fintype ι] {f : ι → R[X]} (h1 : Pairwise (IsCoprime on f))
+theorem separable_prod {ι : Sort _} [Fintypeₓ ι] {f : ι → R[X]} (h1 : Pairwise (IsCoprime on f))
     (h2 : ∀ x, (f x).Separable) : (∏ x, f x).Separable :=
   separable_prod' (fun x hx y hy hxy => h1 x y hxy) fun x hx => h2 x
 
-theorem Separable.inj_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} {f : ι → R} {s : Finset ι}
+theorem Separable.inj_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} {f : ι → R} {s : Finsetₓ ι}
     (hfs : (∏ i in s, X - c (f i)).Separable) {x y : ι} (hx : x ∈ s) (hy : y ∈ s) (hfxy : f x = f y) : x = y := by
   by_contra hxy
   rw [← insert_erase hx, prod_insert (not_mem_erase _ _), ← insert_erase (mem_erase_of_ne_of_mem (Ne.symm hxy) hy),
     prod_insert (not_mem_erase _ _), ← mul_assoc, hfxy, ← sq] at hfs
   cases (hfs.of_mul_left.of_pow (not_is_unit_X_sub_C _) two_ne_zero).2
 
-theorem Separable.injective_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} [Fintype ι] {f : ι → R}
+theorem Separable.injective_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} [Fintypeₓ ι] {f : ι → R}
     (hfs : (∏ i, X - c (f i)).Separable) : Function.Injective f := fun x y hfxy =>
   hfs.inj_of_prod_X_sub_C (mem_univ _) (mem_univ _) hfxy
 
@@ -203,7 +202,7 @@ theorem separable_X_pow_sub_C_unit {n : ℕ} (u : Rˣ) (hn : IsUnit (n : R)) : S
 
 theorem root_multiplicity_le_one_of_separable [Nontrivial R] {p : R[X]} (hsep : Separable p) (x : R) :
     rootMultiplicity x p ≤ 1 := by
-  by_cases' hp : p = 0
+  by_cases hp:p = 0
   · simp [hp]
     
   rw [root_multiplicity_eq_multiplicity, dif_neg hp, ← PartEnat.coe_le_coe, PartEnat.coe_get, Nat.cast_oneₓ]
@@ -240,7 +239,7 @@ theorem separable_iff_derivative_ne_zero {f : F[X]} (hf : Irreducible f) : f.Sep
 theorem separable_map (f : F →+* K) {p : F[X]} : (p.map f).Separable ↔ p.Separable := by
   simp_rw [separable_def, derivative_map, is_coprime_map]
 
-theorem separable_prod_X_sub_C_iff' {ι : Sort _} {f : ι → F} {s : Finset ι} :
+theorem separable_prod_X_sub_C_iff' {ι : Sort _} {f : ι → F} {s : Finsetₓ ι} :
     (∏ i in s, X - c (f i)).Separable ↔ ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y :=
   ⟨fun hfs x hx y hy hfxy => hfs.inj_of_prod_X_sub_C hx hy hfxy, fun H => by
     rw [← prod_attach]
@@ -251,10 +250,9 @@ theorem separable_prod_X_sub_C_iff' {ι : Sort _} {f : ι → F} {s : Finset ι}
             (fun x y hxy => Subtype.eq <| H x.1 x.2 y.1 y.2 hxy) _ _ hxy)
         fun _ _ => separable_X_sub_C⟩
 
-theorem separable_prod_X_sub_C_iff {ι : Sort _} [Fintype ι] {f : ι → F} :
+theorem separable_prod_X_sub_C_iff {ι : Sort _} [Fintypeₓ ι] {f : ι → F} :
     (∏ i, X - c (f i)).Separable ↔ Function.Injective f :=
-  separable_prod_X_sub_C_iff'.trans <| by
-    simp_rw [mem_univ, true_implies_iff, Function.Injective]
+  separable_prod_X_sub_C_iff'.trans <| by simp_rw [mem_univ, true_implies_iff, Function.Injective]
 
 section CharP
 
@@ -274,12 +272,8 @@ theorem separable_or {f : F[X]} (hf : Irreducible f) :
     haveI := is_local_ring_hom_expand F hp
     exact
       Or.inr
-        ⟨by
-          rw [separable_iff_derivative_ne_zero hf, not_not, H], contract p f,
-          of_irreducible_map (↑(expand F p))
-            (by
-              rwa [← expand_contract p H hp.ne'] at hf),
-          expand_contract p H hp.ne'⟩
+        ⟨by rw [separable_iff_derivative_ne_zero hf, not_not, H], contract p f,
+          of_irreducible_map (↑(expand F p)) (by rwa [← expand_contract p H hp.ne'] at hf), expand_contract p H hp.ne'⟩
   else Or.inl <| (separable_iff_derivative_ne_zero hf).2 H
 
 theorem exists_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : p ≠ 0) :
@@ -297,8 +291,7 @@ theorem exists_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : p 
       rw [h1, C_0] at hn
       exact absurd hn hf0
       
-    have hg1 : g.nat_degree * p = N.succ := by
-      rwa [← nat_degree_expand, hgf]
+    have hg1 : g.nat_degree * p = N.succ := by rwa [← nat_degree_expand, hgf]
     have hg2 : g.nat_degree ≠ 0 := by
       intro this
       rw [this, zero_mul] at hg1
@@ -367,8 +360,8 @@ theorem X_pow_sub_one_separable_iff {n : ℕ} : (X ^ n - 1 : F[X]).Separable ↔
 section Splits
 
 theorem card_root_set_eq_nat_degree [Algebra F K] {p : F[X]} (hsep : p.Separable) (hsplit : Splits (algebraMap F K) p) :
-    Fintype.card (p.RootSet K) = p.natDegree := by
-  simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
+    Fintypeₓ.card (p.RootSet K) = p.natDegree := by
+  simp_rw [root_set_def, Finsetₓ.coe_sort_coe, Fintypeₓ.card_coe]
   rw [Multiset.to_finset_card_of_nodup, ← nat_degree_eq_card_roots hsplit]
   exact nodup_roots hsep.map
 
@@ -380,9 +373,9 @@ theorem eq_X_sub_C_of_separable_of_root_eq {x : F} {h : F[X]} (h_sep : h.Separab
     rintro rfl
     exact not_separable_zero h_sep
   apply Polynomial.eq_X_sub_C_of_splits_of_single_root i h_splits
-  apply Finset.mk.inj
+  apply Finsetₓ.mk.inj
   · change _ = {i x}
-    rw [Finset.eq_singleton_iff_unique_mem]
+    rw [Finsetₓ.eq_singleton_iff_unique_mem]
     constructor
     · apply finset.mem_mk.mpr
       rw [mem_roots (show h.map i ≠ 0 from map_ne_zero h_ne_zero)]
@@ -396,10 +389,10 @@ theorem eq_X_sub_C_of_separable_of_root_eq {x : F} {h : F[X]} (h_sep : h.Separab
     
 
 theorem exists_finset_of_splits (i : F →+* K) {f : F[X]} (sep : Separable f) (sp : Splits i f) :
-    ∃ s : Finset K, f.map i = c (i f.leadingCoeff) * s.Prod fun a : K => X - c a := by
+    ∃ s : Finsetₓ K, f.map i = c (i f.leadingCoeff) * s.Prod fun a : K => X - c a := by
   obtain ⟨s, h⟩ := (splits_iff_exists_multiset _).1 sp
   use s.to_finset
-  rw [h, Finset.prod_eq_multiset_prod, ← Multiset.to_finset_eq]
+  rw [h, Finsetₓ.prod_eq_multiset_prod, ← Multiset.to_finset_eq]
   apply nodup_of_separable_prod
   apply separable.of_mul_right
   rw [← h]
@@ -482,9 +475,7 @@ theorem is_separable_tower_top_of_is_separable [IsSeparable F E] : IsSeparable K
 theorem is_separable_tower_bot_of_is_separable [h : IsSeparable F E] : IsSeparable F K :=
   is_separable_iff.2 fun x => by
     refine' (is_separable_iff.1 h (algebraMap K E x)).imp is_integral_tower_bot_of_is_integral_field fun hs => _
-    obtain ⟨q, hq⟩ :=
-      minpoly.dvd F x
-        (IsScalarTower.aeval_eq_zero_of_aeval_algebra_map_eq_zero_field (minpoly.aeval F ((algebraMap K E) x)))
+    obtain ⟨q, hq⟩ := minpoly.dvd F x ((aeval_algebra_map_eq_zero_iff _ _ _).mp (minpoly.aeval F ((algebraMap K E) x)))
     rw [hq] at hs
     exact hs.of_mul_left
 
@@ -508,10 +499,10 @@ variable [Algebra K S] [Algebra K L]
 
 theorem AlgHom.card_of_power_basis (pb : PowerBasis K S) (h_sep : (minpoly K pb.gen).Separable)
     (h_splits : (minpoly K pb.gen).Splits (algebraMap K L)) :
-    @Fintype.card (S →ₐ[K] L) (PowerBasis.AlgHom.fintype pb) = pb.dim := by
+    @Fintypeₓ.card (S →ₐ[K] L) (PowerBasis.AlgHom.fintype pb) = pb.dim := by
   let s := ((minpoly K pb.gen).map (algebraMap K L)).roots.toFinset
   have H := fun x => Multiset.mem_to_finset
-  rw [Fintype.card_congr pb.lift_equiv', Fintype.card_of_subtype s H, ← pb.nat_degree_minpoly,
+  rw [Fintypeₓ.card_congr pb.lift_equiv', Fintypeₓ.card_of_subtype s H, ← pb.nat_degree_minpoly,
     nat_degree_eq_card_roots h_splits, Multiset.to_finset_card_of_nodup]
   exact nodup_roots ((separable_map (algebraMap K L)).mpr h_sep)
 

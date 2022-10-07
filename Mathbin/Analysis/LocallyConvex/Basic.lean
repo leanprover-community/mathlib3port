@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
 -/
 import Mathbin.Analysis.Convex.Basic
+import Mathbin.Analysis.Convex.Hull
 import Mathbin.Analysis.NormedSpace.LatticeOrderedGroup
 import Mathbin.Analysis.NormedSpace.Ordered
 
@@ -83,26 +84,26 @@ theorem Absorbs.union (hu : Absorbs 𝕜 s u) (hv : Absorbs 𝕜 s v) : Absorbs 
 theorem absorbs_union : Absorbs 𝕜 s (u ∪ v) ↔ Absorbs 𝕜 s u ∧ Absorbs 𝕜 s v :=
   ⟨fun h => ⟨h.mono_right <| subset_union_left _ _, h.mono_right <| subset_union_right _ _⟩, fun h => h.1.union h.2⟩
 
-theorem absorbs_Union_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
+theorem absorbs_Union_finset {ι : Type _} {t : Finsetₓ ι} {f : ι → Set E} :
     Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by
   classical
-  induction' t using Finset.induction_on with i t ht hi
-  · simp only [Finset.not_mem_empty, Set.Union_false, Set.Union_empty, absorbs_empty, IsEmpty.forall_iff,
+  induction' t using Finsetₓ.induction_on with i t ht hi
+  · simp only [Finsetₓ.not_mem_empty, Set.Union_false, Set.Union_empty, absorbs_empty, IsEmpty.forall_iff,
       implies_true_iff]
     
-  rw [Finset.set_bUnion_insert, absorbs_union, hi]
+  rw [Finsetₓ.set_bUnion_insert, absorbs_union, hi]
   constructor <;> intro h
   · refine' fun _ hi' => (finset.mem_insert.mp hi').elim _ (h.2 _)
     exact fun hi'' => by
       rw [hi'']
       exact h.1
     
-  exact ⟨h i (Finset.mem_insert_self i t), fun i' hi' => h i' (Finset.mem_insert_of_mem hi')⟩
+  exact ⟨h i (Finsetₓ.mem_insert_self i t), fun i' hi' => h i' (Finsetₓ.mem_insert_of_mem hi')⟩
 
 theorem Set.Finite.absorbs_Union {ι : Type _} {s : Set E} {t : Set ι} {f : ι → Set E} (hi : t.Finite) :
     Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by
-  lift t to Finset ι using hi
-  simp only [Finset.mem_coe]
+  lift t to Finsetₓ ι using hi
+  simp only [Finsetₓ.mem_coe]
   exact absorbs_Union_finset
 
 variable (𝕜)
@@ -147,8 +148,7 @@ theorem balanced_iff_smul_mem : Balanced 𝕜 s ↔ ∀ ⦃a : 𝕜⦄, ∥a∥ 
 alias balanced_iff_smul_mem ↔ Balanced.smul_mem _
 
 @[simp]
-theorem balanced_empty : Balanced 𝕜 (∅ : Set E) := fun _ _ => by
-  rw [smul_set_empty]
+theorem balanced_empty : Balanced 𝕜 (∅ : Set E) := fun _ _ => by rw [smul_set_empty]
 
 @[simp]
 theorem balanced_univ : Balanced 𝕜 (Univ : Set E) := fun a ha => subset_univ _
@@ -296,10 +296,7 @@ theorem absorbent_nhds_zero (hA : A ∈ 𝓝 (0 : E)) : Absorbent 𝕜 A := by
   intro x
   obtain ⟨w, hw₁, hw₂, hw₃⟩ := mem_nhds_iff.mp hA
   have hc : Continuous fun t : 𝕜 => t • x := continuous_id.smul continuous_const
-  obtain ⟨r, hr₁, hr₂⟩ :=
-    metric.is_open_iff.mp (hw₂.preimage hc) 0
-      (by
-        rwa [mem_preimage, zero_smul])
+  obtain ⟨r, hr₁, hr₂⟩ := metric.is_open_iff.mp (hw₂.preimage hc) 0 (by rwa [mem_preimage, zero_smul])
   have hr₃ := inv_pos.mpr (half_pos hr₁)
   refine' ⟨(r / 2)⁻¹, hr₃, fun a ha₁ => _⟩
   have ha₂ : 0 < ∥a∥ := hr₃.trans_le ha₁
@@ -354,6 +351,17 @@ theorem absorbs_zero_iff : Absorbs 𝕜 s 0 ↔ (0 : E) ∈ s := by
 theorem Absorbent.zero_mem (hs : Absorbent 𝕜 s) : (0 : E) ∈ s :=
   absorbs_zero_iff.1 <| absorbent_iff_forall_absorbs_singleton.1 hs _
 
+variable [Module ℝ E] [SmulCommClass ℝ 𝕜 E]
+
+theorem balanced_convex_hull_of_balanced (hs : Balanced 𝕜 s) : Balanced 𝕜 (convexHull ℝ s) := by
+  suffices Convex ℝ { x | ∀ a : 𝕜, ∥a∥ ≤ 1 → a • x ∈ convexHull ℝ s } by
+    rw [balanced_iff_smul_mem] at hs⊢
+    refine' fun a ha x hx => convex_hull_min _ this hx a ha
+    exact fun y hy a ha => subset_convex_hull ℝ s (hs ha hy)
+  intro x hx y hy u v hu hv huv a ha
+  simp only [smul_add, ← smul_comm]
+  exact convex_convex_hull ℝ s (hx a ha) (hy a ha) hu hv huv
+
 end NontriviallyNormedField
 
 section Real
@@ -363,14 +371,10 @@ variable [AddCommGroupₓ E] [Module ℝ E] {s : Set E}
 theorem balanced_iff_neg_mem (hs : Convex ℝ s) : Balanced ℝ s ↔ ∀ ⦃x⦄, x ∈ s → -x ∈ s := by
   refine' ⟨fun h x => h.neg_mem_iff.2, fun h a ha => smul_set_subset_iff.2 fun x hx => _⟩
   rw [Real.norm_eq_abs, abs_le] at ha
-  rw
-    [show a = -((1 - a) / 2) + (a - -1) / 2 by
-      ring,
-    add_smul, neg_smul, ← smul_neg]
+  rw [show a = -((1 - a) / 2) + (a - -1) / 2 by ring, add_smul, neg_smul, ← smul_neg]
   exact
     hs (h hx) hx (div_nonneg (sub_nonneg_of_le ha.2) zero_le_two) (div_nonneg (sub_nonneg_of_le ha.1) zero_le_two)
-      (by
-        ring)
+      (by ring)
 
 end Real
 

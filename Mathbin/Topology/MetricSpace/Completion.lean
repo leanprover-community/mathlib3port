@@ -101,15 +101,14 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
       · have :
           { x : completion α × completion α | ε ≤ dist x.fst x.snd ∨ (x.fst, x.snd) ∈ t } =
             { p : completion α × completion α | ε ≤ dist p.1 p.2 } ∪ t :=
-          by
-          ext <;> simp
+          by ext <;> simp
         rw [this]
         apply IsClosed.union _ tclosed
         exact is_closed_le continuous_const completion.uniform_continuous_dist.continuous
         
       · intro x y
         rw [completion.dist_eq]
-        by_cases' h : ε ≤ dist x y
+        by_cases h:ε ≤ dist x y
         · exact Or.inl h
           
         · have Z := hε (not_leₓ.1 h)
@@ -151,8 +150,7 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
 protected theorem eq_of_dist_eq_zero (x y : Completion α) (h : dist x y = 0) : x = y := by
   /- This follows from the separation of `completion α` and from the description of
     entourages in terms of the distance. -/
-  have : SeparatedSpace (completion α) := by
-    infer_instance
+  have : SeparatedSpace (completion α) := by infer_instance
   refine' separated_def.1 this x y fun s hs => _
   rcases(completion.mem_uniformity_dist s).1 hs with ⟨ε, εpos, hε⟩
   rw [← h] at εpos
@@ -167,7 +165,7 @@ protected theorem uniformity_dist' : 𝓤 (Completion α) = ⨅ ε : { ε : ℝ 
     
   · rintro ⟨r, hr⟩ ⟨p, hp⟩
     use ⟨min r p, lt_minₓ hr hp⟩
-    simp (config := { contextual := true })[lt_min_iff, (· ≥ ·)]
+    simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]
     
 
 protected theorem uniformity_dist : 𝓤 (Completion α) = ⨅ ε > 0, 𝓟 { p | dist p.1 p.2 < ε } := by
@@ -180,8 +178,7 @@ instance : MetricSpace (Completion α) where
   dist_comm := Completion.dist_comm
   dist_triangle := Completion.dist_triangle
   dist := dist
-  toUniformSpace := by
-    infer_instance
+  toUniformSpace := by infer_instance
   uniformity_dist := Completion.uniformity_dist
 
 /-- The embedding of a metric space in its completion is an isometry. -/

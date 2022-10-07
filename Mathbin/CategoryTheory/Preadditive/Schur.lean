@@ -37,9 +37,9 @@ theorem mono_of_nonzero_from_simple [HasKernels C] {X Y : C} [Simple X] {f : X �
 /-- The part of **Schur's lemma** that holds in any preadditive category with kernels:
 that a nonzero morphism between simple objects is an isomorphism.
 -/
-theorem is_iso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : IsIso f := by
+theorem is_iso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : IsIso f :=
   haveI := mono_of_nonzero_from_simple w
-  exact is_iso_of_mono_of_nonzero w
+  is_iso_of_mono_of_nonzero w
 
 /-- As a corollary of Schur's lemma for preadditive categories,
 any morphism between simple objects is (exclusively) either an isomorphism or zero.
@@ -59,9 +59,9 @@ noncomputable instance [HasKernels C] {X : C} [Simple X] : DivisionRing (End X) 
       { (inferInstance : Ringₓ (End X)) with
         inv := fun f =>
           if h : f = 0 then 0
-          else by
+          else
             haveI := is_iso_of_hom_simple h
-            exact inv f,
+            inv f,
         exists_pair_ne := ⟨𝟙 X, 0, id_nonzero _⟩, inv_zero := dif_pos rfl,
         mul_inv_cancel := fun f h => by
           haveI := is_iso_of_hom_simple h
@@ -78,13 +78,13 @@ variable (𝕜 : Type _) [DivisionRing 𝕜]
 the hom space between two non-isomorphic simple objects is 0-dimensional.
 -/
 theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜 C] {X Y : C} [Simple X] [Simple Y]
-    (h : (X ≅ Y) → False) : finrank 𝕜 (X ⟶ Y) = 0 := by
+    (h : (X ≅ Y) → False) : finrank 𝕜 (X ⟶ Y) = 0 :=
   haveI :=
     subsingleton_of_forall_eq (0 : X ⟶ Y) fun f => by
       have p := not_congr (is_iso_iff_nonzero f)
       simp only [not_not, Ne.def] at p
       refine' p.mp fun _ => h (as_iso f)
-  exact finrank_zero_of_subsingleton
+  finrank_zero_of_subsingleton
 
 end
 
@@ -107,10 +107,7 @@ then `X ⟶ X` is 1-dimensional.
 -/
 theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ X, IsIso f ↔ f ≠ 0)
     [I : FiniteDimensional 𝕜 (X ⟶ X)] : finrank 𝕜 (X ⟶ X) = 1 := by
-  have id_nonzero :=
-    (is_iso_iff_nonzero (𝟙 X)).mp
-      (by
-        infer_instance)
+  have id_nonzero := (is_iso_iff_nonzero (𝟙 X)).mp (by infer_instance)
   apply finrank_eq_one (𝟙 X)
   · exact id_nonzero
     
@@ -175,9 +172,7 @@ theorem finrank_hom_simple_simple_le_one (X Y : C) [FiniteDimensional 𝕜 (X �
     apply finrank_le_one f
     intro g
     obtain ⟨c, w⟩ := endomorphism_simple_eq_smul_id 𝕜 (g ≫ inv f)
-    exact
-      ⟨c, by
-        simpa using w =≫ f⟩
+    exact ⟨c, by simpa using w =≫ f⟩
     
 
 theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)] [FiniteDimensional 𝕜 (X ⟶ Y)]
@@ -202,7 +197,7 @@ theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 
   refine'
     ⟨fun h => by
       rw [h]
-      simp , fun h => _⟩
+      simp, fun h => _⟩
   have := finrank_hom_simple_simple_le_one 𝕜 X Y
   interval_cases finrank 𝕜 (X ⟶ Y) with h'
   · exact h'

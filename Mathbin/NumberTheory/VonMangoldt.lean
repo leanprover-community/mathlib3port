@@ -35,7 +35,7 @@ namespace Nat
 
 namespace ArithmeticFunction
 
-open Finset
+open Finsetₓ
 
 open ArithmeticFunction
 
@@ -43,8 +43,7 @@ open ArithmeticFunction
 namespace to indicate that it is bundled as an `arithmetic_function` rather than being the usual
 real logarithm. -/
 noncomputable def log : ArithmeticFunction ℝ :=
-  ⟨fun n => Real.log n, by
-    simp ⟩
+  ⟨fun n => Real.log n, by simp⟩
 
 @[simp]
 theorem log_apply {n : ℕ} : log n = Real.log n :=
@@ -67,8 +66,7 @@ theorem von_mangoldt_apply {n : ℕ} : Λ n = if IsPrimePow n then Real.log (min
   rfl
 
 @[simp]
-theorem von_mangoldt_apply_one : Λ 1 = 0 := by
-  simp [von_mangoldt_apply]
+theorem von_mangoldt_apply_one : Λ 1 = 0 := by simp [von_mangoldt_apply]
 
 @[simp]
 theorem von_mangoldt_nonneg {n : ℕ} : 0 ≤ Λ n := by
@@ -103,7 +101,7 @@ theorem von_mangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n :=
   · simp
     
   · intro p k hp
-    rw [sum_divisors_prime_pow hp, cast_pow, Real.log_pow, Finset.sum_range_succ', pow_zeroₓ, von_mangoldt_apply_one]
+    rw [sum_divisors_prime_pow hp, cast_pow, Real.log_pow, Finsetₓ.sum_range_succ', pow_zeroₓ, von_mangoldt_apply_one]
     simp [von_mangoldt_apply_pow (Nat.succ_ne_zero _), von_mangoldt_apply_prime hp]
     
   intro a b ha' hb' hab ha hb
@@ -133,7 +131,7 @@ theorem moebius_mul_log_eq_von_mangoldt : (μ : ArithmeticFunction ℝ) * log = 
 
 theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d in n.divisors, (μ d : ℝ) * log d) = -Λ n := by
   simp only [← log_mul_moebius_eq_von_mangoldt, mul_comm log, mul_apply, log_apply, int_coe_apply, ←
-    Finset.sum_neg_distrib, neg_mul_eq_mul_neg]
+    Finsetₓ.sum_neg_distrib, neg_mul_eq_mul_neg]
   rw [sum_divisors_antidiagonal fun i j => (μ i : ℝ) * -Real.log j]
   have :
     (∑ i : ℕ in n.divisors, (μ i : ℝ) * -Real.log (n / i : ℕ)) =
@@ -145,18 +143,14 @@ theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d in n.divisors, (μ d : ℝ) * 
     have : (m : ℝ) ≠ 0 := by
       rw [cast_ne_zero]
       rintro rfl
-      exact
-        hn
-          (by
-            simpa using mn)
+      exact hn (by simpa using mn)
     rw [Nat.cast_div mn this, Real.log_div (cast_ne_zero.2 hn) this, neg_sub, mul_sub]
   rw [this, sum_sub_distrib, ← sum_mul, ← Int.cast_sum, ← coe_mul_zeta_apply, eq_comm, sub_eq_self,
     moebius_mul_coe_zeta, mul_eq_zero, Int.cast_eq_zero]
   rcases eq_or_ne n 1 with (hn | hn) <;> simp [hn]
 
 theorem von_mangoldt_le_log : ∀ {n : ℕ}, Λ n ≤ Real.log (n : ℝ)
-  | 0 => by
-    simp
+  | 0 => by simp
   | n + 1 => by
     rw [← von_mangoldt_sum]
     exact single_le_sum (fun _ _ => von_mangoldt_nonneg) (mem_divisors_self _ n.succ_ne_zero)

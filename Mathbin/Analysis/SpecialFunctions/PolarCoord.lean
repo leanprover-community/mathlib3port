@@ -34,7 +34,7 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
   Target := Ioi (0 : ℝ) ×ˢ Ioo (-π) π
   map_target' := by
     rintro ⟨r, θ⟩ ⟨hr, hθ⟩
-    dsimp'  at hr hθ
+    dsimp at hr hθ
     rcases eq_or_ne θ 0 with (rfl | h'θ)
     · simpa using hr
       
@@ -48,7 +48,7 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
       Complex.arg_lt_pi_iff]
     constructor
     · cases hxy
-      · dsimp'  at hxy
+      · dsimp at hxy
         linarith [sq_pos_of_ne_zero _ hxy.ne', sq_nonneg y]
         
       · linarith [sq_nonneg x, sq_pos_of_ne_zero _ hxy]
@@ -62,7 +62,7 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
       
   right_inv' := by
     rintro ⟨r, θ⟩ ⟨hr, hθ⟩
-    dsimp'  at hr hθ
+    dsimp at hr hθ
     simp only [Prod.mk.inj_iffₓ]
     constructor
     · conv_rhs => rw [← sqrt_sq (le_of_ltₓ hr), ← one_mulₓ (r ^ 2), ← sin_sq_add_cos_sq θ]
@@ -76,7 +76,7 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
   left_inv' := by
     rintro ⟨x, y⟩ hxy
     have A : sqrt (x ^ 2 + y ^ 2) = Complex.abs (x + y * Complex.i) := by
-      simp only [Complex.abs, Complex.normSq, pow_two, MonoidWithZeroHom.coe_mk, Complex.add_re, Complex.of_real_re,
+      simp only [Complex.abs_def, Complex.normSq, pow_two, MonoidWithZeroHom.coe_mk, Complex.add_re, Complex.of_real_re,
         Complex.mul_re, Complex.I_re, mul_zero, Complex.of_real_im, Complex.I_im, sub_self, add_zeroₓ, Complex.add_im,
         Complex.mul_im, mul_oneₓ, zero_addₓ]
     have Z := Complex.abs_mul_cos_add_sin_mul_I (x + y * Complex.i)
@@ -120,14 +120,13 @@ theorem has_fderiv_at_polar_coord_symm (p : ℝ × ℝ) :
 theorem polar_coord_source_ae_eq_univ : polarCoord.Source =ᵐ[volume] univ := by
   have A : polar_coord.sourceᶜ ⊆ (LinearMap.snd ℝ ℝ ℝ).ker := by
     intro x hx
-    simp only [polar_coord_source, compl_union, mem_inter_eq, mem_compl_eq, mem_set_of_eq, not_ltₓ, not_not] at hx
+    simp only [polar_coord_source, compl_union, mem_inter_iff, mem_compl_iff, mem_set_of_eq, not_ltₓ, not_not] at hx
     exact hx.2
   have B : volume ((LinearMap.snd ℝ ℝ ℝ).ker : Set (ℝ × ℝ)) = 0 := by
     apply measure.add_haar_submodule
     rw [Ne.def, LinearMap.ker_eq_top]
     intro h
-    have : (LinearMap.snd ℝ ℝ ℝ) (0, 1) = (0 : ℝ × ℝ →ₗ[ℝ] ℝ) (0, 1) := by
-      rw [h]
+    have : (LinearMap.snd ℝ ℝ ℝ) (0, 1) = (0 : ℝ × ℝ →ₗ[ℝ] ℝ) (0, 1) := by rw [h]
     simpa using this
   simp only [ae_eq_univ]
   exact le_antisymmₓ ((measure_mono A).trans (le_of_eqₓ B)) bot_le

@@ -42,7 +42,7 @@ symmetric square, unordered pairs, symmetric powers
 -/
 
 
-open Finset Fintype Function Sym
+open Finsetₓ Fintypeₓ Function Sym
 
 universe u
 
@@ -59,18 +59,13 @@ inductive Rel (α : Type u) : α × α → α × α → Prop
 attribute [refl] rel.refl
 
 @[symm]
-theorem Rel.symm {x y : α × α} : Rel α x y → Rel α y x := by
-  rintro ⟨_, _⟩ <;> constructor
+theorem Rel.symm {x y : α × α} : Rel α x y → Rel α y x := by rintro ⟨_, _⟩ <;> constructor
 
 @[trans]
 theorem Rel.trans {x y z : α × α} (a : Rel α x y) (b : Rel α y z) : Rel α x z := by
-  casesm* rel _ _ _ <;>
-    first |
-      apply rel.refl|
-      apply rel.swap
+  casesm*rel _ _ _ <;> first |apply rel.refl|apply rel.swap
 
-theorem Rel.is_equivalence : Equivalenceₓ (Rel α) := by
-  tidy <;> apply rel.trans <;> assumption
+theorem Rel.is_equivalence : Equivalenceₓ (Rel α) := by tidy <;> apply rel.trans <;> assumption
 
 instance Rel.setoid (α : Type u) : Setoidₓ (α × α) :=
   ⟨Rel α, Rel.is_equivalence⟩
@@ -142,8 +137,7 @@ theorem congr_left {a b c : α} : ⟦(b, a)⟧ = ⟦(c, a)⟧ ↔ b = c := by
     
   rw [h]
 
-theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w ∨ x = w ∧ y = z := by
-  simp
+theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w ∨ x = w ∧ y = z := by simp
 
 theorem mk_eq_mk_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.swap := by
   cases p
@@ -218,8 +212,7 @@ theorem map_comp {g : β → γ} {f : α → β} : Sym2.map (g ∘ f) = Sym2.map
   ext ⟨⟨x, y⟩⟩
   rfl
 
-theorem map_map {g : β → γ} {f : α → β} (x : Sym2 α) : map g (map f x) = map (g ∘ f) x := by
-  tidy
+theorem map_map {g : β → γ} {f : α → β} (x : Sym2 α) : map g (map f x) = map (g ∘ f) x := by tidy
 
 @[simp]
 theorem map_pair_eq (f : α → β) (x y : α) : map f ⟦(x, y)⟧ = ⟦(f x, f y)⟧ :=
@@ -230,8 +223,7 @@ theorem map.injective {f : α → β} (hinj : Injective f) : Injective (map f) :
   refine' Quotientₓ.ind₂ (fun z z' => _) z z'
   cases' z with x y
   cases' z' with x' y'
-  repeat'
-    rw [map_pair_eq, eq_iff]
+  repeat' rw [map_pair_eq, eq_iff]
   rintro (h | h) <;> simp [hinj h.1, hinj h.2]
 
 section Membership
@@ -268,12 +260,10 @@ theorem mem_iff {a b c : α} : a ∈ ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
       apply mem_mk_right }
 
 theorem out_fst_mem (e : Sym2 α) : e.out.1 ∈ e :=
-  ⟨e.out.2, by
-    rw [Prod.mk.etaₓ, e.out_eq]⟩
+  ⟨e.out.2, by rw [Prod.mk.etaₓ, e.out_eq]⟩
 
 theorem out_snd_mem (e : Sym2 α) : e.out.2 ∈ e :=
-  ⟨e.out.1, by
-    rw [eq_swap, Prod.mk.etaₓ, e.out_eq]⟩
+  ⟨e.out.1, by rw [eq_swap, Prod.mk.etaₓ, e.out_eq]⟩
 
 theorem ball {p : α → Prop} {a b : α} : (∀ c ∈ ⟦(a, b)⟧, p c) ↔ p a ∧ p b := by
   refine' ⟨fun h => ⟨h _ <| mem_mk_left _ _, h _ <| mem_mk_right _ _⟩, fun h c hc => _⟩
@@ -290,8 +280,7 @@ noncomputable def Mem.other {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
   Classical.choose h
 
 @[simp]
-theorem other_spec {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, h.other)⟧ = z := by
-  erw [← Classical.choose_spec h]
+theorem other_spec {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, h.other)⟧ = z := by erw [← Classical.choose_spec h]
 
 theorem other_mem {a : α} {z : Sym2 α} (h : a ∈ z) : h.other ∈ z := by
   convert mem_mk_right a h.other
@@ -301,10 +290,7 @@ theorem mem_and_mem_iff {x y : α} {z : Sym2 α} (hne : x ≠ y) : x ∈ z ∧ y
   constructor
   · induction' z using Sym2.ind with x' y'
     rw [mem_iff, mem_iff]
-    rintro ⟨rfl | rfl, rfl | rfl⟩ <;>
-      try
-          trivial <;>
-        simp only [Sym2.eq_swap]
+    rintro ⟨rfl | rfl, rfl | rfl⟩ <;> try trivial <;> simp only [Sym2.eq_swap]
     
   · rintro rfl
     simp
@@ -337,13 +323,9 @@ theorem mem_map {f : α → β} {b : β} {z : Sym2 α} : b ∈ Sym2.map f z ↔ 
   simp only [map, Quotientₓ.map_mk, Prod.map_mkₓ, mem_iff]
   constructor
   · rintro (rfl | rfl)
-    · exact
-        ⟨x, by
-          simp ⟩
+    · exact ⟨x, by simp⟩
       
-    · exact
-        ⟨y, by
-          simp ⟩
+    · exact ⟨y, by simp⟩
       
     
   · rintro ⟨w, rfl | rfl, rfl⟩ <;> simp
@@ -355,9 +337,7 @@ theorem map_congr {f g : α → β} {s : Sym2 α} (h : ∀ x ∈ s, f x = g x) :
   simp only [mem_map]
   constructor <;>
     · rintro ⟨w, hw, rfl⟩
-      exact
-        ⟨w, hw, by
-          simp [hw, h]⟩
+      exact ⟨w, hw, by simp [hw, h]⟩
       
 
 /-- Note: `sym2.map_id` will not simplify `sym2.map id z` due to `sym2.map_congr`. -/
@@ -374,8 +354,7 @@ of this diagonal in `sym2 α`.
 def diag (x : α) : Sym2 α :=
   ⟦(x, x)⟧
 
-theorem diag_injective : Function.Injective (Sym2.diag : α → Sym2 α) := fun x y h => by
-  cases Quotientₓ.exact h <;> rfl
+theorem diag_injective : Function.Injective (Sym2.diag : α → Sym2 α) := fun x y h => by cases Quotientₓ.exact h <;> rfl
 
 /-- A predicate for testing whether an element of `sym2 α` is on the diagonal.
 -/
@@ -457,8 +436,7 @@ def ToRel (s : Set (Sym2 α)) (x y : α) : Prop :=
 theorem to_rel_prop (s : Set (Sym2 α)) (x y : α) : ToRel s x y ↔ ⟦(x, y)⟧ ∈ s :=
   Iff.rfl
 
-theorem to_rel_symmetric (s : Set (Sym2 α)) : Symmetric (ToRel s) := fun x y => by
-  simp [eq_swap]
+theorem to_rel_symmetric (s : Set (Sym2 α)) : Symmetric (ToRel s) := fun x y => by simp [eq_swap]
 
 theorem to_rel_from_rel (sym : Symmetric r) : ToRel (FromRel Sym) = r :=
   rfl
@@ -531,8 +509,7 @@ def sym2EquivSym' : Equivₓ (Sym2 α) (Sym' α 2) where
         · rfl
           
         apply Sym2.Rel.swap)
-  left_inv := by
-    tidy
+  left_inv := by tidy
   right_inv := fun x => by
     refine' Quotientₓ.recOnSubsingleton x fun x => _
     · cases' x with x hx
@@ -575,19 +552,19 @@ def relBool [DecidableEq α] (x y : α × α) : Bool :=
 theorem rel_bool_spec [DecidableEq α] (x y : α × α) : ↥(relBool x y) ↔ Rel α x y := by
   cases' x with x₁ x₂
   cases' y with y₁ y₂
-  dsimp' [rel_bool]
+  dsimp [rel_bool]
   split_ifs <;> simp only [false_iffₓ, Bool.coe_sort_ff, Bool.of_to_bool_iff]
   rotate_left 2
   · contrapose! h
     cases h <;> cc
     
   all_goals
-    subst x₁
-    constructor <;> intro h1
-    · subst h1 <;> apply Sym2.Rel.swap
-      
-    · cases h1 <;> cc
-      
+  subst x₁
+  constructor <;> intro h1
+  · subst h1 <;> apply Sym2.Rel.swap
+    
+  · cases h1 <;> cc
+    
 
 /-- Given `[decidable_eq α]` and `[fintype α]`, the following instance gives `fintype (sym2 α)`.
 -/
@@ -622,13 +599,12 @@ def Mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
       cases' y with y₁ y₂
       cases' mem_iff.mp hy with hy' <;>
         subst a <;>
-          dsimp' [rel_bool]  at h' <;>
+          dsimp [rel_bool] at h' <;>
             split_ifs  at h' <;>
               try
-                  rw [Bool.of_to_bool_iff] at h'
-                  subst x₁
-                  subst x₂ <;>
-                dsimp' [pair_other]
+                rw [Bool.of_to_bool_iff] at h'
+                subst x₁
+                subst x₂ <;> dsimp [pair_other]
       simp only [Ne.symm h_1, if_true, eq_self_iff_true, if_false]
       exfalso
       exact Bool.not_ff h'
@@ -642,7 +618,7 @@ theorem other_spec' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(
   induction z
   cases' z with x y
   have h' := mem_iff.mp h
-  dsimp' [mem.other', Quot.rec, pair_other]
+  dsimp [mem.other', Quot.rec, pair_other]
   cases h' <;> subst a
   · simp only [if_true, eq_self_iff_true]
     rfl
@@ -666,8 +642,8 @@ theorem other_mem' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : h.oth
 theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other' ∈ z) : hb.other' = a := by
   induction z
   cases' z with x y
-  dsimp' [mem.other', Quot.rec, pair_other]  at hb
-  split_ifs  at hb <;> dsimp' [mem.other', Quot.rec, pair_other]
+  dsimp [mem.other', Quot.rec, pair_other] at hb
+  split_ifs  at hb <;> dsimp [mem.other', Quot.rec, pair_other]
   simp only [h, if_true, eq_self_iff_true]
   split_ifs
   assumption
@@ -683,7 +659,7 @@ theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) 
   rw [other_eq_other']
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
+theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finsetₓ α) :
     ((s ×ˢ s).Image Quotientₓ.mk).filter IsDiag = s.diag.Image Quotientₓ.mk := by
   ext z
   induction z using Quotientₓ.induction_on
@@ -700,7 +676,7 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
     
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
+theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finsetₓ α) :
     (((s ×ˢ s).Image Quotientₓ.mk).filter fun a : Sym2 α => ¬a.IsDiag) = s.offDiag.Image Quotientₓ.mk := by
   ext z
   induction z using Quotientₓ.induction_on

@@ -44,8 +44,7 @@ theorem frobenius_verschiebung (x : 𝕎 R) : frobenius (verschiebung x) = x * p
   ghost_simp [mul_comm]
 
 /-- Verschiebung is the same as multiplication by `p` on the ring of Witt vectors of `zmod p`. -/
-theorem verschiebung_zmod (x : 𝕎 (Zmod p)) : verschiebung x = x * p := by
-  rw [← frobenius_verschiebung, frobenius_zmodp]
+theorem verschiebung_zmod (x : 𝕎 (Zmod p)) : verschiebung x = x * p := by rw [← frobenius_verschiebung, frobenius_zmodp]
 
 variable (p R)
 
@@ -87,8 +86,7 @@ theorem coeff_p_zero [CharP R p] : (p : 𝕎 R).coeff 0 = 0 := by
   exact zero_ne_one
 
 @[simp]
-theorem coeff_p_one [CharP R p] : (p : 𝕎 R).coeff 1 = 1 := by
-  rw [coeff_p, if_pos rfl]
+theorem coeff_p_one [CharP R p] : (p : 𝕎 R).coeff 1 = 1 := by rw [coeff_p, if_pos rfl]
 
 theorem p_nonzero [Nontrivial R] [CharP R p] : (p : 𝕎 R) ≠ 0 := by
   intro h

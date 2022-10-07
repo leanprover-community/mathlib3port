@@ -56,7 +56,7 @@ def spanEval : Ideal (MvPolynomial (MonicIrreducible k) k) :=
 /-- Given a finset of monic irreducible polynomials, construct an algebra homomorphism to the
 splitting field of the product of the polynomials sending each indeterminate `x_f` represented by
 the polynomial `f` in the finset to a root of `f`. -/
-def toSplittingField (s : Finset (MonicIrreducible k)) :
+def toSplittingField (s : Finsetₓ (MonicIrreducible k)) :
     MvPolynomial (MonicIrreducible k) k →ₐ[k] SplittingField (∏ x in s, x : k[X]) :=
   MvPolynomial.aeval fun f =>
     if hf : f ∈ s then
@@ -65,7 +65,7 @@ def toSplittingField (s : Finset (MonicIrreducible k)) :
         (mt is_unit_iff_degree_eq_zero.2 f.2.2.not_unit)
     else 37
 
-theorem to_splitting_field_eval_X_self {s : Finset (MonicIrreducible k)} {f} (hf : f ∈ s) :
+theorem to_splitting_field_eval_X_self {s : Finsetₓ (MonicIrreducible k)} {f} (hf : f ∈ s) :
     toSplittingField k s (evalXSelf k f) = 0 := by
   rw [to_splitting_field, eval_X_self, ← AlgHom.coe_to_ring_hom, hom_eval₂, AlgHom.coe_to_ring_hom,
     MvPolynomial.aeval_X, dif_pos hf, ← algebra_map_eq, AlgHom.comp_algebra_map]
@@ -75,7 +75,7 @@ theorem span_eval_ne_top : spanEval k ≠ ⊤ := by
   rw [Ideal.ne_top_iff_one, span_eval, Ideal.span, ← Set.image_univ, Finsupp.mem_span_image_iff_total]
   rintro ⟨v, _, hv⟩
   replace hv := congr_arg (to_splitting_field k v.support) hv
-  rw [AlgHom.map_one, Finsupp.total_apply, Finsupp.sum, AlgHom.map_sum, Finset.sum_eq_zero] at hv
+  rw [AlgHom.map_one, Finsupp.total_apply, Finsupp.sum, AlgHom.map_sum, Finsetₓ.sum_eq_zero] at hv
   · exact zero_ne_one hv
     
   intro j hj
@@ -233,8 +233,7 @@ theorem exists_of_step (z : AlgebraicClosure k) : ∃ n x, ofStep k n x = z :=
 -- slow
 theorem exists_root {f : Polynomial (AlgebraicClosure k)} (hfm : f.Monic) (hfi : Irreducible f) :
     ∃ x : AlgebraicClosure k, f.eval x = 0 := by
-  have : ∃ n p, Polynomial.map (of_step k n) p = f := by
-    convert Ringₓ.DirectLimit.Polynomial.exists_of f
+  have : ∃ n p, Polynomial.map (of_step k n) p = f := by convert Ringₓ.DirectLimit.Polynomial.exists_of f
   obtain ⟨n, p, rfl⟩ := this
   rw [monic_map_iff] at hfm
   have := hfm.irreducible_of_irreducible_map (of_step k n) p hfi

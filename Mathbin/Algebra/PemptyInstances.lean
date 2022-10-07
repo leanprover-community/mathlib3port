@@ -18,8 +18,6 @@ universe u
 
 @[to_additive]
 instance semigroupPempty : Semigroupₓ Pempty.{u + 1} where
-  mul := fun x y => by
-    cases x
-  mul_assoc := fun x y z => by
-    cases x
+  mul := fun x y => by cases x
+  mul_assoc := fun x y z => by cases x
 

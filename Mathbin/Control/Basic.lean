@@ -85,8 +85,7 @@ theorem map_bind (x : m α) {g : α → m β} {f : β → γ} : f <$> (x >>= g) 
   rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [bind_pure_comp_eq_map]
 
 theorem seq_bind_eq (x : m α) {g : β → m γ} {f : α → β} : f <$> x >>= g = x >>= g ∘ f :=
-  show bind (f <$> x) g = bind x (g ∘ f) by
-    rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [pure_bind]
+  show bind (f <$> x) g = bind x (g ∘ f) by rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [pure_bind]
 
 theorem seq_eq_bind_mapₓ {x : m α} {f : m (α → β)} : f <*> x = f >>= (· <$> x) :=
   (bind_map_eq_seq f x).symm
@@ -104,16 +103,14 @@ infixl:55
   fish
 
 @[functor_norm]
-theorem fish_pure {α β} (f : α → m β) : f >=> pure = f := by
-  simp' only [(· >=> ·)] with functor_norm
+theorem fish_pure {α β} (f : α → m β) : f >=> pure = f := by simp only [(· >=> ·), functor_norm]
 
 @[functor_norm]
-theorem fish_pipe {α β} (f : α → m β) : pure >=> f = f := by
-  simp' only [(· >=> ·)] with functor_norm
+theorem fish_pipe {α β} (f : α → m β) : pure >=> f = f := by simp only [(· >=> ·), functor_norm]
 
 @[functor_norm]
 theorem fish_assoc {α β γ φ} (f : α → m β) (g : β → m γ) (h : γ → m φ) : f >=> g >=> h = f >=> (g >=> h) := by
-  simp' only [(· >=> ·)] with functor_norm
+  simp only [(· >=> ·), functor_norm]
 
 variable {β' γ' : Type v}
 
@@ -166,12 +163,10 @@ def mtry {α} (x : F α) : F Unit :=
   x $> () <|> pure ()
 
 @[simp]
-theorem guard_true {h : Decidable True} : @guardₓ F _ True h = pure () := by
-  simp [guardₓ]
+theorem guard_true {h : Decidable True} : @guardₓ F _ True h = pure () := by simp [guardₓ]
 
 @[simp]
-theorem guard_false {h : Decidable False} : @guardₓ F _ False h = failure := by
-  simp [guardₓ]
+theorem guard_false {h : Decidable False} : @guardₓ F _ False h = failure := by simp [guardₓ]
 
 end Alternativeₓ
 
@@ -187,8 +182,7 @@ instance : Monadₓ (Sum.{v, u} e) where
   pure := @Sum.inr e
   bind := @Sum.bindₓ e
 
-instance : IsLawfulFunctor (Sum.{v, u} e) := by
-  refine' { .. } <;> intros <;> casesm Sum _ _ <;> rfl
+instance : IsLawfulFunctor (Sum.{v, u} e) := by refine' { .. } <;> intros <;> casesm Sum _ _ <;> rfl
 
 instance : IsLawfulMonad (Sum.{v, u} e) where
   bind_assoc := by

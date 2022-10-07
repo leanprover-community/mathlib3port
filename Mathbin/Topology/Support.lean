@@ -114,17 +114,16 @@ def HasCompactMulSupport (f : α → β) : Prop :=
   IsCompact (MulTsupport f)
 
 @[to_additive]
-theorem has_compact_mul_support_def : HasCompactMulSupport f ↔ IsCompact (Closure (MulSupport f)) := by
-  rfl
+theorem has_compact_mul_support_def : HasCompactMulSupport f ↔ IsCompact (Closure (MulSupport f)) := by rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ∉ » K)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » K)
 @[to_additive]
 theorem exists_compact_iff_has_compact_mul_support [T2Space α] :
     (∃ K : Set α, IsCompact K ∧ ∀ (x) (_ : x ∉ K), f x = 1) ↔ HasCompactMulSupport f := by
   simp_rw [← nmem_mul_support, ← mem_compl_iff, ← subset_def, compl_subset_compl, has_compact_mul_support_def,
     exists_compact_superset_iff]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ∉ » K)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » K)
 @[to_additive]
 theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K) (hfK : ∀ (x) (_ : x ∉ K), f x = 1) :
     HasCompactMulSupport f :=
@@ -180,8 +179,7 @@ theorem HasCompactMulSupport.comp_closed_embedding (hf : HasCompactMulSupport f)
 theorem HasCompactMulSupport.comp₂_left (hf : HasCompactMulSupport f) (hf₂ : HasCompactMulSupport f₂) (hm : m 1 1 = 1) :
     HasCompactMulSupport fun x => m (f x) (f₂ x) := by
   rw [has_compact_mul_support_iff_eventually_eq] at hf hf₂⊢
-  filter_upwards [hf, hf₂] using fun x hx hx₂ => by
-    simp_rw [hx, hx₂, Pi.one_apply, hm]
+  filter_upwards [hf, hf₂] using fun x hx hx₂ => by simp_rw [hx, hx₂, Pi.one_apply, hm]
 
 end
 
@@ -193,8 +191,7 @@ variable {f f' : α → β} {x : α}
 
 @[to_additive]
 theorem HasCompactMulSupport.mul (hf : HasCompactMulSupport f) (hf' : HasCompactMulSupport f') :
-    HasCompactMulSupport (f * f') := by
-  apply hf.comp₂_left hf' (mul_oneₓ 1)
+    HasCompactMulSupport (f * f') := by apply hf.comp₂_left hf' (mul_oneₓ 1)
 
 -- `by apply` speeds up elaboration
 end Monoidₓ
@@ -207,9 +204,7 @@ variable {f : α → R} {f' : α → M} {x : α}
 
 theorem HasCompactSupport.smul_left (hf : HasCompactSupport f') : HasCompactSupport (f • f') := by
   rw [has_compact_support_iff_eventually_eq] at hf⊢
-  refine'
-    hf.mono fun x hx => by
-      simp_rw [Pi.smul_apply', hx, Pi.zero_apply, smul_zero]
+  refine' hf.mono fun x hx => by simp_rw [Pi.smul_apply', hx, Pi.zero_apply, smul_zero]
 
 end DistribMulAction
 
@@ -221,15 +216,11 @@ variable {f : α → R} {f' : α → M} {x : α}
 
 theorem HasCompactSupport.smul_right (hf : HasCompactSupport f) : HasCompactSupport (f • f') := by
   rw [has_compact_support_iff_eventually_eq] at hf⊢
-  refine'
-    hf.mono fun x hx => by
-      simp_rw [Pi.smul_apply', hx, Pi.zero_apply, zero_smul]
+  refine' hf.mono fun x hx => by simp_rw [Pi.smul_apply', hx, Pi.zero_apply, zero_smul]
 
 theorem HasCompactSupport.smul_left' (hf : HasCompactSupport f') : HasCompactSupport (f • f') := by
   rw [has_compact_support_iff_eventually_eq] at hf⊢
-  refine'
-    hf.mono fun x hx => by
-      simp_rw [Pi.smul_apply', hx, Pi.zero_apply, smul_zero']
+  refine' hf.mono fun x hx => by simp_rw [Pi.smul_apply', hx, Pi.zero_apply, smul_zero]
 
 end SmulWithZero
 
@@ -241,15 +232,11 @@ variable {f f' : α → β} {x : α}
 
 theorem HasCompactSupport.mul_right (hf : HasCompactSupport f) : HasCompactSupport (f * f') := by
   rw [has_compact_support_iff_eventually_eq] at hf⊢
-  refine'
-    hf.mono fun x hx => by
-      simp_rw [Pi.mul_apply, hx, Pi.zero_apply, zero_mul]
+  refine' hf.mono fun x hx => by simp_rw [Pi.mul_apply, hx, Pi.zero_apply, zero_mul]
 
 theorem HasCompactSupport.mul_left (hf : HasCompactSupport f') : HasCompactSupport (f * f') := by
   rw [has_compact_support_iff_eventually_eq] at hf⊢
-  refine'
-    hf.mono fun x hx => by
-      simp_rw [Pi.mul_apply, hx, Pi.zero_apply, mul_zero]
+  refine' hf.mono fun x hx => by simp_rw [Pi.mul_apply, hx, Pi.zero_apply, mul_zero]
 
 end MulZeroClassₓ
 
@@ -264,7 +251,7 @@ of open sets, then for any point we can find a neighbourhood on which only finit
       " If a family of functions `f` has locally-finite support, subordinate to a family of open sets,\nthen for any point we can find a neighbourhood on which only finitely-many members of `f` are\nnon-zero. "]
 theorem exists_finset_nhd_mul_support_subset {f : ι → X → R} (hlf : LocallyFinite fun i => MulSupport (f i))
     (hso : ∀ i, MulTsupport (f i) ⊆ U i) (ho : ∀ i, IsOpen (U i)) (x : X) :
-    ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i), ∀ z ∈ n, (MulSupport fun i => f i z) ⊆ is :=
+    ∃ (is : Finsetₓ ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i), ∀ z ∈ n, (MulSupport fun i => f i z) ⊆ is :=
   by
   obtain ⟨n, hn, hnf⟩ := hlf x
   classical
@@ -283,7 +270,7 @@ theorem exists_finset_nhd_mul_support_subset {f : ι → X → R} (hlf : Locally
       rw [inter_assoc] at hz
       exact mem_of_mem_inter_left hz
     replace hz := mem_of_mem_inter_right (mem_of_mem_inter_left hz)
-    simp only [Finset.mem_filter, finite.mem_to_finset, mem_set_of_eq, mem_Inter, and_imp] at hz
+    simp only [Finsetₓ.mem_filter, finite.mem_to_finset, mem_set_of_eq, mem_Inter, and_imp] at hz
     suffices (mul_support fun i => f i z) ⊆ hnf.to_finset by
       refine' hnf.to_finset.subset_coe_filter_of_subset_forall _ this fun i hi => _
       specialize hz i ⟨z, ⟨hi, hzn⟩⟩

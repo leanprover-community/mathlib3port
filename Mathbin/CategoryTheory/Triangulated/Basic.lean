@@ -96,15 +96,9 @@ structure TriangleMorphism (T₁ : Triangle C) (T₂ : Triangle C) where
   hom₁ : T₁.obj₁ ⟶ T₂.obj₁
   hom₂ : T₁.obj₂ ⟶ T₂.obj₂
   hom₃ : T₁.obj₃ ⟶ T₂.obj₃
-  comm₁' : T₁.mor₁ ≫ hom₂ = hom₁ ≫ T₂.mor₁ := by
-    run_tac
-      obviously
-  comm₂' : T₁.mor₂ ≫ hom₃ = hom₂ ≫ T₂.mor₂ := by
-    run_tac
-      obviously
-  comm₃' : T₁.mor₃ ≫ hom₁⟦1⟧' = hom₃ ≫ T₂.mor₃ := by
-    run_tac
-      obviously
+  comm₁' : T₁.mor₁ ≫ hom₂ = hom₁ ≫ T₂.mor₁ := by obviously
+  comm₂' : T₁.mor₂ ≫ hom₃ = hom₂ ≫ T₂.mor₂ := by obviously
+  comm₃' : T₁.mor₃ ≫ hom₁⟦1⟧' = hom₃ ≫ T₂.mor₃ := by obviously
 
 restate_axiom triangle_morphism.comm₁'
 

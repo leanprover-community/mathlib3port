@@ -32,22 +32,22 @@ protected def whiskerRight (adj : F ⊣ G) : (whiskeringRight C D E).obj F ⊣ (
           naturality' := by
             intros
             ext
-            dsimp'
+            dsimp
             simp },
       counit :=
         { app := fun X => (Functor.associator _ _ _).Hom ≫ whiskerLeft X adj.counit ≫ (Functor.rightUnitor _).Hom,
           naturality' := by
             intros
             ext
-            dsimp'
+            dsimp
             simp },
       left_triangle' := by
         ext
-        dsimp'
-        simp ,
+        dsimp
+        simp,
       right_triangle' := by
         ext
-        dsimp'
+        dsimp
         simp }
 
 -- `tidy` gets stuck for `left_triangle'` and `right_triangle'`.
@@ -61,23 +61,23 @@ protected def whiskerLeft (adj : F ⊣ G) : (whiskeringLeft E D C).obj G ⊣ (wh
           naturality' := by
             intros
             ext
-            dsimp'
+            dsimp
             simp },
       counit :=
         { app := fun X => (Functor.associator _ _ _).inv ≫ whiskerRight adj.counit X ≫ (Functor.leftUnitor _).Hom,
           naturality' := by
             intros
             ext
-            dsimp'
+            dsimp
             simp },
       left_triangle' := by
         ext x
-        dsimp'
+        dsimp
         simp only [category.id_comp, category.comp_id, ← x.map_comp]
-        simp ,
+        simp,
       right_triangle' := by
         ext x
-        dsimp'
+        dsimp
         simp only [category.id_comp, category.comp_id, ← x.map_comp]
         simp }
 

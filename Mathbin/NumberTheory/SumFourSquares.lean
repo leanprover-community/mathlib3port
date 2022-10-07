@@ -21,7 +21,7 @@ The proof used is close to Lagrange's original proof.
 -/
 
 
-open Finset Polynomial FiniteField Equivₓ
+open Finsetₓ Polynomial FiniteField Equivₓ
 
 open BigOperators
 
@@ -29,18 +29,12 @@ namespace Int
 
 theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2) :
     m = ((x - y) / 2) ^ 2 + ((x + y) / 2) ^ 2 :=
-  have : Even (x ^ 2 + y ^ 2) := by
-    simp [h.symm, even_mul]
-  have hxaddy : Even (x + y) := by
-    simpa [sq] with parity_simps
-  have hxsuby : Even (x - y) := by
-    simpa [sq] with parity_simps
-  (mul_right_inj'
-        (show (2 * 2 : ℤ) ≠ 0 by
-          decide)).1 <|
+  have : Even (x ^ 2 + y ^ 2) := by simp [h.symm, even_mul]
+  have hxaddy : Even (x + y) := by simpa [sq, parity_simps]
+  have hxsuby : Even (x - y) := by simpa [sq, parity_simps]
+  (mul_right_inj' (show (2 * 2 : ℤ) ≠ 0 by decide)).1 <|
     calc
-      2 * 2 * m = (x - y) ^ 2 + (x + y) ^ 2 := by
-        rw [mul_assoc, h] <;> ring
+      2 * 2 * m = (x - y) ^ 2 + (x + y) ^ 2 := by rw [mul_assoc, h] <;> ring
       _ = (2 * ((x - y) / 2)) ^ 2 + (2 * ((x + y) / 2)) ^ 2 := by
         rw [even_iff_two_dvd] at hxsuby hxaddy
         rw [Int.mul_div_cancel'ₓ hxsuby, Int.mul_div_cancel'ₓ hxaddy]
@@ -50,23 +44,16 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
 
 theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
     ∃ (a b : ℤ)(k : ℕ), a ^ 2 + b ^ 2 + 1 = k * p ∧ k < p :=
-  (hp.1.eq_two_or_odd.elim fun hp2 =>
-      hp2.symm ▸
-        ⟨1, 0, 1, rfl, by
-          decide⟩)
-    fun hp1 =>
+  (hp.1.eq_two_or_odd.elim fun hp2 => hp2.symm ▸ ⟨1, 0, 1, rfl, by decide⟩) fun hp1 =>
     let ⟨a, b, hab⟩ := Zmod.sq_add_sq p (-1)
     have hab' : (p : ℤ) ∣ a.valMinAbs ^ 2 + b.valMinAbs ^ 2 + 1 :=
-      (CharP.int_cast_eq_zero_iff (Zmod p) p _).1 <| by
-        simpa [eq_neg_iff_add_eq_zero] using hab
+      (CharP.int_cast_eq_zero_iff (Zmod p) p _).1 <| by simpa [eq_neg_iff_add_eq_zero] using hab
     let ⟨k, hk⟩ := hab'
     have hk0 : 0 ≤ k :=
       nonneg_of_mul_nonneg_right
-        (by
-          rw [← hk] <;> exact add_nonneg (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_le_one)
+        (by rw [← hk] <;> exact add_nonneg (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_le_one)
         (Int.coe_nat_pos.2 hp.1.Pos)
-    ⟨a.valMinAbs, b.valMinAbs, k.natAbs, by
-      rw [hk, Int.nat_abs_of_nonneg hk0, mul_comm],
+    ⟨a.valMinAbs, b.valMinAbs, k.natAbs, by rw [hk, Int.nat_abs_of_nonneg hk0, mul_comm],
       lt_of_mul_lt_mul_left
         (calc
           p * k.natAbs = a.valMinAbs.natAbs ^ 2 + b.valMinAbs.natAbs ^ 2 + 1 := by
@@ -82,12 +69,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
               exact
                 (lt_add_iff_pos_right _).2
                   (add_pos_of_nonneg_of_pos (Nat.zero_leₓ _)
-                    (mul_pos
-                      (by
-                        decide)
-                      (Nat.div_pos hp.1.two_le
-                        (by
-                          decide))))
+                    (mul_pos (by decide) (Nat.div_pos hp.1.two_le (by decide))))
           _ = p * p := by
             conv_rhs => rw [← Nat.mod_add_divₓ p 2]
             ring
@@ -108,8 +90,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
     ∀ f : Finₓ 4 → Zmod 2,
       f 0 ^ 2 + f 1 ^ 2 + f 2 ^ 2 + f 3 ^ 2 = 0 →
         ∃ i : Finₓ 4, f i ^ 2 + f (swap i 0 1) ^ 2 = 0 ∧ f (swap i 0 2) ^ 2 + f (swap i 0 3) ^ 2 = 0 :=
-    by
-    decide
+    by decide
   let f : Finₓ 4 → ℤ := Vector.nth (a ::ᵥ b ::ᵥ c ::ᵥ d ::ᵥ Vector.nil)
   let ⟨i, hσ⟩ :=
     this (coe ∘ f)
@@ -117,25 +98,16 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
         rw [← @zero_mul (Zmod 2) _ m, ← show ((2 : ℤ) : Zmod 2) = 0 from rfl, ← Int.cast_mul, ← h] <;>
           simp only [Int.cast_add, Int.cast_pow] <;> rfl)
   let σ := swap i 0
-  have h01 : 2 ∣ f (σ 0) ^ 2 + f (σ 1) ^ 2 :=
-    (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1 <| by
-      simpa [σ] using hσ.1
-  have h23 : 2 ∣ f (σ 2) ^ 2 + f (σ 3) ^ 2 :=
-    (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1 <| by
-      simpa using hσ.2
+  have h01 : 2 ∣ f (σ 0) ^ 2 + f (σ 1) ^ 2 := (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1 <| by simpa [σ] using hσ.1
+  have h23 : 2 ∣ f (σ 2) ^ 2 + f (σ 3) ^ 2 := (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1 <| by simpa using hσ.2
   let ⟨x, hx⟩ := h01
   let ⟨y, hy⟩ := h23
   ⟨(f (σ 0) - f (σ 1)) / 2, (f (σ 0) + f (σ 1)) / 2, (f (σ 2) - f (σ 3)) / 2, (f (σ 2) + f (σ 3)) / 2, by
     rw [← Int.sq_add_sq_of_two_mul_sq_add_sq hx.symm, add_assocₓ, ← Int.sq_add_sq_of_two_mul_sq_add_sq hy.symm, ←
-      mul_right_inj'
-        (show (2 : ℤ) ≠ 0 by
-          decide),
-      ← h, mul_addₓ, ← hx, ← hy]
-    have : (∑ x, f (σ x) ^ 2) = ∑ x, f x ^ 2 := by
-      conv_rhs => rw [← Equivₓ.sum_comp σ]
-    have fin4univ : (univ : Finset (Finₓ 4)).1 = 0 ::ₘ 1 ::ₘ 2 ::ₘ 3 ::ₘ 0 := by
-      decide
-    simpa [Finset.sum_eq_multiset_sum, fin4univ, Multiset.sum_cons, f, add_assocₓ] ⟩
+      mul_right_inj' (show (2 : ℤ) ≠ 0 by decide), ← h, mul_addₓ, ← hx, ← hy]
+    have : (∑ x, f (σ x) ^ 2) = ∑ x, f x ^ 2 := by conv_rhs => rw [← Equivₓ.sum_comp σ]
+    have fin4univ : (univ : Finsetₓ (Finₓ 4)).1 = 0 ::ₘ 1 ::ₘ 2 ::ₘ 3 ::ₘ 0 := by decide
+    simpa [Finsetₓ.sum_eq_multiset_sum, fin4univ, Multiset.sum_cons, f, add_assocₓ] ⟩
 
 private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = p :=
   have hm : ∃ m < p, 0 < m ∧ ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p :=
@@ -148,8 +120,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
             (show a ^ 2 + b ^ 2 + 1 > 0 from
               add_pos_of_nonneg_of_pos (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_lt_one)
             hk.1,
-      a, b, 1, 0, by
-      simpa [sq] using hk.1⟩
+      a, b, 1, 0, by simpa [sq] using hk.1⟩
   let m := Nat.findₓ hm
   let ⟨a, b, c, d, (habcd : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p)⟩ := (Nat.find_specₓ hm).snd.2
   haveI hm0 : NeZero m := NeZero.of_pos (Nat.find_specₓ hm).snd.1
@@ -157,9 +128,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
   m.mod_two_eq_zero_or_one.elim
     (fun hm2 : m % 2 = 0 =>
       let ⟨k, hk⟩ := Nat.dvd_iff_mod_eq_zeroₓ.2 hm2
-      have hk0 : 0 < k :=
-        Nat.pos_of_ne_zeroₓ fun _ => by
-          simp_all [lt_irreflₓ]
+      have hk0 : 0 < k := Nat.pos_of_ne_zeroₓ fun _ => by simp_all [lt_irreflₓ]
       have hkm : k < m := by
         rw [hk, two_mul]
         exact (lt_add_iff_pos_left _).2 hk0
@@ -171,17 +140,14 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
                 rw [habcd, hk, Int.coe_nat_mul, mul_assoc]
                 norm_num)⟩)
     fun hm2 : m % 2 = 1 =>
-    if hm1 : m = 1 then
-      ⟨a, b, c, d, by
-        simp only [hm1, habcd, Int.coe_nat_one, one_mulₓ]⟩
+    if hm1 : m = 1 then ⟨a, b, c, d, by simp only [hm1, habcd, Int.coe_nat_one, one_mulₓ]⟩
     else
       let w := (a : Zmod m).valMinAbs
       let x := (b : Zmod m).valMinAbs
       let y := (c : Zmod m).valMinAbs
       let z := (d : Zmod m).valMinAbs
       have hnat_abs : w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) :=
-        by
-        simp [sq]
+        by simp [sq]
       have hwxyzlt : w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 < m ^ 2 :=
         calc
           w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) := hnat_abs
@@ -193,8 +159,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
                     (Nat.pow_le_pow_of_le_leftₓ (Zmod.nat_abs_val_min_abs_le _) _))
                   (Nat.pow_le_pow_of_le_leftₓ (Zmod.nat_abs_val_min_abs_le _) _))
                 (Nat.pow_le_pow_of_le_leftₓ (Zmod.nat_abs_val_min_abs_le _) _)
-          _ = 4 * (m / 2 : ℕ) ^ 2 := by
-            simp [sq, bit0, bit1, mul_addₓ, add_mulₓ, add_assocₓ]
+          _ = 4 * (m / 2 : ℕ) ^ 2 := by simp [sq, bit0, bit1, mul_addₓ, add_mulₓ, add_assocₓ]
           _ < 4 * (m / 2 : ℕ) ^ 2 + ((4 * (m / 2) : ℕ) * (m % 2 : ℕ) + (m % 2 : ℕ) ^ 2) :=
             (lt_add_iff_pos_right _).2
               (by
@@ -229,8 +194,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
                 (mul_right_inj' (show (m : ℤ) ≠ 0 from Int.coe_nat_ne_zero.2 hm0.1)).1 <| by
                   rw [← habcd, hma, hmb, hmc, hmd]
                   ring⟩
-          (hp.1.eq_one_or_self_of_dvd _ hmdvdp).elim hm1 fun hmeqp => by
-            simpa [lt_irreflₓ, hmeqp] using hmp
+          (hp.1.eq_one_or_self_of_dvd _ hmdvdp).elim hm1 fun hmeqp => by simpa [lt_irreflₓ, hmeqp] using hmp
       have hawbxcydz : ((m : ℕ) : ℤ) ∣ a * w + b * x + c * y + d * z :=
         (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 <| by
           rw [← hwxyz0]
@@ -257,10 +221,8 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
           (by
             erw [← hn]
             repeat'
-              try
-                refine' add_nonneg _ _
-              try
-                exact sq_nonneg _)
+            try refine' add_nonneg _ _
+            try exact sq_nonneg _)
           (Int.coe_nat_pos.2 <| NeZero.pos m)
       have hnm : n.natAbs < m :=
         Int.coe_nat_ltₓ.1
@@ -282,7 +244,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
               ring
             _ = _ := by
               rw [hn, habcd, Int.nat_abs_of_nonneg hn_nonneg]
-              dsimp' [m]
+              dsimp [m]
               ring
             
       False.elim <| Nat.find_minₓ hm hnm ⟨lt_transₓ hnm hmp, hn0, s, t, u, v, hstuv⟩
@@ -292,10 +254,7 @@ theorem sum_four_squares : ∀ n : ℕ, ∃ a b c d : ℕ, a ^ 2 + b ^ 2 + c ^ 2
   | 0 => ⟨0, 0, 0, 0, rfl⟩
   | 1 => ⟨1, 0, 0, 0, rfl⟩
   | n@(k + 2) =>
-    have hm : Fact (minFac (k + 2)).Prime :=
-      ⟨min_fac_prime
-          (by
-            decide)⟩
+    have hm : Fact (minFac (k + 2)).Prime := ⟨min_fac_prime (by decide)⟩
     have : n / minFac n < n := factors_lemma
     let ⟨a, b, c, d, h₁⟩ :=
       show ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = minFac n from prime_sum_four_squares (min_fac (k + 2))

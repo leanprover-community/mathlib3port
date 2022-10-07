@@ -65,7 +65,6 @@ def toPoly (P : Cubic R) : R[X] :=
 
 section Coeff
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 private theorem coeffs :
     (∀ n > 3, P.toPoly.coeff n = 0) ∧
       P.toPoly.coeff 3 = P.a ∧ P.toPoly.coeff 2 = P.b ∧ P.toPoly.coeff 1 = P.c ∧ P.toPoly.coeff 0 = P.d :=
@@ -73,12 +72,9 @@ private theorem coeffs :
   simp only [to_poly, coeff_add, coeff_C, coeff_C_mul_X, coeff_C_mul_X_pow]
   norm_num
   intro n hn
-  repeat'
-    rw [if_neg]
-  any_goals {
-  }
-  repeat'
-    rw [zero_addₓ]
+  repeat' rw [if_neg]
+  any_goals linarith only [hn]
+  repeat' rw [zero_addₓ]
 
 @[simp]
 theorem coeff_gt_three (n : ℕ) (hn : 3 < n) : P.toPoly.coeff n = 0 :=
@@ -100,17 +96,13 @@ theorem coeff_one : P.toPoly.coeff 1 = P.c :=
 theorem coeff_zero : P.toPoly.coeff 0 = P.d :=
   coeffs.2.2.2.2
 
-theorem a_of_eq {Q : Cubic R} (h : P.toPoly = Q.toPoly) : P.a = Q.a := by
-  rw [← coeff_three, h, coeff_three]
+theorem a_of_eq {Q : Cubic R} (h : P.toPoly = Q.toPoly) : P.a = Q.a := by rw [← coeff_three, h, coeff_three]
 
-theorem b_of_eq {Q : Cubic R} (h : P.toPoly = Q.toPoly) : P.b = Q.b := by
-  rw [← coeff_two, h, coeff_two]
+theorem b_of_eq {Q : Cubic R} (h : P.toPoly = Q.toPoly) : P.b = Q.b := by rw [← coeff_two, h, coeff_two]
 
-theorem c_of_eq {Q : Cubic R} (h : P.toPoly = Q.toPoly) : P.c = Q.c := by
-  rw [← coeff_one, h, coeff_one]
+theorem c_of_eq {Q : Cubic R} (h : P.toPoly = Q.toPoly) : P.c = Q.c := by rw [← coeff_one, h, coeff_one]
 
-theorem d_of_eq {Q : Cubic R} (h : P.toPoly = Q.toPoly) : P.d = Q.d := by
-  rw [← coeff_zero, h, coeff_zero]
+theorem d_of_eq {Q : Cubic R} (h : P.toPoly = Q.toPoly) : P.d = Q.d := by rw [← coeff_zero, h, coeff_zero]
 
 @[simp]
 theorem to_poly_injective (P Q : Cubic R) : P.toPoly = Q.toPoly ↔ P = Q :=
@@ -137,8 +129,7 @@ theorem zero : (0 : Cubic R).toPoly = 0 :=
   of_zero rfl rfl rfl rfl
 
 @[simp]
-theorem eq_zero_iff : P.toPoly = 0 ↔ P = 0 := by
-  rw [← zero, to_poly_injective]
+theorem eq_zero_iff : P.toPoly = 0 ↔ P = 0 := by rw [← zero, to_poly_injective]
 
 theorem ne_zero (h0 : ¬P.a = 0 ∨ ¬P.b = 0 ∨ ¬P.c = 0 ∨ ¬P.d = 0) : P.toPoly ≠ 0 := by
   contrapose! h0
@@ -169,12 +160,10 @@ section Degree
 def equiv : Cubic R ≃ { p : R[X] // p.degree ≤ 3 } where
   toFun := fun P => ⟨P.toPoly, degree_cubic_le⟩
   invFun := fun f => ⟨coeff f 3, coeff f 2, coeff f 1, coeff f 0⟩
-  left_inv := fun P => by
-    ext <;> simp only [Subtype.coe_mk, coeffs]
+  left_inv := fun P => by ext <;> simp only [Subtype.coe_mk, coeffs]
   right_inv := fun f => by
     ext (_ | _ | _ | _ | n) <;> simp only [Subtype.coe_mk, coeffs]
-    have h3 : 3 < n + 4 := by
-      linarith only
+    have h3 : 3 < n + 4 := by linarith only
     rw [coeff_gt_three _ h3, (degree_le_iff_coeff_zero (f : R[X]) 3).mp f.2 _ <| with_bot.coe_lt_coe.mpr h3]
 
 theorem degree (ha : P.a ≠ 0) : P.toPoly.degree = 3 :=
@@ -239,8 +228,7 @@ variable {P : Cubic R} [CommRingₓ R] [CommRingₓ S] {φ : R →+* S}
 def roots [IsDomain R] (P : Cubic R) : Multiset R :=
   P.toPoly.roots
 
-theorem map_roots [IsDomain S] : (map φ P).roots = (Polynomial.map φ P.toPoly).roots := by
-  rw [roots, map_to_poly]
+theorem map_roots [IsDomain S] : (map φ P).roots = (Polynomial.map φ P.toPoly).roots := by rw [roots, map_to_poly]
 
 theorem mem_roots_iff [IsDomain R] (h0 : P.toPoly ≠ 0) (x : R) :
     x ∈ P.roots ↔ P.a * x ^ 3 + P.b * x ^ 2 + P.c * x + P.d = 0 := by
@@ -249,7 +237,7 @@ theorem mem_roots_iff [IsDomain R] (h0 : P.toPoly ≠ 0) (x : R) :
 
 theorem card_roots_le [IsDomain R] [DecidableEq R] : P.roots.toFinset.card ≤ 3 := by
   apply (to_finset_card_le P.to_poly.roots).trans
-  by_cases' hP : P.to_poly = 0
+  by_cases hP:P.to_poly = 0
   · exact
       (card_roots' P.to_poly).trans
         (by
@@ -270,7 +258,7 @@ section Split
 
 theorem splits_iff_card_roots (ha : P.a ≠ 0) : Splits φ P.toPoly ↔ (map φ P).roots.card = 3 := by
   replace ha : (map φ P).a ≠ 0 := (_root_.map_ne_zero φ).mpr ha
-  nth_rw_lhs 0[← RingHom.id_comp φ]
+  nth_rw_lhs 0 [← RingHom.id_comp φ]
   rw [roots, ← splits_map_iff, ← map_to_poly, splits_iff_card_roots, ←
     ((degree_eq_iff_nat_degree_eq <| ne_zero_of_a_ne_zero ha).mp <| degree ha : _ = 3)]
 
@@ -286,12 +274,10 @@ theorem eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z})
   change C (φ P.a) * ((X - C x) ::ₘ (X - C y) ::ₘ {X - C z}).Prod = _
   rw [prod_cons, prod_cons, prod_singleton, mul_assoc, mul_assoc]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 theorem eq_sum_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     map φ P = ⟨φ P.a, φ P.a * -(x + y + z), φ P.a * (x * y + x * z + y * z), φ P.a * -(x * y * z)⟩ := by
   apply_fun to_poly
-  any_goals {
-  }
+  any_goals exact fun P Q => (to_poly_injective P Q).mp
   rw [eq_prod_three_roots ha h3, to_poly]
   simp only [C_neg, C_add, C_mul]
   ring1
@@ -300,8 +286,7 @@ theorem b_eq_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) : 
   injection eq_sum_three_roots ha h3
 
 theorem c_eq_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) : φ P.c = φ P.a * (x * y + x * z + y * z) :=
-  by
-  injection eq_sum_three_roots ha h3
+  by injection eq_sum_three_roots ha h3
 
 theorem d_eq_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) : φ P.d = φ P.a * -(x * y * z) := by
   injection eq_sum_three_roots ha h3

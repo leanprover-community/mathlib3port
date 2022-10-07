@@ -50,8 +50,7 @@ theorem has_strict_deriv_at_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStr
   have h0 : x ≠ 0 := by
     rintro rfl
     simpa [lt_irreflₓ] using h
-  expLocalHomeomorph.has_strict_deriv_at_symm h h0 <| by
-    simpa [exp_log h0] using has_strict_deriv_at_exp (log x)
+  expLocalHomeomorph.has_strict_deriv_at_symm h h0 <| by simpa [exp_log h0] using has_strict_deriv_at_exp (log x)
 
 theorem has_strict_fderiv_at_log_real {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) :
     HasStrictFderivAt log (x⁻¹ • (1 : ℂ →L[ℝ] ℂ)) x :=

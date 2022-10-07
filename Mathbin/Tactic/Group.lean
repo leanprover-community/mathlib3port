@@ -38,8 +38,7 @@ theorem Tactic.Group.zpow_trick_one' {G : Type _} [Groupₓ G] (a b : G) (n : �
 
 @[to_additive]
 theorem Tactic.Group.zpow_trick_sub {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) :
-    a * b ^ n * b ^ -m = a * b ^ (n - m) := by
-  rw [mul_assoc, ← zpow_add] <;> rfl
+    a * b ^ n * b ^ -m = a * b ^ (n - m) := by rw [mul_assoc, ← zpow_add] <;> rfl
 
 namespace Tactic
 

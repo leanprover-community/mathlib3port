@@ -54,9 +54,7 @@ instance largeCategory : LargeCategory.{u} BoundedOrderCat where
 
 instance concreteCategory : ConcreteCategory BoundedOrderCat where
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
-  forget_faithful :=
-    ⟨fun X Y => by
-      convert FunLike.coe_injective⟩
+  forget_faithful := ⟨fun X Y => by convert FunLike.coe_injective⟩
 
 instance hasForgetToPartialOrder :
     HasForget₂ BoundedOrderCat

@@ -52,13 +52,9 @@ from some projective object `P`.
 @[nolint has_nonempty_instance]
 structure ProjectivePresentation (X : C) where
   P : C
-  Projective : Projective P := by
-    run_tac
-      tactic.apply_instance
+  Projective : Projective P := by infer_instance
   f : P ⟶ X
-  Epi : Epi f := by
-    run_tac
-      tactic.apply_instance
+  Epi : Epi f := by infer_instance
 
 variable (C)
 
@@ -95,9 +91,7 @@ theorem of_iso {P Q : C} (i : P ≅ Q) (hP : Projective P) : Projective Q := by
   fconstructor
   intro E X f e e_epi
   obtain ⟨f', hf'⟩ := projective.factors (i.hom ≫ f) e
-  exact
-    ⟨i.inv ≫ f', by
-      simp [hf']⟩
+  exact ⟨i.inv ≫ f', by simp [hf']⟩
 
 theorem iso_iff {P Q : C} (i : P ≅ Q) : Projective P ↔ Projective Q :=
   ⟨of_iso i, of_iso i.symm⟩
@@ -115,17 +109,14 @@ instance {P Q : C} [HasBinaryCoproduct P Q] [Projective P] [Projective Q] :
     Projective
       (P ⨿
         Q) where Factors := fun E X' f e epi =>
-    ⟨coprod.desc (factor_thru (coprod.inl ≫ f) e) (factor_thru (coprod.inr ≫ f) e), by
-      tidy⟩
+    ⟨coprod.desc (factor_thru (coprod.inl ≫ f) e) (factor_thru (coprod.inr ≫ f) e), by tidy⟩
 
 section
 
 attribute [local tidy] tactic.discrete_cases
 
 instance {β : Type v} (g : β → C) [HasCoproduct g] [∀ b, Projective (g b)] :
-    Projective (∐ g) where Factors := fun E X' f e epi =>
-    ⟨sigma.desc fun b => factor_thru (sigma.ι g b ≫ f) e, by
-      tidy⟩
+    Projective (∐ g) where Factors := fun E X' f e epi => ⟨sigma.desc fun b => factor_thru (sigma.ι g b ≫ f) e, by tidy⟩
 
 end
 
@@ -133,14 +124,11 @@ instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Projective P] 
     Projective
       (P ⊞
         Q) where Factors := fun E X' f e epi =>
-    ⟨biprod.desc (factor_thru (biprod.inl ≫ f) e) (factor_thru (biprod.inr ≫ f) e), by
-      tidy⟩
+    ⟨biprod.desc (factor_thru (biprod.inl ≫ f) e) (factor_thru (biprod.inr ≫ f) e), by tidy⟩
 
 instance {β : Type v} (g : β → C) [HasZeroMorphisms C] [HasBiproduct g] [∀ b, Projective (g b)] :
     Projective
-      (⨁ g) where Factors := fun E X' f e epi =>
-    ⟨biproduct.desc fun b => factor_thru (biproduct.ι g b ≫ f) e, by
-      tidy⟩
+      (⨁ g) where Factors := fun E X' f e epi => ⟨biproduct.desc fun b => factor_thru (biproduct.ι g b ≫ f) e, by tidy⟩
 
 theorem projective_iff_preserves_epimorphisms_coyoneda_obj (P : C) :
     Projective P ↔ (coyoneda.obj (op P)).PreservesEpimorphisms :=
@@ -242,7 +230,10 @@ def Exact.lift {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R �
 theorem Exact.lift_comp {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S) (hfg : Exact f g)
     (w : h ≫ g = 0) : Exact.lift h f g hfg w ≫ f = h := by
   simp [exact.lift]
-  conv_lhs => congr skip rw [← image_subobject_arrow_comp f]
+  conv_lhs =>
+  congr
+  skip
+  rw [← image_subobject_arrow_comp f]
   rw [← category.assoc, factor_thru_comp, ← image_to_kernel_arrow, ← category.assoc,
     CategoryTheory.Projective.factor_thru_comp, factor_thru_kernel_subobject_comp_arrow]
 

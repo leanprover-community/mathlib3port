@@ -41,7 +41,7 @@ instance Cotangent.moduleOfTower : Module S I.Cotangent :=
   Submodule.Quotient.module' _
 
 instance : IsScalarTower S S' I.Cotangent := by
-  delta' cotangent
+  delta cotangent
   constructor
   intro s s' x
   rw [← @IsScalarTower.algebra_map_smul S' R, ← @IsScalarTower.algebra_map_smul S' R, ← smul_assoc, ←
@@ -49,7 +49,7 @@ instance : IsScalarTower S S' I.Cotangent := by
   rfl
 
 instance [IsNoetherian R I] : IsNoetherian R I.Cotangent := by
-  delta' cotangent
+  delta cotangent
   infer_instance
 
 /-- The quotient map from `I` to `I ⧸ I ^ 2`. -/
@@ -146,7 +146,7 @@ noncomputable def cotangentEquivIdeal : I.Cotangent ≃ₗ[R] I.cotangentIdeal :
     obtain ⟨x, rfl⟩ := I.to_cotangent_surjective x
     obtain ⟨y, rfl⟩ := I.to_cotangent_surjective y
     rw [I.to_cotangent_eq]
-    dsimp' only [to_cotangent_to_quotient_square, Submodule.mkq_apply]  at e
+    dsimp only [to_cotangent_to_quotient_square, Submodule.mkq_apply] at e
     rwa [Submodule.Quotient.eq] at e
     
   · rintro ⟨_, x, hx, rfl⟩

@@ -154,8 +154,7 @@ def Covers (S : Sieve X) (f : Y ⟶ X) : Prop :=
 theorem covers_iff (S : Sieve X) (f : Y ⟶ X) : J.Covers S f ↔ S.pullback f ∈ J Y :=
   Iff.rfl
 
-theorem covering_iff_covers_id (S : Sieve X) : S ∈ J X ↔ J.Covers S (𝟙 X) := by
-  simp [covers_iff]
+theorem covering_iff_covers_id (S : Sieve X) : S ∈ J X ↔ J.Covers S (𝟙 X) := by simp [covers_iff]
 
 /-- The maximality axiom in 'arrow' form: Any arrow `f` in `S` is covered by `S`. -/
 theorem arrow_max (f : Y ⟶ X) (S : Sieve X) (hf : S f) : J.Covers S f := by
@@ -205,12 +204,9 @@ See https://en.wikipedia.org/wiki/Grothendieck_topology#The_discrete_and_indiscr
 -/
 def discrete : GrothendieckTopology C where
   Sieves := fun X => Set.Univ
-  top_mem' := by
-    simp
-  pullback_stable' := fun X Y f => by
-    simp
-  transitive' := by
-    simp
+  top_mem' := by simp
+  pullback_stable' := fun X Y f => by simp
+  transitive' := by simp
 
 variable {C}
 
@@ -236,7 +232,7 @@ instance :
     { Sieves := inf (sieves '' T),
       top_mem' := by
         rintro X S ⟨⟨_, J, hJ, rfl⟩, rfl⟩
-        simp ,
+        simp,
       pullback_stable' := by
         rintro X Y S hS f _ ⟨⟨_, J, hJ, rfl⟩, rfl⟩
         apply J.pullback_stable _ (f _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩),
@@ -299,8 +295,7 @@ theorem bot_covers (S : Sieve X) (f : Y ⟶ X) : (⊥ : GrothendieckTopology C).
   rw [covers_iff, bot_covering, ← sieve.pullback_eq_top_iff_mem]
 
 @[simp]
-theorem top_covers (S : Sieve X) (f : Y ⟶ X) : (⊤ : GrothendieckTopology C).Covers S f := by
-  simp [covers_iff]
+theorem top_covers (S : Sieve X) (f : Y ⟶ X) : (⊤ : GrothendieckTopology C).Covers S f := by simp [covers_iff]
 
 /-- The dense Grothendieck topology.
 
@@ -312,16 +307,12 @@ def dense : GrothendieckTopology C where
   pullback_stable' := by
     intro X Y S h H Z f
     rcases H (f ≫ h) with ⟨W, g, H'⟩
-    exact
-      ⟨W, g, by
-        simpa⟩
+    exact ⟨W, g, by simpa⟩
   transitive' := by
     intro X S H₁ R H₂ Y f
     rcases H₁ f with ⟨Z, g, H₃⟩
     rcases H₂ H₃ (𝟙 Z) with ⟨W, h, H₄⟩
-    exact
-      ⟨W, h ≫ g, by
-        simpa using H₄⟩
+    exact ⟨W, h ≫ g, by simpa using H₄⟩
 
 theorem dense_covering : S ∈ dense X ↔ ∀ {Y} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f) :=
   Iff.rfl
@@ -381,9 +372,7 @@ theorem ext (S T : J.cover X) (h : ∀ ⦃Y⦄ (f : Y ⟶ X), S f ↔ T f) : S =
   Subtype.ext <| Sieve.ext h
 
 instance : OrderTop (J.cover X) :=
-  { (inferInstance : Preorderₓ _) with top := ⟨⊤, J.top_mem _⟩,
-    le_top := fun S Y f h => by
-      tauto }
+  { (inferInstance : Preorderₓ _) with top := ⟨⊤, J.top_mem _⟩, le_top := fun S Y f h => by tauto }
 
 instance : SemilatticeInf (J.cover X) :=
   { (inferInstance : Preorderₓ _) with inf := fun S T => ⟨S ⊓ T, J.intersection_covering S.condition T.condition⟩,
@@ -454,8 +443,7 @@ def Arrow.base {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).arrow) : S.arro
 /-- A relation of `S.pullback f` gives rise to a relation of `S`. -/
 @[simps]
 def Relation.base {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) : S.Relation :=
-  ⟨_, _, _, I.g₁, I.g₂, I.f₁ ≫ f, I.f₂ ≫ f, I.h₁, I.h₂, by
-    simp [reassoc_of I.w]⟩
+  ⟨_, _, _, I.g₁, I.g₂, I.f₁ ≫ f, I.f₂ ≫ f, I.h₁, I.h₂, by simp [reassoc_of I.w]⟩
 
 @[simp]
 theorem Relation.base_fst {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) : I.fst.base = I.base.fst :=
@@ -471,15 +459,11 @@ theorem coe_pullback {Z : C} (f : Y ⟶ X) (g : Z ⟶ Y) (S : J.cover X) : (S.pu
 
 /-- The isomorphism between `S` and the pullback of `S` w.r.t. the identity. -/
 def pullbackId (S : J.cover X) : S.pullback (𝟙 X) ≅ S :=
-  eq_to_iso <|
-    (Cover.ext _ _) fun Y f => by
-      simp
+  eq_to_iso <| (Cover.ext _ _) fun Y f => by simp
 
 /-- Pulling back with respect to a composition is the composition of the pullbacks. -/
 def pullbackComp {X Y Z : C} (S : J.cover X) (f : Z ⟶ Y) (g : Y ⟶ X) : S.pullback (f ≫ g) ≅ (S.pullback g).pullback f :=
-  eq_to_iso <|
-    (Cover.ext _ _) fun Y f => by
-      simp
+  eq_to_iso <| (Cover.ext _ _) fun Y f => by simp
 
 /-- Combine a family of covers over a cover. -/
 def bind {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : J.cover X :=
@@ -556,7 +540,7 @@ abbrev multifork {D : Type w} [Category.{max v u} D] (S : J.cover X) (P : Cᵒ�
   Limits.Multifork.ofι _ (P.obj (Opposite.op X)) (fun I => P.map I.f.op)
     (by
       intro I
-      dsimp' [index]
+      dsimp [index]
       simp only [← P.map_comp, ← op_comp, I.w])
 
 /-- The canonical map from `P.obj (op X)` to the multiequalizer associated to a covering sieve,
@@ -567,7 +551,7 @@ noncomputable abbrev toMultiequalizer {D : Type w} [Category.{max v u} D] (S : J
   Limits.multiequalizer.lift _ _ (fun I => P.map I.f.op)
     (by
       intro I
-      dsimp' only [index, relation.fst, relation.snd]
+      dsimp only [index, relation.fst, relation.snd]
       simp only [← P.map_comp, ← op_comp, I.w])
 
 end Cover
@@ -580,14 +564,12 @@ def pullback (f : Y ⟶ X) : J.cover X ⥤ J.cover Y where
 
 /-- Pulling back along the identity is naturally isomorphic to the identity functor. -/
 def pullbackId (X : C) : J.pullback (𝟙 X) ≅ 𝟭 _ :=
-  (NatIso.ofComponents fun S => S.pullback_id) <| by
-    tidy
+  (NatIso.ofComponents fun S => S.pullback_id) <| by tidy
 
 /-- Pulling back along a composition is naturally isomorphic to
 the composition of the pullbacks. -/
 def pullbackComp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : J.pullback (f ≫ g) ≅ J.pullback g ⋙ J.pullback f :=
-  (NatIso.ofComponents fun S => S.pullback_comp f g) <| by
-    tidy
+  (NatIso.ofComponents fun S => S.pullback_comp f g) <| by tidy
 
 end GrothendieckTopology
 

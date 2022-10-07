@@ -71,11 +71,11 @@ theorem Normal.exists_is_splitting_field [h : Normal F K] [FiniteDimensional F K
   refine' fun x =>
     Algebra.subset_adjoin
       (multiset.mem_to_finset.mpr <|
-        (mem_roots <| mt (Polynomial.map_eq_zero <| algebraMap F K).1 <| Finset.prod_ne_zero_iff.2 fun x hx => _).2 _)
+        (mem_roots <| mt (Polynomial.map_eq_zero <| algebraMap F K).1 <| Finsetₓ.prod_ne_zero_iff.2 fun x hx => _).2 _)
   · exact minpoly.ne_zero (h.is_integral (s x))
     
   rw [is_root.def, eval_map, ← aeval_def, AlgHom.map_prod]
-  exact Finset.prod_eq_zero (Finset.mem_univ _) (minpoly.aeval _ _)
+  exact Finsetₓ.prod_eq_zero (Finsetₓ.mem_univ _) (minpoly.aeval _ _)
 
 section NormalTower
 
@@ -97,14 +97,13 @@ theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function
     obtain ⟨h1, h2⟩ := h.out (algebraMap K E x)
     cases'
       minpoly.mem_range_of_degree_eq_one E x
-        (Or.resolve_left h2 (minpoly.ne_zero h1)
+        (h2.def.resolve_left (minpoly.ne_zero h1)
           (minpoly.irreducible
             (is_integral_of_is_scalar_tower x ((is_integral_algebra_map_iff (algebraMap K E).Injective).mp h1)))
           (minpoly.dvd E x
             ((algebraMap K E).Injective
               (by
-                rw [RingHom.map_zero, aeval_map, ← IsScalarTower.to_alg_hom_apply F K E, ← AlgHom.comp_apply, ←
-                  aeval_alg_hom]
+                rw [RingHom.map_zero, aeval_map_algebra_map, ← aeval_algebra_map_apply]
                 exact minpoly.aeval F (algebraMap K E x))))) with
       y hy
     exact ⟨y, hy⟩⟩
@@ -131,7 +130,7 @@ theorem AlgEquiv.transfer_normal (f : E ≃ₐ[F] E') : Normal F E ↔ Normal F 
   ⟨fun h => Normal.of_alg_equiv f, fun h => Normal.of_alg_equiv f.symm⟩
 
 theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] : Normal F E := by
-  by_cases' hp : p = 0
+  by_cases hp:p = 0
   · have : is_splitting_field F F p := by
       rw [hp]
       exact ⟨splits_zero _, Subsingleton.elim _ _⟩
@@ -174,8 +173,7 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
   letI : Algebra C E := RingHom.toAlgebra (AdjoinRoot.lift (algebraMap F E) x (minpoly.aeval F x))
   haveI : IsScalarTower F C D := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm
   haveI : IsScalarTower F C E := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm
-  suffices Nonempty (D →ₐ[C] E) by
-    exact Nonempty.mapₓ (AlgHom.restrictScalars F) this
+  suffices Nonempty (D →ₐ[C] E) by exact Nonempty.mapₓ (AlgHom.restrictScalars F) this
   let S : Set D := ((p.map (algebraMap F E)).roots.map (algebraMap E D)).toFinset
   suffices ⊤ ≤ IntermediateField.adjoin C S by
     refine' IntermediateField.alg_hom_mk_adjoin_splits' (top_le_iff.mp this) fun y hy => _
@@ -197,8 +195,8 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
   suffices (Algebra.adjoin C S).restrictScalars F = (Algebra.adjoin E {AdjoinRoot.root q}).restrictScalars F by
     rw [AdjoinRoot.adjoin_root_eq_top, Subalgebra.restrict_scalars_top, ← @Subalgebra.restrict_scalars_top F C] at this
     exact top_le_iff.mpr (Subalgebra.restrict_scalars_injective F this)
-  dsimp' only [S]
-  rw [← Finset.image_to_finset, Finset.coe_image]
+  dsimp only [S]
+  rw [← Finsetₓ.image_to_finset, Finsetₓ.coe_image]
   apply Eq.trans (Algebra.adjoin_res_eq_adjoin_res F E C D hFEp.adjoin_roots AdjoinRoot.adjoin_root_eq_top)
   rw [Set.image_singleton, RingHom.algebra_map_to_algebra, AdjoinRoot.lift_root]
 
@@ -250,18 +248,17 @@ variable (E : Type _) [Field E] [Algebra F E] [Algebra E K₁] [Algebra E K₂] 
 def AlgHom.restrictNormalAux [h : Normal F E] : (toAlgHom F E K₁).range →ₐ[F] (toAlgHom F E K₂).range where
   toFun := fun x =>
     ⟨ϕ x, by
-      suffices (to_alg_hom F E K₁).range.map ϕ ≤ _ by
-        exact this ⟨x, Subtype.mem x, rfl⟩
+      suffices (to_alg_hom F E K₁).range.map ϕ ≤ _ by exact this ⟨x, Subtype.mem x, rfl⟩
       rintro x ⟨y, ⟨z, hy⟩, hx⟩
       rw [← hx, ← hy]
       apply minpoly.mem_range_of_degree_eq_one E
       exact
-        Or.resolve_left (h.splits z) (minpoly.ne_zero (h.is_integral z))
+        Or.resolve_left (h.splits z).def (minpoly.ne_zero (h.is_integral z))
           (minpoly.irreducible <|
             is_integral_of_is_scalar_tower _ <| is_integral_alg_hom ϕ <| is_integral_alg_hom _ <| h.is_integral z)
           (minpoly.dvd E _ <| by
-            rw [aeval_map, aeval_alg_hom, aeval_alg_hom, AlgHom.comp_apply, AlgHom.comp_apply, minpoly.aeval,
-              AlgHom.map_zero, AlgHom.map_zero])⟩
+            rw [aeval_map_algebra_map, aeval_alg_hom_apply, aeval_alg_hom_apply, minpoly.aeval, AlgHom.map_zero,
+              AlgHom.map_zero])⟩
   map_zero' := Subtype.ext ϕ.map_zero
   map_one' := Subtype.ext ϕ.map_one
   map_add' := fun x y => Subtype.ext (ϕ.map_add x y)
@@ -286,10 +283,7 @@ theorem AlgHom.restrict_normal_commutes [Normal F E] (x : E) :
 
 theorem AlgHom.restrict_normal_comp [Normal F E] :
     (ψ.restrictNormal E).comp (ϕ.restrictNormal E) = (ψ.comp ϕ).restrictNormal E :=
-  AlgHom.ext fun _ =>
-    (algebraMap E K₃).Injective
-      (by
-        simp only [AlgHom.comp_apply, AlgHom.restrict_normal_commutes])
+  AlgHom.ext fun _ => (algebraMap E K₃).Injective (by simp only [AlgHom.comp_apply, AlgHom.restrict_normal_commutes])
 
 /-- Restrict algebra isomorphism to a normal subfield -/
 def AlgEquiv.restrictNormal [h : Normal F E] : E ≃ₐ[F] E :=
@@ -303,9 +297,7 @@ theorem AlgEquiv.restrict_normal_commutes [Normal F E] (x : E) :
 theorem AlgEquiv.restrict_normal_trans [Normal F E] :
     (χ.trans ω).restrictNormal E = (χ.restrictNormal E).trans (ω.restrictNormal E) :=
   AlgEquiv.ext fun _ =>
-    (algebraMap E K₃).Injective
-      (by
-        simp only [AlgEquiv.trans_apply, AlgEquiv.restrict_normal_commutes])
+    (algebraMap E K₃).Injective (by simp only [AlgEquiv.trans_apply, AlgEquiv.restrict_normal_commutes])
 
 /-- Restriction to an normal subfield as a group homomorphism -/
 def AlgEquiv.restrictNormalHom [Normal F E] : (K₁ ≃ₐ[F] K₁) →* E ≃ₐ[F] E :=
@@ -352,8 +344,7 @@ noncomputable def AlgHom.liftNormal [h : Normal F E] : E →ₐ[F] E :=
 
 @[simp]
 theorem AlgHom.lift_normal_commutes [Normal F E] (x : K₁) :
-    ϕ.liftNormal E (algebraMap K₁ E x) = algebraMap K₂ E (ϕ x) := by
-  apply @AlgHom.commutes K₁ E E _ _ _ _
+    ϕ.liftNormal E (algebraMap K₁ E x) = algebraMap K₂ E (ϕ x) := by apply @AlgHom.commutes K₁ E E _ _ _ _
 
 @[simp]
 theorem AlgHom.restrict_lift_normal (ϕ : K₁ →ₐ[F] K₁) [Normal F K₁] [Normal F E] :
@@ -420,7 +411,7 @@ theorem restrict_scalars_eq_supr_adjoin [h : Normal F L] :
     exact
       minpoly.ne_zero ((is_integral_algebra_map_iff (algebraMap K L).Injective).mp (h.is_integral (algebraMap K L x)))
     
-  · rw [Polynomial.RootSet, Finset.mem_coe, Multiset.mem_to_finset] at hy
+  · rw [Polynomial.RootSet, Finsetₓ.mem_coe, Multiset.mem_to_finset] at hy
     let g :=
       (alg_hom_adjoin_integral_equiv F
             ((is_integral_algebra_map_iff (algebraMap K L).Injective).mp (h.is_integral (algebraMap K L x)))).symm

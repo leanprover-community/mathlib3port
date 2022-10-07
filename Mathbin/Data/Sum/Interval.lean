@@ -19,19 +19,19 @@ Do the same for the lexicographic sum of orders.
 
 open Function Sum
 
-namespace Finset
+namespace Finsetₓ
 
 variable {α₁ α₂ β₁ β₂ γ₁ γ₂ : Type _}
 
 section SumLift₂
 
-variable (f f₁ g₁ : α₁ → β₁ → Finset γ₁) (g f₂ g₂ : α₂ → β₂ → Finset γ₂)
+variable (f f₁ g₁ : α₁ → β₁ → Finsetₓ γ₁) (g f₂ g₂ : α₂ → β₂ → Finsetₓ γ₂)
 
 /-- Lifts maps `α₁ → β₁ → finset γ₁` and `α₂ → β₂ → finset γ₂` to a map
 `α₁ ⊕ α₂ → β₁ ⊕ β₂ → finset (γ₁ ⊕ γ₂)`. Could be generalized to `alternative` functors if we can
 make sure to keep computability and universe polymorphism. -/
 @[simp]
-def sumLift₂ : ∀ (a : Sum α₁ α₂) (b : Sum β₁ β₂), Finset (Sum γ₁ γ₂)
+def sumLift₂ : ∀ (a : Sum α₁ α₂) (b : Sum β₁ β₂), Finsetₓ (Sum γ₁ γ₂)
   | inl a, inl b => (f a b).map Embedding.inl
   | inl a, inr b => ∅
   | inr a, inl b => ∅
@@ -97,8 +97,7 @@ theorem sum_lift₂_eq_empty :
 theorem sum_lift₂_nonempty :
     (sumLift₂ f g a b).Nonempty ↔
       (∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ (f a₁ b₁).Nonempty) ∨ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ (g a₂ b₂).Nonempty :=
-  by
-  simp [nonempty_iff_ne_empty, sum_lift₂_eq_empty, not_and_distrib]
+  by simp [nonempty_iff_ne_empty, sum_lift₂_eq_empty, not_and_distrib]
 
 theorem sum_lift₂_mono (h₁ : ∀ a b, f₁ a b ⊆ g₁ a b) (h₂ : ∀ a b, f₂ a b ⊆ g₂ a b) :
     ∀ a b, sumLift₂ f₁ f₂ a b ⊆ sumLift₂ g₁ g₂ a b
@@ -109,9 +108,9 @@ theorem sum_lift₂_mono (h₁ : ∀ a b, f₁ a b ⊆ g₁ a b) (h₂ : ∀ a b
 
 end SumLift₂
 
-end Finset
+end Finsetₓ
 
-open Finset Function
+open Finsetₓ Function
 
 namespace Sum
 
@@ -129,14 +128,10 @@ instance : LocallyFiniteOrder (Sum α β) where
   finsetIco := sumLift₂ ico ico
   finsetIoc := sumLift₂ ioc ioc
   finsetIoo := sumLift₂ ioo ioo
-  finset_mem_Icc := by
-    rintro (a | a) (b | b) (x | x) <;> simp
-  finset_mem_Ico := by
-    rintro (a | a) (b | b) (x | x) <;> simp
-  finset_mem_Ioc := by
-    rintro (a | a) (b | b) (x | x) <;> simp
-  finset_mem_Ioo := by
-    rintro (a | a) (b | b) (x | x) <;> simp
+  finset_mem_Icc := by rintro (a | a) (b | b) (x | x) <;> simp
+  finset_mem_Ico := by rintro (a | a) (b | b) (x | x) <;> simp
+  finset_mem_Ioc := by rintro (a | a) (b | b) (x | x) <;> simp
+  finset_mem_Ioo := by rintro (a | a) (b | b) (x | x) <;> simp
 
 variable (a₁ a₂ : α) (b₁ b₂ : β) (a b : Sum α β)
 

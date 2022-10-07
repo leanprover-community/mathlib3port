@@ -63,8 +63,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
   set s := { x ∈ Icc a b | Icc a x ∉ f }
   have hsb : b ∈ UpperBounds s := fun x hx => hx.1.2
   have sbd : BddAbove s := ⟨b, hsb⟩
-  have ha : a ∈ s := by
-    simp [hpt, hab]
+  have ha : a ∈ s := by simp [hpt, hab]
   rcases hab.eq_or_lt with (rfl | hlt)
   · exact ha.2
     
@@ -93,7 +92,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
   refine' mem_of_superset _ hyU
   clear! U
   have hy : y ∈ Icc a b := ⟨hc.1.trans hxy.1.le, hxy.2⟩
-  by_cases' hay : Icc a y ∈ f
+  by_cases hay:Icc a y ∈ f
   · refine' mem_of_superset (f.diff_mem_iff.2 ⟨f.diff_mem_iff.2 ⟨hay, hcs.2⟩, hpt y hy⟩) _
     rw [diff_subset_iff, union_comm, Ico_union_right hxy.1.le, diff_subset_iff]
     exact Icc_subset_Icc_union_Icc
@@ -126,8 +125,7 @@ for products (indexed or not) of complete linear orders, and we have instances w
 that cover these cases. -/
 instance (priority := 100) compact_space_of_complete_linear_order {α : Type _} [CompleteLinearOrder α]
     [TopologicalSpace α] [OrderTopology α] : CompactSpace α :=
-  ⟨by
-    simp only [← Icc_bot_top, is_compact_Icc]⟩
+  ⟨by simp only [← Icc_bot_top, is_compact_Icc]⟩
 
 section
 
@@ -222,7 +220,7 @@ theorem ContinuousOn.exists_forall_le' {s : Set β} {f : β → α} (hf : Contin
   obtain ⟨x, hx, hxf⟩ : ∃ x ∈ insert x₀ (K ∩ s), ∀ y ∈ insert x₀ (K ∩ s), f x ≤ f y :=
     ((hK.inter_right hsc).insert x₀).exists_forall_le (insert_nonempty _ _) (hf.mono hsub)
   refine' ⟨x, hsub hx, fun y hy => _⟩
-  by_cases' hyK : y ∈ K
+  by_cases hyK:y ∈ K
   exacts[hxf _ (Or.inr ⟨hyK, hy⟩), (hxf _ (Or.inl rfl)).trans (hKf ⟨hyK, hy⟩)]
 
 /-- The **extreme value theorem**: if a function `f` is continuous on a closed set `s` and it is
@@ -235,10 +233,7 @@ theorem ContinuousOn.exists_forall_ge' {s : Set β} {f : β → α} (hf : Contin
 away from compact sets, then it has a global minimum. -/
 theorem _root_.continuous.exists_forall_le' {f : β → α} (hf : Continuous f) (x₀ : β)
     (h : ∀ᶠ x in cocompact β, f x₀ ≤ f x) : ∃ x : β, ∀ y : β, f x ≤ f y :=
-  let ⟨x, _, hx⟩ :=
-    hf.ContinuousOn.exists_forall_le' is_closed_univ (mem_univ x₀)
-      (by
-        rwa [principal_univ, inf_top_eq])
+  let ⟨x, _, hx⟩ := hf.ContinuousOn.exists_forall_le' is_closed_univ (mem_univ x₀) (by rwa [principal_univ, inf_top_eq])
   ⟨x, fun y => hx y (mem_univ y)⟩
 
 /-- The **extreme value theorem**: if a continuous function `f` is smaller than a value in its range

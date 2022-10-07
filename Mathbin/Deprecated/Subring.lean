@@ -109,10 +109,9 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
     fun r1 r2 hr1 hr2 ih1 ih2 =>
     match r1, r2, ih1, ih2 with
     | _, _, ⟨L1, h1, rfl⟩, ⟨L2, h2, rfl⟩ =>
-      ⟨L1 ++ L2, List.forall_mem_appendₓ.2 ⟨h1, h2⟩, by
-        rw [List.map_appendₓ, List.sum_append]⟩
+      ⟨L1 ++ L2, List.forall_mem_appendₓ.2 ⟨h1, h2⟩, by rw [List.map_appendₓ, List.sum_append]⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩", ":", expr «expr∃ , »((L : list R),
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩", ":", expr «expr∃ , »((L : list R),
     «expr ∧ »(∀ x «expr ∈ » L,
      «expr ∈ »(x, s),
      «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]
@@ -134,7 +133,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure 
   replace HL := HL.1
   clear ih tl
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident L, \",\", ident HL', \",\", ident HP, \"|\", ident HP, \"⟩\", \":\", expr «expr∃ , »((L : list R),\n    «expr ∧ »(∀ x «expr ∈ » L,\n     «expr ∈ »(x, s),\n     «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident L, \",\", ident HL', \",\", ident HP, \"|\", ident HP, \"⟩\", \":\", expr «expr∃ , »((L : list R),\n    «expr ∧ »(∀ x «expr ∈ » L,\n     «expr ∈ »(x, s),\n     «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]"
   · rw [HP]
     clear HP HL hd
     induction' L with hd tl ih
@@ -158,25 +157,15 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure 
     
   rw [List.forall_mem_consₓ] at HL
   rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
-  · exact
-      ⟨hd::L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
-        Or.inl <| by
-          rw [List.prod_cons, List.prod_cons, HP]⟩
+  · exact ⟨hd::L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩, Or.inl <| by rw [List.prod_cons, List.prod_cons, HP]⟩
     
-  · exact
-      ⟨L, HL',
-        Or.inr <| by
-          rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
+  · exact ⟨L, HL', Or.inr <| by rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
     
   · exact
       ⟨hd::L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
-        Or.inr <| by
-          rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
+        Or.inr <| by rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
     
-  · exact
-      ⟨L, HL',
-        Or.inl <| by
-          rw [List.prod_cons, hhd, HP, neg_one_mul, neg_negₓ]⟩
+  · exact ⟨L, HL', Or.inl <| by rw [List.prod_cons, hhd, HP, neg_one_mul, neg_negₓ]⟩
     
 
 theorem Closure.is_subring : IsSubring (Closure s) :=

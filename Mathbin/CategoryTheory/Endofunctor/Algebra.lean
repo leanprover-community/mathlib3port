@@ -59,9 +59,7 @@ F f |          | f
 @[ext]
 structure Hom (A₀ A₁ : Algebra F) where
   f : A₀.1 ⟶ A₁.1
-  h' : F.map f ≫ A₁.str = A₀.str ≫ f := by
-    run_tac
-      obviously
+  h' : F.map f ≫ A₁.str = A₀.str ≫ f := by obviously
 
 restate_axiom hom.h'
 
@@ -130,8 +128,7 @@ theorem iso_of_iso (f : A₀ ⟶ A₁) [IsIso f.1] : IsIso f :=
         h' := by
           rw [is_iso.eq_comp_inv f.1, category.assoc, ← f.h]
           simp },
-      by
-      tidy⟩⟩
+      by tidy⟩⟩
 
 instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where reflects := fun A B => iso_of_iso
 
@@ -160,11 +157,11 @@ def functorOfNatTransId : functorOfNatTrans (𝟙 F) ≅ 𝟭 _ :=
     (fun X =>
       isoMk (Iso.refl _)
         (by
-          dsimp'
-          simp ))
+          dsimp
+          simp))
     fun X Y f => by
     ext
-    dsimp'
+    dsimp
     simp
 
 /-- A composition of natural transformations gives the composition of corresponding functors. -/
@@ -175,11 +172,11 @@ def functorOfNatTransComp {F₀ F₁ F₂ : C ⥤ C} (α : F₀ ⟶ F₁) (β : 
     (fun X =>
       isoMk (Iso.refl _)
         (by
-          dsimp'
-          simp ))
+          dsimp
+          simp))
     fun X Y f => by
     ext
-    dsimp'
+    dsimp
     simp
 
 /-- If `α` and `β` are two equal natural transformations, then the functors of algebras induced by them
@@ -193,11 +190,11 @@ def functorOfNatTransEq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) : functo
     (fun X =>
       isoMk (Iso.refl _)
         (by
-          dsimp'
+          dsimp
           simp [h]))
     fun X Y f => by
     ext
-    dsimp'
+    dsimp
     simp
 
 /-- Naturally isomorphic endofunctors give equivalent categories of algebras.
@@ -208,18 +205,8 @@ we have `equiv_of_nat_iso h ⋙ forget = forget`.
 def equivOfNatIso {F G : C ⥤ C} (α : F ≅ G) : Algebra F ≌ Algebra G where
   Functor := functorOfNatTrans α.inv
   inverse := functorOfNatTrans α.Hom
-  unitIso :=
-    functorOfNatTransId.symm ≪≫
-      functorOfNatTransEq
-          (by
-            simp ) ≪≫
-        functorOfNatTransComp _ _
-  counitIso :=
-    (functorOfNatTransComp _ _).symm ≪≫
-      functorOfNatTransEq
-          (by
-            simp ) ≪≫
-        functor_of_nat_trans_id
+  unitIso := functorOfNatTransId.symm ≪≫ functorOfNatTransEq (by simp) ≪≫ functorOfNatTransComp _ _
+  counitIso := (functorOfNatTransComp _ _).symm ≪≫ functorOfNatTransEq (by simp) ≪≫ functor_of_nat_trans_id
 
 namespace Initial
 
@@ -278,9 +265,7 @@ variable {F : C ⥤ C} (V : Coalgebra F) {V₀ V₁ V₂ : Coalgebra F}
 @[ext]
 structure Hom (V₀ V₁ : Coalgebra F) where
   f : V₀.1 ⟶ V₁.1
-  h' : V₀.str ≫ F.map f = f ≫ V₁.str := by
-    run_tac
-      obviously
+  h' : V₀.str ≫ F.map f = f ≫ V₁.str := by obviously
 
 restate_axiom hom.h'
 
@@ -349,8 +334,7 @@ theorem iso_of_iso (f : V₀ ⟶ V₁) [IsIso f.1] : IsIso f :=
         h' := by
           rw [is_iso.eq_inv_comp f.1, ← category.assoc, ← f.h, category.assoc]
           simp },
-      by
-      tidy⟩⟩
+      by tidy⟩⟩
 
 instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where reflects := fun A B => iso_of_iso
 
@@ -371,9 +355,7 @@ coalgebras of `F` to coalgebras of `G`.
 def functorOfNatTrans {F G : C ⥤ C} (α : F ⟶ G) : Coalgebra F ⥤ Coalgebra G where
   obj := fun V => { V := V.1, str := V.str ≫ α.app V.1 }
   map := fun V₀ V₁ f =>
-    { f := f.1,
-      h' := by
-        rw [category.assoc, ← α.naturality, ← category.assoc, f.h, category.assoc] }
+    { f := f.1, h' := by rw [category.assoc, ← α.naturality, ← category.assoc, f.h, category.assoc] }
 
 /-- The identity transformation induces the identity endofunctor on the category of coalgebras. -/
 @[simps (config := { rhsMd := semireducible })]
@@ -382,11 +364,11 @@ def functorOfNatTransId : functorOfNatTrans (𝟙 F) ≅ 𝟭 _ :=
     (fun X =>
       isoMk (Iso.refl _)
         (by
-          dsimp'
-          simp ))
+          dsimp
+          simp))
     fun X Y f => by
     ext
-    dsimp'
+    dsimp
     simp
 
 /-- A composition of natural transformations gives the composition of corresponding functors. -/
@@ -397,11 +379,11 @@ def functorOfNatTransComp {F₀ F₁ F₂ : C ⥤ C} (α : F₀ ⟶ F₁) (β : 
     (fun X =>
       isoMk (Iso.refl _)
         (by
-          dsimp'
-          simp ))
+          dsimp
+          simp))
     fun X Y f => by
     ext
-    dsimp'
+    dsimp
     simp
 
 /-- If `α` and `β` are two equal natural transformations, then the functors of coalgebras induced by
@@ -415,11 +397,11 @@ def functorOfNatTransEq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) : functo
     (fun X =>
       isoMk (Iso.refl _)
         (by
-          dsimp'
+          dsimp
           simp [h]))
     fun X Y f => by
     ext
-    dsimp'
+    dsimp
     simp
 
 /-- Naturally isomorphic endofunctors give equivalent categories of coalgebras.
@@ -430,18 +412,8 @@ we have `equiv_of_nat_iso h ⋙ forget = forget`.
 def equivOfNatIso {F G : C ⥤ C} (α : F ≅ G) : Coalgebra F ≌ Coalgebra G where
   Functor := functorOfNatTrans α.Hom
   inverse := functorOfNatTrans α.inv
-  unitIso :=
-    functorOfNatTransId.symm ≪≫
-      functorOfNatTransEq
-          (by
-            simp ) ≪≫
-        functorOfNatTransComp _ _
-  counitIso :=
-    (functorOfNatTransComp _ _).symm ≪≫
-      functorOfNatTransEq
-          (by
-            simp ) ≪≫
-        functor_of_nat_trans_id
+  unitIso := functorOfNatTransId.symm ≪≫ functorOfNatTransEq (by simp) ≪≫ functorOfNatTransComp _ _
+  counitIso := (functorOfNatTransComp _ _).symm ≪≫ functorOfNatTransEq (by simp) ≪≫ functor_of_nat_trans_id
 
 end Coalgebra
 
@@ -480,7 +452,7 @@ def AlgCoalgEquiv.unitIso (adj : F ⊣ G) : 𝟭 (Algebra F) ≅ Algebra.toCoalg
             apply (adj.hom_equiv _ _).left_inv A.str },
       naturality' := fun A₁ A₂ f => by
         ext1
-        dsimp'
+        dsimp
         erw [category.id_comp, category.comp_id]
         rfl }
   inv :=
@@ -491,7 +463,7 @@ def AlgCoalgEquiv.unitIso (adj : F ⊣ G) : 𝟭 (Algebra F) ≅ Algebra.toCoalg
             apply ((adj.hom_equiv _ _).left_inv A.str).symm },
       naturality' := fun A₁ A₂ f => by
         ext1
-        dsimp'
+        dsimp
         erw [category.comp_id, category.id_comp]
         rfl }
   hom_inv_id' := by
@@ -509,24 +481,24 @@ def AlgCoalgEquiv.counitIso (adj : F ⊣ G) :
     { app := fun V =>
         { f := 𝟙 V.1,
           h' := by
-            dsimp'
+            dsimp
             erw [G.map_id, category.id_comp, category.comp_id]
             apply (adj.hom_equiv _ _).right_inv V.str },
       naturality' := fun V₁ V₂ f => by
         ext1
-        dsimp'
+        dsimp
         erw [category.comp_id, category.id_comp]
         rfl }
   inv :=
     { app := fun V =>
         { f := 𝟙 V.1,
           h' := by
-            dsimp'
+            dsimp
             rw [G.map_id, category.comp_id, category.id_comp]
             apply ((adj.hom_equiv _ _).right_inv V.str).symm },
       naturality' := fun V₁ V₂ f => by
         ext1
-        dsimp'
+        dsimp
         erw [category.comp_id, category.id_comp]
         rfl }
   hom_inv_id' := by

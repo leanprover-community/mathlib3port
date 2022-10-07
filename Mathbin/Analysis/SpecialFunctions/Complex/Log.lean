@@ -27,22 +27,18 @@ open Real TopologicalSpace
 noncomputable def log (x : ℂ) : ℂ :=
   x.abs.log + arg x * I
 
-theorem log_re (x : ℂ) : x.log.re = x.abs.log := by
-  simp [log]
+theorem log_re (x : ℂ) : x.log.re = x.abs.log := by simp [log]
 
-theorem log_im (x : ℂ) : x.log.im = x.arg := by
-  simp [log]
+theorem log_im (x : ℂ) : x.log.im = x.arg := by simp [log]
 
-theorem neg_pi_lt_log_im (x : ℂ) : -π < (log x).im := by
-  simp only [log_im, neg_pi_lt_arg]
+theorem neg_pi_lt_log_im (x : ℂ) : -π < (log x).im := by simp only [log_im, neg_pi_lt_arg]
 
-theorem log_im_le_pi (x : ℂ) : (log x).im ≤ π := by
-  simp only [log_im, arg_le_pi]
+theorem log_im_le_pi (x : ℂ) : (log x).im ≤ π := by simp only [log_im, arg_le_pi]
 
 theorem exp_log {x : ℂ} (hx : x ≠ 0) : exp (log x) = x := by
-  rw [log, exp_add_mul_I, ← of_real_sin, sin_arg, ← of_real_cos, cos_arg hx, ← of_real_exp, Real.exp_log (abs_pos.2 hx),
-    mul_addₓ, of_real_div, of_real_div, mul_div_cancel' _ (of_real_ne_zero.2 (mt abs_eq_zero.1 hx)), ← mul_assoc,
-    mul_div_cancel' _ (of_real_ne_zero.2 (mt abs_eq_zero.1 hx)), re_add_im]
+  rw [log, exp_add_mul_I, ← of_real_sin, sin_arg, ← of_real_cos, cos_arg hx, ← of_real_exp, Real.exp_log (abs.pos hx),
+    mul_addₓ, of_real_div, of_real_div, mul_div_cancel' _ (of_real_ne_zero.2 <| abs.ne_zero hx), ← mul_assoc,
+    mul_div_cancel' _ (of_real_ne_zero.2 <| abs.ne_zero hx), re_add_im]
 
 @[simp]
 theorem range_exp : Range exp = {0}ᶜ :=
@@ -56,38 +52,26 @@ theorem log_exp {x : ℂ} (hx₁ : -π < x.im) (hx₂ : x.im ≤ π) : log (exp 
     arg_mul_cos_add_sin_mul_I (Real.exp_pos _) ⟨hx₁, hx₂⟩, re_add_im]
 
 theorem exp_inj_of_neg_pi_lt_of_le_pi {x y : ℂ} (hx₁ : -π < x.im) (hx₂ : x.im ≤ π) (hy₁ : -π < y.im) (hy₂ : y.im ≤ π)
-    (hxy : exp x = exp y) : x = y := by
-  rw [← log_exp hx₁ hx₂, ← log_exp hy₁ hy₂, hxy]
+    (hxy : exp x = exp y) : x = y := by rw [← log_exp hx₁ hx₂, ← log_exp hy₁ hy₂, hxy]
 
 theorem of_real_log {x : ℝ} (hx : 0 ≤ x) : (x.log : ℂ) = log x :=
-  Complex.ext
-    (by
-      rw [log_re, of_real_re, abs_of_nonneg hx])
-    (by
-      rw [of_real_im, log_im, arg_of_real_of_nonneg hx])
+  Complex.ext (by rw [log_re, of_real_re, abs_of_nonneg hx]) (by rw [of_real_im, log_im, arg_of_real_of_nonneg hx])
 
-theorem log_of_real_re (x : ℝ) : (log (x : ℂ)).re = Real.log x := by
-  simp [log_re]
+theorem log_of_real_re (x : ℝ) : (log (x : ℂ)).re = Real.log x := by simp [log_re]
 
 @[simp]
-theorem log_zero : log 0 = 0 := by
-  simp [log]
+theorem log_zero : log 0 = 0 := by simp [log]
 
 @[simp]
-theorem log_one : log 1 = 0 := by
-  simp [log]
+theorem log_one : log 1 = 0 := by simp [log]
 
-theorem log_neg_one : log (-1) = π * I := by
-  simp [log]
+theorem log_neg_one : log (-1) = π * I := by simp [log]
 
-theorem log_I : log i = π / 2 * I := by
-  simp [log]
+theorem log_I : log i = π / 2 * I := by simp [log]
 
-theorem log_neg_I : log (-I) = -(π / 2) * I := by
-  simp [log]
+theorem log_neg_I : log (-I) = -(π / 2) * I := by simp [log]
 
-theorem two_pi_I_ne_zero : (2 * π * I : ℂ) ≠ 0 := by
-  norm_num[Real.pi_ne_zero, I_ne_zero]
+theorem two_pi_I_ne_zero : (2 * π * I : ℂ) ≠ 0 := by norm_num [Real.pi_ne_zero, I_ne_zero]
 
 theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * I) := by
   constructor
@@ -95,8 +79,7 @@ theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * 
     rcases exists_unique_add_zsmul_mem_Ioc Real.two_pi_pos x.im (-π) with ⟨n, hn, -⟩
     use -n
     rw [Int.cast_neg, neg_mul, eq_neg_iff_add_eq_zero]
-    have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by
-      simpa [two_mul, mul_addₓ] using hn
+    have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by simpa [two_mul, mul_addₓ] using hn
     rw [← log_exp this.1 this.2, exp_periodic.int_mul n, h, log_one]
     
   · rintro ⟨n, rfl⟩
@@ -181,7 +164,7 @@ theorem continuous_at_clog {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousA
   refine' ContinuousAt.add _ _
   · refine' continuous_of_real.continuous_at.comp _
     refine' (Real.continuous_at_log _).comp complex.continuous_abs.continuous_at
-    rw [abs_ne_zero]
+    rw [complex.abs.ne_zero_iff]
     rintro rfl
     simpa using h
     

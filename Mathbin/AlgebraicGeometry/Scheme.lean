@@ -30,7 +30,7 @@ open Opposite
 
 namespace AlgebraicGeometry
 
--- ./././Mathport/Syntax/Translate/Command.lean:351:11: unsupported: advanced extends in structure
+-- ./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure
 /-- We define `Scheme` as a `X : LocallyRingedSpace`,
 along with a proof that every point has an open neighbourhood `U`
 so that that the restriction of `X` to `U` is isomorphic,
@@ -38,7 +38,7 @@ as a locally ringed space, to `Spec.to_LocallyRingedSpace.obj (op R)`
 for some `R : CommRing`.
 -/
 structure Scheme extends
-  "./././Mathport/Syntax/Translate/Command.lean:351:11: unsupported: advanced extends in structure" where
+  "./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure" where
   local_affine :
     ∀ x : to_LocallyRingedSpace,
       ∃ (U : OpenNhds x)(R : CommRingₓₓ),
@@ -109,15 +109,9 @@ theorem comp_val_c_app {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
   rfl
 
 theorem congr_app {X Y : Scheme} {f g : X ⟶ Y} (e : f = g) (U) :
-    f.val.c.app U =
-      g.val.c.app U ≫
-        X.Presheaf.map
-          (eqToHom
-            (by
-              subst e)) :=
-  by
+    f.val.c.app U = g.val.c.app U ≫ X.Presheaf.map (eqToHom (by subst e)) := by
   subst e
-  dsimp'
+  dsimp
   simp
 
 theorem app_eq {X Y : Scheme} (f : X ⟶ Y) {U V : Opens Y.Carrier} (e : U = V) :
@@ -176,10 +170,8 @@ theorem Spec_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) : spe
 def spec : CommRingₓₓᵒᵖ ⥤ Scheme where
   obj := fun R => specObj (unop R)
   map := fun R S f => specMap f.unop
-  map_id' := fun R => by
-    rw [unop_id, Spec_map_id]
-  map_comp' := fun R S T f g => by
-    rw [unop_comp, Spec_map_comp]
+  map_id' := fun R => by rw [unop_id, Spec_map_id]
+  map_comp' := fun R S T f g => by rw [unop_comp, Spec_map_comp]
 
 /-- The empty scheme.
 -/
@@ -272,8 +264,7 @@ theorem basic_open_eq_of_affine {R : CommRingₓₓ} (f : R) :
     (Scheme.spec.obj <| op R).basicOpen ((specΓIdentity.app R).inv f) = PrimeSpectrum.basicOpen f := by
   ext
   erw [Scheme.mem_basic_open_top]
-  suffices IsUnit (structure_sheaf.to_stalk R x f) ↔ f ∉ PrimeSpectrum.asIdeal x by
-    exact this
+  suffices IsUnit (structure_sheaf.to_stalk R x f) ↔ f ∉ PrimeSpectrum.asIdeal x by exact this
   erw [← is_unit_map_iff (structure_sheaf.stalk_to_fiber_ring_hom R x),
     structure_sheaf.stalk_to_fiber_ring_hom_to_stalk]
   exact

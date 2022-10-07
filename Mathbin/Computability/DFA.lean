@@ -35,7 +35,7 @@ instance [Inhabited σ] : Inhabited (DFA α σ) :=
 
 /-- `M.eval_from s x` evaluates `M` with input `x` starting from the state `s`. -/
 def evalFrom (start : σ) : List α → σ :=
-  List.foldlₓ M.step start
+  List.foldl M.step start
 
 @[simp]
 theorem eval_from_nil (s : σ) : M.evalFrom s [] = s :=
@@ -47,8 +47,7 @@ theorem eval_from_singleton (s : σ) (a : α) : M.evalFrom s [a] = M.step s a :=
 
 @[simp]
 theorem eval_from_append_singleton (s : σ) (x : List α) (a : α) : M.evalFrom s (x ++ [a]) = M.step (M.evalFrom s x) a :=
-  by
-  simp only [eval_from, List.foldl_appendₓ, List.foldl_cons, List.foldl_nil]
+  by simp only [eval_from, List.foldl_appendₓ, List.foldl_cons, List.foldl_nil]
 
 /-- `M.eval x` evaluates `M` with input `x` starting from the state `M.start`. -/
 def eval : List α → σ :=
@@ -73,26 +72,21 @@ theorem eval_from_of_append (start : σ) (x y : List α) :
 /-- `M.accepts` is the language of `x` such that `M.eval x` is an accept state. -/
 def Accepts : Language α := fun x => M.eval x ∈ M.accept
 
-theorem mem_accepts (x : List α) : x ∈ M.Accepts ↔ M.evalFrom M.start x ∈ M.accept := by
-  rfl
+theorem mem_accepts (x : List α) : x ∈ M.Accepts ↔ M.evalFrom M.start x ∈ M.accept := by rfl
 
-theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.card σ ≤ x.length)
+theorem eval_from_split [Fintypeₓ σ] {x : List α} {s t : σ} (hlen : Fintypeₓ.card σ ≤ x.length)
     (hx : M.evalFrom s x = t) :
     ∃ q a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ M.evalFrom s a = q ∧ M.evalFrom q b = q ∧ M.evalFrom q c = t :=
+        a.length + b.length ≤ Fintypeₓ.card σ ∧ b ≠ [] ∧ M.evalFrom s a = q ∧ M.evalFrom q b = q ∧ M.evalFrom q c = t :=
   by
   obtain ⟨n, m, hneq, heq⟩ :=
-    Fintype.exists_ne_map_eq_of_card_lt (fun n : Finₓ (Fintype.card σ + 1) => M.eval_from s (x.take n))
-      (by
-        norm_num)
+    Fintypeₓ.exists_ne_map_eq_of_card_lt (fun n : Finₓ (Fintypeₓ.card σ + 1) => M.eval_from s (x.take n)) (by norm_num)
   wlog hle : (n : ℕ) ≤ m using n m
   have hlt : (n : ℕ) < m := (Ne.le_iff_lt hneq).mp hle
-  have hm : (m : ℕ) ≤ Fintype.card σ := Finₓ.is_le m
-  dsimp'  at heq
-  refine'
-    ⟨M.eval_from s ((x.take m).take n), (x.take m).take n, (x.take m).drop n, x.drop m, _, _, _, by
-      rfl, _⟩
+  have hm : (m : ℕ) ≤ Fintypeₓ.card σ := Finₓ.is_le m
+  dsimp at heq
+  refine' ⟨M.eval_from s ((x.take m).take n), (x.take m).take n, (x.take m).drop n, x.drop m, _, _, _, by rfl, _⟩
   · rw [List.take_append_dropₓ, List.take_append_dropₓ]
     
   · simp only [List.length_dropₓ, List.length_takeₓ]
@@ -132,9 +126,9 @@ theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s) (hy 
     exact hS z (List.mem_cons_of_memₓ a hz)
     
 
-theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card σ ≤ List.length x) :
+theorem pumping_lemma [Fintypeₓ σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintypeₓ.card σ ≤ List.length x) :
     ∃ a b c,
-      x = a ++ b ++ c ∧ a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
+      x = a ++ b ++ c ∧ a.length + b.length ≤ Fintypeₓ.card σ ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
   by
   obtain ⟨_, a, b, c, hx, hlen, hnil, rfl, hb, hc⟩ := M.eval_from_split hlen rfl
   use a, b, c, hx, hlen, hnil

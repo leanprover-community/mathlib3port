@@ -19,7 +19,7 @@ We prove the divisor sum formula, namely that `n` equals `φ` summed over the di
 -/
 
 
-open Finset
+open Finsetₓ
 
 open BigOperators
 
@@ -38,8 +38,7 @@ theorem totient_zero : φ 0 = 0 :=
   rfl
 
 @[simp]
-theorem totient_one : φ 1 = 1 := by
-  simp [totient]
+theorem totient_one : φ 1 = 1 := by simp [totient]
 
 theorem totient_eq_card_coprime (n : ℕ) : φ n = ((range n).filter n.Coprime).card :=
   rfl
@@ -48,25 +47,12 @@ theorem totient_le (n : ℕ) : φ n ≤ n :=
   ((range n).card_filter_le _).trans_eq (card_range n)
 
 theorem totient_lt (n : ℕ) (hn : 1 < n) : φ n < n :=
-  (card_lt_card
-        (filter_ssubset.2
-          ⟨0, by
-            simp [hn.ne', pos_of_gt hn]⟩)).trans_eq
-    (card_range n)
+  (card_lt_card (filter_ssubset.2 ⟨0, by simp [hn.ne', pos_of_gt hn]⟩)).trans_eq (card_range n)
 
 theorem totient_pos : ∀ {n : ℕ}, 0 < n → 0 < φ n
-  | 0 => by
-    decide
-  | 1 => by
-    simp [totient]
-  | n + 2 => fun h =>
-    card_pos.2
-      ⟨1,
-        mem_filter.2
-          ⟨mem_range.2
-              (by
-                decide),
-            coprime_one_rightₓ _⟩⟩
+  | 0 => by decide
+  | 1 => by simp [totient]
+  | n + 2 => fun h => card_pos.2 ⟨1, mem_filter.2 ⟨mem_range.2 (by decide), coprime_one_rightₓ _⟩⟩
 
 theorem filter_coprime_Ico_eq_totient (a n : ℕ) : ((ico n (n + a)).filter (Coprime a)).card = totient a := by
   rw [totient, filter_Ico_card_eq_of_periodic, count_eq_card_filter_range]
@@ -80,7 +66,7 @@ theorem Ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
     simp only [add_zeroₓ, mul_oneₓ, mul_zero, le_of_ltₓ (mod_lt n a_pos)]
     mono
     refine' monotone_filter_left a.coprime _
-    simp only [Finset.le_eq_subset]
+    simp only [Finsetₓ.le_eq_subset]
     exact Ico_subset_Ico rfl.le (add_le_add_left (le_of_ltₓ (mod_lt n a_pos)) k)
     
   simp only [mul_succ]
@@ -105,12 +91,13 @@ open Zmod
 /-- Note this takes an explicit `fintype ((zmod n)ˣ)` argument to avoid trouble with instance
 diamonds. -/
 @[simp]
-theorem _root_.zmod.card_units_eq_totient (n : ℕ) [NeZero n] [Fintype (Zmod n)ˣ] : Fintype.card (Zmod n)ˣ = φ n :=
+theorem _root_.zmod.card_units_eq_totient (n : ℕ) [NeZero n] [Fintypeₓ (Zmod n)ˣ] : Fintypeₓ.card (Zmod n)ˣ = φ n :=
   calc
-    Fintype.card (Zmod n)ˣ = Fintype.card { x : Zmod n // x.val.Coprime n } := Fintype.card_congr Zmod.unitsEquivCoprime
+    Fintypeₓ.card (Zmod n)ˣ = Fintypeₓ.card { x : Zmod n // x.val.Coprime n } :=
+      Fintypeₓ.card_congr Zmod.unitsEquivCoprime
     _ = φ n := by
       obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := exists_eq_succ_of_ne_zero NeZero.out
-      simp only [totient, Finset.card_eq_sum_ones, Fintype.card_subtype, Finset.sum_filter, ←
+      simp only [totient, Finsetₓ.card_eq_sum_ones, Fintypeₓ.card_subtype, Finsetₓ.sum_filter, ←
         Finₓ.sum_univ_eq_sum_range, @Nat.coprime_commₓ (m + 1)]
       rfl
     
@@ -124,15 +111,14 @@ theorem totient_even {n : ℕ} (hn : 2 < n) : Even n.totient := by
   rw [← order_of_units, Units.coe_neg_one, order_of_neg_one, ringChar.eq (Zmod n) n, if_neg hn.ne']
 
 theorem totient_mul {m n : ℕ} (h : m.Coprime n) : φ (m * n) = φ m * φ n :=
-  if hmn0 : m * n = 0 then by
-    cases' Nat.mul_eq_zero.1 hmn0 with h h <;> simp only [totient_zero, mul_zero, zero_mul, h]
+  if hmn0 : m * n = 0 then by cases' Nat.mul_eq_zero.1 hmn0 with h h <;> simp only [totient_zero, mul_zero, zero_mul, h]
   else by
     haveI : NeZero (m * n) := ⟨hmn0⟩
     haveI : NeZero m := ⟨left_ne_zero_of_mul hmn0⟩
     haveI : NeZero n := ⟨right_ne_zero_of_mul hmn0⟩
     simp only [← Zmod.card_units_eq_totient]
-    rw [Fintype.card_congr (Units.mapEquiv (Zmod.chineseRemainder h).toMulEquiv).toEquiv,
-      Fintype.card_congr (@MulEquiv.prodUnits (Zmod m) (Zmod n) _ _).toEquiv, Fintype.card_prod]
+    rw [Fintypeₓ.card_congr (Units.mapEquiv (Zmod.chineseRemainder h).toMulEquiv).toEquiv,
+      Fintypeₓ.card_congr (@MulEquiv.prodUnits (Zmod m) (Zmod n) _ _).toEquiv, Fintypeₓ.card_prod]
 
 /-- For `d ∣ n`, the totient of `n/d` equals the number of values `k < n` such that `gcd n k = d` -/
 theorem totient_div_of_dvd {n d : ℕ} (hnd : d ∣ n) : φ (n / d) = (filter (fun k : ℕ => n.gcd k = d) (range n)).card :=
@@ -142,7 +128,7 @@ theorem totient_div_of_dvd {n d : ℕ} (hnd : d ∣ n) : φ (n / d) = (filter (f
     
   rcases hnd with ⟨x, rfl⟩
   rw [Nat.mul_div_cancel_leftₓ x hd0]
-  apply Finset.card_congr fun k _ => d * k
+  apply Finsetₓ.card_congr fun k _ => d * k
   · simp only [mem_filter, mem_range, and_imp, coprime]
     refine' fun a ha1 ha2 => ⟨(mul_lt_mul_left hd0).2 ha1, _⟩
     rw [gcd_mul_left, ha2, mul_oneₓ]
@@ -165,10 +151,10 @@ theorem sum_totient (n : ℕ) : n.divisors.Sum φ = n := by
     
   rw [← sum_div_divisors n φ]
   have : n = ∑ d : ℕ in n.divisors, (filter (fun k : ℕ => n.gcd k = d) (range n)).card := by
-    nth_rw_lhs 0[← card_range n]
+    nth_rw_lhs 0 [← card_range n]
     refine' card_eq_sum_card_fiberwise fun x hx => mem_divisors.2 ⟨_, hn.ne'⟩
     apply gcd_dvd_left
-  nth_rw_rhs 0[this]
+  nth_rw_rhs 0 [this]
   exact sum_congr rfl fun x hx => totient_div_of_dvd (dvd_of_mem_divisors hx)
 
 theorem sum_totient' (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ m) = n := by
@@ -211,8 +197,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n +
 theorem totient_prime_pow {p : ℕ} (hp : p.Prime) {n : ℕ} (hn : 0 < n) : φ (p ^ n) = p ^ (n - 1) * (p - 1) := by
   rcases exists_eq_succ_of_ne_zero (pos_iff_ne_zero.1 hn) with ⟨m, rfl⟩ <;> exact totient_prime_pow_succ hp _
 
-theorem totient_prime {p : ℕ} (hp : p.Prime) : φ p = p - 1 := by
-  rw [← pow_oneₓ p, totient_prime_pow hp] <;> simp
+theorem totient_prime {p : ℕ} (hp : p.Prime) : φ p = p - 1 := by rw [← pow_oneₓ p, totient_prime_pow hp] <;> simp
 
 theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.Prime := by
   refine' ⟨fun h => _, totient_prime⟩
@@ -225,23 +210,22 @@ theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.Pr
       exact one_ne_zero h
       
     
-  rw [totient_eq_card_coprime, range_eq_Ico, ← Ico_insert_succ_left hp.le, Finset.filter_insert,
+  rw [totient_eq_card_coprime, range_eq_Ico, ← Ico_insert_succ_left hp.le, Finsetₓ.filter_insert,
     if_neg (not_coprime_of_dvd_of_dvd hp (dvd_refl p) (dvd_zero p)), ← Nat.card_Ico 1 p] at h
-  refine' p.prime_of_coprime hp fun n hn hnz => Finset.filter_card_eq h n <| finset.mem_Ico.mpr ⟨_, hn⟩
+  refine' p.prime_of_coprime hp fun n hn hnz => Finsetₓ.filter_card_eq h n <| finset.mem_Ico.mpr ⟨_, hn⟩
   rwa [succ_le_iff, pos_iff_ne_zero]
 
-theorem card_units_zmod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintype (Zmod p)ˣ] : Fintype.card (Zmod p)ˣ ≤ p - 1 := by
+theorem card_units_zmod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintypeₓ (Zmod p)ˣ] : Fintypeₓ.card (Zmod p)ˣ ≤ p - 1 := by
   haveI : NeZero p := ⟨(pos_of_gt hp).ne'⟩
   rw [Zmod.card_units_eq_totient p]
   exact Nat.le_pred_of_ltₓ (Nat.totient_lt p hp)
 
-theorem prime_iff_card_units (p : ℕ) [Fintype (Zmod p)ˣ] : p.Prime ↔ Fintype.card (Zmod p)ˣ = p - 1 := by
+theorem prime_iff_card_units (p : ℕ) [Fintypeₓ (Zmod p)ˣ] : p.Prime ↔ Fintypeₓ.card (Zmod p)ˣ = p - 1 := by
   cases' eq_zero_or_ne_zero p with hp hp
   · subst hp
     simp only [Zmod, not_prime_zero, false_iffₓ, zero_tsub]
     -- the substI created an non-defeq but subsingleton instance diamond; resolve it
-    suffices Fintype.card ℤˣ ≠ 0 by
-      convert this
+    suffices Fintypeₓ.card ℤˣ ≠ 0 by convert this
     simp
     
   rw [Zmod.card_units_eq_totient, Nat.totient_eq_iff_prime <| NeZero.pos p]
@@ -251,18 +235,13 @@ theorem totient_two : φ 2 = 1 :=
   (totient_prime prime_two).trans rfl
 
 theorem totient_eq_one_iff : ∀ {n : ℕ}, n.totient = 1 ↔ n = 1 ∨ n = 2
-  | 0 => by
-    simp
-  | 1 => by
-    simp
-  | 2 => by
-    simp
+  | 0 => by simp
+  | 1 => by simp
+  | 2 => by simp
   | n + 3 => by
     have : 3 ≤ n + 3 := le_add_self
     simp only [succ_succ_ne_one, false_orₓ]
-    exact
-      ⟨fun h => not_even_one.elim <| h ▸ totient_even this, by
-        rintro ⟨⟩⟩
+    exact ⟨fun h => not_even_one.elim <| h ▸ totient_even this, by rintro ⟨⟩⟩
 
 /-! ### Euler's product formula for the totient function
 
@@ -280,11 +259,11 @@ theorem totient_eq_prod_factorization {n : ℕ} (hn : n ≠ 0) :
 /-- Euler's product formula for the totient function. -/
 theorem totient_mul_prod_factors (n : ℕ) :
     (φ n * ∏ p in n.factors.toFinset, p) = n * ∏ p in n.factors.toFinset, p - 1 := by
-  by_cases' hn : n = 0
+  by_cases hn:n = 0
   · simp [hn]
     
   rw [totient_eq_prod_factorization hn]
-  nth_rw 2[← factorization_prod_pow_eq_self hn]
+  nth_rw 2 [← factorization_prod_pow_eq_self hn]
   simp only [← prod_factorization_eq_prod_factors, ← Finsupp.prod_mul]
   refine' Finsupp.prod_congr fun p hp => _
   rw [Finsupp.mem_support_iff, ← zero_lt_iff] at hp
@@ -299,11 +278,10 @@ theorem totient_eq_div_factors_mul (n : ℕ) :
 
 /-- Euler's product formula for the totient function. -/
 theorem totient_eq_mul_prod_factors (n : ℕ) : (φ n : ℚ) = n * ∏ p in n.factors.toFinset, 1 - p⁻¹ := by
-  by_cases' hn : n = 0
+  by_cases hn:n = 0
   · simp [hn]
     
-  have hn' : (n : ℚ) ≠ 0 := by
-    simp [hn]
+  have hn' : (n : ℚ) ≠ 0 := by simp [hn]
   have hpQ : (∏ p in n.factors.to_finset, (p : ℚ)) ≠ 0 := by
     rw [← cast_prod, cast_ne_zero, ← zero_lt_iff, ← prod_factorization_eq_prod_factors]
     exact prod_pos fun p hp => pos_of_mem_factorization hp
@@ -319,8 +297,7 @@ theorem totient_gcd_mul_totient_mul (a b : ℕ) : φ (a.gcd b) * φ (a * b) = φ
     ∀ a1 a2 b1 b2 c1 c2 : ℕ, b1 ∣ a1 → b2 ∣ a2 → a1 / b1 * c1 * (a2 / b2 * c2) = a1 * a2 / (b1 * b2) * (c1 * c2) := by
     intro a1 a2 b1 b2 c1 c2 h1 h2
     calc
-      a1 / b1 * c1 * (a2 / b2 * c2) = a1 / b1 * (a2 / b2) * (c1 * c2) := by
-        apply mul_mul_mul_commₓ
+      a1 / b1 * c1 * (a2 / b2 * c2) = a1 / b1 * (a2 / b2) * (c1 * c2) := by apply mul_mul_mul_commₓ
       _ = a1 * a2 / (b1 * b2) * (c1 * c2) := by
         congr 1
         exact div_mul_div_comm h1 h2
@@ -328,8 +305,7 @@ theorem totient_gcd_mul_totient_mul (a b : ℕ) : φ (a.gcd b) * φ (a * b) = φ
   simp only [totient_eq_div_factors_mul]
   rw [shuffle, shuffle]
   rotate_left
-  repeat'
-    apply prod_prime_factors_dvd
+  repeat' apply prod_prime_factors_dvd
   · simp only [prod_factors_gcd_mul_prod_factors_mul]
     rw [eq_comm, mul_comm, ← mul_assoc, ← Nat.mul_div_assocₓ]
     exact mul_dvd_mul (prod_prime_factors_dvd a) (prod_prime_factors_dvd b)

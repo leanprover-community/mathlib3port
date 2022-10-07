@@ -66,10 +66,8 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
     (h : u.toTopologicalSpace = t) (h' : u'.toTopologicalSpace = t) : u = u' := by
   apply uniform_space_eq
   change uniformity _ = uniformity _
-  have : @CompactSpace γ u.to_topological_space := by
-    rwa [h]
-  have : @CompactSpace γ u'.to_topological_space := by
-    rwa [h']
+  have : @CompactSpace γ u.to_topological_space := by rwa [h]
+  have : @CompactSpace γ u'.to_topological_space := by rwa [h']
   rw [compact_space_uniformity, compact_space_uniformity, h, h']
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -78,7 +76,7 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y «expr ≠ » x)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ≠ » x)
 /-- The unique uniform structure inducing a given compact topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
   uniformity := ⨆ x, 𝓝 (x, x)
@@ -111,8 +109,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     -- and a fortiori not in Δ, so x ≠ y
     have clV : ClusterPt (x, y) (𝓟 <| Vᶜ) := hxy.of_inf_right
     have : (x, y) ∉ Interior V := by
-      have : (x, y) ∈ Closure (Vᶜ) := by
-        rwa [mem_closure_iff_cluster_pt]
+      have : (x, y) ∈ Closure (Vᶜ) := by rwa [mem_closure_iff_cluster_pt]
       rwa [closure_compl] at this
     have diag_subset : diagonal γ ⊆ Interior V := by
       rw [subset_interior_iff_nhds]
@@ -138,7 +135,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       rw [mem_supr]
       intro x
       apply IsOpen.mem_nhds (IsOpen.union (IsOpen.union _ _) _)
-      · by_cases' hx : x ∈ V₁ ∪ V₂
+      · by_cases hx:x ∈ V₁ ∪ V₂
         · left
           cases' hx with hx hx <;> [left, right] <;> constructor <;> tauto
           
@@ -147,11 +144,9 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
           tauto
           
         
-      all_goals
-        simp only [IsOpen.prod, *]
+      all_goals simp only [IsOpen.prod, *]
     -- So W ○ W ∈ F by definition of F
-    have : W ○ W ∈ F := by
-      simpa only using mem_lift' W_in
+    have : W ○ W ∈ F := by simpa only using mem_lift' W_in
     -- And V₁ ×ˢ V₂ ∈ 𝓝 (x, y)
     have hV₁₂ : V₁ ×ˢ V₂ ∈ 𝓝 (x, y) := prod_mem_nhds V₁_in V₂_in
     -- But (x, y) is also a cluster point of F so (V₁ ×ˢ V₂) ∩ (W ○ W) ≠ ∅
@@ -176,20 +171,12 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       change IsOpen s ↔ _
       simp_rw [is_open_iff_mem_nhds, nhds_eq_comap_uniformity_aux, this]
     intro x
-    simp_rw [comap_supr, nhds_prod_eq, comap_prod,
-      show Prod.fst ∘ Prod.mk x = fun y : γ => x by
-        ext <;> simp ,
-      show Prod.snd ∘ Prod.mk x = (id : γ → γ) by
-        ext <;> rfl,
-      comap_id]
+    simp_rw [comap_supr, nhds_prod_eq, comap_prod, show Prod.fst ∘ Prod.mk x = fun y : γ => x by ext <;> simp,
+      show Prod.snd ∘ Prod.mk x = (id : γ → γ) by ext <;> rfl, comap_id]
     rw [supr_split_single _ x, comap_const_of_mem fun V => mem_of_mem_nhds]
-    suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y) ⊓ 𝓝 y ≤ 𝓝 x by
-      simpa
+    suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y) ⊓ 𝓝 y ≤ 𝓝 x by simpa
     intro y hxy
-    simp
-      [comap_const_of_not_mem (compl_singleton_mem_nhds hxy)
-        (by
-          simp )]
+    simp [comap_const_of_not_mem (compl_singleton_mem_nhds hxy) (by simp)]
 
 /-!
 ### Heine-Cantor theorem
@@ -201,10 +188,8 @@ continuous. -/
 theorem CompactSpace.uniform_continuous_of_continuous [CompactSpace α] {f : α → β} (h : Continuous f) :
     UniformContinuous f :=
   calc
-    map (Prod.map f f) (𝓤 α) = map (Prod.map f f) (⨆ x, 𝓝 (x, x)) := by
-      rw [compact_space_uniformity]
-    _ = ⨆ x, map (Prod.map f f) (𝓝 (x, x)) := by
-      rw [map_supr]
+    map (Prod.map f f) (𝓤 α) = map (Prod.map f f) (⨆ x, 𝓝 (x, x)) := by rw [compact_space_uniformity]
+    _ = ⨆ x, map (Prod.map f f) (𝓝 (x, x)) := by rw [map_supr]
     _ ≤ ⨆ x, 𝓝 (f x, f x) := supr_mono fun x => (h.prod_map h).ContinuousAt
     _ ≤ ⨆ y, 𝓝 (y, y) := supr_comp_le (fun y => 𝓝 (y, y)) f
     _ ≤ 𝓤 β := supr_nhds_le_uniformity

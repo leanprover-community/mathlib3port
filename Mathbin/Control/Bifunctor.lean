@@ -97,30 +97,27 @@ open Functor
 
 instance : Bifunctor Prod where bimap := @Prod.map
 
-instance : IsLawfulBifunctor Prod := by
-  refine' { .. } <;> intros <;> cases x <;> rfl
+instance : IsLawfulBifunctor Prod := by refine' { .. } <;> intros <;> cases x <;> rfl
 
 instance Bifunctor.const : Bifunctor Const where bimap := fun α α' β β f _ => f
 
-instance IsLawfulBifunctor.const : IsLawfulBifunctor Const := by
-  refine' { .. } <;> intros <;> rfl
+instance IsLawfulBifunctor.const : IsLawfulBifunctor Const := by refine' { .. } <;> intros <;> rfl
 
 instance Bifunctor.flip : Bifunctor (flip F) where bimap := fun α α' β β' f f' x => (bimap f' f x : F β' α')
 
 instance IsLawfulBifunctor.flip [IsLawfulBifunctor F] : IsLawfulBifunctor (flip F) := by
-  refine' { .. } <;> intros <;> simp' [bimap] with functor_norm
+  refine' { .. } <;> intros <;> simp [bimap, functor_norm]
 
 instance : Bifunctor Sum where bimap := @Sum.map
 
-instance : IsLawfulBifunctor Sum := by
-  refine' { .. } <;> intros <;> cases x <;> rfl
+instance : IsLawfulBifunctor Sum := by refine' { .. } <;> intros <;> cases x <;> rfl
 
 open Bifunctor Functor
 
 instance (priority := 10) Bifunctor.functor {α} : Functor (F α) where map := fun _ _ => snd
 
 instance (priority := 10) Bifunctor.is_lawful_functor [IsLawfulBifunctor F] {α} : IsLawfulFunctor (F α) := by
-  refine' { .. } <;> intros <;> simp' [Functor.map] with functor_norm
+  refine' { .. } <;> intros <;> simp [Functor.map, functor_norm]
 
 section Bicompl
 
@@ -129,7 +126,7 @@ variable (G : Type _ → Type u₀) (H : Type _ → Type u₁) [Functor G] [Func
 instance : Bifunctor (bicompl F G H) where bimap := fun α α' β β' f f' x => (bimap (map f) (map f') x : F (G α') (H β'))
 
 instance [IsLawfulFunctor G] [IsLawfulFunctor H] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompl F G H) := by
-  constructor <;> intros <;> simp' [bimap, map_id, map_comp_map] with functor_norm
+  constructor <;> intros <;> simp [bimap, map_id, map_comp_map, functor_norm]
 
 end Bicompl
 
@@ -140,7 +137,7 @@ variable (G : Type u₂ → Type _) [Functor G]
 instance : Bifunctor (bicompr G F) where bimap := fun α α' β β' f f' x => (map (bimap f f') x : G (F α' β'))
 
 instance [IsLawfulFunctor G] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompr G F) := by
-  constructor <;> intros <;> simp' [bimap] with functor_norm
+  constructor <;> intros <;> simp [bimap, functor_norm]
 
 end Bicompr
 

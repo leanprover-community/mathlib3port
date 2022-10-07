@@ -16,16 +16,16 @@ This file provides two equivalences for linearly ordered fintypes:
 -/
 
 
-open Finset
+open Finsetₓ
 
 /-- Given a linearly ordered fintype `α` of cardinal `k`, the order isomorphism
 `mono_equiv_of_fin α h` is the increasing bijection between `fin k` and `α`. Here, `h` is a proof
 that the cardinality of `α` is `k`. We use this instead of an isomorphism `fin (card α) ≃o α` to
 avoid casting issues in further uses of this function. -/
-def monoEquivOfFin (α : Type _) [Fintype α] [LinearOrderₓ α] {k : ℕ} (h : Fintype.card α = k) : Finₓ k ≃o α :=
+def monoEquivOfFin (α : Type _) [Fintypeₓ α] [LinearOrderₓ α] {k : ℕ} (h : Fintypeₓ.card α = k) : Finₓ k ≃o α :=
   (univ.orderIsoOfFin h).trans <| (OrderIso.setCongr _ _ coe_univ).trans OrderIso.Set.univ
 
-variable {α : Type _} [DecidableEq α] [Fintype α] [LinearOrderₓ α] {m n : ℕ} {s : Finset α}
+variable {α : Type _} [DecidableEq α] [Fintypeₓ α] [LinearOrderₓ α] {m n : ℕ} {s : Finsetₓ α}
 
 /-- If `α` is a linearly ordered fintype, `s : finset α` has cardinality `m` and its complement has
 cardinality `n`, then `fin m ⊕ fin n ≃ α`. The equivalence sends elements of `fin m` to

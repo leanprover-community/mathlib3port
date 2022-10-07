@@ -38,7 +38,7 @@ the reindexed version).
 
 namespace Nat
 
-open Finset
+open Finsetₓ
 
 /-- A variant of the traditional prime counting function which gives the number of primes
 *strictly* less than the input. More convenient for avoiding off-by-one errors.
@@ -56,10 +56,10 @@ localized [Nat] notation "π" => Nat.primeCounting
 -- mathport name: prime_counting'
 localized [Nat] notation "π'" => Nat.primeCounting'
 
-theorem monotone_prime_counting' : Monotone primeCounting' :=
+theorem monotone_prime_counting' : Monotoneₓ primeCounting' :=
   count_monotone Prime
 
-theorem monotone_prime_counting : Monotone primeCounting := fun a b a_le_b =>
+theorem monotone_prime_counting : Monotoneₓ primeCounting := fun a b a_le_b =>
   monotone_prime_counting' (add_le_add_right a_le_b 1)
 
 @[simp]
@@ -78,8 +78,7 @@ theorem prime_counting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
       rw [prime_counting', count_eq_card_filter_range, range_eq_Ico, ← Ico_union_Ico_eq_Ico (zero_le k) le_self_add,
         filter_union]
       apply card_union_le
-    _ ≤ π' k + ((ico k (k + n)).filter Prime).card := by
-      rw [prime_counting', count_eq_card_filter_range]
+    _ ≤ π' k + ((ico k (k + n)).filter Prime).card := by rw [prime_counting', count_eq_card_filter_range]
     _ ≤ π' k + ((ico k (k + n)).filter (Coprime a)).card := by
       refine' add_le_add_left (card_le_of_subset _) k.prime_counting'
       simp only [subset_iff, and_imp, mem_filter, mem_Ico]

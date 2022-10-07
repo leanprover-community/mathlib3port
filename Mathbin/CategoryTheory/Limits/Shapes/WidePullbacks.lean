@@ -68,8 +68,7 @@ instance Hom.inhabited : Inhabited (Hom none none) :=
 attribute [local tidy] tactic.case_bash
 
 instance subsingleton_hom (j j' : WidePullbackShape J) : Subsingleton (j ⟶ j') :=
-  ⟨by
-    tidy⟩
+  ⟨by tidy⟩
 
 instance category : SmallCategory (WidePullbackShape J) :=
   thin_category
@@ -102,11 +101,7 @@ def wideCospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : Wid
 /-- Every diagram is naturally isomorphic (actually, equal) to a `wide_cospan` -/
 def diagramIsoWideCospan (F : WidePullbackShape J ⥤ C) :
     F ≅ wideCospan (F.obj none) (fun j => F.obj (some j)) fun j => F.map (Hom.term j) :=
-  (NatIso.ofComponents fun j =>
-      eq_to_iso <| by
-        tidy) <|
-    by
-    tidy
+  (NatIso.ofComponents fun j => eq_to_iso <| by tidy) <| by tidy
 
 /-- Construct a cone over a wide cospan. -/
 @[simps]
@@ -118,25 +113,15 @@ def mkCone {F : WidePullbackShape J ⥤ C} {X : C} (f : X ⟶ F.obj none) (π : 
           match j with
           | none => f
           | some j => π j,
-        naturality' := fun j j' f => by
-          cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp' <;> simp [w] } }
+        naturality' := fun j j' f => by cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp <;> simp [w] } }
 
 /-- Wide pullback diagrams of equivalent index types are equivlent. -/
 def equivalenceOfEquiv (J' : Type w') (h : J ≃ J') : WidePullbackShape J ≌ WidePullbackShape J' where
   Functor := wideCospan none (fun j => some (h j)) fun j => Hom.term (h j)
   inverse := wideCospan none (fun j => some (h.invFun j)) fun j => Hom.term (h.invFun j)
-  unitIso :=
-    NatIso.ofComponents
-      (fun j => by
-        cases j <;> simp )
-      fun j k f => by
-      simp only [eq_iff_true_of_subsingleton]
+  unitIso := NatIso.ofComponents (fun j => by cases j <;> simp) fun j k f => by simp only [eq_iff_true_of_subsingleton]
   counitIso :=
-    NatIso.ofComponents
-      (fun j => by
-        cases j <;> simp )
-      fun j k f => by
-      simp only [eq_iff_true_of_subsingleton]
+    NatIso.ofComponents (fun j => by cases j <;> simp) fun j k f => by simp only [eq_iff_true_of_subsingleton]
 
 /-- Lifting universe and morphism levels preserves wide pullback diagrams. -/
 def uliftEquivalence : UliftHom.{w'} (ULift.{w'} (WidePullbackShape J)) ≌ WidePullbackShape (ULift J) :=
@@ -172,8 +157,7 @@ instance Hom.inhabited : Inhabited (Hom none none) :=
 attribute [local tidy] tactic.case_bash
 
 instance subsingleton_hom (j j' : WidePushoutShape J) : Subsingleton (j ⟶ j') :=
-  ⟨by
-    tidy⟩
+  ⟨by tidy⟩
 
 instance category : SmallCategory (WidePushoutShape J) :=
   thin_category
@@ -196,20 +180,12 @@ def wideSpan (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j) : WideP
       
     · exact arrows j
       
-  map_comp' := by
-    rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _) <;>
-      first |
-        simpa|
-        simp
+  map_comp' := by rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _) <;> first |simpa|simp
 
 /-- Every diagram is naturally isomorphic (actually, equal) to a `wide_span` -/
 def diagramIsoWideSpan (F : WidePushoutShape J ⥤ C) :
     F ≅ wideSpan (F.obj none) (fun j => F.obj (some j)) fun j => F.map (Hom.init j) :=
-  (NatIso.ofComponents fun j =>
-      eq_to_iso <| by
-        tidy) <|
-    by
-    tidy
+  (NatIso.ofComponents fun j => eq_to_iso <| by tidy) <| by tidy
 
 /-- Construct a cocone over a wide span. -/
 @[simps]
@@ -221,8 +197,7 @@ def mkCocone {F : WidePushoutShape J ⥤ C} {X : C} (f : F.obj none ⟶ X) (ι :
           match j with
           | none => f
           | some j => ι j,
-        naturality' := fun j j' f => by
-          cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp' <;> simp [w] } }
+        naturality' := fun j j' f => by cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp <;> simp [w] } }
 
 end WidePushoutShape
 
@@ -308,11 +283,7 @@ theorem eq_lift_of_comp_eq (g : X ⟶ widePullback _ _ arrows) :
     
 
 theorem hom_eq_lift (g : X ⟶ widePullback _ _ arrows) :
-    g =
-      lift (g ≫ base arrows) (fun j => g ≫ π arrows j)
-        (by
-          tidy) :=
-  by
+    g = lift (g ≫ base arrows) (fun j => g ≫ π arrows j) (by tidy) := by
   apply eq_lift_of_comp_eq
   tidy
 
@@ -441,26 +412,22 @@ def widePushoutShapeUnop : (WidePushoutShape J)ᵒᵖ ⥤ WidePullbackShape J :=
 /-- The inverse of the unit isomorphism of the equivalence
 `wide_pushout_shape_op_equiv : (wide_pushout_shape J)ᵒᵖ ≌ wide_pullback_shape J` -/
 def widePushoutShapeOpUnop : widePushoutShapeUnop J ⋙ widePullbackShapeOp J ≅ 𝟭 _ :=
-  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
-    decide
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by decide
 
 /-- The counit isomorphism of the equivalence
 `wide_pullback_shape_op_equiv : (wide_pullback_shape J)ᵒᵖ ≌ wide_pushout_shape J` -/
 def widePushoutShapeUnopOp : widePushoutShapeOp J ⋙ widePullbackShapeUnop J ≅ 𝟭 _ :=
-  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
-    decide
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by decide
 
 /-- The inverse of the unit isomorphism of the equivalence
 `wide_pullback_shape_op_equiv : (wide_pullback_shape J)ᵒᵖ ≌ wide_pushout_shape J` -/
 def widePullbackShapeOpUnop : widePullbackShapeUnop J ⋙ widePushoutShapeOp J ≅ 𝟭 _ :=
-  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
-    decide
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by decide
 
 /-- The counit isomorphism of the equivalence
 `wide_pushout_shape_op_equiv : (wide_pushout_shape J)ᵒᵖ ≌ wide_pullback_shape J` -/
 def widePullbackShapeUnopOp : widePullbackShapeOp J ⋙ widePushoutShapeUnop J ≅ 𝟭 _ :=
-  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
-    decide
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by decide
 
 /-- The duality equivalence `(wide_pushout_shape J)ᵒᵖ ≌ wide_pullback_shape J` -/
 @[simps]

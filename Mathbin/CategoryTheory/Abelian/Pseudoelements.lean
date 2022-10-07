@@ -103,10 +103,7 @@ def PseudoEqual (P : C) (f g : Over P) : Prop :=
   ∃ (R : C)(p : R ⟶ f.1)(q : R ⟶ g.1)(_ : Epi p)(_ : Epi q), p ≫ f.Hom = q ≫ g.Hom
 
 theorem pseudo_equal_refl {P : C} : Reflexive (PseudoEqual P) := fun f =>
-  ⟨f.1, 𝟙 f.1, 𝟙 f.1, by
-    infer_instance, by
-    infer_instance, by
-    simp ⟩
+  ⟨f.1, 𝟙 f.1, 𝟙 f.1, by infer_instance, by infer_instance, by simp⟩
 
 theorem pseudo_equal_symm {P : C} : Symmetric (PseudoEqual P) := fun f g ⟨R, p, q, ep, Eq, comm⟩ =>
   ⟨R, q, p, Eq, ep, comm.symm⟩
@@ -163,10 +160,7 @@ theorem over_coe_def {P Q : C} (a : Q ⟶ P) : (a : Pseudoelement P) = ⟦a⟧ :
 
 /-- If two elements are pseudo-equal, then their composition with a morphism is, too. -/
 theorem pseudo_apply_aux {P Q : C} (f : P ⟶ Q) (a b : Over P) : a ≈ b → app f a ≈ app f b :=
-  fun ⟨R, p, q, ep, Eq, comm⟩ =>
-  ⟨R, p, q, ep, Eq,
-    show p ≫ a.Hom ≫ f = q ≫ b.Hom ≫ f by
-      rw [reassoc_of comm]⟩
+  fun ⟨R, p, q, ep, Eq, comm⟩ => ⟨R, p, q, ep, Eq, show p ≫ a.Hom ≫ f = q ≫ b.Hom ≫ f by rw [reassoc_of comm]⟩
 
 /-- A morphism `f` induces a function `pseudo_apply f` on pseudoelements. -/
 def pseudoApply {P Q : C} (f : P ⟶ Q) : P → Q :=
@@ -211,14 +205,8 @@ attribute [local instance] has_binary_biproducts.of_has_binary_products
 
 /-- The arrows pseudo-equal to a zero morphism are precisely the zero morphisms -/
 theorem pseudo_zero_aux {P : C} (Q : C) (f : Over P) : f ≈ (0 : Q ⟶ P) ↔ f.Hom = 0 :=
-  ⟨fun ⟨R, p, q, ep, Eq, comm⟩ =>
-    zero_of_epi_comp p
-      (by
-        simp [comm]),
-    fun hf =>
-    ⟨biprod f.1 Q, biprod.fst, biprod.snd, by
-      infer_instance, by
-      infer_instance, by
+  ⟨fun ⟨R, p, q, ep, Eq, comm⟩ => zero_of_epi_comp p (by simp [comm]), fun hf =>
+    ⟨biprod f.1 Q, biprod.fst, biprod.snd, by infer_instance, by infer_instance, by
       rw [hf, over.coe_hom, has_zero_morphisms.comp_zero, has_zero_morphisms.comp_zero]⟩⟩
 
 end
@@ -284,15 +272,13 @@ localized [Pseudoelement]
     CategoryTheory.Abelian.Pseudoelement.zero_morphism_ext CategoryTheory.Abelian.Pseudoelement.zero_morphism_ext'
 
 theorem eq_zero_iff {P Q : C} (f : P ⟶ Q) : f = 0 ↔ ∀ a, f a = 0 :=
-  ⟨fun h a => by
-    simp [h], zero_morphism_ext _⟩
+  ⟨fun h a => by simp [h], zero_morphism_ext _⟩
 
 /-- A monomorphism is injective on pseudoelements. -/
 theorem pseudo_injective_of_mono {P Q : C} (f : P ⟶ Q) [Mono f] : Function.Injective f := fun abar abar' =>
   (Quotientₓ.induction_on₂ abar abar') fun a a' ha =>
     Quotientₓ.sound <|
-      have : ⟦(a.Hom ≫ f : Over Q)⟧ = ⟦a'.Hom ≫ f⟧ := by
-        convert ha
+      have : ⟦(a.Hom ≫ f : Over Q)⟧ = ⟦a'.Hom ≫ f⟧ := by convert ha
       match Quotientₓ.exact this with
       | ⟨R, p, q, ep, Eq, comm⟩ =>
         ⟨R, p, q, ep, Eq,
@@ -317,9 +303,7 @@ theorem pseudo_surjective_of_epi {P Q : C} (f : P ⟶ Q) [Epi f] : Function.Surj
   (Quotientₓ.induction_on qbar) fun q =>
     ⟨((pullback.fst : pullback f q.Hom ⟶ P) : Over P),
       Quotientₓ.sound <|
-        ⟨pullback f q.Hom, 𝟙 (pullback f q.Hom), pullback.snd, by
-          infer_instance, by
-          infer_instance, by
+        ⟨pullback f q.Hom, 𝟙 (pullback f q.Hom), pullback.snd, by infer_instance, by infer_instance, by
           rw [category.id_comp, ← pullback.condition, app_hom, over.coe_hom]⟩⟩
 
 end
@@ -336,7 +320,7 @@ theorem epi_of_pseudo_surjective {P Q : C} (f : P ⟶ Q) : Function.Surjective f
       match Quotientₓ.exact this with
       | ⟨R, x, y, ex, ey, comm⟩ =>
         @epi_of_epi_fac _ _ _ _ _ (x ≫ p.Hom) f y ey <| by
-          dsimp'  at comm
+          dsimp at comm
           rw [category.assoc, comm]
           apply category.comp_id
 
@@ -358,17 +342,12 @@ theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} (h : Exact
       -- It remains to show that the image of this element under f is pseudo-equal to b.
       apply Quotientₓ.sound
       -- pullback.snd is an epimorphism because the map onto the image is!
-      refine'
-        ⟨pullback (abelian.factor_thru_image f) c, 𝟙 _, pullback.snd, by
-          infer_instance, by
-          infer_instance, _⟩
+      refine' ⟨pullback (abelian.factor_thru_image f) c, 𝟙 _, pullback.snd, by infer_instance, by infer_instance, _⟩
       -- Now we can verify that the diagram commutes.
       calc
         𝟙 (pullback (abelian.factor_thru_image f) c) ≫ pullback.fst ≫ f = pullback.fst ≫ f := category.id_comp _
-        _ = pullback.fst ≫ abelian.factor_thru_image f ≫ kernel.ι (cokernel.π f) := by
-          rw [abelian.image.fac]
-        _ = (pullback.snd ≫ c) ≫ kernel.ι (cokernel.π f) := by
-          rw [← category.assoc, pullback.condition]
+        _ = pullback.fst ≫ abelian.factor_thru_image f ≫ kernel.ι (cokernel.π f) := by rw [abelian.image.fac]
+        _ = (pullback.snd ≫ c) ≫ kernel.ι (cokernel.π f) := by rw [← category.assoc, pullback.condition]
         _ = pullback.snd ≫ b.hom := by
           rw [category.assoc]
           congr
@@ -385,9 +364,7 @@ section
 theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
     ((∀ a, g (f a) = 0) ∧ ∀ b, g b = 0 → ∃ a, f a = b) → Exact f g := fun ⟨h₁, h₂⟩ =>
   (Abelian.exact_iff _ _).2
-    ⟨(zero_morphism_ext _) fun a => by
-        rw [comp_apply, h₁ a],
-      by
+    ⟨(zero_morphism_ext _) fun a => by rw [comp_apply, h₁ a], by
       -- If we apply g to the pseudoelement induced by its kernel, we get 0 (of course!).
       have : g (kernel.ι g) = 0 := apply_eq_zero_of_comp_eq_zero _ _ (kernel.condition _)
       -- By pseudo-exactness, we get a preimage.
@@ -429,7 +406,7 @@ theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
       let a'' : R ⟶ P := p ≫ a.Hom - q ≫ a'.Hom
       ⟨a'',
         ⟨show ⟦((p ≫ a.Hom - q ≫ a'.Hom) ≫ f : Over Q)⟧ = ⟦(0 : Q ⟶ Q)⟧ by
-            dsimp'  at comm
+            dsimp at comm
             simp [sub_eq_zero.2 comm],
           fun Z g hh => by
           obtain ⟨X, p', q', ep', eq', comm'⟩ := Quotientₓ.exact hh
@@ -439,10 +416,7 @@ theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
           apply Quotientₓ.sound
           -- Can we prevent quotient.sound from giving us this weird `coe_b` thingy?
           change app g (a'' : over P) ≈ app g a
-          exact
-            ⟨R, 𝟙 R, p, by
-              infer_instance, ep, by
-              simp [sub_eq_add_neg, this]⟩⟩⟩
+          exact ⟨R, 𝟙 R, p, by infer_instance, ep, by simp [sub_eq_add_neg, this]⟩⟩⟩
 
 variable [Limits.HasPullbacks C]
 
@@ -462,14 +436,8 @@ theorem pseudo_pullback {P Q R : C} {f : P ⟶ R} {g : Q ⟶ R} {p : P} {q : Q} 
           exact comm)
     exact
       ⟨l,
-        ⟨Quotientₓ.sound
-            ⟨Z, 𝟙 Z, a, by
-              infer_instance, ea, by
-              rwa [category.id_comp]⟩,
-          Quotientₓ.sound
-            ⟨Z, 𝟙 Z, b, by
-              infer_instance, eb, by
-              rwa [category.id_comp]⟩⟩⟩
+        ⟨Quotientₓ.sound ⟨Z, 𝟙 Z, a, by infer_instance, ea, by rwa [category.id_comp]⟩,
+          Quotientₓ.sound ⟨Z, 𝟙 Z, b, by infer_instance, eb, by rwa [category.id_comp]⟩⟩⟩
 
 section Module
 

@@ -33,8 +33,7 @@ theorem product_cons (a : α) (l₁ : List α) (l₂ : List β) :
 @[simp]
 theorem product_nil : ∀ l : List α, product l (@nil β) = []
   | [] => rfl
-  | a :: l => by
-    rw [product_cons, product_nil] <;> rfl
+  | a :: l => by rw [product_cons, product_nil] <;> rfl
 
 @[simp]
 theorem mem_product {l₁ : List α} {l₂ : List β} {a : α} {b : β} : (a, b) ∈ product l₁ l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ := by
@@ -62,8 +61,7 @@ theorem sigma_cons (a : α) (l₁ : List α) (l₂ : ∀ a, List (σ a)) :
 @[simp]
 theorem sigma_nil : ∀ l : List α, (l.Sigma fun a => @nil (σ a)) = []
   | [] => rfl
-  | a :: l => by
-    rw [sigma_cons, sigma_nil] <;> rfl
+  | a :: l => by rw [sigma_cons, sigma_nil] <;> rfl
 
 @[simp]
 theorem mem_sigma {l₁ : List α} {l₂ : ∀ a, List (σ a)} {a : α} {b : σ a} :

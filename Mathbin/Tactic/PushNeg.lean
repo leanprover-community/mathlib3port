@@ -9,6 +9,11 @@ import Mathbin.Logic.Basic
 
 open Tactic Expr
 
+/- Enable the option `trace.push_neg.use_distrib` in order to have `¬ (p ∧ q)` normalized to
+`¬ p ∨ ¬ q`, rather than the default `p → ¬ q`. -/
+initialize
+  registerTraceClass.1 `push_neg.use_distrib
+
 namespace PushNeg
 
 section
@@ -28,6 +33,9 @@ theorem not_not_eq : (¬¬p) = p :=
 
 theorem not_and_eq : (¬(p ∧ q)) = (p → ¬q) :=
   propext not_and
+
+theorem not_and_distrib_eq : (¬(p ∧ q)) = (¬p ∨ ¬q) :=
+  propext not_and_distrib
 
 theorem not_or_eq : (¬(p ∨ q)) = (¬p ∧ ¬q) :=
   propext not_or_distrib
@@ -72,8 +80,13 @@ private unsafe def transform_negation_step (e : expr) : tactic (Option (expr × 
           let pr ← mk_app `` not_not_eq [a]
           return (some (a, pr))
         | quote.1 ((%%ₓa) ∧ %%ₓb) => do
-          let pr ← mk_app `` not_and_eq [a, b]
-          return (some (quote.1 ((%%ₓa : Prop) → ¬%%ₓb), pr))
+          let distrib ← get_bool_option `trace.push_neg.use_distrib ff
+          if distrib then do
+              let pr ← mk_app `` not_and_distrib_eq [a, b]
+              return (some (quote.1 (¬(%%ₓa : Prop) ∨ ¬%%ₓb), pr))
+            else do
+              let pr ← mk_app `` not_and_eq [a, b]
+              return (some (quote.1 ((%%ₓa : Prop) → ¬%%ₓb), pr))
         | quote.1 ((%%ₓa) ∨ %%ₓb) => do
           let pr ← mk_app `` not_or_eq [a, b]
           return (some (quote.1 ((¬%%ₓa) ∧ ¬%%ₓb), pr))

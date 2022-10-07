@@ -171,9 +171,7 @@ theorem map_map (op₁ : γ → δ) (op₂ : β → γ) (f : Germ l β) : map op
 /-- Lift a binary function `β → γ → δ` to a function `germ l β → germ l γ → germ l δ`. -/
 def map₂ (op : β → γ → δ) : Germ l β → Germ l γ → Germ l δ :=
   (Quotientₓ.map₂' fun f g x => op (f x) (g x)) fun f f' Hf g g' Hg =>
-    Hg.mp <|
-      Hf.mono fun x Hf Hg => by
-        simp only [Hf, Hg]
+    Hg.mp <| Hf.mono fun x Hf Hg => by simp only [Hf, Hg]
 
 @[simp]
 theorem map₂_coe (op : β → γ → δ) (f : α → β) (g : α → γ) : map₂ op (f : Germ l β) g = fun x => op (f x) (g x) :=
@@ -346,7 +344,7 @@ def coeMulHom [Monoidₓ M] (l : Filter α) : (α → M) →* Germ l M :=
   ⟨coe, rfl, fun f g => rfl⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident coe_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident coe_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem coe_coe_mul_hom [Monoidₓ M] : (coeMulHom l : (α → M) → Germ l M) = coe :=
   rfl
@@ -473,9 +471,7 @@ instance [Monoidₓ M] [MulAction M β] : MulAction M (Germ l β) where
       simp only [mul_smul]
 
 instance mulAction' [Monoidₓ M] [MulAction M β] : MulAction (Germ l M) (Germ l β) where
-  one_smul := fun f =>
-    (induction_on f) fun f => by
-      simp only [← coe_one, ← coe_smul', one_smul]
+  one_smul := fun f => (induction_on f) fun f => by simp only [← coe_one, ← coe_smul', one_smul]
   mul_smul := fun c₁ c₂ f =>
     (induction_on₃ c₁ c₂ f) fun c₁ c₂ f => by
       norm_cast
@@ -486,8 +482,7 @@ instance [Monoidₓ M] [AddMonoidₓ N] [DistribMulAction M N] : DistribMulActio
     (induction_on₂ f g) fun f g => by
       norm_cast
       simp only [smul_add]
-  smul_zero := fun c => by
-    simp only [← coe_zero, ← coe_smul, smul_zero]
+  smul_zero := fun c => by simp only [← coe_zero, ← coe_smul, smul_zero]
 
 instance distribMulAction' [Monoidₓ M] [AddMonoidₓ N] [DistribMulAction M N] :
     DistribMulAction (Germ l M) (Germ l N) where
@@ -495,9 +490,7 @@ instance distribMulAction' [Monoidₓ M] [AddMonoidₓ N] [DistribMulAction M N]
     (induction_on₃ c f g) fun c f g => by
       norm_cast
       simp only [smul_add]
-  smul_zero := fun c =>
-    (induction_on c) fun c => by
-      simp only [← coe_zero, ← coe_smul', smul_zero]
+  smul_zero := fun c => (induction_on c) fun c => by simp only [← coe_zero, ← coe_smul', smul_zero]
 
 instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (Germ l M) where
   add_smul := fun c₁ c₂ f =>
@@ -514,9 +507,7 @@ instance module' [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module (Ger
     (induction_on₃ c₁ c₂ f) fun c₁ c₂ f => by
       norm_cast
       simp only [add_smul]
-  zero_smul := fun f =>
-    (induction_on f) fun f => by
-      simp only [← coe_zero, ← coe_smul', zero_smul]
+  zero_smul := fun f => (induction_on f) fun f => by simp only [← coe_zero, ← coe_smul', zero_smul]
 
 end Module
 

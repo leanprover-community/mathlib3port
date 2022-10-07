@@ -43,20 +43,16 @@ theorem log_div_log : log x / log b = logb b x :=
   rfl
 
 @[simp]
-theorem logb_zero : logb b 0 = 0 := by
-  simp [logb]
+theorem logb_zero : logb b 0 = 0 := by simp [logb]
 
 @[simp]
-theorem logb_one : logb b 1 = 0 := by
-  simp [logb]
+theorem logb_one : logb b 1 = 0 := by simp [logb]
 
 @[simp]
-theorem logb_abs (x : ℝ) : logb b (abs x) = logb b x := by
-  rw [logb, logb, log_abs]
+theorem logb_abs (x : ℝ) : logb b (abs x) = logb b x := by rw [logb, logb, log_abs]
 
 @[simp]
-theorem logb_neg_eq_logb (x : ℝ) : logb b (-x) = logb b x := by
-  rw [← logb_abs x, ← logb_abs (-x), abs_neg]
+theorem logb_neg_eq_logb (x : ℝ) : logb b (-x) = logb b x := by rw [← logb_abs x, ← logb_abs (-x), abs_neg]
 
 theorem logb_mul (hx : x ≠ 0) (hy : y ≠ 0) : logb b (x * y) = logb b x + logb b y := by
   simp_rw [logb, log_mul hx hy, add_div]
@@ -65,8 +61,7 @@ theorem logb_div (hx : x ≠ 0) (hy : y ≠ 0) : logb b (x / y) = logb b x - log
   simp_rw [logb, log_div hx hy, sub_div]
 
 @[simp]
-theorem logb_inv (x : ℝ) : logb b x⁻¹ = -logb b x := by
-  simp [logb, neg_div]
+theorem logb_inv (x : ℝ) : logb b x⁻¹ = -logb b x := by simp [logb, neg_div]
 
 section BPosAndNeOne
 
@@ -132,11 +127,9 @@ variable (hb : 1 < b)
 
 include hb
 
-private theorem b_pos : 0 < b := by
-  linarith
+private theorem b_pos : 0 < b := by linarith
 
-private theorem b_ne_one : b ≠ 1 := by
-  linarith
+private theorem b_ne_one : b ≠ 1 := by linarith
 
 @[simp]
 theorem logb_le_logb (h : 0 < x) (h₁ : 0 < y) : logb b x ≤ logb b y ↔ x ≤ y := by
@@ -178,14 +171,12 @@ theorem logb_neg_iff (h : 0 < x) : logb b x < 0 ↔ x < 1 := by
 theorem logb_neg (h0 : 0 < x) (h1 : x < 1) : logb b x < 0 :=
   (logb_neg_iff hb h0).2 h1
 
-theorem logb_nonneg_iff (hx : 0 < x) : 0 ≤ logb b x ↔ 1 ≤ x := by
-  rw [← not_ltₓ, logb_neg_iff hb hx, not_ltₓ]
+theorem logb_nonneg_iff (hx : 0 < x) : 0 ≤ logb b x ↔ 1 ≤ x := by rw [← not_ltₓ, logb_neg_iff hb hx, not_ltₓ]
 
 theorem logb_nonneg (hx : 1 ≤ x) : 0 ≤ logb b x :=
   (logb_nonneg_iff hb (zero_lt_one.trans_le hx)).2 hx
 
-theorem logb_nonpos_iff (hx : 0 < x) : logb b x ≤ 0 ↔ x ≤ 1 := by
-  rw [← not_ltₓ, logb_pos_iff hb hx, not_ltₓ]
+theorem logb_nonpos_iff (hx : 0 < x) : logb b x ≤ 0 ↔ x ≤ 1 := by rw [← not_ltₓ, logb_pos_iff hb hx, not_ltₓ]
 
 theorem logb_nonpos_iff' (hx : 0 ≤ x) : logb b x ≤ 0 ↔ x ≤ 1 := by
   rcases hx.eq_or_lt with (rfl | hx)
@@ -196,9 +187,9 @@ theorem logb_nonpos_iff' (hx : 0 ≤ x) : logb b x ≤ 0 ↔ x ≤ 1 := by
 theorem logb_nonpos (hx : 0 ≤ x) (h'x : x ≤ 1) : logb b x ≤ 0 :=
   (logb_nonpos_iff' hb hx).2 h'x
 
-theorem strict_mono_on_logb : StrictMonoOn (logb b) (Set.Ioi 0) := fun x hx y hy hxy => logb_lt_logb hb hx hxy
+theorem strict_mono_on_logb : StrictMonoOnₓ (logb b) (Set.Ioi 0) := fun x hx y hy hxy => logb_lt_logb hb hx hxy
 
-theorem strict_anti_on_logb : StrictAntiOn (logb b) (Set.Iio 0) := by
+theorem strict_anti_on_logb : StrictAntiOnₓ (logb b) (Set.Iio 0) := by
   rintro x (hx : x < 0) y (hy : y < 0) hxy
   rw [← logb_abs y, ← logb_abs x]
   refine' logb_lt_logb hb (abs_pos.2 hy.ne) _
@@ -226,8 +217,7 @@ variable (b_lt_one : b < 1)
 
 include b_lt_one
 
-private theorem b_ne_one : b ≠ 1 := by
-  linarith
+private theorem b_ne_one : b ≠ 1 := by linarith
 
 include b_pos
 
@@ -279,10 +269,10 @@ theorem logb_nonneg_of_base_lt_one (hx : 0 < x) (hx' : x ≤ 1) : 0 ≤ logb b x
 theorem logb_nonpos_iff_of_base_lt_one (hx : 0 < x) : logb b x ≤ 0 ↔ 1 ≤ x := by
   rw [← not_ltₓ, logb_pos_iff_of_base_lt_one b_pos b_lt_one hx, not_ltₓ]
 
-theorem strict_anti_on_logb_of_base_lt_one : StrictAntiOn (logb b) (Set.Ioi 0) := fun x hx y hy hxy =>
+theorem strict_anti_on_logb_of_base_lt_one : StrictAntiOnₓ (logb b) (Set.Ioi 0) := fun x hx y hy hxy =>
   logb_lt_logb_of_base_lt_one b_pos b_lt_one hx hxy
 
-theorem strict_mono_on_logb_of_base_lt_one : StrictMonoOn (logb b) (Set.Iio 0) := by
+theorem strict_mono_on_logb_of_base_lt_one : StrictMonoOnₓ (logb b) (Set.Iio 0) := by
   rintro x (hx : x < 0) y (hy : y < 0) hxy
   rw [← logb_abs y, ← logb_abs x]
   refine' logb_lt_logb_of_base_lt_one b_pos b_lt_one (abs_pos.2 hy.ne) _
@@ -347,14 +337,14 @@ theorem logb_eq_zero : logb b x = 0 ↔ b = 0 ∨ b = 1 ∨ b = -1 ∨ x = 0 ∨
 -- TODO add other limits and continuous API lemmas analogous to those in log.lean
 open BigOperators
 
-theorem logb_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀ x ∈ s, f x ≠ 0) :
+theorem logb_prod {α : Type _} (s : Finsetₓ α) (f : α → ℝ) (hf : ∀ x ∈ s, f x ≠ 0) :
     logb b (∏ i in s, f i) = ∑ i in s, logb b (f i) := by
   classical
-  induction' s using Finset.induction_on with a s ha ih
+  induction' s using Finsetₓ.induction_on with a s ha ih
   · simp
     
-  simp only [Finset.mem_insert, forall_eq_or_imp] at hf
-  simp [ha, ih hf.2, logb_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
+  simp only [Finsetₓ.mem_insert, forall_eq_or_imp] at hf
+  simp [ha, ih hf.2, logb_mul hf.1 (Finsetₓ.prod_ne_zero_iff.2 hf.2)]
 
 end Real
 

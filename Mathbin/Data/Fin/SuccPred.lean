@@ -18,8 +18,7 @@ to a specific `fin` instance.
 namespace Finₓ
 
 instance : ∀ {n : ℕ}, SuccOrder (Finₓ n)
-  | 0 => by
-    constructor <;> exact elim0
+  | 0 => by constructor <;> exact elim0
   | n + 1 =>
     SuccOrder.ofCore (fun i => if i < Finₓ.last n then i + 1 else i)
       (by
@@ -41,8 +40,7 @@ theorem succ_apply {n : ℕ} (a) : SuccOrder.succ a = if a < Finₓ.last n then 
   rfl
 
 instance : ∀ {n : ℕ}, PredOrder (Finₓ n)
-  | 0 => by
-    constructor <;> exact elim0
+  | 0 => by constructor <;> exact elim0
   | n + 1 =>
     PredOrder.ofCore (fun x => if x = 0 then 0 else x - 1)
       (by

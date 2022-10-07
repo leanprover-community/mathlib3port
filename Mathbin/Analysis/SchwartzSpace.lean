@@ -78,21 +78,19 @@ instance : Coe 𝓢(E, F) (E → F) :=
 
 instance funLike : FunLike 𝓢(E, F) E fun _ => F where
   coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 instance : CoeFun 𝓢(E, F) fun _ => E → F :=
   ⟨fun p => p.toFun⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 /-- All derivatives of a Schwartz function are rapidly decaying. -/
 theorem decay (f : 𝓢(E, F)) (k n : ℕ) : ∃ (C : ℝ)(hC : 0 < C), ∀ x, ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ ≤ C := by
   rcases f.decay' k n with ⟨C, hC⟩
   exact
-    ⟨max C 1, by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]", fun x =>
-      (hC x).trans (le_max_leftₓ _ _)⟩
+    ⟨max C 1, by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]",
+      fun x => (hC x).trans (le_max_leftₓ _ _)⟩
 
 /-- Every Schwartz function is smooth. -/
 theorem smooth (f : 𝓢(E, F)) (n : ℕ∞) : ContDiff ℝ n f :=
@@ -113,7 +111,7 @@ theorem bounds_bdd_below (k n : ℕ) (f : 𝓢(E, F)) :
     BddBelow { c | 0 ≤ c ∧ ∀ x, ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ ≤ c } :=
   ⟨0, fun _ ⟨hn, _⟩ => hn⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 theorem decay_add_le_aux (k n : ℕ) (f g : 𝓢(E, F)) (x : E) :
     ∥x∥ ^ k * ∥iteratedFderiv ℝ n (f + g) x∥ ≤
       ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ + ∥x∥ ^ k * ∥iteratedFderiv ℝ n g x∥ :=
@@ -121,14 +119,13 @@ theorem decay_add_le_aux (k n : ℕ) (f g : 𝓢(E, F)) (x : E) :
   rw [← mul_addₓ]
   refine'
     mul_le_mul_of_nonneg_left _
-      (by
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]")
+      (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
   convert norm_add_le _ _
   exact iterated_fderiv_add_apply (f.smooth _) (g.smooth _)
 
 theorem decay_neg_aux (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
     ∥x∥ ^ k * ∥iteratedFderiv ℝ n (-f) x∥ = ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ := by
-  nth_rw 3[← norm_neg]
+  nth_rw 3 [← norm_neg]
   congr
   exact iterated_fderiv_neg_apply
 
@@ -168,14 +165,14 @@ section Smul
 variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F] [NormedField 𝕜'] [NormedSpace 𝕜' F]
   [SmulCommClass ℝ 𝕜' F]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 instance : HasSmul 𝕜 𝓢(E, F) :=
   ⟨fun c f =>
     { toFun := c • f, smooth' := (f.smooth _).const_smul c,
       decay' := fun k n => by
         refine' ⟨f.seminorm_aux k n * (∥c∥ + 1), fun x => _⟩
         have hc : 0 ≤ ∥c∥ := by
-          trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]"
+          trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
         refine' le_transₓ _ ((mul_le_mul_of_nonneg_right (f.le_seminorm_aux k n x) hc).trans _)
         · apply Eq.leₓ
           rw [mul_comm _ ∥c∥, ← mul_assoc]
@@ -227,10 +224,7 @@ end Smul
 section Zero
 
 instance : Zero 𝓢(E, F) :=
-  ⟨{ toFun := fun _ => 0, smooth' := cont_diff_const,
-      decay' := fun _ _ =>
-        ⟨1, fun _ => by
-          simp ⟩ }⟩
+  ⟨{ toFun := fun _ => 0, smooth' := cont_diff_const, decay' := fun _ _ => ⟨1, fun _ => by simp⟩ }⟩
 
 instance : Inhabited 𝓢(E, F) :=
   ⟨0⟩
@@ -247,10 +241,7 @@ theorem zero_apply {x : E} : (0 : 𝓢(E, F)) x = 0 :=
   rfl
 
 theorem seminorm_aux_zero (k n : ℕ) : (0 : 𝓢(E, F)).seminormAux k n = 0 :=
-  le_antisymmₓ
-    (seminorm_aux_le_bound k n _ rfl.le fun _ => by
-      simp [Pi.zero_def])
-    (seminorm_aux_nonneg _ _ _)
+  le_antisymmₓ (seminorm_aux_le_bound k n _ rfl.le fun _ => by simp [Pi.zero_def]) (seminorm_aux_nonneg _ _ _)
 
 end Zero
 
@@ -358,6 +349,16 @@ theorem seminorm_le_bound (k n : ℕ) (f : 𝓢(E, F)) {M : ℝ} (hMp : 0 ≤ M)
 /-- The seminorm controls the Schwartz estimate for any fixed `x`. -/
 theorem le_seminorm (k n : ℕ) (f : 𝓢(E, F)) (x : E) : ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ ≤ Seminorm 𝕜 k n f :=
   f.le_seminorm_aux k n x
+
+theorem norm_iterated_fderiv_le_seminorm (f : 𝓢(E, F)) (n : ℕ) (x₀ : E) :
+    ∥iteratedFderiv ℝ n f x₀∥ ≤ (SchwartzMap.seminorm 𝕜 0 n) f := by
+  have := SchwartzMap.le_seminorm 𝕜 0 n f x₀
+  rwa [pow_zeroₓ, one_mulₓ] at this
+
+theorem norm_pow_mul_le_seminorm (f : 𝓢(E, F)) (k : ℕ) (x₀ : E) : ∥x₀∥ ^ k * ∥f x₀∥ ≤ (SchwartzMap.seminorm 𝕜 k 0) f :=
+  by
+  have := SchwartzMap.le_seminorm 𝕜 k 0 f x₀
+  rwa [norm_iterated_fderiv_zero] at this
 
 end Seminorms
 

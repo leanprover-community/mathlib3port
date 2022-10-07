@@ -48,12 +48,12 @@ theorem dim_lt_aleph_0 : ∀ [IsNoetherian K V], Module.rank K V < ℵ₀ :=
 variable {K V}
 
 /-- In a noetherian module over a division ring, all bases are indexed by a finite type. -/
-noncomputable def fintypeBasisIndex {ι : Type _} [IsNoetherian K V] (b : Basis ι K V) : Fintype ι :=
+noncomputable def fintypeBasisIndex {ι : Type _} [IsNoetherian K V] (b : Basis ι K V) : Fintypeₓ ι :=
   b.fintypeIndexOfDimLtAleph0 (dim_lt_aleph_0 K V)
 
 /-- In a noetherian module over a division ring,
 `basis.of_vector_space` is indexed by a finite type. -/
-noncomputable instance [IsNoetherian K V] : Fintype (Basis.OfVectorSpaceIndex K V) :=
+noncomputable instance [IsNoetherian K V] : Fintypeₓ (Basis.OfVectorSpaceIndex K V) :=
   fintypeBasisIndex (Basis.ofVectorSpace K V)
 
 /-- In a noetherian module over a division ring,
@@ -65,7 +65,7 @@ variable (K V)
 
 /-- In a noetherian module over a division ring,
 there exists a finite basis. This is the indexing `finset`. -/
-noncomputable def finsetBasisIndex [IsNoetherian K V] : Finset V :=
+noncomputable def finsetBasisIndex [IsNoetherian K V] : Finsetₓ V :=
   (finite_basis_index (Basis.ofVectorSpace K V)).toFinset
 
 @[simp]
@@ -83,9 +83,7 @@ This is in contrast to the result `finite_basis_index (basis.of_vector_space K V
 which provides a set and a `set.finite`.
 -/
 noncomputable def finsetBasis [IsNoetherian K V] : Basis (finsetBasisIndex K V) K V :=
-  (Basis.ofVectorSpace K V).reindex
-    (by
-      simp )
+  (Basis.ofVectorSpace K V).reindex (by simp)
 
 @[simp]
 theorem range_finset_basis [IsNoetherian K V] : Set.Range (finsetBasis K V) = Basis.OfVectorSpaceIndex K V := by
@@ -100,7 +98,7 @@ theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V := by
     exact
       ⟨⟨finset_basis_index K V, by
           convert (finset_basis K V).span_eq
-          simp ⟩⟩
+          simp⟩⟩
     
   · rintro ⟨s, hs⟩
     rw [IsNoetherian.iff_dim_lt_aleph_0, ← dim_top, ← hs]

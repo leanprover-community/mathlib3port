@@ -212,8 +212,7 @@ variable [One α]
 
 /-- Constructs a simple continued fraction without fractional part. -/
 def ofInteger (a : α) : SimpleContinuedFraction α :=
-  ⟨GeneralizedContinuedFraction.ofInteger a, fun n aₙ h => by
-    cases h⟩
+  ⟨GeneralizedContinuedFraction.ofInteger a, fun n aₙ h => by cases h⟩
 
 instance : Inhabited (SimpleContinuedFraction α) :=
   ⟨ofInteger 1⟩
@@ -255,8 +254,7 @@ variable [One α] [Zero α] [LT α]
 
 /-- Constructs a continued fraction without fractional part. -/
 def ofInteger (a : α) : ContinuedFraction α :=
-  ⟨SimpleContinuedFraction.ofInteger a, fun n bₙ h => by
-    cases h⟩
+  ⟨SimpleContinuedFraction.ofInteger a, fun n bₙ h => by cases h⟩
 
 instance : Inhabited (ContinuedFraction α) :=
   ⟨ofInteger 0⟩

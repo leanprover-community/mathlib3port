@@ -26,7 +26,7 @@ adjacent.
 -/
 
 
-open Finset Fintype
+open Finsetₓ Fintypeₓ
 
 namespace SimpleGraph
 
@@ -61,7 +61,7 @@ theorem is_clique_iff_induce_eq : G.IsClique s ↔ G.induce s = ⊤ := by
     simpa [hne]
     
 
-instance [DecidableEq α] [DecidableRel G.Adj] {s : Finset α} : Decidable (G.IsClique s) :=
+instance [DecidableEq α] [DecidableRel G.Adj] {s : Finsetₓ α} : Decidable (G.IsClique s) :=
   decidableOfIff' _ G.is_clique_iff
 
 variable {G H}
@@ -87,17 +87,17 @@ end Clique
 
 section NClique
 
-variable {n : ℕ} {s : Finset α}
+variable {n : ℕ} {s : Finsetₓ α}
 
 /-- A `n`-clique in a graph is a set of `n` vertices which are pairwise connected. -/
-structure IsNClique (n : ℕ) (s : Finset α) : Prop where
+structure IsNClique (n : ℕ) (s : Finsetₓ α) : Prop where
   clique : G.IsClique s
   card_eq : s.card = n
 
 theorem is_n_clique_iff : G.IsNClique n s ↔ G.IsClique s ∧ s.card = n :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h => ⟨h.1, h.2⟩⟩
 
-instance [DecidableEq α] [DecidableRel G.Adj] {n : ℕ} {s : Finset α} : Decidable (G.IsNClique n s) :=
+instance [DecidableEq α] [DecidableRel G.Adj] {n : ℕ} {s : Finsetₓ α} : Decidable (G.IsNClique n s) :=
   decidableOfIff' _ G.is_n_clique_iff
 
 variable {G H}
@@ -117,10 +117,8 @@ variable [DecidableEq α] {a b c : α}
 
 theorem is_3_clique_triple_iff : G.IsNClique 3 {a, b, c} ↔ G.Adj a b ∧ G.Adj a c ∧ G.Adj b c := by
   simp only [is_n_clique_iff, is_clique_iff, Set.pairwise_insert_of_symmetric G.symm, coe_insert]
-  have : ¬1 + 1 = 3 := by
-    norm_num
-  by_cases' hab : a = b <;>
-    by_cases' hbc : b = c <;> by_cases' hac : a = c <;> subst_vars <;> simp [G.ne_of_adj, and_rotate, *]
+  have : ¬1 + 1 = 3 := by norm_num
+  by_cases hab:a = b <;> by_cases hbc:b = c <;> by_cases hac:a = c <;> subst_vars <;> simp [G.ne_of_adj, and_rotate, *]
 
 theorem is_3_clique_iff : G.IsNClique 3 s ↔ ∃ a b c, G.Adj a b ∧ G.Adj a c ∧ G.Adj b c ∧ s = {a, b, c} := by
   refine' ⟨fun h => _, _⟩
@@ -146,14 +144,14 @@ variable {m n : ℕ}
 def CliqueFree (n : ℕ) : Prop :=
   ∀ t, ¬G.IsNClique n t
 
-variable {G H} {s : Finset α}
+variable {G H} {s : Finsetₓ α}
 
 theorem IsNClique.not_clique_free (hG : G.IsNClique n s) : ¬G.CliqueFree n := fun h => h _ hG
 
 theorem not_clique_free_of_top_embedding {n : ℕ} (f : (⊤ : SimpleGraph (Finₓ n)) ↪g G) : ¬G.CliqueFree n := by
   simp only [clique_free, is_n_clique_iff, is_clique_iff_induce_eq, not_forall, not_not]
   use finset.univ.map f.to_embedding
-  simp only [card_map, Finset.card_fin, eq_self_iff_true, and_trueₓ]
+  simp only [card_map, Finsetₓ.card_fin, eq_self_iff_true, and_trueₓ]
   ext ⟨v, hv⟩ ⟨w, hw⟩
   simp only [coe_map, RelEmbedding.coe_fn_to_embedding, Set.mem_image, coe_univ, Set.mem_univ, true_andₓ] at hv hw
   obtain ⟨v', rfl⟩ := hv
@@ -168,7 +166,7 @@ noncomputable def topEmbeddingOfNotCliqueFree {n : ℕ} (h : ¬G.CliqueFree n) :
   obtain ⟨ha, hb⟩ := h.some_spec
   have : (⊤ : SimpleGraph (Finₓ h.some.card)) ≃g (⊤ : SimpleGraph h.some) := by
     apply iso.complete_graph
-    simpa using (Fintype.equivFin h.some).symm
+    simpa using (Fintypeₓ.equivFin h.some).symm
   rw [← ha] at this
   convert (embedding.induce ↑h.some).comp this.to_embedding <;> exact hb.symm
 
@@ -183,9 +181,9 @@ theorem not_clique_free_iff (n : ℕ) : ¬G.CliqueFree n ↔ Nonempty ((⊤ : Si
 theorem clique_free_iff {n : ℕ} : G.CliqueFree n ↔ IsEmpty ((⊤ : SimpleGraph (Finₓ n)) ↪g G) := by
   rw [← not_iff_not, not_clique_free_iff, not_is_empty_iff]
 
-theorem not_clique_free_card_of_top_embedding [Fintype α] (f : (⊤ : SimpleGraph α) ↪g G) : ¬G.CliqueFree (card α) := by
+theorem not_clique_free_card_of_top_embedding [Fintypeₓ α] (f : (⊤ : SimpleGraph α) ↪g G) : ¬G.CliqueFree (card α) := by
   rw [not_clique_free_iff]
-  use (iso.complete_graph (Fintype.equivFin α)).symm.toEmbedding.trans f
+  use (iso.complete_graph (Fintypeₓ.equivFin α)).symm.toEmbedding.trans f
 
 theorem clique_free_bot (h : 2 ≤ n) : (⊥ : SimpleGraph α).CliqueFree n := by
   rintro t ht
@@ -201,11 +199,11 @@ theorem CliqueFree.anti (h : G ≤ H) : H.CliqueFree n → G.CliqueFree n :=
   forall_imp fun s => mt <| IsNClique.mono h
 
 /-- See `simple_graph.clique_free_chromatic_number_succ` for a tighter bound. -/
-theorem clique_free_of_card_lt [Fintype α] (hc : card α < n) : G.CliqueFree n := by
+theorem clique_free_of_card_lt [Fintypeₓ α] (hc : card α < n) : G.CliqueFree n := by
   by_contra h
   refine' Nat.lt_le_antisymmₓ hc _
   rw [clique_free_iff, not_is_empty_iff] at h
-  simpa using Fintype.card_le_of_embedding h.some.to_embedding
+  simpa using Fintypeₓ.card_le_of_embedding h.some.to_embedding
 
 end CliqueFree
 
@@ -214,10 +212,10 @@ end CliqueFree
 
 section CliqueSet
 
-variable (G) {n : ℕ} {a b c : α} {s : Finset α}
+variable (G) {n : ℕ} {a b c : α} {s : Finsetₓ α}
 
 /-- The `n`-cliques in a graph as a set. -/
-def CliqueSet (n : ℕ) : Set (Finset α) :=
+def CliqueSet (n : ℕ) : Set (Finsetₓ α) :=
   { s | G.IsNClique n s }
 
 theorem mem_clique_set_iff : s ∈ G.CliqueSet n ↔ G.IsNClique n s :=
@@ -245,17 +243,17 @@ end CliqueSet
 
 section CliqueFinset
 
-variable (G) [Fintype α] [DecidableEq α] [DecidableRel G.Adj] {n : ℕ} {a b c : α} {s : Finset α}
+variable (G) [Fintypeₓ α] [DecidableEq α] [DecidableRel G.Adj] {n : ℕ} {a b c : α} {s : Finsetₓ α}
 
 /-- The `n`-cliques in a graph as a finset. -/
-def cliqueFinset (n : ℕ) : Finset (Finset α) :=
+def cliqueFinset (n : ℕ) : Finsetₓ (Finsetₓ α) :=
   univ.filter <| G.IsNClique n
 
 theorem mem_clique_finset_iff : s ∈ G.cliqueFinset n ↔ G.IsNClique n s :=
   mem_filter.trans <| and_iff_right <| mem_univ _
 
 @[simp]
-theorem coe_clique_finset (n : ℕ) : (G.cliqueFinset n : Set (Finset α)) = G.CliqueSet n :=
+theorem coe_clique_finset (n : ℕ) : (G.cliqueFinset n : Set (Finsetₓ α)) = G.CliqueSet n :=
   Set.ext fun _ => mem_clique_finset_iff _
 
 @[simp]

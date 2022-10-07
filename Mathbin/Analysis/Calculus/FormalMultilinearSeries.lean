@@ -54,8 +54,7 @@ section Module
 /- `derive` is not able to find the module structure, probably because Lean is confused by the
 dependent types. We register it explicitly. -/
 instance : Module 𝕜 (FormalMultilinearSeries 𝕜 E F) := by
-  letI : ∀ n, Module 𝕜 (ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => E) F) := fun n => by
-    infer_instance
+  letI : ∀ n, Module 𝕜 (ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => E) F) := fun n => by infer_instance
   refine' Pi.module _ _ _
 
 end Module
@@ -178,11 +177,9 @@ noncomputable def order (p : FormalMultilinearSeries 𝕜 E F) : ℕ :=
   inf { n | p n ≠ 0 }
 
 @[simp]
-theorem order_zero : (0 : FormalMultilinearSeries 𝕜 E F).order = 0 := by
-  simp [order]
+theorem order_zero : (0 : FormalMultilinearSeries 𝕜 E F).order = 0 := by simp [order]
 
-theorem ne_zero_of_order_ne_zero (hp : p.order ≠ 0) : p ≠ 0 := fun h => by
-  simpa [h] using hp
+theorem ne_zero_of_order_ne_zero (hp : p.order ≠ 0) : p ≠ 0 := fun h => by simpa [h] using hp
 
 theorem order_eq_find [DecidablePred fun n => p n ≠ 0] (hp : ∃ n, p n ≠ 0) : p.order = Nat.findₓ hp := by
   simp [order, Inf, hp]
@@ -196,8 +193,7 @@ theorem order_eq_zero_iff (hp : p ≠ 0) : p.order = 0 ↔ p 0 ≠ 0 := by
   have : ∃ n, p n ≠ 0 := formal_multilinear_series.ne_iff.mp hp
   simp [order_eq_find this, hp]
 
-theorem order_eq_zero_iff' : p.order = 0 ↔ p = 0 ∨ p 0 ≠ 0 := by
-  by_cases' h : p = 0 <;> simp [h, order_eq_zero_iff]
+theorem order_eq_zero_iff' : p.order = 0 ↔ p = 0 ∨ p 0 ≠ 0 := by by_cases h:p = 0 <;> simp [h, order_eq_zero_iff]
 
 theorem apply_order_ne_zero (hp : p ≠ 0) : p p.order ≠ 0 := by
   classical
@@ -208,7 +204,7 @@ theorem apply_order_ne_zero' (hp : p.order ≠ 0) : p p.order ≠ 0 :=
   apply_order_ne_zero (ne_zero_of_order_ne_zero hp)
 
 theorem apply_eq_zero_of_lt_order (hp : n < p.order) : p n = 0 := by
-  by_cases' p = 0
+  by_cases p = 0
   · simp [h]
     
   · classical
@@ -242,8 +238,7 @@ theorem coeff_eq_zero : p.coeff n = 0 ↔ p n = 0 := by
   rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.mk_pi_field_eq_zero_iff]
 
 @[simp]
-theorem apply_eq_pow_smul_coeff : (p n fun _ => z) = z ^ n • p.coeff n := by
-  simp
+theorem apply_eq_pow_smul_coeff : (p n fun _ => z) = z ^ n • p.coeff n := by simp
 
 @[simp]
 theorem norm_apply_eq_norm_coef : ∥p n∥ = ∥coeff p n∥ := by
@@ -268,12 +263,27 @@ theorem coeff_fslope : p.fslope.coeff n = p.coeff (n + 1) := by
 
 @[simp]
 theorem coeff_iterate_fslope (k n : ℕ) : ((fslope^[k]) p).coeff n = p.coeff (n + k) := by
-  induction' k with k ih generalizing p <;>
-    first |
-      rfl|
-      simpa [ih]
+  induction' k with k ih generalizing p <;> first |rfl|simpa [ih]
 
 end Fslope
 
 end FormalMultilinearSeries
+
+section Const
+
+/-- The formal multilinear series where all terms of positive degree are equal to zero, and the term
+of degree zero is `c`. It is the power series expansion of the constant function equal to `c`
+everywhere. -/
+def constFormalMultilinearSeries (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _) [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E] [HasContinuousConstSmul 𝕜 E] [TopologicalAddGroup E] {F : Type _} [NormedAddCommGroup F]
+    [TopologicalAddGroup F] [NormedSpace 𝕜 F] [HasContinuousConstSmul 𝕜 F] (c : F) : FormalMultilinearSeries 𝕜 E F
+  | 0 => ContinuousMultilinearMap.curry0 _ _ c
+  | _ => 0
+
+@[simp]
+theorem const_formal_multilinear_series_apply [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedAddCommGroup F]
+    [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] {c : F} {n : ℕ} (hn : n ≠ 0) : constFormalMultilinearSeries 𝕜 E c n = 0 :=
+  Nat.casesOn n (fun hn => (hn rfl).elim) (fun _ _ => rfl) hn
+
+end Const
 

@@ -46,7 +46,7 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
           MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ (p ∈ s → q ∈ s → p < q → μ (u ∩ v) = 0) :=
     by
     intro p q
-    by_cases' H : p ∈ s ∧ q ∈ s ∧ p < q
+    by_cases H:p ∈ s ∧ q ∈ s ∧ p < q
     · rcases h p H.1 q H.2.1 H.2.2 with ⟨u, v, hu, hv, h'u, h'v, hμ⟩
       exact ⟨u, v, hu, hv, h'u, h'v, fun ps qs pq => hμ⟩
       
@@ -81,8 +81,7 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
         congr
         ext1 q
         exact (huv p q).2.2.2.2 p.2 q.2.1 q.2.2
-      _ = 0 := by
-        simp only [tsum_zero]
+      _ = 0 := by simp only [tsum_zero]
       
   have ff' : ∀ᵐ x ∂μ, f x = f' x := by
     have : ∀ᵐ x ∂μ, x ∉ t := by
@@ -90,11 +89,11 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
       change μ _ = 0
       convert this
       ext y
-      simp only [not_exists, exists_propₓ, mem_set_of_eq, mem_compl_eq, not_not_mem]
+      simp only [not_exists, exists_propₓ, mem_set_of_eq, mem_compl_iff, not_not_mem]
     filter_upwards [this] with x hx
     apply (infi_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
     · intro i
-      by_cases' H : x ∈ u' i
+      by_cases H:x ∈ u' i
       swap
       · simp only [H, le_top, not_false_iff, piecewise_eq_of_not_mem]
         

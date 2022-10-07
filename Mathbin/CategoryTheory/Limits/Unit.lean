@@ -33,19 +33,15 @@ def punitCocone : Cocone F :=
 
 /-- Any cone over a functor into `punit` is a limit cone.
 -/
-def punitConeIsLimit {c : Cone F} : IsLimit c := by
-  tidy
+def punitConeIsLimit {c : Cone F} : IsLimit c := by tidy
 
 /-- Any cocone over a functor into `punit` is a colimit cocone.
 -/
-def punitCoconeIsColimit {c : Cocone F} : IsColimit c := by
-  tidy
+def punitCoconeIsColimit {c : Cocone F} : IsColimit c := by tidy
 
-instance : HasLimitsOfSize.{v', v} (Discrete PUnit) := by
-  tidy
+instance : HasLimitsOfSize.{v', v} (Discrete PUnit) := by tidy
 
-instance : HasColimitsOfSize.{v', v} (Discrete PUnit) := by
-  tidy
+instance : HasColimitsOfSize.{v', v} (Discrete PUnit) := by tidy
 
 end CategoryTheory.Limits
 

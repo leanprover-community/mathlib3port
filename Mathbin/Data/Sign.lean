@@ -20,7 +20,7 @@ inductive SignType
   | zero
   | neg
   | Pos
-  deriving DecidableEq, Inhabited, Fintype
+  deriving DecidableEq, Inhabited, Fintypeₓ
 
 namespace SignType
 
@@ -66,17 +66,7 @@ instance : LE SignType :=
   ⟨Le⟩
 
 instance : DecidableRel Le := fun a b => by
-  cases a <;>
-    cases b <;>
-      first |
-        exact
-          is_false
-            (by
-              rintro ⟨⟩)|
-        exact
-          is_true
-            (by
-              constructor)
+  cases a <;> cases b <;> first |exact is_false (by rintro ⟨⟩)|exact is_true (by constructor)
 
 /- We can define a `field` instance on `sign_type`, but it's not mathematically sensible,
 so we only define the `comm_group_with_zero`. -/
@@ -85,35 +75,22 @@ instance : CommGroupWithZero SignType where
   one := 1
   mul := (· * ·)
   inv := id
-  mul_zero := fun a => by
-    cases a <;> rfl
-  zero_mul := fun a => by
-    cases a <;> rfl
-  mul_one := fun a => by
-    cases a <;> rfl
-  one_mul := fun a => by
-    cases a <;> rfl
-  mul_inv_cancel := fun a ha => by
-    cases a <;> trivial
-  mul_comm := fun a b => by
-    casesm* _ <;> rfl
-  mul_assoc := fun a b c => by
-    casesm* _ <;> rfl
-  exists_pair_ne :=
-    ⟨0, 1, by
-      rintro ⟨⟩⟩
+  mul_zero := fun a => by cases a <;> rfl
+  zero_mul := fun a => by cases a <;> rfl
+  mul_one := fun a => by cases a <;> rfl
+  one_mul := fun a => by cases a <;> rfl
+  mul_inv_cancel := fun a ha => by cases a <;> trivial
+  mul_comm := fun a b => by casesm*_ <;> rfl
+  mul_assoc := fun a b c => by casesm*_ <;> rfl
+  exists_pair_ne := ⟨0, 1, by rintro ⟨⟩⟩
   inv_zero := rfl
 
 instance : LinearOrderₓ SignType where
   le := (· ≤ ·)
-  le_refl := fun a => by
-    cases a <;> constructor
-  le_total := fun a b => by
-    casesm* _ <;> decide
-  le_antisymm := fun a b ha hb => by
-    casesm* _ <;> rfl
-  le_trans := fun a b c hab hbc => by
-    casesm* _ <;> constructor
+  le_refl := fun a => by cases a <;> constructor
+  le_total := fun a b => by casesm*_ <;> decide
+  le_antisymm := fun a b ha hb => by casesm*_ <;> rfl
+  le_trans := fun a b c hab hbc => by casesm*_ <;> constructor
   decidableLe := Le.decidableRel
 
 instance : BoundedOrder SignType where
@@ -123,13 +100,8 @@ instance : BoundedOrder SignType where
   bot_le := Le.of_neg
 
 instance : HasDistribNeg SignType :=
-  { SignType.hasNeg with
-    neg_neg := fun x => by
-      cases x <;> rfl,
-    neg_mul := fun x y => by
-      casesm* _ <;> rfl,
-    mul_neg := fun x y => by
-      casesm* _ <;> rfl }
+  { SignType.hasNeg with neg_neg := fun x => by cases x <;> rfl, neg_mul := fun x y => by casesm*_ <;> rfl,
+    mul_neg := fun x y => by casesm*_ <;> rfl }
 
 /-- `sign_type` is equivalent to `fin 3`. -/
 def fin3Equiv : SignType ≃* Finₓ 3 where
@@ -140,48 +112,38 @@ def fin3Equiv : SignType ≃* Finₓ 3 where
     | ⟨1, h⟩ => 1
     | ⟨2, h⟩ => -1
     | ⟨n + 3, h⟩ => (h.not_le le_add_self).elim
-  left_inv := fun a => by
-    cases a <;> rfl
+  left_inv := fun a => by cases a <;> rfl
   right_inv := fun a =>
     match a with
     | ⟨0, h⟩ => rfl
     | ⟨1, h⟩ => rfl
     | ⟨2, h⟩ => rfl
     | ⟨n + 3, h⟩ => (h.not_le le_add_self).elim
-  map_mul' := fun x y => by
-    casesm* _ <;> rfl
+  map_mul' := fun x y => by casesm*_ <;> rfl
 
 section CaseBashing
 
-theorem nonneg_iff {a : SignType} : 0 ≤ a ↔ a = 0 ∨ a = 1 := by
-  decide!
+theorem nonneg_iff {a : SignType} : 0 ≤ a ↔ a = 0 ∨ a = 1 := by decide!
 
-theorem nonneg_iff_ne_neg_one {a : SignType} : 0 ≤ a ↔ a ≠ -1 := by
-  decide!
+theorem nonneg_iff_ne_neg_one {a : SignType} : 0 ≤ a ↔ a ≠ -1 := by decide!
 
-theorem neg_one_lt_iff {a : SignType} : -1 < a ↔ 0 ≤ a := by
-  decide!
+theorem neg_one_lt_iff {a : SignType} : -1 < a ↔ 0 ≤ a := by decide!
 
-theorem nonpos_iff {a : SignType} : a ≤ 0 ↔ a = -1 ∨ a = 0 := by
-  decide!
+theorem nonpos_iff {a : SignType} : a ≤ 0 ↔ a = -1 ∨ a = 0 := by decide!
 
-theorem nonpos_iff_ne_one {a : SignType} : a ≤ 0 ↔ a ≠ 1 := by
-  decide!
+theorem nonpos_iff_ne_one {a : SignType} : a ≤ 0 ↔ a ≠ 1 := by decide!
 
-theorem lt_one_iff {a : SignType} : a < 1 ↔ a ≤ 0 := by
-  decide!
+theorem lt_one_iff {a : SignType} : a < 1 ↔ a ≤ 0 := by decide!
 
 @[simp]
-theorem neg_iff {a : SignType} : a < 0 ↔ a = -1 := by
-  decide!
+theorem neg_iff {a : SignType} : a < 0 ↔ a = -1 := by decide!
 
 @[simp]
 theorem le_neg_one_iff {a : SignType} : a ≤ -1 ↔ a = -1 :=
   le_bot_iff
 
 @[simp]
-theorem pos_iff {a : SignType} : 0 < a ↔ a = 1 := by
-  decide!
+theorem pos_iff {a : SignType} : 0 < a ↔ a = 1 := by decide!
 
 @[simp]
 theorem one_le_iff {a : SignType} : 1 ≤ a ↔ a = 1 :=
@@ -204,12 +166,10 @@ theorem not_one_lt (a : SignType) : ¬1 < a :=
   not_top_lt
 
 @[simp]
-theorem self_eq_neg_iff (a : SignType) : a = -a ↔ a = 0 := by
-  decide!
+theorem self_eq_neg_iff (a : SignType) : a = -a ↔ a = 0 := by decide!
 
 @[simp]
-theorem neg_eq_self_iff (a : SignType) : -a = a ↔ a = 0 := by
-  decide!
+theorem neg_eq_self_iff (a : SignType) : -a = a ↔ a = 0 := by decide!
 
 @[simp]
 theorem neg_one_lt_one : (-1 : SignType) < 1 :=
@@ -255,12 +215,11 @@ def castHom {α} [MulZeroOneClassₓ α] [HasDistribNeg α] : SignType →*₀ �
   toFun := cast
   map_zero' := rfl
   map_one' := rfl
-  map_mul' := fun x y => by
-    cases x <;> cases y <;> simp
+  map_mul' := fun x y => by cases x <;> cases y <;> simp
 
 theorem range_eq {α} (f : SignType → α) : Set.Range f = {f zero, f neg, f pos} := by
   classical
-  simpa only [← Finset.coe_singleton, ← Finset.image_singleton, ← Fintype.coe_image_univ, Finset.coe_image, ←
+  simpa only [← Finsetₓ.coe_singleton, ← Finsetₓ.image_singleton, ← Fintypeₓ.coe_image_univ, Finsetₓ.coe_image, ←
     Set.image_insert_eq]
 
 end SignType
@@ -276,10 +235,8 @@ variable [Zero α] [Preorderₓ α] [DecidableRel ((· < ·) : α → α → Pro
 /-- The sign of an element is 1 if it's positive, -1 if negative, 0 otherwise. -/
 def sign : α →o SignType :=
   ⟨fun a => if 0 < a then 1 else if a < 0 then -1 else 0, fun a b h => by
-    dsimp'
-    split_ifs with h₁ h₂ h₃ h₄ _ _ h₂ h₃ <;>
-      try
-        constructor
+    dsimp
+    split_ifs with h₁ h₂ h₃ h₄ _ _ h₂ h₃ <;> try constructor
     · cases lt_irreflₓ 0 (h₁.trans <| h.trans_lt h₃)
       
     · cases h₂ (h₁.trans_le h)
@@ -291,16 +248,13 @@ theorem sign_apply : sign a = ite (0 < a) 1 (ite (a < 0) (-1) 0) :=
   rfl
 
 @[simp]
-theorem sign_zero : sign (0 : α) = 0 := by
-  simp [sign_apply]
+theorem sign_zero : sign (0 : α) = 0 := by simp [sign_apply]
 
 @[simp]
-theorem sign_pos (ha : 0 < a) : sign a = 1 := by
-  rwa [sign_apply, if_pos]
+theorem sign_pos (ha : 0 < a) : sign a = 1 := by rwa [sign_apply, if_pos]
 
 @[simp]
-theorem sign_neg (ha : a < 0) : sign a = -1 := by
-  rwa [sign_apply, if_neg <| asymm ha, if_pos]
+theorem sign_neg (ha : a < 0) : sign a = -1 := by rwa [sign_apply, if_neg <| asymm ha, if_pos]
 
 theorem sign_eq_one_iff : sign a = 1 ↔ 0 < a := by
   refine' ⟨fun h => _, fun h => sign_pos h⟩
@@ -379,7 +333,7 @@ theorem sign_mul (x y : α) : sign (x * y) = sign x * sign y := by
   rcases lt_trichotomyₓ x 0 with (hx | hx | hx) <;>
     rcases lt_trichotomyₓ y 0 with (hy | hy | hy) <;>
       simp only [sign_zero, mul_zero, zero_mul, sign_pos, sign_neg, hx, hy, mul_oneₓ, neg_one_mul, neg_negₓ, one_mulₓ,
-        mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos, neg_zero', mul_neg_of_pos_of_neg, mul_pos]
+        mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos, neg_zero, mul_neg_of_pos_of_neg, mul_pos]
 
 /-- `sign` as a `monoid_with_zero_hom` for a nontrivial ordered semiring. Note that linearity
 is required; consider ℂ with the order `z ≤ w` iff they have the same imaginary part and
@@ -440,12 +394,12 @@ theorem sign_eq_sign (n : ℤ) : n.sign = sign n := by
 
 end Int
 
-open Finset Nat
+open Finsetₓ Nat
 
 open BigOperators
 
-private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α → ℤ) :
-    ∃ (β : Type u_1)(t : Finset β)(sgn : β → SignType)(g : β → α),
+private theorem exists_signed_sum_aux [DecidableEq α] (s : Finsetₓ α) (f : α → ℤ) :
+    ∃ (β : Type u_1)(t : Finsetₓ β)(sgn : β → SignType)(g : β → α),
       (∀ b, g b ∈ s) ∧
         (t.card = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b in t, if g b = a then (sgn b : ℤ) else 0) = f a :=
   by
@@ -460,27 +414,25 @@ private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α �
     
 
 /-- We can decompose a sum of absolute value `n` into a sum of `n` signs. -/
-theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
-    ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
+theorem exists_signed_sum [DecidableEq α] (s : Finsetₓ α) (f : α → ℤ) :
+    ∃ (β : Type u_1)(_ : Fintypeₓ β)(sgn : β → SignType)(g : β → α),
       (∀ b, g b ∈ s) ∧
-        (Fintype.card β = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b, if g b = a then (sgn b : ℤ) else 0) = f a :=
+        (Fintypeₓ.card β = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b, if g b = a then (sgn b : ℤ) else 0) = f a :=
   let ⟨β, t, sgn, g, hg, ht, hf⟩ := exists_signed_sum_aux s f
-  ⟨t, inferInstance, fun b => sgn b, fun b => g b, fun b => hg b, by
-    simp [ht], fun a ha => (@sum_attach _ _ t _ fun b => ite (g b = a) (sgn b : ℤ) 0).trans <| hf _ ha⟩
+  ⟨t, inferInstance, fun b => sgn b, fun b => g b, fun b => hg b, by simp [ht], fun a ha =>
+    (@sum_attach _ _ t _ fun b => ite (g b = a) (sgn b : ℤ) 0).trans <| hf _ ha⟩
 
 /-- We can decompose a sum of absolute value less than `n` into a sum of at most `n` signs. -/
-theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finset α) (f : α → ℤ) (n : ℕ)
+theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finsetₓ α) (f : α → ℤ) (n : ℕ)
     (h : (∑ i in s, (f i).natAbs) ≤ n) :
-    ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
-      (∀ b, g b ∉ s → sgn b = 0) ∧ Fintype.card β = n ∧ ∀ a ∈ s, (∑ i, if g i = a then (sgn i : ℤ) else 0) = f a :=
+    ∃ (β : Type u_1)(_ : Fintypeₓ β)(sgn : β → SignType)(g : β → α),
+      (∀ b, g b ∉ s → sgn b = 0) ∧ Fintypeₓ.card β = n ∧ ∀ a ∈ s, (∑ i, if g i = a then (sgn i : ℤ) else 0) = f a :=
   by
   obtain ⟨β, _, sgn, g, hg, hβ, hf⟩ := exists_signed_sum s f
   skip
   refine'
     ⟨Sum β (Finₓ (n - ∑ i in s, (f i).natAbs)), inferInstance, Sum.elim sgn 0, Sum.elim g <| Classical.arbitrary _, _,
-      by
-      simp [hβ, h], fun a ha => by
-      simp [hf _ ha]⟩
+      by simp [hβ, h], fun a ha => by simp [hf _ ha]⟩
   rintro (b | b) hb
   · cases hb (hg _)
     

@@ -147,9 +147,7 @@ theorem measure_le_tsum_of_absolutely_continuous [SecondCountableTopology α] {�
     ρ s ≤ ∑' x : h.index, ρ (h.covering x) :=
   calc
     ρ s ≤ ρ ((s \ ⋃ x ∈ h.index, h.covering x) ∪ ⋃ x ∈ h.index, h.covering x) :=
-      measure_mono
-        (by
-          simp only [subset_union_left, diff_union_self])
+      measure_mono (by simp only [subset_union_left, diff_union_self])
     _ ≤ ρ (s \ ⋃ x ∈ h.index, h.covering x) + ρ (⋃ x ∈ h.index, h.covering x) := measure_union_le _ _
     _ = ∑' x : h.index, ρ (h.covering x) := by
       rw [hρ h.measure_diff_bUnion,
@@ -175,7 +173,7 @@ theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
     s ∈ v.filterAt x ↔ ∃ ε > (0 : ℝ), ∀ a ∈ v.SetsAt x, a ⊆ ClosedBall x ε → a ∈ s := by
   simp only [filter_at, exists_propₓ, gt_iff_ltₓ]
   rw [mem_binfi_of_directed]
-  · simp only [subset_def, and_imp, exists_propₓ, mem_sep_eq, mem_Ioi, mem_principal]
+  · simp only [subset_def, and_imp, exists_propₓ, mem_sep_iff, mem_Ioi, mem_principal]
     
   · simp only [DirectedOn, exists_propₓ, ge_iff_leₓ, le_principal_iff, mem_Ioi, Order.Preimage, mem_principal]
     intro x hx y hy
@@ -187,8 +185,8 @@ theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
     
 
 instance filter_at_ne_bot (x : α) : (v.filterAt x).ne_bot := by
-  simp only [ne_bot_iff, ← empty_mem_iff_bot, mem_filter_at_iff, not_exists, exists_propₓ, mem_empty_eq, and_trueₓ,
-    gt_iff_ltₓ, not_and, Ne.def, not_false_iff, not_forall]
+  simp only [ne_bot_iff, ← empty_mem_iff_bot, mem_filter_at_iff, not_exists, exists_propₓ, mem_empty_iff_false,
+    and_trueₓ, gt_iff_ltₓ, not_and, Ne.def, not_false_iff, not_forall]
   intro ε εpos
   obtain ⟨w, w_sets, hw⟩ : ∃ w ∈ v.sets_at x, w ⊆ closed_ball x ε := v.nontrivial x ε εpos
   exact ⟨w, w_sets, hw⟩
@@ -198,7 +196,7 @@ theorem eventually_filter_at_iff {x : α} {P : Set α → Prop} :
   v.mem_filter_at_iff
 
 theorem eventually_filter_at_mem_sets (x : α) : ∀ᶠ a in v.filterAt x, a ∈ v.SetsAt x := by
-  simp (config := { contextual := true })only [eventually_filter_at_iff, exists_propₓ, and_trueₓ, gt_iff_ltₓ,
+  simp (config := { contextual := true }) only [eventually_filter_at_iff, exists_propₓ, and_trueₓ, gt_iff_ltₓ,
     implies_true_iff]
   exact ⟨1, zero_lt_one⟩
 

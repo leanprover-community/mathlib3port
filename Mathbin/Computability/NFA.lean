@@ -46,13 +46,12 @@ theorem mem_step_set (s : σ) (S : Set σ) (a : α) : s ∈ M.StepSet S a ↔ �
   mem_Union₂
 
 @[simp]
-theorem step_set_empty (a : α) : M.StepSet ∅ a = ∅ := by
-  simp_rw [step_set, Union_false, Union_empty]
+theorem step_set_empty (a : α) : M.StepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
 
 /-- `M.eval_from S x` computes all possible paths though `M` with input `x` starting at an element
   of `S`. -/
 def EvalFrom (start : Set σ) : List α → Set σ :=
-  List.foldlₓ M.StepSet start
+  List.foldl M.StepSet start
 
 @[simp]
 theorem eval_from_nil (S : Set σ) : M.evalFrom S [] = S :=
@@ -98,15 +97,15 @@ def toDFA : DFA α (Set σ) where
 theorem to_DFA_correct : M.toDFA.Accepts = M.Accepts := by
   ext x
   rw [accepts, DFA.Accepts, eval, DFA.eval]
-  change List.foldlₓ _ _ _ ∈ { S | _ } ↔ _
+  change List.foldl _ _ _ ∈ { S | _ } ↔ _
   constructor <;>
     · exact fun ⟨w, h2, h3⟩ => ⟨w, h3, h2⟩
       
 
-theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
+theorem pumping_lemma [Fintypeₓ σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintypeₓ.card (Set σ) ≤ List.length x) :
     ∃ a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
+        a.length + b.length ≤ Fintypeₓ.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
   by
   rw [← to_DFA_correct] at hx⊢
   exact M.to_DFA.pumping_lemma hx hlen
@@ -125,13 +124,11 @@ def toNFA (M : DFA α σ') : NFA α σ' where
 @[simp]
 theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
     M.toNFA.evalFrom {start} s = {M.evalFrom start s} := by
-  change List.foldlₓ M.to_NFA.step_set {start} s = {List.foldlₓ M.step start s}
+  change List.foldl M.to_NFA.step_set {start} s = {List.foldl M.step start s}
   induction' s with a s ih generalizing start
   · tauto
     
-  · rw [List.foldlₓ, List.foldlₓ,
-      show M.to_NFA.step_set {start} a = {M.step start a} by
-        simpa [NFA.StepSet] ]
+  · rw [List.foldl, List.foldl, show M.to_NFA.step_set {start} a = {M.step start a} by simpa [NFA.StepSet] ]
     tauto
     
 

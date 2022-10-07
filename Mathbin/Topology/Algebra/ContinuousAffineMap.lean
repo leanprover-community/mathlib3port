@@ -57,8 +57,7 @@ theorem to_fun_eq_coe (f : P →A[R] Q) : f.toFun = ⇑f :=
 
 theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn := by
   rintro ⟨⟨f, ⟨f', hf₁, hf₂⟩, hf₀⟩, hf₁⟩ ⟨⟨g, ⟨g', hg₁, hg₂⟩, hg₀⟩, hg₁⟩ h
-  have : f = g ∧ f' = g' := by
-    simpa only using AffineMap.coe_fn_injective h
+  have : f = g ∧ f' = g' := by simpa only using AffineMap.coe_fn_injective h
   congr
   exacts[this.1, this.2]
 
@@ -140,10 +139,7 @@ theorem coe_const (q : Q) : (const R P q : P → Q) = Function.const P q :=
   rfl
 
 noncomputable instance : Inhabited (P →A[R] Q) :=
-  ⟨const R P <|
-      Nonempty.some
-        (by
-          infer_instance : Nonempty Q)⟩
+  ⟨const R P <| Nonempty.some (by infer_instance : Nonempty Q)⟩
 
 variable {R P} {W₂ Q₂ : Type _}
 
@@ -264,8 +260,7 @@ variable [AddCommGroupₓ W] [Module R W] [TopologicalSpace W]
 def toContinuousAffineMap (f : V →L[R] W) : V →A[R] W where
   toFun := f
   linear := f
-  map_vadd' := by
-    simp
+  map_vadd' := by simp
   cont := f.cont
 
 @[simp]
@@ -273,8 +268,7 @@ theorem coe_to_continuous_affine_map (f : V →L[R] W) : ⇑f.toContinuousAffine
   rfl
 
 @[simp]
-theorem to_continuous_affine_map_map_zero (f : V →L[R] W) : f.toContinuousAffineMap 0 = 0 := by
-  simp
+theorem to_continuous_affine_map_map_zero (f : V →L[R] W) : f.toContinuousAffineMap 0 = 0 := by simp
 
 end ContinuousLinearMap
 

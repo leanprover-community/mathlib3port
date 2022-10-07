@@ -69,7 +69,7 @@ protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => Closur
   intro x
   rcases hf x with ⟨s, hsx, hsf⟩
   refine' ⟨Interior s, interior_mem_nhds.2 hsx, hsf.subset fun i hi => _⟩
-  exact (hi.mono (closure_inter_open' is_open_interior)).of_closure.mono (inter_subset_inter_right _ interior_subset)
+  exact (hi.mono is_open_interior.closure_inter').of_closure.mono (inter_subset_inter_right _ interior_subset)
 
 theorem is_closed_Union (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsClosed (⋃ i, f i) := by
   simp only [← is_open_compl_iff, compl_Union, is_open_iff_mem_nhds, mem_Inter]
@@ -78,7 +78,7 @@ theorem is_closed_Union (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : Is
   rcases hf a with ⟨t, h_nhds, h_fin⟩
   have : (t ∩ ⋂ i ∈ { i | (f i ∩ t).Nonempty }, f iᶜ) ∈ 𝓝 a := inter_mem h_nhds ((bInter_mem h_fin).2 fun i _ => ha i)
   filter_upwards [this]
-  simp only [mem_inter_eq, mem_Inter]
+  simp only [mem_inter_iff, mem_Inter]
   rintro b ⟨hbt, hn⟩ i hfb
   exact hn i ⟨b, hfb, hbt⟩ hfb
 
@@ -92,8 +92,7 @@ intersection of the complements to `f i`, `x ∉ f i`, is a neighbourhood of `x`
 theorem Inter_compl_mem_nhds (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) (x : X) :
     (⋂ (i) (hi : x ∉ f i), f iᶜ) ∈ 𝓝 x := by
   refine' IsOpen.mem_nhds _ (mem_Inter₂.2 fun i => id)
-  suffices IsClosed (⋃ i : { i // x ∉ f i }, f i) by
-    rwa [← is_open_compl_iff, compl_Union, Inter_subtype] at this
+  suffices IsClosed (⋃ i : { i // x ∉ f i }, f i) by rwa [← is_open_compl_iff, compl_Union, Inter_subtype] at this
   exact (hf.comp_injective Subtype.coe_injective).is_closed_Union fun i => hc _
 
 /-- Let `f : ℕ → Π a, β a` be a sequence of (dependent) functions on a topological space. Suppose

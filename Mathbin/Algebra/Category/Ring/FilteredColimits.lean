@@ -49,8 +49,7 @@ parameter {J : Type v}[SmallCategory J](F : J ⥤ SemiRing.{max v u})
 -- This instance is needed below in `colimit_semiring`, during the verification of the
 -- semiring axioms.
 instance semiringObj (j : J) : Semiringₓ (((F ⋙ forget₂ SemiRing Mon.{max v u}) ⋙ forget Mon).obj j) :=
-  show Semiringₓ (F.obj j) by
-    infer_instance
+  show Semiringₓ (F.obj j) by infer_instance
 
 variable [IsFiltered J]
 

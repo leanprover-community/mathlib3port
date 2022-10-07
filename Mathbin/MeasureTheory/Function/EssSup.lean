@@ -61,7 +61,7 @@ variable [ConditionallyCompleteLinearOrder β]
 
 theorem ess_sup_eq_Inf {m : MeasurableSpace α} (μ : Measureₓ α) (f : α → β) :
     essSup f μ = inf { a | μ { x | a < f x } = 0 } := by
-  dsimp' [essSup, limsup, Limsup]
+  dsimp [essSup, limsup, Limsup]
   congr
   ext a
   simp [eventually_map, ae_iff]
@@ -74,10 +74,7 @@ variable [CompleteLattice β]
 
 @[simp]
 theorem ess_sup_measure_zero {m : MeasurableSpace α} {f : α → β} : essSup f (0 : Measureₓ α) = ⊥ :=
-  le_bot_iff.mp
-    (Inf_le
-      (by
-        simp [Set.mem_set_of_eq, eventually_le, ae_iff]))
+  le_bot_iff.mp (Inf_le (by simp [Set.mem_set_of_eq, eventually_le, ae_iff]))
 
 @[simp]
 theorem ess_inf_measure_zero {m : MeasurableSpace α} {f : α → β} : essInf f (0 : Measureₓ α) = ⊤ :=
@@ -89,14 +86,13 @@ theorem ess_sup_mono_ae {f g : α → β} (hfg : f ≤ᵐ[μ] g) : essSup f μ �
 theorem ess_inf_mono_ae {f g : α → β} (hfg : f ≤ᵐ[μ] g) : essInf f μ ≤ essInf g μ :=
   liminf_le_liminf hfg
 
-theorem ess_sup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c := by
-  have hμ_ne_bot : μ.ae.ne_bot := by
-    rwa [ne_bot_iff, Ne.def, ae_eq_bot]
-  exact limsup_const c
+theorem ess_sup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c :=
+  haveI hμ_ne_bot : μ.ae.ne_bot := by rwa [ne_bot_iff, Ne.def, ae_eq_bot]
+  limsup_const c
 
 theorem ess_sup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ => c) : essSup f μ ≤ c := by
   refine' (ess_sup_mono_ae hf).trans _
-  by_cases' hμ : μ = 0
+  by_cases hμ:μ = 0
   · simp [hμ]
     
   · rwa [ess_sup_const]
@@ -231,7 +227,7 @@ theorem ae_lt_of_ess_sup_lt {f : α → β} {x : β} (hf : essSup f μ < x) : �
 theorem ae_lt_of_lt_ess_inf {f : α → β} {x : β} (hf : x < essInf f μ) : ∀ᵐ y ∂μ, x < f y :=
   @ae_lt_of_ess_sup_lt α βᵒᵈ _ _ _ _ _ hf
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident x, ",", ident hx, "⟩", ":", expr «expr∃ , »((x), «expr ∧ »(«expr ≤ »(0, f x), «expr ≤ »(f x, c)))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident x, ",", ident hx, "⟩", ":", expr «expr∃ , »((x), «expr ∧ »(«expr ≤ »(0, f x), «expr ≤ »(f x, c)))]]
 theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α → β} (hf : 0 ≤ᵐ[μ.restrict s] f)
     (hs : MeasurableSet s) (hs_not_null : μ s ≠ 0) : essSup (s.indicator f) μ = essSup f (μ.restrict s) := by
   refine'
@@ -256,7 +252,7 @@ theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α →
   rw [ae_restrict_iff' hs] at h_restrict_le
   have hc : 0 ≤ c := by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident x, \",\", ident hx, \"⟩\", \":\", expr «expr∃ , »((x), «expr ∧ »(«expr ≤ »(0, f x), «expr ≤ »(f x, c)))]]"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident x, \",\", ident hx, \"⟩\", \":\", expr «expr∃ , »((x), «expr ∧ »(«expr ≤ »(0, f x), «expr ≤ »(f x, c)))]]"
     exact hx.1.trans hx.2
     refine' frequently.exists _
     · exact μ.ae
@@ -265,14 +261,13 @@ theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α →
     have hs' : ∃ᵐ x ∂μ, x ∈ s := by
       contrapose! hs_not_null
       rw [not_frequently, ae_iff] at hs_not_null
-      suffices { a : α | ¬a ∉ s } = s by
-        rwa [← this]
+      suffices { a : α | ¬a ∉ s } = s by rwa [← this]
       simp
     refine' hs'.mp (hf.mp (h_restrict_le.mono fun x hxs_imp_c hxf_nonneg hxs => _))
     rw [Pi.zero_apply] at hxf_nonneg
     exact ⟨hxf_nonneg hxs, hxs_imp_c hxs⟩
   refine' h_restrict_le.mono fun x hxc => _
-  by_cases' hxs : x ∈ s
+  by_cases hxs:x ∈ s
   · simpa [hxs] using hxc hxs
     
   · simpa [hxs] using hc

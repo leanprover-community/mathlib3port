@@ -210,9 +210,7 @@ theorem eventually_right_inverse' (e : LocalHomeomorph α β) {x} (hx : x ∈ e.
 
 theorem eventually_ne_nhds_within (e : LocalHomeomorph α β) {x} (hx : x ∈ e.Source) : ∀ᶠ x' in 𝓝[≠] x, e x' ≠ e x :=
   eventually_nhds_within_iff.2 <|
-    (e.eventually_left_inverse hx).mono fun x' hx' =>
-      mt fun h => by
-        rw [mem_singleton_iff, ← e.left_inv hx, ← h, hx']
+    (e.eventually_left_inverse hx).mono fun x' hx' => mt fun h => by rw [mem_singleton_iff, ← e.left_inv hx, ← h, hx']
 
 theorem nhds_within_source_inter {x} (hx : x ∈ e.Source) (s : Set α) : 𝓝[e.Source ∩ s] x = 𝓝[s] x :=
   nhds_within_inter_of_mem (mem_nhds_within_of_mem_nhds <| IsOpen.mem_nhds e.open_source hx)
@@ -278,8 +276,7 @@ theorem symm_target : e.symm.Target = e.Source :=
 
 @[simp, mfld_simps]
 theorem symm_symm : e.symm.symm = e :=
-  eq_of_local_equiv_eq <| by
-    simp
+  eq_of_local_equiv_eq <| by simp
 
 /-- A local homeomorphism is continuous at any point of its source -/
 protected theorem continuous_at {x : α} (h : x ∈ e.Source) : ContinuousAt e x :=
@@ -296,8 +293,7 @@ theorem map_nhds_eq {x} (hx : x ∈ e.Source) : map e (𝓝 x) = 𝓝 (e x) :=
   le_antisymmₓ (e.ContinuousAt hx) <| le_map_of_right_inverse (e.eventually_right_inverse' hx) (e.tendsto_symm hx)
 
 theorem symm_map_nhds_eq {x} (hx : x ∈ e.Source) : map e.symm (𝓝 (e x)) = 𝓝 x :=
-  (e.symm.map_nhds_eq <| e.map_source hx).trans <| by
-    rw [e.left_inv hx]
+  (e.symm.map_nhds_eq <| e.map_source hx).trans <| by rw [e.left_inv hx]
 
 theorem image_mem_nhds {x} (hx : x ∈ e.Source) {s : Set α} (hs : s ∈ 𝓝 x) : e '' s ∈ 𝓝 (e x) :=
   e.map_nhds_eq hx ▸ Filter.image_mem_map hs
@@ -318,10 +314,7 @@ theorem map_nhds_within_preimage_eq (e : LocalHomeomorph α β) {x} (hx : x ∈ 
 
 theorem eventually_nhds (e : LocalHomeomorph α β) {x : α} (p : β → Prop) (hx : x ∈ e.Source) :
     (∀ᶠ y in 𝓝 (e x), p y) ↔ ∀ᶠ x in 𝓝 x, p (e x) :=
-  Iff.trans
-    (by
-      rw [e.map_nhds_eq hx])
-    eventually_map
+  Iff.trans (by rw [e.map_nhds_eq hx]) eventually_map
 
 theorem eventually_nhds' (e : LocalHomeomorph α β) {x : α} (p : α → Prop) (hx : x ∈ e.Source) :
     (∀ᶠ y in 𝓝 (e x), p (e.symm y)) ↔ ∀ᶠ x in 𝓝 x, p x := by
@@ -527,8 +520,7 @@ def ofContinuousOpenRestrict (e : LocalEquiv α β) (hc : ContinuousOn e e.Sourc
     (hs : IsOpen e.Source) : LocalHomeomorph α β where
   toLocalEquiv := e
   open_source := hs
-  open_target := by
-    simpa only [range_restrict, e.image_source_eq_target] using ho.is_open_range
+  open_target := by simpa only [range_restrict, e.image_source_eq_target] using ho.is_open_range
   continuous_to_fun := hc
   continuous_inv_fun := e.image_source_eq_target ▸ ho.continuous_on_image_of_left_inv_on e.LeftInvOn
 
@@ -616,8 +608,7 @@ theorem of_set_symm : (ofSet s hs).symm = ofSet s hs :=
   rfl
 
 @[simp, mfld_simps]
-theorem of_set_univ_eq_refl : ofSet Univ is_open_univ = LocalHomeomorph.refl α := by
-  ext <;> simp
+theorem of_set_univ_eq_refl : ofSet Univ is_open_univ = LocalHomeomorph.refl α := by ext <;> simp
 
 end
 
@@ -638,8 +629,7 @@ protected def trans' (h : e.Target = e'.Source) : LocalHomeomorph α γ :=
 composition is well defined. -/
 protected def trans : LocalHomeomorph α γ :=
   LocalHomeomorph.trans' (e.symm.restrOpen e'.Source e'.open_source).symm (e'.restrOpen e.Target e.open_target)
-    (by
-      simp [inter_comm])
+    (by simp [inter_comm])
 
 @[simp, mfld_simps]
 theorem trans_to_local_equiv : (e.trans e').toLocalEquiv = e.toLocalEquiv.trans e'.toLocalEquiv :=
@@ -656,8 +646,7 @@ theorem coe_trans_symm : ((e.trans e').symm : γ → α) = e.symm ∘ e'.symm :=
 theorem trans_apply {x : α} : (e.trans e') x = e' (e x) :=
   rfl
 
-theorem trans_symm_eq_symm_trans_symm : (e.trans e').symm = e'.symm.trans e.symm := by
-  cases e <;> cases e' <;> rfl
+theorem trans_symm_eq_symm_trans_symm : (e.trans e').symm = e'.symm.trans e.symm := by cases e <;> cases e' <;> rfl
 
 /- This could be considered as a simp lemma, but there are many situations where it makes something
 simple into something more complicated. -/
@@ -704,8 +693,7 @@ theorem trans_of_set' {s : Set β} (hs : IsOpen s) : e.trans (ofSet s hs) = e.re
   rw [trans_of_set, restr_source_inter]
 
 theorem of_set_trans {s : Set α} (hs : IsOpen s) : (ofSet s hs).trans e = e.restr s :=
-  (LocalHomeomorph.ext _ _ (fun x => rfl) fun x => rfl) <| by
-    simp [LocalEquiv.trans_source, hs.interior_eq, inter_comm]
+  (LocalHomeomorph.ext _ _ (fun x => rfl) fun x => rfl) <| by simp [LocalEquiv.trans_source, hs.interior_eq, inter_comm]
 
 theorem of_set_trans' {s : Set α} (hs : IsOpen s) : (ofSet s hs).trans e = e.restr (e.Source ∩ s) := by
   rw [of_set_trans, restr_source_inter]
@@ -827,7 +815,7 @@ theorem prod_trans {η : Type _} {ε : Type _} [TopologicalSpace η] [Topologica
     (f : LocalHomeomorph β γ) (e' : LocalHomeomorph δ η) (f' : LocalHomeomorph η ε) :
     (e.Prod e').trans (f.Prod f') = (e.trans f).Prod (e'.trans f') :=
   LocalHomeomorph.eq_of_local_equiv_eq <| by
-    dsimp' only [trans_to_local_equiv, prod_to_local_equiv] <;> apply LocalEquiv.prod_trans
+    dsimp only [trans_to_local_equiv, prod_to_local_equiv] <;> apply LocalEquiv.prod_trans
 
 theorem prod_eq_prod_of_nonempty {e₁ e₁' : LocalHomeomorph α β} {e₂ e₂' : LocalHomeomorph γ δ}
     (h : (e₁.Prod e₂).Source.Nonempty) : e₁.Prod e₂ = e₁'.Prod e₂' ↔ e₁ = e₁' ∧ e₂ = e₂' := by
@@ -883,8 +871,7 @@ This way we have better definitional equalities for `source` and `target`. -/
 def disjointUnion (e e' : LocalHomeomorph α β) [∀ x, Decidable (x ∈ e.Source)] [∀ y, Decidable (y ∈ e.Target)]
     (Hs : Disjoint e.Source e'.Source) (Ht : Disjoint e.Target e'.Target) : LocalHomeomorph α β :=
   (e.piecewise e' e.Source e.Target e.is_image_source_target (e'.is_image_source_target_of_disjoint e Hs.symm Ht.symm)
-        (by
-          rw [e.open_source.inter_frontier_eq, (Hs.symm.frontier_right e'.open_source).inter_eq])
+        (by rw [e.open_source.inter_frontier_eq, (Hs.symm.frontier_right e'.open_source).inter_eq])
         (by
           rw [e.open_source.inter_frontier_eq]
           exact eq_on_empty _ _)).replaceEquiv
@@ -894,7 +881,7 @@ end Piecewise
 
 section Pi
 
-variable {ι : Type _} [Fintype ι] {Xi Yi : ι → Type _} [∀ i, TopologicalSpace (Xi i)] [∀ i, TopologicalSpace (Yi i)]
+variable {ι : Type _} [Fintypeₓ ι] {Xi Yi : ι → Type _} [∀ i, TopologicalSpace (Xi i)] [∀ i, TopologicalSpace (Yi i)]
   (ei : ∀ i, LocalHomeomorph (Xi i) (Yi i))
 
 /-- The product of a finite family of `local_homeomorph`s. -/
@@ -944,23 +931,17 @@ theorem continuous_within_at_iff_continuous_within_at_comp_left {f : γ → α} 
     (h : f ⁻¹' e.Source ∈ 𝓝[s] x) : ContinuousWithinAt f s x ↔ ContinuousWithinAt (e ∘ f) s x := by
   refine' ⟨(e.continuous_at hx).comp_continuous_within_at, fun fe_cont => _⟩
   rw [← continuous_within_at_inter' h] at fe_cont⊢
-  have : ContinuousWithinAt (e.symm ∘ e ∘ f) (s ∩ f ⁻¹' e.source) x := by
-    have : ContinuousWithinAt e.symm univ (e (f x)) := (e.continuous_at_symm (e.map_source hx)).ContinuousWithinAt
-    exact ContinuousWithinAt.comp this fe_cont (subset_univ _)
-  exact
-    this.congr
-      (fun y hy => by
-        simp [e.left_inv hy.2])
-      (by
-        simp [e.left_inv hx])
+  have : ContinuousWithinAt (e.symm ∘ e ∘ f) (s ∩ f ⁻¹' e.source) x :=
+    haveI : ContinuousWithinAt e.symm univ (e (f x)) := (e.continuous_at_symm (e.map_source hx)).ContinuousWithinAt
+    ContinuousWithinAt.comp this fe_cont (subset_univ _)
+  exact this.congr (fun y hy => by simp [e.left_inv hy.2]) (by simp [e.left_inv hx])
 
 /-- Continuity at a point can be read under left composition with a local homeomorphism if a
 neighborhood of the initial point is sent to the source of the local homeomorphism-/
 theorem continuous_at_iff_continuous_at_comp_left {f : γ → α} {x : γ} (h : f ⁻¹' e.Source ∈ 𝓝 x) :
     ContinuousAt f x ↔ ContinuousAt (e ∘ f) x := by
   have hx : f x ∈ e.source := (mem_of_mem_nhds h : _)
-  have h' : f ⁻¹' e.source ∈ 𝓝[univ] x := by
-    rwa [nhds_within_univ]
+  have h' : f ⁻¹' e.source ∈ 𝓝[univ] x := by rwa [nhds_within_univ]
   rw [← continuous_within_at_univ, ← continuous_within_at_univ,
     e.continuous_within_at_iff_continuous_within_at_comp_left hx h']
 
@@ -1044,7 +1025,7 @@ theorem to_open_embedding (h : e.Source = Set.Univ) : OpenEmbedding e := by
     exact e.inj_on
     
   · intro U hU
-    simpa only [h, subset_univ] with mfld_simps using e.image_open_of_open hU
+    simpa only [h, subset_univ, mfld_simps] using e.image_open_of_open hU
     
 
 end LocalHomeomorph
@@ -1113,7 +1094,7 @@ theorem local_homeomorph_subtype_coe_source : s.localHomeomorphSubtypeCoe.Source
 
 @[simp, mfld_simps]
 theorem local_homeomorph_subtype_coe_target : s.localHomeomorphSubtypeCoe.Target = s := by
-  simp' only [local_homeomorph_subtype_coe, Subtype.range_coe_subtype] with mfld_simps
+  simp only [local_homeomorph_subtype_coe, Subtype.range_coe_subtype, mfld_simps]
   rfl
 
 end TopologicalSpace.Opens
@@ -1140,7 +1121,7 @@ theorem subtype_restr_coe : ((e.subtypeRestr s : LocalHomeomorph s β) : s → �
 
 @[simp, mfld_simps]
 theorem subtype_restr_source : (e.subtypeRestr s).Source = coe ⁻¹' e.Source := by
-  simp' only [subtype_restr_def] with mfld_simps
+  simp only [subtype_restr_def, mfld_simps]
 
 /- This lemma characterizes the transition functions of an open subset in terms of the transition
 functions of the original space. -/
@@ -1151,14 +1132,13 @@ theorem subtype_restr_symm_trans_subtype_restr (f f' : LocalHomeomorph α β) :
   rw [← of_set_trans _ openness₁, ← trans_assoc, ← trans_assoc]
   refine' eq_on_source.trans' _ (eq_on_source_refl _)
   -- f' has been eliminated !!!
-  have sets_identity : f.symm.source ∩ (f.target ∩ f.symm ⁻¹' s) = f.symm.source ∩ f.symm ⁻¹' s := by
-    mfld_set_tac
+  have sets_identity : f.symm.source ∩ (f.target ∩ f.symm ⁻¹' s) = f.symm.source ∩ f.symm ⁻¹' s := by mfld_set_tac
   have openness₂ : IsOpen (s : Set α) := s.2
   rw [of_set_trans', sets_identity, ← trans_of_set' _ openness₂, trans_assoc]
   refine' eq_on_source.trans' (eq_on_source_refl _) _
   -- f has been eliminated !!!
   refine' Setoidₓ.trans (trans_symm_self s.local_homeomorph_subtype_coe) _
-  simp' only with mfld_simps
+  simp only [mfld_simps]
 
 end LocalHomeomorph
 

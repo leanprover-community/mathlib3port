@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yaël Dillies
 -/
 import Mathbin.Algebra.PunitInstances
-import Mathbin.Order.Hom.Lattice
+import Mathbin.Order.Heyting.Hom
 import Mathbin.Tactic.Abel
 import Mathbin.Tactic.Ring
 
@@ -60,61 +60,46 @@ theorem mul_self : a * a = a :=
 theorem add_self : a + a = 0 := by
   have : a + a = a + a + (a + a) :=
     calc
-      a + a = (a + a) * (a + a) := by
-        rw [mul_self]
-      _ = a * a + a * a + (a * a + a * a) := by
-        rw [add_mulₓ, mul_addₓ]
-      _ = a + a + (a + a) := by
-        rw [mul_self]
+      a + a = (a + a) * (a + a) := by rw [mul_self]
+      _ = a * a + a * a + (a * a + a * a) := by rw [add_mulₓ, mul_addₓ]
+      _ = a + a + (a + a) := by rw [mul_self]
       
   rwa [self_eq_add_left] at this
 
 @[simp]
 theorem neg_eq : -a = a :=
   calc
-    -a = -a + 0 := by
-      rw [add_zeroₓ]
-    _ = -a + -a + a := by
-      rw [← neg_add_selfₓ, add_assocₓ]
-    _ = a := by
-      rw [add_self, zero_addₓ]
+    -a = -a + 0 := by rw [add_zeroₓ]
+    _ = -a + -a + a := by rw [← neg_add_selfₓ, add_assocₓ]
+    _ = a := by rw [add_self, zero_addₓ]
     
 
 theorem add_eq_zero : a + b = 0 ↔ a = b :=
   calc
     a + b = 0 ↔ a = -b := add_eq_zero_iff_eq_neg
-    _ ↔ a = b := by
-      rw [neg_eq]
+    _ ↔ a = b := by rw [neg_eq]
     
 
 @[simp]
 theorem mul_add_mul : a * b + b * a = 0 := by
   have : a + b = a + b + (a * b + b * a) :=
     calc
-      a + b = (a + b) * (a + b) := by
-        rw [mul_self]
-      _ = a * a + a * b + (b * a + b * b) := by
-        rw [add_mulₓ, mul_addₓ, mul_addₓ]
-      _ = a + a * b + (b * a + b) := by
-        simp only [mul_self]
-      _ = a + b + (a * b + b * a) := by
-        abel
+      a + b = (a + b) * (a + b) := by rw [mul_self]
+      _ = a * a + a * b + (b * a + b * b) := by rw [add_mulₓ, mul_addₓ, mul_addₓ]
+      _ = a + a * b + (b * a + b) := by simp only [mul_self]
+      _ = a + b + (a * b + b * a) := by abel
       
   rwa [self_eq_add_rightₓ] at this
 
 @[simp]
-theorem sub_eq_add : a - b = a + b := by
-  rw [sub_eq_add_neg, add_right_injₓ, neg_eq]
+theorem sub_eq_add : a - b = a + b := by rw [sub_eq_add_neg, add_right_injₓ, neg_eq]
 
 @[simp]
-theorem mul_one_add_self : a * (1 + a) = 0 := by
-  rw [mul_addₓ, mul_oneₓ, mul_self, add_self]
+theorem mul_one_add_self : a * (1 + a) = 0 := by rw [mul_addₓ, mul_oneₓ, mul_self, add_self]
 
 -- Note [lower instance priority]
 instance (priority := 100) BooleanRing.toCommRing : CommRingₓ α :=
-  { (inferInstance : BooleanRing α) with
-    mul_comm := fun a b => by
-      rw [← add_eq_zero, mul_add_mul] }
+  { (inferInstance : BooleanRing α) with mul_comm := fun a b => by rw [← add_eq_zero, mul_add_mul] }
 
 end BooleanRing
 
@@ -183,41 +168,39 @@ BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasSup
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasInf
 
 theorem sup_comm (a b : α) : a ⊔ b = b ⊔ a := by
-  dsimp' only [(· ⊔ ·)]
+  dsimp only [(· ⊔ ·)]
   ring
 
 theorem inf_comm (a b : α) : a ⊓ b = b ⊓ a := by
-  dsimp' only [(· ⊓ ·)]
+  dsimp only [(· ⊓ ·)]
   ring
 
 theorem sup_assoc (a b c : α) : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) := by
-  dsimp' only [(· ⊔ ·)]
+  dsimp only [(· ⊔ ·)]
   ring
 
 theorem inf_assoc (a b c : α) : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) := by
-  dsimp' only [(· ⊓ ·)]
+  dsimp only [(· ⊓ ·)]
   ring
 
 theorem sup_inf_self (a b : α) : a ⊔ a ⊓ b = a := by
-  dsimp' only [(· ⊔ ·), (· ⊓ ·)]
+  dsimp only [(· ⊔ ·), (· ⊓ ·)]
   assoc_rw [mul_self, add_self, add_zeroₓ]
 
 theorem inf_sup_self (a b : α) : a ⊓ (a ⊔ b) = a := by
-  dsimp' only [(· ⊔ ·), (· ⊓ ·)]
+  dsimp only [(· ⊔ ·), (· ⊓ ·)]
   rw [mul_addₓ, mul_addₓ, mul_self, ← mul_assoc, mul_self, add_assocₓ, add_self, add_zeroₓ]
 
 theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b * c + a * (b * c) :=
   calc
     (a + b + a * b) * (a + c + a * c) =
         a * a + b * c + a * (b * c) + (a * b + a * a * b) + (a * c + a * a * c) + (a * b * c + a * a * b * c) :=
-      by
-      ring
-    _ = a + b * c + a * (b * c) := by
-      simp only [mul_self, add_self, add_zeroₓ]
+      by ring
+    _ = a + b * c + a * (b * c) := by simp only [mul_self, add_self, add_zeroₓ]
     
 
 theorem le_sup_inf (a b c : α) : (a ⊔ b) ⊓ (a ⊔ c) ⊔ (a ⊔ b ⊓ c) = a ⊔ b ⊓ c := by
-  dsimp' only [(· ⊔ ·), (· ⊓ ·)]
+  dsimp only [(· ⊔ ·), (· ⊓ ·)]
   rw [le_sup_inf_aux, add_self, mul_self, zero_addₓ]
 
 /-- The Boolean algebra structure on a Boolean ring.
@@ -233,20 +216,12 @@ The data is defined so that:
 -/
 def toBooleanAlgebra : BooleanAlgebra α :=
   { Lattice.mk' sup_comm sup_assoc inf_comm inf_assoc sup_inf_self inf_sup_self with le_sup_inf := le_sup_inf, top := 1,
-    le_top := fun a =>
-      show a + 1 + a * 1 = 1 by
-        assoc_rw [mul_oneₓ, add_commₓ, add_self, add_zeroₓ],
-    bot := 0,
-    bot_le := fun a =>
-      show 0 + a + 0 * a = a by
-        rw [zero_mul, zero_addₓ, add_zeroₓ],
-    compl := fun a => 1 + a,
-    inf_compl_le_bot := fun a =>
-      show a * (1 + a) + 0 + a * (1 + a) * 0 = 0 by
-        norm_num[mul_addₓ, mul_self, add_self],
+    le_top := fun a => show a + 1 + a * 1 = 1 by assoc_rw [mul_oneₓ, add_commₓ, add_self, add_zeroₓ], bot := 0,
+    bot_le := fun a => show 0 + a + 0 * a = a by rw [zero_mul, zero_addₓ, add_zeroₓ], compl := fun a => 1 + a,
+    inf_compl_le_bot := fun a => show a * (1 + a) + 0 + a * (1 + a) * 0 = 0 by norm_num [mul_addₓ, mul_self, add_self] ,
     top_le_sup_compl := fun a => by
       change 1 + (a + (1 + a) + a * (1 + a)) + 1 * (a + (1 + a) + a * (1 + a)) = a + (1 + a) + a * (1 + a)
-      norm_num[mul_addₓ, mul_self]
+      norm_num [mul_addₓ, mul_self]
       rw [← add_assocₓ, add_self] }
 
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.toBooleanAlgebra
@@ -283,10 +258,8 @@ theorem of_boolalg_sdiff (a b : AsBoolalg α) : ofBoolalg (a \ b) = ofBoolalg a 
 
 private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a * b) = a + b :=
   calc
-    (a + b + a * b) * (1 + a * b) = a + b + (a * b + a * b * (a * b)) + (a * (b * b) + a * a * b) := by
-      ring
-    _ = a + b := by
-      simp only [mul_self, add_self, add_zeroₓ]
+    (a + b + a * b) * (1 + a * b) = a + b + (a * b + a * b * (a * b)) + (a * (b * b) + a * a * b) := by ring
+    _ = a + b := by simp only [mul_self, add_self, add_zeroₓ]
     
 
 @[simp]
@@ -325,7 +298,7 @@ from `α` to `β` considered as Boolean algebras. -/
 protected def RingHom.asBoolalg (f : α →+* β) : BoundedLatticeHom (AsBoolalg α) (AsBoolalg β) where
   toFun := toBoolalg ∘ f ∘ ofBoolalg
   map_sup' := fun a b => by
-    dsimp'
+    dsimp
     simp_rw [map_add f, map_mul f]
     rfl
   map_inf' := f.map_mul'
@@ -491,7 +464,7 @@ protected def BoundedLatticeHom.asBoolring (f : BoundedLatticeHom α β) : AsBoo
   toFun := toBoolring ∘ f ∘ ofBoolring
   map_zero' := f.map_bot'
   map_one' := f.map_top'
-  map_add' := map_symm_diff f
+  map_add' := map_symm_diff' f
   map_mul' := f.map_inf'
 
 @[simp]

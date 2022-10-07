@@ -43,9 +43,9 @@ theorem Encoding.encode_injective {α : Type u} (e : Encoding α) : Function.Inj
 
 /-- An encoding plus a guarantee of finiteness of the alphabet. -/
 structure FinEncoding (α : Type u) extends Encoding.{u, 0} α where
-  ΓFin : Fintype Γ
+  ΓFin : Fintypeₓ Γ
 
-instance {α : Type u} (e : FinEncoding α) : Fintype e.toEncoding.Γ :=
+instance {α : Type u} (e : FinEncoding α) : Fintypeₓ e.toEncoding.Γ :=
   e.ΓFin
 
 /-- A standard Turing machine alphabet, consisting of blank,bit0,bit1,bra,ket,comma. -/
@@ -55,7 +55,7 @@ inductive Γ'
   | bra
   | ket
   | comma
-  deriving DecidableEq, Fintype
+  deriving DecidableEq, Fintypeₓ
 
 instance inhabitedΓ' : Inhabited Γ' :=
   ⟨Γ'.blank⟩
@@ -151,8 +151,7 @@ def encodingNatΓ' : Encoding ℕ where
   encode := fun x => List.map inclusionBoolΓ' (encodeNat x)
   decode := fun x => some (decodeNat (List.map sectionΓ'Bool x))
   decode_encode := fun x =>
-    congr_arg _ <| by
-      rw [List.map_mapₓ, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
+    congr_arg _ <| by rw [List.map_mapₓ, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
 
 /-- A binary fin_encoding of ℕ in Γ'. -/
 def finEncodingNatΓ' : FinEncoding ℕ :=
@@ -218,9 +217,9 @@ theorem Encoding.card_le_aleph_0 {α : Type u} (e : Encoding.{u, v} α) [Encodab
   · rw [Cardinal.mk_list_eq_aleph_0]
     
 
-theorem FinEncoding.card_le_aleph_0 {α : Type u} (e : FinEncoding α) : (#α) ≤ ℵ₀ := by
-  haveI : Encodable e.Γ := Fintype.toEncodable _
-  exact e.to_encoding.card_le_aleph_0
+theorem FinEncoding.card_le_aleph_0 {α : Type u} (e : FinEncoding α) : (#α) ≤ ℵ₀ :=
+  haveI : Encodable e.Γ := Fintypeₓ.toEncodable _
+  e.to_encoding.card_le_aleph_0
 
 end Computability
 

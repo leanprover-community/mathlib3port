@@ -58,12 +58,10 @@ def cantorFunctionAux (c : ℝ) (f : ℕ → Bool) (n : ℕ) : ℝ :=
   cond (f n) (c ^ n) 0
 
 @[simp]
-theorem cantor_function_aux_tt (h : f n = tt) : cantorFunctionAux c f n = c ^ n := by
-  simp [cantor_function_aux, h]
+theorem cantor_function_aux_tt (h : f n = tt) : cantorFunctionAux c f n = c ^ n := by simp [cantor_function_aux, h]
 
 @[simp]
-theorem cantor_function_aux_ff (h : f n = ff) : cantorFunctionAux c f n = 0 := by
-  simp [cantor_function_aux, h]
+theorem cantor_function_aux_ff (h : f n = ff) : cantorFunctionAux c f n = 0 := by simp [cantor_function_aux, h]
 
 theorem cantor_function_aux_nonneg (h : 0 ≤ c) : 0 ≤ cantorFunctionAux c f n := by
   cases h' : f n <;> simp [h']
@@ -202,8 +200,7 @@ theorem mk_real : (#ℝ) = 𝔠 := by
     
 
 /-- The cardinality of the reals, as a set. -/
-theorem mk_univ_real : (#(Set.Univ : Set ℝ)) = 𝔠 := by
-  rw [mk_univ, mk_real]
+theorem mk_univ_real : (#(Set.Univ : Set ℝ)) = 𝔠 := by rw [mk_univ, mk_real]
 
 /-- **Non-Denumerability of the Continuum**: The reals are not countable. -/
 theorem not_countable_real : ¬(Set.Univ : Set ℝ).Countable := by

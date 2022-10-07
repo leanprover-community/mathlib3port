@@ -93,12 +93,12 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
           (Ici s).indicator (fun t : ℝ => (1 : ℝ≥0∞)) (f x) :=
       by
       funext a
-      by_cases' s ∈ Ioc (0 : ℝ) (f a)
+      by_cases s ∈ Ioc (0 : ℝ) (f a)
       · simp only [h, show s ∈ Ioi (0 : ℝ) from h.1, show f a ∈ Ici s from h.2, indicator_of_mem, mul_oneₓ]
         
       · have h_copy := h
         simp only [mem_Ioc, not_and, not_leₓ] at h
-        by_cases' h' : 0 < s
+        by_cases h':0 < s
         · simp only [h_copy, h h', indicator_of_not_mem, not_false_iff, mem_Ici, not_leₓ, mul_zero]
           
         · have : s ∉ Ioi (0 : ℝ) := h'
@@ -109,17 +109,16 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
     rw [lintegral_const_mul']
     swap
     · apply Ennreal.mul_ne_top Ennreal.of_real_ne_top
-      by_cases' s ∈ Ioi (0 : ℝ) <;>
+      by_cases s ∈ Ioi (0 : ℝ) <;>
         · simp [h]
           
       
-    simp_rw
-      [show
+    simp_rw [show
         (fun a => (Ici s).indicator (fun t : ℝ => (1 : ℝ≥0∞)) (f a)) = fun a =>
           { a : α | s ≤ f a }.indicator (fun _ => 1) a
         by
         funext a
-        by_cases' s ≤ f a <;> simp [h]]
+        by_cases s ≤ f a <;> simp [h]]
     rw [lintegral_indicator]
     swap
     · exact f_mble measurable_set_Ici
@@ -128,8 +127,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
       show
         (Ioi 0).indicator (fun _x : ℝ => (1 : ℝ≥0∞)) s * μ { a : α | s ≤ f a } =
           (Ioi 0).indicator (fun _x : ℝ => 1 * μ { a : α | s ≤ f a }) s
-        by
-        by_cases' 0 < s <;> simp [h]]
+        by by_cases 0 < s <;> simp [h]]
     simp_rw [mul_comm _ (Ennreal.ofReal _), one_mulₓ]
     rfl
     
@@ -140,7 +138,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
     funext p
     cases p
     rw [Function.uncurry_apply_pairₓ]
-    by_cases' p_snd ∈ Ioc 0 (f p_fst)
+    by_cases p_snd ∈ Ioc 0 (f p_fst)
     · have h' : (p_fst, p_snd) ∈ { p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst) } := h
       rw [Set.indicator_of_mem h', Set.indicator_of_mem h]
       
@@ -213,8 +211,7 @@ theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
     (∫⁻ ω, Ennreal.ofReal (f ω ^ p) ∂μ) =
       Ennreal.ofReal p * ∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (t ^ (p - 1)) :=
   by
-  have one_lt_p : -1 < p - 1 := by
-    linarith
+  have one_lt_p : -1 < p - 1 := by linarith
   have obs : ∀ x : ℝ, (∫ t : ℝ in 0 ..x, t ^ (p - 1)) = x ^ p / p := by
     intro x
     rw [integral_rpow (Or.inl one_lt_p)]

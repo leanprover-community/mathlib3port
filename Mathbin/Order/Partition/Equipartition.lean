@@ -18,25 +18,24 @@ difference of `1`.
 -/
 
 
-open Finset Fintype
+open Finsetₓ Fintypeₓ
 
 namespace Finpartition
 
-variable {α : Type _} [DecidableEq α] {s t : Finset α} (P : Finpartition s)
+variable {α : Type _} [DecidableEq α] {s t : Finsetₓ α} (P : Finpartition s)
 
 /-- An equipartition is a partition whose parts are all the same size, up to a difference of `1`. -/
 def IsEquipartition : Prop :=
-  (P.parts : Set (Finset α)).EquitableOn card
+  (P.parts : Set (Finsetₓ α)).EquitableOn card
 
 theorem is_equipartition_iff_card_parts_eq_average :
     P.IsEquipartition ↔
-      ∀ a : Finset α, a ∈ P.parts → a.card = s.card / P.parts.card ∨ a.card = s.card / P.parts.card + 1 :=
-  by
-  simp_rw [is_equipartition, Finset.equitable_on_iff, P.sum_card_parts]
+      ∀ a : Finsetₓ α, a ∈ P.parts → a.card = s.card / P.parts.card ∨ a.card = s.card / P.parts.card + 1 :=
+  by simp_rw [is_equipartition, Finsetₓ.equitable_on_iff, P.sum_card_parts]
 
 variable {P}
 
-theorem _root_.set.subsingleton.is_equipartition (h : (P.parts : Set (Finset α)).Subsingleton) : P.IsEquipartition :=
+theorem _root_.set.subsingleton.is_equipartition (h : (P.parts : Set (Finsetₓ α)).Subsingleton) : P.IsEquipartition :=
   h.EquitableOn _
 
 theorem IsEquipartition.card_parts_eq_average (hP : P.IsEquipartition) (ht : t ∈ P.parts) :
@@ -59,9 +58,7 @@ theorem IsEquipartition.card_part_le_average_add_one (hP : P.IsEquipartition) (h
 variable (s)
 
 theorem bot_is_equipartition : (⊥ : Finpartition s).IsEquipartition :=
-  Set.equitable_on_iff_exists_eq_eq_add_one.2
-    ⟨1, by
-      simp ⟩
+  Set.equitable_on_iff_exists_eq_eq_add_one.2 ⟨1, by simp⟩
 
 theorem top_is_equipartition : (⊤ : Finpartition s).IsEquipartition :=
   (parts_top_subsingleton _).IsEquipartition

@@ -96,8 +96,7 @@ Note that the elaborator has a lot of trouble with this definition - it is often
 write `(dfinsupp.to_finsupp f : ι →₀ M)` instead of `f.to_finsupp`, as for some unknown reason
 using dot notation or omitting the type ascription prevents the type being resolved correctly. -/
 def Dfinsupp.toFinsupp (f : Π₀ i : ι, M) : ι →₀ M :=
-  ⟨f.support, f, fun i => by
-    simp only [Dfinsupp.mem_support_iff]⟩
+  ⟨f.support, f, fun i => by simp only [Dfinsupp.mem_support_iff]⟩
 
 @[simp]
 theorem Dfinsupp.to_finsupp_coe (f : Π₀ i : ι, M) : ⇑f.toFinsupp = f :=
@@ -234,12 +233,12 @@ def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η 
   toFun := fun f =>
     ⟨split f,
       Trunc.mk
-        ⟨(splitSupport f : Finset ι).val, fun i => by
-          rw [← Finset.mem_def, mem_split_support_iff_nonzero]
+        ⟨(splitSupport f : Finsetₓ ι).val, fun i => by
+          rw [← Finsetₓ.mem_def, mem_split_support_iff_nonzero]
           exact (Decidable.em _).symm⟩⟩
   invFun := fun f => by
     refine'
-      on_finset (Finset.sigma f.support fun j => (f j).support) (fun ji => f ji.1 ji.2) fun g hg =>
+      on_finset (Finsetₓ.sigma f.support fun j => (f j).support) (fun ji => f ji.1 ji.2) fun g hg =>
         finset.mem_sigma.mpr ⟨_, mem_support_iff.mpr hg⟩
     simp only [Ne.def, Dfinsupp.mem_support_to_fun]
     intro h
@@ -276,14 +275,12 @@ theorem sigma_finsupp_equiv_dfinsupp_single [Zero N] (a : Σi, η i) (n : N) :
   by
   obtain ⟨i, a⟩ := a
   ext j b
-  by_cases' h : i = j
+  by_cases h:i = j
   · subst h
     simp [split_apply, Finsupp.single_apply]
     
-  suffices Finsupp.single (⟨i, a⟩ : Σi, η i) n ⟨j, b⟩ = 0 by
-    simp [split_apply, dif_neg h, this]
-  have H : (⟨i, a⟩ : Σi, η i) ≠ ⟨j, b⟩ := by
-    simp [h]
+  suffices Finsupp.single (⟨i, a⟩ : Σi, η i) n ⟨j, b⟩ = 0 by simp [split_apply, dif_neg h, this]
+  have H : (⟨i, a⟩ : Σi, η i) ≠ ⟨j, b⟩ := by simp [h]
   rw [Finsupp.single_apply, if_neg H]
 
 -- Without this Lean fails to find the `add_zero_class` instance on `Π₀ i, (η i →₀ N)`.

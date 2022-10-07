@@ -87,15 +87,13 @@ theorem MeasurableSet.compl_iff : MeasurableSet (sᶜ) ↔ MeasurableSet s :=
   ⟨MeasurableSet.of_compl, MeasurableSet.compl⟩
 
 @[simp]
-theorem MeasurableSet.univ : MeasurableSet (Univ : Set α) := by
-  simpa using (@MeasurableSet.empty α _).compl
+theorem MeasurableSet.univ : MeasurableSet (Univ : Set α) := by simpa using (@MeasurableSet.empty α _).compl
 
 @[nontriviality]
 theorem Subsingleton.measurable_set [Subsingleton α] {s : Set α} : MeasurableSet s :=
   Subsingleton.set_cases MeasurableSet.empty MeasurableSet.univ s
 
-theorem MeasurableSet.congr {s t : Set α} (hs : MeasurableSet s) (h : s = t) : MeasurableSet t := by
-  rwa [← h]
+theorem MeasurableSet.congr {s t : Set α} (hs : MeasurableSet s) (h : s = t) : MeasurableSet t := by rwa [← h]
 
 theorem MeasurableSet.bUnion_decode₂ [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, MeasurableSet (f b)) (n : ℕ) :
     MeasurableSet (⋃ b ∈ decode₂ β n, f b) :=
@@ -111,16 +109,13 @@ theorem MeasurableSet.bUnion {f : β → Set α} {s : Set β} (hs : s.Countable)
     MeasurableSet (⋃ b ∈ s, f b) := by
   rw [bUnion_eq_Union]
   haveI := hs.to_encodable
-  exact
-    MeasurableSet.Union
-      (by
-        simpa using h)
+  exact MeasurableSet.Union (by simpa using h)
 
 theorem Set.Finite.measurable_set_bUnion {f : β → Set α} {s : Set β} (hs : s.Finite)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=
   MeasurableSet.bUnion hs.Countable h
 
-theorem Finset.measurable_set_bUnion {f : β → Set α} (s : Finset β) (h : ∀ b ∈ s, MeasurableSet (f b)) :
+theorem Finsetₓ.measurable_set_bUnion {f : β → Set α} (s : Finsetₓ β) (h : ∀ b ∈ s, MeasurableSet (f b)) :
     MeasurableSet (⋃ b ∈ s, f b) :=
   s.finite_to_set.measurable_set_bUnion h
 
@@ -148,7 +143,7 @@ theorem Set.Finite.measurable_set_bInter {f : β → Set α} {s : Set β} (hs : 
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
   MeasurableSet.bInter hs.Countable h
 
-theorem Finset.measurable_set_bInter {f : β → Set α} (s : Finset β) (h : ∀ b ∈ s, MeasurableSet (f b)) :
+theorem Finsetₓ.measurable_set_bInter {f : β → Set α} (s : Finsetₓ β) (h : ∀ b ∈ s, MeasurableSet (f b)) :
     MeasurableSet (⋂ b ∈ s, f b) :=
   s.finite_to_set.measurable_set_bInter h
 
@@ -199,7 +194,7 @@ theorem MeasurableSet.disjointed {f : ℕ → Set α} (h : ∀ i, MeasurableSet 
 
 @[simp]
 theorem MeasurableSet.const (p : Prop) : MeasurableSet { a : α | p } := by
-  by_cases' p <;> simp [h, MeasurableSet.empty] <;> apply MeasurableSet.univ
+  by_cases p <;> simp [h, MeasurableSet.empty] <;> apply MeasurableSet.univ
 
 /-- Every set has a measurable superset. Declare this as local instance as needed. -/
 theorem nonempty_measurable_superset (s : Set α) : Nonempty { t // s ⊆ t ∧ MeasurableSet t } :=
@@ -245,8 +240,7 @@ theorem MeasurableSet.insert {s : Set α} (hs : MeasurableSet s) (a : α) : Meas
 @[simp]
 theorem measurable_set_insert {a : α} {s : Set α} : MeasurableSet (insert a s) ↔ MeasurableSet s :=
   ⟨fun h =>
-    if ha : a ∈ s then by
-      rwa [← insert_eq_of_mem ha]
+    if ha : a ∈ s then by rwa [← insert_eq_of_mem ha]
     else insert_diff_self_of_not_mem ha ▸ h.diff (measurable_set_singleton _),
     fun h => h.insert a⟩
 
@@ -256,7 +250,7 @@ theorem Set.Subsingleton.measurable_set {s : Set α} (hs : s.Subsingleton) : Mea
 theorem Set.Finite.measurable_set {s : Set α} (hs : s.Finite) : MeasurableSet s :=
   (Finite.induction_on hs MeasurableSet.empty) fun a s ha hsf hsm => hsm.insert _
 
-protected theorem Finset.measurable_set (s : Finset α) : MeasurableSet (↑s : Set α) :=
+protected theorem Finsetₓ.measurable_set (s : Finsetₓ α) : MeasurableSet (↑s : Set α) :=
   s.finite_to_set.MeasurableSet
 
 theorem Set.Countable.measurable_set {s : Set α} (hs : s.Countable) : MeasurableSet s := by
@@ -379,8 +373,7 @@ theorem generate_from_insert_empty (S : Set (Set α)) : generateFrom (insert ∅
 theorem measurable_set_bot_iff {s : Set α} : @MeasurableSet α ⊥ s ↔ s = ∅ ∨ s = univ :=
   let b : MeasurableSpace α :=
     { MeasurableSet' := fun s => s = ∅ ∨ s = univ, measurable_set_empty := Or.inl rfl,
-      measurable_set_compl := by
-        simp (config := { contextual := true })[or_imp_distrib],
+      measurable_set_compl := by simp (config := { contextual := true }) [or_imp_distrib],
       measurable_set_Union := fun f hf =>
         Classical.by_cases
           (fun h : ∃ i, f i = univ =>
@@ -390,10 +383,7 @@ theorem measurable_set_bot_iff {s : Set α} : @MeasurableSet α ⊥ s ↔ s = �
           Or.inl <|
             eq_empty_of_subset_empty <|
               Union_subset fun i =>
-                (hf i).elim
-                  (by
-                    simp (config := { contextual := true }))
-                  fun hi => False.elim <| h ⟨i, hi⟩ }
+                (hf i).elim (by simp (config := { contextual := true })) fun hi => False.elim <| h ⟨i, hi⟩ }
   have : b = ⊥ :=
     bot_unique fun s hs =>
       hs.elim (fun s => s.symm ▸ @measurable_set_empty _ ⊥) fun s => s.symm ▸ @MeasurableSet.univ _ ⊥
@@ -411,13 +401,11 @@ theorem measurable_set_inf {m₁ m₂ : MeasurableSpace α} {s : Set α} :
 @[simp]
 theorem measurable_set_Inf {ms : Set (MeasurableSpace α)} {s : Set α} :
     @MeasurableSet _ (inf ms) s ↔ ∀ m ∈ ms, @MeasurableSet _ m s :=
-  show s ∈ ⋂₀ _ ↔ _ by
-    simp
+  show s ∈ ⋂₀ _ ↔ _ by simp
 
 @[simp]
 theorem measurable_set_infi {ι} {m : ι → MeasurableSpace α} {s : Set α} :
-    @MeasurableSet _ (infi m) s ↔ ∀ i, @MeasurableSet _ (m i) s := by
-  rw [infi, measurable_set_Inf, forall_range_iff]
+    @MeasurableSet _ (infi m) s ↔ ∀ i, @MeasurableSet _ (m i) s := by rw [infi, measurable_set_Inf, forall_range_iff]
 
 theorem measurable_set_sup {m₁ m₂ : MeasurableSpace α} {s : Set α} :
     measurable_set[m₁ ⊔ m₂] s ↔ GenerateMeasurable (measurable_set[m₁] ∪ measurable_set[m₂]) s :=

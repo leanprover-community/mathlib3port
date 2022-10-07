@@ -41,12 +41,8 @@ theorem fpower_series_radius (f : E →L[𝕜] F) (x : E) : (f.fpowerSeries x).r
   ((f.fpowerSeries x).radius_eq_top_of_forall_image_add_eq_zero 2) fun n => rfl
 
 protected theorem has_fpower_series_on_ball (f : E →L[𝕜] F) (x : E) : HasFpowerSeriesOnBall f (f.fpowerSeries x) x ∞ :=
-  { r_le := by
-      simp ,
-    r_pos := Ennreal.coe_lt_top,
-    HasSum := fun y _ =>
-      (has_sum_nat_add_iff' 2).1 <| by
-        simp [Finset.sum_range_succ, ← sub_sub, has_sum_zero] }
+  { r_le := by simp, r_pos := Ennreal.coe_lt_top,
+    HasSum := fun y _ => (has_sum_nat_add_iff' 2).1 <| by simp [Finsetₓ.sum_range_succ, ← sub_sub, has_sum_zero] }
 
 protected theorem has_fpower_series_at (f : E →L[𝕜] F) (x : E) : HasFpowerSeriesAt f (f.fpowerSeries x) x :=
   ⟨∞, f.HasFpowerSeriesOnBall x⟩
@@ -81,13 +77,11 @@ theorem fpower_series_bilinear_radius (f : E →L[𝕜] F →L[𝕜] G) (x : E �
 
 protected theorem has_fpower_series_on_ball_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     HasFpowerSeriesOnBall (fun x : E × F => f x.1 x.2) (f.fpowerSeriesBilinear x) x ∞ :=
-  { r_le := by
-      simp ,
-    r_pos := Ennreal.coe_lt_top,
+  { r_le := by simp, r_pos := Ennreal.coe_lt_top,
     HasSum := fun y _ =>
       (has_sum_nat_add_iff' 3).1 <| by
-        simp only [Finset.sum_range_succ, Finset.sum_range_one, Prod.fst_add, Prod.snd_add, f.map_add_add]
-        dsimp'
+        simp only [Finsetₓ.sum_range_succ, Finsetₓ.sum_range_one, Prod.fst_add, Prod.snd_add, f.map_add_add]
+        dsimp
         simp only [add_commₓ, sub_self, has_sum_zero] }
 
 protected theorem has_fpower_series_at_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :

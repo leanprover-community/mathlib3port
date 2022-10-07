@@ -84,16 +84,10 @@ theorem app_inv {F G : C ⥤ D} (α : F ≅ G) (X : C) : (α.app X).inv = α.inv
 variable {F G : C ⥤ D}
 
 instance hom_app_is_iso (α : F ≅ G) (X : C) : IsIso (α.Hom.app X) :=
-  ⟨⟨α.inv.app X,
-      ⟨by
-        rw [← comp_app, iso.hom_inv_id, ← id_app], by
-        rw [← comp_app, iso.inv_hom_id, ← id_app]⟩⟩⟩
+  ⟨⟨α.inv.app X, ⟨by rw [← comp_app, iso.hom_inv_id, ← id_app], by rw [← comp_app, iso.inv_hom_id, ← id_app]⟩⟩⟩
 
 instance inv_app_is_iso (α : F ≅ G) (X : C) : IsIso (α.inv.app X) :=
-  ⟨⟨α.Hom.app X,
-      ⟨by
-        rw [← comp_app, iso.inv_hom_id, ← id_app], by
-        rw [← comp_app, iso.hom_inv_id, ← id_app]⟩⟩⟩
+  ⟨⟨α.Hom.app X, ⟨by rw [← comp_app, iso.inv_hom_id, ← id_app], by rw [← comp_app, iso.hom_inv_id, ← id_app]⟩⟩⟩
 
 section
 
@@ -121,13 +115,11 @@ theorem cancel_nat_iso_inv_left {X : C} {Z : D} (g g' : F.obj X ⟶ Z) : α.inv.
 
 @[simp]
 theorem cancel_nat_iso_hom_right {X : D} {Y : C} (f f' : X ⟶ F.obj Y) : f ≫ α.Hom.app Y = f' ≫ α.Hom.app Y ↔ f = f' :=
-  by
-  simp only [cancel_mono]
+  by simp only [cancel_mono]
 
 @[simp]
 theorem cancel_nat_iso_inv_right {X : D} {Y : C} (f f' : X ⟶ G.obj Y) : f ≫ α.inv.app Y = f' ≫ α.inv.app Y ↔ f = f' :=
-  by
-  simp only [cancel_mono]
+  by simp only [cancel_mono]
 
 @[simp]
 theorem cancel_nat_iso_hom_right_assoc {W X X' : D} {Y : C} (f : W ⟶ X) (g : X ⟶ F.obj Y) (f' : W ⟶ X')
@@ -148,14 +140,11 @@ end
 
 variable {X Y : C}
 
-theorem naturality_1 (α : F ≅ G) (f : X ⟶ Y) : α.inv.app X ≫ F.map f ≫ α.Hom.app Y = G.map f := by
-  simp
+theorem naturality_1 (α : F ≅ G) (f : X ⟶ Y) : α.inv.app X ≫ F.map f ≫ α.Hom.app Y = G.map f := by simp
 
-theorem naturality_2 (α : F ≅ G) (f : X ⟶ Y) : α.Hom.app X ≫ G.map f ≫ α.inv.app Y = F.map f := by
-  simp
+theorem naturality_2 (α : F ≅ G) (f : X ⟶ Y) : α.Hom.app X ≫ G.map f ≫ α.inv.app Y = F.map f := by simp
 
-theorem naturality_1' (α : F ⟶ G) (f : X ⟶ Y) [IsIso (α.app X)] : inv (α.app X) ≫ F.map f ≫ α.app Y = G.map f := by
-  simp
+theorem naturality_1' (α : F ⟶ G) (f : X ⟶ Y) [IsIso (α.app X)] : inv (α.app X) ≫ F.map f ≫ α.app Y = G.map f := by simp
 
 @[simp, reassoc]
 theorem naturality_2' (α : F ⟶ G) (f : X ⟶ Y) [IsIso (α.app Y)] : α.app X ≫ G.map f ≫ inv (α.app Y) = F.map f := by
@@ -196,17 +185,13 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
 
 @[simp]
 theorem ofComponents.app (app' : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (X) :
-    (ofComponents app' naturality).app X = app' X := by
-  tidy
+    (ofComponents app' naturality).app X = app' X := by tidy
 
 -- Making this an instance would cause a typeclass inference loop with `is_iso_app_of_is_iso`.
 /-- A natural transformation is an isomorphism if all its components are isomorphisms.
 -/
 theorem is_iso_of_is_iso_app (α : F ⟶ G) [∀ X : C, IsIso (α.app X)] : IsIso α :=
-  ⟨(IsIso.of_iso
-        (ofComponents (fun X => asIso (α.app X))
-          (by
-            tidy))).1⟩
+  ⟨(IsIso.of_iso (ofComponents (fun X => asIso (α.app X)) (by tidy))).1⟩
 
 /-- Horizontal composition of natural isomorphisms. -/
 def hcomp {F G : C ⥤ D} {H I : D ⥤ E} (α : F ≅ G) (β : H ≅ I) : F ⋙ H ≅ G ⋙ I := by

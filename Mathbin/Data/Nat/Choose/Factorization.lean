@@ -35,7 +35,7 @@ variable {p n k : ℕ}
 /-- A logarithmic upper bound on the multiplicity of a prime in a binomial coefficient.
 -/
 theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n := by
-  by_cases' h : (choose n k).factorization p = 0
+  by_cases h:(choose n k).factorization p = 0
   · simp [h]
     
   have hp : p.prime := Not.imp_symm (choose n k).factorization_eq_zero_of_non_prime h
@@ -44,7 +44,7 @@ theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n :
     simp [choose_eq_zero_of_lt hnk]
   rw [factorization_def _ hp, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
   simp only [hp.multiplicity_choose hkn (lt_add_one _), PartEnat.get_coe]
-  refine' (Finset.card_filter_le _ _).trans (le_of_eqₓ (Nat.card_Ico _ _))
+  refine' (Finsetₓ.card_filter_le _ _).trans (le_of_eqₓ (Nat.card_Ico _ _))
 
 /-- A `pow` form of `nat.factorization_choose_le`
 -/
@@ -75,8 +75,8 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
   · simp [choose_eq_zero_of_lt hnk]
     
   rw [factorization_def _ hp, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
-  simp only [hp.multiplicity_choose hkn (lt_add_one _), PartEnat.get_coe, Finset.card_eq_zero,
-    Finset.filter_eq_empty_iff, not_leₓ]
+  simp only [hp.multiplicity_choose hkn (lt_add_one _), PartEnat.get_coe, Finsetₓ.card_eq_zero,
+    Finsetₓ.filter_eq_empty_iff, not_leₓ]
   intro i hi
   rcases eq_or_lt_of_leₓ (finset.mem_Ico.mp hi).1 with (rfl | hi)
   · rw [pow_oneₓ, ← add_lt_add_iff_left (2 * p), ← succ_mul, two_mul, add_add_add_commₓ]
@@ -84,8 +84,7 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
       lt_of_le_of_ltₓ
         (add_le_add (add_le_add_right (le_mul_of_one_le_right' ((one_le_div_iff hp.pos).mpr hk)) (k % p))
           (add_le_add_right (le_mul_of_one_le_right' ((one_le_div_iff hp.pos).mpr hk')) ((n - k) % p)))
-        (by
-          rwa [div_add_mod, div_add_mod, add_tsub_cancel_of_le hkn])
+        (by rwa [div_add_mod, div_add_mod, add_tsub_cancel_of_le hkn])
     
   · replace hn : n < p ^ i
     · calc
@@ -119,7 +118,7 @@ theorem factorization_factorial_eq_zero_of_lt (h : n < p) : (factorial n).factor
     hn (lt_of_succ_lt h), add_zeroₓ, factorization_eq_zero_of_lt h]
 
 theorem factorization_choose_eq_zero_of_lt (h : n < p) : (choose n k).factorization p = 0 := by
-  by_cases' hnk : n < k
+  by_cases hnk:n < k
   · simp [choose_eq_zero_of_lt hnk]
     
   rw [choose_eq_factorial_div_factorial (le_of_not_ltₓ hnk),
@@ -139,12 +138,12 @@ theorem le_two_mul_of_factorization_central_binom_pos (h_pos : 0 < (centralBinom
 
 /-- A binomial coefficient is the product of its prime factors, which are at most `n`. -/
 theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :
-    (∏ p in Finset.range (n + 1), p ^ (Nat.choose n k).factorization p) = choose n k := by
-  nth_rw_rhs 0[← factorization_prod_pow_eq_self (choose_pos hkn).ne']
+    (∏ p in Finsetₓ.range (n + 1), p ^ (Nat.choose n k).factorization p) = choose n k := by
+  nth_rw_rhs 0 [← factorization_prod_pow_eq_self (choose_pos hkn).ne']
   rw [eq_comm]
-  apply Finset.prod_subset
+  apply Finsetₓ.prod_subset
   · intro p hp
-    rw [Finset.mem_range]
+    rw [Finsetₓ.mem_range]
     contrapose! hp
     rw [Finsupp.mem_support_iff, not_not, factorization_choose_eq_zero_of_lt hp]
     
@@ -155,7 +154,7 @@ theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :
 /-- The `n`th central binomial coefficient is the product of its prime factors, which are
 at most `2n`. -/
 theorem prod_pow_factorization_central_binom (n : ℕ) :
-    (∏ p in Finset.range (2 * n + 1), p ^ (centralBinom n).factorization p) = centralBinom n := by
+    (∏ p in Finsetₓ.range (2 * n + 1), p ^ (centralBinom n).factorization p) = centralBinom n := by
   apply prod_pow_factorization_choose
   linarith
 

@@ -44,15 +44,12 @@ theorem destutter'_cons_pos (h : R b a) : (a :: l).destutter' R b = b :: l.destu
   rw [destutter', if_pos h]
 
 @[simp]
-theorem destutter'_cons_neg (h : ¬R b a) : (a :: l).destutter' R b = l.destutter' R b := by
-  rw [destutter', if_neg h]
+theorem destutter'_cons_neg (h : ¬R b a) : (a :: l).destutter' R b = l.destutter' R b := by rw [destutter', if_neg h]
 
 variable (R)
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 @[simp]
-theorem destutter'_singleton : [b].destutter' R a = if R a b then [a, b] else [a] := by
-  split_ifs <;> simp [h]
+theorem destutter'_singleton : [b].destutter' R a = if R a b then [a, b] else [a] := by split_ifs <;> simp! [h]
 
 theorem destutter'_sublist (a) : l.destutter' R a <+ a :: l := by
   induction' l with b l hl generalizing a
@@ -146,8 +143,7 @@ theorem destutter_of_chain' : ∀ l : List α, l.Chain' R → l.destutter R = l
 
 @[simp]
 theorem destutter_eq_self_iff : ∀ l : List α, l.destutter R = l ↔ l.Chain' R
-  | [] => by
-    simp
+  | [] => by simp
   | a :: l => l.destutter'_eq_self_iff R a
 
 theorem destutter_idem : (l.destutter R).destutter R = l.destutter R :=

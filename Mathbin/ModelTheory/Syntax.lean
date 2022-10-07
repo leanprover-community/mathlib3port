@@ -68,8 +68,8 @@ open FirstOrder
 
 open Structure Finₓ
 
--- ./././Mathport/Syntax/Translate/Command.lean:306:30: infer kinds are unsupported in Lean 4: var {}
--- ./././Mathport/Syntax/Translate/Command.lean:306:30: infer kinds are unsupported in Lean 4: func {}
+-- ./././Mathport/Syntax/Translate/Command.lean:308:30: infer kinds are unsupported in Lean 4: var {}
+-- ./././Mathport/Syntax/Translate/Command.lean:308:30: infer kinds are unsupported in Lean 4: func {}
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
 inductive Term (α : Type u') : Type max u u'
@@ -82,17 +82,17 @@ variable {L}
 
 namespace Term
 
-open Finset
+open Finsetₓ
 
 /-- The `finset` of variables used in a given term. -/
 @[simp]
-def varFinsetₓ [DecidableEq α] : L.term α → Finset α
+def varFinsetₓ [DecidableEq α] : L.term α → Finsetₓ α
   | var i => {i}
   | func f ts => univ.bUnion fun i => (ts i).varFinset
 
 /-- The `finset` of variables from the left side of a sum used in a given term. -/
 @[simp]
-def varFinsetLeftₓ [DecidableEq α] : L.term (Sum α β) → Finset α
+def varFinsetLeftₓ [DecidableEq α] : L.term (Sum α β) → Finsetₓ α
   | var (Sum.inl i) => {i}
   | var (Sum.inr i) => ∅
   | func f ts => univ.bUnion fun i => (ts i).varFinsetLeft
@@ -130,9 +130,7 @@ theorem relabel_comp_relabel (f : α → β) (g : β → γ) :
 /-- Relabels a term's variables along a bijection. -/
 @[simps]
 def relabelEquiv (g : α ≃ β) : L.term α ≃ L.term β :=
-  ⟨relabelₓ g, relabelₓ g.symm, fun t => by
-    simp , fun t => by
-    simp ⟩
+  ⟨relabelₓ g, relabelₓ g.symm, fun t => by simp, fun t => by simp⟩
 
 /-- Restricts a term to use only a set of the given variables. -/
 def restrictVarₓ [DecidableEq α] : ∀ (t : L.term α) (f : t.varFinset → β), L.term β
@@ -278,14 +276,12 @@ end Lhom
 def Lequiv.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α where
   toFun := φ.toLhom.onTerm
   invFun := φ.invLhom.onTerm
-  left_inv := by
-    rw [Function.left_inverse_iff_comp, ← Lhom.comp_on_term, φ.left_inv, Lhom.id_on_term]
-  right_inv := by
-    rw [Function.right_inverse_iff_comp, ← Lhom.comp_on_term, φ.right_inv, Lhom.id_on_term]
+  left_inv := by rw [Function.left_inverse_iff_comp, ← Lhom.comp_on_term, φ.left_inv, Lhom.id_on_term]
+  right_inv := by rw [Function.right_inverse_iff_comp, ← Lhom.comp_on_term, φ.right_inv, Lhom.id_on_term]
 
 variable (L) (α)
 
--- ./././Mathport/Syntax/Translate/Command.lean:306:30: infer kinds are unsupported in Lean 4: falsum {}
+-- ./././Mathport/Syntax/Translate/Command.lean:308:30: infer kinds are unsupported in Lean 4: falsum {}
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
 inductive BoundedFormula : ℕ → Type max u v u'
@@ -376,11 +372,11 @@ instance : HasSup (L.BoundedFormula α n) :=
 protected def iff (φ ψ : L.BoundedFormula α n) :=
   φ.imp ψ ⊓ ψ.imp φ
 
-open Finset
+open Finsetₓ
 
 /-- The `finset` of variables used in a given formula. -/
 @[simp]
-def freeVarFinsetₓ [DecidableEq α] : ∀ {n}, L.BoundedFormula α n → Finset α
+def freeVarFinsetₓ [DecidableEq α] : ∀ {n}, L.BoundedFormula α n → Finsetₓ α
   | n, falsum => ∅
   | n, equal t₁ t₂ => t₁.varFinsetLeft ∪ t₂.varFinsetLeft
   | n, rel R ts => univ.bUnion fun i => (ts i).varFinsetLeft
@@ -470,10 +466,7 @@ def mapTermRelₓ {g : ℕ → ℕ} (ft : ∀ n, L.term (Sum α (Finₓ n)) → 
 
 /-- Raises all of the `fin`-indexed variables of a formula greater than or equal to `m` by `n'`. -/
 def liftAt : ∀ {n : ℕ} (n' m : ℕ), L.BoundedFormula α n → L.BoundedFormula α (n + n') := fun n n' m φ =>
-  φ.mapTermRel (fun k t => t.liftAt n' m) (fun _ => id) fun _ =>
-    castLeₓ
-      (by
-        rw [add_assocₓ, add_commₓ 1, add_assocₓ])
+  φ.mapTermRel (fun k t => t.liftAt n' m) (fun _ => id) fun _ => castLeₓ (by rw [add_assocₓ, add_commₓ 1, add_assocₓ])
 
 @[simp]
 theorem map_term_rel_map_term_rel {L'' : Language} (ft : ∀ n, L.term (Sum α (Finₓ n)) → L'.term (Sum β (Finₓ n)))
@@ -515,9 +508,7 @@ relations. -/
 def mapTermRelEquiv (ft : ∀ n, L.term (Sum α (Finₓ n)) ≃ L'.term (Sum β (Finₓ n)))
     (fr : ∀ n, L.Relations n ≃ L'.Relations n) {n} : L.BoundedFormula α n ≃ L'.BoundedFormula β n :=
   ⟨mapTermRelₓ (fun n => ft n) (fun n => fr n) fun _ => id,
-    mapTermRelₓ (fun n => (ft n).symm) (fun n => (fr n).symm) fun _ => id, fun φ => by
-    simp , fun φ => by
-    simp ⟩
+    mapTermRelₓ (fun n => (ft n).symm) (fun n => (fr n).symm) fun _ => id, fun φ => by simp, fun φ => by simp⟩
 
 /-- A function to help relabel the variables in bounded formulas. -/
 def relabelAux (g : α → Sum β (Finₓ n)) (k : ℕ) : Sum α (Finₓ k) → Sum β (Finₓ (n + k)) :=
@@ -570,8 +561,7 @@ theorem relabel_all (g : α → Sum β (Finₓ n)) {k} (φ : L.BoundedFormula α
 
 @[simp]
 theorem relabel_ex (g : α → Sum β (Finₓ n)) {k} (φ : L.BoundedFormula α (k + 1)) : φ.ex.relabel g = (φ.relabel g).ex :=
-  by
-  simp [bounded_formula.ex]
+  by simp [bounded_formula.ex]
 
 @[simp]
 theorem relabel_sum_inl (φ : L.BoundedFormula α n) :
@@ -617,11 +607,9 @@ inductive IsAtomic : L.BoundedFormula α n → Prop
   | equal (t₁ t₂ : L.term (Sum α (Finₓ n))) : IsAtomic (bdEqual t₁ t₂)
   | rel {l : ℕ} (R : L.Relations l) (ts : Finₓ l → L.term (Sum α (Finₓ n))) : IsAtomic (R.BoundedFormula ts)
 
-theorem not_all_is_atomic (φ : L.BoundedFormula α (n + 1)) : ¬φ.all.IsAtomic := fun con => by
-  cases con
+theorem not_all_is_atomic (φ : L.BoundedFormula α (n + 1)) : ¬φ.all.IsAtomic := fun con => by cases con
 
-theorem not_ex_is_atomic (φ : L.BoundedFormula α (n + 1)) : ¬φ.ex.IsAtomic := fun con => by
-  cases con
+theorem not_ex_is_atomic (φ : L.BoundedFormula α (n + 1)) : ¬φ.ex.IsAtomic := fun con => by cases con
 
 theorem IsAtomic.relabel {m : ℕ} {φ : L.BoundedFormula α m} (h : φ.IsAtomic) (f : α → Sum β (Finₓ n)) :
     (φ.relabel f).IsAtomic :=
@@ -690,11 +678,7 @@ theorem IsPrenex.induction_on_all_not {P : ∀ {n}, L.BoundedFormula α n → Pr
 
 theorem IsPrenex.relabel {m : ℕ} {φ : L.BoundedFormula α m} (h : φ.IsPrenex) (f : α → Sum β (Finₓ n)) :
     (φ.relabel f).IsPrenex :=
-  IsPrenex.rec_on h (fun _ _ h => (h.relabel f).IsPrenex)
-    (fun _ _ _ h => by
-      simp [h.all])
-    fun _ _ _ h => by
-    simp [h.ex]
+  IsPrenex.rec_on h (fun _ _ h => (h.relabel f).IsPrenex) (fun _ _ _ h => by simp [h.all]) fun _ _ _ h => by simp [h.ex]
 
 theorem IsPrenex.cast_le (hφ : IsPrenex φ) : ∀ {n} {h : l ≤ n}, (φ.cast_le h).IsPrenex :=
   IsPrenex.rec_on hφ (fun _ _ ih _ _ => ih.cast_le.IsPrenex) (fun _ _ _ ih _ _ => ih.all) fun _ _ _ ih _ _ => ih.ex
@@ -985,23 +969,23 @@ variable {L} {α}
 
 open Set
 
-theorem monotone_distinct_constants_theory : Monotone (L.DistinctConstantsTheory : Set α → L[[α]].Theory) :=
+theorem monotone_distinct_constants_theory : Monotoneₓ (L.DistinctConstantsTheory : Set α → L[[α]].Theory) :=
   fun s t st => image_subset _ (inter_subset_inter_left _ (prod_mono st st))
 
 theorem directed_distinct_constants_theory : Directed (· ⊆ ·) (L.DistinctConstantsTheory : Set α → L[[α]].Theory) :=
-  Monotone.directed_le monotone_distinct_constants_theory
+  Monotoneₓ.directed_le monotone_distinct_constants_theory
 
 theorem distinct_constants_theory_eq_Union (s : Set α) :
     L.DistinctConstantsTheory s =
-      ⋃ t : Finset s, L.DistinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
+      ⋃ t : Finsetₓ s, L.DistinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
   by
   classical
   simp only [distinct_constants_theory]
   rw [← image_Union, ← Union_inter]
   refine' congr rfl (congr (congr rfl _) rfl)
   ext ⟨i, j⟩
-  simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_Union, mem_image,
-    Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_distrib_rightₓ, exists_eq_right]
+  simp only [prod_mk_mem_set_prod_eq, Finsetₓ.coe_map, Function.Embedding.coe_subtype, mem_Union, mem_image,
+    Finsetₓ.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_distrib_rightₓ, exists_eq_right]
   refine' ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, _⟩, ⟨h.2, _⟩⟩, _⟩
   · simp
     

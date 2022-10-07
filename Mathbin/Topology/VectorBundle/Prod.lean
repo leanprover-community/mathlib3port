@@ -46,8 +46,7 @@ variable [TopologicalSpace (TotalSpace E₁)] [TopologicalSpace (TotalSpace E₂
 the induced topology from the diagonal embedding into `total_space E₁ × total_space E₂`. -/
 instance Prod.topologicalSpace : TopologicalSpace (TotalSpace (E₁ ×ᵇ E₂)) :=
   TopologicalSpace.induced (fun p => ((⟨p.1, p.2.1⟩ : TotalSpace E₁), (⟨p.1, p.2.2⟩ : TotalSpace E₂)))
-    (by
-      infer_instance : TopologicalSpace (TotalSpace E₁ × TotalSpace E₂))
+    (by infer_instance : TopologicalSpace (TotalSpace E₁ × TotalSpace E₂))
 
 /-- The diagonal map from the total space of the fibrewise product of two topological vector bundles
 `E₁`, `E₂` into `total_space E₁ × total_space E₂` is `inducing`. -/
@@ -209,7 +208,7 @@ instance _root_.bundle.prod.topological_vector_bundle : TopologicalVectorBundle 
         (((continuous_on_coord_change e₁ he₁ e₁' he₁').mono _).prodMapL R
               ((continuous_on_coord_change e₂ he₂ e₂' he₂').mono _)).congr
           _ <;>
-      dsimp' only [base_set_prod] with mfld_simps
+      dsimp only [base_set_prod, mfld_simps]
     · mfld_set_tac
       
     · mfld_set_tac

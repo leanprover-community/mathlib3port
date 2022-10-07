@@ -102,8 +102,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
   have Dopen : ∀ n i, IsOpen (D n i) := by
     intro n i
     rw [Dn]
-    iterate 4 
-      refine' is_open_Union fun _ => _
+    iterate 4 refine' is_open_Union fun _ => _
     exact is_open_ball
   -- the covering `D n i` is a refinement of the original covering: `D n i ⊆ s i`
   have HDS : ∀ n i, D n i ⊆ s i := by
@@ -116,10 +115,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       _ ≤ 3 * 2⁻¹ ^ n := Ennreal.mul_le_mul _ le_rflₓ
       
     -- TODO: use `norm_num`
-    have : ((1 : ℕ) : ℝ≥0∞) ≤ (3 : ℕ) :=
-      Ennreal.coe_nat_le_coe_nat.2
-        (by
-          norm_num1)
+    have : ((1 : ℕ) : ℝ≥0∞) ≤ (3 : ℕ) := Ennreal.coe_nat_le_coe_nat.2 (by norm_num1)
     exact_mod_cast this
   -- Let us show the rest of the properties. Since the definition expects a family indexed
   -- by a single parameter, we use `ℕ × ι` as the domain.
@@ -143,23 +139,13 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     have Hgt : ∀ m ≥ n + k + 1, ∀ (i : ι), Disjoint (D m i) B := by
       rintro m hm i y ⟨hym, hyx⟩
       rcases memD.1 hym with ⟨z, rfl, hzi, H, hz⟩
-      have : z ∉ ball x (2⁻¹ ^ k) := fun hz =>
-        H n
-          (by
-            linarith)
-          i (hsub hz)
+      have : z ∉ ball x (2⁻¹ ^ k) := fun hz => H n (by linarith) i (hsub hz)
       apply this
       calc
         edist z x ≤ edist y z + edist y x := edist_triangle_left _ _ _
         _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) := Ennreal.add_lt_add hz hyx
-        _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) :=
-          add_le_add
-            (hpow_le <| by
-              linarith)
-            (hpow_le <| by
-              linarith)
-        _ = 2⁻¹ ^ k := by
-          rw [← two_mul, h2pow]
+        _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) := add_le_add (hpow_le <| by linarith) (hpow_le <| by linarith)
+        _ = 2⁻¹ ^ k := by rw [← two_mul, h2pow]
         
     -- For each `m ≤ n + k` there is at most one `j` such that `D m j ∩ B` is nonempty.
     have Hle : ∀ m ≤ n + k, Set.Subsingleton { j | (D m j ∩ B).Nonempty } := by
@@ -174,14 +160,11 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
         edist z' y' ≤ edist z' x + edist x y' := edist_triangle _ _ _
         _ ≤ edist z z' + edist z x + (edist y x + edist y y') :=
           add_le_add (edist_triangle_left _ _ _) (edist_triangle_left _ _ _)
-        _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) + (2⁻¹ ^ (n + k + 1) + 2⁻¹ ^ m) := by
-          apply_rules [Ennreal.add_lt_add]
-        _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by
-          simp only [two_mul, add_commₓ]
+        _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) + (2⁻¹ ^ (n + k + 1) + 2⁻¹ ^ m) := by apply_rules [Ennreal.add_lt_add]
+        _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by simp only [two_mul, add_commₓ]
         _ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
           Ennreal.mul_le_mul le_rflₓ <| add_le_add le_rflₓ <| hpow_le (add_le_add hm le_rflₓ)
-        _ = 3 * 2⁻¹ ^ m := by
-          rw [mul_addₓ, h2pow, bit1, add_mulₓ, one_mulₓ]
+        _ = 3 * 2⁻¹ ^ m := by rw [mul_addₓ, h2pow, bit1, add_mulₓ, one_mulₓ]
         
     -- Finally, we glue `Hgt` and `Hle`
     have : (⋃ (m ≤ n + k) (i ∈ { i : ι | (D m i ∩ B).Nonempty }), {(m, i)}).Finite :=

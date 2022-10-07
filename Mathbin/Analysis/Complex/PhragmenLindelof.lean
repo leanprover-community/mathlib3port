@@ -92,10 +92,12 @@ theorem is_O_sub_exp_rpow {a : ℝ} {f g : ℂ → E} {l : Filter ℂ}
           B₁ ≤ B₂ →
             (fun z : ℂ => expR (B₁ * abs z ^ c₁)) =O[comap Complex.abs at_top ⊓ l] fun z => expR (B₂ * abs z ^ c₂) :=
     by
-    have : ∀ᶠ z : ℂ in comap abs at_top ⊓ l, 1 ≤ abs z := ((eventually_ge_at_top 1).comap _).filter_mono inf_le_left
+    have : ∀ᶠ z : ℂ in comap Complex.abs at_top ⊓ l, 1 ≤ abs z :=
+      ((eventually_ge_at_top 1).comap _).filter_mono inf_le_left
     refine' fun c₁ c₂ B₁ B₂ hc hB₀ hB => is_O.of_bound 1 (this.mono fun z hz => _)
     rw [one_mulₓ, Real.norm_eq_abs, Real.norm_eq_abs, Real.abs_exp, Real.abs_exp, Real.exp_le_exp]
-    exact mul_le_mul hB (Real.rpow_le_rpow_of_exponent_le hz hc) (Real.rpow_nonneg_of_nonneg (abs_nonneg _) _) hB₀
+    exact
+      mul_le_mul hB (Real.rpow_le_rpow_of_exponent_le hz hc) (Real.rpow_nonneg_of_nonneg (complex.abs.nonneg _) _) hB₀
   rcases hBf with ⟨cf, hcf, Bf, hOf⟩
   rcases hBg with ⟨cg, hcg, Bg, hOg⟩
   refine' ⟨max cf cg, max_ltₓ hcf hcg, max 0 (max Bf Bg), _⟩
@@ -146,13 +148,9 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
   intro C hC₀ hle_a hle_b
   -- After a change of variables, we deal with the strip `a - b < im z < a + b` instead
   -- of `a < im z < b`
-  obtain ⟨a, b, rfl, rfl⟩ : ∃ a' b', a = a' - b' ∧ b = a' + b' :=
-    ⟨(a + b) / 2, (b - a) / 2, by
-      ring, by
-      ring⟩
+  obtain ⟨a, b, rfl, rfl⟩ : ∃ a' b', a = a' - b' ∧ b = a' + b' := ⟨(a + b) / 2, (b - a) / 2, by ring, by ring⟩
   have hab : a - b < a + b := hza.trans hzb
-  have hb : 0 < b := by
-    simpa only [sub_eq_add_neg, add_lt_add_iff_left, neg_lt_self_iff] using hab
+  have hb : 0 < b := by simpa only [sub_eq_add_neg, add_lt_add_iff_left, neg_lt_self_iff] using hab
   rw [add_sub_sub_cancel, ← two_mul, div_mul_eq_div_div] at hB
   have hπb : 0 < π / 2 / b := div_pos Real.pi_div_two_pos hb
   -- Choose some `c B : ℝ` satisfying `hB`, then choose `max c 0 < d < π / 2 / b`.
@@ -230,7 +228,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
   · have hwc := frontier_subset_closure hw
     rw [frontier_re_prod_im, closure_Ioo (neg_lt_self hR₀).Ne, frontier_Ioo hab, closure_Ioo hab.ne,
       frontier_Ioo (neg_lt_self hR₀)] at hw
-    by_cases' him : w.im = a - b ∨ w.im = a + b
+    by_cases him:w.im = a - b ∨ w.im = a + b
     · rw [closure_re_prod_im, closure_Ioo (neg_lt_self hR₀).Ne] at hwc
       rw [norm_smul, ← one_mulₓ C]
       exact mul_le_mul (hg₁ _ him) (him.by_cases (hle_a _) (hle_b _)) (norm_nonneg _) zero_le_one
@@ -309,8 +307,7 @@ theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
         ∃ B, f =O[comap (HasAbs.abs ∘ im) atTop ⊓ 𝓟 (re ⁻¹' Ioo a b)] fun z => expR (B * expR (c * abs z.im)))
     (hle_a : ∀ z : ℂ, re z = a → ∥f z∥ ≤ C) (hle_b : ∀ z, re z = b → ∥f z∥ ≤ C) (hza : a ≤ re z) (hzb : re z ≤ b) :
     ∥f z∥ ≤ C := by
-  suffices ∥(fun z => f (z * -I)) (z * I)∥ ≤ C by
-    simpa [mul_assoc] using this
+  suffices ∥(fun z => f (z * -I)) (z * I)∥ ≤ C by simpa [mul_assoc] using this
   have H : maps_to (fun z => z * -I) (im ⁻¹' Ioo a b) (re ⁻¹' Ioo a b) := by
     intro z hz
     simpa using hz
@@ -326,8 +323,7 @@ theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
       simpa [(· ∘ ·)] using tendsto_comap
     simpa [(· ∘ ·)] using hO.comp_tendsto this
     
-  all_goals
-    simpa
+  all_goals simpa
 
 /-- **Phragmen-Lindelöf principle** in a strip `U = {z : ℂ | a < re z < b}`.
 Let `f : ℂ → E` be a function such that
@@ -501,7 +497,7 @@ theorem quadrant_II (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
   refine'
     quadrant_I (hd.comp (differentiable_id.mul_const _).DiffContOnCl H) (Exists₃.imp (fun c hc B hO => _) hB) him
       (fun x hx => _) hz_im hz_re
-  · simpa only [(· ∘ ·), Complex.abs_mul, abs_I, mul_oneₓ] using
+  · simpa only [(· ∘ ·), map_mul, abs_I, mul_oneₓ] using
       hO.comp_tendsto ((tendsto_mul_right_cobounded I_ne_zero).inf H.tendsto)
     
   · rw [comp_app, mul_assoc, I_mul_I, mul_neg_one, ← of_real_neg]
@@ -563,7 +559,7 @@ theorem quadrant_III (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
     simpa only [mem_re_prod_im, neg_re, neg_im, neg_lt_zero, mem_Iio] using hw
   refine' quadrant_I (hd.comp differentiable_neg.diff_cont_on_cl H) _ (fun x hx => _) (fun x hx => _) hz_re hz_im
   · refine' Exists₃.imp (fun c hc B hO => _) hB
-    simpa only [(· ∘ ·), Complex.abs_neg] using hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
+    simpa only [(· ∘ ·), complex.abs.map_neg] using hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
     
   · rw [comp_app, ← of_real_neg]
     exact hre (-x) (neg_nonpos.2 hx)
@@ -627,7 +623,7 @@ theorem quadrant_IV (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
     simpa only [mem_re_prod_im, neg_re, neg_im, neg_lt_zero, neg_pos, mem_Ioi, mem_Iio] using hw
   refine' quadrant_II (hd.comp differentiable_neg.diff_cont_on_cl H) _ (fun x hx => _) (fun x hx => _) hz_re hz_im
   · refine' Exists₃.imp (fun c hc B hO => _) hB
-    simpa only [(· ∘ ·), Complex.abs_neg] using hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
+    simpa only [(· ∘ ·), complex.abs.map_neg] using hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
     
   · rw [comp_app, ← of_real_neg]
     exact hre (-x) (neg_nonneg.2 hx)
@@ -711,14 +707,13 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
     have hfc : ContinuousOn (fun x : ℝ => f x) (Ici 0) := by
       refine' hd.continuous_on.comp continuous_of_real.continuous_on fun x hx => _
       rwa [closure_set_of_lt_re]
-    by_cases' h₀ : ∀ x : ℝ, 0 ≤ x → f x = 0
+    by_cases h₀:∀ x : ℝ, 0 ≤ x → f x = 0
     · refine' ⟨0, le_rflₓ, fun y hy => _⟩
       rw [h₀ y hy, h₀ 0 le_rflₓ]
       
     push_neg  at h₀
     rcases h₀ with ⟨x₀, hx₀, hne⟩
-    have hlt : ∥(0 : E)∥ < ∥f x₀∥ := by
-      rwa [norm_zero, norm_pos_iff]
+    have hlt : ∥(0 : E)∥ < ∥f x₀∥ := by rwa [norm_zero, norm_pos_iff]
     suffices ∀ᶠ x : ℝ in cocompact ℝ ⊓ 𝓟 (Ici 0), ∥f x∥ ≤ ∥f x₀∥ by
       simpa only [exists_propₓ] using hfc.norm.exists_forall_ge' is_closed_Ici hx₀ this
     rw [Real.cocompact_eq, inf_sup_right, (disjoint_at_bot_principal_Ici (0 : ℝ)).eq_bot, bot_sup_eq]
@@ -744,8 +739,7 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
       calc
         x₀ ≤ x₀ - z.re := (le_sub_self_iff _).2 hz
         _ ≤ abs (x₀ - z.re) := le_abs_self _
-        _ = abs (z - x₀).re := by
-          rw [sub_re, of_real_re, _root_.abs_sub_comm]
+        _ = abs (z - x₀).re := by rw [sub_re, of_real_re, _root_.abs_sub_comm]
         _ ≤ abs (z - x₀) := abs_re_le_abs _
         
     -- Thus we have `C < ∥f x₀∥ = ∥f 0∥ ≤ C`. Contradiction completes the proof.
@@ -855,7 +849,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay (hd : DiffContOnCl
       
     · exact
         mul_le_mul (le_max_leftₓ _ _) (Real.rpow_le_rpow_of_exponent_le hr (le_max_leftₓ _ _))
-          (Real.rpow_nonneg_of_nonneg (abs_nonneg _) _) (le_max_rightₓ _ _)
+          (Real.rpow_nonneg_of_nonneg (complex.abs.nonneg _) _) (le_max_rightₓ _ _)
       
     
   · rw [tendsto_zero_iff_norm_tendsto_zero]
@@ -886,7 +880,7 @@ theorem eq_on_right_half_plane_of_superexponential_decay {g : ℂ → E} (hfd : 
   suffices eq_on (f - g) 0 { z : ℂ | 0 ≤ z.re } by
     simpa only [eq_on, Pi.sub_apply, Pi.zero_apply, sub_eq_zero] using this
   refine' eq_zero_on_right_half_plane_of_superexponential_decay (hfd.sub hgd) _ hre _
-  · set l : Filter ℂ := comap abs at_top ⊓ 𝓟 { z : ℂ | 0 < z.re }
+  · set l : Filter ℂ := comap Complex.abs at_top ⊓ 𝓟 { z : ℂ | 0 < z.re }
     suffices
       ∀ {c₁ c₂ B₁ B₂ : ℝ},
         c₁ ≤ c₂ → B₁ ≤ B₂ → 0 ≤ B₂ → (fun z => expR (B₁ * abs z ^ c₁)) =O[l] fun z => expR (B₂ * abs z ^ c₂)
@@ -899,7 +893,8 @@ theorem eq_on_right_half_plane_of_superexponential_decay {g : ℂ → E} (hfd : 
     have : ∀ᶠ z : ℂ in l, 1 ≤ abs z := ((eventually_ge_at_top 1).comap _).filter_mono inf_le_left
     refine' is_O.of_bound 1 (this.mono fun z hz => _)
     simp only [Real.norm_of_nonneg (Real.exp_pos _).le, Real.exp_le_exp, one_mulₓ]
-    exact mul_le_mul hB (Real.rpow_le_rpow_of_exponent_le hz hc) (Real.rpow_nonneg_of_nonneg (abs_nonneg _) _) hB₂
+    exact
+      mul_le_mul hB (Real.rpow_le_rpow_of_exponent_le hz hc) (Real.rpow_nonneg_of_nonneg (complex.abs.nonneg _) _) hB₂
     
   · rcases hfim with ⟨Cf, hCf⟩
     rcases hgim with ⟨Cg, hCg⟩

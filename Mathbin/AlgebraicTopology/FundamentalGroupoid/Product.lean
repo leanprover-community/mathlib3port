@@ -81,8 +81,7 @@ def piIso : CategoryTheory.Groupoidₓ.of (∀ i : I, πₓ (X i)) ≅ πₓ (To
   inv_hom_id' := by
     change CategoryTheory.Functor.pi' (proj X) ⋙ pi_to_pi_Top X = 𝟭 _
     apply CategoryTheory.Functor.ext <;> intros
-    · suffices Path.Homotopic.pi ((CategoryTheory.Functor.pi' (proj X)).map f) = f by
-        simpa
+    · suffices Path.Homotopic.pi ((CategoryTheory.Functor.pi' (proj X)).map f) = f by simpa
       change (CategoryTheory.Functor.pi' (proj X)).map f with fun i => (CategoryTheory.Functor.pi' (proj X)).map f i
       simp
       
@@ -106,9 +105,9 @@ def piTopToPiCone :
     Limits.Fan.mk (πₓ (Top.of (∀ i, X i))) (proj X) ⟶
       Groupoidₓ.piLimitFan fun i : I => πₓ (X i) where Hom := CategoryTheory.Functor.pi' (proj X)
 
-instance : IsIso (piTopToPiCone X) := by
+instance : IsIso (piTopToPiCone X) :=
   haveI : is_iso (pi_Top_to_pi_cone X).Hom := (inferInstance : is_iso (pi_iso X).inv)
-  exact limits.cones.cone_iso_of_hom_iso (pi_Top_to_pi_cone X)
+  limits.cones.cone_iso_of_hom_iso (pi_Top_to_pi_cone X)
 
 /-- The fundamental groupoid functor preserves products -/
 def preservesProduct : Limits.PreservesLimit (Discrete.functor X) π := by

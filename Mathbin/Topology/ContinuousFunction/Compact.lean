@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Topology.ContinuousFunction.Bounded
-import Mathbin.Topology.UniformSpace.CompactSeparated
+import Mathbin.Topology.UniformSpace.Compact
 import Mathbin.Topology.CompactOpen
 import Mathbin.Topology.Sets.Compacts
 
@@ -157,9 +157,11 @@ open BoundedContinuousFunction
 
 instance : NormedAddCommGroup C(α, E) :=
   { ContinuousMap.metricSpace _ _, ContinuousMap.addCommGroup with
-    dist_eq := fun x y => by
-      rw [← norm_mk_of_compact, ← dist_mk_of_compact, dist_eq_norm, mk_of_compact_sub],
+    dist_eq := fun x y => by rw [← norm_mk_of_compact, ← dist_mk_of_compact, dist_eq_norm, mk_of_compact_sub],
     dist := dist, norm := norm }
+
+instance [Nonempty α] [One E] [NormOneClass E] :
+    NormOneClass C(α, E) where norm_one := by simp only [← norm_mk_of_compact, mk_of_compact_one, norm_one]
 
 section
 
@@ -184,8 +186,14 @@ theorem norm_le_of_nonempty [Nonempty α] {M : ℝ} : ∥f∥ ≤ M ↔ ∀ x, �
 theorem norm_lt_iff {M : ℝ} (M0 : 0 < M) : ∥f∥ < M ↔ ∀ x, ∥f x∥ < M :=
   @BoundedContinuousFunction.norm_lt_iff_of_compact _ _ _ _ _ (mkOfCompact f) _ M0
 
+theorem nnnorm_lt_iff {M : ℝ≥0} (M0 : 0 < M) : ∥f∥₊ < M ↔ ∀ x : α, ∥f x∥₊ < M :=
+  f.norm_lt_iff M0
+
 theorem norm_lt_iff_of_nonempty [Nonempty α] {M : ℝ} : ∥f∥ < M ↔ ∀ x, ∥f x∥ < M :=
   @BoundedContinuousFunction.norm_lt_iff_of_nonempty_compact _ _ _ _ _ _ (mkOfCompact f) _
+
+theorem nnnorm_lt_iff_of_nonempty [Nonempty α] {M : ℝ≥0} : ∥f∥₊ < M ↔ ∀ x, ∥f x∥₊ < M :=
+  f.norm_lt_iff_of_nonempty
 
 theorem apply_le_norm (f : C(α, ℝ)) (x : α) : f x ≤ ∥f∥ :=
   le_transₓ (le_abs.mpr (Or.inl (le_reflₓ (f x)))) (f.norm_coe_le_norm x)
@@ -226,7 +234,7 @@ def linearIsometryBoundedOfCompact : C(α, E) ≃ₗᵢ[𝕜] α →ᵇ E :=
   { addEquivBoundedOfCompact α E with
     map_smul' := fun c f => by
       ext
-      simp ,
+      simp,
     norm_map' := fun f => rfl }
 
 end
@@ -378,10 +386,8 @@ def compRightHomeomorph {X Y : Type _} (T : Type _) [TopologicalSpace X] [Compac
     [CompactSpace Y] [NormedAddCommGroup T] (f : X ≃ₜ Y) : C(Y, T) ≃ₜ C(X, T) where
   toFun := compRightContinuousMap T f.toContinuousMap
   invFun := compRightContinuousMap T f.symm.toContinuousMap
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
 
 /-- Precomposition of functions into a normed ring by continuous map is an algebra homomorphism.
 -/
@@ -428,7 +434,7 @@ theorem summable_of_locally_summable_norm {ι : Type _} {F : ι → C(X, E)}
     (hF : ∀ K : Compacts X, Summable fun i => ∥(F i).restrict K∥) : Summable F := by
   refine' (ContinuousMap.exists_tendsto_compact_open_iff_forall _).2 fun K hK => _
   lift K to compacts X using hK
-  have A : ∀ s : Finset ι, restrict (↑K) (∑ i in s, F i) = ∑ i in s, restrict K (F i) := by
+  have A : ∀ s : Finsetₓ ι, restrict (↑K) (∑ i in s, F i) = ∑ i in s, restrict K (F i) := by
     intro s
     ext1 x
     simp
@@ -456,7 +462,9 @@ theorem _root_.bounded_continuous_function.mk_of_compact_star [CompactSpace α] 
   rfl
 
 instance [CompactSpace α] :
-    NormedStarGroup C(α, β) where norm_star := fun f => by
+    NormedStarGroup
+      C(α,
+        β) where norm_star := fun f => by
     rw [← BoundedContinuousFunction.norm_mk_of_compact, BoundedContinuousFunction.mk_of_compact_star, norm_star,
       BoundedContinuousFunction.norm_mk_of_compact]
 

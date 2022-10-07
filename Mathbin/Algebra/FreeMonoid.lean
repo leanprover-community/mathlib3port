@@ -31,12 +31,9 @@ namespace FreeMonoid
 instance : Monoidₓ (FreeMonoid α) where
   one := []
   mul := fun x y => (x ++ y : List α)
-  mul_one := by
-    intros <;> apply List.append_nil
-  one_mul := by
-    intros <;> rfl
-  mul_assoc := by
-    intros <;> apply List.append_assoc
+  mul_one := by intros <;> apply List.append_nil
+  one_mul := by intros <;> rfl
+  mul_assoc := by intros <;> apply List.append_assoc
 
 @[to_additive]
 instance : Inhabited (FreeMonoid α) :=
@@ -50,6 +47,10 @@ theorem one_def : (1 : FreeMonoid α) = [] :=
 theorem mul_def (xs ys : List α) : (xs * ys : FreeMonoid α) = (xs ++ ys : List α) :=
   rfl
 
+@[to_additive]
+theorem prod_eq_join (xs : List (FreeMonoid α)) : xs.Prod = xs.join := by
+  induction xs <;> simp [*, mul_def, List.join, one_def]
+
 /-- Embeds an element of `α` into `free_monoid α` as a singleton list. -/
 @[to_additive "Embeds an element of `α` into `free_add_monoid α` as a singleton list."]
 def of (x : α) : FreeMonoid α :=
@@ -62,6 +63,10 @@ theorem of_def (x : α) : of x = [x] :=
 @[to_additive]
 theorem of_injective : Function.Injective (@of α) := fun a b => List.head_eq_of_cons_eqₓ
 
+@[to_additive]
+theorem of_mul_eq_cons (x : α) (l : FreeMonoid α) : of x * l = x :: l :=
+  rfl
+
 /-- Recursor for `free_monoid` using `1` and `of x * xs` instead of `[]` and `x :: xs`. -/
 @[elabAsElim, to_additive "Recursor for `free_add_monoid` using `0` and `of x + xs` instead of `[]` and `x :: xs`."]
 def recOn {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1) (ih : ∀ x xs, C xs → C (of x * xs)) : C xs :=
@@ -70,15 +75,13 @@ def recOn {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1) (ih : �
 @[ext, to_additive]
 theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x)) : f = g :=
   MonoidHom.ext fun l =>
-    (recOn l (f.map_one.trans g.map_one.symm)) fun x xs hxs => by
-      simp only [h, hxs, MonoidHom.map_mul]
+    (recOn l (f.map_one.trans g.map_one.symm)) fun x xs hxs => by simp only [h, hxs, MonoidHom.map_mul]
 
 /-- Equivalence between maps `α → M` and monoid homomorphisms `free_monoid α →* M`. -/
 @[to_additive "Equivalence between maps `α → A` and additive monoid homomorphisms\n`free_add_monoid α →+ A`."]
 def lift : (α → M) ≃ (FreeMonoid α →* M) where
   toFun := fun f =>
-    ⟨fun l => (l.map f).Prod, rfl, fun l₁ l₂ => by
-      simp only [mul_def, List.map_appendₓ, List.prod_append]⟩
+    ⟨fun l => (l.map f).Prod, rfl, fun l₁ l₂ => by simp only [mul_def, List.map_appendₓ, List.prod_append]⟩
   invFun := fun f x => f (of x)
   left_inv := fun f => funext fun x => one_mulₓ (f x)
   right_inv := fun f => hom_eq fun x => one_mulₓ (f (of x))

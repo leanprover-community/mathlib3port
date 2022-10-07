@@ -153,15 +153,14 @@ theorem pairwise_eq_iff_exists_eq [Nonempty ι] (s : Set α) (f : α → ι) :
 
 theorem pairwise_union : (s ∪ t).Pairwise r ↔ s.Pairwise r ∧ t.Pairwise r ∧ ∀ a ∈ s, ∀ b ∈ t, a ≠ b → r a b ∧ r b a :=
   by
-  simp only [Set.Pairwise, mem_union_eq, or_imp_distrib, forall_and_distrib]
+  simp only [Set.Pairwise, mem_union, or_imp_distrib, forall_and_distrib]
   exact
     ⟨fun H => ⟨H.1.1, H.2.2, H.2.1, fun x hx y hy hne => H.1.2 y hy x hx hne.symm⟩, fun H =>
       ⟨⟨H.1, fun x hx y hy hne => H.2.2.2 y hy x hx hne.symm⟩, H.2.2.1, H.2.1⟩⟩
 
 theorem pairwise_union_of_symmetric (hr : Symmetric r) :
     (s ∪ t).Pairwise r ↔ s.Pairwise r ∧ t.Pairwise r ∧ ∀ a ∈ s, ∀ b ∈ t, a ≠ b → r a b :=
-  pairwise_union.trans <| by
-    simp only [hr.iff, and_selfₓ]
+  pairwise_union.trans <| by simp only [hr.iff, and_selfₓ]
 
 theorem pairwise_insert : (insert a s).Pairwise r ↔ s.Pairwise r ∧ ∀ b ∈ s, a ≠ b → r a b ∧ r b a := by
   simp only [insert_eq, pairwise_union, pairwise_singleton, true_andₓ, mem_singleton_iff, forall_eq]
@@ -177,8 +176,7 @@ theorem Pairwise.insert_of_symmetric (hs : s.Pairwise r) (hr : Symmetric r) (h :
     (insert a s).Pairwise r :=
   (pairwise_insert_of_symmetric hr).2 ⟨hs, h⟩
 
-theorem pairwise_pair : Set.Pairwise {a, b} r ↔ a ≠ b → r a b ∧ r b a := by
-  simp [pairwise_insert]
+theorem pairwise_pair : Set.Pairwise {a, b} r ↔ a ≠ b → r a b ∧ r b a := by simp [pairwise_insert]
 
 theorem pairwise_pair_of_symmetric (hr : Symmetric r) : Set.Pairwise {a, b} r ↔ a ≠ b → r a b := by
   simp [pairwise_insert_of_symmetric hr]
@@ -196,7 +194,7 @@ theorem Pairwise.on_injective (hs : s.Pairwise r) (hf : Function.Injective f) (h
     Pairwise (r on f) := fun i j hij => hs (hfs i) (hfs j) (hf.Ne hij)
 
 theorem InjOn.pairwise_image {s : Set ι} (h : s.InjOn f) : (f '' s).Pairwise r ↔ s.Pairwise (r on f) := by
-  simp (config := { contextual := true })[h.eq_iff, Set.Pairwise]
+  simp (config := { contextual := true }) [h.eq_iff, Set.Pairwise]
 
 theorem pairwise_Union {f : ι → Set α} (h : Directed (· ⊆ ·) f) : (⋃ n, f n).Pairwise r ↔ ∀ n, (f n).Pairwise r := by
   constructor
@@ -225,10 +223,7 @@ theorem pairwise_subtype_iff_pairwise_set {α : Type _} (s : Set α) (r : α →
     (Pairwise fun (x : s) (y : s) => r x y) ↔ s.Pairwise r := by
   constructor
   · intro h x hx y hy hxy
-    exact
-      h ⟨x, hx⟩ ⟨y, hy⟩
-        (by
-          simpa only [Subtype.mk_eq_mk, Ne.def] )
+    exact h ⟨x, hx⟩ ⟨y, hy⟩ (by simpa only [Subtype.mk_eq_mk, Ne.def] )
     
   · rintro h ⟨x, hx⟩ ⟨y, hy⟩ hxy
     simp only [Subtype.mk_eq_mk, Ne.def] at hxy
@@ -380,12 +375,7 @@ disjoint iff `f` is injective . -/
 theorem pairwise_disjoint_image_right_iff {f : α → β → γ} {s : Set α} {t : Set β} (hf : ∀ a ∈ s, Injective (f a)) :
     (s.PairwiseDisjoint fun a => f a '' t) ↔ (s ×ˢ t).InjOn fun p => f p.1 p.2 := by
   refine' ⟨fun hs x hx y hy (h : f _ _ = _) => _, fun hs x hx y hy h => _⟩
-  · suffices x.1 = y.1 by
-      exact
-        Prod.extₓ this
-          (hf _ hx.1 <|
-            h.trans <| by
-              rw [this])
+  · suffices x.1 = y.1 by exact Prod.extₓ this (hf _ hx.1 <| h.trans <| by rw [this])
     refine' hs.elim hx.1 hy.1 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.2, _⟩)
     rw [h]
     exact mem_image_of_mem _ hy.2
@@ -401,13 +391,7 @@ theorem pairwise_disjoint_image_left_iff {f : α → β → γ} {s : Set α} {t 
     (hf : ∀ b ∈ t, Injective fun a => f a b) :
     (t.PairwiseDisjoint fun b => (fun a => f a b) '' s) ↔ (s ×ˢ t).InjOn fun p => f p.1 p.2 := by
   refine' ⟨fun ht x hx y hy (h : f _ _ = _) => _, fun ht x hx y hy h => _⟩
-  · suffices x.2 = y.2 by
-      exact
-        Prod.extₓ
-          (hf _ hx.2 <|
-            h.trans <| by
-              rw [this])
-          this
+  · suffices x.2 = y.2 by exact Prod.extₓ (hf _ hx.2 <| h.trans <| by rw [this]) this
     refine' ht.elim hx.2 hy.2 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.1, _⟩)
     rw [h]
     exact mem_image_of_mem _ hy.1

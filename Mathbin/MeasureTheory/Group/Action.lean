@@ -26,14 +26,14 @@ namespace MeasureTheory
 
 variable {G M α : Type _}
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] []
 /-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
 class VaddInvariantMeasure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
   measure_preimage_vadd : ∀ (c : M) ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c +ᵥ x) ⁻¹' s) = μ s
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] []
 /-- A measure `μ : measure α` is invariant under a multiplicative action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/
@@ -93,9 +93,7 @@ theorem smul_invariant_measure_tfae :
   tfae_have 1 ↔ 2
   exact ⟨fun h => h.1, fun h => ⟨h⟩⟩
   tfae_have 2 → 6
-  exact fun H c =>
-    ext fun s hs => by
-      rw [map_apply (measurable_const_smul c) hs, H _ _ hs]
+  exact fun H c => ext fun s hs => by rw [map_apply (measurable_const_smul c) hs, H _ _ hs]
   tfae_have 6 → 7
   exact fun H c => ⟨measurable_const_smul c, H c⟩
   tfae_have 7 → 4
@@ -114,7 +112,7 @@ theorem smul_invariant_measure_tfae :
   tfae_finish
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident vadd_invariant_measure_tfae]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident vadd_invariant_measure_tfae]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable {G} [SmulInvariantMeasure G α μ]
 
 @[to_additive]
@@ -151,21 +149,17 @@ theorem measure_is_open_pos_of_smul_invariant_of_compact_ne_zero (hK : IsCompact
     (hne : U.Nonempty) : 0 < μ U :=
   let ⟨t, ht⟩ := hK.exists_finite_cover_smul G hU hne
   pos_iff_ne_zero.2 fun hμU =>
-    hμK <|
-      measure_mono_null ht <|
-        (measure_bUnion_null_iff t.countable_to_set).2 fun _ _ => by
-          rwa [measure_smul_set]
+    hμK <| measure_mono_null ht <| (measure_bUnion_null_iff t.countable_to_set).2 fun _ _ => by rwa [measure_smul_set]
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident measure_is_open_pos_of_vadd_invariant_of_compact_ne_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident measure_is_open_pos_of_vadd_invariant_of_compact_ne_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[to_additive]
 theorem is_locally_finite_measure_of_smul_invariant (hU : IsOpen U) (hne : U.Nonempty) (hμU : μ U ≠ ∞) :
     IsLocallyFiniteMeasure μ :=
   ⟨fun x =>
     let ⟨g, hg⟩ := hU.exists_smul_mem G x hne
     ⟨(· • ·) g ⁻¹' U, (hU.Preimage (continuous_id.const_smul _)).mem_nhds hg,
-      Ne.lt_top <| by
-        rwa [measure_preimage_smul]⟩⟩
+      Ne.lt_top <| by rwa [measure_preimage_smul]⟩⟩
 
 variable [Measure.Regular μ]
 

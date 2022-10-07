@@ -168,8 +168,7 @@ def homOfSheafedSpaceHomOfIsIso {X Y : LocallyRingedSpace} (f : X.toSheafedSpace
     -- Here we need to see that the stalk maps are really local ring homomorphisms.
     -- This can be solved by type class inference, because stalk maps of isomorphisms are isomorphisms
     -- and isomorphisms are local ring homomorphisms.
-    show IsLocalRingHom (PresheafedSpace.stalkMap (SheafedSpace.forgetToPresheafedSpace.map f) x) by
-      infer_instance
+    show IsLocalRingHom (PresheafedSpace.stalkMap (SheafedSpace.forgetToPresheafedSpace.map f) x) by infer_instance
 
 /-- Given two locally ringed spaces `X` and `Y`, an isomorphism between `X` and `Y` as _sheafed_
 spaces can be lifted to an isomorphism `X ⟶ Y` as locally ringed spaces.
@@ -200,7 +199,7 @@ instance is_SheafedSpace_iso {X Y : LocallyRingedSpace} (f : X ⟶ Y) [IsIso f] 
 def restrict {U : Top} (X : LocallyRingedSpace) {f : U ⟶ X.toTop} (h : OpenEmbedding f) : LocallyRingedSpace where
   LocalRing := by
     intro x
-    dsimp'  at *
+    dsimp at *
     -- We show that the stalk of the restriction is isomorphic to the original stalk,
     apply @RingEquiv.local_ring _ _ _ (X.local_ring (f x))
     exact (X.to_PresheafedSpace.restrict_stalk_iso h x).symm.commRingIsoToRingEquiv
@@ -259,7 +258,7 @@ theorem preimage_basic_open {X Y : LocallyRingedSpace} (f : X ⟶ Y) {U : Opens 
 theorem basic_open_zero (X : LocallyRingedSpace) (U : Opens X.Carrier) :
     X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ∅ := by
   ext
-  simp only [Set.mem_empty_eq, TopologicalSpace.Opens.empty_eq, TopologicalSpace.Opens.mem_coe, opens.coe_bot,
+  simp only [Set.mem_empty_iff_false, TopologicalSpace.Opens.empty_eq, TopologicalSpace.Opens.mem_coe, opens.coe_bot,
     iff_falseₓ, RingedSpace.basic_open, is_unit_zero_iff, Set.mem_set_of_eq, map_zero]
   rintro ⟨⟨y, _⟩, h, e⟩
   exact @zero_ne_one (X.presheaf.stalk y) _ _ h

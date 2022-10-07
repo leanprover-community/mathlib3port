@@ -99,13 +99,10 @@ theorem strong_epi_of_strong_epi [StrongEpi (f ≫ g)] : StrongEpi g :=
       intros
       constructor
       intro u v sq
-      have h₀ : (f ≫ u) ≫ z = (f ≫ g) ≫ v := by
-        simp only [category.assoc, sq.w]
+      have h₀ : (f ≫ u) ≫ z = (f ≫ g) ≫ v := by simp only [category.assoc, sq.w]
       exact
         comm_sq.has_lift.mk'
-          ⟨(comm_sq.mk h₀).lift, by
-            simp only [← cancel_mono z, category.assoc, comm_sq.fac_right, sq.w], by
-            simp ⟩ }
+          ⟨(comm_sq.mk h₀).lift, by simp only [← cancel_mono z, category.assoc, comm_sq.fac_right, sq.w], by simp⟩ }
 
 /-- If `f ≫ g` is a strong monomorphism, then so is `f`. -/
 theorem strong_mono_of_strong_mono [StrongMono (f ≫ g)] : StrongMono f :=
@@ -114,24 +111,17 @@ theorem strong_mono_of_strong_mono [StrongMono (f ≫ g)] : StrongMono f :=
       intros
       constructor
       intro u v sq
-      have h₀ : u ≫ f ≫ g = z ≫ v ≫ g := by
-        rw [reassoc_of sq.w]
-      exact
-        comm_sq.has_lift.mk'
-          ⟨(comm_sq.mk h₀).lift, by
-            simp , by
-            simp [← cancel_epi z, sq.w]⟩ }
+      have h₀ : u ≫ f ≫ g = z ≫ v ≫ g := by rw [reassoc_of sq.w]
+      exact comm_sq.has_lift.mk' ⟨(comm_sq.mk h₀).lift, by simp, by simp [← cancel_epi z, sq.w]⟩ }
 
 /-- An isomorphism is in particular a strong epimorphism. -/
 instance (priority := 100) strong_epi_of_is_iso [IsIso f] : StrongEpi f where
-  Epi := by
-    infer_instance
+  Epi := by infer_instance
   llp := fun X Y z hz => HasLiftingProperty.of_left_iso _ _
 
 /-- An isomorphism is in particular a strong monomorphism. -/
 instance (priority := 100) strong_mono_of_is_iso [IsIso f] : StrongMono f where
-  mono := by
-    infer_instance
+  mono := by infer_instance
   rlp := fun X Y z hz => HasLiftingProperty.of_right_iso _ _
 
 theorem StrongEpi.of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'} (e : Arrow.mk f ≅ Arrow.mk g)
@@ -168,19 +158,11 @@ end
 
 /-- A strong epimorphism that is a monomorphism is an isomorphism. -/
 theorem is_iso_of_mono_of_strong_epi (f : P ⟶ Q) [Mono f] [StrongEpi f] : IsIso f :=
-  ⟨⟨(CommSq.mk
-          (show 𝟙 P ≫ f = f ≫ 𝟙 Q by
-            simp )).lift,
-      by
-      tidy⟩⟩
+  ⟨⟨(CommSq.mk (show 𝟙 P ≫ f = f ≫ 𝟙 Q by simp)).lift, by tidy⟩⟩
 
 /-- A strong monomorphism that is an epimorphism is an isomorphism. -/
 theorem is_iso_of_epi_of_strong_mono (f : P ⟶ Q) [Epi f] [StrongMono f] : IsIso f :=
-  ⟨⟨(CommSq.mk
-          (show 𝟙 P ≫ f = f ≫ 𝟙 Q by
-            simp )).lift,
-      by
-      tidy⟩⟩
+  ⟨⟨(CommSq.mk (show 𝟙 P ≫ f = f ≫ 𝟙 Q by simp)).lift, by tidy⟩⟩
 
 section
 

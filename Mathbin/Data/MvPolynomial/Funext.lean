@@ -50,7 +50,7 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
     · infer_instance
       
     intro x
-    dsimp' [e]
+    dsimp [e]
     rw [fin_succ_equiv_apply]
     calc
       _ = eval _ p := _
@@ -69,7 +69,7 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
     · intro φ i hφ
       simp only [*, eval_X, Polynomial.eval_mul, RingHom.map_mul, eval₂_hom_X']
       congr 1
-      by_cases' hi : i = 0
+      by_cases hi:i = 0
       · subst hi
         simp only [Polynomial.eval_X, Finₓ.cases_zero]
         
@@ -90,8 +90,7 @@ theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, ev
   clear h p q
   intro p h
   obtain ⟨n, f, hf, p, rfl⟩ := exists_fin_rename p
-  suffices p = 0 by
-    rw [this, AlgHom.map_zero]
+  suffices p = 0 by rw [this, AlgHom.map_zero]
   apply funext_fin
   intro x
   classical
@@ -99,8 +98,7 @@ theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, ev
   simp only [eval, eval₂_hom_rename, Function.extend_compₓ hf]
 
 theorem funext_iff {σ : Type _} {p q : MvPolynomial σ R} : p = q ↔ ∀ x : σ → R, eval x p = eval x q :=
-  ⟨by
-    rintro rfl <;> simp only [forall_const, eq_self_iff_true], funext⟩
+  ⟨by rintro rfl <;> simp only [forall_const, eq_self_iff_true], funext⟩
 
 end MvPolynomial
 

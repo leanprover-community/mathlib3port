@@ -123,9 +123,9 @@ right-module structure over `R`.
 The preferred way of setting this up is
 `[module Rᵐᵒᵖ M] [module Sᵐᵒᵖ M] [is_scalar_tower Rᵐᵒᵖ Sᵐᵒᵖ M]`.
 -/
-instance RestrictScalars.opModule [Module Sᵐᵒᵖ M] : Module Rᵐᵒᵖ (RestrictScalars R S M) := by
+instance RestrictScalars.opModule [Module Sᵐᵒᵖ M] : Module Rᵐᵒᵖ (RestrictScalars R S M) :=
   letI : Module Sᵐᵒᵖ (RestrictScalars R S M) := ‹Module Sᵐᵒᵖ M›
-  exact Module.compHom M (algebraMap R S).op
+  Module.compHom M (algebraMap R S).op
 
 instance RestrictScalars.is_central_scalar [Module S M] [Module Sᵐᵒᵖ M] [IsCentralScalar S M] :
     IsCentralScalar R
@@ -134,11 +134,11 @@ instance RestrictScalars.is_central_scalar [Module S M] [Module Sᵐᵒᵖ M] [I
 /-- The `R`-algebra homomorphism from the original coefficient algebra `S` to endomorphisms
 of `restrict_scalars R S M`.
 -/
-def RestrictScalars.lsmul [Module S M] : S →ₐ[R] Module.End R (RestrictScalars R S M) := by
-  -- We use `restrict_scalars.module_orig` in the implementation,
+def RestrictScalars.lsmul [Module S M] : S →ₐ[R] Module.End R (RestrictScalars R S M) :=
+  letI-- We use `restrict_scalars.module_orig` in the implementation,
   -- but not in the type.
-  letI : Module S (RestrictScalars R S M) := RestrictScalars.moduleOrig R S M
-  exact Algebra.lsmul R (RestrictScalars R S M)
+   : Module S (RestrictScalars R S M) := RestrictScalars.moduleOrig R S M
+  Algebra.lsmul R (RestrictScalars R S M)
 
 end
 

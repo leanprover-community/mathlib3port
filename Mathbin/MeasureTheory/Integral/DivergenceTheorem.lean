@@ -47,7 +47,7 @@ divergence theorem, Bochner integral
 -/
 
 
-open Set Finset TopologicalSpace Function BoxIntegral MeasureTheory Filter
+open Set Finsetₓ TopologicalSpace Function BoxIntegral MeasureTheory Filter
 
 open BigOperators Classical TopologicalSpace Interval
 
@@ -321,11 +321,9 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv {F : 
   have hIcc : eL ⁻¹' icc (eL a) (eL b) = icc a b := by
     ext1 x
     simp only [Set.mem_preimage, Set.mem_Icc, he_ord]
-  have hIcc' : icc (eL a) (eL b) = eL.symm ⁻¹' icc a b := by
-    rw [← hIcc, eL.symm_preimage_preimage]
+  have hIcc' : icc (eL a) (eL b) = eL.symm ⁻¹' icc a b := by rw [← hIcc, eL.symm_preimage_preimage]
   calc
-    (∫ x in icc a b, DF x) = ∫ x in icc a b, ∑ i, f' i x (eL.symm <| e i) := by
-      simp only [hDF]
+    (∫ x in icc a b, DF x) = ∫ x in icc a b, ∑ i, f' i x (eL.symm <| e i) := by simp only [hDF]
     _ = ∫ x in icc (eL a) (eL b), ∑ i, f' i (eL.symm x) (eL.symm <| e i) := by
       rw [← he_vol.set_integral_preimage_emb he_emb]
       simp only [hIcc, eL.symm_apply_apply]
@@ -527,8 +525,7 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
     calc
       (∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1)) =
           ∫ x in Icc a₁ b₁, ∫ y in Icc a₂ b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1) :=
-        by
-        simp only [intervalIntegral.integral_of_le, h₁, h₂, set_integral_congr_set_ae Ioc_ae_eq_Icc]
+        by simp only [intervalIntegral.integral_of_le, h₁, h₂, set_integral_congr_set_ae Ioc_ae_eq_Icc]
       _ = ∫ x in Icc a₁ b₁ ×ˢ Icc a₂ b₂, f' x (1, 0) + g' x (0, 1) := (set_integral_prod _ Hi).symm
       _ =
           (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) -

@@ -52,15 +52,22 @@ def condCount (s : Set Ω) : Measureₓ Ω :=
   measure.count[|s]
 
 @[simp]
-theorem cond_count_empty_meas : (condCount ∅ : Measureₓ Ω) = 0 := by
-  simp [cond_count]
+theorem cond_count_empty_meas : (condCount ∅ : Measureₓ Ω) = 0 := by simp [cond_count]
 
-theorem cond_count_empty {s : Set Ω} : condCount s ∅ = 0 := by
-  simp
+theorem cond_count_empty {s : Set Ω} : condCount s ∅ = 0 := by simp
 
 theorem finite_of_cond_count_ne_zero {s t : Set Ω} (h : condCount s t ≠ 0) : s.Finite := by
   by_contra hs'
   simpa [cond_count, cond, measure.count_apply_infinite hs'] using h
+
+theorem cond_count_univ [Fintypeₓ Ω] {s : Set Ω} : condCount Set.Univ s = Measure.count s / Fintypeₓ.card Ω := by
+  rw [cond_count, cond_apply _ MeasurableSet.univ, ← Ennreal.div_eq_inv_mul, Set.univ_inter]
+  congr
+  rw [← Finsetₓ.coe_univ, measure.count_apply, finset.univ.tsum_subtype' fun _ => (1 : Ennreal)]
+  · simp [Finsetₓ.card_univ]
+    
+  · exact (@Finsetₓ.coe_univ Ω _).symm ▸ MeasurableSet.univ
+    
 
 variable [MeasurableSingletonClass Ω]
 
@@ -74,17 +81,11 @@ theorem cond_count_is_probability_measure {s : Set Ω} (hs : s.Finite) (hs' : s.
          }
 
 theorem cond_count_singleton (ω : Ω) (t : Set Ω) [Decidable (ω ∈ t)] : condCount {ω} t = if ω ∈ t then 1 else 0 := by
-  rw [cond_count, cond_apply _ (measurable_set_singleton ω), measure.count_singleton, Ennreal.inv_one, one_mulₓ]
+  rw [cond_count, cond_apply _ (measurable_set_singleton ω), measure.count_singleton, inv_one, one_mulₓ]
   split_ifs
-  · rw
-      [(by
-        simpa : ({ω} : Set Ω) ∩ t = {ω}),
-      measure.count_singleton]
+  · rw [(by simpa : ({ω} : Set Ω) ∩ t = {ω}), measure.count_singleton]
     
-  · rw
-      [(by
-        simpa : ({ω} : Set Ω) ∩ t = ∅),
-      measure.count_empty]
+  · rw [(by simpa : ({ω} : Set Ω) ∩ t = ∅), measure.count_empty]
     
 
 variable {s t u : Set Ω}
@@ -114,20 +115,19 @@ theorem pred_true_of_cond_count_eq_one (h : condCount s t = 1) : s ⊆ t := by
   rw [cond_count, cond_apply _ hsf.measurable_set, mul_comm] at h
   replace h := Ennreal.eq_inv_of_mul_eq_one_left h
   rw [inv_invₓ, measure.count_apply_finite _ hsf, measure.count_apply_finite _ (hsf.inter_of_left _), Nat.cast_inj] at h
-  suffices s ∩ t = s by
-    exact this ▸ fun x hx => hx.2
+  suffices s ∩ t = s by exact this ▸ fun x hx => hx.2
   rw [← @Set.Finite.to_finset_inj _ _ _ (hsf.inter_of_left _) hsf]
-  exact Finset.eq_of_subset_of_card_le (Set.Finite.to_finset_subset.2 (s.inter_subset_left t)) h.symm.le
+  exact Finsetₓ.eq_of_subset_of_card_le (Set.Finite.to_finset_subset.2 (s.inter_subset_left t)) h.symm.le
 
 theorem cond_count_eq_zero_iff (hs : s.Finite) : condCount s t = 0 ↔ s ∩ t = ∅ := by
   simp [cond_count, cond_apply _ hs.measurable_set, measure.count_apply_eq_top, Set.not_infinite.2 hs,
     measure.count_apply_finite _ (hs.inter_of_left _)]
 
-theorem cond_count_univ (hs : s.Finite) (hs' : s.Nonempty) : condCount s Set.Univ = 1 :=
+theorem cond_count_of_univ (hs : s.Finite) (hs' : s.Nonempty) : condCount s Set.Univ = 1 :=
   cond_count_eq_one_of hs hs' s.subset_univ
 
 theorem cond_count_inter (hs : s.Finite) : condCount s (t ∩ u) = condCount (s ∩ t) u * condCount s t := by
-  by_cases' hst : s ∩ t = ∅
+  by_cases hst:s ∩ t = ∅
   · rw [hst, cond_count_empty_meas, measure.coe_zero, Pi.zero_apply, zero_mul, cond_count_eq_zero_iff hs, ←
       Set.inter_assoc, hst, Set.empty_inter]
     
@@ -178,10 +178,7 @@ theorem cond_count_disjoint_union (hs : s.Finite) (ht : t.Finite) (hst : Disjoin
 theorem cond_count_add_compl_eq (u t : Set Ω) (hs : s.Finite) :
     condCount (s ∩ u) t * condCount s u + condCount (s ∩ uᶜ) t * condCount s (uᶜ) = condCount s t := by
   conv_rhs =>
-    rw
-      [(by
-        simp : s = s ∩ u ∪ s ∩ uᶜ),
-      ←
+    rw [(by simp : s = s ∩ u ∪ s ∩ uᶜ), ←
       cond_count_disjoint_union (hs.inter_of_left _) (hs.inter_of_left _)
         (disjoint_compl_right.mono inf_le_right inf_le_right)]
   simp [cond_count_inter_self hs]

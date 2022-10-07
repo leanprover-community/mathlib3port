@@ -115,8 +115,7 @@ theorem real_smul_def (r : ℝ) (j : JordanDecomposition α) :
 
 @[simp]
 theorem coe_smul (r : ℝ≥0) : (r : ℝ) • j = r • j :=
-  show dite _ _ _ = _ by
-    rw [dif_pos (Nnreal.coe_nonneg r), Real.to_nnreal_coe]
+  show dite _ _ _ = _ by rw [dif_pos (Nnreal.coe_nonneg r), Real.to_nnreal_coe]
 
 theorem real_smul_nonneg (r : ℝ) (hr : 0 ≤ r) : r • j = r.toNnreal • j :=
   dif_pos hr
@@ -180,7 +179,7 @@ end JordanDecomposition
 
 namespace SignedMeasure
 
-open Measureₓ VectorMeasure JordanDecomposition Classical
+open Classical JordanDecomposition Measureₓ Set VectorMeasure
 
 variable {s : SignedMeasure α} {μ ν : Measure α} [IsFiniteMeasure μ] [IsFiniteMeasure ν]
 
@@ -268,11 +267,7 @@ theorem of_diff_eq_zero_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv
   erw [of_union (Set.disjoint_of_subset_left (u.diff_subset v) Set.disjoint_diff) (hu.diff hv) (hv.diff hu)] at hs
   rw [zero_apply] at a b
   constructor
-  all_goals
-    first |
-      linarith|
-      infer_instance|
-      assumption
+  all_goals first |linarith|infer_instance|assumption
 
 /-- If the symmetric difference of two negative sets is a null-set, then so are the differences
 between the two sets. -/
@@ -289,15 +284,9 @@ theorem of_inter_eq_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv : M
   have hwuv : s ((w ∩ u) ∆ (w ∩ v)) = 0 := by
     refine'
       subset_positive_null_set (hu.union hv) ((hw.inter hu).symmDiff (hw.inter hv)) (hu.symm_diff hv)
-        (restrict_le_restrict_union _ _ hu hsu hv hsv) hs _ _
-    · exact symm_diff_le_sup u v
-      
-    · rintro x (⟨⟨hxw, hxu⟩, hx⟩ | ⟨⟨hxw, hxv⟩, hx⟩) <;> rw [Set.mem_inter_eq, not_and] at hx
-      · exact Or.inl ⟨hxu, hx hxw⟩
-        
-      · exact Or.inr ⟨hxv, hx hxw⟩
-        
-      
+        (restrict_le_restrict_union _ _ hu hsu hv hsv) hs symm_diff_subset_union _
+    rw [← inter_symm_diff_distrib_left]
+    exact inter_subset_right _ _
   obtain ⟨huv, hvu⟩ :=
     of_diff_eq_zero_of_symm_diff_eq_zero_positive (hw.inter hu) (hw.inter hv)
       (restrict_le_restrict_subset _ _ hu hsu (w.inter_subset_right u))
@@ -329,8 +318,7 @@ private theorem eq_of_pos_part_eq_pos_part {j₁ j₂ : JordanDecomposition α} 
     suffices
       j₁.pos_part.to_signed_measure - j₁.neg_part.to_signed_measure =
         j₁.pos_part.to_signed_measure - j₂.neg_part.to_signed_measure
-      by
-      exact sub_right_inj.mp this
+      by exact sub_right_inj.mp this
     convert hj'
     
 
@@ -386,15 +374,12 @@ theorem to_signed_measure_injective : injective <| @JordanDecomposition.toSigned
   -- and the symmetric difference of the Hahn decompositions have measure zero, the result follows
   rw [← Ennreal.to_real_eq_to_real (measure_ne_top _ _) (measure_ne_top _ _), hμ₁, hμ₂, ← hj]
   exact of_inter_eq_of_symm_diff_eq_zero_positive hS₁.compl hT₁.compl hi hS₃ hT₃ hST₁
-  all_goals
-    infer_instance
+  all_goals infer_instance
 
 @[simp]
 theorem to_jordan_decomposition_to_signed_measure (j : JordanDecomposition α) :
     j.toSignedMeasure.toJordanDecomposition = j :=
-  (@to_signed_measure_injective _ _ j j.toSignedMeasure.toJordanDecomposition
-      (by
-        simp )).symm
+  (@to_signed_measure_injective _ _ j j.toSignedMeasure.toJordanDecomposition (by simp)).symm
 
 end JordanDecomposition
 
@@ -432,31 +417,24 @@ private theorem to_jordan_decomposition_smul_real_nonneg (s : SignedMeasure α) 
 
 theorem to_jordan_decomposition_smul_real (s : SignedMeasure α) (r : ℝ) :
     (r • s).toJordanDecomposition = r • s.toJordanDecomposition := by
-  by_cases' hr : 0 ≤ r
+  by_cases hr:0 ≤ r
   · exact to_jordan_decomposition_smul_real_nonneg s r hr
     
   · ext1
-    · rw [real_smul_pos_part_neg _ _ (not_leₓ.1 hr),
-        show r • s = -(-r • s) by
-          rw [neg_smul, neg_negₓ],
+    · rw [real_smul_pos_part_neg _ _ (not_leₓ.1 hr), show r • s = -(-r • s) by rw [neg_smul, neg_negₓ],
         to_jordan_decomposition_neg, neg_pos_part, to_jordan_decomposition_smul_real_nonneg, ← smul_neg_part,
         real_smul_nonneg]
-      all_goals
-        exact Left.nonneg_neg_iff.2 (le_of_ltₓ (not_leₓ.1 hr))
+      all_goals exact Left.nonneg_neg_iff.2 (le_of_ltₓ (not_leₓ.1 hr))
       
-    · rw [real_smul_neg_part_neg _ _ (not_leₓ.1 hr),
-        show r • s = -(-r • s) by
-          rw [neg_smul, neg_negₓ],
+    · rw [real_smul_neg_part_neg _ _ (not_leₓ.1 hr), show r • s = -(-r • s) by rw [neg_smul, neg_negₓ],
         to_jordan_decomposition_neg, neg_neg_part, to_jordan_decomposition_smul_real_nonneg, ← smul_pos_part,
         real_smul_nonneg]
-      all_goals
-        exact Left.nonneg_neg_iff.2 (le_of_ltₓ (not_leₓ.1 hr))
+      all_goals exact Left.nonneg_neg_iff.2 (le_of_ltₓ (not_leₓ.1 hr))
       
     
 
 theorem to_jordan_decomposition_eq {s : SignedMeasure α} {j : JordanDecomposition α} (h : s = j.toSignedMeasure) :
-    s.toJordanDecomposition = j := by
-  rw [h, to_jordan_decomposition_to_signed_measure]
+    s.toJordanDecomposition = j := by rw [h, to_jordan_decomposition_to_signed_measure]
 
 /-- The total variation of a signed measure. -/
 def totalVariation (s : SignedMeasure α) : Measure α :=
@@ -472,7 +450,7 @@ theorem null_of_total_variation_zero (s : SignedMeasure α) {i : Set α} (hs : s
   rw [total_variation, measure.coe_add, Pi.add_apply, add_eq_zero_iff] at hs
   rw [← to_signed_measure_to_jordan_decomposition s, to_signed_measure, vector_measure.coe_sub, Pi.sub_apply,
     measure.to_signed_measure_apply, measure.to_signed_measure_apply]
-  by_cases' hi : MeasurableSet i
+  by_cases hi:MeasurableSet i
   · rw [if_pos hi, if_pos hi]
     simp [hs.1, hs.2]
     
@@ -499,9 +477,9 @@ theorem total_variation_absolutely_continuous_iff (s : SignedMeasure α) (μ : M
   constructor <;> intro h
   · constructor
     all_goals
-      refine' measure.absolutely_continuous.mk fun S hS₁ hS₂ => _
-      have := h hS₂
-      rw [total_variation, measure.add_apply, add_eq_zero_iff] at this
+    refine' measure.absolutely_continuous.mk fun S hS₁ hS₂ => _
+    have := h hS₂
+    rw [total_variation, measure.add_apply, add_eq_zero_iff] at this
     exacts[this.1, this.2]
     
   · refine' measure.absolutely_continuous.mk fun S hS₁ hS₂ => _

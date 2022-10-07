@@ -54,8 +54,7 @@ variable {R M N G M' : Type _} [NormedField R] [SeminormedAddCommGroup M] [Semin
   [NormedSpace R M'] {f : M →L[R] N} {g : N →L[R] G} {c : R}
 
 theorem is_conformal_map_id : IsConformalMap (id R M) :=
-  ⟨1, one_ne_zero, id, by
-    simp ⟩
+  ⟨1, one_ne_zero, id, by simp⟩
 
 theorem IsConformalMap.smul (hf : IsConformalMap f) {c : R} (hc : c ≠ 0) : IsConformalMap (c • f) := by
   rcases hf with ⟨c', hc', li, rfl⟩
@@ -69,10 +68,7 @@ protected theorem LinearIsometry.is_conformal_map (f' : M →ₗᵢ[R] N) : IsCo
 
 @[nontriviality]
 theorem is_conformal_map_of_subsingleton [Subsingleton M] (f' : M →L[R] N) : IsConformalMap f' :=
-  ⟨1, one_ne_zero,
-    ⟨0, fun x => by
-      simp [Subsingleton.elim x 0]⟩,
-    Subsingleton.elim _ _⟩
+  ⟨1, one_ne_zero, ⟨0, fun x => by simp [Subsingleton.elim x 0]⟩, Subsingleton.elim _ _⟩
 
 namespace IsConformalMap
 

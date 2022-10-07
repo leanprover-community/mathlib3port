@@ -49,7 +49,7 @@ structure IntermediateField extends Subalgebra K L where
   inv_mem' : ∀ x ∈ carrier, x⁻¹ ∈ carrier
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident intermediate_field.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident intermediate_field.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable {K L L'} (S : IntermediateField K L)
 
 namespace IntermediateField
@@ -187,12 +187,12 @@ protected theorem multiset_sum_mem (m : Multiset L) : (∀ a ∈ m, a ∈ S) →
 
 /-- Product of elements of an intermediate field indexed by a `finset` is in the intermediate_field.
 -/
-protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∏ i in t, f i) ∈ S :=
+protected theorem prod_mem {ι : Type _} {t : Finsetₓ ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∏ i in t, f i) ∈ S :=
   prod_mem h
 
 /-- Sum of elements in a `intermediate_field` indexed by a `finset` is in the `intermediate_field`.
 -/
-protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∑ i in t, f i) ∈ S :=
+protected theorem sum_mem {ι : Type _} {t : Finsetₓ ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∑ i in t, f i) ∈ S :=
   sum_mem h
 
 protected theorem pow_mem {x : L} (hx : x ∈ S) (n : ℤ) : x ^ n ∈ S :=
@@ -227,8 +227,7 @@ protected theorem coe_pow (x : S) (n : ℕ) : (↑(x ^ n) : L) = ↑x ^ n :=
 
 end InheritedLemmas
 
-theorem coe_nat_mem (n : ℕ) : (n : L) ∈ S := by
-  simpa using coe_int_mem S n
+theorem coe_nat_mem (n : ℕ) : (n : L) ∈ S := by simpa using coe_int_mem S n
 
 end IntermediateField
 
@@ -251,7 +250,7 @@ theorem to_intermediate_field_to_subalgebra (S : IntermediateField K L) :
 /-- Turn a subalgebra satisfying `is_field` into an intermediate_field -/
 def Subalgebra.toIntermediateField' (S : Subalgebra K L) (hS : IsField S) : IntermediateField K L :=
   S.toIntermediateField fun x hx => by
-    by_cases' hx0 : x = 0
+    by_cases hx0:x = 0
     · rw [hx0, inv_zero]
       exact S.zero_mem
       
@@ -284,21 +283,21 @@ instance toField : Field S :=
   S.toSubfield.toField
 
 @[simp, norm_cast]
-theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
+theorem coe_sum {ι : Type _} [Fintypeₓ ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
   classical
-  induction' Finset.univ using Finset.induction_on with i s hi H
+  induction' Finsetₓ.univ using Finsetₓ.induction_on with i s hi H
   · simp
     
-  · rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
+  · rw [Finsetₓ.sum_insert hi, AddMemClass.coe_add, H, Finsetₓ.sum_insert hi]
     
 
 @[simp, norm_cast]
-theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
+theorem coe_prod {ι : Type _} [Fintypeₓ ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
   classical
-  induction' Finset.univ using Finset.induction_on with i s hi H
+  induction' Finsetₓ.univ using Finsetₓ.induction_on with i s hi H
   · simp
     
-  · rw [Finset.prod_insert hi, MulMemClass.coe_mul, H, Finset.prod_insert hi]
+  · rw [Finsetₓ.prod_insert hi, MulMemClass.coe_mul, H, Finsetₓ.prod_insert hi]
     
 
 /-! `intermediate_field`s inherit structure from their `subalgebra` coercions. -/
@@ -476,9 +475,7 @@ theorem set_range_subset : Set.Range (algebraMap K L) ⊆ S :=
   S.toSubalgebra.range_subset
 
 theorem field_range_le : (algebraMap K L).fieldRange ≤ S.toSubfield := fun x hx =>
-  S.toSubalgebra.range_subset
-    (by
-      rwa [Set.mem_range, ← RingHom.mem_field_range])
+  S.toSubalgebra.range_subset (by rwa [Set.mem_range, ← RingHom.mem_field_range])
 
 @[simp]
 theorem to_subalgebra_le_to_subalgebra {S S' : IntermediateField K L} : S.toSubalgebra ≤ S'.toSubalgebra ↔ S ≤ S' :=
@@ -527,14 +524,12 @@ theorem mem_restrict_scalars {E : IntermediateField L' L} {x : L} : x ∈ restri
 
 theorem restrict_scalars_injective :
     Function.Injective (restrictScalars K : IntermediateField L' L → IntermediateField K L) := fun U V H =>
-  ext fun x => by
-    rw [← mem_restrict_scalars K, H, mem_restrict_scalars]
+  ext fun x => by rw [← mem_restrict_scalars K, H, mem_restrict_scalars]
 
 end RestrictScalars
 
 /-- This was formerly an instance called `lift2_alg`, but an instance above already provides it. -/
-example {F : IntermediateField K L} {E : IntermediateField F L} : Algebra K E := by
-  infer_instance
+example {F : IntermediateField K L} {E : IntermediateField F L} : Algebra K E := by infer_instance
 
 end Tower
 
@@ -590,7 +585,7 @@ theorem is_integral_iff {x : S} : IsIntegral K x ↔ IsIntegral K (x : L) := by
   rw [← is_algebraic_iff_is_integral, is_algebraic_iff, is_algebraic_iff_is_integral]
 
 theorem minpoly_eq (x : S) : minpoly K x = minpoly K (x : L) := by
-  by_cases' hx : IsIntegral K x
+  by_cases hx:IsIntegral K x
   · exact minpoly.eq_of_algebra_map_eq (algebraMap S L).Injective hx rfl
     
   · exact (minpoly.eq_zero hx).trans (minpoly.eq_zero (mt is_integral_iff.mpr hx)).symm

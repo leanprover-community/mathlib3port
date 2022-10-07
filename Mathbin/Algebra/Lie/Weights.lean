@@ -89,7 +89,7 @@ theorem exists_pre_weight_space_zero_le_ker_of_is_noetherian [IsNoetherian R M] 
 
 variable {R} (L)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident k, ",", ident hk, "⟩", ":", expr «expr∃ , »((k),
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident k, ",", ident hk, "⟩", ":", expr «expr∃ , »((k),
     «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))]]
 /-- See also `bourbaki1975b` Chapter VII §1.1, Proposition 2 (ii). -/
 protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w₂) (M₃ : Type w₃) [AddCommGroupₓ M₁]
@@ -133,7 +133,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
       algebra_tensor_module.curry_apply, curry_apply, LinearMap.to_fun_eq_coe, LinearMap.coe_restrict_scalars_eq_coe]
     abel
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident k, \",\", ident hk, \"⟩\", \":\", expr «expr∃ , »((k),\n    «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident k, \",\", ident hk, \"⟩\", \":\", expr «expr∃ , »((k),\n    «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))]]"
   · use k
     rw [← LinearMap.comp_apply, LinearMap.commute_pow_left_of_commute h_comm_square, LinearMap.comp_apply, hk,
       LinearMap.map_zero]
@@ -142,10 +142,8 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   simp only [mem_pre_weight_space] at hm₁ hm₂
   obtain ⟨k₁, hk₁⟩ := hm₁ x
   obtain ⟨k₂, hk₂⟩ := hm₂ x
-  have hf₁ : (f₁ ^ k₁) (m₁ ⊗ₜ m₂) = 0 := by
-    simp only [hk₁, zero_tmul, LinearMap.rtensor_tmul, LinearMap.rtensor_pow]
-  have hf₂ : (f₂ ^ k₂) (m₁ ⊗ₜ m₂) = 0 := by
-    simp only [hk₂, tmul_zero, LinearMap.ltensor_tmul, LinearMap.ltensor_pow]
+  have hf₁ : (f₁ ^ k₁) (m₁ ⊗ₜ m₂) = 0 := by simp only [hk₁, zero_tmul, LinearMap.rtensor_tmul, LinearMap.rtensor_pow]
+  have hf₂ : (f₂ ^ k₂) (m₁ ⊗ₜ m₂) = 0 := by simp only [hk₂, tmul_zero, LinearMap.ltensor_tmul, LinearMap.ltensor_pow]
   -- It's now just an application of the binomial theorem.
   use k₁ + k₂ - 1
   have hf_comm : Commute f₁ f₂ := by
@@ -153,10 +151,10 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
     simp only [LinearMap.mul_apply, LinearMap.rtensor_tmul, LinearMap.ltensor_tmul, algebra_tensor_module.curry_apply,
       LinearMap.to_fun_eq_coe, LinearMap.ltensor_tmul, curry_apply, LinearMap.coe_restrict_scalars_eq_coe]
   rw [hf_comm.add_pow']
-  simp only [TensorProduct.mapIncl, Submodule.subtype_apply, Finset.sum_apply, Submodule.coe_mk, LinearMap.coe_fn_sum,
+  simp only [TensorProduct.mapIncl, Submodule.subtype_apply, Finsetₓ.sum_apply, Submodule.coe_mk, LinearMap.coe_fn_sum,
     TensorProduct.map_tmul, LinearMap.smul_apply]
   -- The required sum is zero because each individual term is zero.
-  apply Finset.sum_eq_zero
+  apply Finsetₓ.sum_eq_zero
   rintro ⟨i, j⟩ hij
   -- Eliminate the binomial coefficients from the picture.
   suffices (f₁ ^ i * f₂ ^ j) (m₁ ⊗ₜ m₂) = 0 by
@@ -188,8 +186,7 @@ def weightSpace [LieAlgebra.IsNilpotent R L] (χ : L → R) : LieSubmodule R L M
     lie_mem := fun x m hm => by
       rw [← zero_addₓ χ]
       refine' lie_mem_pre_weight_space_of_mem_pre_weight_space _ hm
-      suffices pre_weight_space L (0 : L → R) = ⊤ by
-        simp only [this, Submodule.mem_top]
+      suffices pre_weight_space L (0 : L → R) = ⊤ by simp only [this, Submodule.mem_top]
       exact LieAlgebra.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent R L }
 
 theorem mem_weight_space [LieAlgebra.IsNilpotent R L] (χ : L → R) (m : M) :
@@ -328,7 +325,9 @@ def rootSpaceWeightSpaceProductAux {χ₁ χ₂ χ₃ : H → R} (hχ : χ₁ + 
         simp only [LieSubmodule.coe_add, lie_add]
         rfl,
       map_smul' := fun t m => by
-        conv_lhs => congr rw [LieSubmodule.coe_smul, lie_smul]
+        conv_lhs =>
+        congr
+        rw [LieSubmodule.coe_smul, lie_smul]
         rfl }
   map_add' := fun x y => by
     ext m <;>
@@ -447,24 +446,15 @@ theorem is_cartan_of_zero_root_subalgebra_eq (h : zeroRootSubalgebra R L H = H) 
 theorem zero_root_subalgebra_eq_of_is_cartan (H : LieSubalgebra R L) [H.IsCartanSubalgebra] [IsNoetherian R L] :
     zeroRootSubalgebra R L H = H := by
   refine' le_antisymmₓ _ (le_zero_root_subalgebra R L H)
-  suffices root_space H 0 ≤ H.to_lie_submodule by
-    exact fun x hx => this hx
-  obtain ⟨k, hk⟩ :=
-    (root_space H 0).is_nilpotent_iff_exists_self_le_ucs.mp
-      (by
-        infer_instance)
-  exact
-    hk.trans
-      (LieSubmodule.ucs_le_of_centralizer_eq_self
-        (by
-          simp )
-        k)
+  suffices root_space H 0 ≤ H.to_lie_submodule by exact fun x hx => this hx
+  obtain ⟨k, hk⟩ := (root_space H 0).is_nilpotent_iff_exists_self_le_ucs.mp (by infer_instance)
+  exact hk.trans (LieSubmodule.ucs_le_of_centralizer_eq_self (by simp) k)
 
 theorem zero_root_subalgebra_eq_iff_is_cartan [IsNoetherian R L] :
     zeroRootSubalgebra R L H = H ↔ H.IsCartanSubalgebra :=
   ⟨is_cartan_of_zero_root_subalgebra_eq R L H, by
     intros
-    simp ⟩
+    simp⟩
 
 end LieAlgebra
 

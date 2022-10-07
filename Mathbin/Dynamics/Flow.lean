@@ -45,8 +45,7 @@ def IsInvariant (ϕ : τ → α → α) (s : Set α) : Prop :=
 
 variable (ϕ : τ → α → α) (s : Set α)
 
-theorem is_invariant_iff_image : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s ⊆ s := by
-  simp_rw [IsInvariant, maps_to']
+theorem is_invariant_iff_image : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s ⊆ s := by simp_rw [IsInvariant, maps_to']
 
 /-- A set `s ⊆ α` is forward-invariant under `ϕ : τ → α → α` if
     `ϕ t s ⊆ s` for all `t ≥ 0`. -/
@@ -142,32 +141,23 @@ variable {τ : Type _} [AddCommGroupₓ τ] [TopologicalSpace τ] [TopologicalAd
 
 theorem is_invariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s = s :=
   (is_invariant_iff_image _ _).trans
-    (Iff.intro
-      (fun h t =>
-        Subset.antisymm (h t) fun _ hx =>
-          ⟨_, h (-t) ⟨_, hx, rfl⟩, by
-            simp [← map_add]⟩)
-      fun h t => by
-      rw [h t])
+    (Iff.intro (fun h t => Subset.antisymm (h t) fun _ hx => ⟨_, h (-t) ⟨_, hx, rfl⟩, by simp [← map_add]⟩) fun h t =>
+      by rw [h t])
 
 /-- The time-reversal of a flow `ϕ` by a (commutative, additive) group
     is defined `ϕ.reverse t x = ϕ (-t) x`. -/
 def reverse : Flow τ α where
   toFun := fun t => ϕ (-t)
   cont' := ϕ.Continuous continuous_fst.neg continuous_snd
-  map_add' := fun _ _ _ => by
-    rw [neg_add, map_add]
-  map_zero' := fun _ => by
-    rw [neg_zero, map_zero_apply]
+  map_add' := fun _ _ _ => by rw [neg_add, map_add]
+  map_zero' := fun _ => by rw [neg_zero, map_zero_apply]
 
 /-- The map `ϕ t` as a homeomorphism. -/
 def toHomeomorph (t : τ) : α ≃ₜ α where
   toFun := ϕ t
   invFun := ϕ (-t)
-  left_inv := fun x => by
-    rw [← map_add, neg_add_selfₓ, map_zero_apply]
-  right_inv := fun x => by
-    rw [← map_add, add_neg_selfₓ, map_zero_apply]
+  left_inv := fun x => by rw [← map_add, neg_add_selfₓ, map_zero_apply]
+  right_inv := fun x => by rw [← map_add, add_neg_selfₓ, map_zero_apply]
 
 theorem image_eq_preimage (t : τ) (s : Set α) : ϕ t '' s = ϕ (-t) ⁻¹' s :=
   (ϕ.toHomeomorph t).toEquiv.image_eq_preimage s

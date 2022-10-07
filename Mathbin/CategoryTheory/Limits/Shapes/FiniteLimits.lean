@@ -43,9 +43,9 @@ instance (priority := 100) has_limits_of_shape_of_has_finite_limits (J : Type w)
   apply has_finite_limits.out
 
 instance (priority := 100) has_finite_limits_of_has_limits_of_size [HasLimitsOfSize.{v', u'} C] : HasFiniteLimits C :=
-  ⟨fun J hJ hJ' => by
+  ⟨fun J hJ hJ' =>
     haveI := has_limits_of_size_shrink.{0, 0} C
-    exact has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
+    has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
 
 /-- If `C` has all limits, it has finite limits. -/
 instance (priority := 100) has_finite_limits_of_has_limits [HasLimits C] : HasFiniteLimits C :=
@@ -82,9 +82,9 @@ instance (priority := 100) has_colimits_of_shape_of_has_finite_colimits (J : Typ
 
 instance (priority := 100) has_finite_colimits_of_has_colimits_of_size [HasColimitsOfSize.{v', u'} C] :
     HasFiniteColimits C :=
-  ⟨fun J hJ hJ' => by
+  ⟨fun J hJ hJ' =>
     haveI := has_colimits_of_size_shrink.{0, 0} C
-    exact has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
+    has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
 
 /-- We can always derive `has_finite_colimits C` by providing colimits at an
 arbitrary universe. -/
@@ -106,33 +106,29 @@ section
 
 open WalkingParallelPair WalkingParallelPairHom
 
-instance fintypeWalkingParallelPair : Fintype WalkingParallelPair where
+instance fintypeWalkingParallelPair : Fintypeₓ WalkingParallelPair where
   elems := [WalkingParallelPair.zero, WalkingParallelPair.one].toFinset
-  complete := fun x => by
-    cases x <;> simp
+  complete := fun x => by cases x <;> simp
 
 attribute [local tidy] tactic.case_bash
 
-instance (j j' : WalkingParallelPair) : Fintype (WalkingParallelPairHom j j') where
+instance (j j' : WalkingParallelPair) : Fintypeₓ (WalkingParallelPairHom j j') where
   elems :=
     WalkingParallelPair.recOn j
       (WalkingParallelPair.recOn j' [WalkingParallelPairHom.id zero].toFinset [left, right].toFinset)
       (WalkingParallelPair.recOn j' ∅ [WalkingParallelPairHom.id one].toFinset)
-  complete := by
-    tidy
+  complete := by tidy
 
 end
 
 instance : FinCategory WalkingParallelPair where
 
 /-- Equalizers are finite limits, so if `C` has all finite limits, it also has all equalizers -/
-example [HasFiniteLimits C] : HasEqualizers C := by
-  infer_instance
+example [HasFiniteLimits C] : HasEqualizers C := by infer_instance
 
 /-- Coequalizers are finite colimits, of if `C` has all finite colimits, it also has all
     coequalizers -/
-example [HasFiniteColimits C] : HasCoequalizers C := by
-  infer_instance
+example [HasFiniteColimits C] : HasCoequalizers C := by infer_instance
 
 variable {J : Type v}
 
@@ -140,11 +136,11 @@ attribute [local tidy] tactic.case_bash
 
 namespace WidePullbackShape
 
-instance fintypeObj [Fintype J] : Fintype (WidePullbackShape J) := by
+instance fintypeObj [Fintypeₓ J] : Fintypeₓ (WidePullbackShape J) := by
   rw [wide_pullback_shape]
   infer_instance
 
-instance fintypeHom (j j' : WidePullbackShape J) : Fintype (j ⟶ j') where
+instance fintypeHom (j j' : WidePullbackShape J) : Fintypeₓ (j ⟶ j') where
   elems := by
     cases j'
     · cases j
@@ -153,25 +149,24 @@ instance fintypeHom (j j' : WidePullbackShape J) : Fintype (j ⟶ j') where
       · exact {hom.term j}
         
       
-    · by_cases' some j' = j
+    · by_cases some j' = j
       · rw [h]
         exact {hom.id j}
         
       · exact ∅
         
       
-  complete := by
-    tidy
+  complete := by tidy
 
 end WidePullbackShape
 
 namespace WidePushoutShape
 
-instance fintypeObj [Fintype J] : Fintype (WidePushoutShape J) := by
+instance fintypeObj [Fintypeₓ J] : Fintypeₓ (WidePushoutShape J) := by
   rw [wide_pushout_shape]
   infer_instance
 
-instance fintypeHom (j j' : WidePushoutShape J) : Fintype (j ⟶ j') where
+instance fintypeHom (j j' : WidePushoutShape J) : Fintypeₓ (j ⟶ j') where
   elems := by
     cases j
     · cases j'
@@ -180,22 +175,21 @@ instance fintypeHom (j j' : WidePushoutShape J) : Fintype (j ⟶ j') where
       · exact {hom.init j'}
         
       
-    · by_cases' some j = j'
+    · by_cases some j = j'
       · rw [h]
         exact {hom.id j'}
         
       · exact ∅
         
       
-  complete := by
-    tidy
+  complete := by tidy
 
 end WidePushoutShape
 
-instance finCategoryWidePullback [Fintype J] :
+instance finCategoryWidePullback [Fintypeₓ J] :
     FinCategory (WidePullbackShape J) where fintypeHom := WidePullbackShape.fintypeHom
 
-instance finCategoryWidePushout [Fintype J] :
+instance finCategoryWidePushout [Fintypeₓ J] :
     FinCategory (WidePushoutShape J) where fintypeHom := WidePushoutShape.fintypeHom
 
 -- We can't just made this an `abbreviation`
@@ -204,7 +198,7 @@ instance finCategoryWidePushout [Fintype J] :
 for every finite collection of morphisms
 -/
 class HasFiniteWidePullbacks : Prop where
-  out (J : Type) [Fintype J] : HasLimitsOfShape (WidePullbackShape J) C
+  out (J : Type) [Fintypeₓ J] : HasLimitsOfShape (WidePullbackShape J) C
 
 instance has_limits_of_shape_wide_pullback_shape (J : Type) [Finite J] [HasFiniteWidePullbacks C] :
     HasLimitsOfShape (WidePullbackShape J) C := by
@@ -216,7 +210,7 @@ instance has_limits_of_shape_wide_pullback_shape (J : Type) [Finite J] [HasFinit
 for every finite collection of morphisms
 -/
 class HasFiniteWidePushouts : Prop where
-  out (J : Type) [Fintype J] : HasColimitsOfShape (WidePushoutShape J) C
+  out (J : Type) [Fintypeₓ J] : HasColimitsOfShape (WidePushoutShape J) C
 
 instance has_colimits_of_shape_wide_pushout_shape (J : Type) [Finite J] [HasFiniteWidePushouts C] :
     HasColimitsOfShape (WidePushoutShape J) C := by
@@ -236,18 +230,15 @@ it also has finite wide pushouts
 theorem has_finite_wide_pushouts_of_has_finite_limits [HasFiniteColimits C] : HasFiniteWidePushouts C :=
   ⟨fun J _ => has_finite_colimits.out _⟩
 
-instance fintypeWalkingPair : Fintype WalkingPair where
+instance fintypeWalkingPair : Fintypeₓ WalkingPair where
   elems := {WalkingPair.left, WalkingPair.right}
-  complete := fun x => by
-    cases x <;> simp
+  complete := fun x => by cases x <;> simp
 
 /-- Pullbacks are finite limits, so if `C` has all finite limits, it also has all pullbacks -/
-example [HasFiniteWidePullbacks C] : HasPullbacks C := by
-  infer_instance
+example [HasFiniteWidePullbacks C] : HasPullbacks C := by infer_instance
 
 /-- Pushouts are finite colimits, so if `C` has all finite colimits, it also has all pushouts -/
-example [HasFiniteWidePushouts C] : HasPushouts C := by
-  infer_instance
+example [HasFiniteWidePushouts C] : HasPushouts C := by infer_instance
 
 end CategoryTheory.Limits
 

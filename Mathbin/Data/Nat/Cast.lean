@@ -49,10 +49,7 @@ theorem coe_cast_ring_hom [NonAssocSemiringₓ α] : (castRingHom α : ℕ → �
   rfl
 
 theorem cast_commute [NonAssocSemiringₓ α] (n : ℕ) (x : α) : Commute (↑n) x :=
-  (Nat.recOn n
-      (by
-        rw [cast_zero] <;> exact Commute.zero_left x))
-    fun n ihn => by
+  (Nat.recOn n (by rw [cast_zero] <;> exact Commute.zero_left x)) fun n ihn => by
     rw [cast_succ] <;> exact ihn.add_left (Commute.one_left x)
 
 theorem cast_comm [NonAssocSemiringₓ α] (n : ℕ) (x : α) : (n : α) * x = x * n :=
@@ -66,9 +63,8 @@ section
 variable [OrderedSemiring α]
 
 @[mono]
-theorem mono_cast : Monotone (coe : ℕ → α) :=
-  monotone_nat_of_le_succ fun n => by
-    rw [Nat.cast_succₓ] <;> exact le_add_of_nonneg_right zero_le_one
+theorem mono_cast : Monotoneₓ (coe : ℕ → α) :=
+  monotone_nat_of_le_succ fun n => by rw [Nat.cast_succₓ] <;> exact le_add_of_nonneg_right zero_le_one
 
 @[simp]
 theorem cast_nonneg (n : ℕ) : 0 ≤ (n : α) :=
@@ -85,27 +81,22 @@ theorem cast_lt {m n : ℕ} : (m : α) < n ↔ m < n :=
   strict_mono_cast.lt_iff_lt
 
 @[simp]
-theorem cast_pos {n : ℕ} : (0 : α) < n ↔ 0 < n := by
-  rw [← cast_zero, cast_lt]
+theorem cast_pos {n : ℕ} : (0 : α) < n ↔ 0 < n := by rw [← cast_zero, cast_lt]
 
 theorem cast_add_one_pos (n : ℕ) : 0 < (n : α) + 1 :=
   add_pos_of_nonneg_of_pos n.cast_nonneg zero_lt_one
 
 @[simp, norm_cast]
-theorem one_lt_cast {n : ℕ} : 1 < (n : α) ↔ 1 < n := by
-  rw [← cast_one, cast_lt]
+theorem one_lt_cast {n : ℕ} : 1 < (n : α) ↔ 1 < n := by rw [← cast_one, cast_lt]
 
 @[simp, norm_cast]
-theorem one_le_cast {n : ℕ} : 1 ≤ (n : α) ↔ 1 ≤ n := by
-  rw [← cast_one, cast_le]
+theorem one_le_cast {n : ℕ} : 1 ≤ (n : α) ↔ 1 ≤ n := by rw [← cast_one, cast_le]
 
 @[simp, norm_cast]
-theorem cast_lt_one {n : ℕ} : (n : α) < 1 ↔ n = 0 := by
-  rw [← cast_one, cast_lt, lt_succ_iff, le_zero_iff]
+theorem cast_lt_one {n : ℕ} : (n : α) < 1 ↔ n = 0 := by rw [← cast_one, cast_lt, lt_succ_iff, le_zero_iff]
 
 @[simp, norm_cast]
-theorem cast_le_one {n : ℕ} : (n : α) ≤ 1 ↔ n ≤ 1 := by
-  rw [← cast_one, cast_le]
+theorem cast_le_one {n : ℕ} : (n : α) ≤ 1 ↔ n ≤ 1 := by rw [← cast_one, cast_le]
 
 end
 
@@ -138,12 +129,10 @@ instance : AddMonoidWithOneₓ (α × β) :=
     nat_cast_succ := fun n => congr_arg2ₓ Prod.mk (Nat.cast_succₓ _) (Nat.cast_succₓ _) }
 
 @[simp]
-theorem fst_nat_cast (n : ℕ) : (n : α × β).fst = n := by
-  induction n <;> simp [*]
+theorem fst_nat_cast (n : ℕ) : (n : α × β).fst = n := by induction n <;> simp [*]
 
 @[simp]
-theorem snd_nat_cast (n : ℕ) : (n : α × β).snd = n := by
-  induction n <;> simp [*]
+theorem snd_nat_cast (n : ℕ) : (n : α × β).snd = n := by induction n <;> simp [*]
 
 end Prod
 
@@ -156,7 +145,7 @@ theorem ext_nat' [AddMonoidₓ A] [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1
     apply Nat.rec
     · simp only [Nat.nat_zero_eq_zero, map_zero]
       
-    simp (config := { contextual := true })[Nat.succ_eq_add_one, h]
+    simp (config := { contextual := true }) [Nat.succ_eq_add_one, h]
 
 @[ext]
 theorem AddMonoidHom.ext_nat [AddMonoidₓ A] : ∀ {f g : ℕ →+ A}, ∀ h : f 1 = g 1, f = g :=
@@ -166,16 +155,12 @@ variable [AddMonoidWithOneₓ A]
 
 -- these versions are primed so that the `ring_hom_class` versions aren't
 theorem eq_nat_cast' [AddMonoidHomClass F ℕ A] (f : F) (h1 : f 1 = 1) : ∀ n : ℕ, f n = n
-  | 0 => by
-    simp
-  | n + 1 => by
-    rw [map_add, h1, eq_nat_cast' n, Nat.cast_add_one]
+  | 0 => by simp
+  | n + 1 => by rw [map_add, h1, eq_nat_cast' n, Nat.cast_add_one]
 
 theorem map_nat_cast' {A} [AddMonoidWithOneₓ A] [AddMonoidHomClass F A B] (f : F) (h : f 1 = 1) : ∀ n : ℕ, f n = n
-  | 0 => by
-    simp
-  | n + 1 => by
-    rw [Nat.cast_addₓ, map_add, Nat.cast_addₓ, map_nat_cast', Nat.cast_oneₓ, h, Nat.cast_oneₓ]
+  | 0 => by simp
+  | n + 1 => by rw [Nat.cast_addₓ, map_add, Nat.cast_addₓ, map_nat_cast', Nat.cast_oneₓ, h, Nat.cast_oneₓ]
 
 end AddMonoidHomClass
 
@@ -210,8 +195,7 @@ theorem map_nat_cast [RingHomClass F R S] (f : F) : ∀ n : ℕ, f (n : R) = n :
   map_nat_cast' f <| map_one f
 
 theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
-  ext_nat' f g <| by
-    simp only [map_one]
+  ext_nat' f g <| by simp only [map_one]
 
 end RingHomClass
 

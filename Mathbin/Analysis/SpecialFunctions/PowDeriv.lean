@@ -284,16 +284,9 @@ theorem cont_diff_at_rpow_const_of_ne {x p : ℝ} {n : ℕ∞} (h : x ≠ 0) : C
 
 theorem cont_diff_rpow_const_of_le {p : ℝ} {n : ℕ} (h : ↑n ≤ p) : ContDiff ℝ n fun x : ℝ => x ^ p := by
   induction' n with n ihn generalizing p
-  · exact
-      cont_diff_zero.2
-        (continuous_id.rpow_const fun x => by
-          exact_mod_cast Or.inr h)
+  · exact cont_diff_zero.2 (continuous_id.rpow_const fun x => by exact_mod_cast Or.inr h)
     
-  · have h1 : 1 ≤ p :=
-      le_transₓ
-        (by
-          simp )
-        h
+  · have h1 : 1 ≤ p := le_transₓ (by simp) h
     rw [Nat.cast_succₓ, ← le_sub_iff_add_le] at h
     rw [cont_diff_succ_iff_deriv, deriv_rpow_const' h1]
     refine' ⟨differentiable_rpow_const h1, cont_diff_const.mul (ihn h)⟩
@@ -307,11 +300,8 @@ theorem cont_diff_at_rpow_const {x p : ℝ} {n : ℕ} (h : x ≠ 0 ∨ ↑n ≤ 
 
 theorem has_strict_deriv_at_rpow_const {x p : ℝ} (hx : x ≠ 0 ∨ 1 ≤ p) :
     HasStrictDerivAt (fun x => x ^ p) (p * x ^ (p - 1)) x :=
-  ContDiffAt.has_strict_deriv_at'
-    (cont_diff_at_rpow_const
-      (by
-        rwa [Nat.cast_oneₓ]))
-    (has_deriv_at_rpow_const hx) le_rflₓ
+  ContDiffAt.has_strict_deriv_at' (cont_diff_at_rpow_const (by rwa [Nat.cast_oneₓ])) (has_deriv_at_rpow_const hx)
+    le_rflₓ
 
 end Real
 
@@ -442,7 +432,7 @@ variable {f g : ℝ → ℝ} {f' g' x y p : ℝ} {s : Set ℝ}
 theorem HasDerivWithinAt.rpow (hf : HasDerivWithinAt f f' s x) (hg : HasDerivWithinAt g g' s x) (h : 0 < f x) :
     HasDerivWithinAt (fun x => f x ^ g x) (f' * g x * f x ^ (g x - 1) + g' * f x ^ g x * log (f x)) s x := by
   convert (hf.has_fderiv_within_at.rpow hg.has_fderiv_within_at h).HasDerivWithinAt using 1
-  dsimp'
+  dsimp
   ring
 
 theorem HasDerivAt.rpow (hf : HasDerivAt f f' x) (hg : HasDerivAt g g' x) (h : 0 < f x) :
@@ -480,20 +470,16 @@ open Real Filter
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞`. -/
 theorem tendsto_one_plus_div_rpow_exp (t : ℝ) : Tendsto (fun x : ℝ => (1 + t / x) ^ x) atTop (𝓝 (exp t)) := by
   apply ((real.continuous_exp.tendsto _).comp (tendsto_mul_log_one_plus_div_at_top t)).congr' _
-  have h₁ : (1 : ℝ) / 2 < 1 := by
-    linarith
+  have h₁ : (1 : ℝ) / 2 < 1 := by linarith
   have h₂ : tendsto (fun x : ℝ => 1 + t / x) at_top (𝓝 1) := by
     simpa using (tendsto_inv_at_top_zero.const_mul t).const_add 1
   refine' (eventually_ge_of_tendsto_gt h₁ h₂).mono fun x hx => _
-  have hx' : 0 < 1 + t / x := by
-    linarith
+  have hx' : 0 < 1 + t / x := by linarith
   simp [mul_comm x, exp_mul, exp_log hx']
 
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞` for naturals `x`. -/
 theorem tendsto_one_plus_div_pow_exp (t : ℝ) : Tendsto (fun x : ℕ => (1 + t / (x : ℝ)) ^ x) atTop (𝓝 (Real.exp t)) :=
-  ((tendsto_one_plus_div_rpow_exp t).comp tendsto_coe_nat_at_top_at_top).congr
-    (by
-      simp )
+  ((tendsto_one_plus_div_rpow_exp t).comp tendsto_coe_nat_at_top_at_top).congr (by simp)
 
 end Limits
 

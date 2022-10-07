@@ -57,15 +57,10 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
     
   intro y le_y y_lt
   calc
-    ∥g i y∥ = ∥g i (y + x) - g i x∥ := by
-      rw [ContinuousLinearMap.map_add, add_sub_cancel]
+    ∥g i y∥ = ∥g i (y + x) - g i x∥ := by rw [ContinuousLinearMap.map_add, add_sub_cancel]
     _ ≤ ∥g i (y + x)∥ + ∥g i x∥ := norm_sub_le _ _
     _ ≤ m + m :=
-      add_le_add
-        (real_norm_le (y + x)
-          (by
-            rwa [add_commₓ, add_mem_ball_iff_norm])
-          i)
+      add_le_add (real_norm_le (y + x) (by rwa [add_commₓ, add_mem_ball_iff_norm]) i)
         (real_norm_le x (Metric.mem_ball_self ε_pos) i)
     _ = (m + m : ℕ) := (m.cast_add m).symm
     _ ≤ (m + m : ℕ) * (∥y∥ / (ε / ∥k∥)) :=
@@ -116,8 +111,7 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
       simp_rw [dist_eq_norm] at hC
       calc
         ∥g n x∥ ≤ ∥g 0 x∥ + ∥g n x - g 0 x∥ := norm_le_insert' _ _
-        _ ≤ C + ∥g 0 x∥ := by
-          linarith [hC n 0]
+        _ ≤ C + ∥g 0 x∥ := by linarith [hC n 0]
         
     cases' banach_steinhaus h_point_bdd with C' hC'
     /- show the uniform bound from `banach_steinhaus` is a norm bound of the limit map
@@ -131,9 +125,7 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
       exact hn n (le_reflₓ n)
     calc
       ∥f x∥ ≤ ∥g n x∥ + ∥g n x - f x∥ := norm_le_insert _ _
-      _ < ∥g n∥ * ∥x∥ + ε := by
-        linarith [lt_ε, (g n).le_op_norm x]
-      _ ≤ C' * ∥x∥ + ε := by
-        nlinarith [hC' n, norm_nonneg x]
+      _ < ∥g n∥ * ∥x∥ + ε := by linarith [lt_ε, (g n).le_op_norm x]
+      _ ≤ C' * ∥x∥ + ε := by nlinarith [hC' n, norm_nonneg x]
       
 

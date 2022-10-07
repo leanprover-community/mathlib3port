@@ -82,14 +82,10 @@ def IsSplitCoequalizer.map {Z : C} {π : Y ⟶ Z} (q : IsSplitCoequalizer f g π
     IsSplitCoequalizer (F.map f) (F.map g) (F.map π) where
   rightSection := F.map q.rightSection
   leftSection := F.map q.leftSection
-  condition := by
-    rw [← F.map_comp, q.condition, F.map_comp]
-  right_section_π := by
-    rw [← F.map_comp, q.right_section_π, F.map_id]
-  left_section_bottom := by
-    rw [← F.map_comp, q.left_section_bottom, F.map_id]
-  left_section_top := by
-    rw [← F.map_comp, q.left_section_top, F.map_comp]
+  condition := by rw [← F.map_comp, q.condition, F.map_comp]
+  right_section_π := by rw [← F.map_comp, q.right_section_π, F.map_id]
+  left_section_bottom := by rw [← F.map_comp, q.left_section_bottom, F.map_id]
+  left_section_top := by rw [← F.map_comp, q.left_section_top, F.map_comp]
 
 section
 
@@ -110,15 +106,14 @@ is more convenient to show a given cofork is a coequalizer by showing it is spli
 def IsSplitCoequalizer.isCoequalizer {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f g h) : IsColimit t.asCofork :=
   (Cofork.IsColimit.mk' _) fun s =>
     ⟨t.rightSection ≫ s.π, by
-      dsimp'
-      rw [← t.left_section_top_assoc, s.condition, t.left_section_bottom_assoc], fun m hm => by
-      simp [← hm]⟩
+      dsimp
+      rw [← t.left_section_top_assoc, s.condition, t.left_section_bottom_assoc], fun m hm => by simp [← hm]⟩
 
 end
 
 variable (f g)
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`splittable] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`splittable] []
 /-- The pair `f,g` is a split pair if there is a `h : Y ⟶ Z` so that `f, g, h` forms a split coequalizer
 in `C`.
 -/

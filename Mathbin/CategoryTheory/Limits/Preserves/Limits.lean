@@ -43,9 +43,7 @@ variable [PreservesLimit F G]
 @[simp]
 theorem preserves_lift_map_cone (c₁ c₂ : Cone F) (t : IsLimit c₁) :
     (PreservesLimit.preserves t).lift (G.mapCone c₂) = G.map (t.lift c₂) :=
-  ((PreservesLimit.preserves t).uniq (G.mapCone c₂) _
-      (by
-        simp [← G.map_comp])).symm
+  ((PreservesLimit.preserves t).uniq (G.mapCone c₂) _ (by simp [← G.map_comp])).symm
 
 variable [HasLimit F] [HasLimit (F ⋙ G)]
 
@@ -79,7 +77,7 @@ def preservesLimitNatIso : lim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ lim :
     (by
       intro _ _ f
       ext
-      dsimp'
+      dsimp
       simp only [preserves_limits_iso_hom_π, whisker_right_app, lim_map_π, category.assoc,
         preserves_limits_iso_hom_π_assoc, ← G.map_comp])
 
@@ -92,9 +90,7 @@ variable [PreservesColimit F G]
 @[simp]
 theorem preserves_desc_map_cocone (c₁ c₂ : Cocone F) (t : IsColimit c₁) :
     (PreservesColimit.preserves t).desc (G.mapCocone _) = G.map (t.desc c₂) :=
-  ((PreservesColimit.preserves t).uniq (G.mapCocone _) _
-      (by
-        simp [← G.map_comp])).symm
+  ((PreservesColimit.preserves t).uniq (G.mapCocone _) _ (by simp [← G.map_comp])).symm
 
 variable [HasColimit F] [HasColimit (F ⋙ G)]
 
@@ -131,7 +127,7 @@ def preservesColimitNatIso : colim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ c
       intro _ _ f
       rw [← iso.inv_comp_eq, ← category.assoc, ← iso.eq_comp_inv]
       ext
-      dsimp'
+      dsimp
       erw [ι_colim_map_assoc]
       simp only [ι_preserves_colimits_iso_inv, whisker_right_app, category.assoc, ι_preserves_colimits_iso_inv_assoc, ←
         G.map_comp]

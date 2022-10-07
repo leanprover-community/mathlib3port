@@ -59,40 +59,31 @@ theorem sin_eq_zero_iff {θ : ℂ} : sin θ = 0 ↔ ∃ k : ℤ, θ = k * π := 
     ring
     
 
-theorem sin_ne_zero_iff {θ : ℂ} : sin θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π := by
-  rw [← not_exists, not_iff_not, sin_eq_zero_iff]
+theorem sin_ne_zero_iff {θ : ℂ} : sin θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π := by rw [← not_exists, not_iff_not, sin_eq_zero_iff]
 
 theorem tan_eq_zero_iff {θ : ℂ} : tan θ = 0 ↔ ∃ k : ℤ, θ = k * π / 2 := by
   have h := (sin_two_mul θ).symm
   rw [mul_assoc] at h
   rw [tan, div_eq_zero_iff, ← mul_eq_zero, ← zero_mul (1 / 2 : ℂ), mul_one_div,
     CancelFactors.cancel_factors_eq_div h two_ne_zero', mul_comm]
-  simpa only [zero_div, zero_mul, Ne.def, not_false_iff] with field_simps using sin_eq_zero_iff
+  simpa only [zero_div, zero_mul, Ne.def, not_false_iff, field_simps] using sin_eq_zero_iff
 
 theorem tan_ne_zero_iff {θ : ℂ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π / 2 := by
   rw [← not_exists, not_iff_not, tan_eq_zero_iff]
 
 theorem tan_int_mul_pi_div_two (n : ℤ) : tan (n * π / 2) = 0 :=
-  tan_eq_zero_iff.mpr
-    (by
-      use n)
+  tan_eq_zero_iff.mpr (by use n)
 
 theorem cos_eq_cos_iff {x y : ℂ} : cos x = cos y ↔ ∃ k : ℤ, y = 2 * k * π + x ∨ y = 2 * k * π - x :=
   calc
     cos x = cos y ↔ cos x - cos y = 0 := sub_eq_zero.symm
-    _ ↔ -2 * sin ((x + y) / 2) * sin ((x - y) / 2) = 0 := by
-      rw [cos_sub_cos]
-    _ ↔ sin ((x + y) / 2) = 0 ∨ sin ((x - y) / 2) = 0 := by
-      simp
-        [(by
-          norm_num : (2 : ℂ) ≠ 0)]
+    _ ↔ -2 * sin ((x + y) / 2) * sin ((x - y) / 2) = 0 := by rw [cos_sub_cos]
+    _ ↔ sin ((x + y) / 2) = 0 ∨ sin ((x - y) / 2) = 0 := by simp [(by norm_num : (2 : ℂ) ≠ 0)]
     _ ↔ sin ((x - y) / 2) = 0 ∨ sin ((x + y) / 2) = 0 := Or.comm
     _ ↔ (∃ k : ℤ, y = 2 * k * π + x) ∨ ∃ k : ℤ, y = 2 * k * π - x := by
       apply or_congrₓ <;>
-        field_simp [sin_eq_zero_iff,
-          (by
-            norm_num : -(2 : ℂ) ≠ 0),
-          eq_sub_iff_add_eq', sub_eq_iff_eq_add, mul_comm (2 : ℂ), mul_right_commₓ _ (2 : ℂ)]
+        field_simp [sin_eq_zero_iff, (by norm_num : -(2 : ℂ) ≠ 0), eq_sub_iff_add_eq', sub_eq_iff_eq_add,
+          mul_comm (2 : ℂ), mul_right_commₓ _ (2 : ℂ)]
       constructor <;>
         · rintro ⟨k, rfl⟩
           use -k
@@ -129,7 +120,7 @@ theorem tan_add' {x y : ℂ} (h : (∀ k : ℤ, x ≠ (2 * k + 1) * π / 2) ∧ 
   tan_add (Or.inl h)
 
 theorem tan_two_mul {z : ℂ} : tan (2 * z) = 2 * tan z / (1 - tan z ^ 2) := by
-  by_cases' h : ∀ k : ℤ, z ≠ (2 * k + 1) * π / 2
+  by_cases h:∀ k : ℤ, z ≠ (2 * k + 1) * π / 2
   · rw [two_mul, two_mul, sq, tan_add (Or.inl ⟨h, h⟩)]
     
   · rw [not_forall_not] at h
@@ -140,8 +131,7 @@ theorem tan_add_mul_I {x y : ℂ}
     (h :
       ((∀ k : ℤ, x ≠ (2 * k + 1) * π / 2) ∧ ∀ l : ℤ, y * I ≠ (2 * l + 1) * π / 2) ∨
         (∃ k : ℤ, x = (2 * k + 1) * π / 2) ∧ ∃ l : ℤ, y * I = (2 * l + 1) * π / 2) :
-    tan (x + y * I) = (tan x + tanh y * I) / (1 - tan x * tanh y * I) := by
-  rw [tan_add h, tan_mul_I, mul_assoc]
+    tan (x + y * I) = (tan x + tanh y * I) / (1 - tan x * tanh y * I) := by rw [tan_add h, tan_mul_I, mul_assoc]
 
 theorem tan_eq {z : ℂ}
     (h :
@@ -165,7 +155,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} : cos z = w ↔ exp (z * I) ^ 2 - 2 * w
   refine' Eq.congr _ rfl
   ring
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (w «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (w «expr ≠ » 0)
 theorem cos_surjective : Function.Surjective cos := by
   intro x
   obtain ⟨w, w₀, hw⟩ : ∃ (w : _)(_ : w ≠ 0), 1 * w * w + -2 * x * w + 1 = 0 := by

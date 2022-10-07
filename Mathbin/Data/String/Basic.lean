@@ -35,8 +35,7 @@ def ltb : Iterator → Iterator → Bool
 instance hasLt' : LT Stringₓ :=
   ⟨fun s₁ s₂ => ltb s₁.mkIterator s₂.mkIterator⟩
 
-instance decidableLt : @DecidableRel Stringₓ (· < ·) := by
-  infer_instance
+instance decidableLt : @DecidableRel Stringₓ (· < ·) := by infer_instance
 
 -- short-circuit type class inference
 @[simp]
@@ -51,7 +50,7 @@ theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : Stringₓ}, s₁ < s₂ ↔ s₁.to
       
     · exact iff_of_false Bool.ff_ne_tt (not_lt_of_lt List.Lex.nil)
       
-    · dsimp' [iterator.has_next, iterator.curr, iterator.next]
+    · dsimp [iterator.has_next, iterator.curr, iterator.next]
       split_ifs
       · subst b
         exact IH.trans list.lex.cons_iff.symm
@@ -68,8 +67,7 @@ theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : Stringₓ}, s₁ < s₂ ↔ s₁.to
 instance hasLe : LE Stringₓ :=
   ⟨fun s₁ s₂ => ¬s₂ < s₁⟩
 
-instance decidableLe : @DecidableRel Stringₓ (· ≤ ·) := by
-  infer_instance
+instance decidableLe : @DecidableRel Stringₓ (· ≤ ·) := by infer_instance
 
 -- short-circuit type class inference
 @[simp]
@@ -95,8 +93,7 @@ theorem to_list_singleton (c : Charₓ) : (Stringₓ.singleton c).toList = [c] :
   rfl
 
 theorem to_list_nonempty : ∀ {s : Stringₓ}, s ≠ Stringₓ.empty → s.toList = s.head :: (s.popn 1).toList
-  | ⟨s⟩, h => by
-    cases s <;> [cases h rfl, rfl]
+  | ⟨s⟩, h => by cases s <;> [cases h rfl, rfl]
 
 @[simp]
 theorem head_empty : "".head = default :=
@@ -119,11 +116,9 @@ theorem popn_empty {n : ℕ} : "".popn n = "" := by
 instance : LinearOrderₓ Stringₓ where
   lt := (· < ·)
   le := (· ≤ ·)
-  decidableLt := by
-    infer_instance
+  decidableLt := by infer_instance
   decidableLe := Stringₓ.decidableLe
-  DecidableEq := by
-    infer_instance
+  DecidableEq := by infer_instance
   le_refl := fun a => le_iff_to_list_le.2 le_rflₓ
   le_trans := fun a b c => by
     simp only [le_iff_to_list_le]
@@ -134,8 +129,7 @@ instance : LinearOrderₓ Stringₓ where
   le_antisymm := fun a b => by
     simp only [le_iff_to_list_le, ← to_list_inj]
     apply le_antisymmₓ
-  lt_iff_le_not_le := fun a b => by
-    simp only [le_iff_to_list_le, lt_iff_to_list_lt, lt_iff_le_not_leₓ]
+  lt_iff_le_not_le := fun a b => by simp only [le_iff_to_list_le, lt_iff_to_list_lt, lt_iff_le_not_leₓ]
 
 end Stringₓ
 
@@ -151,8 +145,7 @@ theorem List.length_as_string (l : List Charₓ) : l.asString.length = l.length 
 
 @[simp]
 theorem List.as_string_inj {l l' : List Charₓ} : l.asString = l'.asString ↔ l = l' :=
-  ⟨fun h => by
-    rw [← List.to_list_inv_as_string l, ← List.to_list_inv_as_string l', to_list_inj, h], fun h => h ▸ rfl⟩
+  ⟨fun h => by rw [← List.to_list_inv_as_string l, ← List.to_list_inv_as_string l', to_list_inj, h], fun h => h ▸ rfl⟩
 
 @[simp]
 theorem Stringₓ.length_to_list (s : Stringₓ) : s.toList.length = s.length := by

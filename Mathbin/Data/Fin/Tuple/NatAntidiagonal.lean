@@ -117,7 +117,7 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodupₓ (antidiagonalTuple 
       
     · rw [List.mem_mapₓ] at hx₁ hx₂
       obtain ⟨⟨x₁, hx₁, rfl⟩, ⟨x₂, hx₂, h₁₂⟩⟩ := hx₁, hx₂
-      dsimp'  at h₁₂
+      dsimp at h₁₂
       rw [Finₓ.cons_eq_cons, Nat.succ_inj'] at h₁₂
       obtain ⟨h₁₂, rfl⟩ := h₁₂
       rw [h₁₂] at h
@@ -168,7 +168,7 @@ theorem antidiagonal_tuple_pairwise_pi_lex : ∀ k n, (antidiagonalTuple k n).Pa
         obtain ⟨a, b, hab, rfl : (Nat.succ a, b) = p⟩ := hp
         exact Or.inl (Nat.zero_lt_succₓ _)
         
-      dsimp'
+      dsimp
       simp_rw [Nat.succ_inj', Nat.succ_lt_succ_iff]
       exact n_ih
       
@@ -213,10 +213,10 @@ end Multiset.Nat
 /-! ### Finsets -/
 
 
-namespace Finset.Nat
+namespace Finsetₓ.Nat
 
 /-- `finset.antidiagonal_tuple k n` is a finset of `k`-tuples summing to `n` -/
-def antidiagonalTuple (k n : ℕ) : Finset (Finₓ k → ℕ) :=
+def antidiagonalTuple (k n : ℕ) : Finsetₓ (Finₓ k → ℕ) :=
   ⟨Multiset.Nat.antidiagonalTuple k n, Multiset.Nat.nodup_antidiagonal_tuple k n⟩
 
 @[simp]
@@ -231,15 +231,15 @@ theorem mem_antidiagonal_tuple {n : ℕ} {k : ℕ} {x : Finₓ k → ℕ} : x �
   List.Nat.mem_antidiagonal_tuple
 
 theorem antidiagonal_tuple_zero_right (k : ℕ) : antidiagonalTuple k 0 = {0} :=
-  Finset.eq_of_veq (Multiset.Nat.antidiagonal_tuple_zero_right k)
+  Finsetₓ.eq_of_veq (Multiset.Nat.antidiagonal_tuple_zero_right k)
 
 @[simp]
 theorem antidiagonal_tuple_one (n : ℕ) : antidiagonalTuple 1 n = {![n]} :=
-  Finset.eq_of_veq (Multiset.Nat.antidiagonal_tuple_one n)
+  Finsetₓ.eq_of_veq (Multiset.Nat.antidiagonal_tuple_one n)
 
 theorem antidiagonal_tuple_two (n : ℕ) :
     antidiagonalTuple 2 n = (antidiagonal n).map (piFinTwoEquiv fun _ => ℕ).symm.toEmbedding :=
-  Finset.eq_of_veq (Multiset.Nat.antidiagonal_tuple_two n)
+  Finsetₓ.eq_of_veq (Multiset.Nat.antidiagonal_tuple_two n)
 
 section EquivProd
 
@@ -256,5 +256,5 @@ def sigmaAntidiagonalTupleEquivTuple (k : ℕ) : (Σn, antidiagonalTuple k n) �
 
 end EquivProd
 
-end Finset.Nat
+end Finsetₓ.Nat
 

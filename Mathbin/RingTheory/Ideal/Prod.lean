@@ -24,8 +24,7 @@ namespace Ideal
 /-- `I × J` as an ideal of `R × S`. -/
 def prod : Ideal (R × S) where
   Carrier := { x | x.fst ∈ I ∧ x.snd ∈ J }
-  zero_mem' := by
-    simp
+  zero_mem' := by simp
   add_mem' := by
     rintro ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ ⟨ha₁, ha₂⟩ ⟨hb₁, hb₂⟩
     exact ⟨I.add_mem ha₁ hb₁, J.add_mem ha₂ hb₂⟩
@@ -39,8 +38,7 @@ theorem mem_prod {r : R} {s : S} : (⟨r, s⟩ : R × S) ∈ prod I J ↔ r ∈ 
 
 @[simp]
 theorem prod_top_top : prod (⊤ : Ideal R) (⊤ : Ideal S) = ⊤ :=
-  Ideal.ext <| by
-    simp
+  Ideal.ext <| by simp
 
 /-- Every ideal of the product ring is of the form `I × J`, where `I` and `J` can be explicitly
     given as the image under the projection maps. -/
@@ -82,8 +80,7 @@ def idealProdEquiv : Ideal (R × S) ≃ Ideal R × Ideal S where
   toFun := fun I => ⟨map (RingHom.fst R S) I, map (RingHom.snd R S) I⟩
   invFun := fun I => prod I.1 I.2
   left_inv := fun I => (ideal_prod_eq I).symm
-  right_inv := fun ⟨I, J⟩ => by
-    simp
+  right_inv := fun ⟨I, J⟩ => by simp
 
 @[simp]
 theorem ideal_prod_equiv_symm_apply (I : Ideal R) (J : Ideal S) : idealProdEquiv.symm ⟨I, J⟩ = prod I J :=
@@ -131,11 +128,7 @@ theorem is_prime_ideal_prod_top' {I : Ideal S} [h : I.IsPrime] : (prod (⊤ : Id
 theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} : (Ideal.prod I J).IsPrime → I = ⊤ ∨ J = ⊤ := by
   contrapose!
   simp only [ne_top_iff_one, is_prime_iff, not_and, not_forall, not_or_distrib]
-  exact fun ⟨hI, hJ⟩ hIJ =>
-    ⟨⟨0, 1⟩, ⟨1, 0⟩, by
-      simp , by
-      simp [hJ], by
-      simp [hI]⟩
+  exact fun ⟨hI, hJ⟩ hIJ => ⟨⟨0, 1⟩, ⟨1, 0⟩, by simp, by simp [hJ], by simp [hI]⟩
 
 /-- Classification of prime ideals in product rings: the prime ideals of `R × S` are precisely the
     ideals of the form `p × S` or `R × p`, where `p` is a prime ideal of `R` or `S`. -/

@@ -56,7 +56,8 @@ instance (a b : B) [Inhabited (a ⟶ b)] : Inhabited (Hom a b) :=
 inductive Hom₂ : ∀ {a b : B}, Hom a b → Hom a b → Type max u v
   | id {a b} (f : Hom a b) : hom₂ f f
   | vcomp {a b} {f g h : Hom a b} (η : hom₂ f g) (θ : hom₂ g h) : hom₂ f h
-  | whisker_left {a b c} (f : Hom a b) {g h : Hom b c} (η : hom₂ g h) :
+  |
+  whisker_left {a b c} (f : Hom a b) {g h : Hom b c} (η : hom₂ g h) :
     hom₂ (f.comp g) (f.comp h)-- `η` cannot be earlier than `h` since it is a recursive argument.
 
   | whisker_right {a b c} {f g : Hom a b} (h : Hom b c) (η : hom₂ f g) : hom₂ (f.comp h) (g.comp h)
@@ -111,31 +112,40 @@ inductive Rel : ∀ {a b : B} {f g : Hom a b}, Hom₂ f g → Hom₂ f g → Pro
   | assoc {a b} {f g h i : Hom a b} (η : Hom₂ f g) (θ : Hom₂ g h) (ι : Hom₂ h i) : rel ((η ≫ θ) ≫ ι) (η ≫ θ ≫ ι)
   | whisker_left {a b c} (f : Hom a b) (g h : Hom b c) (η η' : Hom₂ g h) : rel η η' → rel (f ◁ η) (f ◁ η')
   | whisker_left_id {a b c} (f : Hom a b) (g : Hom b c) : rel (f ◁ 𝟙 g) (𝟙 (f.comp g))
-  | whisker_left_comp {a b c} (f : Hom a b) {g h i : Hom b c} (η : Hom₂ g h) (θ : Hom₂ h i) :
+  |
+  whisker_left_comp {a b c} (f : Hom a b) {g h i : Hom b c} (η : Hom₂ g h) (θ : Hom₂ h i) :
     rel (f ◁ η ≫ θ) ((f ◁ η) ≫ f ◁ θ)
   | id_whisker_left {a b} {f g : Hom a b} (η : Hom₂ f g) : rel (Hom.id a ◁ η) (λ_ f ≫ η ≫ λ⁻¹_ g)
-  | comp_whisker_left {a b c d} (f : Hom a b) (g : Hom b c) {h h' : Hom c d} (η : Hom₂ h h') :
+  |
+  comp_whisker_left {a b c d} (f : Hom a b) (g : Hom b c) {h h' : Hom c d} (η : Hom₂ h h') :
     rel (f.comp g ◁ η) (α_ f g h ≫ (f ◁ g ◁ η) ≫ α⁻¹_ f g h')
   | whisker_right {a b c} (f g : Hom a b) (h : Hom b c) (η η' : Hom₂ f g) : rel η η' → rel (η ▷ h) (η' ▷ h)
   | id_whisker_right {a b c} (f : Hom a b) (g : Hom b c) : rel (𝟙 f ▷ g) (𝟙 (f.comp g))
-  | comp_whisker_right {a b c} {f g h : Hom a b} (i : Hom b c) (η : Hom₂ f g) (θ : Hom₂ g h) :
+  |
+  comp_whisker_right {a b c} {f g h : Hom a b} (i : Hom b c) (η : Hom₂ f g) (θ : Hom₂ g h) :
     rel ((η ≫ θ) ▷ i) ((η ▷ i) ≫ θ ▷ i)
   | whisker_right_id {a b} {f g : Hom a b} (η : Hom₂ f g) : rel (η ▷ Hom.id b) (ρ_ f ≫ η ≫ ρ⁻¹_ g)
-  | whisker_right_comp {a b c d} {f f' : Hom a b} (g : Hom b c) (h : Hom c d) (η : Hom₂ f f') :
+  |
+  whisker_right_comp {a b c d} {f f' : Hom a b} (g : Hom b c) (h : Hom c d) (η : Hom₂ f f') :
     rel (η ▷ g.comp h) (α⁻¹_ f g h ≫ ((η ▷ g) ▷ h) ≫ α_ f' g h)
-  | whisker_assoc {a b c d} (f : Hom a b) {g g' : Hom b c} (η : Hom₂ g g') (h : Hom c d) :
+  |
+  whisker_assoc {a b c d} (f : Hom a b) {g g' : Hom b c} (η : Hom₂ g g') (h : Hom c d) :
     rel ((f ◁ η) ▷ h) (α_ f g h ≫ (f ◁ η ▷ h) ≫ α⁻¹_ f g' h)
-  | whisker_exchange {a b c} {f g : Hom a b} {h i : Hom b c} (η : Hom₂ f g) (θ : Hom₂ h i) :
+  |
+  whisker_exchange {a b c} {f g : Hom a b} {h i : Hom b c} (η : Hom₂ f g) (θ : Hom₂ h i) :
     rel ((f ◁ θ) ≫ η ▷ i) ((η ▷ h) ≫ g ◁ θ)
-  | associator_hom_inv {a b c d} (f : Hom a b) (g : Hom b c) (h : Hom c d) :
+  |
+  associator_hom_inv {a b c d} (f : Hom a b) (g : Hom b c) (h : Hom c d) :
     rel (α_ f g h ≫ α⁻¹_ f g h) (𝟙 ((f.comp g).comp h))
-  | associator_inv_hom {a b c d} (f : Hom a b) (g : Hom b c) (h : Hom c d) :
+  |
+  associator_inv_hom {a b c d} (f : Hom a b) (g : Hom b c) (h : Hom c d) :
     rel (α⁻¹_ f g h ≫ α_ f g h) (𝟙 (f.comp (g.comp h)))
   | left_unitor_hom_inv {a b} (f : Hom a b) : rel (λ_ f ≫ λ⁻¹_ f) (𝟙 ((Hom.id a).comp f))
   | left_unitor_inv_hom {a b} (f : Hom a b) : rel (λ⁻¹_ f ≫ λ_ f) (𝟙 f)
   | right_unitor_hom_inv {a b} (f : Hom a b) : rel (ρ_ f ≫ ρ⁻¹_ f) (𝟙 (f.comp (Hom.id b)))
   | right_unitor_inv_hom {a b} (f : Hom a b) : rel (ρ⁻¹_ f ≫ ρ_ f) (𝟙 f)
-  | pentagon {a b c d e} (f : Hom a b) (g : Hom b c) (h : Hom c d) (i : Hom d e) :
+  |
+  pentagon {a b c d e} (f : Hom a b) (g : Hom b c) (h : Hom c d) (i : Hom d e) :
     rel ((α_ f g h ▷ i) ≫ α_ f (g.comp h) i ≫ f ◁ α_ g h i) (α_ (f.comp g) h i ≫ α_ f g (h.comp i))
   | triangle {a b c} (f : Hom a b) (g : Hom b c) : rel (α_ f (Hom.id b) g ≫ f ◁ λ_ g) (ρ_ f ▷ g)
 

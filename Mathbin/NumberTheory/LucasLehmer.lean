@@ -44,21 +44,16 @@ def mersenne (p : ℕ) : ℕ :=
   2 ^ p - 1
 
 theorem mersenne_pos {p : ℕ} (h : 0 < p) : 0 < mersenne p := by
-  dsimp' [mersenne]
+  dsimp [mersenne]
   calc
-    0 < 2 ^ 1 - 1 := by
-      norm_num
+    0 < 2 ^ 1 - 1 := by norm_num
     _ ≤ 2 ^ p - 1 := Nat.pred_le_predₓ (Nat.pow_le_pow_of_le_rightₓ (Nat.succ_posₓ 1) h)
     
 
 @[simp]
 theorem succ_mersenne (k : ℕ) : mersenne k + 1 = 2 ^ k := by
   rw [mersenne, tsub_add_cancel_of_le]
-  exact
-    one_le_pow_of_one_le
-      (by
-        norm_num)
-      k
+  exact one_le_pow_of_one_le (by norm_num) k
 
 namespace LucasLehmer
 
@@ -97,15 +92,14 @@ theorem mersenne_int_ne_zero (p : ℕ) (w : 0 < p) : (2 ^ p - 1 : ℤ) ≠ 0 := 
   exact_mod_cast Nat.one_lt_two_pow p w
 
 theorem s_mod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ sMod p i := by
-  cases i <;> dsimp' [s_mod]
+  cases i <;> dsimp [s_mod]
   · exact sup_eq_left.mp rfl
     
   · apply Int.mod_nonnegₓ
     exact mersenne_int_ne_zero p w
     
 
-theorem s_mod_mod (p i : ℕ) : sMod p i % (2 ^ p - 1) = sMod p i := by
-  cases i <;> simp [s_mod]
+theorem s_mod_mod (p i : ℕ) : sMod p i % (2 ^ p - 1) = sMod p i := by cases i <;> simp [s_mod]
 
 theorem s_mod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 := by
   rw [← s_mod_mod]
@@ -119,7 +113,7 @@ theorem s_mod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 := by
 
 theorem s_zmod_eq_s (p' : ℕ) (i : ℕ) : sZmod (p' + 2) i = (s i : Zmod (2 ^ (p' + 2) - 1)) := by
   induction' i with i ih
-  · dsimp' [s, s_zmod]
+  · dsimp [s, s_zmod]
     norm_num
     
   · push_cast [s, s_zmod, ih]
@@ -131,9 +125,7 @@ theorem Int.coe_nat_pow_pred (b p : ℕ) (w : 0 < b) : ((b ^ p - 1 : ℕ) : ℤ)
   norm_cast
 
 theorem Int.coe_nat_two_pow_pred (p : ℕ) : ((2 ^ p - 1 : ℕ) : ℤ) = (2 ^ p - 1 : ℤ) :=
-  Int.coe_nat_pow_pred 2 p
-    (by
-      decide)
+  Int.coe_nat_pow_pred 2 p (by decide)
 
 theorem s_zmod_eq_s_mod (p : ℕ) (i : ℕ) : sZmod p i = (sMod p i : Zmod (2 ^ p - 1)) := by
   induction i <;> push_cast [← int.coe_nat_two_pow_pred p, s_mod, s_zmod, *]
@@ -143,7 +135,7 @@ def lucasLehmerResidue (p : ℕ) : Zmod (2 ^ p - 1) :=
   sZmod p (p - 2)
 
 theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) : lucasLehmerResidue p = 0 ↔ sMod p (p - 2) = 0 := by
-  dsimp' [lucas_lehmer_residue]
+  dsimp [lucas_lehmer_residue]
   rw [s_zmod_eq_s_mod p]
   constructor
   · -- We want to use that fact that `0 ≤ s_mod p (p-2) < 2^p - 1`
@@ -176,7 +168,7 @@ def q (p : ℕ) : ℕ+ :=
 -- cardinality calculations would be somewhat more involved, too.
 /-- We construct the ring `X q` as ℤ/qℤ + √3 ℤ/qℤ. -/
 def X (q : ℕ+) : Type :=
-  Zmod q × Zmod q deriving AddCommGroupₓ, DecidableEq, Fintype, Inhabited
+  Zmod q × Zmod q deriving AddCommGroupₓ, DecidableEq, Fintypeₓ, Inhabited
 
 namespace X
 
@@ -238,43 +230,32 @@ theorem bit1_fst (x : X q) : (bit1 x).1 = bit1 x.1 :=
 
 @[simp]
 theorem bit1_snd (x : X q) : (bit1 x).2 = bit0 x.2 := by
-  dsimp' [bit1]
+  dsimp [bit1]
   simp
 
 instance : Monoidₓ (X q) :=
   { (inferInstance : Mul (X q)) with
     mul_assoc := fun x y z => by
       ext <;>
-        · dsimp'
+        · dsimp
           ring
           ,
-    one := ⟨1, 0⟩,
-    one_mul := fun x => by
-      ext <;> simp ,
-    mul_one := fun x => by
-      ext <;> simp }
+    one := ⟨1, 0⟩, one_mul := fun x => by ext <;> simp, mul_one := fun x => by ext <;> simp }
 
 instance : AddGroupWithOneₓ (X q) :=
-  { X.monoid, X.addCommGroup _ with natCast := fun n => ⟨n, 0⟩,
-    nat_cast_zero := by
-      simp ,
-    nat_cast_succ := by
-      simp [Nat.castₓ, Monoidₓ.one],
-    intCast := fun n => ⟨n, 0⟩,
-    int_cast_of_nat := fun n => by
-      simp <;> rfl,
-    int_cast_neg_succ_of_nat := fun n => by
-      ext <;> simp <;> rfl }
+  { X.monoid, X.addCommGroup _ with natCast := fun n => ⟨n, 0⟩, nat_cast_zero := by simp,
+    nat_cast_succ := by simp [Nat.castₓ, Monoidₓ.one], intCast := fun n => ⟨n, 0⟩,
+    int_cast_of_nat := fun n => by simp <;> rfl, int_cast_neg_succ_of_nat := fun n => by ext <;> simp <;> rfl }
 
 theorem left_distrib (x y z : X q) : x * (y + z) = x * y + x * z := by
   ext <;>
-    · dsimp'
+    · dsimp
       ring
       
 
 theorem right_distrib (x y z : X q) : (x + y) * z = x * z + y * z := by
   ext <;>
-    · dsimp'
+    · dsimp
       ring
       
 
@@ -286,7 +267,7 @@ instance : CommRingₓ (X q) :=
   { (inferInstance : Ringₓ (X q)) with
     mul_comm := fun x y => by
       ext <;>
-        · dsimp'
+        · dsimp
           ring
            }
 
@@ -310,8 +291,9 @@ instance : CommRingₓ (X q) :=
              "by"
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
-               [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
-                (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))]
+               [(Tactic.injection "injection" `h ["with" [`h1 "_"]])
+                []
+                (Tactic.exact "exact" (Term.app `zero_ne_one [`h1]))])))))]
          "⟩")]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -331,8 +313,9 @@ instance : CommRingₓ (X q) :=
            "by"
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
-             [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
-              (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))]
+             [(Tactic.injection "injection" `h ["with" [`h1 "_"]])
+              []
+              (Tactic.exact "exact" (Term.app `zero_ne_one [`h1]))])))))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
@@ -345,15 +328,17 @@ instance : CommRingₓ (X q) :=
          "by"
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
-           [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
-            (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))
+           [(Tactic.injection "injection" `h ["with" [`h1 "_"]])
+            []
+            (Tactic.exact "exact" (Term.app `zero_ne_one [`h1]))])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
-          (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))
+         [(Tactic.injection "injection" `h ["with" [`h1 "_"]])
+          []
+          (Tactic.exact "exact" (Term.app `zero_ne_one [`h1]))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `zero_ne_one [`h1]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -366,7 +351,7 @@ instance : CommRingₓ (X q) :=
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.injection "injection" `h ["with" [`h1 "_"]])-/-- failed to format: format: uncaught backtrack exception
 instance
   [ Fact 1 < ( q : ℕ ) ] : Nontrivial X q
@@ -389,21 +374,19 @@ theorem int_coe_snd (n : ℤ) : (n : X q).snd = (0 : Zmod q) :=
   rfl
 
 @[norm_cast]
-theorem coe_mul (n m : ℤ) : ((n * m : ℤ) : X q) = (n : X q) * (m : X q) := by
-  ext <;> simp <;> ring
+theorem coe_mul (n m : ℤ) : ((n * m : ℤ) : X q) = (n : X q) * (m : X q) := by ext <;> simp <;> ring
 
 @[norm_cast]
-theorem coe_nat (n : ℕ) : ((n : ℤ) : X q) = (n : X q) := by
-  ext <;> simp
+theorem coe_nat (n : ℕ) : ((n : ℤ) : X q) = (n : X q) := by ext <;> simp
 
 /-- The cardinality of `X` is `q^2`. -/
-theorem X_card : Fintype.card (X q) = q ^ 2 := by
-  dsimp' [X]
-  rw [Fintype.card_prod, Zmod.card q]
+theorem X_card : Fintypeₓ.card (X q) = q ^ 2 := by
+  dsimp [X]
+  rw [Fintypeₓ.card_prod, Zmod.card q]
   ring
 
 /-- There are strictly fewer than `q^2` units, since `0` is not a unit. -/
-theorem units_card (w : 1 < q) : Fintype.card (X q)ˣ < q ^ 2 := by
+theorem units_card (w : 1 < q) : Fintypeₓ.card (X q)ˣ < q ^ 2 := by
   haveI : Fact (1 < (q : ℕ)) := ⟨w⟩
   convert card_units_lt (X q)
   rw [X_card]
@@ -417,33 +400,28 @@ def ωb : X q :=
   (2, -1)
 
 theorem ω_mul_ωb (q : ℕ+) : (ω : X q) * ωb = 1 := by
-  dsimp' [ω, ωb]
+  dsimp [ω, ωb]
   ext <;> simp <;> ring
 
 theorem ωb_mul_ω (q : ℕ+) : (ωb : X q) * ω = 1 := by
-  dsimp' [ω, ωb]
+  dsimp [ω, ωb]
   ext <;> simp <;> ring
 
 /-- A closed form for the recurrence relation. -/
 theorem closed_form (i : ℕ) : (s i : X q) = (ω : X q) ^ 2 ^ i + (ωb : X q) ^ 2 ^ i := by
   induction' i with i ih
-  · dsimp' [s, ω, ωb]
+  · dsimp [s, ω, ωb]
     ext <;>
       · simp <;> rfl
         
     
   · calc
       (s (i + 1) : X q) = (s i ^ 2 - 2 : ℤ) := rfl
-      _ = (s i : X q) ^ 2 - 2 := by
-        push_cast
-      _ = (ω ^ 2 ^ i + ωb ^ 2 ^ i) ^ 2 - 2 := by
-        rw [ih]
-      _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 + 2 * (ωb ^ 2 ^ i * ω ^ 2 ^ i) - 2 := by
-        ring
-      _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 := by
-        rw [← mul_powₓ ωb ω, ωb_mul_ω, one_pow, mul_oneₓ, add_sub_cancel]
-      _ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by
-        rw [← pow_mulₓ, ← pow_mulₓ, pow_succ'ₓ]
+      _ = (s i : X q) ^ 2 - 2 := by push_cast
+      _ = (ω ^ 2 ^ i + ωb ^ 2 ^ i) ^ 2 - 2 := by rw [ih]
+      _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 + 2 * (ωb ^ 2 ^ i * ω ^ 2 ^ i) - 2 := by ring
+      _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 := by rw [← mul_powₓ ωb ω, ωb_mul_ω, one_pow, mul_oneₓ, add_sub_cancel]
+      _ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by rw [← pow_mulₓ, ← pow_mulₓ, pow_succ'ₓ]
       
     
 
@@ -462,7 +440,7 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
   simp at H
   interval_cases q (p' + 2) <;> clear H
   · -- If q = 1, we get a contradiction from 2^p = 2
-    dsimp' [q]  at h
+    dsimp [q] at h
     injection h with h'
     clear h
     simp [mersenne] at h'
@@ -471,15 +449,11 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
         (calc
           2 ≤ p' + 2 := Nat.le_add_leftₓ _ _
           _ < 2 ^ (p' + 2) := Nat.lt_two_pow _
-          _ = 2 :=
-            Nat.pred_injₓ (Nat.one_le_two_pow _)
-              (by
-                decide)
-              h'
+          _ = 2 := Nat.pred_injₓ (Nat.one_le_two_pow _) (by decide) h'
           )
     
   · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
-    dsimp' [q]  at h
+    dsimp [q] at h
     injection h with h'
     clear h
     rw [mersenne, Pnat.one_coe, Nat.min_fac_eq_two_iff, pow_succₓ] at h'
@@ -488,27 +462,23 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
 
 theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     ∃ k : ℤ, (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) = k * mersenne (p' + 2) * (ω : X (q (p' + 2))) ^ 2 ^ p' - 1 := by
-  dsimp' [lucas_lehmer_residue]  at h
+  dsimp [lucas_lehmer_residue] at h
   rw [s_zmod_eq_s p'] at h
   simp [Zmod.int_coe_zmod_eq_zero_iff_dvd] at h
   cases' h with k h
   use k
   replace h := congr_arg (fun n : ℤ => (n : X (q (p' + 2)))) h
   -- coercion from ℤ to X q
-  dsimp'  at h
+  dsimp at h
   rw [closed_form] at h
   replace h := congr_arg (fun x => ω ^ 2 ^ p' * x) h
-  dsimp'  at h
-  have t : 2 ^ p' + 2 ^ p' = 2 ^ (p' + 1) := by
-    ring_exp
+  dsimp at h
+  have t : 2 ^ p' + 2 ^ p' = 2 ^ (p' + 1) := by ring_exp
   rw [mul_addₓ, ← pow_addₓ ω, t, ← mul_powₓ ω ωb (2 ^ p'), ω_mul_ωb, one_pow] at h
   rw [mul_comm, coe_mul] at h
   rw [mul_comm _ (k : X (q (p' + 2)))] at h
   replace h := eq_sub_of_add_eq h
-  have : 1 ≤ 2 ^ (p' + 2) :=
-    Nat.one_le_pow _ _
-      (by
-        decide)
+  have : 1 ≤ 2 ^ (p' + 2) := Nat.one_le_pow _ _ (by decide)
   exact_mod_cast h
 
 /-- `q` is the minimum factor of `mersenne p`, so `M p = 0` in `X q`. -/
@@ -523,22 +493,17 @@ theorem ω_pow_eq_neg_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : (ω
 
 theorem ω_pow_eq_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = 1 :=
   calc
-    (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = (ω ^ 2 ^ (p' + 1)) ^ 2 := by
-      rw [← pow_mulₓ, ← pow_succ'ₓ]
-    _ = -1 ^ 2 := by
-      rw [ω_pow_eq_neg_one p' h]
-    _ = 1 := by
-      simp
+    (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = (ω ^ 2 ^ (p' + 1)) ^ 2 := by rw [← pow_mulₓ, ← pow_succ'ₓ]
+    _ = -1 ^ 2 := by rw [ω_pow_eq_neg_one p' h]
+    _ = 1 := by simp
     
 
 /-- `ω` as an element of the group of units. -/
 def ωUnit (p : ℕ) : Units (X (q p)) where
   val := ω
   inv := ωb
-  val_inv := by
-    simp [ω_mul_ωb]
-  inv_val := by
-    simp [ωb_mul_ω]
+  val_inv := by simp [ω_mul_ωb]
+  inv_val := by simp [ωb_mul_ω]
 
 @[simp]
 theorem ω_unit_coe (p : ℕ) : (ωUnit p : X (q p)) = ω :=
@@ -567,7 +532,7 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : orderOf (ωU
 theorem order_ineq (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : 2 ^ (p' + 2) < (q (p' + 2) : ℕ) ^ 2 :=
   calc
     2 ^ (p' + 2) = orderOf (ωUnit (p' + 2)) := (order_ω p' h).symm
-    _ ≤ Fintype.card (X _)ˣ := order_of_le_card_univ
+    _ ≤ Fintypeₓ.card (X _)ˣ := order_of_le_card_univ
     _ < (q (p' + 2) : ℕ) ^ 2 := units_card (Nat.lt_of_succ_ltₓ (two_lt_q _))
     
 
@@ -592,11 +557,7 @@ theorem lucas_lehmer_sufficiency (p : ℕ) (w : 1 < p) : LucasLehmerTest p → (
 
 -- Here we calculate the residue, very inefficiently, using `dec_trivial`. We can do much better.
 example : (mersenne 5).Prime :=
-  lucas_lehmer_sufficiency 5
-    (by
-      norm_num)
-    (by
-      decide)
+  lucas_lehmer_sufficiency 5 (by norm_num) (by decide)
 
 -- Next we use `norm_num` to calculate each `s p i`.
 namespace LucasLehmer
@@ -605,7 +566,7 @@ open Tactic
 
 theorem s_mod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b) (h3 : (b * b - 2) % a = c) :
     sMod p (i + 1) = c := by
-  dsimp' [s_mod, mersenne]
+  dsimp [s_mod, mersenne]
   rw [h1, h2, sq, h3]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
@@ -622,21 +583,13 @@ unsafe def run_test : tactic Unit := do
   let-- Calculate the candidate Mersenne prime
   M : ℤ := 2 ^ p - 1
   let t ← to_expr (pquote.1 ((2 ^ %%ₓquote.1 p) - 1 = %%ₓquote.1 M))
-  let v ←
-    to_expr
-        (pquote.1
-          (by
-            norm_num : (2 ^ %%ₓquote.1 p) - 1 = %%ₓquote.1 M))
+  let v ← to_expr (pquote.1 (by norm_num : (2 ^ %%ₓquote.1 p) - 1 = %%ₓquote.1 M))
   let w ← assertv `w t v
   let t
     ←-- base case
         to_expr
         (pquote.1 (sMod (%%ₓquote.1 p) 0 = 4))
-  let v ←
-    to_expr
-        (pquote.1
-          (by
-            norm_num[LucasLehmer.sMod] : sMod (%%ₓquote.1 p) 0 = 4))
+  let v ← to_expr (pquote.1 (by norm_num [LucasLehmer.sMod] : sMod (%%ₓquote.1 p) 0 = 4))
   let h ← assertv `h t v
   -- step case, repeated p-2 times
       iterate_exactly
@@ -651,9 +604,7 @@ end LucasLehmer
 
 /-- We verify that the tactic works to prove `127.prime`. -/
 example : (mersenne 7).Prime :=
-  lucas_lehmer_sufficiency _
-    (by
-      norm_num)
+  lucas_lehmer_sufficiency _ (by norm_num)
     (by
       run_tac
         lucas_lehmer.run_test)
@@ -681,7 +632,11 @@ theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1]
   -- See https://leanprover.zulipchat.com/#narrow/stream/113489-new-members/topic/help.20finding.20a.20lemma/near/177698446
   conv in k => rw [← Nat.div_add_modₓ k (2 ^ n)]
   refine' Nat.Modeq.add_right _ _
-  conv => congr skip skip rw [← one_mulₓ (k / 2 ^ n)]
+  conv =>
+  congr
+  skip
+  skip
+  rw [← one_mulₓ (k / 2 ^ n)]
   exact (Nat.modeq_sub <| Nat.succ_le_of_ltₓ <| pow_pos zero_lt_two _).mul_right _
 
 -- It's hard to know what the limiting factor for large Mersenne primes would be.

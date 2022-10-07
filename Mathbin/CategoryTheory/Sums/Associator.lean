@@ -104,28 +104,14 @@ theorem inverse_associator_map_inr_inr {X Y : E} (f : inr (inr X) ⟶ inr (inr Y
 -/
 def associativity : Sum (Sum C D) E ≌ Sum C (Sum D E) :=
   Equivalence.mk (associator C D E) (inverseAssociator C D E)
-    (NatIso.ofComponents
-      (fun X =>
-        eqToIso
-          (by
-            tidy))
-      (by
-        tidy))
-    (NatIso.ofComponents
-      (fun X =>
-        eqToIso
-          (by
-            tidy))
-      (by
-        tidy))
+    (NatIso.ofComponents (fun X => eqToIso (by tidy)) (by tidy))
+    (NatIso.ofComponents (fun X => eqToIso (by tidy)) (by tidy))
 
 instance associatorIsEquivalence : IsEquivalence (associator C D E) :=
-  (by
-    infer_instance : IsEquivalence (associativity C D E).Functor)
+  (by infer_instance : IsEquivalence (associativity C D E).Functor)
 
 instance inverseAssociatorIsEquivalence : IsEquivalence (inverseAssociator C D E) :=
-  (by
-    infer_instance : IsEquivalence (associativity C D E).inverse)
+  (by infer_instance : IsEquivalence (associativity C D E).inverse)
 
 -- TODO unitors?
 -- TODO pentagon natural transformation? ...satisfying?

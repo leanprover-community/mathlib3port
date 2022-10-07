@@ -152,9 +152,9 @@ theorem sentence_realize (φ : L.Sentence) : (u : Filter α).product M ⊨ φ �
   simp_rw [sentence.realize, ← realize_formula_cast φ, iff_eq_eq]
   exact congr rfl (Subsingleton.elim _ _)
 
-instance : Nonempty ((u : Filter α).product M) := by
+instance : Nonempty ((u : Filter α).product M) :=
   letI : ∀ a, Inhabited (M a) := fun _ => Classical.inhabitedOfNonempty'
-  exact nonempty_of_inhabited
+  nonempty_of_inhabited
 
 end Ultraproduct
 

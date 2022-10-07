@@ -60,8 +60,7 @@ theorem polar_mem (s : Set E) (y : F) (hy : y ∈ B.Polar s) : ∀ x ∈ s, ∥B
   hy
 
 @[simp]
-theorem zero_mem_polar (s : Set E) : (0 : F) ∈ B.Polar s := fun _ _ => by
-  simp only [map_zero, norm_zero, zero_le_one]
+theorem zero_mem_polar (s : Set E) : (0 : F) ∈ B.Polar s := fun _ _ => by simp only [map_zero, norm_zero, zero_le_one]
 
 theorem polar_eq_Inter {s : Set E} : B.Polar s = ⋂ x ∈ s, { y : F | ∥B x y∥ ≤ 1 } := by
   ext
@@ -81,7 +80,7 @@ theorem polar_Union {ι} {s : ι → Set E} : B.Polar (⋃ i, s i) = ⋂ i, B.Po
 theorem polar_union {s t : Set E} : B.Polar (s ∪ t) = B.Polar s ∩ B.Polar t :=
   B.polar_gc.l_sup
 
-theorem polar_antitone : Antitone (B.Polar : Set E → Set F) :=
+theorem polar_antitone : Antitoneₓ (B.Polar : Set E → Set F) :=
   B.polar_gc.monotone_l
 
 @[simp]
@@ -122,9 +121,7 @@ variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 
 theorem polar_univ (h : SeparatingRight B) : B.Polar Set.Univ = {(0 : F)} := by
   rw [Set.eq_singleton_iff_unique_mem]
-  refine'
-    ⟨by
-      simp only [zero_mem_polar], fun y hy => h _ fun x => _⟩
+  refine' ⟨by simp only [zero_mem_polar], fun y hy => h _ fun x => _⟩
   refine' norm_le_zero_iff.mp (le_of_forall_le_of_denseₓ fun ε hε => _)
   rcases NormedField.exists_norm_lt 𝕜 hε with ⟨c, hc, hcε⟩
   calc

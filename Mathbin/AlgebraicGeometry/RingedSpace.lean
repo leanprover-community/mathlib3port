@@ -126,13 +126,7 @@ theorem mem_basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) (x : U) :
 
 @[simp]
 theorem mem_top_basic_open (f : X.Presheaf.obj (op ⊤)) (x : X) :
-    x ∈ X.basicOpen f ↔
-      IsUnit
-        (X.Presheaf.germ
-          ⟨x,
-            show x ∈ (⊤ : Opens X) by
-              trivial⟩
-          f) :=
+    x ∈ X.basicOpen f ↔ IsUnit (X.Presheaf.germ ⟨x, show x ∈ (⊤ : Opens X) by trivial⟩ f) :=
   mem_basic_open X f ⟨x, _⟩
 
 theorem basic_open_subset {U : Opens X} (f : X.Presheaf.obj (op U)) : X.basicOpen f ⊆ U := by
@@ -186,7 +180,7 @@ theorem basic_open_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X
 theorem basic_open_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
     X.basicOpen (f * g) = X.basicOpen f ⊓ X.basicOpen g := by
   ext1
-  dsimp' [RingedSpace.basic_open]
+  dsimp [RingedSpace.basic_open]
   rw [Set.image_inter Subtype.coe_injective]
   congr
   ext

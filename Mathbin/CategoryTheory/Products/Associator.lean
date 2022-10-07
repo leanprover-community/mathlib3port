@@ -36,28 +36,14 @@ def inverseAssociator : C × D × E ⥤ (C × D) × E where
 -/
 def associativity : (C × D) × E ≌ C × D × E :=
   Equivalence.mk (associator C D E) (inverseAssociator C D E)
-    (NatIso.ofComponents
-      (fun X =>
-        eqToIso
-          (by
-            simp ))
-      (by
-        tidy))
-    (NatIso.ofComponents
-      (fun X =>
-        eqToIso
-          (by
-            simp ))
-      (by
-        tidy))
+    (NatIso.ofComponents (fun X => eqToIso (by simp)) (by tidy))
+    (NatIso.ofComponents (fun X => eqToIso (by simp)) (by tidy))
 
 instance associatorIsEquivalence : IsEquivalence (associator C D E) :=
-  (by
-    infer_instance : IsEquivalence (associativity C D E).Functor)
+  (by infer_instance : IsEquivalence (associativity C D E).Functor)
 
 instance inverseAssociatorIsEquivalence : IsEquivalence (inverseAssociator C D E) :=
-  (by
-    infer_instance : IsEquivalence (associativity C D E).inverse)
+  (by infer_instance : IsEquivalence (associativity C D E).inverse)
 
 -- TODO unitors?
 -- TODO pentagon natural transformation? ...satisfying?

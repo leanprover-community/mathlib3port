@@ -21,7 +21,7 @@ Instances for the following typeclasses are defined:
 * `order_topology ℝ≥0`
 * `has_continuous_sub ℝ≥0`
 * `has_continuous_inv₀ ℝ≥0` (continuity of `x⁻¹` away from `0`)
-* `has_continuous_smul ℝ≥0 ℝ`
+* `has_continuous_smul ℝ≥0 α` (whenever `α` has a continuous `mul_action ℝ α`)
 
 Everything is inherited from the corresponding structures on the reals.
 
@@ -73,7 +73,7 @@ section coe
 
 variable {α : Type _}
 
-open Filter Finset
+open Filter Finsetₓ
 
 theorem _root_.continuous_real_to_nnreal : Continuous Real.toNnreal :=
   (continuous_id.max continuous_const).subtype_mk _
@@ -86,10 +86,9 @@ theorem continuous_coe : Continuous (coe : ℝ≥0 → ℝ) :=
 def _root_.continuous_map.coe_nnreal_real : C(ℝ≥0, ℝ) :=
   ⟨coe, continuous_coe⟩
 
-instance {X : Type _} [TopologicalSpace X] : CanLift C(X, ℝ) C(X, ℝ≥0) where
-  coe := ContinuousMap.coeNnrealReal.comp
-  cond := fun f => ∀ x, 0 ≤ f x
-  prf := fun f hf => ⟨⟨fun x => ⟨f x, hf x⟩, f.2.subtype_mk _⟩, FunLike.ext' rfl⟩
+instance ContinuousMap.canLift {X : Type _} [TopologicalSpace X] :
+    CanLift C(X, ℝ) C(X, ℝ≥0) ContinuousMap.coeNnrealReal.comp fun f =>
+      ∀ x, 0 ≤ f x where prf := fun f hf => ⟨⟨fun x => ⟨f x, hf x⟩, f.2.subtype_mk _⟩, FunLike.ext' rfl⟩
 
 @[simp, norm_cast]
 theorem tendsto_coe {f : Filter α} {m : α → ℝ≥0} {x : ℝ≥0} :
@@ -115,10 +114,9 @@ theorem tendsto_real_to_nnreal {f : Filter α} {m : α → ℝ} {x : ℝ} (h : T
     Tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
   (continuous_real_to_nnreal.Tendsto _).comp h
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ≠ » 0)
 theorem nhds_zero : 𝓝 (0 : ℝ≥0) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
-  nhds_bot_order.trans <| by
-    simp [bot_lt_iff_ne_bot]
+  nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]
 
 theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0)).HasBasis (fun a : ℝ≥0 => 0 < a) fun a => iio a :=
   nhds_bot_basis
@@ -129,10 +127,8 @@ instance : HasContinuousSub ℝ≥0 :=
 instance : HasContinuousInv₀ ℝ≥0 :=
   ⟨fun x hx => tendsto_coe.1 <| (Real.tendsto_inv <| Nnreal.coe_ne_zero.2 hx).comp continuous_coe.ContinuousAt⟩
 
-instance :
-    HasContinuousSmul ℝ≥0
-      ℝ where continuous_smul :=
-    Real.continuous_mul.comp <| (continuous_subtype_val.comp continuous_fst).prod_mk continuous_snd
+instance [TopologicalSpace α] [MulAction ℝ α] [HasContinuousSmul ℝ α] :
+    HasContinuousSmul ℝ≥0 α where continuous_smul := (continuous_induced_dom.comp continuous_fst).smul continuous_snd
 
 @[norm_cast]
 theorem has_sum_coe {f : α → ℝ≥0} {r : ℝ≥0} : HasSum (fun a => (f a : ℝ)) (r : ℝ) ↔ HasSum f r := by
@@ -160,9 +156,7 @@ open Classical
 
 @[norm_cast]
 theorem coe_tsum {f : α → ℝ≥0} : ↑(∑' a, f a) = ∑' a, (f a : ℝ) :=
-  if hf : Summable f then Eq.symm <| (has_sum_coe.2 <| hf.HasSum).tsum_eq
-  else by
-    simp [tsum, hf, mt summable_coe.1 hf]
+  if hf : Summable f then Eq.symm <| (has_sum_coe.2 <| hf.HasSum).tsum_eq else by simp [tsum, hf, mt summable_coe.1 hf]
 
 theorem coe_tsum_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
     (⟨∑' n, f n, tsum_nonneg hf₁⟩ : ℝ≥0) = (∑' n, ⟨f n, hf₁ n⟩ : ℝ≥0) := by
@@ -170,12 +164,10 @@ theorem coe_tsum_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
   simp_rw [← Nnreal.coe_tsum, Subtype.coe_eta]
 
 theorem tsum_mul_left (a : ℝ≥0) (f : α → ℝ≥0) : (∑' x, a * f x) = a * ∑' x, f x :=
-  Nnreal.eq <| by
-    simp only [coe_tsum, Nnreal.coe_mul, tsum_mul_left]
+  Nnreal.eq <| by simp only [coe_tsum, Nnreal.coe_mul, tsum_mul_left]
 
 theorem tsum_mul_right (f : α → ℝ≥0) (a : ℝ≥0) : (∑' x, f x * a) = (∑' x, f x) * a :=
-  Nnreal.eq <| by
-    simp only [coe_tsum, Nnreal.coe_mul, tsum_mul_right]
+  Nnreal.eq <| by simp only [coe_tsum, Nnreal.coe_mul, tsum_mul_right]
 
 theorem summable_comp_injective {β : Type _} {f : α → ℝ≥0} (hf : Summable f) {i : β → α} (hi : Function.Injective i) :
     Summable (f ∘ i) :=
@@ -214,16 +206,15 @@ theorem tendsto_at_top_zero_of_summable {f : ℕ → ℝ≥0} (hf : Summable f) 
 /-- The sum over the complement of a finset tends to `0` when the finset grows to cover the whole
 space. This does not need a summability assumption, as otherwise all sums are zero. -/
 theorem tendsto_tsum_compl_at_top_zero {α : Type _} (f : α → ℝ≥0) :
-    Tendsto (fun s : Finset α => ∑' b : { x // x ∉ s }, f b) atTop (𝓝 0) := by
+    Tendsto (fun s : Finsetₓ α => ∑' b : { x // x ∉ s }, f b) atTop (𝓝 0) := by
   simp_rw [← tendsto_coe, coe_tsum, Nnreal.coe_zero]
   exact tendsto_tsum_compl_at_top_zero fun a : α => (f a : ℝ)
 
 /-- `x ↦ x ^ n` as an order isomorphism of `ℝ≥0`. -/
 def powOrderIso (n : ℕ) (hn : n ≠ 0) : ℝ≥0 ≃o ℝ≥0 :=
-  (StrictMono.orderIsoOfSurjective (fun x => x ^ n) fun x y h =>
+  (StrictMonoₓ.orderIsoOfSurjective (fun x => x ^ n) fun x y h =>
       strict_mono_on_pow hn.bot_lt (zero_le x) (zero_le y) h) <|
-    (continuous_id.pow _).Surjective (tendsto_pow_at_top hn) <| by
-      simpa [order_bot.at_bot_eq, pos_iff_ne_zero]
+    (continuous_id.pow _).Surjective (tendsto_pow_at_top hn) <| by simpa [order_bot.at_bot_eq, pos_iff_ne_zero]
 
 end Nnreal
 

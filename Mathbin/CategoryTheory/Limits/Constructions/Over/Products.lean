@@ -50,7 +50,7 @@ def conesEquivInverseObj (B : C) {J : Type w} (F : Discrete J ⥤ Over B) (c : C
         Option.casesOn X c.x.Hom fun j : J =>
           (c.π.app ⟨j⟩).left,-- `tidy` can do this using `case_bash`, but let's try to be a good `-T50000` citizen:
       naturality' := fun X Y f => by
-        dsimp'
+        dsimp
         cases X <;> cases Y <;> cases f
         · rw [category.id_comp, category.comp_id]
           
@@ -70,7 +70,7 @@ def conesEquivInverse (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
         cases j
         · simp
           
-        · dsimp'
+        · dsimp
           rw [← f.w ⟨j⟩]
           rfl
            }
@@ -83,11 +83,7 @@ def conesEquivFunctor (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
     Cone (widePullbackDiagramOfDiagramOver B F) ⥤ Cone F where
   obj := fun c =>
     { x := Over.mk (c.π.app none),
-      π :=
-        { app := fun ⟨j⟩ =>
-            Over.homMk (c.π.app (some j))
-              (by
-                apply c.w (wide_pullback_shape.hom.term j)) } }
+      π := { app := fun ⟨j⟩ => Over.homMk (c.π.app (some j)) (by apply c.w (wide_pullback_shape.hom.term j)) } }
   map := fun c₁ c₂ f => { Hom := Over.homMk f.Hom }
 
 attribute [local tidy] tactic.case_bash
@@ -96,25 +92,13 @@ attribute [local tidy] tactic.case_bash
 @[simp]
 def conesEquivUnitIso (B : C) (F : Discrete J ⥤ Over B) :
     𝟭 (Cone (widePullbackDiagramOfDiagramOver B F)) ≅ conesEquivFunctor B F ⋙ conesEquivInverse B F :=
-  NatIso.ofComponents
-    (fun _ =>
-      Cones.ext { Hom := 𝟙 _, inv := 𝟙 _ }
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun _ => Cones.ext { Hom := 𝟙 _, inv := 𝟙 _ } (by tidy)) (by tidy)
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simp]
 def conesEquivCounitIso (B : C) (F : Discrete J ⥤ Over B) :
     conesEquivInverse B F ⋙ conesEquivFunctor B F ≅ 𝟭 (Cone F) :=
-  NatIso.ofComponents
-    (fun _ =>
-      Cones.ext { Hom := Over.homMk (𝟙 _), inv := Over.homMk (𝟙 _) }
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun _ => Cones.ext { Hom := Over.homMk (𝟙 _), inv := Over.homMk (𝟙 _) } (by tidy)) (by tidy)
 
 -- TODO: Can we add `. obviously` to the second arguments of `nat_iso.of_components` and
 --       `cones.ext`?
@@ -171,7 +155,7 @@ theorem over_has_terminal (B : C) : HasTerminal (Over B) :=
                 ext
                 rw [over.hom_mk_left]
                 have := m.w
-                dsimp'  at this
+                dsimp at this
                 rwa [category.comp_id, category.comp_id] at this } } }
 
 end CategoryTheory.Over

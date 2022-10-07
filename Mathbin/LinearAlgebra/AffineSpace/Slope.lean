@@ -41,8 +41,7 @@ theorem slope_def_field (f : k → k) (a b : k) : slope f a b = (f b - f a) / (b
   (div_eq_inv_mul _ _).symm
 
 @[simp]
-theorem slope_same (f : k → PE) (a : k) : (slope f a a : E) = 0 := by
-  rw [slope, sub_self, inv_zero, zero_smul]
+theorem slope_same (f : k → PE) (a : k) : (slope f a a : E) = 0 := by rw [slope, sub_self, inv_zero, zero_smul]
 
 include E
 
@@ -88,16 +87,16 @@ explicitly provides coefficients. If `a ≠ c`, then the sum of the coefficients
 actually an affine combination, see `line_map_slope_slope_sub_div_sub`. -/
 theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c : k) :
     ((b - a) / (c - a)) • slope f a b + ((c - b) / (c - a)) • slope f b c = slope f a c := by
-  by_cases' hab : a = b
+  by_cases hab:a = b
   · subst hab
     rw [sub_self, zero_div, zero_smul, zero_addₓ]
-    by_cases' hac : a = c
+    by_cases hac:a = c
     · simp [hac]
       
     · rw [div_self (sub_ne_zero.2 <| Ne.symm hac), one_smul]
       
     
-  by_cases' hbc : b = c
+  by_cases hbc:b = c
   · subst hbc
     simp [sub_ne_zero.2 (Ne.symm hab)]
     

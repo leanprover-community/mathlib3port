@@ -63,12 +63,9 @@ instance bicategory : Bicategory.{max v u, max v u} Cat.{v, u} where
 
 /-- `Cat` is a strict bicategory. -/
 instance bicategory.strict : Bicategory.Strict Cat.{v, u} where
-  id_comp' := fun C D F => by
-    cases F <;> rfl
-  comp_id' := fun C D F => by
-    cases F <;> rfl
-  assoc' := by
-    intros <;> rfl
+  id_comp' := fun C D F => by cases F <;> rfl
+  comp_id' := fun C D F => by cases F <;> rfl
+  assoc' := by intros <;> rfl
 
 /-- Category structure on `Cat` -/
 instance category : LargeCategory.{max v u} Cat.{v, u} :=
@@ -133,7 +130,7 @@ instance : Full typeToCat.{u} where
     intro X Y F
     apply Functor.ext
     · intro x y f
-      dsimp'
+      dsimp
       ext
       
     · rintro ⟨x⟩

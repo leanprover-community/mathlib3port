@@ -97,10 +97,10 @@ instance (M : T.Model) : Nonempty M :=
 
 section Inhabited
 
-attribute [local instance] trivial_unit_structure
+attribute [local instance] inhabited.trivial_structure
 
-instance : Inhabited (ModelCat (∅ : L.Theory)) :=
-  ⟨ModelCat.of _ Unit⟩
+instance : Inhabited (ModelCat.{u, v, w} (∅ : L.Theory)) :=
+  ⟨ModelCat.of _ PUnit⟩
 
 end Inhabited
 
@@ -133,11 +133,33 @@ def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.OnTheory T).Model) : T.Mo
   nonempty' := M.nonempty'
   is_model := (@Lhom.on_Theory_model L L' M (φ.reduct M) _ φ _ T).1 M.is_model
 
+/-- When `φ` is injective, `default_expansion` expands a model of `T` to a model of `φ.on_Theory T`
+  arbitrarily. -/
+@[simps]
+noncomputable def defaultExpansion {L' : Language} {φ : L →ᴸ L'} (h : φ.Injective)
+    [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.Range fun f : L.Functions n => φ.onFunction f)]
+    [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.Range fun r : L.Relations n => φ.onRelation r)] (M : T.Model)
+    [Inhabited M] : (φ.OnTheory T).Model where
+  Carrier := M
+  struc := φ.defaultExpansion M
+  nonempty' := M.nonempty'
+  is_model := (@Lhom.on_Theory_model L L' M _ (φ.defaultExpansion M) φ (h.is_expansion_on_default M) T).2 M.is_model
+
 instance leftStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.Model) : L.Structure M :=
   (Lhom.sumInl : L →ᴸ L.Sum L').reduct M
 
 instance rightStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.Model) : L'.Structure M :=
   (Lhom.sumInr : L' →ᴸ L.Sum L').reduct M
+
+/-- A model of a theory is also a model of any subtheory. -/
+@[simps]
+def subtheoryModel (M : T.Model) {T' : L.Theory} (h : T' ⊆ T) : T'.Model where
+  Carrier := M
+  is_model := ⟨fun φ hφ => realize_sentence_of_mem T (h hφ)⟩
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+instance subtheory_Model_models (M : T.Model) {T' : L.Theory} (h : T' ⊆ T) : M.subtheoryModel h ⊨ T :=
+  M.is_model
 
 end Model
 

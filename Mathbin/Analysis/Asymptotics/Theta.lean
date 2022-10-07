@@ -92,27 +92,20 @@ theorem _root_.filter.eventually_eq.trans_is_Theta {f₁ f₂ : α → E} {g : �
   ⟨hf.trans_is_O h.1, h.2.trans_eventually_eq hf.symm⟩
 
 @[simp]
-theorem is_Theta_norm_left : (fun x => ∥f' x∥) =Θ[l] g ↔ f' =Θ[l] g := by
-  simp [is_Theta]
+theorem is_Theta_norm_left : (fun x => ∥f' x∥) =Θ[l] g ↔ f' =Θ[l] g := by simp [is_Theta]
 
 @[simp]
-theorem is_Theta_norm_right : (f =Θ[l] fun x => ∥g' x∥) ↔ f =Θ[l] g' := by
-  simp [is_Theta]
+theorem is_Theta_norm_right : (f =Θ[l] fun x => ∥g' x∥) ↔ f =Θ[l] g' := by simp [is_Theta]
 
 alias is_Theta_norm_left ↔ is_Theta.of_norm_left is_Theta.norm_left
 
 alias is_Theta_norm_right ↔ is_Theta.of_norm_right is_Theta.norm_right
 
 theorem is_Theta_of_norm_eventually_eq (h : (fun x => ∥f x∥) =ᶠ[l] fun x => ∥g x∥) : f =Θ[l] g :=
-  ⟨IsO.of_bound 1 <| by
-      simpa only [one_mulₓ] using h.le,
-    IsO.of_bound 1 <| by
-      simpa only [one_mulₓ] using h.symm.le⟩
+  ⟨IsO.of_bound 1 <| by simpa only [one_mulₓ] using h.le, IsO.of_bound 1 <| by simpa only [one_mulₓ] using h.symm.le⟩
 
 theorem is_Theta_of_norm_eventually_eq' {g : α → ℝ} (h : (fun x => ∥f' x∥) =ᶠ[l] g) : f' =Θ[l] g :=
-  is_Theta_of_norm_eventually_eq <|
-    h.mono fun x hx => by
-      simp only [← hx, norm_norm]
+  is_Theta_of_norm_eventually_eq <| h.mono fun x hx => by simp only [← hx, norm_norm]
 
 theorem IsTheta.is_o_congr_left (h : f' =Θ[l] g') : f' =o[l] k ↔ g' =o[l] k :=
   ⟨h.symm.trans_is_o, h.trans_is_o⟩
@@ -143,8 +136,7 @@ theorem IsTheta.tendsto_zero_iff (h : f'' =Θ[l] g'') : Tendsto f'' l (𝓝 0) �
   simp only [← is_o_one_iff ℝ, h.is_o_congr_left]
 
 theorem IsTheta.tendsto_norm_at_top_iff (h : f' =Θ[l] g') : Tendsto (norm ∘ f') l atTop ↔ Tendsto (norm ∘ g') l atTop :=
-  by
-  simp only [← is_o_const_left_of_ne (@one_ne_zero ℝ _ _), h.is_o_congr_right]
+  by simp only [← is_o_const_left_of_ne (@one_ne_zero ℝ _ _), h.is_o_congr_right]
 
 theorem IsTheta.is_bounded_under_le_iff (h : f' =Θ[l] g') :
     IsBoundedUnder (· ≤ ·) l (norm ∘ f') ↔ IsBoundedUnder (· ≤ ·) l (norm ∘ g') := by
@@ -163,12 +155,10 @@ theorem IsTheta.inv {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) : (fun
 
 @[simp]
 theorem is_Theta_inv {f : α → 𝕜} {g : α → 𝕜'} : ((fun x => (f x)⁻¹) =Θ[l] fun x => (g x)⁻¹) ↔ f =Θ[l] g :=
-  ⟨fun h => by
-    simpa only [inv_invₓ] using h.inv, IsTheta.inv⟩
+  ⟨fun h => by simpa only [inv_invₓ] using h.inv, IsTheta.inv⟩
 
 theorem IsTheta.div {f₁ f₂ : α → 𝕜} {g₁ g₂ : α → 𝕜'} (h₁ : f₁ =Θ[l] g₁) (h₂ : f₂ =Θ[l] g₂) :
-    (fun x => f₁ x / f₂ x) =Θ[l] fun x => g₁ x / g₂ x := by
-  simpa only [div_eq_mul_inv] using h₁.mul h₂.inv
+    (fun x => f₁ x / f₂ x) =Θ[l] fun x => g₁ x / g₂ x := by simpa only [div_eq_mul_inv] using h₁.mul h₂.inv
 
 theorem IsTheta.pow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : ℕ) : (fun x => f x ^ n) =Θ[l] fun x => g x ^ n :=
   ⟨h.1.pow n, h.2.pow n⟩

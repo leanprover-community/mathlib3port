@@ -69,17 +69,13 @@ class CreatesLimit (K : J ⥤ C) (F : C ⥤ D) extends ReflectsLimit K F where
 `K : J ⥤ C`.
 -/
 class CreatesLimitsOfShape (J : Type w) [Category.{w'} J] (F : C ⥤ D) where
-  CreatesLimit : ∀ {K : J ⥤ C}, CreatesLimit K F := by
-    run_tac
-      tactic.apply_instance
+  CreatesLimit : ∀ {K : J ⥤ C}, CreatesLimit K F := by infer_instance
 
 -- This should be used with explicit universe variables.
 /-- `F` creates limits if it creates limits of shape `J` for any `J`. -/
 @[nolint check_univs]
 class CreatesLimitsOfSize (F : C ⥤ D) where
-  CreatesLimitsOfShape : ∀ {J : Type w} [Category.{w'} J], CreatesLimitsOfShape J F := by
-    run_tac
-      tactic.apply_instance
+  CreatesLimitsOfShape : ∀ {J : Type w} [Category.{w'} J], CreatesLimitsOfShape J F := by infer_instance
 
 /-- `F` creates small limits if it creates limits of shape `J` for any small `J`. -/
 abbrev CreatesLimits (F : C ⥤ D) :=
@@ -100,17 +96,13 @@ class CreatesColimit (K : J ⥤ C) (F : C ⥤ D) extends ReflectsColimit K F whe
 `K : J ⥤ C`.
 -/
 class CreatesColimitsOfShape (J : Type w) [Category.{w'} J] (F : C ⥤ D) where
-  CreatesColimit : ∀ {K : J ⥤ C}, CreatesColimit K F := by
-    run_tac
-      tactic.apply_instance
+  CreatesColimit : ∀ {K : J ⥤ C}, CreatesColimit K F := by infer_instance
 
 -- This should be used with explicit universe variables.
 /-- `F` creates colimits if it creates colimits of shape `J` for any small `J`. -/
 @[nolint check_univs]
 class CreatesColimitsOfSize (F : C ⥤ D) where
-  CreatesColimitsOfShape : ∀ {J : Type w} [Category.{w'} J], CreatesColimitsOfShape J F := by
-    run_tac
-      tactic.apply_instance
+  CreatesColimitsOfShape : ∀ {J : Type w} [Category.{w'} J], CreatesColimitsOfShape J F := by infer_instance
 
 /-- `F` creates small colimits if it creates colimits of shape `J` for any small `J`. -/
 abbrev CreatesColimits (F : C ⥤ D) :=
@@ -269,10 +261,9 @@ def createsLimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fait
         { app := fun j => F.preimage (i.Hom ≫ l.π.app j),
           naturality' := fun Y Z f =>
             F.map_injective <| by
-              dsimp'
+              dsimp
               simpa using (l.w f).symm } }
-    (Cones.ext i fun j => by
-      simp only [functor.image_preimage, functor.map_cone_π_app])
+    (Cones.ext i fun j => by simp only [functor.image_preimage, functor.map_cone_π_app])
 
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cone maps,
@@ -360,10 +351,9 @@ def createsColimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fa
         { app := fun j => F.preimage (l.ι.app j ≫ i.inv),
           naturality' := fun Y Z f =>
             F.map_injective <| by
-              dsimp'
+              dsimp
               simpa [← cancel_mono i.hom] using l.w f } }
-    (Cocones.ext i fun j => by
-      simp )
+    (Cocones.ext i fun j => by simp)
 
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cocone maps,
@@ -405,7 +395,7 @@ def createsLimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K
           F.mapConePostcompose ≪≫
             (Cones.postcompose (isoWhiskerRight h F).Hom).mapIso (liftedLimitMapsToOriginal t') ≪≫
               Cones.ext (Iso.refl _) fun j => by
-                dsimp'
+                dsimp
                 rw [category.assoc, ← F.map_comp]
                 simp } }
 
@@ -437,7 +427,7 @@ def createsColimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅
           F.mapCoconePrecompose ≪≫
             (Cocones.precompose (isoWhiskerRight h F).inv).mapIso (liftedColimitMapsToOriginal t') ≪≫
               Cocones.ext (Iso.refl _) fun j => by
-                dsimp'
+                dsimp
                 rw [← F.map_comp_assoc]
                 simp } }
 
@@ -478,10 +468,7 @@ def liftsToColimitOfCreates (K : J ⥤ C) (F : C ⥤ D) [CreatesColimit K F] (c 
 /-- Any cone lifts through the identity functor. -/
 def idLiftsCone (c : Cone (K ⋙ 𝟭 C)) : LiftableCone K (𝟭 C) c where
   liftedCone := { x := c.x, π := c.π ≫ K.rightUnitor.Hom }
-  validLift :=
-    Cones.ext (Iso.refl _)
-      (by
-        tidy)
+  validLift := Cones.ext (Iso.refl _) (by tidy)
 
 /-- The identity functor creates all limits. -/
 instance idCreatesLimits :
@@ -492,10 +479,7 @@ instance idCreatesLimits :
 /-- Any cocone lifts through the identity functor. -/
 def idLiftsCocone (c : Cocone (K ⋙ 𝟭 C)) : LiftableCocone K (𝟭 C) c where
   liftedCocone := { x := c.x, ι := K.rightUnitor.inv ≫ c.ι }
-  validLift :=
-    Cocones.ext (Iso.refl _)
-      (by
-        tidy)
+  validLift := Cocones.ext (Iso.refl _) (by tidy)
 
 /-- The identity functor creates all colimits. -/
 instance idCreatesColimits :

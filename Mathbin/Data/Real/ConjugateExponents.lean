@@ -78,16 +78,14 @@ theorem conjugate_eq : conjugateExponent p = q :=
 theorem sub_one_mul_conj : (p - 1) * q = p :=
   mul_comm q (p - 1) ▸ (eq_div_iff h.sub_one_ne_zero).1 h.conj_eq
 
-theorem mul_eq_add : p * q = p + q := by
-  simpa only [sub_mul, sub_eq_iff_eq_add, one_mulₓ] using h.sub_one_mul_conj
+theorem mul_eq_add : p * q = p + q := by simpa only [sub_mul, sub_eq_iff_eq_add, one_mulₓ] using h.sub_one_mul_conj
 
 @[symm]
 protected theorem symm : q.IsConjugateExponent p :=
   { one_lt := by
       rw [h.conj_eq]
       exact (one_lt_div h.sub_one_pos).mpr (sub_one_lt p),
-    inv_add_inv_conj := by
-      simpa [add_commₓ] using h.inv_add_inv_conj }
+    inv_add_inv_conj := by simpa [add_commₓ] using h.inv_add_inv_conj }
 
 theorem div_conj_eq_sub_one : p / q = p - 1 := by
   field_simp [h.symm.ne_zero]
@@ -108,9 +106,7 @@ theorem inv_add_inv_conj_ennreal : 1 / Ennreal.ofReal p + 1 / Ennreal.ofReal q =
 end IsConjugateExponent
 
 theorem is_conjugate_exponent_iff {p q : ℝ} (h : 1 < p) : p.IsConjugateExponent q ↔ q = p / (p - 1) :=
-  ⟨fun H => H.conj_eq, fun H =>
-    ⟨h, by
-      field_simp [H, ne_of_gtₓ (lt_transₓ zero_lt_one h)]⟩⟩
+  ⟨fun H => H.conj_eq, fun H => ⟨h, by field_simp [H, ne_of_gtₓ (lt_transₓ zero_lt_one h)] ⟩⟩
 
 theorem is_conjugate_exponent_conjugate_exponent {p : ℝ} (h : 1 < p) : p.IsConjugateExponent (conjugateExponent p) :=
   (is_conjugate_exponent_iff h).2 rfl

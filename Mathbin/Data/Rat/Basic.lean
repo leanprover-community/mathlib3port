@@ -41,8 +41,7 @@ instance : Field ℚ :=
     inv := Inv.inv, ratCast := id, rat_cast_mk := fun a b h1 h2 => (num_div_denom _).symm, qsmul := (· * ·) }
 
 -- Extra instances to short-circuit type class resolution
-instance : DivisionRing ℚ := by
-  infer_instance
+instance : DivisionRing ℚ := by infer_instance
 
 end Ratₓ
 

@@ -33,7 +33,7 @@ a morphism `Δ[n] ⟶ ∂Δ[n]`.
 
 universe v u
 
-open CategoryTheory
+open CategoryTheory CategoryTheory.Limits
 
 open Simplicial
 
@@ -127,10 +127,27 @@ def sk (n : ℕ) : SSet ⥤ SSet.Truncated n :=
 instance {n} : Inhabited (SSet.Truncated n) :=
   ⟨(sk n).obj <| Δ[0]⟩
 
+/-- The category of augmented simplicial sets, as a particular case of
+augmented simplicial objects. -/
+abbrev Augmented :=
+  SimplicialObject.Augmented (Type u)
+
+namespace Augmented
+
+/-- The functor which sends `[n]` to the simplicial set `Δ[n]` equipped by
+the obvious augmentation towards the terminal object of the category of sets. -/
+@[simps]
+noncomputable def standardSimplex : SimplexCategory ⥤ SSet.Augmented where
+  obj := fun Δ =>
+    { left := SSet.standardSimplex.obj Δ, right := terminal _, Hom := { app := fun Δ' => terminal.from _ } }
+  map := fun Δ₁ Δ₂ θ => { left := SSet.standardSimplex.map θ, right := terminal.from _ }
+
+end Augmented
+
 end SSet
 
 /-- The functor associating the singular simplicial set to a topological space. -/
-noncomputable def Top.toSSet : Top ⥤ SSet :=
+def Top.toSSet : Top ⥤ SSet :=
   ColimitAdj.restrictedYoneda SimplexCategory.toTop
 
 /-- The geometric realization functor. -/

@@ -62,7 +62,7 @@ theorem measurable_set_Ioo : MeasurableSet I.Ioo :=
 
 end Countable
 
-variable [Fintype ι]
+variable [Fintypeₓ ι]
 
 theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc := by
   rw [coe_eq_pi]
@@ -82,7 +82,7 @@ end BoxIntegral
 
 open BoxIntegral BoxIntegral.Box
 
-variable [Fintype ι]
+variable [Fintypeₓ ι]
 
 namespace MeasureTheory
 
@@ -93,8 +93,7 @@ function. -/
 @[simps]
 def toBoxAdditive (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : ι →ᵇᵃ[⊤] ℝ where
   toFun := fun J => (μ J).toReal
-  sum_partition_boxes' := fun J hJ π hπ => by
-    rw [← π.measure_Union_to_real, hπ.Union_eq]
+  sum_partition_boxes' := fun J hJ π hπ => by rw [← π.measure_Union_to_real, hπ.Union_eq]
 
 end Measureₓ
 

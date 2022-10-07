@@ -97,6 +97,7 @@ class HasSbtw (α : Type _) where
 
 export HasSbtw (Sbtw)
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic order_laws_tac
 /-- A circular preorder is the analogue of a preorder where you can loop around. `≤` and `<` are
 replaced by ternary relations `btw` and `sbtw`. `btw` is reflexive and cyclic. `sbtw` is transitive.
 -/
@@ -336,7 +337,7 @@ def Preorderₓ.toCircularPreorder (α : Type _) [Preorderₓ α] : CircularPreo
   Sbtw := fun a b c => a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b
   btw_refl := fun a => Or.inl ⟨le_rflₓ, le_rflₓ⟩
   btw_cyclic_left := fun a b c h => by
-    unfold btw  at h⊢
+    unfold btw at h⊢
     rwa [← Or.assoc, or_comm]
   sbtw_trans_left := fun a b c d => by
     rintro (⟨hab, hbc⟩ | ⟨hbc, hca⟩ | ⟨hca, hab⟩) (⟨hbd, hdc⟩ | ⟨hdc, hcb⟩ | ⟨hcb, hbd⟩)

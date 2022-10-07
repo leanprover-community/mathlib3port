@@ -44,8 +44,7 @@ variable (R M)
 /-- `smul_with_zero` is a class consisting of a Type `R` with `0 ∈ R` and a scalar multiplication
 of `R` on a Type `M` with `0`, such that the equality `r • m = 0` holds if at least one among `r`
 or `m` equals `0`. -/
-class SmulWithZero [Zero R] [Zero M] extends HasSmul R M where
-  smul_zero : ∀ r : R, r • (0 : M) = 0
+class SmulWithZero [Zero R] [Zero M] extends SmulZeroClass R M where
   zero_smul : ∀ m : M, (0 : R) • m = 0
 
 instance MulZeroClassₓ.toSmulWithZero [MulZeroClassₓ R] : SmulWithZero R R where
@@ -65,13 +64,6 @@ variable (R) {M} [Zero R] [Zero M] [SmulWithZero R M]
 theorem zero_smul (m : M) : (0 : R) • m = 0 :=
   SmulWithZero.zero_smul m
 
-variable {R} (M)
-
-/-- Note that this lemma has different typeclass assumptions to `smul_zero`. -/
-@[simp]
-theorem smul_zero' (r : R) : r • (0 : M) = 0 :=
-  SmulWithZero.smul_zero r
-
 variable {R M} [Zero R'] [Zero M'] [HasSmul R M']
 
 /-- Pullback a `smul_with_zero` structure along an injective zero-preserving homomorphism.
@@ -80,12 +72,8 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.Injective f)
     (smul : ∀ (a : R) (b), f (a • b) = a • f b) : SmulWithZero R M' where
   smul := (· • ·)
-  zero_smul := fun a =>
-    hf <| by
-      simp [smul]
-  smul_zero := fun a =>
-    hf <| by
-      simp [smul]
+  zero_smul := fun a => hf <| by simp [smul]
+  smul_zero := fun a => hf <| by simp [smul]
 
 /-- Pushforward a `smul_with_zero` structure along a surjective zero-preserving homomorphism.
 See note [reducible non-instances]. -/
@@ -96,18 +84,15 @@ protected def Function.Surjective.smulWithZero (f : ZeroHom M M') (hf : Function
   zero_smul := fun m => by
     rcases hf m with ⟨x, rfl⟩
     simp [← smul]
-  smul_zero := fun c => by
-    simp only [← f.map_zero, ← smul, smul_zero']
+  smul_zero := fun c => by simp only [← f.map_zero, ← smul, smul_zero]
 
 variable (M)
 
 /-- Compose a `smul_with_zero` with a `zero_hom`, with action `f r' • m` -/
 def SmulWithZero.compHom (f : ZeroHom R' R) : SmulWithZero R' M where
   smul := (· • ·) ∘ f
-  smul_zero := fun m => by
-    simp
-  zero_smul := fun m => by
-    simp
+  smul_zero := fun m => by simp
+  zero_smul := fun m => by simp
 
 end Zero
 
@@ -166,11 +151,8 @@ variable (M)
 
 /-- Compose a `mul_action_with_zero` with a `monoid_with_zero_hom`, with action `f r' • m` -/
 def MulActionWithZero.compHom (f : R' →*₀ R) : MulActionWithZero R' M :=
-  { SmulWithZero.compHom M f.toZeroHom with smul := (· • ·) ∘ f,
-    mul_smul := fun r s m => by
-      simp [mul_smul],
-    one_smul := fun m => by
-      simp }
+  { SmulWithZero.compHom M f.toZeroHom with smul := (· • ·) ∘ f, mul_smul := fun r s m => by simp [mul_smul],
+    one_smul := fun m => by simp }
 
 end MonoidWithZeroₓ
 
@@ -183,7 +165,7 @@ theorem smul_inv₀ [SmulCommClass α β β] [IsScalarTower α β β] (c : α) (
   · simp only [inv_zero, zero_smul]
     
   obtain rfl | hx := eq_or_ne x 0
-  · simp only [inv_zero, smul_zero']
+  · simp only [inv_zero, smul_zero]
     
   · refine' inv_eq_of_mul_eq_one_left _
     rw [smul_mul_smul, inv_mul_cancel hc, inv_mul_cancel hx, one_smul]
@@ -195,5 +177,5 @@ end GroupWithZeroₓ
 @[simps]
 def smulMonoidWithZeroHom {α β : Type _} [MonoidWithZeroₓ α] [MulZeroOneClassₓ β] [MulActionWithZero α β]
     [IsScalarTower α β β] [SmulCommClass α β β] : α × β →*₀ β :=
-  { smulMonoidHom with map_zero' := smul_zero' _ _ }
+  { smulMonoidHom with map_zero' := smul_zero _ }
 

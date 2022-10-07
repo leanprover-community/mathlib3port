@@ -46,13 +46,12 @@ theorem antidiagonal_zero : antidiagonal 0 = {(0, 0)} :=
 
 /-- The antidiagonal of `n` does not contain duplicate entries. -/
 @[simp]
-theorem nodup_antidiagonal (n : ℕ) : Nodup (antidiagonal n) :=
+theorem nodup_antidiagonal (n : ℕ) : Nodupₓ (antidiagonal n) :=
   coe_nodup.2 <| List.Nat.nodup_antidiagonal n
 
 @[simp]
 theorem antidiagonal_succ {n : ℕ} : antidiagonal (n + 1) = (0, n + 1) ::ₘ (antidiagonal n).map (Prod.map Nat.succ id) :=
-  by
-  simp only [antidiagonal, List.Nat.antidiagonal_succ, coe_map, cons_coe]
+  by simp only [antidiagonal, List.Nat.antidiagonal_succ, coe_map, cons_coe]
 
 theorem antidiagonal_succ' {n : ℕ} :
     antidiagonal (n + 1) = (n + 1, 0) ::ₘ (antidiagonal n).map (Prod.map id Nat.succ) := by

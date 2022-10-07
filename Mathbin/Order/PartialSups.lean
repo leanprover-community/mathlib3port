@@ -72,7 +72,7 @@ theorem partial_sups_le (f : ℕ → α) (n : ℕ) (a : α) (w : ∀ m, m ≤ n 
   · exact sup_le (ih fun m p => w m (Nat.le_succ_of_leₓ p)) (w (n + 1) le_rflₓ)
     
 
-theorem Monotone.partial_sups_eq {f : ℕ → α} (hf : Monotone f) : (partialSups f : ℕ → α) = f := by
+theorem Monotoneₓ.partial_sups_eq {f : ℕ → α} (hf : Monotoneₓ f) : (partialSups f : ℕ → α) = f := by
   ext n
   induction' n with n ih
   · rfl
@@ -80,7 +80,7 @@ theorem Monotone.partial_sups_eq {f : ℕ → α} (hf : Monotone f) : (partialSu
   · rw [partial_sups_succ, ih, sup_eq_right.2 (hf (Nat.le_succₓ _))]
     
 
-theorem partial_sups_mono : Monotone (partialSups : (ℕ → α) → ℕ →o α) := by
+theorem partial_sups_mono : Monotoneₓ (partialSups : (ℕ → α) → ℕ →o α) := by
   rintro f g h n
   induction' n with n ih
   · exact h 0
@@ -103,24 +103,24 @@ def partialSups.gi : GaloisInsertion (partialSups : (ℕ → α) → ℕ →o α
   choice_eq := fun f h => OrderHom.ext _ _ ((le_partial_sups f).antisymm h)
 
 theorem partial_sups_eq_sup'_range (f : ℕ → α) (n : ℕ) :
-    partialSups f n = (Finset.range (n + 1)).sup' ⟨n, Finset.self_mem_range_succ n⟩ f := by
+    partialSups f n = (Finsetₓ.range (n + 1)).sup' ⟨n, Finsetₓ.self_mem_range_succ n⟩ f := by
   induction' n with n ih
   · simp
     
-  · dsimp' [partialSups]  at ih⊢
-    simp_rw [@Finset.range_succ n.succ]
-    rw [ih, Finset.sup'_insert, sup_comm]
+  · dsimp [partialSups] at ih⊢
+    simp_rw [@Finsetₓ.range_succ n.succ]
+    rw [ih, Finsetₓ.sup'_insert, sup_comm]
     
 
 end SemilatticeSup
 
 theorem partial_sups_eq_sup_range [SemilatticeSup α] [OrderBot α] (f : ℕ → α) (n : ℕ) :
-    partialSups f n = (Finset.range (n + 1)).sup f := by
+    partialSups f n = (Finsetₓ.range (n + 1)).sup f := by
   induction' n with n ih
   · simp
     
-  · dsimp' [partialSups]  at ih⊢
-    rw [Finset.range_succ, Finset.sup_insert, sup_comm, ih]
+  · dsimp [partialSups] at ih⊢
+    rw [Finsetₓ.range_succ, Finsetₓ.sup_insert, sup_comm, ih]
     
 
 /- Note this lemma requires a distributive lattice, so is not useful (or true) in situations such as
@@ -139,14 +139,10 @@ section CompleteLattice
 variable [CompleteLattice α]
 
 theorem partial_sups_eq_bsupr (f : ℕ → α) (n : ℕ) : partialSups f n = ⨆ i ≤ n, f i := by
-  rw [partial_sups_eq_sup_range, Finset.sup_eq_supr]
+  rw [partial_sups_eq_sup_range, Finsetₓ.sup_eq_supr]
   congr
   ext a
-  exact
-    supr_congr_Prop
-      (by
-        rw [Finset.mem_range, Nat.lt_succ_iffₓ])
-      fun _ => rfl
+  exact supr_congr_Prop (by rw [Finsetₓ.mem_range, Nat.lt_succ_iff]) fun _ => rfl
 
 @[simp]
 theorem supr_partial_sups_eq (f : ℕ → α) : (⨆ n, partialSups f n) = ⨆ n, f n := by
@@ -160,8 +156,7 @@ theorem supr_le_supr_of_partial_sups_le_partial_sups {f g : ℕ → α} (h : par
   exact supr_mono h
 
 theorem supr_eq_supr_of_partial_sups_eq_partial_sups {f g : ℕ → α} (h : partialSups f = partialSups g) :
-    (⨆ n, f n) = ⨆ n, g n := by
-  simp_rw [← supr_partial_sups_eq f, ← supr_partial_sups_eq g, h]
+    (⨆ n, f n) = ⨆ n, g n := by simp_rw [← supr_partial_sups_eq f, ← supr_partial_sups_eq g, h]
 
 end CompleteLattice
 

@@ -81,13 +81,13 @@ theorem ext_inner_left_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E) (h : 
   intro i
   simp only [to_dual_map_apply, ContinuousLinearMap.coe_coe]
   rw [← inner_conj_sym]
-  nth_rw_rhs 0[← inner_conj_sym]
+  nth_rw_rhs 0 [← inner_conj_sym]
   exact congr_arg conj (h i)
 
 theorem ext_inner_right_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E) (h : ∀ i : ι, ⟪x, b i⟫ = ⟪y, b i⟫) : x = y := by
   refine' ext_inner_left_basis b fun i => _
   rw [← inner_conj_sym]
-  nth_rw_rhs 0[← inner_conj_sym]
+  nth_rw_rhs 0 [← inner_conj_sym]
   exact congr_arg conj (h i)
 
 variable (𝕜) (E) [CompleteSpace E]
@@ -99,16 +99,14 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
   LinearIsometryEquiv.ofSurjective (toDualMap 𝕜 E)
     (by
       intro ℓ
-      set Y := ker ℓ with hY
-      by_cases' htriv : Y = ⊤
+      set Y := LinearMap.ker ℓ with hY
+      by_cases htriv:Y = ⊤
       · have hℓ : ℓ = 0 := by
           have h' := linear_map.ker_eq_top.mp htriv
           rw [← coe_zero] at h'
           apply coe_injective
           exact h'
-        exact
-          ⟨0, by
-            simp [hℓ]⟩
+        exact ⟨0, by simp [hℓ]⟩
         
       · rw [← Submodule.orthogonal_eq_bot_iff] at htriv
         change Yᗮ ≠ ⊥ at htriv
@@ -117,29 +115,24 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
         refine' ⟨(ℓ z† / ⟪z, z⟫) • z, _⟩
         ext x
         have h₁ : ℓ z • x - ℓ x • z ∈ Y := by
-          rw [mem_ker, map_sub, ContinuousLinearMap.map_smul, ContinuousLinearMap.map_smul, Algebra.id.smul_eq_mul,
-            Algebra.id.smul_eq_mul, mul_comm]
+          rw [LinearMap.mem_ker, map_sub, ContinuousLinearMap.map_smul, ContinuousLinearMap.map_smul,
+            Algebra.id.smul_eq_mul, Algebra.id.smul_eq_mul, mul_comm]
           exact sub_self (ℓ x * ℓ z)
-        have h₂ : ℓ z * ⟪z, x⟫ = ℓ x * ⟪z, z⟫ := by
-          have h₃ :=
+        have h₂ : ℓ z * ⟪z, x⟫ = ℓ x * ⟪z, z⟫ :=
+          haveI h₃ :=
             calc
               0 = ⟪z, ℓ z • x - ℓ x • z⟫ := by
                 rw [(Y.mem_orthogonal' z).mp hz]
                 exact h₁
-              _ = ⟪z, ℓ z • x⟫ - ⟪z, ℓ x • z⟫ := by
-                rw [inner_sub_right]
-              _ = ℓ z * ⟪z, x⟫ - ℓ x * ⟪z, z⟫ := by
-                simp [inner_smul_right]
+              _ = ⟪z, ℓ z • x⟫ - ⟪z, ℓ x • z⟫ := by rw [inner_sub_right]
+              _ = ℓ z * ⟪z, x⟫ - ℓ x * ⟪z, z⟫ := by simp [inner_smul_right]
               
-          exact sub_eq_zero.mp (Eq.symm h₃)
+          sub_eq_zero.mp (Eq.symm h₃)
         have h₄ :=
           calc
-            ⟪(ℓ z† / ⟪z, z⟫) • z, x⟫ = ℓ z / ⟪z, z⟫ * ⟪z, x⟫ := by
-              simp [inner_smul_left, conj_conj]
-            _ = ℓ z * ⟪z, x⟫ / ⟪z, z⟫ := by
-              rw [← div_mul_eq_mul_div]
-            _ = ℓ x * ⟪z, z⟫ / ⟪z, z⟫ := by
-              rw [h₂]
+            ⟪(ℓ z† / ⟪z, z⟫) • z, x⟫ = ℓ z / ⟪z, z⟫ * ⟪z, x⟫ := by simp [inner_smul_left, conj_conj]
+            _ = ℓ z * ⟪z, x⟫ / ⟪z, z⟫ := by rw [← div_mul_eq_mul_div]
+            _ = ℓ x * ⟪z, z⟫ / ⟪z, z⟫ := by rw [h₂]
             _ = ℓ x := by
               have : ⟪z, z⟫ ≠ 0 := by
                 change z = 0 → False at z_ne_0
@@ -175,8 +168,7 @@ local postfix:1024 "♯" => continuousLinearMapOfBilin
 variable (B : E →L⋆[𝕜] E →L[𝕜] 𝕜)
 
 @[simp]
-theorem continuous_linear_map_of_bilin_apply (v w : E) : ⟪B♯ v, w⟫ = B v w := by
-  simp [continuous_linear_map_of_bilin]
+theorem continuous_linear_map_of_bilin_apply (v w : E) : ⟪B♯ v, w⟫ = B v w := by simp [continuous_linear_map_of_bilin]
 
 theorem unique_continuous_linear_map_of_bilin {v f : E} (is_lax_milgram : ∀ w, ⟪f, w⟫ = B v w) : f = B♯ v := by
   refine' ext_inner_right 𝕜 _

@@ -141,7 +141,7 @@ theorem induct_on_objects [IsPreconnected J] (p : Set J) {j₀ : J} (h0 : j₀ �
     (h1 : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), j₁ ∈ p ↔ j₂ ∈ p) (j : J) : j ∈ p := by
   injection constant_of_preserves_morphisms (fun k => ULift.up (k ∈ p)) (fun j₁ j₂ f => _) j j₀ with i
   rwa [i]
-  dsimp'
+  dsimp
   exact congr_arg ULift.up (propext (h1 f))
 
 /-- If any maximal connected component containing some element j₀ of J is all of J, then J is connected.
@@ -151,17 +151,14 @@ The converse of `induct_on_objects`.
 theorem IsConnected.of_induct [Nonempty J] {j₀ : J}
     (h : ∀ p : Set J, j₀ ∈ p → (∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), j₁ ∈ p ↔ j₂ ∈ p) → ∀ j : J, j ∈ p) : IsConnected J :=
   IsConnected.of_constant_of_preserves_morphisms fun α F a => by
-    have w :=
-      h { j | F j = F j₀ } rfl fun _ _ f => by
-        simp [a f]
-    dsimp'  at w
+    have w := h { j | F j = F j₀ } rfl fun _ _ f => by simp [a f]
+    dsimp at w
     intro j j'
     rw [w j, w j']
 
 /-- Lifting the universe level of morphisms and objects preserves connectedness. -/
 instance [hc : IsConnected J] : IsConnected (UliftHom.{v₂} (ULift.{u₂} J)) := by
-  have : Nonempty (UliftHom.{v₂} (ULift.{u₂} J)) := by
-    simp [ulift_hom, hc.is_nonempty]
+  have : Nonempty (UliftHom.{v₂} (ULift.{u₂} J)) := by simp [ulift_hom, hc.is_nonempty]
   apply is_connected.of_induct
   rintro p hj₀ h ⟨j⟩
   let p' : Set J := (fun j : J => p { down := j } : Set J)
@@ -199,18 +196,12 @@ theorem is_preconnected_of_equivalent {K : Type u₁} [Category.{v₂} K] [IsPre
             isoWhiskerLeft e.inverse (isoConstant (e.Functor ⋙ F) (e.inverse.obj k))
           _ ≅ e.inverse ⋙ (Functor.const J).obj (F.obj k) :=
             isoWhiskerLeft _ ((F ⋙ Functor.const J).mapIso (e.counitIso.app k))
-          _ ≅ (Functor.const K).obj (F.obj k) :=
-            NatIso.ofComponents (fun X => Iso.refl _)
-              (by
-                simp )
+          _ ≅ (Functor.const K).obj (F.obj k) := NatIso.ofComponents (fun X => Iso.refl _) (by simp)
           ⟩ }
 
 /-- If `J` and `K` are equivalent, then if `J` is connected then `K` is as well. -/
 theorem is_connected_of_equivalent {K : Type u₁} [Category.{v₂} K] (e : J ≌ K) [IsConnected J] : IsConnected K :=
-  { is_nonempty :=
-      Nonempty.mapₓ e.Functor.obj
-        (by
-          infer_instance),
+  { is_nonempty := Nonempty.mapₓ e.Functor.obj (by infer_instance),
     to_is_preconnected := is_preconnected_of_equivalent e }
 
 /-- If `J` is preconnected, then `Jᵒᵖ` is preconnected as well. -/

@@ -49,7 +49,7 @@ theorem has_basis_small_sets (l : Filter α) : HasBasis l.smallSets (fun t : Set
 theorem tendsto_small_sets_iff {f : α → Set β} : Tendsto f la lb.smallSets ↔ ∀ t ∈ lb, ∀ᶠ x in la, f x ⊆ t :=
   (has_basis_small_sets lb).tendsto_right_iff
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem eventually_small_sets {p : Set α → Prop} : (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, ∀ (t) (_ : t ⊆ s), p t :=
   eventually_lift'_iff monotone_powerset
 
@@ -57,7 +57,7 @@ theorem eventually_small_sets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ 
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, p s :=
   eventually_small_sets.trans <| exists₂_congrₓ fun s hsf => ⟨fun H => H s Subset.rfl, fun hs t ht => hp ht hs⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (s «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (s «expr ⊆ » t)
 theorem frequently_small_sets {p : Set α → Prop} : (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _)(_ : s ⊆ t), p s :=
   l.has_basis_small_sets.frequently_iff
 
@@ -69,16 +69,15 @@ theorem HasAntitoneBasis.tendsto_small_sets {ι} [Preorderₓ ι] {s : ι → Se
   tendsto_small_sets_iff.2 fun t ht => hl.eventually_subset ht
 
 @[mono]
-theorem monotone_small_sets : Monotone (@smallSets α) :=
-  monotone_lift' monotone_id monotone_const
+theorem monotone_small_sets : Monotoneₓ (@smallSets α) :=
+  monotone_lift' monotone_idₓ monotone_constₓ
 
 @[simp]
 theorem small_sets_bot : (⊥ : Filter α).smallSets = pure ∅ := by
   rw [small_sets, lift'_bot monotone_powerset, powerset_empty, principal_singleton]
 
 @[simp]
-theorem small_sets_top : (⊤ : Filter α).smallSets = ⊤ := by
-  rw [small_sets, lift'_top, powerset_univ, principal_univ]
+theorem small_sets_top : (⊤ : Filter α).smallSets = ⊤ := by rw [small_sets, lift'_top, powerset_univ, principal_univ]
 
 @[simp]
 theorem small_sets_principal (s : Set α) : (𝓟 s).smallSets = 𝓟 (𝒫 s) :=
@@ -120,10 +119,8 @@ theorem eventually_small_sets_eventually {p : α → Prop} :
     (∀ᶠ s in l.smallSets, ∀ᶠ x in l', x ∈ s → p x) ↔ ∀ᶠ x in l ⊓ l', p x :=
   calc
     _ ↔ ∃ s ∈ l, ∀ᶠ x in l', x ∈ s → p x := eventually_small_sets' fun s t hst ht => ht.mono fun x hx hs => hx (hst hs)
-    _ ↔ ∃ s ∈ l, ∃ t ∈ l', ∀ x, x ∈ t → x ∈ s → p x := by
-      simp only [eventually_iff_exists_mem]
-    _ ↔ ∀ᶠ x in l ⊓ l', p x := by
-      simp only [eventually_inf, and_comm, mem_inter_iff, ← and_imp]
+    _ ↔ ∃ s ∈ l, ∃ t ∈ l', ∀ x, x ∈ t → x ∈ s → p x := by simp only [eventually_iff_exists_mem]
+    _ ↔ ∀ᶠ x in l ⊓ l', p x := by simp only [eventually_inf, and_comm, mem_inter_iff, ← and_imp]
     
 
 @[simp]

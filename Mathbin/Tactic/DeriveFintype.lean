@@ -111,23 +111,23 @@ namespace DeriveFintype
 We will set `enum` to the discriminant of the inductive type, so a `finset_above`
 represents a finset that enumerates all elements in a tail of the constructor list. -/
 def FinsetAbove (α) (enum : α → ℕ) (n : ℕ) :=
-  { s : Finset α // ∀ x ∈ s, n ≤ enum x }
+  { s : Finsetₓ α // ∀ x ∈ s, n ≤ enum x }
 
 /-- Construct a fintype instance from a completed `finset_above`. -/
-def mkFintype {α} (enum : α → ℕ) (s : FinsetAbove α enum 0) (H : ∀ x, x ∈ s.1) : Fintype α :=
+def mkFintype {α} (enum : α → ℕ) (s : FinsetAbove α enum 0) (H : ∀ x, x ∈ s.1) : Fintypeₓ α :=
   ⟨s.1, H⟩
 
 /-- This is the case for a simple variant (no arguments) in an inductive type. -/
 def FinsetAbove.cons {α} {enum : α → ℕ} (n) (a : α) (h : enum a = n) (s : FinsetAbove α enum (n + 1)) :
     FinsetAbove α enum n := by
-  refine' ⟨Finset.cons a s.1 _, _⟩
+  refine' ⟨Finsetₓ.cons a s.1 _, _⟩
   · intro h'
     have := s.2 _ h'
     rw [h] at this
     exact Nat.not_succ_le_selfₓ n this
     
   · intro x h'
-    rcases Finset.mem_cons.1 h' with (rfl | h')
+    rcases Finsetₓ.mem_cons.1 h' with (rfl | h')
     · exact ge_of_eqₓ h
       
     · exact Nat.le_of_succ_leₓ (s.2 _ h')
@@ -143,8 +143,7 @@ theorem FinsetAbove.mem_cons_of_mem {α} {enum : α → ℕ} {n a h s b} :
 
 /-- The base case is when we run out of variants; we just put an empty finset at the end. -/
 def FinsetAbove.nil {α} {enum : α → ℕ} (n) : FinsetAbove α enum n :=
-  ⟨∅, by
-    rintro _ ⟨⟩⟩
+  ⟨∅, by rintro _ ⟨⟩⟩
 
 instance (α enum n) : Inhabited (FinsetAbove α enum n) :=
   ⟨FinsetAbove.nil _⟩
@@ -154,34 +153,33 @@ The property `P` here is `λ a, enum a = n` where `n` is the discriminant for th
 variant. -/
 @[nolint has_nonempty_instance]
 def FinsetIn {α} (P : α → Prop) :=
-  { s : Finset α // ∀ x ∈ s, P x }
+  { s : Finsetₓ α // ∀ x ∈ s, P x }
 
 /-- To construct the finset, we use an injective map from the type `Γ`, which will be the
 sigma over all constructor arguments. We use sigma instances and existing fintype instances
 to prove that `Γ` is a fintype, and construct the function `f` that maps `⟨a, b, c, ...⟩`
 to `C_n a b c ...` where `C_n` is the nth constructor, and `mem` asserts
 `enum (C_n a b c ...) = n`. -/
-def FinsetIn.mk {α} {P : α → Prop} (Γ) [Fintype Γ] (f : Γ → α) (inj : Function.Injective f) (mem : ∀ x, P (f x)) :
+def FinsetIn.mk {α} {P : α → Prop} (Γ) [Fintypeₓ Γ] (f : Γ → α) (inj : Function.Injective f) (mem : ∀ x, P (f x)) :
     FinsetIn P :=
-  ⟨Finset.univ.map ⟨f, inj⟩, fun x h => by
-    rcases Finset.mem_map.1 h with ⟨x, _, rfl⟩ <;> exact mem x⟩
+  ⟨Finsetₓ.univ.map ⟨f, inj⟩, fun x h => by rcases Finsetₓ.mem_map.1 h with ⟨x, _, rfl⟩ <;> exact mem x⟩
 
-theorem FinsetIn.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ → α} {inj mem a} (b) (H : f b = a) :
+theorem FinsetIn.mem_mk {α} {P : α → Prop} {Γ} {s : Fintypeₓ Γ} {f : Γ → α} {inj mem a} (b) (H : f b = a) :
     a ∈ (@FinsetIn.mk α P Γ s f inj mem).1 :=
-  Finset.mem_map.2 ⟨_, Finset.mem_univ _, H⟩
+  Finsetₓ.mem_map.2 ⟨_, Finsetₓ.mem_univ _, H⟩
 
 /-- For nontrivial variants, we split the constructor list into a `finset_in` component for the
 current constructor and a `finset_above` for the rest. -/
 def FinsetAbove.union {α} {enum : α → ℕ} (n) (s : FinsetIn fun a => enum a = n) (t : FinsetAbove α enum (n + 1)) :
     FinsetAbove α enum n := by
-  refine' ⟨Finset.disjUnion s.1 t.1 _, _⟩
+  refine' ⟨Finsetₓ.disjUnion s.1 t.1 _, _⟩
   · intro a hs ht
     have := t.2 _ ht
     rw [s.2 _ hs] at this
     exact Nat.not_succ_le_selfₓ n this
     
   · intro x h'
-    rcases Finset.mem_disj_union.1 h' with (h' | h')
+    rcases Finsetₓ.mem_disj_union.1 h' with (h' | h')
     · exact ge_of_eqₓ (s.2 _ h')
       
     · exact Nat.le_of_succ_leₓ (t.2 _ h')
@@ -317,7 +315,7 @@ open Tactic.DeriveFintype
 where all arguments to all constructors are fintypes. -/
 unsafe def mk_fintype_instance : tactic Unit := do
   intros
-  let quote.1 (Fintype (%%ₓe)) ← target >>= whnf
+  let quote.1 (Fintypeₓ (%%ₓe)) ← target >>= whnf
   let (const I ls, args) ← pure (get_app_fn_args e)
   let env ← get_env
   let cs := env.constructors_of I
@@ -349,7 +347,7 @@ argument `fintype α`, even if it is not used.  (This is due to the implementati
 -/
 @[derive_handler]
 unsafe def fintype_instance : derive_handler :=
-  instance_derive_handler `` Fintype mk_fintype_instance
+  instance_derive_handler `` Fintypeₓ mk_fintype_instance
 
 end Tactic
 

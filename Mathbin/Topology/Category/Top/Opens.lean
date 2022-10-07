@@ -149,8 +149,7 @@ theorem map_id_obj_unop (U : (Opens X)ᵒᵖ) : (map (𝟙 X)).obj (unop U) = un
   rfl
 
 @[simp]
-theorem op_map_id_obj (U : (Opens X)ᵒᵖ) : (map (𝟙 X)).op.obj U = U := by
-  simp
+theorem op_map_id_obj (U : (Opens X)ᵒᵖ) : (map (𝟙 X)).op.obj U = U := by simp
 
 /-- The inclusion `U ⟶ (map f).obj ⊤` as a morphism in the category of open sets.
 -/
@@ -181,7 +180,7 @@ theorem op_map_comp_obj (f : X ⟶ Y) (g : Y ⟶ Z) (U) : (map (f ≫ g)).op.obj
 theorem map_supr (f : X ⟶ Y) {ι : Type _} (U : ι → Opens Y) : (map f).obj (supr U) = supr ((map f).obj ∘ U) := by
   apply Subtype.eq
   rw [supr_def, supr_def, map_obj]
-  dsimp'
+  dsimp
   rw [Set.preimage_Union]
   rfl
 
@@ -256,23 +255,15 @@ def mapMapIso {X Y : Top.{u}} (H : X ≅ Y) : Opens Y ≌ Opens X where
   Functor := map H.Hom
   inverse := map H.inv
   unitIso :=
-    NatIso.ofComponents
-      (fun U =>
-        eqToIso
-          (by
-            simp [map, Set.preimage_preimage]))
+    NatIso.ofComponents (fun U => eqToIso (by simp [map, Set.preimage_preimage]))
       (by
         intro _ _ _
-        simp )
+        simp)
   counitIso :=
-    NatIso.ofComponents
-      (fun U =>
-        eqToIso
-          (by
-            simp [map, Set.preimage_preimage]))
+    NatIso.ofComponents (fun U => eqToIso (by simp [map, Set.preimage_preimage]))
       (by
         intro _ _ _
-        simp )
+        simp)
 
 end TopologicalSpace.Opens
 
@@ -315,25 +306,19 @@ theorem inclusion_map_eq_top {X : Top} (U : Opens X) : (Opens.map U.inclusion).o
 
 @[simp]
 theorem adjunction_counit_app_self {X : Top} (U : Opens X) :
-    U.OpenEmbedding.IsOpenMap.Adjunction.counit.app U =
-      eqToHom
-        (by
-          simp ) :=
-  by
-  ext
+    U.OpenEmbedding.IsOpenMap.Adjunction.counit.app U = eqToHom (by simp) := by ext
 
 theorem inclusion_top_functor (X : Top) : (@Opens.open_embedding X ⊤).IsOpenMap.Functor = map (inclusionTopIso X).inv :=
   by
   apply functor.hext
   intro
   abstract obj_eq 
-    ext
-    exact ⟨fun ⟨⟨_, _⟩, h, rfl⟩ => h, fun h => ⟨⟨x, trivialₓ⟩, h, rfl⟩⟩
+  ext
+  exact ⟨fun ⟨⟨_, _⟩, h, rfl⟩ => h, fun h => ⟨⟨x, trivialₓ⟩, h, rfl⟩⟩
   intros
   apply Subsingleton.helim
   congr 1
-  iterate 2 
-    apply inclusion_top_functor.obj_eq
+  iterate 2 apply inclusion_top_functor.obj_eq
 
 theorem functor_obj_map_obj {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) (U : Opens Y) :
     hf.Functor.obj ((Opens.map f).obj U) = hf.Functor.obj ⊤ ⊓ U := by

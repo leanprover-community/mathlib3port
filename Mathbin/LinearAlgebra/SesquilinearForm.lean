@@ -59,7 +59,7 @@ theorem is_ortho_def {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} {x y} : B
   Iff.rfl
 
 theorem is_ortho_zero_left (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) (x) : IsOrtho B (0 : M₁) x := by
-  dunfold is_ortho
+  dsimp only [is_ortho]
   rw [map_zero B, zero_apply]
 
 theorem is_ortho_zero_right (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) (x) : IsOrtho B x (0 : M₂) :=
@@ -96,7 +96,7 @@ variable [Field K] [Field K₁] [AddCommGroupₓ V₁] [Module K₁ V₁] [Field
 -- todo: this also holds for [comm_ring R] [is_domain R] when J₁ is invertible
 theorem ortho_smul_left {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y} {a : K₁} (ha : a ≠ 0) :
     IsOrtho B x y ↔ IsOrtho B (a • x) y := by
-  dunfold is_ortho
+  dsimp only [is_ortho]
   constructor <;> intro H
   · rw [map_smulₛₗ₂, H, smul_zero]
     
@@ -112,7 +112,7 @@ theorem ortho_smul_left {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y} 
 -- todo: this also holds for [comm_ring R] [is_domain R] when J₂ is invertible
 theorem ortho_smul_right {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y} {a : K₂} {ha : a ≠ 0} :
     IsOrtho B x y ↔ IsOrtho B x (a • y) := by
-  dunfold is_ortho
+  dsimp only [is_ortho]
   constructor <;> intro H
   · rw [map_smulₛₗ, H, smul_zero]
     
@@ -133,10 +133,9 @@ theorem linear_independent_of_is_Ortho {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[
   classical
   rw [linear_independent_iff']
   intro s w hs i hi
-  have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by
-    rw [hs, map_zero, zero_apply]
+  have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by rw [hs, map_zero, zero_apply]
   have hsum : (s.sum fun j : n => I₁ (w j) * B (v j) (v i)) = I₁ (w i) * B (v i) (v i) := by
-    apply Finset.sum_eq_single_of_mem i hi
+    apply Finsetₓ.sum_eq_single_of_mem i hi
     intro j hj hij
     rw [is_Ortho_def.1 hv₁ _ _ hij, mul_zero]
   simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum] at this
@@ -324,11 +323,11 @@ variable [Field K] [AddCommGroupₓ V] [Module K V] [Field K₁] [AddCommGroup�
 -- ↓ This lemma only applies in fields as we require `a * b = 0 → a = 0 ∨ b = 0`
 theorem span_singleton_inf_orthogonal_eq_bot (B : V₁ →ₛₗ[J₁] V₁ →ₛₗ[J₁'] K) (x : V₁) (hx : ¬B.IsOrtho x x) :
     (K₁ ∙ x) ⊓ Submodule.orthogonalBilin (K₁ ∙ x) B = ⊥ := by
-  rw [← Finset.coe_singleton]
+  rw [← Finsetₓ.coe_singleton]
   refine' eq_bot_iff.2 fun y h => _
   rcases mem_span_finset.1 h.1 with ⟨μ, rfl⟩
   have := h.2 x _
-  · rw [Finset.sum_singleton] at this⊢
+  · rw [Finsetₓ.sum_singleton] at this⊢
     suffices hμzero : μ x = 0
     · rw [hμzero, zero_smul, Submodule.mem_bot]
       
@@ -341,7 +340,7 @@ theorem span_singleton_inf_orthogonal_eq_bot (B : V₁ →ₛₗ[J₁] V₁ →�
           exact y)
         fun hfalse => False.elim <| hx hfalse
     
-  · rw [Submodule.mem_span] <;> exact fun _ hp => hp <| Finset.mem_singleton_self _
+  · rw [Submodule.mem_span] <;> exact fun _ hp => hp <| Finsetₓ.mem_singleton_self _
     
 
 -- ↓ This lemma only applies in fields since we use the `mul_eq_zero`
@@ -411,8 +410,7 @@ theorem is_adjoint_pair_iff_comp_eq_compl₂ : IsAdjointPair B B' f g ↔ B'.com
     rw [← compl₂_apply, ← comp_apply, h]
     
 
-theorem is_adjoint_pair_zero : IsAdjointPair B B' 0 0 := fun _ _ => by
-  simp only [zero_apply, map_zero]
+theorem is_adjoint_pair_zero : IsAdjointPair B B' 0 0 := fun _ _ => by simp only [zero_apply, map_zero]
 
 theorem is_adjoint_pair_id : IsAdjointPair B B 1 1 := fun x y => rfl
 
@@ -536,8 +534,7 @@ theorem is_pair_self_adjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.End R M) :
   simp_rw [is_pair_self_adjoint, is_adjoint_pair_iff_comp_eq_compl₂, hₗ, hᵣ, compl₁₂_inj he he]
 
 theorem is_skew_adjoint_iff_neg_self_adjoint (f : Module.End R M) : B.IsSkewAdjoint f ↔ IsAdjointPair (-B) B f f :=
-  show (∀ x y, B (f x) y = B x ((-f) y)) ↔ ∀ x y, B (f x) y = (-B) x (f y) by
-    simp
+  show (∀ x y, B (f x) y = B x ((-f) y)) ↔ ∀ x y, B (f x) y = (-B) x (f y) by simp
 
 @[simp]
 theorem mem_self_adjoint_submodule (f : Module.End R M) : f ∈ B.selfAdjointSubmodule ↔ B.IsSelfAdjoint f :=
@@ -655,7 +652,7 @@ theorem IsOrthoₓ.not_is_ortho_basis_self_of_separating_left [Nontrivial R] {B 
   refine' v.ne_zero i ((hB (v i)) fun m => _)
   obtain ⟨vi, rfl⟩ := v.repr.symm.surjective m
   rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, map_sum]
-  apply Finset.sum_eq_zero
+  apply Finsetₓ.sum_eq_zero
   rintro j -
   rw [map_smulₛₗ]
   convert mul_zero _ using 2
@@ -684,7 +681,7 @@ theorem IsOrthoₓ.separating_left_of_not_is_ortho_basis_self [NoZeroDivisors R]
   rw [Finsupp.zero_apply]
   specialize hB (v i)
   simp_rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, map_sum₂, map_smulₛₗ₂, smul_eq_mul] at hB
-  rw [Finset.sum_eq_single i] at hB
+  rw [Finsetₓ.sum_eq_single i] at hB
   · exact eq_zero_of_ne_zero_of_mul_right_eq_zero (h i) hB
     
   · intro j hj hij

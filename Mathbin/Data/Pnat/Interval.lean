@@ -14,7 +14,7 @@ intervals as finsets and fintypes.
 -/
 
 
-open Finset Pnat
+open Finsetₓ Pnat
 
 instance : LocallyFiniteOrder ℕ+ :=
   Subtype.locallyFiniteOrder _
@@ -48,36 +48,28 @@ theorem map_subtype_embedding_Ioo : (ioo a b).map (Function.Embedding.subtype _)
   map_subtype_embedding_Ioo _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
 
 @[simp]
-theorem card_Icc : (icc a b).card = b + 1 - a := by
-  rw [← Nat.card_Icc, ← map_subtype_embedding_Icc, card_map]
+theorem card_Icc : (icc a b).card = b + 1 - a := by rw [← Nat.card_Icc, ← map_subtype_embedding_Icc, card_map]
 
 @[simp]
-theorem card_Ico : (ico a b).card = b - a := by
-  rw [← Nat.card_Ico, ← map_subtype_embedding_Ico, card_map]
+theorem card_Ico : (ico a b).card = b - a := by rw [← Nat.card_Ico, ← map_subtype_embedding_Ico, card_map]
 
 @[simp]
-theorem card_Ioc : (ioc a b).card = b - a := by
-  rw [← Nat.card_Ioc, ← map_subtype_embedding_Ioc, card_map]
+theorem card_Ioc : (ioc a b).card = b - a := by rw [← Nat.card_Ioc, ← map_subtype_embedding_Ioc, card_map]
 
 @[simp]
-theorem card_Ioo : (ioo a b).card = b - a - 1 := by
-  rw [← Nat.card_Ioo, ← map_subtype_embedding_Ioo, card_map]
+theorem card_Ioo : (ioo a b).card = b - a - 1 := by rw [← Nat.card_Ioo, ← map_subtype_embedding_Ioo, card_map]
 
 @[simp]
-theorem card_fintype_Icc : Fintype.card (Set.Icc a b) = b + 1 - a := by
-  rw [← card_Icc, Fintype.card_of_finset]
+theorem card_fintype_Icc : Fintypeₓ.card (Set.Icc a b) = b + 1 - a := by rw [← card_Icc, Fintypeₓ.card_of_finset]
 
 @[simp]
-theorem card_fintype_Ico : Fintype.card (Set.Ico a b) = b - a := by
-  rw [← card_Ico, Fintype.card_of_finset]
+theorem card_fintype_Ico : Fintypeₓ.card (Set.Ico a b) = b - a := by rw [← card_Ico, Fintypeₓ.card_of_finset]
 
 @[simp]
-theorem card_fintype_Ioc : Fintype.card (Set.Ioc a b) = b - a := by
-  rw [← card_Ioc, Fintype.card_of_finset]
+theorem card_fintype_Ioc : Fintypeₓ.card (Set.Ioc a b) = b - a := by rw [← card_Ioc, Fintypeₓ.card_of_finset]
 
 @[simp]
-theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
-  rw [← card_Ioo, Fintype.card_of_finset]
+theorem card_fintype_Ioo : Fintypeₓ.card (Set.Ioo a b) = b - a - 1 := by rw [← card_Ioo, Fintypeₓ.card_of_finset]
 
 end Pnat
 

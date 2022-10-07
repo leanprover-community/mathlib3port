@@ -32,18 +32,15 @@ theorem symmod_add_one_self {i : Int} : 0 < i → symmod i (i + 1) = -1 := by
 theorem mul_symdiv_eq {i j : Int} : j * symdiv i j = i - symmod i j := by
   unfold symdiv
   unfold symmod
-  by_cases' h1 : 2 * (i % j) < j
-  · repeat'
-      rw [if_pos h1]
+  by_cases h1:2 * (i % j) < j
+  · repeat' rw [if_pos h1]
     rw [Int.mod_defₓ, sub_sub_cancel]
     
-  · repeat'
-      rw [if_neg h1]
+  · repeat' rw [if_neg h1]
     rw [Int.mod_defₓ, sub_sub, sub_sub_cancel, mul_addₓ, mul_oneₓ]
     
 
-theorem symmod_eq {i j : Int} : symmod i j = i - j * symdiv i j := by
-  rw [mul_symdiv_eq, sub_sub_cancel]
+theorem symmod_eq {i j : Int} : symmod i j = i - j * symdiv i j := by rw [mul_symdiv_eq, sub_sub_cancel]
 
 /-- (sgm v b as n) is the new value assigned to the nth variable
 after a single step of equality elimination using valuation v,
@@ -71,14 +68,13 @@ theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
     simp only [zero_addₓ, coeffs.val_between, List.map]
     cases' @rhs_correct_aux k with d h1
     rw [← h1]
-    by_cases' hk : k < as.length
+    by_cases hk:k < as.length
     · rw [get_map hk, symmod_eq, sub_mul]
       exists d + symdiv (get k as) m * v k
       ring
       
     · rw [not_ltₓ] at hk
-      repeat'
-        rw [get_eq_default_of_le]
+      repeat' rw [get_eq_default_of_le]
       exists d
       rw [add_assocₓ]
       exact hk
@@ -185,8 +181,7 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         by
         apply fun_mono_2 rfl
         simp only [coeffs.val_except, mul_addₓ]
-        repeat'
-          rw [← coeffs.val_between_map_mul]
+        repeat' rw [← coeffs.val_between_map_mul]
         rw [add_add_add_commₓ]
         have h5 :
           add as (List.map (Mul.mul a_n) (List.map (fun x : ℤ => symmod x (get n as + 1)) as)) =
@@ -206,12 +201,10 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
             simp only [m]
             
         simp only [List.length_mapₓ]
-        repeat'
-          rw [← coeffs.val_between_add, h5]
+        repeat' rw [← coeffs.val_between_add, h5]
       _ = -(m * a_n * sgm v b as n) + m * sym_sym m b + coeffs.val_except n v (as.map fun a_i => m * sym_sym m a_i) :=
         by
-        repeat'
-          rw [add_assocₓ]
+        repeat' rw [add_assocₓ]
         apply fun_mono_2
         rfl
         rw [← add_assocₓ]
@@ -239,8 +232,7 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
           
         simp only [List.length_mapₓ, mul_comm _ m]
         rw [← coeffs.val_between_map_mul, List.map_mapₓ]
-      _ = (sym_sym m b + (coeffs.val_except n v (as.map (sym_sym m)) + -a_n * sgm v b as n)) * m := by
-        ring
+      _ = (sym_sym m b + (coeffs.val_except n v (as.map (sym_sym m)) + -a_n * sgm v b as n)) * m := by ring
       _ = term.val (v ⟨n ↦ sgm v b as n⟩) (coeffs_reduce n b as) * m := by
         simp only [coeffs_reduce, term.val, m, a_n]
         rw [← coeffs.val_except_add_eq n, coeffs.val_except_update_set, get_set, update_eq]
@@ -335,10 +327,7 @@ def eqElim : List Ee → Clause → Clause
 open Tactic
 
 theorem sat_empty : Clause.Sat ([], []) :=
-  ⟨fun _ => 0,
-    ⟨by
-      decide, by
-      decide⟩⟩
+  ⟨fun _ => 0, ⟨by decide, by decide⟩⟩
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -356,8 +345,7 @@ theorem sat_empty : Clause.Sat ([], []) :=
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sat
   | [], ([], les), h => h
-  | e::_, ([], les), h => by
-    cases e <;> simp only [eq_elim] <;> apply sat_empty
+  | e::_, ([], les), h => by cases e <;> simp only [eq_elim] <;> apply sat_empty
   | [], (_::_, les), h => sat_empty
   | ee.drop::es, (Eq::eqs, les), h1 => by
     apply @sat_eq_elim es _ _
@@ -377,7 +365,7 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
     rfl
   | ee.nondiv i::es, ((b, as)::eqs, les), h1 => by
     unfold eq_elim
-    by_cases' h2 : ¬i ∣ b ∧ ∀ x : ℤ, x ∈ as → i ∣ x
+    by_cases h2:¬i ∣ b ∧ ∀ x : ℤ, x ∈ as → i ∣ x
     · exfalso
       cases' h1 with v h1
       have h3 : 0 = b + coeffs.val v as := h1.left _ (Or.inl rfl)
@@ -392,7 +380,7 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
     apply sat_empty
   | ee.factor i::es, ((b, as)::eqs, les), h1 => by
     simp only [eq_elim]
-    by_cases' h2 : i ∣ b ∧ ∀ x ∈ as, i ∣ x
+    by_cases h2:i ∣ b ∧ ∀ x ∈ as, i ∣ x
     · rw [if_pos h2]
       apply sat_eq_elim
       cases' h1 with v h1
@@ -409,7 +397,7 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
       
   | ee.reduce n::es, ((b, as)::eqs, les), h1 => by
     simp only [eq_elim]
-    by_cases' h2 : 0 < get n as
+    by_cases h2:0 < get n as
     run_tac
       tactic.rotate 1
     · rw [if_neg h2]

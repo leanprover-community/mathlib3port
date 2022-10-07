@@ -128,8 +128,7 @@ theorem generate_measurable_eq_rec (s : Set (Set α)) :
       obtain ⟨j, hj⟩ := exists_gt i
       exact mem_Union.2 ⟨j, compl_mem_generate_measurable_rec hj hi⟩
       
-    · have : ∀ n, ∃ i, f n ∈ generate_measurable_rec s i := fun n => by
-        simpa using IH n
+    · have : ∀ n, ∃ i, f n ∈ generate_measurable_rec s i := fun n => by simpa using IH n
       choose I hI using this
       refine'
         mem_Union.2
@@ -149,7 +148,7 @@ theorem generate_measurable_eq_rec (s : Set (Set α)) :
     revert t
     apply (aleph 1).ord.out.wo.wf.induction i
     intro j H t ht
-    unfold generate_measurable_rec  at ht
+    unfold generate_measurable_rec at ht
     rcases ht with (((h | h) | ⟨u, ⟨-, ⟨⟨k, hk⟩, rfl⟩, hu⟩, rfl⟩) | ⟨f, rfl⟩)
     · exact generate_measurable.basic t h
       

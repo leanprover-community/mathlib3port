@@ -47,10 +47,7 @@ instance : Coe ℚ≥0 ℚ :=
 theorem val_eq_coe (q : ℚ≥0) : q.val = q :=
   rfl
 
-instance : CanLift ℚ ℚ≥0 where
-  coe := coe
-  cond := fun q => 0 ≤ q
-  prf := fun q hq => ⟨⟨q, hq⟩, rfl⟩
+instance canLift : CanLift ℚ ℚ≥0 coe fun q => 0 ≤ q where prf := fun q hq => ⟨⟨q, hq⟩, rfl⟩
 
 @[ext]
 theorem ext : (p : ℚ) = (q : ℚ) → p = q :=
@@ -123,13 +120,10 @@ theorem coe_bit1 (q : ℚ≥0) : ((bit1 q : ℚ≥0) : ℚ) = bit1 q :=
 
 @[simp, norm_cast]
 theorem coe_sub (h : q ≤ p) : ((p - q : ℚ≥0) : ℚ) = p - q :=
-  max_eq_leftₓ <|
-    le_sub.2 <| by
-      simp [show (q : ℚ) ≤ p from h]
+  max_eq_leftₓ <| le_sub.2 <| by simp [show (q : ℚ) ≤ p from h]
 
 @[simp]
-theorem coe_eq_zero : (q : ℚ) = 0 ↔ q = 0 := by
-  norm_cast
+theorem coe_eq_zero : (q : ℚ) = 0 ↔ q = 0 := by norm_cast
 
 theorem coe_ne_zero : (q : ℚ) ≠ 0 ↔ q ≠ 0 :=
   coe_eq_zero.Not
@@ -146,9 +140,9 @@ theorem coe_lt_coe : (p : ℚ) < q ↔ p < q :=
 theorem coe_pos : (0 : ℚ) < q ↔ 0 < q :=
   Iff.rfl
 
-theorem coe_mono : Monotone (coe : ℚ≥0 → ℚ) := fun _ _ => coe_le_coe.2
+theorem coe_mono : Monotoneₓ (coe : ℚ≥0 → ℚ) := fun _ _ => coe_le_coe.2
 
-theorem to_nnrat_mono : Monotone toNnrat := fun x y h => max_le_max h le_rflₓ
+theorem to_nnrat_mono : Monotoneₓ toNnrat := fun x y h => max_le_max h le_rflₓ
 
 @[simp]
 theorem to_nnrat_coe (q : ℚ≥0) : toNnrat q = q :=
@@ -156,8 +150,7 @@ theorem to_nnrat_coe (q : ℚ≥0) : toNnrat q = q :=
 
 @[simp]
 theorem to_nnrat_coe_nat (n : ℕ) : toNnrat n = n :=
-  ext <| by
-    simp [Ratₓ.coe_to_nnrat]
+  ext <| by simp [Ratₓ.coe_to_nnrat]
 
 /-- `to_nnrat` and `coe : ℚ≥0 → ℚ` form a Galois insertion. -/
 protected def gi : GaloisInsertion toNnrat coe :=
@@ -221,26 +214,22 @@ theorem coe_multiset_prod (s : Multiset ℚ≥0) : (s.Prod : ℚ) = (s.map coe).
   coeHom.map_multiset_prod _
 
 @[norm_cast]
-theorem coe_sum {s : Finset α} {f : α → ℚ≥0} : ↑(∑ a in s, f a) = ∑ a in s, (f a : ℚ) :=
+theorem coe_sum {s : Finsetₓ α} {f : α → ℚ≥0} : ↑(∑ a in s, f a) = ∑ a in s, (f a : ℚ) :=
   coeHom.map_sum _ _
 
-theorem to_nnrat_sum_of_nonneg {s : Finset α} {f : α → ℚ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
+theorem to_nnrat_sum_of_nonneg {s : Finsetₓ α} {f : α → ℚ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
     (∑ a in s, f a).toNnrat = ∑ a in s, (f a).toNnrat := by
-  rw [← coe_inj, coe_sum, Ratₓ.coe_to_nnrat _ (Finset.sum_nonneg hf)]
-  exact
-    Finset.sum_congr rfl fun x hxs => by
-      rw [Ratₓ.coe_to_nnrat _ (hf x hxs)]
+  rw [← coe_inj, coe_sum, Ratₓ.coe_to_nnrat _ (Finsetₓ.sum_nonneg hf)]
+  exact Finsetₓ.sum_congr rfl fun x hxs => by rw [Ratₓ.coe_to_nnrat _ (hf x hxs)]
 
 @[norm_cast]
-theorem coe_prod {s : Finset α} {f : α → ℚ≥0} : ↑(∏ a in s, f a) = ∏ a in s, (f a : ℚ) :=
+theorem coe_prod {s : Finsetₓ α} {f : α → ℚ≥0} : ↑(∏ a in s, f a) = ∏ a in s, (f a : ℚ) :=
   coeHom.map_prod _ _
 
-theorem to_nnrat_prod_of_nonneg {s : Finset α} {f : α → ℚ} (hf : ∀ a ∈ s, 0 ≤ f a) :
+theorem to_nnrat_prod_of_nonneg {s : Finsetₓ α} {f : α → ℚ} (hf : ∀ a ∈ s, 0 ≤ f a) :
     (∏ a in s, f a).toNnrat = ∏ a in s, (f a).toNnrat := by
-  rw [← coe_inj, coe_prod, Ratₓ.coe_to_nnrat _ (Finset.prod_nonneg hf)]
-  exact
-    Finset.prod_congr rfl fun x hxs => by
-      rw [Ratₓ.coe_to_nnrat _ (hf x hxs)]
+  rw [← coe_inj, coe_prod, Ratₓ.coe_to_nnrat _ (Finsetₓ.prod_nonneg hf)]
+  exact Finsetₓ.prod_congr rfl fun x hxs => by rw [Ratₓ.coe_to_nnrat _ (hf x hxs)]
 
 @[norm_cast]
 theorem nsmul_coe (q : ℚ≥0) (n : ℕ) : ↑(n • q) = n • (q : ℚ) :=
@@ -278,26 +267,21 @@ namespace Ratₓ
 variable {p q : ℚ}
 
 @[simp]
-theorem to_nnrat_zero : toNnrat 0 = 0 := by
-  simp [to_nnrat] <;> rfl
+theorem to_nnrat_zero : toNnrat 0 = 0 := by simp [to_nnrat] <;> rfl
 
 @[simp]
-theorem to_nnrat_one : toNnrat 1 = 1 := by
-  simp [to_nnrat, max_eq_leftₓ zero_le_one]
+theorem to_nnrat_one : toNnrat 1 = 1 := by simp [to_nnrat, max_eq_leftₓ zero_le_one]
 
 @[simp]
-theorem to_nnrat_pos : 0 < toNnrat q ↔ 0 < q := by
-  simp [to_nnrat, ← coe_lt_coe]
+theorem to_nnrat_pos : 0 < toNnrat q ↔ 0 < q := by simp [to_nnrat, ← coe_lt_coe]
 
 @[simp]
-theorem to_nnrat_eq_zero : toNnrat q = 0 ↔ q ≤ 0 := by
-  simpa [-to_nnrat_pos] using (@to_nnrat_pos q).Not
+theorem to_nnrat_eq_zero : toNnrat q = 0 ↔ q ≤ 0 := by simpa [-to_nnrat_pos] using (@to_nnrat_pos q).Not
 
 alias to_nnrat_eq_zero ↔ _ to_nnrat_of_nonpos
 
 @[simp]
-theorem to_nnrat_le_to_nnrat_iff (hp : 0 ≤ p) : toNnrat q ≤ toNnrat p ↔ q ≤ p := by
-  simp [← coe_le_coe, to_nnrat, hp]
+theorem to_nnrat_le_to_nnrat_iff (hp : 0 ≤ p) : toNnrat q ≤ toNnrat p ↔ q ≤ p := by simp [← coe_le_coe, to_nnrat, hp]
 
 @[simp]
 theorem to_nnrat_lt_to_nnrat_iff' : toNnrat q < toNnrat p ↔ q < p ∧ 0 < p := by
@@ -312,8 +296,7 @@ theorem to_nnrat_lt_to_nnrat_iff_of_nonneg (hq : 0 ≤ q) : toNnrat q < toNnrat 
 
 @[simp]
 theorem to_nnrat_add (hq : 0 ≤ q) (hp : 0 ≤ p) : toNnrat (q + p) = toNnrat q + toNnrat p :=
-  Nnrat.ext <| by
-    simp [to_nnrat, hq, hp, add_nonneg]
+  Nnrat.ext <| by simp [to_nnrat, hq, hp, add_nonneg]
 
 theorem to_nnrat_add_le : toNnrat (q + p) ≤ toNnrat q + toNnrat p :=
   coe_le_coe.1 <| max_leₓ (add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)) <| coe_nonneg _
@@ -340,12 +323,7 @@ theorem to_nnrat_bit0 (hq : 0 ≤ q) : toNnrat (bit0 q) = bit0 (toNnrat q) :=
 
 @[simp]
 theorem to_nnrat_bit1 (hq : 0 ≤ q) : toNnrat (bit1 q) = bit1 (toNnrat q) :=
-  (to_nnrat_add
-        (by
-          simp [hq])
-        zero_le_one).trans <|
-    by
-    simp [to_nnrat_one, bit1, hq]
+  (to_nnrat_add (by simp [hq]) zero_le_one).trans <| by simp [to_nnrat_one, bit1, hq]
 
 theorem to_nnrat_mul (hp : 0 ≤ p) : toNnrat (p * q) = toNnrat p * toNnrat q := by
   cases' le_totalₓ 0 q with hq hq
@@ -359,7 +337,7 @@ theorem to_nnrat_inv (q : ℚ) : toNnrat q⁻¹ = (toNnrat q)⁻¹ := by
   obtain hq | hq := le_totalₓ q 0
   · rw [to_nnrat_eq_zero.mpr hq, inv_zero, to_nnrat_eq_zero.mpr (inv_nonpos.mpr hq)]
     
-  · nth_rw 0[← Ratₓ.coe_to_nnrat q hq]
+  · nth_rw 0 [← Ratₓ.coe_to_nnrat q hq]
     rw [← coe_inv, to_nnrat_coe]
     
 
@@ -377,8 +355,7 @@ def Ratₓ.nnabs (x : ℚ) : ℚ≥0 :=
   ⟨abs x, abs_nonneg x⟩
 
 @[norm_cast, simp]
-theorem Ratₓ.coe_nnabs (x : ℚ) : (Ratₓ.nnabs x : ℚ) = abs x := by
-  simp [Ratₓ.nnabs]
+theorem Ratₓ.coe_nnabs (x : ℚ) : (Ratₓ.nnabs x : ℚ) = abs x := by simp [Ratₓ.nnabs]
 
 /-! ### Numerator and denominator -/
 

@@ -107,7 +107,7 @@ def continuousLocal (T : Top.{v}) : LocalPredicate fun x : X => T :=
       intro x
       specialize w x
       rcases w with ⟨V, m, i, w⟩
-      dsimp'  at w
+      dsimp at w
       rw [continuous_iff_continuous_at] at w
       specialize w ⟨x, m⟩
       simpa using (opens.open_embedding_of_le i.le).continuous_at_iff.1 w }
@@ -217,7 +217,7 @@ def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.s
 @[simp]
 theorem stalk_to_fiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
     stalkToFiber P x ((subsheafToTypes P).Presheaf.germ x f) = f.1 x := by
-  dsimp' [presheaf.germ, stalk_to_fiber]
+  dsimp [presheaf.germ, stalk_to_fiber]
   cases x
   simp
   rfl
@@ -257,7 +257,7 @@ theorem stalk_to_fiber_injective (P : LocalPredicate T) (x : X)
   obtain ⟨U, ⟨fU, hU⟩, rfl⟩ := jointly_surjective'.{v, v} tU
   obtain ⟨V, ⟨fV, hV⟩, rfl⟩ := jointly_surjective'.{v, v} tV
   · -- Decompose everything into its constituent parts:
-    dsimp'
+    dsimp
     simp only [stalk_to_fiber, types.colimit.ι_desc_apply'] at h
     specialize w (unop U) (unop V) fU hU fV hV h
     rcases w with ⟨W, iU, iV, w⟩
@@ -287,8 +287,7 @@ def subpresheafContinuousPrelocalIsoPresheafToTop (T : Top.{v}) :
         inv_hom_id' := by
           ext ⟨f, p⟩ x
           rfl })
-    (by
-      tidy)
+    (by tidy)
 
 /-- The sheaf of continuous functions on `X` with values in a space `T`.
 -/

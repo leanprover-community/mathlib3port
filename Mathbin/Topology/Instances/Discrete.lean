@@ -29,12 +29,10 @@ instance (priority := 100) DiscreteTopology.first_countable_topology [DiscreteTo
     exact Filter.is_countably_generated_pure
 
 instance (priority := 100) DiscreteTopology.second_countable_topology_of_encodable [hd : DiscreteTopology α]
-    [Encodable α] : SecondCountableTopology α := by
-  have : ∀ i : α, second_countable_topology ↥({i} : Set α) := fun i =>
-    { is_open_generated_countable :=
-        ⟨{univ}, countable_singleton _, by
-          simp only [eq_iff_true_of_subsingleton]⟩ }
-  exact second_countable_topology_of_countable_cover (singletons_open_iff_discrete.mpr hd) (Union_of_singleton α)
+    [Encodable α] : SecondCountableTopology α :=
+  haveI : ∀ i : α, second_countable_topology ↥({i} : Set α) := fun i =>
+    { is_open_generated_countable := ⟨{univ}, countable_singleton _, by simp only [eq_iff_true_of_subsingleton]⟩ }
+  second_countable_topology_of_countable_cover (singletons_open_iff_discrete.mpr hd) (Union_of_singleton α)
 
 instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ' [h : DiscreteTopology α] [PartialOrderₓ α]
     [PredOrder α] [SuccOrder α] [NoMinOrder α] [NoMaxOrder α] : OrderTopology α :=
@@ -58,11 +56,10 @@ instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ [h : Dis
   ⟨by
     rw [h.eq_bot]
     refine' (eq_bot_of_singletons_open fun a => _).symm
-    have h_singleton_eq_inter : {a} = Iic a ∩ Ici a := by
-      rw [inter_comm, Ici_inter_Iic, Icc_self a]
-    by_cases' ha_top : IsTop a
+    have h_singleton_eq_inter : {a} = Iic a ∩ Ici a := by rw [inter_comm, Ici_inter_Iic, Icc_self a]
+    by_cases ha_top:IsTop a
     · rw [ha_top.Iic_eq, inter_comm, inter_univ] at h_singleton_eq_inter
-      by_cases' ha_bot : IsBot a
+      by_cases ha_bot:IsBot a
       · rw [ha_bot.Ici_eq] at h_singleton_eq_inter
         rw [h_singleton_eq_inter]
         apply is_open_univ
@@ -75,7 +72,7 @@ instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ [h : Dis
       
     · rw [is_top_iff_is_max] at ha_top
       rw [← Iio_succ_of_not_is_max ha_top] at h_singleton_eq_inter
-      by_cases' ha_bot : IsBot a
+      by_cases ha_bot:IsBot a
       · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
         rw [h_singleton_eq_inter]
         exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩

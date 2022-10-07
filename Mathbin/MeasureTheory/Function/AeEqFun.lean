@@ -148,12 +148,10 @@ theorem mk_coe_fn (f : α →ₘ[μ] β) : mk f f.AeStronglyMeasurable = f := by
   exact (ae_strongly_measurable.ae_eq_mk _).symm
 
 @[ext]
-theorem ext {f g : α →ₘ[μ] β} (h : f =ᵐ[μ] g) : f = g := by
-  rwa [← f.mk_coe_fn, ← g.mk_coe_fn, mk_eq_mk]
+theorem ext {f g : α →ₘ[μ] β} (h : f =ᵐ[μ] g) : f = g := by rwa [← f.mk_coe_fn, ← g.mk_coe_fn, mk_eq_mk]
 
 theorem ext_iff {f g : α →ₘ[μ] β} : f = g ↔ f =ᵐ[μ] g :=
-  ⟨fun h => by
-    rw [h], fun h => ext h⟩
+  ⟨fun h => by rw [h], fun h => ext h⟩
 
 theorem coe_fn_mk (f : α → β) (hf) : (mk f hf : α →ₘ[μ] β) =ᵐ[μ] f := by
   apply (ae_strongly_measurable.ae_eq_mk _).symm.trans
@@ -263,8 +261,7 @@ theorem comp₂_eq_mk (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁
     comp₂ g hg f₁ f₂ =
       mk (fun a => g (f₁ a) (f₂ a))
         (hg.comp_ae_strongly_measurable (f₁.AeStronglyMeasurable.prod_mk f₂.AeStronglyMeasurable)) :=
-  by
-  rw [comp₂_eq_pair, pair_eq_mk, comp_mk] <;> rfl
+  by rw [comp₂_eq_pair, pair_eq_mk, comp_mk] <;> rfl
 
 theorem coe_fn_comp₂ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α →ₘ[μ] β) (f₂ : α →ₘ[μ] γ) :
     comp₂ g hg f₁ f₂ =ᵐ[μ] fun a => g (f₁ a) (f₂ a) := by
@@ -299,8 +296,7 @@ theorem comp₂_measurable_eq_mk (g : β → γ → δ) (hg : Measurable (uncurr
     comp₂Measurable g hg f₁ f₂ =
       mk (fun a => g (f₁ a) (f₂ a))
         (hg.comp_ae_measurable (f₁.AeMeasurable.prod_mk f₂.AeMeasurable)).AeStronglyMeasurable :=
-  by
-  rw [comp₂_measurable_eq_pair, pair_eq_mk, comp_measurable_mk] <;> rfl
+  by rw [comp₂_measurable_eq_pair, pair_eq_mk, comp_measurable_mk] <;> rfl
 
 theorem coe_fn_comp₂_measurable (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β) (f₂ : α →ₘ[μ] γ) :
     comp₂Measurable g hg f₁ f₂ =ᵐ[μ] fun a => g (f₁ a) (f₂ a) := by
@@ -318,36 +314,29 @@ def toGerm (f : α →ₘ[μ] β) : Germ μ.ae β :=
 theorem mk_to_germ (f : α → β) (hf) : (mk f hf : α →ₘ[μ] β).toGerm = f :=
   rfl
 
-theorem to_germ_eq (f : α →ₘ[μ] β) : f.toGerm = (f : α → β) := by
-  rw [← mk_to_germ, mk_coe_fn]
+theorem to_germ_eq (f : α →ₘ[μ] β) : f.toGerm = (f : α → β) := by rw [← mk_to_germ, mk_coe_fn]
 
 theorem to_germ_injective : Injective (toGerm : (α →ₘ[μ] β) → Germ μ.ae β) := fun f g H =>
-  ext <|
-    Germ.coe_eq.1 <| by
-      rwa [← to_germ_eq, ← to_germ_eq]
+  ext <| Germ.coe_eq.1 <| by rwa [← to_germ_eq, ← to_germ_eq]
 
 theorem comp_to_germ (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) : (comp g hg f).toGerm = f.toGerm.map g :=
-  (induction_on f) fun f hf => by
-    simp
+  (induction_on f) fun f hf => by simp
 
 theorem comp_measurable_to_germ [MeasurableSpace β] [BorelSpace β] [PseudoMetrizableSpace β] [PseudoMetrizableSpace γ]
     [SecondCountableTopology γ] [MeasurableSpace γ] [OpensMeasurableSpace γ] (g : β → γ) (hg : Measurable g)
     (f : α →ₘ[μ] β) : (compMeasurable g hg f).toGerm = f.toGerm.map g :=
-  (induction_on f) fun f hf => by
-    simp
+  (induction_on f) fun f hf => by simp
 
 theorem comp₂_to_germ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α →ₘ[μ] β) (f₂ : α →ₘ[μ] γ) :
     (comp₂ g hg f₁ f₂).toGerm = f₁.toGerm.map₂ g f₂.toGerm :=
-  (induction_on₂ f₁ f₂) fun f₁ hf₁ f₂ hf₂ => by
-    simp
+  (induction_on₂ f₁ f₂) fun f₁ hf₁ f₂ hf₂ => by simp
 
 theorem comp₂_measurable_to_germ [PseudoMetrizableSpace β] [SecondCountableTopology β] [MeasurableSpace β]
     [BorelSpace β] [PseudoMetrizableSpace γ] [SecondCountableTopology γ] [MeasurableSpace γ] [BorelSpace γ]
     [PseudoMetrizableSpace δ] [SecondCountableTopology δ] [MeasurableSpace δ] [OpensMeasurableSpace δ] (g : β → γ → δ)
     (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β) (f₂ : α →ₘ[μ] γ) :
     (comp₂Measurable g hg f₁ f₂).toGerm = f₁.toGerm.map₂ g f₂.toGerm :=
-  (induction_on₂ f₁ f₂) fun f₁ hf₁ f₂ hf₂ => by
-    simp
+  (induction_on₂ f₁ f₂) fun f₁ hf₁ f₂ hf₂ => by simp
 
 /-- Given a predicate `p` and an equivalence class `[f]`, return true if `p` holds of `f a`
     for almost all `a` -/
@@ -364,8 +353,7 @@ theorem lift_rel_mk_mk {r : β → γ → Prop} {f : α → β} {g : α → γ} 
   Iff.rfl
 
 theorem lift_rel_iff_coe_fn {r : β → γ → Prop} {f : α →ₘ[μ] β} {g : α →ₘ[μ] γ} :
-    LiftRel r f g ↔ ∀ᵐ a ∂μ, r (f a) (g a) := by
-  rw [← lift_rel_mk_mk, mk_coe_fn, mk_coe_fn]
+    LiftRel r f g ↔ ∀ᵐ a ∂μ, r (f a) (g a) := by rw [← lift_rel_mk_mk, mk_coe_fn, mk_coe_fn]
 
 section Order
 
@@ -508,19 +496,13 @@ theorem smul_to_germ (c : 𝕜) (f : α →ₘ[μ] γ) : (c • f).toGerm = c �
   comp_to_germ _ _ _
 
 instance [SmulCommClass 𝕜 𝕜' γ] : SmulCommClass 𝕜 𝕜' (α →ₘ[μ] γ) :=
-  ⟨fun a b f =>
-    (induction_on f) fun f hf => by
-      simp_rw [smul_mk, smul_comm]⟩
+  ⟨fun a b f => (induction_on f) fun f hf => by simp_rw [smul_mk, smul_comm]⟩
 
 instance [HasSmul 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' γ] : IsScalarTower 𝕜 𝕜' (α →ₘ[μ] γ) :=
-  ⟨fun a b f =>
-    (induction_on f) fun f hf => by
-      simp_rw [smul_mk, smul_assoc]⟩
+  ⟨fun a b f => (induction_on f) fun f hf => by simp_rw [smul_mk, smul_assoc]⟩
 
 instance [HasSmul 𝕜ᵐᵒᵖ γ] [IsCentralScalar 𝕜 γ] : IsCentralScalar 𝕜 (α →ₘ[μ] γ) :=
-  ⟨fun a f =>
-    (induction_on f) fun f hf => by
-      simp_rw [smul_mk, op_smul_eq_smul]⟩
+  ⟨fun a f => (induction_on f) fun f hf => by simp_rw [smul_mk, op_smul_eq_smul]⟩
 
 end HasSmul
 
@@ -698,8 +680,7 @@ def lintegral (f : α →ₘ[μ] ℝ≥0∞) : ℝ≥0∞ :=
 theorem lintegral_mk (f : α → ℝ≥0∞) (hf) : (mk f hf : α →ₘ[μ] ℝ≥0∞).lintegral = ∫⁻ a, f a ∂μ :=
   rfl
 
-theorem lintegral_coe_fn (f : α →ₘ[μ] ℝ≥0∞) : (∫⁻ a, f a ∂μ) = f.lintegral := by
-  rw [← lintegral_mk, mk_coe_fn]
+theorem lintegral_coe_fn (f : α →ₘ[μ] ℝ≥0∞) : (∫⁻ a, f a ∂μ) = f.lintegral := by rw [← lintegral_mk, mk_coe_fn]
 
 @[simp]
 theorem lintegral_zero : lintegral (0 : α →ₘ[μ] ℝ≥0∞) = 0 :=
@@ -710,8 +691,7 @@ theorem lintegral_eq_zero_iff {f : α →ₘ[μ] ℝ≥0∞} : lintegral f = 0 �
   (induction_on f) fun f hf => (lintegral_eq_zero_iff' hf.AeMeasurable).trans mk_eq_mk.symm
 
 theorem lintegral_add (f g : α →ₘ[μ] ℝ≥0∞) : lintegral (f + g) = lintegral f + lintegral g :=
-  (induction_on₂ f g) fun f hf g hg => by
-    simp [lintegral_add_left' hf.ae_measurable]
+  (induction_on₂ f g) fun f hf g hg => by simp [lintegral_add_left' hf.ae_measurable]
 
 theorem lintegral_mono {f g : α →ₘ[μ] ℝ≥0∞} : f ≤ g → lintegral f ≤ lintegral g :=
   (induction_on₂ f g) fun f hf g hg hfg => lintegral_mono_ae hfg

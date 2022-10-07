@@ -132,7 +132,7 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
     apply (f i j).property
     
   rintro ⟨a, f, h₀, h₁⟩
-  dsimp'  at *
+  dsimp at *
   use abs ⟨a, fun i j => ⟨f i j, h₁ i j⟩⟩
   rw [← abs_map, h₀]
   rfl
@@ -156,7 +156,7 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
     
   rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
   use abs ⟨a, fun i j => ⟨(f₀ i j, f₁ i j), h i j⟩⟩
-  dsimp'
+  dsimp
   constructor
   · rw [xeq, ← abs_map]
     rfl
@@ -170,7 +170,7 @@ open Mvfunctor
 
 theorem mem_supp {α : Typevec n} (x : F α) (i) (u : α i) : u ∈ Supp x i ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ := by
   rw [supp]
-  dsimp'
+  dsimp
   constructor
   · intro h a f haf
     have : liftp (fun i u => u ∈ f i '' univ) x := by
@@ -205,8 +205,7 @@ theorem has_good_supp_iff {α : Typevec n} (x : F α) :
     refine' ⟨a, f, xeq.symm, _⟩
     intro a' f' h''
     rintro hu u ⟨j, h₂, hfi⟩
-    have hh : u ∈ supp x a' := by
-      rw [← hfi] <;> apply h'
+    have hh : u ∈ supp x a' := by rw [← hfi] <;> apply h'
     refine' (mem_supp x _ u).mp hh _ _ hu
     
   rintro ⟨a, f, xeq, h⟩ p
@@ -296,7 +295,7 @@ theorem supp_preservation_iff_liftp_preservation : q.SuppPreservation ↔ q.Lift
   · rintro α p ⟨a, f⟩
     have h' := h
     rw [supp_preservation_iff_uniform] at h'
-    dsimp' only [supp_preservation, supp]  at h
+    dsimp only [supp_preservation, supp] at h
     simp only [liftp_iff_of_is_uniform, supp_eq_of_is_uniform, Mvpfunctor.liftp_iff', h', image_univ, mem_range,
       exists_imp_distrib]
     constructor <;> intros <;> subst_vars <;> solve_by_elim

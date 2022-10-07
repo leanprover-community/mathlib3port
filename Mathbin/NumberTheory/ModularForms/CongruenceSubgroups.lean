@@ -64,8 +64,8 @@ theorem Gamma_mem (N : ℕ) (γ : SL(2, ℤ)) :
     rw [SL_reduction_mod_hom_val N γ]
     fin_cases i <;> fin_cases j
     all_goals
-      simp_rw [h]
-      rfl
+    simp_rw [h]
+    rfl
     
 
 theorem Gamma_normal (N : ℕ) : Subgroup.Normal (gamma N) :=
@@ -77,7 +77,6 @@ theorem Gamma_one_top : gamma 1 = ⊤ := by
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 theorem Gamma_zero_bot : gamma 0 = ⊥ := by
   ext
   simp only [Gamma_mem, coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom, map_apply, Int.cast_id, Subgroup.mem_bot]
@@ -85,8 +84,7 @@ theorem Gamma_zero_bot : gamma 0 = ⊥ := by
   · intro h
     ext
     fin_cases i <;> fin_cases j
-    any_goals {
-    }
+    any_goals simp [h]
     
   · intro h
     simp [h]
@@ -96,8 +94,7 @@ theorem Gamma_zero_bot : gamma 0 = ⊥ := by
 modulo `N`. -/
 def gamma0 (N : ℕ) : Subgroup SL(2, ℤ) where
   Carrier := { g : SL(2, ℤ) | ((↑ₘg 1 0 : ℤ) : Zmod N) = 0 }
-  one_mem' := by
-    simp
+  one_mem' := by simp
   mul_mem' := by
     intro a b ha hb
     simp only [Set.mem_set_of_eq]
@@ -118,15 +115,13 @@ def gamma0 (N : ℕ) : Subgroup SL(2, ℤ) where
 theorem Gamma0_mem (N : ℕ) (A : SL(2, ℤ)) : A ∈ gamma0 N ↔ ((↑ₘA 1 0 : ℤ) : Zmod N) = 0 :=
   Iff.rfl
 
-theorem Gamma0_det (N : ℕ) (A : gamma0 N) : (A.1.1.det : Zmod N) = 1 := by
-  simp [A.1.property]
+theorem Gamma0_det (N : ℕ) (A : gamma0 N) : (A.1.1.det : Zmod N) = 1 := by simp [A.1.property]
 
 /-- The group homomorphism from `Gamma0` to `zmod N` given by mapping a matrix to its lower
 right-hand entry. -/
 def gamma0Map (N : ℕ) : gamma0 N →* Zmod N where
   toFun := fun g => ((↑ₘg 1 1 : ℤ) : Zmod N)
-  map_one' := by
-    simp
+  map_one' := by simp
   map_mul' := by
     intro A B
     have := (two_mul_expl A.1.1 B.1.1).2.2.2
@@ -186,8 +181,7 @@ theorem Gamma1_mem (N : ℕ) (A : SL(2, ℤ)) :
     
   · intro ha
     simp_rw [gamma1, Subgroup.mem_map]
-    have hA : A ∈ gamma0 N := by
-      simp [ha.right.right, Gamma0_mem, Subtype.val_eq_coe]
+    have hA : A ∈ gamma0 N := by simp [ha.right.right, Gamma0_mem, Subtype.val_eq_coe]
     have HA : (⟨A, hA⟩ : gamma0 N) ∈ gamma1' N := by
       simp only [Gamma1_to_Gamma0_mem, Subgroup.coe_mk, coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom, map_apply]
       exact ha
@@ -213,8 +207,7 @@ theorem is_congruence_subgroup_trans (H K : Subgroup SL(2, ℤ)) (h : H ≤ K) (
   refine' ⟨N, le_transₓ hN h⟩
 
 theorem Gamma_is_cong_sub (N : ℕ+) : IsCongruenceSubgroup (gamma N) :=
-  ⟨N, by
-    simp only [le_reflₓ]⟩
+  ⟨N, by simp only [le_reflₓ]⟩
 
 theorem Gamma1_is_congruence (N : ℕ+) : IsCongruenceSubgroup (gamma1 N) := by
   refine' ⟨N, _⟩

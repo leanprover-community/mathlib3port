@@ -101,11 +101,11 @@ variable (M : Matrix n n α)
 
 theorem hadamard_one : M ⊙ (1 : Matrix n n α) = diagonalₓ fun i => M i i := by
   ext
-  by_cases' h : i = j <;> simp [h]
+  by_cases h:i = j <;> simp [h]
 
 theorem one_hadamard : (1 : Matrix n n α) ⊙ M = diagonalₓ fun i => M i i := by
   ext
-  by_cases' h : i = j <;> simp [h]
+  by_cases h:i = j <;> simp [h]
 
 end One
 
@@ -120,7 +120,7 @@ end Diagonal
 
 section trace
 
-variable [Fintype m] [Fintype n]
+variable [Fintypeₓ m] [Fintypeₓ n]
 
 variable (R) [Semiringₓ α] [Semiringₓ R] [Module R α]
 
@@ -129,8 +129,8 @@ theorem sum_hadamard_eq : (∑ (i : m) (j : n), (A ⊙ B) i j) = trace (A ⬝ B�
 
 theorem dot_product_vec_mul_hadamard [DecidableEq m] [DecidableEq n] (v : m → α) (w : n → α) :
     dotProduct (vecMulₓ v (A ⊙ B)) w = trace (diagonalₓ v ⬝ A ⬝ (B ⬝ diagonalₓ w)ᵀ) := by
-  rw [← sum_hadamard_eq, Finset.sum_comm]
-  simp [dot_product, vec_mul, Finset.sum_mul, mul_assoc]
+  rw [← sum_hadamard_eq, Finsetₓ.sum_comm]
+  simp [dot_product, vec_mul, Finsetₓ.sum_mul, mul_assoc]
 
 end trace
 

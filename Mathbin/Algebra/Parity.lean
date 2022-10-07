@@ -3,11 +3,7 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.Ring.Basic
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.GroupPower.Basic
-import Mathbin.Algebra.FieldPower
-import Mathbin.Algebra.Opposites
+import Mathbin.Algebra.Associated
 
 /-!  # Squares, even and odd elements
 
@@ -54,15 +50,11 @@ theorem is_square_mul_self (m : α) : IsSquare (m * m) :=
 
 @[to_additive]
 theorem is_square_op_iff (a : α) : IsSquare (op a) ↔ IsSquare a :=
-  ⟨fun ⟨c, hc⟩ =>
-    ⟨unop c, by
-      rw [← unop_mul, ← hc, unop_op]⟩,
-    fun ⟨c, hc⟩ => by
-    simp [hc]⟩
+  ⟨fun ⟨c, hc⟩ => ⟨unop c, by rw [← unop_mul, ← hc, unop_op]⟩, fun ⟨c, hc⟩ => by simp [hc]⟩
 
 /-- Create a decidability instance for `is_square` on `fintype`s. -/
-instance isSquareDecidable [Fintype α] [DecidableEq α] : DecidablePred (IsSquare : α → Prop) := fun a =>
-  Fintype.decidableExistsFintype
+instance isSquareDecidable [Fintypeₓ α] [DecidableEq α] : DecidablePred (IsSquare : α → Prop) := fun a =>
+  Fintypeₓ.decidableExistsFintype
 
 end Mul
 
@@ -74,17 +66,14 @@ theorem is_square_one [MulOneClassₓ α] : IsSquare (1 : α) :=
 theorem IsSquare.map [MulOneClassₓ α] [MulOneClassₓ β] [MonoidHomClass F α β] {m : α} (f : F) :
     IsSquare m → IsSquare (f m) := by
   rintro ⟨m, rfl⟩
-  exact
-    ⟨f m, by
-      simp ⟩
+  exact ⟨f m, by simp⟩
 
 section Monoidₓ
 
 variable [Monoidₓ α] {n : ℕ} {a : α}
 
 @[to_additive even_iff_exists_two_nsmul]
-theorem is_square_iff_exists_sq (m : α) : IsSquare m ↔ ∃ c, m = c ^ 2 := by
-  simp [IsSquare, pow_two]
+theorem is_square_iff_exists_sq (m : α) : IsSquare m ↔ ∃ c, m = c ^ 2 := by simp [IsSquare, pow_two]
 
 alias is_square_iff_exists_sq ↔ IsSquare.exists_sq is_square_of_exists_sq
 
@@ -114,8 +103,7 @@ theorem Even.neg_pow : Even n → ∀ a : α, -a ^ n = a ^ n := by
   rintro ⟨c, rfl⟩ a
   simp_rw [← two_mul, pow_mulₓ, neg_sq]
 
-theorem Even.neg_one_pow (h : Even n) : (-1 : α) ^ n = 1 := by
-  rw [h.neg_pow, one_pow]
+theorem Even.neg_one_pow (h : Even n) : (-1 : α) ^ n = 1 := by rw [h.neg_pow, one_pow]
 
 end Monoidₓ
 
@@ -184,8 +172,7 @@ theorem Even.neg_zpow : Even n → ∀ a : α, -a ^ n = a ^ n := by
   rintro ⟨c, rfl⟩ a
   exact zpow_bit0_neg _ _
 
-theorem Even.neg_one_zpow (h : Even n) : (-1 : α) ^ n = 1 := by
-  rw [h.neg_zpow, one_zpow]
+theorem Even.neg_one_zpow (h : Even n) : (-1 : α) ^ n = 1 := by rw [h.neg_zpow, one_zpow]
 
 end DivisionMonoid
 
@@ -223,11 +210,9 @@ section Semiringₓ
 
 variable [Semiringₓ α] [Semiringₓ β] {m n : α}
 
-theorem even_iff_exists_two_mul (m : α) : Even m ↔ ∃ c, m = 2 * c := by
-  simp [even_iff_exists_two_nsmul]
+theorem even_iff_exists_two_mul (m : α) : Even m ↔ ∃ c, m = 2 * c := by simp [even_iff_exists_two_nsmul]
 
-theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a := by
-  simp [Even, Dvd.Dvd, two_mul]
+theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a := by simp [Even, Dvd.Dvd, two_mul]
 
 @[simp]
 theorem range_two_mul (α : Type _) [Semiringₓ α] : (Set.Range fun x : α => 2 * x) = { a | Even a } := by
@@ -283,9 +268,7 @@ theorem range_two_mul_add_one (α : Type _) [Semiringₓ α] : (Set.Range fun x 
 
 theorem Even.add_odd : Even m → Odd n → Odd (m + n) := by
   rintro ⟨m, rfl⟩ ⟨n, rfl⟩
-  exact
-    ⟨m + n, by
-      rw [mul_addₓ, ← two_mul, add_assocₓ]⟩
+  exact ⟨m + n, by rw [mul_addₓ, ← two_mul, add_assocₓ]⟩
 
 theorem Odd.add_even (hm : Odd m) (hn : Even n) : Odd (m + n) := by
   rw [add_commₓ]
@@ -307,9 +290,7 @@ theorem odd_two_mul_add_one (m : α) : Odd (2 * m + 1) :=
 
 theorem Odd.map [RingHomClass F α β] (f : F) : Odd m → Odd (f m) := by
   rintro ⟨m, rfl⟩
-  exact
-    ⟨f m, by
-      simp [two_mul]⟩
+  exact ⟨f m, by simp [two_mul]⟩
 
 @[simp]
 theorem Odd.mul : Odd m → Odd n → Odd (m * n) := by
@@ -338,8 +319,7 @@ theorem Odd.neg_pow : Odd n → ∀ a : α, -a ^ n = -(a ^ n) := by
   rintro ⟨c, rfl⟩ a
   simp_rw [pow_addₓ, pow_mulₓ, neg_sq, pow_oneₓ, mul_neg]
 
-theorem Odd.neg_one_pow (h : Odd n) : (-1 : α) ^ n = -1 := by
-  rw [h.neg_pow, one_pow]
+theorem Odd.neg_one_pow (h : Odd n) : (-1 : α) ^ n = -1 := by rw [h.neg_pow, one_pow]
 
 end Monoidₓ
 
@@ -361,8 +341,7 @@ section Ringₓ
 variable [Ringₓ α] {a b : α} {n : ℕ}
 
 @[simp]
-theorem even_neg_two : Even (-2 : α) := by
-  simp only [even_neg, even_two]
+theorem even_neg_two : Even (-2 : α) := by simp only [even_neg, even_two]
 
 theorem Odd.neg (hp : Odd a) : Odd (-a) := by
   obtain ⟨k, hk⟩ := hp
@@ -374,8 +353,7 @@ theorem odd_neg : Odd (-a) ↔ Odd a :=
   ⟨fun h => neg_negₓ a ▸ h.neg, Odd.neg⟩
 
 @[simp]
-theorem odd_neg_one : Odd (-1 : α) := by
-  simp
+theorem odd_neg_one : Odd (-1 : α) := by simp
 
 theorem Odd.sub_even (ha : Odd a) (hb : Even b) : Odd (a - b) := by
   rw [sub_eq_add_neg]
@@ -389,8 +367,7 @@ theorem Odd.sub_odd (ha : Odd a) (hb : Odd b) : Even (a - b) := by
   rw [sub_eq_add_neg]
   exact ha.add_odd hb.neg
 
-theorem odd_abs [LinearOrderₓ α] : Odd (abs a) ↔ Odd a := by
-  cases' abs_choice a with h h <;> simp only [h, odd_neg]
+theorem odd_abs [LinearOrderₓ α] : Odd (abs a) ↔ Odd a := by cases' abs_choice a with h h <;> simp only [h, odd_neg]
 
 end Ringₓ
 
@@ -435,16 +412,16 @@ theorem Even.pow_abs {p : ℕ} (hp : Even p) (a : R) : abs a ^ p = a ^ p := by
 theorem pow_bit0_abs (a : R) (p : ℕ) : abs a ^ bit0 p = a ^ bit0 p :=
   (even_bit0 _).pow_abs _
 
-theorem Odd.strict_mono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n := by
+theorem Odd.strict_mono_pow (hn : Odd n) : StrictMonoₓ fun a : R => a ^ n := by
   cases' hn with k hk <;> simpa only [hk, two_mul] using strict_mono_pow_bit1 _
 
 end Powers
 
 /-- The cardinality of `fin (bit0 k)` is even, `fact` version.
 This `fact` is needed as an instance by `matrix.special_linear_group.has_neg`. -/
-theorem Fintype.card_fin_even {k : ℕ} : Fact (Even (Fintype.card (Finₓ (bit0 k)))) :=
+theorem Fintypeₓ.card_fin_even {k : ℕ} : Fact (Even (Fintypeₓ.card (Finₓ (bit0 k)))) :=
   ⟨by
-    rw [Fintype.card_fin]
+    rw [Fintypeₓ.card_fin]
     exact even_bit0 k⟩
 
 section FieldPower
@@ -459,8 +436,7 @@ theorem Odd.neg_zpow (h : Odd n) (a : K) : -a ^ n = -(a ^ n) := by
   obtain ⟨k, rfl⟩ := h.exists_bit1
   exact zpow_bit1_neg _ _
 
-theorem Odd.neg_one_zpow (h : Odd n) : (-1 : K) ^ n = -1 := by
-  rw [h.neg_zpow, one_zpow]
+theorem Odd.neg_one_zpow (h : Odd n) : (-1 : K) ^ n = -1 := by rw [h.neg_zpow, one_zpow]
 
 end DivisionRing
 

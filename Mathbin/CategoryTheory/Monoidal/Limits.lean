@@ -54,40 +54,50 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F where
         π :=
           { app := fun j => limit.π F j ⊗ limit.π G j,
             naturality' := fun j j' f => by
-              dsimp'
+              dsimp
               simp only [category.id_comp, ← tensor_comp, limit.w] } }
   μ_natural' := fun X Y X' Y' f g => by
     ext
-    dsimp'
+    dsimp
     simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.tensor_hom_app, limit.lift_map, nat_trans.comp_app,
       category.assoc, ← tensor_comp, lim_map_π]
   associativity' := fun X Y Z => by
     ext
-    dsimp'
+    dsimp
     simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.associator_hom_app, limit.lift_map, nat_trans.comp_app,
       category.assoc]
     slice_lhs 2 2 => rw [← tensor_id_comp_id_tensor]
-    slice_lhs 1 2 => rw [← comp_tensor_id, limit.lift_π]dsimp
+    slice_lhs 1 2 =>
+    rw [← comp_tensor_id, limit.lift_π]
+    dsimp
     slice_lhs 1 2 => rw [tensor_id_comp_id_tensor]
     conv_lhs => rw [associator_naturality]
     conv_rhs => rw [← id_tensor_comp_tensor_id (limit.π (Y ⊗ Z) j)]
-    slice_rhs 2 3 => rw [← id_tensor_comp, limit.lift_π]dsimp
-    dsimp'
+    slice_rhs 2 3 =>
+    rw [← id_tensor_comp, limit.lift_π]
+    dsimp
+    dsimp
     simp
   left_unitality' := fun X => by
     ext
-    dsimp'
+    dsimp
     simp
     conv_rhs => rw [← tensor_id_comp_id_tensor (limit.π X j)]
-    slice_rhs 1 2 => rw [← comp_tensor_id]erw [limit.lift_π]dsimp
+    slice_rhs 1 2 =>
+    rw [← comp_tensor_id]
+    erw [limit.lift_π]
+    dsimp
     slice_rhs 2 3 => rw [left_unitor_naturality]
     simp
   right_unitality' := fun X => by
     ext
-    dsimp'
+    dsimp
     simp
     conv_rhs => rw [← id_tensor_comp_tensor_id _ (limit.π X j)]
-    slice_rhs 1 2 => rw [← id_tensor_comp]erw [limit.lift_π]dsimp
+    slice_rhs 1 2 =>
+    rw [← id_tensor_comp]
+    erw [limit.lift_π]
+    dsimp
     slice_rhs 2 3 => rw [right_unitor_naturality]
     simp
 
@@ -121,7 +131,7 @@ theorem lim_lax_μ (F G : J ⥤ C) :
           π :=
             { app := fun j => limit.π F j ⊗ limit.π G j,
               naturality' := fun j j' f => by
-                dsimp'
+                dsimp
                 simp only [category.id_comp, ← tensor_comp, limit.w] } } :=
   rfl
 

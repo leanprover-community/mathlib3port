@@ -24,7 +24,7 @@ namespace FunctionField
 
 open Polynomial
 
-variable (Fq F : Type) [Field Fq] [Fintype Fq] [Field F]
+variable (Fq F : Type) [Field Fq] [Fintypeₓ Fq] [Field F]
 
 variable [Algebra Fq[X] F] [Algebra (Ratfunc Fq) F]
 
@@ -38,7 +38,7 @@ namespace RingOfIntegers
 
 open FunctionField
 
-noncomputable instance : Fintype (ClassGroup (ringOfIntegers Fq F) F) :=
+noncomputable instance : Fintypeₓ (ClassGroup (ringOfIntegers Fq F) F) :=
   ClassGroup.fintypeOfAdmissibleOfFinite (Ratfunc Fq) F
     (Polynomial.cardPowDegreeIsAdmissible :
       AbsoluteValue.IsAdmissible (Polynomial.cardPowDegree : AbsoluteValue Fq[X] ℤ))
@@ -47,7 +47,7 @@ end RingOfIntegers
 
 /-- The class number in a function field is the (finite) cardinality of the class group. -/
 noncomputable def classNumber : ℕ :=
-  Fintype.card (ClassGroup (ringOfIntegers Fq F) F)
+  Fintypeₓ.card (ClassGroup (ringOfIntegers Fq F) F)
 
 /-- The class number of a function field is `1` iff the ring of integers is a PID. -/
 theorem class_number_eq_one_iff : classNumber Fq F = 1 ↔ IsPrincipalIdealRing (ringOfIntegers Fq F) :=

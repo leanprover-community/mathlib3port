@@ -91,16 +91,10 @@ theorem IsCompact.induction_on {s : Set α} (hs : IsCompact s) {p : Set α → P
     (hmono : ∀ ⦃s t⦄, s ⊆ t → p t → p s) (hunion : ∀ ⦃s t⦄, p s → p t → p (s ∪ t))
     (hnhds : ∀ x ∈ s, ∃ t ∈ 𝓝[s] x, p t) : p s := by
   let f : Filter α :=
-    { Sets := { t | p (tᶜ) },
-      univ_sets := by
-        simpa,
+    { Sets := { t | p (tᶜ) }, univ_sets := by simpa,
       sets_of_superset := fun t₁ t₂ ht₁ ht => hmono (compl_subset_compl.2 ht) ht₁,
-      inter_sets := fun t₁ t₂ ht₁ ht₂ => by
-        simp [compl_inter, hunion ht₁ ht₂] }
-  have : sᶜ ∈ f :=
-    hs.compl_mem_sets_of_nhds_within
-      (by
-        simpa using hnhds)
+      inter_sets := fun t₁ t₂ ht₁ ht₂ => by simp [compl_inter, hunion ht₁ ht₂] }
+  have : sᶜ ∈ f := hs.compl_mem_sets_of_nhds_within (by simpa using hnhds)
   simpa
 
 /-- The intersection of a compact set and a closed set is a compact set. -/
@@ -173,37 +167,54 @@ theorem IsCompact.elim_directed_cover {ι : Type v} [hι : Nonempty ι] (hs : Is
 
 /-- For every open cover of a compact set, there exists a finite subcover. -/
 theorem IsCompact.elim_finite_subcover {ι : Type v} (hs : IsCompact s) (U : ι → Set α) (hUo : ∀ i, IsOpen (U i))
-    (hsU : s ⊆ ⋃ i, U i) : ∃ t : Finset ι, s ⊆ ⋃ i ∈ t, U i :=
+    (hsU : s ⊆ ⋃ i, U i) : ∃ t : Finsetₓ ι, s ⊆ ⋃ i ∈ t, U i :=
   hs.elim_directed_cover _ (fun t => is_open_bUnion fun i _ => hUo i) (Union_eq_Union_finset U ▸ hsU)
     (directed_of_sup fun t₁ t₂ h => bUnion_subset_bUnion_left h)
 
 theorem IsCompact.elim_nhds_subcover' (hs : IsCompact s) (U : ∀ x ∈ s, Set α) (hU : ∀ x ∈ s, U x ‹x ∈ s› ∈ 𝓝 x) :
-    ∃ t : Finset s, s ⊆ ⋃ x ∈ t, U (x : s) x.2 :=
+    ∃ t : Finsetₓ s, s ⊆ ⋃ x ∈ t, U (x : s) x.2 :=
   (hs.elim_finite_subcover (fun x : s => Interior (U x x.2)) (fun x => is_open_interior) fun x hx =>
         mem_Union.2 ⟨⟨x, hx⟩, mem_interior_iff_mem_nhds.2 <| hU _ _⟩).imp
     fun t ht => Subset.trans ht <| Union₂_mono fun _ _ => interior_subset
 
 theorem IsCompact.elim_nhds_subcover (hs : IsCompact s) (U : α → Set α) (hU : ∀ x ∈ s, U x ∈ 𝓝 x) :
-    ∃ t : Finset α, (∀ x ∈ t, x ∈ s) ∧ s ⊆ ⋃ x ∈ t, U x :=
+    ∃ t : Finsetₓ α, (∀ x ∈ t, x ∈ s) ∧ s ⊆ ⋃ x ∈ t, U x :=
   let ⟨t, ht⟩ := hs.elim_nhds_subcover' (fun x _ => U x) hU
   ⟨t.Image coe, fun x hx =>
-    let ⟨y, hyt, hyx⟩ := Finset.mem_image.1 hx
+    let ⟨y, hyt, hyx⟩ := Finsetₓ.mem_image.1 hx
     hyx ▸ y.2,
-    by
-    rwa [Finset.set_bUnion_finset_image]⟩
+    by rwa [Finsetₓ.set_bUnion_finset_image]⟩
+
+/-- The neighborhood filter of a compact set is disjoint with a filter `l` if and only if the
+neighborhood filter of each point of this set is disjoint with `l`. -/
+theorem IsCompact.disjoint_nhds_set_left {l : Filter α} (hs : IsCompact s) :
+    Disjoint (𝓝ˢ s) l ↔ ∀ x ∈ s, Disjoint (𝓝 x) l := by
+  refine' ⟨fun h x hx => h.mono_left <| nhds_le_nhds_set hx, fun H => _⟩
+  choose! U hxU hUl using fun x hx => (nhds_basis_opens x).disjoint_iff_left.1 (H x hx)
+  choose hxU hUo using hxU
+  rcases hs.elim_nhds_subcover U fun x hx => (hUo x hx).mem_nhds (hxU x hx) with ⟨t, hts, hst⟩
+  refine'
+    (has_basis_nhds_set _).disjoint_iff_left.2 ⟨⋃ x ∈ t, U x, ⟨is_open_bUnion fun x hx => hUo x (hts x hx), hst⟩, _⟩
+  rw [compl_Union₂, bInter_finset_mem]
+  exact fun x hx => hUl x (hts x hx)
+
+/-- A filter `l` is disjoint with the neighborhood filter of a compact set if and only if it is
+disjoint with the neighborhood filter of each point of this set. -/
+theorem IsCompact.disjoint_nhds_set_right {l : Filter α} (hs : IsCompact s) :
+    Disjoint l (𝓝ˢ s) ↔ ∀ x ∈ s, Disjoint l (𝓝 x) := by simpa only [Disjoint.comm] using hs.disjoint_nhds_set_left
 
 /-- For every family of closed sets whose intersection avoids a compact set,
 there exists a finite subfamily whose intersection avoids this compact set. -/
 theorem IsCompact.elim_finite_subfamily_closed {s : Set α} {ι : Type v} (hs : IsCompact s) (Z : ι → Set α)
-    (hZc : ∀ i, IsClosed (Z i)) (hsZ : (s ∩ ⋂ i, Z i) = ∅) : ∃ t : Finset ι, (s ∩ ⋂ i ∈ t, Z i) = ∅ :=
+    (hZc : ∀ i, IsClosed (Z i)) (hsZ : (s ∩ ⋂ i, Z i) = ∅) : ∃ t : Finsetₓ ι, (s ∩ ⋂ i ∈ t, Z i) = ∅ :=
   let ⟨t, ht⟩ :=
     hs.elim_finite_subcover (fun i => Z iᶜ) (fun i => (hZc i).is_open_compl)
       (by
-        simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_eq, not_and,
-          iff_selfₓ, mem_Inter, mem_compl_eq] using hsZ)
+        simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_iff,
+          not_and, iff_selfₓ, mem_Inter, mem_compl_iff] using hsZ)
   ⟨t, by
-    simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_eq, not_and,
-      iff_selfₓ, mem_Inter, mem_compl_eq] using ht⟩
+    simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_iff, not_and,
+      iff_selfₓ, mem_Inter, mem_compl_iff] using ht⟩
 
 /-- If `s` is a compact set in a topological space `α` and `f : ι → set α` is a locally finite
 family of sets, then `f i ∩ s` is nonempty only for a finitely many `i`. -/
@@ -219,7 +230,7 @@ theorem LocallyFinite.finite_nonempty_inter_compact {ι : Type _} {f : ι → Se
 /-- To show that a compact set intersects the intersection of a family of closed sets,
   it is sufficient to show that it intersects every finite subfamily. -/
 theorem IsCompact.inter_Inter_nonempty {s : Set α} {ι : Type v} (hs : IsCompact s) (Z : ι → Set α)
-    (hZc : ∀ i, IsClosed (Z i)) (hsZ : ∀ t : Finset ι, (s ∩ ⋂ i ∈ t, Z i).Nonempty) : (s ∩ ⋂ i, Z i).Nonempty := by
+    (hZc : ∀ i, IsClosed (Z i)) (hsZ : ∀ t : Finsetₓ ι, (s ∩ ⋂ i ∈ t, Z i).Nonempty) : (s ∩ ⋂ i, Z i).Nonempty := by
   simp only [← ne_empty_iff_nonempty] at hsZ⊢
   apply mt (hs.elim_finite_subfamily_closed Z hZc)
   push_neg
@@ -233,15 +244,11 @@ theorem IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed {ι : Type 
   apply hι.elim
   intro i₀
   let Z' := fun i => Z i ∩ Z i₀
-  suffices (⋂ i, Z' i).Nonempty by
-    exact this.mono (Inter_mono fun i => inter_subset_left (Z i) (Z i₀))
+  suffices (⋂ i, Z' i).Nonempty by exact this.mono (Inter_mono fun i => inter_subset_left (Z i) (Z i₀))
   rw [← ne_empty_iff_nonempty]
   intro H
-  obtain ⟨t, ht⟩ : ∃ t : Finset ι, (Z i₀ ∩ ⋂ i ∈ t, Z' i) = ∅
-  exact
-    (hZc i₀).elim_finite_subfamily_closed Z' (fun i => IsClosed.inter (hZcl i) (hZcl i₀))
-      (by
-        rw [H, inter_empty])
+  obtain ⟨t, ht⟩ : ∃ t : Finsetₓ ι, (Z i₀ ∩ ⋂ i ∈ t, Z' i) = ∅
+  exact (hZc i₀).elim_finite_subfamily_closed Z' (fun i => IsClosed.inter (hZcl i) (hZcl i₀)) (by rw [H, inter_empty])
   obtain ⟨i₁, hi₁⟩ : ∃ i₁ : ι, Z i₁ ⊆ Z i₀ ∧ ∀ i ∈ t, Z i₁ ⊆ Z' i := by
     rcases Directed.finset_le hZd t with ⟨i, hi⟩
     rcases hZd i i₀ with ⟨i₁, hi₁, hi₁₀⟩
@@ -257,23 +264,23 @@ theorem IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed {ι : Type 
 the intersection of a decreasing sequence of nonempty compact closed sets is nonempty. -/
 theorem IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed (Z : ℕ → Set α) (hZd : ∀ i, Z (i + 1) ⊆ Z i)
     (hZn : ∀ i, (Z i).Nonempty) (hZ0 : IsCompact (Z 0)) (hZcl : ∀ i, IsClosed (Z i)) : (⋂ i, Z i).Nonempty :=
-  have Zmono : Antitone Z := antitone_nat_of_succ_le hZd
+  have Zmono : Antitoneₓ Z := antitone_nat_of_succ_le hZd
   have hZd : Directed (· ⊇ ·) Z := directed_of_sup Zmono
   have : ∀ i, Z i ⊆ Z 0 := fun i => Zmono <| zero_le i
   have hZc : ∀ i, IsCompact (Z i) := fun i => compact_of_is_closed_subset hZ0 (hZcl i) (this i)
   IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed Z hZd hZn hZc hZcl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (b' «expr ⊆ » b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (b' «expr ⊆ » b)
 /-- For every open cover of a compact set, there exists a finite subcover. -/
 theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (hs : IsCompact s)
     (hc₁ : ∀ i ∈ b, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i ∈ b, c i) :
     ∃ (b' : _)(_ : b' ⊆ b), Set.Finite b' ∧ s ⊆ ⋃ i ∈ b', c i := by
   rcases hs.elim_finite_subcover (fun i => c i : b → Set α) _ _ with ⟨d, hd⟩ <;> [skip, simpa using hc₁,
     simpa using hc₂]
-  refine' ⟨↑(d.image coe), _, Finset.finite_to_set _, _⟩
+  refine' ⟨↑(d.image coe), _, Finsetₓ.finite_to_set _, _⟩
   · simp
     
-  · rwa [Finset.coe_image, bUnion_image]
+  · rwa [Finsetₓ.coe_image, bUnion_image]
     
 
 /-- A set `s` is compact if for every family of closed sets whose intersection avoids `s`,
@@ -281,26 +288,21 @@ there exists a finite subfamily whose intersection avoids `s`. -/
 theorem is_compact_of_finite_subfamily_closed
     (h :
       ∀ {ι : Type u} (Z : ι → Set α),
-        (∀ i, IsClosed (Z i)) → (s ∩ ⋂ i, Z i) = ∅ → ∃ t : Finset ι, (s ∩ ⋂ i ∈ t, Z i) = ∅) :
+        (∀ i, IsClosed (Z i)) → (s ∩ ⋂ i, Z i) = ∅ → ∃ t : Finsetₓ ι, (s ∩ ⋂ i ∈ t, Z i) = ∅) :
     IsCompact s := fun f hfn hfs =>
   Classical.by_contradiction fun this : ¬∃ x ∈ s, ClusterPt x f =>
-    have hf : ∀ x ∈ s, 𝓝 x ⊓ f = ⊥ := by
-      simpa only [ClusterPt, not_exists, not_not, ne_bot_iff]
+    have hf : ∀ x ∈ s, 𝓝 x ⊓ f = ⊥ := by simpa only [ClusterPt, not_exists, not_not, ne_bot_iff]
     have : ¬∃ x ∈ s, ∀ t ∈ f.Sets, x ∈ Closure t := fun ⟨x, hxs, hx⟩ => by
-      have : ∅ ∈ 𝓝 x ⊓ f := by
-        rw [empty_mem_iff_bot, hf x hxs]
-      let ⟨t₁, ht₁, t₂, ht₂, ht⟩ := by
-        rw [mem_inf_iff] at this <;> exact this
+      have : ∅ ∈ 𝓝 x ⊓ f := by rw [empty_mem_iff_bot, hf x hxs]
+      let ⟨t₁, ht₁, t₂, ht₂, ht⟩ := by rw [mem_inf_iff] at this <;> exact this
       have : ∅ ∈ 𝓝[t₂] x := by
         rw [ht, inter_comm]
         exact inter_mem_nhds_within _ ht₁
-      have : 𝓝[t₂] x = ⊥ := by
-        rwa [empty_mem_iff_bot] at this
+      have : 𝓝[t₂] x = ⊥ := by rwa [empty_mem_iff_bot] at this
       simp only [closure_eq_cluster_pts] at hx <;> exact (hx t₂ ht₂).Ne this
     let ⟨t, ht⟩ :=
       h (fun i : f.Sets => Closure i.1) (fun i => is_closed_closure)
-        (by
-          simpa [eq_empty_iff_forall_not_mem, not_exists] )
+        (by simpa [eq_empty_iff_forall_not_mem, not_exists] )
     have : (⋂ i ∈ t, Subtype.val i) ∈ f := t.Inter_mem_sets.2 fun i hi => i.2
     have : (s ∩ ⋂ i ∈ t, Subtype.val i) ∈ f := inter_mem (le_principal_iff.1 hfs) this
     have : ∅ ∈ f :=
@@ -315,28 +317,27 @@ theorem is_compact_of_finite_subfamily_closed
               rw [mem_Inter₂] at hx
               exact hx i hit)
         show False from hxi this
-    hfn.Ne <| by
-      rwa [empty_mem_iff_bot] at this
+    hfn.Ne <| by rwa [empty_mem_iff_bot] at this
 
 /-- A set `s` is compact if for every open cover of `s`, there exists a finite subcover. -/
 theorem is_compact_of_finite_subcover
-    (h : ∀ {ι : Type u} (U : ι → Set α), (∀ i, IsOpen (U i)) → (s ⊆ ⋃ i, U i) → ∃ t : Finset ι, s ⊆ ⋃ i ∈ t, U i) :
+    (h : ∀ {ι : Type u} (U : ι → Set α), (∀ i, IsOpen (U i)) → (s ⊆ ⋃ i, U i) → ∃ t : Finsetₓ ι, s ⊆ ⋃ i ∈ t, U i) :
     IsCompact s :=
   is_compact_of_finite_subfamily_closed fun ι Z hZc hsZ =>
     let ⟨t, ht⟩ :=
       h (fun i => Z iᶜ) (fun i => is_open_compl_iff.mpr <| hZc i)
         (by
-          simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_eq,
-            not_and, iff_selfₓ, mem_Inter, mem_compl_eq] using hsZ)
+          simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_iff,
+            not_and, iff_selfₓ, mem_Inter, mem_compl_iff] using hsZ)
     ⟨t, by
-      simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_eq, not_and,
-        iff_selfₓ, mem_Inter, mem_compl_eq] using ht⟩
+      simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_iff, not_and,
+        iff_selfₓ, mem_Inter, mem_compl_iff] using ht⟩
 
 /-- A set `s` is compact if and only if
 for every open cover of `s`, there exists a finite subcover. -/
 theorem is_compact_iff_finite_subcover :
     IsCompact s ↔
-      ∀ {ι : Type u} (U : ι → Set α), (∀ i, IsOpen (U i)) → (s ⊆ ⋃ i, U i) → ∃ t : Finset ι, s ⊆ ⋃ i ∈ t, U i :=
+      ∀ {ι : Type u} (U : ι → Set α), (∀ i, IsOpen (U i)) → (s ⊆ ⋃ i, U i) → ∃ t : Finsetₓ ι, s ⊆ ⋃ i ∈ t, U i :=
   ⟨fun hs ι => hs.elim_finite_subcover, is_compact_of_finite_subcover⟩
 
 /-- A set `s` is compact if and only if
@@ -345,7 +346,7 @@ there exists a finite subfamily whose intersection avoids `s`. -/
 theorem is_compact_iff_finite_subfamily_closed :
     IsCompact s ↔
       ∀ {ι : Type u} (Z : ι → Set α),
-        (∀ i, IsClosed (Z i)) → (s ∩ ⋂ i, Z i) = ∅ → ∃ t : Finset ι, (s ∩ ⋂ i ∈ t, Z i) = ∅ :=
+        (∀ i, IsClosed (Z i)) → (s ∩ ⋂ i, Z i) = ∅ → ∃ t : Finsetₓ ι, (s ∩ ⋂ i ∈ t, Z i) = ∅ :=
   ⟨fun hs ι => hs.elim_finite_subfamily_closed, is_compact_of_finite_subfamily_closed⟩
 
 /-- To show that `∀ y ∈ K, P x y` holds for `x` close enough to `x₀` when `K` is compact,
@@ -378,11 +379,7 @@ theorem is_compact_empty : IsCompact (∅ : Set α) := fun f hnf hsf =>
 
 @[simp]
 theorem is_compact_singleton {a : α} : IsCompact ({a} : Set α) := fun f hf hfa =>
-  ⟨a, rfl,
-    ClusterPt.of_le_nhds'
-      (hfa.trans <| by
-        simpa only [principal_singleton] using pure_le_nhds a)
-      hf⟩
+  ⟨a, rfl, ClusterPt.of_le_nhds' (hfa.trans <| by simpa only [principal_singleton] using pure_le_nhds a) hf⟩
 
 theorem Set.Subsingleton.is_compact {s : Set α} (hs : s.Subsingleton) : IsCompact s :=
   (Subsingleton.induction_on hs is_compact_empty) fun x => is_compact_singleton
@@ -390,24 +387,24 @@ theorem Set.Subsingleton.is_compact {s : Set α} (hs : s.Subsingleton) : IsCompa
 theorem Set.Finite.compact_bUnion {s : Set ι} {f : ι → Set α} (hs : s.Finite) (hf : ∀ i ∈ s, IsCompact (f i)) :
     IsCompact (⋃ i ∈ s, f i) :=
   is_compact_of_finite_subcover fun ι U hUo hsU =>
-    have : ∀ i : Subtype s, ∃ t : Finset ι, f i ⊆ ⋃ j ∈ t, U j := fun ⟨i, hi⟩ =>
+    have : ∀ i : Subtype s, ∃ t : Finsetₓ ι, f i ⊆ ⋃ j ∈ t, U j := fun ⟨i, hi⟩ =>
       (hf i hi).elim_finite_subcover _ hUo
         (calc
           f i ⊆ ⋃ i ∈ s, f i := subset_bUnion_of_mem hi
           _ ⊆ ⋃ j, U j := hsU
           )
     let ⟨finite_subcovers, h⟩ := axiom_of_choice this
-    haveI : Fintype (Subtype s) := hs.fintype
-    let t := Finset.bUnion Finset.univ finite_subcovers
+    haveI : Fintypeₓ (Subtype s) := hs.fintype
+    let t := Finsetₓ.bUnion Finsetₓ.univ finite_subcovers
     have : (⋃ i ∈ s, f i) ⊆ ⋃ i ∈ t, U i :=
       Union₂_subset fun i hi =>
         calc
           f i ⊆ ⋃ j ∈ finite_subcovers ⟨i, hi⟩, U j := h ⟨i, hi⟩
-          _ ⊆ ⋃ j ∈ t, U j := bUnion_subset_bUnion_left fun j hj => finset.mem_bUnion.mpr ⟨_, Finset.mem_univ _, hj⟩
+          _ ⊆ ⋃ j ∈ t, U j := bUnion_subset_bUnion_left fun j hj => finset.mem_bUnion.mpr ⟨_, Finsetₓ.mem_univ _, hj⟩
           
     ⟨t, this⟩
 
-theorem Finset.compact_bUnion (s : Finset ι) {f : ι → Set α} (hf : ∀ i ∈ s, IsCompact (f i)) :
+theorem Finsetₓ.compact_bUnion (s : Finsetₓ ι) {f : ι → Set α} (hf : ∀ i ∈ s, IsCompact (f i)) :
     IsCompact (⋃ i ∈ s, f i) :=
   s.finite_to_set.compact_bUnion hf
 
@@ -421,8 +418,7 @@ theorem Set.Finite.is_compact (hs : s.Finite) : IsCompact s :=
   bUnion_of_singleton s ▸ hs.compact_bUnion fun _ _ => is_compact_singleton
 
 theorem IsCompact.finite_of_discrete [DiscreteTopology α] {s : Set α} (hs : IsCompact s) : s.Finite := by
-  have : ∀ x : α, ({x} : Set α) ∈ 𝓝 x := by
-    simp [nhds_discrete]
+  have : ∀ x : α, ({x} : Set α) ∈ 𝓝 x := by simp [nhds_discrete]
   rcases hs.elim_nhds_subcover (fun x => {x}) fun x hx => this x with ⟨t, hts, hst⟩
   simp only [← t.set_bUnion_coe, bUnion_of_singleton] at hst
   exact t.finite_to_set.subset hst
@@ -431,15 +427,12 @@ theorem is_compact_iff_finite [DiscreteTopology α] {s : Set α} : IsCompact s �
   ⟨fun h => h.finite_of_discrete, fun h => h.IsCompact⟩
 
 theorem IsCompact.union (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s ∪ t) := by
-  rw [union_eq_Union] <;>
-    exact
-      compact_Union fun b => by
-        cases b <;> assumption
+  rw [union_eq_Union] <;> exact compact_Union fun b => by cases b <;> assumption
 
 theorem IsCompact.insert (hs : IsCompact s) (a) : IsCompact (insert a s) :=
   is_compact_singleton.union hs
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident i, ",", ident hi, "⟩", ":", expr «expr∃ , »((i), «expr ⊆ »(V i, W))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident i, ",", ident hi, "⟩", ":", expr «expr∃ , »((i), «expr ⊆ »(V i, W))]]
 /-- If `V : ι → set α` is a decreasing family of closed compact sets then any neighborhood of
 `⋂ i, V i` contains some `V i`. We assume each `V i` is compact *and* closed because `α` is
 not assumed to be Hausdorff. See `exists_subset_nhd_of_compact` for version assuming this. -/
@@ -448,7 +441,7 @@ theorem exists_subset_nhd_of_compact' {ι : Type _} [Nonempty ι] {V : ι → Se
     ∃ i, V i ⊆ U := by
   obtain ⟨W, hsubW, W_op, hWU⟩ := exists_open_set_nhds hU
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident i, \",\", ident hi, \"⟩\", \":\", expr «expr∃ , »((i), «expr ⊆ »(V i, W))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident i, \",\", ident hi, \"⟩\", \":\", expr «expr∃ , »((i), «expr ⊆ »(V i, W))]]"
   · exact ⟨i, hi.trans hWU⟩
     
   by_contra' H
@@ -458,9 +451,8 @@ theorem exists_subset_nhd_of_compact' {ι : Type _} [Nonempty ι] {V : ι → Se
       IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed _ (fun i j => _) H
         (fun i => (hV_cpct i).inter_right W_op.is_closed_compl) fun i => (hV_closed i).inter W_op.is_closed_compl
     rcases hV i j with ⟨k, hki, hkj⟩
-    refine' ⟨k, ⟨fun x => _, fun x => _⟩⟩ <;> simp only [and_imp, mem_inter_eq, mem_compl_eq] <;> tauto
-  have : ¬(⋂ i : ι, V i) ⊆ W := by
-    simpa [← Inter_inter, inter_compl_nonempty_iff]
+    refine' ⟨k, ⟨fun x => _, fun x => _⟩⟩ <;> simp only [and_imp, mem_inter_iff, mem_compl_iff] <;> tauto
+  have : ¬(⋂ i : ι, V i) ⊆ W := by simpa [← Inter_inter, inter_compl_nonempty_iff]
   contradiction
 
 /-- If `α` has a basis consisting of compact opens, then an open set in `α` is compact open iff
@@ -475,16 +467,13 @@ theorem is_compact_open_iff_eq_finite_Union_of_is_topological_basis (b : ι → 
     choose f' hf' using hf
     have : b ∘ f' = f := funext hf'
     subst this
-    obtain ⟨t, ht⟩ :=
-      h₁.elim_finite_subcover (b ∘ f') (fun i => hb.is_open (Set.mem_range_self _))
-        (by
-          rw [e])
+    obtain ⟨t, ht⟩ := h₁.elim_finite_subcover (b ∘ f') (fun i => hb.is_open (Set.mem_range_self _)) (by rw [e])
     refine' ⟨t.image f', Set.Finite.intro inferInstance, le_antisymmₓ _ _⟩
     · refine' Set.Subset.trans ht _
       simp only [Set.Union_subset_iff, coe_coe]
       intro i hi
       erw [← Set.Union_subtype (fun x : ι => x ∈ t.image f') fun i => b i.1]
-      exact Set.subset_Union (fun i : t.image f' => b i) ⟨_, Finset.mem_image_of_mem _ hi⟩
+      exact Set.subset_Union (fun i : t.image f' => b i) ⟨_, Finsetₓ.mem_image_of_mem _ hi⟩
       
     · apply Set.Union₂_subset
       rintro i hi
@@ -539,7 +528,7 @@ theorem _root_.nat.cocompact_eq : cocompact ℕ = at_top :=
 theorem Tendsto.is_compact_insert_range_of_cocompact {f : α → β} {b} (hf : Tendsto f (cocompact α) (𝓝 b))
     (hfc : Continuous f) : IsCompact (insert b (Range f)) := by
   intro l hne hle
-  by_cases' hb : ClusterPt b l
+  by_cases hb:ClusterPt b l
   · exact ⟨b, Or.inl rfl, hb⟩
     
   simp only [cluster_pt_iff, not_forall, ← not_disjoint_iff_nonempty_inter, not_not] at hb
@@ -623,23 +612,15 @@ def NhdsContainBoxes (s : Set α) (t : Set β) : Prop :=
 
 theorem NhdsContainBoxes.symm {s : Set α} {t : Set β} : NhdsContainBoxes s t → NhdsContainBoxes t s := fun H n hn hp =>
   let ⟨u, v, uo, vo, su, tv, p⟩ :=
-    H (Prod.swap ⁻¹' n) (hn.Preimage continuous_swap)
-      (by
-        rwa [← image_subset_iff, image_swap_prod])
-  ⟨v, u, vo, uo, tv, su, by
-    rwa [← image_subset_iff, image_swap_prod] at p⟩
+    H (Prod.swap ⁻¹' n) (hn.Preimage continuous_swap) (by rwa [← image_subset_iff, image_swap_prod])
+  ⟨v, u, vo, uo, tv, su, by rwa [← image_subset_iff, image_swap_prod] at p⟩
 
 theorem NhdsContainBoxes.comm {s : Set α} {t : Set β} : NhdsContainBoxes s t ↔ NhdsContainBoxes t s :=
   Iff.intro NhdsContainBoxes.symm NhdsContainBoxes.symm
 
 theorem nhds_contain_boxes_of_singleton {x : α} {y : β} : NhdsContainBoxes ({x} : Set α) ({y} : Set β) := fun n hn hp =>
-  let ⟨u, v, uo, vo, xu, yv, hp'⟩ :=
-    is_open_prod_iff.mp hn x y
-      (hp <| by
-        simp )
-  ⟨u, v, uo, vo, by
-    simpa, by
-    simpa, hp'⟩
+  let ⟨u, v, uo, vo, xu, yv, hp'⟩ := is_open_prod_iff.mp hn x y (hp <| by simp)
+  ⟨u, v, uo, vo, by simpa, by simpa, hp'⟩
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -649,20 +630,11 @@ theorem nhds_contain_boxes_of_compact {s : Set α} (hs : IsCompact s) (t : Set �
     (H : ∀ x ∈ s, NhdsContainBoxes ({x} : Set α) t) : NhdsContainBoxes s t := fun n hn hp =>
   have : ∀ x : s, ∃ uv : Set α × Set β, IsOpen uv.1 ∧ IsOpen uv.2 ∧ {↑x} ⊆ uv.1 ∧ t ⊆ uv.2 ∧ uv.1 ×ˢ uv.2 ⊆ n :=
     fun ⟨x, hx⟩ =>
-    have : ({x} : Set α) ×ˢ t ⊆ n :=
-      Subset.trans
-        (prod_mono
-          (by
-            simpa)
-          Subset.rfl)
-        hp
+    have : ({x} : Set α) ×ˢ t ⊆ n := Subset.trans (prod_mono (by simpa) Subset.rfl) hp
     let ⟨ux, vx, H1⟩ := H x hx n hn this
     ⟨⟨ux, vx⟩, H1⟩
   let ⟨uvs, h⟩ := Classical.axiom_of_choice this
-  have us_cover : s ⊆ ⋃ i, (uvs i).1 := fun x hx =>
-    subset_Union _ ⟨x, hx⟩
-      (by
-        simpa using (h ⟨x, hx⟩).2.2.1)
+  have us_cover : s ⊆ ⋃ i, (uvs i).1 := fun x hx => subset_Union _ ⟨x, hx⟩ (by simpa using (h ⟨x, hx⟩).2.2.1)
   let ⟨s0, s0_cover⟩ := hs.elim_finite_subcover _ (fun i => (h i).1) us_cover
   let u := ⋃ i ∈ s0, (uvs i).1
   let v := ⋂ i ∈ s0, (uvs i).2
@@ -670,8 +642,7 @@ theorem nhds_contain_boxes_of_compact {s : Set α} (hs : IsCompact s) (t : Set �
   have : IsOpen v := is_open_bInter s0.finite_to_set fun i _ => (h i).2.1
   have : t ⊆ v := subset_Inter₂ fun i _ => (h i).2.2.2.1
   have : u ×ˢ v ⊆ n := fun ⟨x', y'⟩ ⟨hx', hy'⟩ =>
-    have : ∃ i ∈ s0, x' ∈ (uvs i).1 := by
-      simpa using hx'
+    have : ∃ i ∈ s0, x' ∈ (uvs i).1 := by simpa using hx'
     let ⟨i, is0, hi⟩ := this
     (h i).2.2.2.2 ⟨hi, (bInter_subset_of_mem is0 : v ⊆ (uvs i).2) hy'⟩
   ⟨u, v, ‹IsOpen u›, ‹IsOpen v›, s0_cover, ‹t ⊆ v›, ‹u ×ˢ v ⊆ n›⟩
@@ -705,13 +676,10 @@ theorem compact_univ [h : CompactSpace α] : IsCompact (Univ : Set α) :=
   h.compact_univ
 
 theorem cluster_point_of_compact [CompactSpace α] (f : Filter α) [NeBot f] : ∃ x, ClusterPt x f := by
-  simpa using
-    compact_univ
-      (show f ≤ 𝓟 univ by
-        simp )
+  simpa using compact_univ (show f ≤ 𝓟 univ by simp)
 
 theorem CompactSpace.elim_nhds_subcover [CompactSpace α] (U : α → Set α) (hU : ∀ x, U x ∈ 𝓝 x) :
-    ∃ t : Finset α, (⋃ x ∈ t, U x) = ⊤ := by
+    ∃ t : Finsetₓ α, (⋃ x ∈ t, U x) = ⊤ := by
   obtain ⟨t, -, s⟩ := IsCompact.elim_nhds_subcover compact_univ U fun x m => hU x
   exact
     ⟨t, by
@@ -719,7 +687,7 @@ theorem CompactSpace.elim_nhds_subcover [CompactSpace α] (U : α → Set α) (h
       exact s⟩
 
 theorem compact_space_of_finite_subfamily_closed
-    (h : ∀ {ι : Type u} (Z : ι → Set α), (∀ i, IsClosed (Z i)) → (⋂ i, Z i) = ∅ → ∃ t : Finset ι, (⋂ i ∈ t, Z i) = ∅) :
+    (h : ∀ {ι : Type u} (Z : ι → Set α), (∀ i, IsClosed (Z i)) → (⋂ i, Z i) = ∅ → ∃ t : Finsetₓ ι, (⋂ i ∈ t, Z i) = ∅) :
     CompactSpace α :=
   { compact_univ := by
       apply is_compact_of_finite_subfamily_closed
@@ -730,7 +698,7 @@ theorem compact_space_of_finite_subfamily_closed
 theorem IsClosed.is_compact [CompactSpace α] {s : Set α} (h : IsClosed s) : IsCompact s :=
   compact_of_is_closed_subset compact_univ h (subset_univ _)
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] []
 /-- `α` is a noncompact topological space if it not a compact space. -/
 class NoncompactSpace (α : Type _) [TopologicalSpace α] : Prop where
   noncompact_univ : ¬IsCompact (Univ : Set α)
@@ -764,8 +732,7 @@ theorem not_compact_space_iff : ¬CompactSpace α ↔ NoncompactSpace α :=
   ⟨fun h₁ => ⟨fun h₂ => h₁ ⟨h₂⟩⟩, fun ⟨h₁⟩ ⟨h₂⟩ => h₁ h₂⟩
 
 instance : NoncompactSpace ℤ :=
-  noncompact_space_of_ne_bot <| by
-    simp only [Filter.cocompact_eq_cofinite, Filter.cofinite_ne_bot]
+  noncompact_space_of_ne_bot <| by simp only [Filter.cocompact_eq_cofinite, Filter.cofinite_ne_bot]
 
 -- Note: We can't make this into an instance because it loops with `finite.compact_space`.
 /-- A compact discrete space is finite. -/
@@ -773,33 +740,31 @@ theorem finite_of_compact_of_discrete [CompactSpace α] [DiscreteTopology α] : 
   Finite.of_finite_univ <| compact_univ.finite_of_discrete
 
 theorem finite_cover_nhds_interior [CompactSpace α] {U : α → Set α} (hU : ∀ x, U x ∈ 𝓝 x) :
-    ∃ t : Finset α, (⋃ x ∈ t, Interior (U x)) = univ :=
+    ∃ t : Finsetₓ α, (⋃ x ∈ t, Interior (U x)) = univ :=
   let ⟨t, ht⟩ :=
     compact_univ.elim_finite_subcover (fun x => Interior (U x)) (fun x => is_open_interior) fun x _ =>
       mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
   ⟨t, univ_subset_iff.1 ht⟩
 
 theorem finite_cover_nhds [CompactSpace α] {U : α → Set α} (hU : ∀ x, U x ∈ 𝓝 x) :
-    ∃ t : Finset α, (⋃ x ∈ t, U x) = univ :=
+    ∃ t : Finsetₓ α, (⋃ x ∈ t, U x) = univ :=
   let ⟨t, ht⟩ := finite_cover_nhds_interior hU
   ⟨t, univ_subset_iff.1 <| ht.symm.Subset.trans <| Union₂_mono fun x hx => interior_subset⟩
 
 /-- If `α` is a compact space, then a locally finite family of sets of `α` can have only finitely
 many nonempty elements. -/
 theorem LocallyFinite.finite_nonempty_of_compact {ι : Type _} [CompactSpace α] {f : ι → Set α} (hf : LocallyFinite f) :
-    { i | (f i).Nonempty }.Finite := by
-  simpa only [inter_univ] using hf.finite_nonempty_inter_compact compact_univ
+    { i | (f i).Nonempty }.Finite := by simpa only [inter_univ] using hf.finite_nonempty_inter_compact compact_univ
 
 /-- If `α` is a compact space, then a locally finite family of nonempty sets of `α` can have only
 finitely many elements, `set.finite` version. -/
 theorem LocallyFinite.finite_of_compact {ι : Type _} [CompactSpace α] {f : ι → Set α} (hf : LocallyFinite f)
-    (hne : ∀ i, (f i).Nonempty) : (Univ : Set ι).Finite := by
-  simpa only [hne] using hf.finite_nonempty_of_compact
+    (hne : ∀ i, (f i).Nonempty) : (Univ : Set ι).Finite := by simpa only [hne] using hf.finite_nonempty_of_compact
 
 /-- If `α` is a compact space, then a locally finite family of nonempty sets of `α` can have only
 finitely many elements, `fintype` version. -/
 noncomputable def LocallyFinite.fintypeOfCompact {ι : Type _} [CompactSpace α] {f : ι → Set α} (hf : LocallyFinite f)
-    (hne : ∀ i, (f i).Nonempty) : Fintype ι :=
+    (hne : ∀ i, (f i).Nonempty) : Fintypeₓ ι :=
   fintypeOfFiniteUniv (hf.finite_of_compact hne)
 
 /-- The comap of the cocompact filter on `β` by a continuous function `f : α → β` is less than or
@@ -827,31 +792,23 @@ theorem is_closed_proj_of_is_compact {X : Type _} [TopologicalSpace X] [CompactS
   rw [is_closed_iff_cluster_pt] at hC⊢
   intro y(y_closure : ClusterPt y <| 𝓟 (πY '' C))
   have : ne_bot (map πX (comap πY (𝓝 y) ⊓ 𝓟 C)) := by
-    suffices ne_bot (map πY (comap πY (𝓝 y) ⊓ 𝓟 C)) by
-      simpa only [map_ne_bot_iff]
+    suffices ne_bot (map πY (comap πY (𝓝 y) ⊓ 𝓟 C)) by simpa only [map_ne_bot_iff]
     convert y_closure
     calc
       map πY (comap πY (𝓝 y) ⊓ 𝓟 C) = 𝓝 y ⊓ map πY (𝓟 C) := Filter.push_pull' _ _ _
-      _ = 𝓝 y ⊓ 𝓟 (πY '' C) := by
-        rw [map_principal]
+      _ = 𝓝 y ⊓ 𝓟 (πY '' C) := by rw [map_principal]
       
   obtain ⟨x, hx⟩ : ∃ x, ClusterPt x (map πX (comap πY (𝓝 y) ⊓ 𝓟 C))
   exact cluster_point_of_compact _
-  refine'
-    ⟨⟨x, y⟩, _, by
-      simp [πY]⟩
+  refine' ⟨⟨x, y⟩, _, by simp [πY]⟩
   apply hC
   rw [ClusterPt, ← Filter.map_ne_bot_iff πX]
   convert hx
   calc
-    map πX (𝓝 (x, y) ⊓ 𝓟 C) = map πX (comap πX (𝓝 x) ⊓ comap πY (𝓝 y) ⊓ 𝓟 C) := by
-      rw [nhds_prod_eq, Filter.prod]
-    _ = map πX (comap πY (𝓝 y) ⊓ 𝓟 C ⊓ comap πX (𝓝 x)) := by
-      ac_rfl
-    _ = map πX (comap πY (𝓝 y) ⊓ 𝓟 C) ⊓ 𝓝 x := by
-      rw [Filter.push_pull]
-    _ = 𝓝 x ⊓ map πX (comap πY (𝓝 y) ⊓ 𝓟 C) := by
-      rw [inf_comm]
+    map πX (𝓝 (x, y) ⊓ 𝓟 C) = map πX (comap πX (𝓝 x) ⊓ comap πY (𝓝 y) ⊓ 𝓟 C) := by rw [nhds_prod_eq, Filter.prod]
+    _ = map πX (comap πY (𝓝 y) ⊓ 𝓟 C ⊓ comap πX (𝓝 x)) := by ac_rfl
+    _ = map πX (comap πY (𝓝 y) ⊓ 𝓟 C) ⊓ 𝓝 x := by rw [Filter.push_pull]
+    _ = 𝓝 x ⊓ map πX (comap πY (𝓝 y) ⊓ 𝓟 C) := by rw [inf_comm]
     
 
 theorem exists_subset_nhd_of_compact_space [CompactSpace α] {ι : Type _} [Nonempty ι] {V : ι → Set α}
@@ -871,12 +828,9 @@ theorem Inducing.is_compact_iff {f : α → β} (hf : Inducing f) {s : Set α} :
         _ = 𝓟 (f '' s) := map_principal
         )
   use x, x_in
-  suffices (map f (𝓝 x ⊓ F)).ne_bot by
-    simpa [Filter.map_ne_bot_iff]
-  rwa
-    [calc
-      map f (𝓝 x ⊓ F) = map f ((comap f <| 𝓝 <| f x) ⊓ F) := by
-        rw [hf.nhds_eq_comap]
+  suffices (map f (𝓝 x ⊓ F)).ne_bot by simpa [Filter.map_ne_bot_iff]
+  rwa [calc
+      map f (𝓝 x ⊓ F) = map f ((comap f <| 𝓝 <| f x) ⊓ F) := by rw [hf.nhds_eq_comap]
       _ = 𝓝 (f x) ⊓ map f F := Filter.push_pull' _ _ _
       ]
 
@@ -965,7 +919,7 @@ theorem Filter.coprod_cocompact : (Filter.cocompact α).coprod (Filter.cocompact
     rw [compl_subset_comm] at hAt hBt'⊢
     refine' subset.trans _ (Set.prod_mono hAt hBt')
     intro x
-    simp only [compl_union, mem_inter_eq, mem_prod, mem_preimage, mem_compl_eq]
+    simp only [compl_union, mem_inter_iff, mem_prod, mem_preimage, mem_compl_iff]
     tauto
     
   · rintro ⟨t, ht, htS⟩
@@ -1051,8 +1005,7 @@ class LocallyCompactSpace (α : Type _) [TopologicalSpace α] : Prop where
 
 theorem compact_basis_nhds [LocallyCompactSpace α] (x : α) :
     (𝓝 x).HasBasis (fun s => s ∈ 𝓝 x ∧ IsCompact s) fun s => s :=
-  has_basis_self.2 <| by
-    simpa only [and_comm] using LocallyCompactSpace.local_compact_nhds x
+  has_basis_self.2 <| by simpa only [and_comm] using LocallyCompactSpace.local_compact_nhds x
 
 theorem local_compact_nhds [LocallyCompactSpace α] {x : α} {n : Set α} (h : n ∈ 𝓝 x) : ∃ s ∈ 𝓝 x, s ⊆ n ∧ IsCompact s :=
   LocallyCompactSpace.local_compact_nhds _ _ h
@@ -1098,7 +1051,7 @@ instance LocallyCompactSpace.pi [∀ i, CompactSpace (π i)] : LocallyCompactSpa
       
     · rw [← Set.univ_pi_ite]
       refine' is_compact_univ_pi fun i => _
-      by_cases' i ∈ s
+      by_cases i ∈ s
       · rw [if_pos h]
         exact hc i
         
@@ -1140,12 +1093,12 @@ theorem exists_compact_superset [LocallyCompactSpace α] {K : Set α} (hK : IsCo
   ⟨L, hLc, hKL⟩
 
 protected theorem ClosedEmbedding.locally_compact_space [LocallyCompactSpace β] {f : α → β} (hf : ClosedEmbedding f) :
-    LocallyCompactSpace α := by
-  have : ∀ x : α, (𝓝 x).HasBasis (fun s => s ∈ 𝓝 (f x) ∧ IsCompact s) fun s => f ⁻¹' s := by
+    LocallyCompactSpace α :=
+  haveI : ∀ x : α, (𝓝 x).HasBasis (fun s => s ∈ 𝓝 (f x) ∧ IsCompact s) fun s => f ⁻¹' s := by
     intro x
     rw [hf.to_embedding.to_inducing.nhds_eq_comap]
     exact (compact_basis_nhds _).comap _
-  exact locally_compact_space_of_has_basis this fun x s hs => hf.is_compact_preimage hs.2
+  locally_compact_space_of_has_basis this fun x s hs => hf.is_compact_preimage hs.2
 
 protected theorem IsClosed.locally_compact_space [LocallyCompactSpace α] {s : Set α} (hs : IsClosed s) :
     LocallyCompactSpace s :=
@@ -1167,10 +1120,7 @@ protected theorem IsOpen.locally_compact_space [LocallyCompactSpace α] {s : Set
 
 theorem Ultrafilter.le_nhds_Lim [CompactSpace α] (F : Ultrafilter α) :
     ↑F ≤ 𝓝 (@lim _ _ (F : Filter α).nonempty_of_ne_bot F) := by
-  rcases compact_univ.ultrafilter_le_nhds F
-      (by
-        simp ) with
-    ⟨x, -, h⟩
+  rcases compact_univ.ultrafilter_le_nhds F (by simp) with ⟨x, -, h⟩
   exact le_nhds_Lim ⟨x, h⟩
 
 theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Set α} (hS : IsClosed S)
@@ -1179,7 +1129,7 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Se
   let opens := { U : Set α | Sᶜ ⊆ U ∧ IsOpen U ∧ Uᶜ.Nonempty }
   obtain ⟨U, ⟨Uc, Uo, Ucne⟩, h⟩ :=
     zorn_subset opens fun c hc hz => by
-      by_cases' hcne : c.nonempty
+      by_cases hcne:c.nonempty
       · obtain ⟨U₀, hU₀⟩ := hcne
         haveI : Nonempty { U // U ∈ c } := ⟨⟨U₀, hU₀⟩⟩
         obtain ⟨U₀compl, U₀opn, U₀ne⟩ := hc hU₀
@@ -1191,7 +1141,7 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Se
           
         · convert_to (⋂ U : { U // U ∈ c }, U.1ᶜ).Nonempty
           · ext
-            simp only [not_exists, exists_propₓ, not_and, Set.mem_Inter, Subtype.forall, mem_set_of_eq, mem_compl_eq,
+            simp only [not_exists, exists_propₓ, not_and, Set.mem_Inter, Subtype.forall, mem_set_of_eq, mem_compl_iff,
               mem_sUnion]
             
           apply IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed
@@ -1282,7 +1232,7 @@ protected noncomputable def LocallyFinite.encodable {ι : Type _} {f : ι → Se
     (hne : ∀ i, (f i).Nonempty) : Encodable ι :=
   @Encodable.ofEquiv _ _ (hf.countable_univ hne).toEncodable (Equivₓ.Set.univ _).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- In a topological space with sigma compact topology, if `f` is a function that sends each point
 `x` of a closed set `s` to a neighborhood of `x` within `s`, then for some countable set `t ⊆ s`,
 the neighborhoods `f x`, `x ∈ t`, cover the whole set `s`. -/
@@ -1373,9 +1323,7 @@ theorem find_shiftr (x : α) : K.shiftr.find x = K.find x + 1 :=
   Nat.find_comp_succ _ _ (not_mem_empty _)
 
 theorem mem_diff_shiftr_find (x : α) : x ∈ K.shiftr (K.find x + 1) \ K.shiftr (K.find x) :=
-  ⟨K.mem_find _,
-    mt K.shiftr.mem_iff_find_le.1 <| by
-      simp only [find_shiftr, not_leₓ, Nat.lt_succ_selfₓ]⟩
+  ⟨K.mem_find _, mt K.shiftr.mem_iff_find_le.1 <| by simp only [find_shiftr, not_leₓ, Nat.lt_succ_selfₓ]⟩
 
 /-- A choice of an
 [exhaustion by compact sets](https://en.wikipedia.org/wiki/Exhaustion_by_compact_sets)
@@ -1412,7 +1360,7 @@ protected theorem IsClopen.is_closed (hs : IsClopen s) : IsClosed s :=
   hs.2
 
 theorem is_clopen_iff_frontier_eq_empty {s : Set α} : IsClopen s ↔ Frontier s = ∅ := by
-  rw [IsClopen, ← closure_eq_iff_is_closed, ← interior_eq_iff_open, Frontier, diff_eq_empty]
+  rw [IsClopen, ← closure_eq_iff_is_closed, ← interior_eq_iff_is_open, Frontier, diff_eq_empty]
   refine' ⟨fun h => (h.2.trans h.1.symm).Subset, fun h => _⟩
   exact ⟨interior_subset.antisymm (subset_closure.trans h), (h.trans interior_subset).antisymm subset_closure⟩
 
@@ -1453,7 +1401,7 @@ theorem is_clopen_bUnion {β : Type _} {s : Set β} {f : β → Set α} (hs : s.
     IsClopen (⋃ i ∈ s, f i) :=
   ⟨is_open_bUnion fun i hi => (h i hi).1, is_closed_bUnion hs fun i hi => (h i hi).2⟩
 
-theorem is_clopen_bUnion_finset {β : Type _} {s : Finset β} {f : β → Set α} (h : ∀ i ∈ s, IsClopen <| f i) :
+theorem is_clopen_bUnion_finset {β : Type _} {s : Finsetₓ β} {f : β → Set α} (h : ∀ i ∈ s, IsClopen <| f i) :
     IsClopen (⋃ i ∈ s, f i) :=
   is_clopen_bUnion s.finite_to_set h
 
@@ -1464,7 +1412,7 @@ theorem is_clopen_bInter {β : Type _} {s : Set β} (hs : s.Finite) {f : β → 
     IsClopen (⋂ i ∈ s, f i) :=
   ⟨is_open_bInter hs fun i hi => (h i hi).1, is_closed_bInter fun i hi => (h i hi).2⟩
 
-theorem is_clopen_bInter_finset {β : Type _} {s : Finset β} {f : β → Set α} (h : ∀ i ∈ s, IsClopen (f i)) :
+theorem is_clopen_bInter_finset {β : Type _} {s : Finsetₓ β} {f : β → Set α} (h : ∀ i ∈ s, IsClopen (f i)) :
     IsClopen (⋂ i ∈ s, f i) :=
   is_clopen_bInter s.finite_to_set h
 
@@ -1480,9 +1428,7 @@ theorem is_clopen_inter_of_disjoint_cover_clopen {Z a b : Set α} (h : IsClopen 
   convert this using 1
   refine' (inter_subset_inter_right Z hab.subset_compl_right).antisymm _
   rintro x ⟨hx₁, hx₂⟩
-  exact
-    ⟨hx₁, by
-      simpa [not_mem_of_mem_compl hx₂] using cover hx₁⟩
+  exact ⟨hx₁, by simpa [not_mem_of_mem_compl hx₂] using cover hx₁⟩
 
 @[simp]
 theorem is_clopen_discrete [DiscreteTopology α] (x : Set α) : IsClopen x :=
@@ -1577,12 +1523,12 @@ theorem is_closed_irreducible_component {x : α} : IsClosed (IrreducibleComponen
   closure_eq_iff_is_closed.1 <|
     eq_irreducible_component is_irreducible_irreducible_component.IsPreirreducible.closure subset_closure
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`is_preirreducible_univ] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`is_preirreducible_univ] []
 /-- A preirreducible space is one where there is no non-trivial pair of disjoint opens. -/
 class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where
   is_preirreducible_univ : IsPreirreducible (Univ : Set α)
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] []
 /-- An irreducible space is one that is nonempty
 and where there is no non-trivial pair of disjoint opens. -/
 class IrreducibleSpace (α : Type u) [TopologicalSpace α] extends PreirreducibleSpace α : Prop where
@@ -1593,17 +1539,20 @@ attribute [instance] IrreducibleSpace.to_nonempty
 
 theorem IrreducibleSpace.is_irreducible_univ (α : Type u) [TopologicalSpace α] [IrreducibleSpace α] :
     IsIrreducible (⊤ : Set α) :=
-  ⟨by
-    simp , PreirreducibleSpace.is_preirreducible_univ α⟩
+  ⟨by simp, PreirreducibleSpace.is_preirreducible_univ α⟩
 
 theorem irreducible_space_def (α : Type u) [TopologicalSpace α] : IrreducibleSpace α ↔ IsIrreducible (⊤ : Set α) :=
-  ⟨@IrreducibleSpace.is_irreducible_univ α _, fun h => by
+  ⟨@IrreducibleSpace.is_irreducible_univ α _, fun h =>
     haveI : PreirreducibleSpace α := ⟨h.2⟩
-    exact ⟨⟨h.1.some⟩⟩⟩
+    ⟨⟨h.1.some⟩⟩⟩
 
 theorem nonempty_preirreducible_inter [PreirreducibleSpace α] {s t : Set α} :
     IsOpen s → IsOpen t → s.Nonempty → t.Nonempty → (s ∩ t).Nonempty := by
   simpa only [univ_inter, univ_subset_iff] using @PreirreducibleSpace.is_preirreducible_univ α _ _ s t
+
+/-- In a (pre)irreducible space, a nonempty open set is dense. -/
+protected theorem IsOpen.dense [PreirreducibleSpace α] {s : Set α} (ho : IsOpen s) (hne : s.Nonempty) : Dense s :=
+  dense_iff_inter_open.2 fun t hto htne => nonempty_preirreducible_inter hto ho htne hne
 
 theorem IsPreirreducible.image {s : Set α} (H : IsPreirreducible s) (f : α → β) (hf : ContinuousOn f s) :
     IsPreirreducible (f '' s) := by
@@ -1617,14 +1566,14 @@ theorem IsPreirreducible.image {s : Set α} (H : IsPreirreducible s) (f : α →
   rcases this ⟨x, hxu, hx⟩ ⟨y, hyv, hy⟩ with ⟨z, hzs, hzu', hzv'⟩
   refine' ⟨f z, mem_image_of_mem f hzs, _, _⟩
   all_goals
-    rw [← mem_preimage]
-    apply mem_of_mem_inter_left
-    show z ∈ _ ∩ s
-    simp [*]
+  rw [← mem_preimage]
+  apply mem_of_mem_inter_left
+  show z ∈ _ ∩ s
+  simp [*]
 
 theorem IsIrreducible.image {s : Set α} (H : IsIrreducible s) (f : α → β) (hf : ContinuousOn f s) :
     IsIrreducible (f '' s) :=
-  ⟨nonempty_image_iff.mpr H.Nonempty, H.IsPreirreducible.Image f hf⟩
+  ⟨H.Nonempty.Image _, H.IsPreirreducible.Image f hf⟩
 
 theorem Subtype.preirreducible_space {s : Set α} (h : IsPreirreducible s) : PreirreducibleSpace s :=
   { is_preirreducible_univ := by
@@ -1641,35 +1590,44 @@ theorem Subtype.irreducible_space {s : Set α} (h : IsIrreducible s) : Irreducib
   { is_preirreducible_univ := (Subtype.preirreducible_space h.IsPreirreducible).is_preirreducible_univ,
     to_nonempty := h.Nonempty.to_subtype }
 
+/-- An infinite type with cofinite topology is an irreducible topological space. -/
+instance (priority := 100) {α} [Infinite α] : IrreducibleSpace (CofiniteTopology α) where
+  is_preirreducible_univ := fun u v => by
+    haveI : Infinite (CofiniteTopology α) := ‹_›
+    simp only [CofiniteTopology.is_open_iff, univ_inter]
+    intro hu hv hu' hv'
+    simpa only [compl_union, compl_compl] using ((hu hu').union (hv hv')).infinite_compl.Nonempty
+  to_nonempty := (inferInstance : Nonempty α)
+
 /-- A set `s` is irreducible if and only if
 for every finite collection of open sets all of whose members intersect `s`,
 `s` also intersects the intersection of the entire collection
 (i.e., there is an element of `s` contained in every member of the collection). -/
 theorem is_irreducible_iff_sInter {s : Set α} :
     IsIrreducible s ↔
-      ∀ (U : Finset (Set α)) (hU : ∀ u ∈ U, IsOpen u) (H : ∀ u ∈ U, (s ∩ u).Nonempty), (s ∩ ⋂₀ ↑U).Nonempty :=
+      ∀ (U : Finsetₓ (Set α)) (hU : ∀ u ∈ U, IsOpen u) (H : ∀ u ∈ U, (s ∩ u).Nonempty), (s ∩ ⋂₀ ↑U).Nonempty :=
   by
   constructor <;> intro h
   · intro U
-    apply Finset.induction_on U
+    apply Finsetₓ.induction_on U
     · intros
       simpa using h.nonempty
       
     · intro u U hu IH hU H
-      rw [Finset.coe_insert, sInter_insert]
+      rw [Finsetₓ.coe_insert, sInter_insert]
       apply h.2
-      · solve_by_elim [Finset.mem_insert_self]
+      · solve_by_elim [Finsetₓ.mem_insert_self]
         
-      · apply is_open_sInter (Finset.finite_to_set U)
+      · apply is_open_sInter (Finsetₓ.finite_to_set U)
         intros
-        solve_by_elim [Finset.mem_insert_of_mem]
+        solve_by_elim [Finsetₓ.mem_insert_of_mem]
         
-      · solve_by_elim [Finset.mem_insert_self]
+      · solve_by_elim [Finsetₓ.mem_insert_self]
         
       · apply IH
         all_goals
-          intros
-          solve_by_elim [Finset.mem_insert_of_mem]
+        intros
+        solve_by_elim [Finsetₓ.mem_insert_of_mem]
         
       
     
@@ -1679,9 +1637,9 @@ theorem is_irreducible_iff_sInter {s : Set α} :
     intro u v hu hv hu' hv'
     simpa using h {u, v} _ _
     all_goals
-      intro t
-      rw [Finset.mem_insert, Finset.mem_singleton]
-      rintro (rfl | rfl) <;> assumption
+    intro t
+    rw [Finsetₓ.mem_insert, Finsetₓ.mem_singleton]
+    rintro (rfl | rfl) <;> assumption
     
 
 /-- A set is preirreducible if and only if
@@ -1690,10 +1648,10 @@ theorem is_preirreducible_iff_closed_union_closed {s : Set α} :
     IsPreirreducible s ↔ ∀ z₁ z₂ : Set α, IsClosed z₁ → IsClosed z₂ → s ⊆ z₁ ∪ z₂ → s ⊆ z₁ ∨ s ⊆ z₂ := by
   constructor
   all_goals
-    intro h t₁ t₂ ht₁ ht₂
-    specialize h (t₁ᶜ) (t₂ᶜ)
-    simp only [is_open_compl_iff, is_closed_compl_iff] at h
-    specialize h ht₁ ht₂
+  intro h t₁ t₂ ht₁ ht₂
+  specialize h (t₁ᶜ) (t₂ᶜ)
+  simp only [is_open_compl_iff, is_closed_compl_iff] at h
+  specialize h ht₁ ht₂
   · contrapose!
     simp only [not_subset]
     rintro ⟨⟨x, hx, hx'⟩, ⟨y, hy, hy'⟩⟩
@@ -1703,7 +1661,7 @@ theorem is_preirreducible_iff_closed_union_closed {s : Set α} :
     
   · rintro ⟨x, hx, hx'⟩ ⟨y, hy, hy'⟩
     rw [← compl_inter] at h
-    delta' Set.Nonempty
+    delta Set.Nonempty
     rw [imp_iff_not_or] at h
     contrapose! h
     constructor
@@ -1718,34 +1676,34 @@ theorem is_preirreducible_iff_closed_union_closed {s : Set α} :
 for every cover by a finite collection of closed sets,
 it is contained in one of the members of the collection. -/
 theorem is_irreducible_iff_sUnion_closed {s : Set α} :
-    IsIrreducible s ↔ ∀ (Z : Finset (Set α)) (hZ : ∀ z ∈ Z, IsClosed z) (H : s ⊆ ⋃₀↑Z), ∃ z ∈ Z, s ⊆ z := by
+    IsIrreducible s ↔ ∀ (Z : Finsetₓ (Set α)) (hZ : ∀ z ∈ Z, IsClosed z) (H : s ⊆ ⋃₀↑Z), ∃ z ∈ Z, s ⊆ z := by
   rw [IsIrreducible, is_preirreducible_iff_closed_union_closed]
   constructor <;> intro h
   · intro Z
-    apply Finset.induction_on Z
+    apply Finsetₓ.induction_on Z
     · intros
-      rw [Finset.coe_empty, sUnion_empty] at H
+      rw [Finsetₓ.coe_empty, sUnion_empty] at H
       rcases h.1 with ⟨x, hx⟩
       exfalso
       tauto
       
     · intro z Z hz IH hZ H
       cases' h.2 z (⋃₀↑Z) _ _ _ with h' h'
-      · exact ⟨z, Finset.mem_insert_self _ _, h'⟩
+      · exact ⟨z, Finsetₓ.mem_insert_self _ _, h'⟩
         
       · rcases IH _ h' with ⟨z', hz', hsz'⟩
-        · exact ⟨z', Finset.mem_insert_of_mem hz', hsz'⟩
+        · exact ⟨z', Finsetₓ.mem_insert_of_mem hz', hsz'⟩
           
         · intros
-          solve_by_elim [Finset.mem_insert_of_mem]
+          solve_by_elim [Finsetₓ.mem_insert_of_mem]
           
         
-      · solve_by_elim [Finset.mem_insert_self]
+      · solve_by_elim [Finsetₓ.mem_insert_self]
         
       · rw [sUnion_eq_bUnion]
-        apply is_closed_bUnion (Finset.finite_to_set Z)
+        apply is_closed_bUnion (Finsetₓ.finite_to_set Z)
         · intros
-          solve_by_elim [Finset.mem_insert_of_mem]
+          solve_by_elim [Finsetₓ.mem_insert_of_mem]
           
         
       · simpa using H
@@ -1763,11 +1721,11 @@ theorem is_irreducible_iff_sUnion_closed {s : Set α} :
       
     intro z₁ z₂ hz₁ hz₂ H
     have := h {z₁, z₂} _ _
-    simp only [exists_propₓ, Finset.mem_insert, Finset.mem_singleton] at this
+    simp only [exists_propₓ, Finsetₓ.mem_insert, Finsetₓ.mem_singleton] at this
     · rcases this with ⟨z, rfl | rfl, hz⟩ <;> tauto
       
     · intro t
-      rw [Finset.mem_insert, Finset.mem_singleton]
+      rw [Finsetₓ.mem_insert, Finsetₓ.mem_singleton]
       rintro (rfl | rfl) <;> assumption
       
     · simpa using H
@@ -1790,16 +1748,11 @@ theorem IsPreirreducible.subset_irreducible {S U Z : Set α} (hZ : IsPreirreduci
   replace hZ : IsIrreducible Z := ⟨⟨z, h₂ (h₁ hz)⟩, hZ⟩
   refine' ⟨⟨z, h₁ hz⟩, _⟩
   rintro u v hu hv ⟨x, hx, hx'⟩ ⟨y, hy, hy'⟩
-  obtain ⟨a, -, ha'⟩ :=
-    is_irreducible_iff_sInter.mp hZ {U, u, v}
-      (by
-        tidy)
-      _
-  replace ha' : a ∈ U ∧ a ∈ u ∧ a ∈ v := by
-    simpa using ha'
+  obtain ⟨a, -, ha'⟩ := is_irreducible_iff_sInter.mp hZ {U, u, v} (by tidy) _
+  replace ha' : a ∈ U ∧ a ∈ u ∧ a ∈ v := by simpa using ha'
   exact ⟨a, h₁ ha'.1, ha'.2⟩
   · intro U H
-    simp only [Finset.mem_insert, Finset.mem_singleton] at H
+    simp only [Finsetₓ.mem_insert, Finsetₓ.mem_singleton] at H
     rcases H with (rfl | rfl | rfl)
     exacts[⟨z, h₂ (h₁ hz), hz⟩, ⟨x, h₂ hx, hx'⟩, ⟨y, h₂ hy, hy'⟩]
     

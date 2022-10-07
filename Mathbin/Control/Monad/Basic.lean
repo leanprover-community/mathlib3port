@@ -49,8 +49,7 @@ universe u v
 
 @[monad_norm]
 theorem map_eq_bind_pure_comp (m : Type u → Type v) [Monadₓ m] [IsLawfulMonad m] {α β : Type u} (f : α → β) (x : m α) :
-    f <$> x = x >>= pure ∘ f := by
-  rw [bind_pure_comp_eq_map]
+    f <$> x = x >>= pure ∘ f := by rw [bind_pure_comp_eq_map]
 
 /-- run a `state_t` program and discard the final state -/
 def StateTₓ.eval {m : Type u → Type v} [Functor m] {σ α} (cmd : StateTₓ σ m α) (s : σ) : m α :=

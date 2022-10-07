@@ -90,21 +90,17 @@ theorem snd_surjective : Function.Surjective (snd R M M₂) := fun x => ⟨(0, x
 @[simps]
 def prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : M →ₗ[R] M₂ × M₃ where
   toFun := Pi.prod f g
-  map_add' := fun x y => by
-    simp only [Pi.prod, Prod.mk_add_mk, map_add]
-  map_smul' := fun c x => by
-    simp only [Pi.prod, Prod.smul_mk, map_smul, RingHom.id_apply]
+  map_add' := fun x y => by simp only [Pi.prod, Prod.mk_add_mk, map_add]
+  map_smul' := fun c x => by simp only [Pi.prod, Prod.smul_mk, map_smul, RingHom.id_apply]
 
 theorem coe_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
 
 @[simp]
-theorem fst_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : (fst R M₂ M₃).comp (prod f g) = f := by
-  ext <;> rfl
+theorem fst_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : (fst R M₂ M₃).comp (prod f g) = f := by ext <;> rfl
 
 @[simp]
-theorem snd_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : (snd R M₂ M₃).comp (prod f g) = g := by
-  ext <;> rfl
+theorem snd_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : (snd R M₂ M₃).comp (prod f g) = g := by ext <;> rfl
 
 @[simp]
 theorem pair_fst_snd : prod (fst R M M₂) (snd R M M₂) = LinearMap.id :=
@@ -119,10 +115,8 @@ def prodEquiv [Module S M₂] [Module S M₃] [SmulCommClass R S M₂] [SmulComm
     ((M →ₗ[R] M₂) × (M →ₗ[R] M₃)) ≃ₗ[S] M →ₗ[R] M₂ × M₃ where
   toFun := fun f => f.1.Prod f.2
   invFun := fun f => ((fst _ _ _).comp f, (snd _ _ _).comp f)
-  left_inv := fun f => by
-    ext <;> rfl
-  right_inv := fun f => by
-    ext <;> rfl
+  left_inv := fun f => by ext <;> rfl
+  right_inv := fun f => by ext <;> rfl
   map_add' := fun a b => rfl
   map_smul' := fun r a => rfl
 
@@ -188,11 +182,9 @@ theorem inl_eq_prod : inl R M M₂ = prod LinearMap.id 0 :=
 theorem inr_eq_prod : inr R M M₂ = prod 0 LinearMap.id :=
   rfl
 
-theorem inl_injective : Function.Injective (inl R M M₂) := fun _ => by
-  simp
+theorem inl_injective : Function.Injective (inl R M M₂) := fun _ => by simp
 
-theorem inr_injective : Function.Injective (inr R M M₂) := fun _ => by
-  simp
+theorem inr_injective : Function.Injective (inr R M M₂) := fun _ => by simp
 
 /-- The coprod function `λ x : M × M₂, f x.1 + g x.2` is a linear map. -/
 def coprod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) : M × M₂ →ₗ[R] M₃ :=
@@ -218,11 +210,9 @@ theorem comp_coprod (f : M₃ →ₗ[R] M₄) (g₁ : M →ₗ[R] M₃) (g₂ : 
     f.comp (g₁.coprod g₂) = (f.comp g₁).coprod (f.comp g₂) :=
   ext fun x => f.map_add (g₁ x.1) (g₂ x.2)
 
-theorem fst_eq_coprod : fst R M M₂ = coprod LinearMap.id 0 := by
-  ext <;> simp
+theorem fst_eq_coprod : fst R M M₂ = coprod LinearMap.id 0 := by ext <;> simp
 
-theorem snd_eq_coprod : snd R M M₂ = coprod 0 LinearMap.id := by
-  ext <;> simp
+theorem snd_eq_coprod : snd R M M₂ = coprod 0 LinearMap.id := by ext <;> simp
 
 @[simp]
 theorem coprod_comp_prod (f : M₂ →ₗ[R] M₄) (g : M₃ →ₗ[R] M₄) (f' : M →ₗ[R] M₂) (g' : M →ₗ[R] M₃) :
@@ -245,15 +235,13 @@ See note [bundled maps over different rings] for why separate `R` and `S` semiri
 def coprodEquiv [Module S M₃] [SmulCommClass R S M₃] : ((M →ₗ[R] M₃) × (M₂ →ₗ[R] M₃)) ≃ₗ[S] M × M₂ →ₗ[R] M₃ where
   toFun := fun f => f.1.coprod f.2
   invFun := fun f => (f.comp (inl _ _ _), f.comp (inr _ _ _))
-  left_inv := fun f => by
-    simp only [Prod.mk.etaₓ, coprod_inl, coprod_inr]
-  right_inv := fun f => by
-    simp only [← comp_coprod, comp_id, coprod_inl_inr]
+  left_inv := fun f => by simp only [Prod.mk.etaₓ, coprod_inl, coprod_inr]
+  right_inv := fun f => by simp only [← comp_coprod, comp_id, coprod_inl_inr]
   map_add' := fun a b => by
     ext
     simp only [Prod.snd_add, add_apply, coprod_apply, Prod.fst_add, add_add_add_commₓ]
   map_smul' := fun r a => by
-    dsimp'
+    dsimp
     ext
     simp only [smul_add, smul_apply, Prod.smul_snd, Prod.smul_fst, coprod_apply]
 
@@ -283,7 +271,7 @@ theorem prod_map_comap_prod (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) (S 
   SetLike.coe_injective <| Set.preimage_prod_map_prod f g _ _
 
 theorem ker_prod_map (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) : (LinearMap.prodMap f g).ker = Submodule.prod f.ker g.ker := by
-  dsimp' only [ker]
+  dsimp only [ker]
   rw [← prod_map_comap_prod, Submodule.prod_bot]
 
 @[simp]
@@ -343,15 +331,10 @@ variable {A : Type _} [NonUnitalNonAssocSemiringₓ A] [Module R A]
 variable {B : Type _} [NonUnitalNonAssocSemiringₓ B] [Module R B]
 
 theorem inl_map_mul (a₁ a₂ : A) : LinearMap.inl R A B (a₁ * a₂) = LinearMap.inl R A B a₁ * LinearMap.inl R A B a₂ :=
-  Prod.extₓ rfl
-    (by
-      simp )
+  Prod.extₓ rfl (by simp)
 
 theorem inr_map_mul (b₁ b₂ : B) : LinearMap.inr R A B (b₁ * b₂) = LinearMap.inr R A B b₁ * LinearMap.inr R A B b₂ :=
-  Prod.extₓ
-    (by
-      simp )
-    rfl
+  Prod.extₓ (by simp) rfl
 
 end map_mul
 
@@ -384,8 +367,7 @@ variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMo
   [Module R M₂] [Module R M₃] [Module R M₄]
 
 theorem range_coprod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) : (f.coprod g).range = f.range ⊔ g.range :=
-  Submodule.ext fun x => by
-    simp [mem_sup]
+  Submodule.ext fun x => by simp [mem_sup]
 
 theorem is_compl_range_inl_inr : IsCompl (inl R M M₂).range (inr R M M₂).range := by
   constructor
@@ -403,7 +385,7 @@ theorem sup_range_inl_inr : (inl R M M₂).range ⊔ (inr R M M₂).range = ⊤ 
   is_compl_range_inl_inr.sup_eq_top
 
 theorem disjoint_inl_inr : Disjoint (inl R M M₂).range (inr R M M₂).range := by
-  simp (config := { contextual := true })[disjoint_def, @eq_comm M 0, @eq_comm M₂ 0] <;> intros <;> rfl
+  simp (config := { contextual := true }) [disjoint_def, @eq_comm M 0, @eq_comm M₂ 0] <;> intros <;> rfl
 
 theorem map_coprod_prod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) (p : Submodule R M) (q : Submodule R M₂) :
     map (coprod f g) (p.Prod q) = map f p ⊔ map g q := by
@@ -412,13 +394,9 @@ theorem map_coprod_prod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) (p : Su
     rintro _ ⟨x, ⟨h₁, h₂⟩, rfl⟩
     exact mem_sup.2 ⟨_, ⟨_, h₁, rfl⟩, _, ⟨_, h₂, rfl⟩, rfl⟩
     
-  · exact fun x hx =>
-      ⟨(x, 0), by
-        simp [hx]⟩
+  · exact fun x hx => ⟨(x, 0), by simp [hx]⟩
     
-  · exact fun x hx =>
-      ⟨(0, x), by
-        simp [hx]⟩
+  · exact fun x hx => ⟨(0, x), by simp [hx]⟩
     
 
 theorem comap_prod_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) (p : Submodule R M₂) (q : Submodule R M₃) :
@@ -478,8 +456,7 @@ variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
 variable [Module R M] [Module R M₂]
 
 theorem sup_eq_range (p q : Submodule R M) : p ⊔ q = (p.Subtype.coprod q.Subtype).range :=
-  Submodule.ext fun x => by
-    simp [Submodule.mem_sup, SetLike.exists]
+  Submodule.ext fun x => by simp [Submodule.mem_sup, SetLike.exists]
 
 variable (p : Submodule R M) (q : Submodule R M₂)
 
@@ -489,48 +466,37 @@ theorem map_inl : p.map (inl R M M₂) = prod p ⊥ := by
   simp only [And.left_comm, eq_comm, mem_map, Prod.mk.inj_iffₓ, inl_apply, mem_bot, exists_eq_left', mem_prod]
 
 @[simp]
-theorem map_inr : q.map (inr R M M₂) = prod ⊥ q := by
-  ext ⟨x, y⟩ <;> simp [And.left_comm, eq_comm]
+theorem map_inr : q.map (inr R M M₂) = prod ⊥ q := by ext ⟨x, y⟩ <;> simp [And.left_comm, eq_comm]
 
 @[simp]
-theorem comap_fst : p.comap (fst R M M₂) = prod p ⊤ := by
-  ext ⟨x, y⟩ <;> simp
+theorem comap_fst : p.comap (fst R M M₂) = prod p ⊤ := by ext ⟨x, y⟩ <;> simp
 
 @[simp]
-theorem comap_snd : q.comap (snd R M M₂) = prod ⊤ q := by
-  ext ⟨x, y⟩ <;> simp
+theorem comap_snd : q.comap (snd R M M₂) = prod ⊤ q := by ext ⟨x, y⟩ <;> simp
 
 @[simp]
-theorem prod_comap_inl : (prod p q).comap (inl R M M₂) = p := by
-  ext <;> simp
+theorem prod_comap_inl : (prod p q).comap (inl R M M₂) = p := by ext <;> simp
 
 @[simp]
-theorem prod_comap_inr : (prod p q).comap (inr R M M₂) = q := by
-  ext <;> simp
+theorem prod_comap_inr : (prod p q).comap (inr R M M₂) = q := by ext <;> simp
 
 @[simp]
-theorem prod_map_fst : (prod p q).map (fst R M M₂) = p := by
-  ext x <;> simp [(⟨0, zero_mem _⟩ : ∃ x, x ∈ q)]
+theorem prod_map_fst : (prod p q).map (fst R M M₂) = p := by ext x <;> simp [(⟨0, zero_mem _⟩ : ∃ x, x ∈ q)]
 
 @[simp]
-theorem prod_map_snd : (prod p q).map (snd R M M₂) = q := by
-  ext x <;> simp [(⟨0, zero_mem _⟩ : ∃ x, x ∈ p)]
+theorem prod_map_snd : (prod p q).map (snd R M M₂) = q := by ext x <;> simp [(⟨0, zero_mem _⟩ : ∃ x, x ∈ p)]
 
 @[simp]
-theorem ker_inl : (inl R M M₂).ker = ⊥ := by
-  rw [ker, ← prod_bot, prod_comap_inl]
+theorem ker_inl : (inl R M M₂).ker = ⊥ := by rw [ker, ← prod_bot, prod_comap_inl]
 
 @[simp]
-theorem ker_inr : (inr R M M₂).ker = ⊥ := by
-  rw [ker, ← prod_bot, prod_comap_inr]
+theorem ker_inr : (inr R M M₂).ker = ⊥ := by rw [ker, ← prod_bot, prod_comap_inr]
 
 @[simp]
-theorem range_fst : (fst R M M₂).range = ⊤ := by
-  rw [range_eq_map, ← prod_top, prod_map_fst]
+theorem range_fst : (fst R M M₂).range = ⊤ := by rw [range_eq_map, ← prod_top, prod_map_fst]
 
 @[simp]
-theorem range_snd : (snd R M M₂).range = ⊤ := by
-  rw [range_eq_map, ← prod_top, prod_map_snd]
+theorem range_snd : (snd R M M₂).range = ⊤ := by rw [range_eq_map, ← prod_top, prod_map_snd]
 
 variable (R M M₂)
 
@@ -542,20 +508,13 @@ def fst : Submodule R (M × M₂) :=
 @[simps]
 def fstEquiv : Submodule.fst R M M₂ ≃ₗ[R] M where
   toFun := fun x => x.1.1
-  invFun := fun m =>
-    ⟨⟨m, 0⟩, by
-      tidy⟩
-  map_add' := by
-    simp
-  map_smul' := by
-    simp
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  invFun := fun m => ⟨⟨m, 0⟩, by tidy⟩
+  map_add' := by simp
+  map_smul' := by simp
+  left_inv := by tidy
+  right_inv := by tidy
 
-theorem fst_map_fst : (Submodule.fst R M M₂).map (LinearMap.fst R M M₂) = ⊤ := by
-  tidy
+theorem fst_map_fst : (Submodule.fst R M M₂).map (LinearMap.fst R M M₂) = ⊤ := by tidy
 
 theorem fst_map_snd : (Submodule.fst R M M₂).map (LinearMap.snd R M M₂) = ⊥ := by
   tidy
@@ -569,47 +528,29 @@ def snd : Submodule R (M × M₂) :=
 @[simps]
 def sndEquiv : Submodule.snd R M M₂ ≃ₗ[R] M₂ where
   toFun := fun x => x.1.2
-  invFun := fun n =>
-    ⟨⟨0, n⟩, by
-      tidy⟩
-  map_add' := by
-    simp
-  map_smul' := by
-    simp
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  invFun := fun n => ⟨⟨0, n⟩, by tidy⟩
+  map_add' := by simp
+  map_smul' := by simp
+  left_inv := by tidy
+  right_inv := by tidy
 
 theorem snd_map_fst : (Submodule.snd R M M₂).map (LinearMap.fst R M M₂) = ⊥ := by
   tidy
   exact 0
 
-theorem snd_map_snd : (Submodule.snd R M M₂).map (LinearMap.snd R M M₂) = ⊤ := by
-  tidy
+theorem snd_map_snd : (Submodule.snd R M M₂).map (LinearMap.snd R M M₂) = ⊤ := by tidy
 
 theorem fst_sup_snd : Submodule.fst R M M₂ ⊔ Submodule.snd R M M₂ = ⊤ := by
   rw [eq_top_iff]
   rintro ⟨m, n⟩ -
-  rw
-    [show (m, n) = (m, 0) + (0, n) by
-      simp ]
+  rw [show (m, n) = (m, 0) + (0, n) by simp]
   apply Submodule.add_mem (Submodule.fst R M M₂ ⊔ Submodule.snd R M M₂)
-  · exact
-      Submodule.mem_sup_left
-        (submodule.mem_comap.mpr
-          (by
-            simp ))
+  · exact Submodule.mem_sup_left (submodule.mem_comap.mpr (by simp))
     
-  · exact
-      Submodule.mem_sup_right
-        (submodule.mem_comap.mpr
-          (by
-            simp ))
+  · exact Submodule.mem_sup_right (submodule.mem_comap.mpr (by simp))
     
 
-theorem fst_inf_snd : Submodule.fst R M M₂ ⊓ Submodule.snd R M M₂ = ⊥ := by
-  tidy
+theorem fst_inf_snd : Submodule.fst R M M₂ ⊓ Submodule.snd R M M₂ = ⊥ := by tidy
 
 theorem le_prod_iff {p₁ : Submodule R M} {p₂ : Submodule R M₂} {q : Submodule R (M × M₂)} :
     q ≤ p₁.Prod p₂ ↔ map (LinearMap.fst R M M₂) q ≤ p₁ ∧ map (LinearMap.snd R M M₂) q ≤ p₂ := by
@@ -714,11 +655,8 @@ variable (e₁ : M ≃ₗ[R] M₂) (e₂ : M₃ ≃ₗ[R] M₄)
 protected def skewProd (f : M →ₗ[R] M₄) : (M × M₃) ≃ₗ[R] M₂ × M₄ :=
   { ((e₁ : M →ₗ[R] M₂).comp (LinearMap.fst R M M₃)).Prod
       ((e₂ : M₃ →ₗ[R] M₄).comp (LinearMap.snd R M M₃) + f.comp (LinearMap.fst R M M₃)) with
-    invFun := fun p : M₂ × M₄ => (e₁.symm p.1, e₂.symm (p.2 - f (e₁.symm p.1))),
-    left_inv := fun p => by
-      simp ,
-    right_inv := fun p => by
-      simp }
+    invFun := fun p : M₂ × M₄ => (e₁.symm p.1, e₂.symm (p.2 - f (e₁.symm p.1))), left_inv := fun p => by simp,
+    right_inv := fun p => by simp }
 
 @[simp]
 theorem skew_prod_apply (f : M →ₗ[R] M₄) (x) : e₁.skewProd e₂ f x = (e₁ x.1, e₂ x.2 + f x.1) :=
@@ -752,11 +690,10 @@ theorem range_prod_eq {f : M →ₗ[R] M₂} {g : M →ₗ[R] M₃} (h : ker f �
     Prod.forallₓ, Pi.prod]
   rintro _ _ x rfl y rfl
   simp only [Prod.mk.inj_iffₓ, ← sub_mem_ker_iff]
-  have : y - x ∈ ker f ⊔ ker g := by
-    simp only [h, mem_top]
+  have : y - x ∈ ker f ⊔ ker g := by simp only [h, mem_top]
   rcases mem_sup.1 this with ⟨x', hx', y', hy', H⟩
   refine' ⟨x' + x, _, _⟩
-  · simp only [mem_ker.mp hx', add_sub_cancel, mem_ker]
+  · simp only [mem_ker.mp hx', map_add, zero_addₓ]
     
   · simp [← eq_sub_iff_add_eq.1 H, map_add, add_left_injₓ, self_eq_add_rightₓ, mem_ker.mp hy']
     
@@ -822,7 +759,7 @@ all isomorphic to `M`.
 def tunnel (f : M × N →ₗ[R] M) (i : Injective f) : ℕ →o (Submodule R M)ᵒᵈ :=
   ⟨fun n => OrderDual.toDual (tunnel'ₓ f i n).1,
     monotone_nat_of_le_succ fun n => by
-      dsimp' [tunnel', tunnel_aux]
+      dsimp [tunnel', tunnel_aux]
       rw [Submodule.map_comp, Submodule.map_comp]
       apply Submodule.map_subtype_le⟩
 
@@ -838,20 +775,20 @@ def tailingLinearEquiv (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) : ta
     (Submodule.sndEquiv R M N)
 
 theorem tailing_le_tunnel (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) : tailing f i n ≤ (tunnel f i n).ofDual := by
-  dsimp' [tailing, tunnel_aux]
+  dsimp [tailing, tunnel_aux]
   rw [Submodule.map_comp, Submodule.map_comp]
   apply Submodule.map_subtype_le
 
 theorem tailing_disjoint_tunnel_succ (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) :
     Disjoint (tailing f i n) (tunnel f i (n + 1)).ofDual := by
   rw [disjoint_iff]
-  dsimp' [tailing, tunnel, tunnel']
+  dsimp [tailing, tunnel, tunnel']
   rw [Submodule.map_inf_eq_map_inf_comap, Submodule.comap_map_eq_of_injective (tunnel_aux_injective _ i _), inf_comm,
     Submodule.fst_inf_snd, Submodule.map_bot]
 
 theorem tailing_sup_tunnel_succ_le_tunnel (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) :
     tailing f i n ⊔ (tunnel f i (n + 1)).ofDual ≤ (tunnel f i n).ofDual := by
-  dsimp' [tailing, tunnel, tunnel', tunnel_aux]
+  dsimp [tailing, tunnel, tunnel', tunnel_aux]
   rw [← Submodule.map_sup, sup_comm, Submodule.fst_sup_snd, Submodule.map_comp, Submodule.map_comp]
   apply Submodule.map_subtype_le
 
@@ -860,13 +797,11 @@ def tailings (f : M × N →ₗ[R] M) (i : Injective f) : ℕ → Submodule R M 
   partialSups (tailing f i)
 
 @[simp]
-theorem tailings_zero (f : M × N →ₗ[R] M) (i : Injective f) : tailings f i 0 = tailing f i 0 := by
-  simp [tailings]
+theorem tailings_zero (f : M × N →ₗ[R] M) (i : Injective f) : tailings f i 0 = tailing f i 0 := by simp [tailings]
 
 @[simp]
 theorem tailings_succ (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) :
-    tailings f i (n + 1) = tailings f i n ⊔ tailing f i (n + 1) := by
-  simp [tailings]
+    tailings f i (n + 1) = tailings f i n ⊔ tailing f i (n + 1) := by simp [tailings]
 
 theorem tailings_disjoint_tunnel (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) :
     Disjoint (tailings f i n) (tunnel f i (n + 1)).ofDual := by

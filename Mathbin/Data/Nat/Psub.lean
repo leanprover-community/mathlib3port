@@ -36,34 +36,26 @@ def psub (m : ℕ) : ℕ → Option ℕ
   | 0 => some m
   | n + 1 => psub n >>= ppred
 
-theorem pred_eq_ppred (n : ℕ) : pred n = (ppred n).getOrElse 0 := by
-  cases n <;> rfl
+theorem pred_eq_ppred (n : ℕ) : pred n = (ppred n).getOrElse 0 := by cases n <;> rfl
 
 theorem sub_eq_psub (m : ℕ) : ∀ n, m - n = (psub m n).getOrElse 0
   | 0 => rfl
-  | n + 1 =>
-    (pred_eq_ppred (m - n)).trans <| by
-      rw [sub_eq_psub, psub] <;> cases psub m n <;> rfl
+  | n + 1 => (pred_eq_ppred (m - n)).trans <| by rw [sub_eq_psub, psub] <;> cases psub m n <;> rfl
 
 @[simp]
 theorem ppred_eq_some {m : ℕ} : ∀ {n}, ppred n = some m ↔ succ m = n
-  | 0 => by
-    constructor <;> intro h <;> contradiction
-  | n + 1 => by
-    dsimp' <;> constructor <;> intro h <;> injection h <;> subst n
+  | 0 => by constructor <;> intro h <;> contradiction
+  | n + 1 => by dsimp <;> constructor <;> intro h <;> injection h <;> subst n
 
 @[simp]
 theorem ppred_eq_none : ∀ {n : ℕ}, ppred n = none ↔ n = 0
-  | 0 => by
-    simp
-  | n + 1 => by
-    dsimp' <;> constructor <;> contradiction
+  | 0 => by simp
+  | n + 1 => by dsimp <;> constructor <;> contradiction
 
 theorem psub_eq_some {m : ℕ} : ∀ {n k}, psub m n = some k ↔ k + n = m
-  | 0, k => by
-    simp [eq_comm]
+  | 0, k => by simp [eq_comm]
   | n + 1, k => by
-    dsimp'
+    dsimp
     apply option.bind_eq_some.trans
     simp [psub_eq_some, add_commₓ, add_left_commₓ, Nat.succ_eq_add_one]
 
@@ -89,8 +81,7 @@ theorem psub_add (m n k) :
     psub m (n + k) = do
       let x ← psub m n
       psub x k :=
-  by
-  induction k <;> simp [*, add_succ, bind_assoc]
+  by induction k <;> simp [*, add_succ, bind_assoc]
 
 /-- Same as `psub`, but with a more efficient implementation. -/
 @[inline]

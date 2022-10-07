@@ -67,7 +67,7 @@ you should parametrize over `(F : Type*) [order_add_monoid_hom_class F α β] (f
 When you extend this structure, make sure to extend `order_add_monoid_hom_class`. -/
 structure OrderAddMonoidHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] [AddZeroClassₓ α] [AddZeroClassₓ β] extends
   α →+ β where
-  monotone' : Monotone to_fun
+  monotone' : Monotoneₓ to_fun
 
 -- mathport name: «expr →+o »
 infixr:25 " →+o " => OrderAddMonoidHom
@@ -77,7 +77,7 @@ infixr:25 " →+o " => OrderAddMonoidHom
 You should also extend this typeclass when you extend `order_add_monoid_hom`. -/
 class OrderAddMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β] [AddZeroClassₓ α]
   [AddZeroClassₓ β] extends AddMonoidHomClass F α β where
-  Monotone (f : F) : Monotone f
+  Monotone (f : F) : Monotoneₓ f
 
 -- Instances and lemmas are defined below through `@[to_additive]`.
 end AddMonoidₓ
@@ -97,7 +97,7 @@ When you extend this structure, make sure to extend `order_monoid_hom_class`. -/
 @[to_additive]
 structure OrderMonoidHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] [MulOneClassₓ α] [MulOneClassₓ β] extends
   α →* β where
-  monotone' : Monotone to_fun
+  monotone' : Monotoneₓ to_fun
 
 -- mathport name: «expr →*o »
 infixr:25 " →*o " => OrderMonoidHom
@@ -108,7 +108,7 @@ You should also extend this typeclass when you extend `order_monoid_hom`. -/
 @[to_additive]
 class OrderMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β] [MulOneClassₓ α]
   [MulOneClassₓ β] extends MonoidHomClass F α β where
-  Monotone (f : F) : Monotone f
+  Monotone (f : F) : Monotoneₓ f
 
 -- See note [lower instance priority]
 @[to_additive]
@@ -136,7 +136,7 @@ you should parametrize over `(F : Type*) [order_monoid_with_zero_hom_class F α 
 When you extend this structure, make sure to extend `order_monoid_with_zero_hom_class`. -/
 structure OrderMonoidWithZeroHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] [MulZeroOneClassₓ α]
   [MulZeroOneClassₓ β] extends α →*₀ β where
-  monotone' : Monotone to_fun
+  monotone' : Monotoneₓ to_fun
 
 -- mathport name: «expr →*₀o »
 infixr:25 " →*₀o " => OrderMonoidWithZeroHom
@@ -147,7 +147,7 @@ ordered monoid with zero homomorphisms.
 You should also extend this typeclass when you extend `order_monoid_with_zero_hom`. -/
 class OrderMonoidWithZeroHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β]
   [MulZeroOneClassₓ α] [MulZeroOneClassₓ β] extends MonoidWithZeroHomClass F α β where
-  Monotone (f : F) : Monotone f
+  Monotone (f : F) : Monotoneₓ f
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderMonoidWithZeroHomClass.toOrderMonoidHomClass [OrderMonoidWithZeroHomClass F α β] :
@@ -176,6 +176,46 @@ theorem map_nonpos (ha : a ≤ 0) : f a ≤ 0 := by
   exact OrderHomClass.mono _ ha
 
 end OrderedAddCommMonoid
+
+section OrderedAddCommGroup
+
+variable [OrderedAddCommGroup α] [OrderedAddCommMonoid β] [AddMonoidHomClass F α β] (f : F)
+
+theorem monotone_iff_map_nonneg : Monotoneₓ (f : α → β) ↔ ∀ a, 0 ≤ a → 0 ≤ f a :=
+  ⟨fun h a => by
+    rw [← map_zero f]
+    apply h, fun h a b hl => by
+    rw [← sub_add_cancel b a, map_add f]
+    exact le_add_of_nonneg_left (h _ <| sub_nonneg.2 hl)⟩
+
+theorem antitone_iff_map_nonpos : Antitoneₓ (f : α → β) ↔ ∀ a, 0 ≤ a → f a ≤ 0 :=
+  monotone_to_dual_comp_iff.symm.trans <| monotone_iff_map_nonneg _
+
+theorem monotone_iff_map_nonpos : Monotoneₓ (f : α → β) ↔ ∀ a ≤ 0, f a ≤ 0 :=
+  antitone_comp_of_dual_iff.symm.trans <| antitone_iff_map_nonpos _
+
+theorem antitone_iff_map_nonneg : Antitoneₓ (f : α → β) ↔ ∀ a ≤ 0, 0 ≤ f a :=
+  monotone_comp_of_dual_iff.symm.trans <| monotone_iff_map_nonneg _
+
+variable [CovariantClass β β (· + ·) (· < ·)]
+
+theorem strict_mono_iff_map_pos : StrictMonoₓ (f : α → β) ↔ ∀ a, 0 < a → 0 < f a :=
+  ⟨fun h a => by
+    rw [← map_zero f]
+    apply h, fun h a b hl => by
+    rw [← sub_add_cancel b a, map_add f]
+    exact lt_add_of_pos_left _ (h _ <| sub_pos.2 hl)⟩
+
+theorem strict_anti_iff_map_neg : StrictAntiₓ (f : α → β) ↔ ∀ a, 0 < a → f a < 0 :=
+  strict_mono_to_dual_comp_iff.symm.trans <| strict_mono_iff_map_pos _
+
+theorem strict_mono_iff_map_neg : StrictMonoₓ (f : α → β) ↔ ∀ a < 0, f a < 0 :=
+  strict_anti_comp_of_dual_iff.symm.trans <| strict_anti_iff_map_neg _
+
+theorem strict_anti_iff_map_pos : StrictAntiₓ (f : α → β) ↔ ∀ a < 0, 0 < f a :=
+  strict_mono_comp_of_dual_iff.symm.trans <| strict_mono_iff_map_pos _
+
+end OrderedAddCommGroup
 
 namespace OrderMonoidHom
 
@@ -234,13 +274,11 @@ theorem coe_order_hom (f : α →*o β) : ((f : α →o β) : α → β) = f :=
 
 @[to_additive]
 theorem to_monoid_hom_injective : Injective (toMonoidHom : _ → α →* β) := fun f g h =>
-  ext <| by
-    convert FunLike.ext_iff.1 h
+  ext <| by convert FunLike.ext_iff.1 h
 
 @[to_additive]
 theorem to_order_hom_injective : Injective (toOrderHom : _ → α →o β) := fun f g h =>
-  ext <| by
-    convert FunLike.ext_iff.1 h
+  ext <| by convert FunLike.ext_iff.1 h
 
 /-- Copy of an `order_monoid_hom` with a new `to_fun` equal to the old one. Useful to fix
 definitional equalities. -/
@@ -305,16 +343,12 @@ theorem cancel_right {g₁ g₂ : β →*o γ} {f : α →*o β} (hf : Function.
 
 @[to_additive]
 theorem cancel_left {g : β →*o γ} {f₁ f₂ : α →*o β} (hg : Function.Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 /-- `1` is the homomorphism sending all elements to `1`. -/
 @[to_additive "`1` is the homomorphism sending all elements to `1`."]
 instance : One (α →*o β) :=
-  ⟨{ (1 : α →* β) with monotone' := monotone_const }⟩
+  ⟨{ (1 : α →* β) with monotone' := monotone_constₓ }⟩
 
 @[simp, to_additive]
 theorem coe_one : ⇑(1 : α →*o β) = 1 :=
@@ -391,7 +425,7 @@ include hα hβ
 /-- Makes an ordered group homomorphism from a proof that the map preserves multiplication. -/
 @[to_additive "Makes an ordered additive group homomorphism from a proof that the map preserves\naddition.",
   simps (config := { fullyApplied := false })]
-def mk' (f : α → β) (hf : Monotone f) (map_mul : ∀ a b : α, f (a * b) = f a * f b) : α →*o β :=
+def mk' (f : α → β) (hf : Monotoneₓ f) (map_mul : ∀ a b : α, f (a * b) = f a * f b) : α →*o β :=
   { MonoidHom.mk' f map_mul with monotone' := hf }
 
 end OrderedCommGroup
@@ -451,12 +485,10 @@ theorem coe_order_monoid_hom (f : α →*₀o β) : ⇑(f : α →*o β) = f :=
   rfl
 
 theorem to_order_monoid_hom_injective : Injective (toOrderMonoidHom : _ → α →*o β) := fun f g h =>
-  ext <| by
-    convert FunLike.ext_iff.1 h
+  ext <| by convert FunLike.ext_iff.1 h
 
 theorem to_monoid_with_zero_hom_injective : Injective (toMonoidWithZeroHom : _ → α →*₀ β) := fun f g h =>
-  ext <| by
-    convert FunLike.ext_iff.1 h
+  ext <| by convert FunLike.ext_iff.1 h
 
 /-- Copy of an `order_monoid_hom` with a new `to_fun` equal to the old one. Useful to fix
 definitional equalities. -/
@@ -514,11 +546,7 @@ theorem cancel_right {g₁ g₂ : β →*₀o γ} {f : α →*₀o β} (hf : Fun
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : β →*₀o γ} {f₁ f₂ : α →*₀o β} (hg : Function.Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end Preorderₓ
 

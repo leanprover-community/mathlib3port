@@ -21,12 +21,10 @@ def dist (n m : ℕ) :=
 theorem dist.def (n m : ℕ) : dist n m = n - m + (m - n) :=
   rfl
 
-theorem dist_comm (n m : ℕ) : dist n m = dist m n := by
-  simp [dist.def, add_commₓ]
+theorem dist_comm (n m : ℕ) : dist n m = dist m n := by simp [dist.def, add_commₓ]
 
 @[simp]
-theorem dist_self (n : ℕ) : dist n n = 0 := by
-  simp [dist.def, tsub_self]
+theorem dist_self (n : ℕ) : dist n n = 0 := by simp [dist.def, tsub_self]
 
 theorem eq_of_dist_eq_zero {n m : ℕ} (h : dist n m = 0) : n = m :=
   have : n - m = 0 := Nat.eq_zero_of_add_eq_zero_right h
@@ -35,8 +33,7 @@ theorem eq_of_dist_eq_zero {n m : ℕ} (h : dist n m = 0) : n = m :=
   have : m ≤ n := tsub_eq_zero_iff_le.mp this
   le_antisymmₓ ‹n ≤ m› ‹m ≤ n›
 
-theorem dist_eq_zero {n m : ℕ} (h : n = m) : dist n m = 0 := by
-  rw [h, dist_self]
+theorem dist_eq_zero {n m : ℕ} (h : n = m) : dist n m = 0 := by rw [h, dist_self]
 
 theorem dist_eq_sub_of_le {n m : ℕ} (h : n ≤ m) : dist n m = m - n := by
   rw [dist.def, tsub_eq_zero_iff_le.mpr h, zero_addₓ]
@@ -48,14 +45,11 @@ theorem dist_eq_sub_of_le_right {n m : ℕ} (h : m ≤ n) : dist n m = n - m := 
 theorem dist_tri_left (n m : ℕ) : m ≤ dist n m + n :=
   le_transₓ le_tsub_add (add_le_add_right (Nat.le_add_leftₓ _ _) _)
 
-theorem dist_tri_right (n m : ℕ) : m ≤ n + dist n m := by
-  rw [add_commₓ] <;> apply dist_tri_left
+theorem dist_tri_right (n m : ℕ) : m ≤ n + dist n m := by rw [add_commₓ] <;> apply dist_tri_left
 
-theorem dist_tri_left' (n m : ℕ) : n ≤ dist n m + m := by
-  rw [dist_comm] <;> apply dist_tri_left
+theorem dist_tri_left' (n m : ℕ) : n ≤ dist n m + m := by rw [dist_comm] <;> apply dist_tri_left
 
-theorem dist_tri_right' (n m : ℕ) : n ≤ m + dist n m := by
-  rw [dist_comm] <;> apply dist_tri_right
+theorem dist_tri_right' (n m : ℕ) : n ≤ m + dist n m := by rw [dist_comm] <;> apply dist_tri_right
 
 theorem dist_zero_right (n : ℕ) : dist n 0 = n :=
   Eq.trans (dist_eq_sub_of_le_right (zero_le n)) (tsub_zero n)
@@ -66,10 +60,8 @@ theorem dist_zero_left (n : ℕ) : dist 0 n = n :=
 theorem dist_add_add_right (n k m : ℕ) : dist (n + k) (m + k) = dist n m :=
   calc
     dist (n + k) (m + k) = n + k - (m + k) + (m + k - (n + k)) := rfl
-    _ = n - m + (m + k - (n + k)) := by
-      rw [add_tsub_add_eq_tsub_right]
-    _ = n - m + (m - n) := by
-      rw [add_tsub_add_eq_tsub_right]
+    _ = n - m + (m + k - (n + k)) := by rw [add_tsub_add_eq_tsub_right]
+    _ = n - m + (m - n) := by rw [add_tsub_add_eq_tsub_right]
     
 
 theorem dist_add_add_left (k n m : ℕ) : dist (k + n) (k + m) = dist n m := by
@@ -78,17 +70,13 @@ theorem dist_add_add_left (k n m : ℕ) : dist (k + n) (k + m) = dist n m := by
 
 theorem dist_eq_intro {n m k l : ℕ} (h : n + m = k + l) : dist n k = dist l m :=
   calc
-    dist n k = dist (n + m) (k + m) := by
-      rw [dist_add_add_right]
-    _ = dist (k + l) (k + m) := by
-      rw [h]
-    _ = dist l m := by
-      rw [dist_add_add_left]
+    dist n k = dist (n + m) (k + m) := by rw [dist_add_add_right]
+    _ = dist (k + l) (k + m) := by rw [h]
+    _ = dist l m := by rw [dist_add_add_left]
     
 
 theorem dist.triangle_inequality (n m k : ℕ) : dist n k ≤ dist n m + dist m k := by
-  have : dist n m + dist m k = n - m + (m - k) + (k - m + (m - n)) := by
-    simp [dist.def, add_commₓ, add_left_commₓ]
+  have : dist n m + dist m k = n - m + (m - k) + (k - m + (m - n)) := by simp [dist.def, add_commₓ, add_left_commₓ]
   rw [this, dist.def]
   exact add_le_add tsub_le_tsub_add_tsub tsub_le_tsub_add_tsub
 
@@ -108,17 +96,14 @@ or.elim (lt_or_ge i j)
   (assume : i ≥ j,
     by rw [max_eq_left this , min_eq_right this, dist_eq_sub_of_le_right this])
 -/
-theorem dist_succ_succ {i j : Nat} : dist (succ i) (succ j) = dist i j := by
-  simp [dist.def, succ_sub_succ]
+theorem dist_succ_succ {i j : Nat} : dist (succ i) (succ j) = dist i j := by simp [dist.def, succ_sub_succ]
 
 theorem dist_pos_of_ne {i j : Nat} : i ≠ j → 0 < dist i j := fun hne =>
   Nat.ltByCases
     (fun this : i < j => by
       rw [dist_eq_sub_of_le (le_of_ltₓ this)]
       apply tsub_pos_of_lt this)
-    (fun this : i = j => by
-      contradiction)
-    fun this : i > j => by
+    (fun this : i = j => by contradiction) fun this : i > j => by
     rw [dist_eq_sub_of_le_right (le_of_ltₓ this)]
     apply tsub_pos_of_lt this
 

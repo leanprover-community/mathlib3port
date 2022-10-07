@@ -39,7 +39,7 @@ open Matrix
 
 open Matrix
 
-variable {S : Matrix n n 𝕜} [Fintype n] (hS : S.PosDef)
+variable {S : Matrix n n 𝕜} [Fintypeₓ n] (hS : S.PosDef)
 
 /-- The inverse of the lower triangular matrix `L` of the LDL-decomposition. It is obtained by
 applying Gram-Schmidt-Orthogonalization w.r.t. the inner product induced by `Sᵀ` on the standard
@@ -65,8 +65,7 @@ noncomputable instance LDL.invertibleLowerInv : Invertible (LDL.lowerInv hS) := 
 
 theorem LDL.lower_inv_orthogonal {i j : n} (h₀ : i ≠ j) : ⟪LDL.lowerInv hS i, Sᵀ.mulVec (LDL.lowerInv hS j)⟫ = 0 :=
   show @inner 𝕜 (n → 𝕜) (InnerProductSpace.ofMatrix hS.transpose).toHasInner (LDL.lowerInv hS i) (LDL.lowerInv hS j) = 0
-    by
-    apply gram_schmidt_orthogonal _ _ h₀
+    by apply gram_schmidt_orthogonal _ _ h₀
 
 /-- The entries of the diagonal matrix `D` of the LDL decomposition. -/
 noncomputable def LDL.diagEntries : n → 𝕜 := fun i => ⟪star (LDL.lowerInv hS i), S.mulVec (star (LDL.lowerInv hS i))⟫
@@ -84,7 +83,7 @@ theorem LDL.lower_inv_triangular {i j : n} (hij : i < j) : LDL.lowerInv hS i j =
 by some lower triangular matrix and get a diagonal matrix. -/
 theorem LDL.diag_eq_lower_inv_conj : LDL.diag hS = LDL.lowerInv hS ⬝ S ⬝ (LDL.lowerInv hS)ᴴ := by
   ext i j
-  by_cases' hij : i = j
+  by_cases hij:i = j
   · simpa only [hij, LDL.diag, diagonal_apply_eq, LDL.diagEntries, Matrix.mul_assoc, inner, Pi.star_apply,
       IsROrC.star_def, star_ring_end_self_apply]
     

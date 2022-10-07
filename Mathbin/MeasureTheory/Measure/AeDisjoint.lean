@@ -26,7 +26,7 @@ def AeDisjoint (s t : Set α) :=
 
 variable {μ} {s t u v : Set α}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If `s : ι → set α` is a countable family of pairwise a.e. disjoint sets, then there exists a
 family of measurable null sets `t i` such that `s i \ t i` are pairwise disjoint. -/
 theorem exists_null_pairwise_disjoint_diff [Countable ι] {s : ι → Set α} (hd : Pairwise (AeDisjoint μ on s)) :
@@ -40,7 +40,7 @@ theorem exists_null_pairwise_disjoint_diff [Countable ι] {s : ι → Set α} (h
   · simp only [Pairwise, disjoint_left, on_fun, mem_diff, not_and, and_imp, not_not]
     intro i j hne x hi hU hj
     replace hU : x ∉ s i ∩ ⋃ (j) (_ : j ≠ i), s j := fun h => hU (subset_to_measurable _ _ h)
-    simp only [mem_inter_eq, mem_Union, not_and, not_exists] at hU
+    simp only [mem_inter_iff, mem_Union, not_and, not_exists] at hU
     exact (hU hi j hne.symm hj).elim
     
 
@@ -50,8 +50,7 @@ protected theorem eq (h : AeDisjoint μ s t) : μ (s ∩ t) = 0 :=
   h
 
 @[symm]
-protected theorem symm (h : AeDisjoint μ s t) : AeDisjoint μ t s := by
-  rwa [ae_disjoint, inter_comm]
+protected theorem symm (h : AeDisjoint μ s t) : AeDisjoint μ t s := by rwa [ae_disjoint, inter_comm]
 
 protected theorem symmetric : Symmetric (AeDisjoint μ) := fun s t h => h.symm
 

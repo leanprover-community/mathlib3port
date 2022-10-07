@@ -39,29 +39,20 @@ variable {x y z}
 
 theorem IsCoprime.symm (H : IsCoprime x y) : IsCoprime y x :=
   let ⟨a, b, H⟩ := H
-  ⟨b, a, by
-    rw [add_commₓ, H]⟩
+  ⟨b, a, by rw [add_commₓ, H]⟩
 
 theorem is_coprime_comm : IsCoprime x y ↔ IsCoprime y x :=
   ⟨IsCoprime.symm, IsCoprime.symm⟩
 
 theorem is_coprime_self : IsCoprime x x ↔ IsUnit x :=
-  ⟨fun ⟨a, b, h⟩ =>
-    is_unit_of_mul_eq_one x (a + b) <| by
-      rwa [mul_comm, add_mulₓ],
-    fun h =>
+  ⟨fun ⟨a, b, h⟩ => is_unit_of_mul_eq_one x (a + b) <| by rwa [mul_comm, add_mulₓ], fun h =>
     let ⟨b, hb⟩ := is_unit_iff_exists_inv'.1 h
-    ⟨b, 0, by
-      rwa [zero_mul, add_zeroₓ]⟩⟩
+    ⟨b, 0, by rwa [zero_mul, add_zeroₓ]⟩⟩
 
 theorem is_coprime_zero_left : IsCoprime 0 x ↔ IsUnit x :=
-  ⟨fun ⟨a, b, H⟩ =>
-    is_unit_of_mul_eq_one x b <| by
-      rwa [mul_zero, zero_addₓ, mul_comm] at H,
-    fun H =>
+  ⟨fun ⟨a, b, H⟩ => is_unit_of_mul_eq_one x b <| by rwa [mul_zero, zero_addₓ, mul_comm] at H, fun H =>
     let ⟨b, hb⟩ := is_unit_iff_exists_inv'.1 H
-    ⟨1, b, by
-      rwa [one_mulₓ, zero_addₓ]⟩⟩
+    ⟨1, b, by rwa [one_mulₓ, zero_addₓ]⟩⟩
 
 theorem is_coprime_zero_right : IsCoprime x 0 ↔ IsUnit x :=
   is_coprime_comm.trans is_coprime_zero_left
@@ -75,12 +66,10 @@ theorem IsCoprime.ne_zero [Nontrivial R] {p : Finₓ 2 → R} (h : IsCoprime (p 
   exact not_coprime_zero_zero h
 
 theorem is_coprime_one_left : IsCoprime 1 x :=
-  ⟨1, 0, by
-    rw [one_mulₓ, zero_mul, add_zeroₓ]⟩
+  ⟨1, 0, by rw [one_mulₓ, zero_mul, add_zeroₓ]⟩
 
 theorem is_coprime_one_right : IsCoprime x 1 :=
-  ⟨0, 1, by
-    rw [one_mulₓ, zero_mul, zero_addₓ]⟩
+  ⟨0, 1, by rw [one_mulₓ, zero_mul, zero_addₓ]⟩
 
 theorem IsCoprime.dvd_of_dvd_mul_right (H1 : IsCoprime x z) (H2 : x ∣ y * z) : x ∣ y := by
   let ⟨a, b, H⟩ := H1
@@ -97,10 +86,8 @@ theorem IsCoprime.mul_left (H1 : IsCoprime x z) (H2 : IsCoprime y z) : IsCoprime
   let ⟨c, d, h2⟩ := H2
   ⟨a * c, a * x * d + b * c * y + b * d * z,
     calc
-      a * c * (x * y) + (a * x * d + b * c * y + b * d * z) * z = (a * x + b * z) * (c * y + d * z) := by
-        ring
-      _ = 1 := by
-        rw [h1, h2, mul_oneₓ]
+      a * c * (x * y) + (a * x * d + b * c * y + b * d * z) * z = (a * x + b * z) * (c * y + d * z) := by ring
+      _ = 1 := by rw [h1, h2, mul_oneₓ]
       ⟩
 
 theorem IsCoprime.mul_right (H1 : IsCoprime x y) (H2 : IsCoprime x z) : IsCoprime x (y * z) := by
@@ -120,8 +107,7 @@ theorem IsCoprime.mul_dvd (H : IsCoprime x y) (H1 : x ∣ z) (H2 : y ∣ z) : x 
 
 theorem IsCoprime.of_mul_left_left (H : IsCoprime (x * y) z) : IsCoprime x z :=
   let ⟨a, b, h⟩ := H
-  ⟨a * y, b, by
-    rwa [mul_right_commₓ, mul_assoc]⟩
+  ⟨a * y, b, by rwa [mul_right_commₓ, mul_assoc]⟩
 
 theorem IsCoprime.of_mul_left_right (H : IsCoprime (x * y) z) : IsCoprime y z := by
   rw [mul_comm] at H
@@ -157,8 +143,7 @@ theorem IsCoprime.is_unit_of_dvd' {a b x : R} (h : IsCoprime a b) (ha : x ∣ a)
 
 theorem IsCoprime.map (H : IsCoprime x y) {S : Type v} [CommSemiringₓ S] (f : R →+* S) : IsCoprime (f x) (f y) :=
   let ⟨a, b, h⟩ := H
-  ⟨f a, f b, by
-    rw [← f.map_mul, ← f.map_mul, ← f.map_add, h, f.map_one]⟩
+  ⟨f a, f b, by rw [← f.map_mul, ← f.map_mul, ← f.map_add, h, f.map_one]⟩
 
 variable {x y z}
 
@@ -203,12 +188,8 @@ variable {R G : Type _} [CommSemiringₓ R] [Groupₓ G] [MulAction G R] [SmulCo
   (y z : R)
 
 theorem is_coprime_group_smul_left : IsCoprime (x • y) z ↔ IsCoprime y z :=
-  ⟨fun ⟨a, b, h⟩ =>
-    ⟨x • a, b, by
-      rwa [smul_mul_assoc, ← mul_smul_comm]⟩,
-    fun ⟨a, b, h⟩ =>
-    ⟨x⁻¹ • a, b, by
-      rwa [smul_mul_smul, inv_mul_selfₓ, one_smul]⟩⟩
+  ⟨fun ⟨a, b, h⟩ => ⟨x • a, b, by rwa [smul_mul_assoc, ← mul_smul_comm]⟩, fun ⟨a, b, h⟩ =>
+    ⟨x⁻¹ • a, b, by rwa [smul_mul_smul, inv_mul_selfₓ, one_smul]⟩⟩
 
 theorem is_coprime_group_smul_right : IsCoprime y (x • z) ↔ IsCoprime y z :=
   is_coprime_comm.trans <| (is_coprime_group_smul_left x z y).trans is_coprime_comm
@@ -251,8 +232,7 @@ section CommRingₓ
 variable {R : Type u} [CommRingₓ R]
 
 theorem add_mul_left_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x + y * z) y :=
-  @of_add_mul_left_left R _ _ _ (-z) <| by
-    simpa only [mul_neg, add_neg_cancel_rightₓ] using h
+  @of_add_mul_left_left R _ _ _ (-z) <| by simpa only [mul_neg, add_neg_cancel_rightₓ] using h
 
 theorem add_mul_right_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x + z * y) y := by
   rw [mul_comm]

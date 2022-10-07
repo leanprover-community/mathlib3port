@@ -118,10 +118,8 @@ private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x, ⁅y, z⁆⁆ =
     
 
 instance : LieRing (A ⊗[R] L) where
-  add_lie := fun x y z => by
-    simp only [bracket_def, LinearMap.add_apply, LinearMap.map_add]
-  lie_add := fun x y z => by
-    simp only [bracket_def, LinearMap.map_add]
+  add_lie := fun x y z => by simp only [bracket_def, LinearMap.add_apply, LinearMap.map_add]
+  lie_add := fun x y z => by simp only [bracket_def, LinearMap.map_add]
   lie_self := bracket_lie_self R A L
   leibniz_lie := bracket_leibniz_lie R A L
 

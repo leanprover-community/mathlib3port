@@ -26,9 +26,9 @@ open Classical
 
 open BigOperators
 
-open Fintype
+open Fintypeₓ
 
-variable (M : Type _) [Fintype M] [Mul M]
+variable (M : Type _) [Fintypeₓ M] [Mul M]
 
 /-- The commuting probability of a finite type with a multiplication operation -/
 def commProb : ℚ :=
@@ -56,9 +56,9 @@ theorem comm_prob_eq_one_iff [h : Nonempty M] : commProb M = 1 ↔ Commutative (
   · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr card_ne_zero)
     
 
-variable (G : Type _) [Groupₓ G] [Fintype G]
+variable (G : Type _) [Groupₓ G] [Fintypeₓ G]
 
-theorem card_comm_eq_card_conj_classes_mul_card [h : Fintype (ConjClasses G)] :
+theorem card_comm_eq_card_conj_classes_mul_card [h : Fintypeₓ (ConjClasses G)] :
     card { p : G × G // p.1 * p.2 = p.2 * p.1 } = @card (ConjClasses G) h * card G := by
   convert
     calc
@@ -89,8 +89,7 @@ theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2
     div_mul_cancel, Nat.cast_le]
   · apply card_le_of_injective _ _
     exact fun p => ⟨⟨p.1.1, p.1.2⟩, subtype.ext_iff.mp p.2⟩
-    exact fun p q h => by
-      simpa only [Subtype.ext_iff, Prod.ext_iffₓ] using h
+    exact fun p q h => by simpa only [Subtype.ext_iff, Prod.ext_iffₓ] using h
     
   · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr card_ne_zero)
     

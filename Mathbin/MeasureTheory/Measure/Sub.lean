@@ -41,9 +41,7 @@ theorem sub_le_of_le_add {d} (h : μ ≤ d + ν) : μ - ν ≤ d :=
   Inf_le h
 
 theorem sub_eq_zero_of_le (h : μ ≤ ν) : μ - ν = 0 :=
-  nonpos_iff_eq_zero'.1 <|
-    sub_le_of_le_add <| by
-      rwa [zero_addₓ]
+  nonpos_iff_eq_zero'.1 <| sub_le_of_le_add <| by rwa [zero_addₓ]
 
 theorem sub_le : μ - ν ≤ μ :=
   sub_le_of_le_add <| Measure.le_add_right le_rflₓ
@@ -66,14 +64,12 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
   -- We begin by defining `measure_sub`, which will be equal to `(μ - ν)`.
   let measure_sub : Measureₓ α :=
     @MeasureTheory.Measure.ofMeasurable α _ (fun (t : Set α) (h_t_measurable_set : MeasurableSet t) => μ t - ν t)
-      (by
-        simp )
+      (by simp)
       (by
         intro g h_meas h_disj
         simp only
         rw [Ennreal.tsum_sub]
-        repeat'
-          rw [← MeasureTheory.measure_Union h_disj h_meas]
+        repeat' rw [← MeasureTheory.measure_Union h_disj h_meas]
         exacts[MeasureTheory.measure_ne_top _ _, fun i => h₂ _ (h_meas _)])
   -- Now, we demonstrate `μ - ν = measure_sub`, and apply it.
   · have h_measure_sub_add : ν + measure_sub = μ := by
@@ -101,8 +97,7 @@ theorem sub_add_cancel_of_le [IsFiniteMeasure ν] (h₁ : ν ≤ μ) : μ - ν +
 
 theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
     (μ - ν).restrict s = μ.restrict s - ν.restrict s := by
-  repeat'
-    rw [sub_def]
+  repeat' rw [sub_def]
   have h_nonempty : { d | μ ≤ d + ν }.Nonempty := ⟨μ, measure.le_add_right le_rflₓ⟩
   rw [restrict_Inf_eq_Inf_restrict h_nonempty h_meas_s]
   apply le_antisymmₓ
@@ -113,8 +108,7 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
     refine' ⟨ν' + (⊤ : Measureₓ α).restrict (sᶜ), _, _⟩
     · rw [mem_set_of_eq, add_right_commₓ, measure.le_iff]
       intro t h_meas_t
-      repeat'
-        rw [← measure_inter_add_diff t h_meas_s]
+      repeat' rw [← measure_inter_add_diff t h_meas_s]
       refine' add_le_add _ _
       · rw [add_apply, add_apply]
         apply le_add_right _
@@ -122,8 +116,7 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
         apply h_ν'_in _ (h_meas_t.inter h_meas_s)
         
       · rw [add_apply, restrict_apply (h_meas_t.diff h_meas_s), diff_eq, inter_assoc, inter_self, ← add_apply]
-        have h_mu_le_add_top : μ ≤ ν' + ν + ⊤ := by
-          simp only [add_top, le_top]
+        have h_mu_le_add_top : μ ≤ ν' + ν + ⊤ := by simp only [add_top, le_top]
         exact measure.le_iff'.1 h_mu_le_add_top _
         
       

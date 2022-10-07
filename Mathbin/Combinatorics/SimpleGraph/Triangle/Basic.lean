@@ -26,13 +26,13 @@ This module defines and proves properties about triangles in simple graphs.
 -/
 
 
-open Finset Fintype Nat
+open Finsetₓ Fintypeₓ Nat
 
 open Classical
 
 namespace SimpleGraph
 
-variable {α 𝕜 : Type _} [Fintype α] [LinearOrderedField 𝕜] {G H : SimpleGraph α} {ε δ : 𝕜} {n : ℕ} {s : Finset α}
+variable {α 𝕜 : Type _} [Fintypeₓ α] [LinearOrderedField 𝕜] {G H : SimpleGraph α} {ε δ : 𝕜} {n : ℕ} {s : Finsetₓ α}
 
 /-- A simple graph is *`ε`-triangle-free far* if one must remove at least `ε * (card α)^2` edges to
 make it triangle-free. -/
@@ -57,8 +57,8 @@ variable [Nonempty α]
 
 theorem FarFromTriangleFree.nonpos (h₀ : G.FarFromTriangleFree ε) (h₁ : G.CliqueFree 3) : ε ≤ 0 := by
   have := h₀ (empty_subset _)
-  rw [coe_empty, Finset.card_empty, cast_zero, delete_edges_empty_eq] at this
-  exact nonpos_of_mul_nonpos_left (this h₁) (cast_pos.2 <| sq_pos_of_pos Fintype.card_pos)
+  rw [coe_empty, Finsetₓ.card_empty, cast_zero, delete_edges_empty_eq] at this
+  exact nonpos_of_mul_nonpos_left (this h₁) (cast_pos.2 <| sq_pos_of_pos Fintypeₓ.card_pos)
 
 theorem CliqueFree.not_far_from_triangle_free (hG : G.CliqueFree 3) (hε : 0 < ε) : ¬G.FarFromTriangleFree ε := fun h =>
   (h.nonpos hG).not_lt hε

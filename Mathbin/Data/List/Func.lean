@@ -94,19 +94,15 @@ theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.
     rw [max_eq_leftₓ]
     rfl
     simp [Nat.le_add_rightₓ]
-  | m + 1, [] => by
-    simp only [Set, Nat.zero_max, length, @length_set m]
-  | m + 1, a :: as => by
-    simp only [Set, Nat.max_succ_succ, length, @length_set m]
+  | m + 1, [] => by simp only [Set, Nat.zero_max, length, @length_set m]
+  | m + 1, a :: as => by simp only [Set, Nat.max_succ_succ, length, @length_set m]
 
 @[simp]
-theorem get_nil {k : ℕ} : (get k [] : α) = default := by
-  cases k <;> rfl
+theorem get_nil {k : ℕ} : (get k [] : α) = default := by cases k <;> rfl
 
 theorem get_eq_default_of_le : ∀ (k : ℕ) {as : List α}, as.length ≤ k → get k as = default
   | 0, [], h1 => rfl
-  | 0, a :: as, h1 => by
-    cases h1
+  | 0, a :: as, h1 => by cases h1
   | k + 1, [], h1 => rfl
   | k + 1, a :: as, h1 => by
     apply get_eq_default_of_le k
@@ -115,14 +111,11 @@ theorem get_eq_default_of_le : ∀ (k : ℕ) {as : List α}, as.length ≤ k →
 
 @[simp]
 theorem get_set {a : α} : ∀ {k : ℕ} {as : List α}, get k (as {k ↦ a}) = a
-  | 0, as => by
-    cases as <;> rfl
-  | k + 1, as => by
-    cases as <;> simp [get_set]
+  | 0, as => by cases as <;> rfl
+  | k + 1, as => by cases as <;> simp [get_set]
 
 theorem eq_get_of_mem {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ d : α, a = get n as
-  | [], h => by
-    cases h
+  | [], h => by cases h
   | b :: as, h => by
     rw [mem_cons_iff] at h
     cases h
@@ -136,8 +129,7 @@ theorem eq_get_of_mem {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, �
       
 
 theorem mem_get_of_le : ∀ {n : ℕ} {as : List α}, n < as.length → get n as ∈ as
-  | _, [], h1 => by
-    cases h1
+  | _, [], h1 => by cases h1
   | 0, a :: as, _ => Or.inl rfl
   | n + 1, a :: as, h1 => by
     apply Or.inr
@@ -179,18 +171,17 @@ theorem get_set_eq_of_ne {a : α} : ∀ {as : List α} (k : ℕ) (m : ℕ), m �
       
 
 theorem get_map {f : α → β} : ∀ {n : ℕ} {as : List α}, n < as.length → get n (as.map f) = f (get n as)
-  | _, [], h => by
-    cases h
+  | _, [], h => by cases h
   | 0, a :: as, h => rfl
   | n + 1, a :: as, h1 => by
     have h2 : n < length as := by
-      rw [← Nat.succ_le_iff, ← Nat.lt_succ_iffₓ]
+      rw [← Nat.succ_le_iff, ← Nat.lt_succ_iff]
       apply h1
     apply get_map h2
 
 theorem get_map' {f : α → β} {n : ℕ} {as : List α} : f default = default → get n (as.map f) = f (get n as) := by
   intro h1
-  by_cases' h2 : n < as.length
+  by_cases h2:n < as.length
   · apply get_map h2
     
   · rw [not_ltₓ] at h2
@@ -201,7 +192,7 @@ theorem get_map' {f : α → β} {n : ℕ} {as : List α} : f default = default 
 
 theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} : p default → (∀ x ∈ as, p x) → ∀ n, p (get n as) := by
   intro h1 h2 n
-  by_cases' h3 : n < as.length
+  by_cases h3:n < as.length
   · apply h2 _ (mem_get_of_le h3)
     
   · rw [not_ltₓ] at h3
@@ -223,16 +214,13 @@ theorem equiv_of_eq : as1 = as2 → Equiv as1 as2 := by
 
 theorem eq_of_equiv : ∀ {as1 as2 : List α}, as1.length = as2.length → Equiv as1 as2 → as1 = as2
   | [], [], h1, h2 => rfl
-  | _ :: _, [], h1, h2 => by
-    cases h1
-  | [], _ :: _, h1, h2 => by
-    cases h1
+  | _ :: _, [], h1, h2 => by cases h1
+  | [], _ :: _, h1, h2 => by cases h1
   | a1 :: as1, a2 :: as2, h1, h2 => by
     congr
     · apply h2 0
       
-    have h3 : as1.length = as2.length := by
-      simpa [add_left_injₓ, add_commₓ, length] using h1
+    have h3 : as1.length = as2.length := by simpa [add_left_injₓ, add_commₓ, length] using h1
     apply eq_of_equiv h3
     intro m
     apply h2 (m + 1)
@@ -251,50 +239,38 @@ theorem get_neg [AddGroupₓ α] {k : ℕ} {as : List α} : @get α ⟨0⟩ k (n
   apply neg_zero
 
 @[simp]
-theorem length_neg [Neg α] (as : List α) : (neg as).length = as.length := by
-  simp only [neg, length_map]
+theorem length_neg [Neg α] (as : List α) : (neg as).length = as.length := by simp only [neg, length_map]
 
 variable [Inhabited α] [Inhabited β]
 
 -- pointwise
 theorem nil_pointwise {f : α → β → γ} : ∀ bs : List β, pointwise f [] bs = bs.map (f default)
   | [] => rfl
-  | b :: bs => by
-    simp only [nil_pointwise bs, pointwise, eq_self_iff_true, and_selfₓ, map]
+  | b :: bs => by simp only [nil_pointwise bs, pointwise, eq_self_iff_true, and_selfₓ, map]
 
 theorem pointwise_nil {f : α → β → γ} : ∀ as : List α, pointwise f as [] = as.map fun a => f a default
   | [] => rfl
-  | a :: as => by
-    simp only [pointwise_nil as, pointwise, eq_self_iff_true, and_selfₓ, List.map]
+  | a :: as => by simp only [pointwise_nil as, pointwise, eq_self_iff_true, and_selfₓ, List.map]
 
 theorem get_pointwise [Inhabited γ] {f : α → β → γ} (h1 : f default default = default) :
     ∀ (k : Nat) (as : List α) (bs : List β), get k (pointwise f as bs) = f (get k as) (get k bs)
-  | k, [], [] => by
-    simp only [h1, get_nil, pointwise, get]
-  | 0, [], b :: bs => by
-    simp only [get_pointwise, get_nil, pointwise, get, Nat.nat_zero_eq_zero, map]
+  | k, [], [] => by simp only [h1, get_nil, pointwise, get]
+  | 0, [], b :: bs => by simp only [get_pointwise, get_nil, pointwise, get, Nat.nat_zero_eq_zero, map]
   | k + 1, [], b :: bs => by
     have : get k (map (f default) bs) = f default (get k bs) := by
       simpa [nil_pointwise, get_nil] using get_pointwise k [] bs
     simpa [get, get_nil, pointwise, map]
-  | 0, a :: as, [] => by
-    simp only [get_pointwise, get_nil, pointwise, get, Nat.nat_zero_eq_zero, map]
-  | k + 1, a :: as, [] => by
-    simpa [get, get_nil, pointwise, map, pointwise_nil, get_nil] using get_pointwise k as []
-  | 0, a :: as, b :: bs => by
-    simp only [pointwise, get]
-  | k + 1, a :: as, b :: bs => by
-    simp only [pointwise, get, get_pointwise k]
+  | 0, a :: as, [] => by simp only [get_pointwise, get_nil, pointwise, get, Nat.nat_zero_eq_zero, map]
+  | k + 1, a :: as, [] => by simpa [get, get_nil, pointwise, map, pointwise_nil, get_nil] using get_pointwise k as []
+  | 0, a :: as, b :: bs => by simp only [pointwise, get]
+  | k + 1, a :: as, b :: bs => by simp only [pointwise, get, get_pointwise k]
 
 theorem length_pointwise {f : α → β → γ} :
     ∀ {as : List α} {bs : List β}, (pointwise f as bs).length = max as.length bs.length
   | [], [] => rfl
-  | [], b :: bs => by
-    simp only [pointwise, length, length_map, max_eq_rightₓ (Nat.zero_leₓ (length bs + 1))]
-  | a :: as, [] => by
-    simp only [pointwise, length, length_map, max_eq_leftₓ (Nat.zero_leₓ (length as + 1))]
-  | a :: as, b :: bs => by
-    simp only [pointwise, length, Nat.max_succ_succ, @length_pointwise as bs]
+  | [], b :: bs => by simp only [pointwise, length, length_map, max_eq_rightₓ (Nat.zero_leₓ (length bs + 1))]
+  | a :: as, [] => by simp only [pointwise, length, length_map, max_eq_leftₓ (Nat.zero_leₓ (length as + 1))]
+  | a :: as, b :: bs => by simp only [pointwise, length, Nat.max_succ_succ, @length_pointwise as bs]
 
 end Func
 
@@ -334,16 +310,13 @@ theorem map_add_map {α : Type u} [AddMonoidₓ α] (f g : α → α) {as : List
     
   intro m
   rw [get_add]
-  by_cases' h : m < length as
-  · repeat'
-      rw [@get_map α α ⟨0⟩ ⟨0⟩ _ _ _ h]
+  by_cases h:m < length as
+  · repeat' rw [@get_map α α ⟨0⟩ ⟨0⟩ _ _ _ h]
     
   rw [not_ltₓ] at h
-  repeat'
-      rw [get_eq_default_of_le m] <;>
-    try
-      rw [length_map]
-      apply h
+  repeat' rw [get_eq_default_of_le m] <;> try
+    rw [length_map]
+    apply h
   apply zero_addₓ
 
 -- sub

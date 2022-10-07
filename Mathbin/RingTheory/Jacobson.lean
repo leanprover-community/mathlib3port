@@ -100,16 +100,12 @@ theorem is_jacobson_of_surjective [H : IsJacobson R] : (∃ f : R →+* S, Funct
   use map f '' { J : Ideal R | comap f p ≤ J ∧ J.IsMaximal }
   use fun j ⟨J, hJ, hmap⟩ => hmap ▸ Or.symm (map_eq_top_or_is_maximal_of_surjective f hf hJ.right)
   have : p = map f (comap f p).jacobson :=
-    (is_jacobson.out' (comap f p)
-          (by
-            rw [← comap_radical, is_prime.radical hp])).symm ▸
+    (is_jacobson.out' (comap f p) (by rw [← comap_radical, is_prime.radical hp])).symm ▸
       (map_comap_of_surjective f hf p).symm
   exact Eq.trans this (map_Inf hf fun J ⟨hJ, _⟩ => le_transₓ (Ideal.ker_le_comap f) hJ)
 
 instance (priority := 100) is_jacobson_quotient [IsJacobson R] : IsJacobson (R ⧸ I) :=
-  is_jacobson_of_surjective
-    ⟨Quotient.mk I, by
-      rintro ⟨x⟩ <;> use x <;> rfl⟩
+  is_jacobson_of_surjective ⟨Quotient.mk I, by rintro ⟨x⟩ <;> use x <;> rfl⟩
 
 theorem is_jacobson_iso (e : R ≃+* S) : IsJacobson R ↔ IsJacobson S :=
   ⟨fun h => @is_jacobson_of_surjective _ _ _ _ h ⟨(e : R →+* S), e.Surjective⟩, fun h =>
@@ -118,7 +114,7 @@ theorem is_jacobson_iso (e : R ≃+* S) : IsJacobson R ↔ IsJacobson S :=
 theorem is_jacobson_of_is_integral [Algebra R S] (hRS : Algebra.IsIntegral R S) (hR : IsJacobson R) : IsJacobson S := by
   rw [is_jacobson_iff_prime_eq]
   intro P hP
-  by_cases' hP_top : comap (algebraMap R S) P = ⊤
+  by_cases hP_top:comap (algebraMap R S) P = ⊤
   · simp [comap_eq_top_iff.1 hP_top]
     
   · haveI : Nontrivial (R ⧸ comap (algebraMap R S) P) := quotient.nontrivial hP_top
@@ -130,8 +126,7 @@ theorem is_jacobson_of_is_integral [Algebra R S] (hRS : Algebra.IsIntegral R S) 
       comap_jacobson]
     refine' Inf_le_Inf fun J hJ => _
     simp only [true_andₓ, Set.mem_image, bot_le, Set.mem_set_of_eq]
-    have : J.is_maximal := by
-      simpa using hJ
+    have : J.is_maximal := by simpa using hJ
     exact
       exists_ideal_over_maximal_of_is_integral (is_integral_quotient_of_is_integral hRS) J
         (comap_bot_le_of_injective _ algebra_map_quotient_injective)
@@ -174,7 +169,7 @@ theorem is_maximal_iff_is_maximal_disjoint [H : IsJacobson R] (J : Ideal S) :
     push_neg  at this
     rcases this with ⟨I, hI, hI'⟩
     convert hI.right
-    by_cases' hJ : J = map (algebraMap R S) I
+    by_cases hJ:J = map (algebraMap R S) I
     · rw [hJ, comap_map_of_is_prime_disjoint (powers y) S I (is_maximal.is_prime hI.right)]
       rwa [disjoint_powers_iff_not_mem y (is_maximal.is_prime hI.right).radical]
       
@@ -240,7 +235,7 @@ theorem is_jacobson_localization [H : IsJacobson R] : IsJacobson S := by
     have hxy : x * y ∈ (comap (algebraMap R S) P').jacobson := by
       rw [Ideal.jacobson, mem_Inf]
       intro J hJ
-      by_cases' y ∈ J
+      by_cases y ∈ J
       · exact J.mul_mem_left x h
         
       · exact J.mul_mem_right y ((mem_Inf.1 hx) ⟨hJ.left, ⟨hJ.right, h⟩⟩)
@@ -367,8 +362,7 @@ theorem jacobson_bot_of_integral_localization {R : Type _} [CommRingₓ R] [IsDo
   let g := quotient_map I (algebraMap S Sₘ) le_rflₓ
   have := is_maximal_comap_of_is_integral_of_is_maximal' φ' hφ' I hI
   have := ((is_maximal_iff_is_maximal_disjoint Rₘ x _).1 this).left
-  have : ((I.comap (algebraMap S Sₘ)).comap φ).IsMaximal := by
-    rwa [comap_comap, hcomm, ← comap_comap] at this
+  have : ((I.comap (algebraMap S Sₘ)).comap φ).IsMaximal := by rwa [comap_comap, hcomm, ← comap_comap] at this
   rw [← bot_quotient_is_maximal_iff] at this⊢
   refine'
     is_maximal_of_is_integral_of_is_maximal_comap' f _ ⊥
@@ -379,23 +373,21 @@ theorem jacobson_bot_of_integral_localization {R : Type _} [CommRingₓ R] [IsDo
         RingHom.is_integral_trans _ _
           (RingHom.is_integral_of_surjective _
             (IsLocalization.surjective_quotient_map_of_maximal_of_localization (Submonoid.powers x) Rₘ
-              (by
-                rwa [comap_comap, hcomm, ← bot_quotient_is_maximal_iff])))
+              (by rwa [comap_comap, hcomm, ← bot_quotient_is_maximal_iff])))
           (RingHom.is_integral_quotient_of_is_integral _ hφ'))
 
 /-- Used to bootstrap the proof of `is_jacobson_polynomial_iff_is_jacobson`.
   That theorem is more general and should be used instead of this one. -/
 private theorem is_jacobson_polynomial_of_domain (R : Type _) [CommRingₓ R] [IsDomain R] [hR : IsJacobson R]
     (P : Ideal R[X]) [IsPrime P] (hP : ∀ x : R, c x ∈ P → x = 0) : P.jacobson = P := by
-  by_cases' Pb : P = ⊥
+  by_cases Pb:P = ⊥
   · exact Pb.symm ▸ jacobson_bot_polynomial_of_jacobson_bot (hR.out radical_bot_of_is_domain)
     
   · rw [jacobson_eq_iff_jacobson_quotient_eq_bot]
     haveI : (P.comap (C : R →+* R[X])).IsPrime := comap_is_prime C P
     obtain ⟨p, pP, p0⟩ := exists_nonzero_mem_of_ne_bot Pb hP
     let x := (Polynomial.map (Quotientₓ.mk (comap (C : R →+* _) P)) p).leadingCoeff
-    have hx : x ≠ 0 := by
-      rwa [Ne.def, leading_coeff_eq_zero]
+    have hx : x ≠ 0 := by rwa [Ne.def, leading_coeff_eq_zero]
     refine'
       jacobson_bot_of_integral_localization (Localization.Away x)
         (Localization ((Submonoid.powers x).map (P.quotient_map C le_rflₓ) : Submonoid (R[X] ⧸ P)))
@@ -422,8 +414,7 @@ theorem is_jacobson_polynomial_of_is_jacobson (hR : IsJacobson R) : IsJacobson R
     rw [← map_jacobson_of_surjective _ hi', comap_map_of_surjective _ _, comap_map_of_surjective _ _] at this
     refine'
       le_antisymmₓ (le_transₓ (le_sup_of_le_left le_rflₓ) (le_transₓ (le_of_eqₓ this) (sup_le le_rflₓ hi'))) le_jacobson
-    all_goals
-      exact Polynomial.map_surjective i hi
+    all_goals exact Polynomial.map_surjective i hi
   exact
     @is_jacobson_polynomial_of_domain R' _ _ (is_jacobson_of_surjective ⟨i, hi⟩) (map (map_ring_hom i) I) _
       (eq_zero_of_polynomial_mem_map_range I)
@@ -433,9 +424,7 @@ theorem is_jacobson_polynomial_iff_is_jacobson : IsJacobson R[X] ↔ IsJacobson 
   intro H
   exact
     is_jacobson_of_surjective
-      ⟨eval₂_ring_hom (RingHom.id _) 1, fun x =>
-        ⟨C x, by
-          simp only [coe_eval₂_ring_hom, RingHom.id_apply, eval₂_C]⟩⟩
+      ⟨eval₂_ring_hom (RingHom.id _) 1, fun x => ⟨C x, by simp only [coe_eval₂_ring_hom, RingHom.id_apply, eval₂_C]⟩⟩
 
 instance [IsJacobson R] : IsJacobson R[X] :=
   is_jacobson_polynomial_iff_is_jacobson.mpr ‹IsJacobson R›
@@ -464,19 +453,12 @@ theorem is_maximal_comap_C_of_is_maximal [Nontrivial R] (hP' : ∀ x : R, c x �
     this <|
       map_injective (Quotientₓ.mk (P.comap (C : R →+* R[X]) : Ideal R))
         ((injective_iff_map_eq_zero (Quotientₓ.mk (P.comap (C : R →+* R[X]) : Ideal R))).2 fun x hx => by
-          rwa [quotient.eq_zero_iff_mem,
-            (by
-              rwa [eq_bot_iff] : (P.comap C : Ideal R) = ⊥)] at
-            hx)
-        (by
-          simpa only [leading_coeff_eq_zero, Polynomial.map_zero] using hp0')
+          rwa [quotient.eq_zero_iff_mem, (by rwa [eq_bot_iff] : (P.comap C : Ideal R) = ⊥)] at hx)
+        (by simpa only [leading_coeff_eq_zero, Polynomial.map_zero] using hp0')
   have hM : (0 : R ⧸ P.comap C) ∉ M := fun ⟨n, hn⟩ => hp0 (pow_eq_zero hn)
   suffices (⊥ : Ideal (Localization M)).IsMaximal by
     rw [← IsLocalization.comap_map_of_is_prime_disjoint M (Localization M) ⊥ bot_prime fun x hx => hM (hx.2 ▸ hx.1)]
-    refine'
-      ((is_maximal_iff_is_maximal_disjoint (Localization M) _ _).mp
-          (by
-            rwa [map_bot])).1
+    refine' ((is_maximal_iff_is_maximal_disjoint (Localization M) _ _).mp (by rwa [map_bot])).1
     swap
     exact Localization.is_localization
   let M' : Submonoid (R[X] ⧸ P) := M.map φ
@@ -484,8 +466,7 @@ theorem is_maximal_comap_C_of_is_maximal [Nontrivial R] (hP' : ∀ x : R, c x �
   haveI : IsDomain (Localization M') :=
     IsLocalization.is_domain_localization (le_non_zero_divisors_of_no_zero_divisors hM')
   suffices (⊥ : Ideal (Localization M')).IsMaximal by
-    rw
-      [le_antisymmₓ bot_le
+    rw [le_antisymmₓ bot_le
         (comap_bot_le_of_injective _
           (IsLocalization.map_injective_of_injective M (Localization M) (Localization M') quotient_map_injective))]
     refine' is_maximal_comap_of_is_integral_of_is_maximal' _ _ ⊥ this
@@ -529,7 +510,6 @@ private theorem quotient_mk_comp_C_is_integral_of_jacobson' [Nontrivial R] (hR :
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 /-- If `R` is a Jacobson ring, and `P` is a maximal ideal of `polynomial R`,
   then `R → R[X]/P` is an integral map. -/
 theorem quotient_mk_comp_C_is_integral_of_jacobson : ((Quotient.mk P).comp c : R →+* R[X] ⧸ P).IsIntegral := by
@@ -546,8 +526,7 @@ theorem quotient_mk_comp_C_is_integral_of_jacobson : ((Quotient.mk P).comp c : R
   rw [← quotient_mk_maps_eq]
   refine' RingHom.is_integral_trans _ _ ((Quotientₓ.mk P').is_integral_of_surjective quotient.mk_surjective) _
   apply quotient_mk_comp_C_is_integral_of_jacobson' _ _ fun x hx => _
-  any_goals {
-  }
+  any_goals exact Ideal.is_jacobson_quotient
   · exact
       Or.rec_on (map_eq_top_or_is_maximal_of_surjective f hf hP)
         (fun h => absurd (trans (h ▸ hPJ : P = comap f ⊤) comap_top : P = ⊤) hP.ne_top) id
@@ -603,7 +582,7 @@ instance is_jacobson {R : Type _} [CommRingₓ R] {ι : Type _} [Finite ι] [IsJ
     IsJacobson (MvPolynomial ι R) := by
   cases nonempty_fintype ι
   haveI := Classical.decEq ι
-  let e := Fintype.equivFin ι
+  let e := Fintypeₓ.equivFin ι
   rw [is_jacobson_iso (rename_equiv R e).toRingEquiv]
   exact is_jacobson_mv_polynomial_fin _
 
@@ -652,7 +631,7 @@ theorem quotient_mk_comp_C_is_integral_of_jacobson {R : Type _} [CommRingₓ R] 
 theorem comp_C_integral_of_surjective_of_jacobson {R : Type _} [CommRingₓ R] [IsJacobson R] {σ : Type _} [Finite σ]
     {S : Type _} [Field S] (f : MvPolynomial σ R →+* S) (hf : Function.Surjective f) : (f.comp c).IsIntegral := by
   cases nonempty_fintype σ
-  have e := (Fintype.equivFin σ).symm
+  have e := (Fintypeₓ.equivFin σ).symm
   let f' : MvPolynomial (Finₓ _) R →+* S := f.comp (rename_equiv R e).toRingEquiv.toRingHom
   have hf' : Function.Surjective f' := Function.Surjective.comp hf (rename_equiv R e).Surjective
   have : (f'.comp C).IsIntegral := by

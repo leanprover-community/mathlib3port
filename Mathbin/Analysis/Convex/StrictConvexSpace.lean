@@ -83,8 +83,7 @@ variable [NormedSpace ℝ E]
 /-- A real normed vector space is strictly convex provided that the unit ball is strictly convex. -/
 theorem StrictConvexSpace.of_strict_convex_closed_unit_ball [LinearMap.CompatibleSmul E E 𝕜 ℝ]
     (h : StrictConvex 𝕜 (ClosedBall (0 : E) 1)) : StrictConvexSpace 𝕜 E :=
-  ⟨fun r hr => by
-    simpa only [smul_closed_unit_ball_of_nonneg hr.le] using h.smul r⟩
+  ⟨fun r hr => by simpa only [smul_closed_unit_ball_of_nonneg hr.le] using h.smul r⟩
 
 /-- If `∥x + y∥ = ∥x∥ + ∥y∥` implies that `x y : E` are in the same ray, then `E` is a strictly
 convex space. -/
@@ -106,8 +105,7 @@ theorem StrictConvexSpace.of_norm_add (h : ∀ x y : E, ∥x + y∥ = ∥x∥ + 
   have hb' : ∥b∥ = b := Real.norm_of_nonneg hb.le
   calc
     ∥a • x + b • y∥ < ∥a • x∥ + ∥b • y∥ := (norm_add_le _ _).lt_of_ne fun H => hne _
-    _ = 1 := by
-      simpa only [norm_smul, hx₁, hy₁, mul_oneₓ, ha', hb']
+    _ = 1 := by simpa only [norm_smul, hx₁, hy₁, mul_oneₓ, ha', hb']
     
   simpa only [norm_smul, hx₁, hy₁, ha', hb', mul_oneₓ, smul_comm a, smul_right_inj ha.ne', smul_right_inj hb.ne'] using
     (h _ _ H).norm_smul_eq.symm
@@ -126,12 +124,11 @@ theorem StrictConvexSpace.of_norm_add_lt_aux {a b c d : ℝ} (ha : 0 < a) (hab :
     ∥c • x + d • y∥ = ∥(c / a) • (a • x + b • y) + (d - c / a * b) • y∥ := by
       rw [smul_add, ← mul_smul, ← mul_smul, div_mul_cancel _ ha.ne', sub_smul, add_add_sub_cancel]
     _ ≤ ∥(c / a) • (a • x + b • y)∥ + ∥(d - c / a * b) • y∥ := norm_add_le _ _
-    _ = c / a * ∥a • x + b • y∥ + (d - c / a * b) * ∥y∥ := by
-      rw [norm_smul_of_nonneg h₁.le, norm_smul_of_nonneg h₂]
+    _ = c / a * ∥a • x + b • y∥ + (d - c / a * b) * ∥y∥ := by rw [norm_smul_of_nonneg h₁.le, norm_smul_of_nonneg h₂]
     _ < c / a * 1 + (d - c / a * b) * 1 :=
       add_lt_add_of_lt_of_le (mul_lt_mul_of_pos_left hxy h₁) (mul_le_mul_of_nonneg_left hy h₂)
     _ = 1 := by
-      nth_rw 0[← hab]
+      nth_rw 0 [← hab]
       rw [mul_addₓ, div_mul_cancel _ ha.ne', mul_oneₓ, add_add_sub_cancel, hcd]
     
 
@@ -192,15 +189,13 @@ theorem norm_add_lt_of_not_same_ray (h : ¬SameRay ℝ x y) : ∥x + y∥ < ∥x
   have hxy : 0 < ∥x∥ + ∥y∥ := add_pos hx hy
   have :=
     combo_mem_ball_of_ne (inv_norm_smul_mem_closed_unit_ball x) (inv_norm_smul_mem_closed_unit_ball y) hne
-      (div_pos hx hxy) (div_pos hy hxy)
-      (by
-        rw [← add_div, div_self hxy.ne'])
+      (div_pos hx hxy) (div_pos hy hxy) (by rw [← add_div, div_self hxy.ne'])
   rwa [mem_ball_zero_iff, div_eq_inv_mul, div_eq_inv_mul, mul_smul, mul_smul, smul_inv_smul₀ hx.ne',
     smul_inv_smul₀ hy.ne', ← smul_add, norm_smul, Real.norm_of_nonneg (inv_pos.2 hxy).le, ← div_eq_inv_mul,
     div_lt_one hxy] at this
 
 theorem lt_norm_sub_of_not_same_ray (h : ¬SameRay ℝ x y) : ∥x∥ - ∥y∥ < ∥x - y∥ := by
-  nth_rw 0[← sub_add_cancel x y]  at h⊢
+  nth_rw 0 [← sub_add_cancel x y]  at h⊢
   exact sub_lt_iff_lt_add.2 (norm_add_lt_of_not_same_ray fun H' => h <| H'.add_left SameRay.rfl)
 
 theorem abs_lt_norm_sub_of_not_same_ray (h : ¬SameRay ℝ x y) : abs (∥x∥ - ∥y∥) < ∥x - y∥ := by
@@ -252,8 +247,7 @@ theorem eq_line_map_of_dist_eq_mul_of_dist_eq_mul {x y z : PE} (hxy : dist x y =
     rw [← dist_add_dist_eq_iff, dist_zero_left, dist_vsub_cancel_right, ← dist_eq_norm_vsub', ← dist_eq_norm_vsub', hxy,
       hyz, ← add_mulₓ, add_sub_cancel'_right, one_mulₓ]
   rcases eq_or_ne x z with (rfl | hne)
-  · obtain rfl : y = x := by
-      simpa
+  · obtain rfl : y = x := by simpa
     simp
     
   · rw [← dist_ne_zero] at hne
@@ -288,8 +282,7 @@ noncomputable def affineIsometryOfStrictConvexSpace {f : PF → PE} (hi : Isomet
         · rw [hi.dist_eq, hi.dist_eq, dist_midpoint_right, Real.norm_of_nonneg zero_le_two, div_eq_inv_mul]
           )
       hi.Continuous with
-    norm_map := fun x => by
-      simp [AffineMap.ofMapMidpoint, ← dist_eq_norm_vsub E, hi.dist_eq] }
+    norm_map := fun x => by simp [AffineMap.ofMapMidpoint, ← dist_eq_norm_vsub E, hi.dist_eq] }
 
 @[simp]
 theorem coe_affine_isometry_of_strict_convex_space {f : PF → PE} (hi : Isometry f) :

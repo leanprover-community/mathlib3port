@@ -30,11 +30,7 @@ variable [Groupₓ A] [Groupₓ B]
 
 @[to_additive AddMonoidHom.ker_eq_bot_of_cancel]
 theorem ker_eq_bot_of_cancel {f : A →* B} (h : ∀ u v : f.ker →* A, f.comp u = f.comp v → u = v) : f.ker = ⊥ := by
-  simpa using
-    _root_.congr_arg range
-      (h f.ker.subtype 1
-        (by
-          tidy))
+  simpa using _root_.congr_arg range (h f.ker.subtype 1 (by tidy))
 
 end
 
@@ -51,8 +47,7 @@ theorem range_eq_top_of_cancel {f : A →* B} (h : ∀ u v : B →* B ⧸ f.rang
     rw [show (1 : B ⧸ f.range) = (1 : B) from QuotientGroup.coe_one _, QuotientGroup.eq, inv_one, one_mulₓ]
     exact ⟨x, rfl⟩
     
-  replace h : (QuotientGroup.mk' _).ker = (1 : B →* B ⧸ f.range).ker := by
-    rw [h]
+  replace h : (QuotientGroup.mk' _).ker = (1 : B →* B ⧸ f.range).ker := by rw [h]
   rwa [ker_one, QuotientGroup.ker_mk] at h
 
 end
@@ -132,7 +127,7 @@ theorem from_coset_eq_of_mem_range {b : B} (hb : b ∈ f.range) :
     from_coset ⟨b *l f.range.Carrier, ⟨b, rfl⟩⟩ = from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩ := by
   congr
   change b *l f.range = f.range
-  nth_rw 1[show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]
+  nth_rw 1 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]
   rw [left_coset_eq_iff, mul_oneₓ]
   exact Subgroup.inv_mem _ hb
 
@@ -141,7 +136,7 @@ theorem from_coset_ne_of_nin_range {b : B} (hb : b ∉ f.range) :
   intro r
   simp only [Subtype.mk_eq_mk] at r
   change b *l f.range = f.range at r
-  nth_rw 1[show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]  at r
+  nth_rw 1 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]  at r
   rw [left_coset_eq_iff, mul_oneₓ] at r
   exact hb (inv_invₓ b ▸ Subgroup.inv_mem _ r)
 
@@ -178,10 +173,10 @@ def g : B →* SX' where
   toFun := fun β =>
     { toFun := fun x => β • x, invFun := fun x => β⁻¹ • x,
       left_inv := fun x => by
-        dsimp' only
+        dsimp only
         rw [← mul_smul, mul_left_invₓ, one_smul],
       right_inv := fun x => by
-        dsimp' only
+        dsimp only
         rw [← mul_smul, mul_right_invₓ, one_smul] }
   map_one' := by
     ext
@@ -215,11 +210,7 @@ The strategy is the following: assuming `epi f`
 -/
 
 
-theorem g_apply_from_coset (x : B) (y : X) :
-    (g x) (from_coset y) =
-      from_coset
-        ⟨x *l y, by
-          tidy⟩ :=
+theorem g_apply_from_coset (x : B) (y : X) : (g x) (from_coset y) = from_coset ⟨x *l y, by tidy⟩ :=
   rfl
 
 theorem g_apply_infinity (x : B) : (g x) ∞ = ∞ :=
@@ -232,8 +223,7 @@ theorem h_apply_infinity (x : B) (hx : x ∈ f.range) : (h x) ∞ = ∞ := by
 
 theorem h_apply_from_coset (x : B) :
     (h x) (from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩) = from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩ :=
-  by
-  simp [H, τ_symm_apply_from_coset, g_apply_infinity, τ_apply_infinity]
+  by simp [H, τ_symm_apply_from_coset, g_apply_infinity, τ_apply_infinity]
 
 theorem h_apply_from_coset' (x : B) (b : B) (hb : b ∈ f.range) :
     (h x) (from_coset ⟨b *l f.range.Carrier, ⟨b, rfl⟩⟩) = from_coset ⟨b *l f.range.Carrier, ⟨b, rfl⟩⟩ :=
@@ -244,14 +234,9 @@ theorem h_apply_from_coset_nin_range (x : B) (hx : x ∈ f.range) (b : B) (hb : 
   simp only [H, tau, MonoidHom.coe_mk, Equivₓ.to_fun_as_coe, Equivₓ.coe_trans, Function.comp_app]
   rw [Equivₓ.symm_swap,
     @Equivₓ.swap_apply_of_ne_of_ne X' _ (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) ∞
-      (from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩) (from_coset_ne_of_nin_range _ hb)
-      (by
-        simp )]
+      (from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩) (from_coset_ne_of_nin_range _ hb) (by simp)]
   simp only [g_apply_from_coset, ← Subtype.val_eq_coe, left_coset_assoc]
-  refine'
-    Equivₓ.swap_apply_of_ne_of_ne (from_coset_ne_of_nin_range _ fun r => hb _)
-      (by
-        simp )
+  refine' Equivₓ.swap_apply_of_ne_of_ne (from_coset_ne_of_nin_range _ fun r => hb _) (by simp)
   convert Subgroup.mul_mem _ (Subgroup.inv_mem _ hx) r
   rw [← mul_assoc, mul_left_invₓ, one_mulₓ]
 
@@ -261,7 +246,7 @@ theorem agree : f.range.Carrier = { x | h x = g x } := by
     change h (f a) = g (f a)
     ext ⟨⟨_, ⟨y, rfl⟩⟩⟩
     · rw [g_apply_from_coset]
-      by_cases' m : y ∈ f.range
+      by_cases m:y ∈ f.range
       · rw [h_apply_from_coset' _ _ _ m, from_coset_eq_of_mem_range _ m]
         change from_coset _ = from_coset ⟨f a *l (y *l _), _⟩
         simpa only [← from_coset_eq_of_mem_range _ (Subgroup.mul_mem _ ⟨a, rfl⟩ m), left_coset_assoc]
@@ -276,22 +261,15 @@ theorem agree : f.range.Carrier = { x | h x = g x } := by
   · have eq1 :
       (h b) (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) =
         from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ :=
-      by
-      simp [H, tau, g_apply_infinity]
+      by simp [H, tau, g_apply_infinity]
     have eq2 :
       (g b) (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) = from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ := rfl
-    exact
-      (from_coset_ne_of_nin_range _ r).symm
-        (by
-          rw [← eq1, ← eq2, FunLike.congr_fun hb])
+    exact (from_coset_ne_of_nin_range _ r).symm (by rw [← eq1, ← eq2, FunLike.congr_fun hb])
     
 
 theorem comp_eq : (f ≫ show B ⟶ Groupₓₓ.of SX' from g) = f ≫ h :=
   (FunLike.ext _ _) fun a => by
-    simp only [comp_apply,
-      show h (f a) = _ from
-        (by
-          simp [← agree] : f a ∈ { b | h b = g b })]
+    simp only [comp_apply, show h (f a) = _ from (by simp [← agree] : f a ∈ { b | h b = g b })]
 
 theorem g_ne_h (x : B) (hx : x ∉ f.range) : g ≠ h := by
   intro r
@@ -340,12 +318,14 @@ variable {A B : Groupₓₓ.{u}} (f : A ⟶ B)
 
 @[to_additive]
 instance forget_Group_preserves_mono :
-    (forget Groupₓₓ).PreservesMonomorphisms where preserves := fun X Y f e => by
+    (forget
+        Groupₓₓ).PreservesMonomorphisms where preserves := fun X Y f e => by
     rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
 
 @[to_additive]
 instance forget_Group_preserves_epi :
-    (forget Groupₓₓ).PreservesEpimorphisms where preserves := fun X Y f e => by
+    (forget
+        Groupₓₓ).PreservesEpimorphisms where preserves := fun X Y f e => by
     rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
 
 end Groupₓₓ
@@ -382,12 +362,14 @@ theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by
 
 @[to_additive]
 instance forget_CommGroup_preserves_mono :
-    (forget CommGroupₓₓ).PreservesMonomorphisms where preserves := fun X Y f e => by
+    (forget
+        CommGroupₓₓ).PreservesMonomorphisms where preserves := fun X Y f e => by
     rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
 
 @[to_additive]
 instance forget_CommGroup_preserves_epi :
-    (forget CommGroupₓₓ).PreservesEpimorphisms where preserves := fun X Y f e => by
+    (forget
+        CommGroupₓₓ).PreservesEpimorphisms where preserves := fun X Y f e => by
     rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
 
 end CommGroupₓₓ

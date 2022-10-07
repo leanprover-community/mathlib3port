@@ -84,8 +84,7 @@ theorem ext {x y : TruncatedWittVector p n R} (h : ∀ i, x.coeff i = y.coeff i)
   funext h
 
 theorem ext_iff {x y : TruncatedWittVector p n R} : x = y ↔ ∀ i, x.coeff i = y.coeff i :=
-  ⟨fun h i => by
-    rw [h], ext⟩
+  ⟨fun h i => by rw [h], ext⟩
 
 @[simp]
 theorem coeff_mk (x : Finₓ n → R) (i : Finₓ n) : (mk p x).coeff i = x i :=
@@ -141,7 +140,7 @@ variable [CommRingₓ R]
 @[simp]
 theorem out_truncate_fun (x : 𝕎 R) : (truncateFun n x).out = init n x := by
   ext i
-  dsimp' [TruncatedWittVector.out, init, select]
+  dsimp [TruncatedWittVector.out, init, select]
   split_ifs with hi
   swap
   · rfl
@@ -381,19 +380,19 @@ theorem coeff_truncate {m : ℕ} (hm : n ≤ m) (i : Finₓ n) (x : TruncatedWit
   obtain ⟨y, rfl⟩ := WittVector.truncate_surjective p _ _ x
   simp only [truncate_witt_vector_truncate, WittVector.coeff_truncate, Finₓ.coe_cast_le]
 
-section Fintype
+section Fintypeₓ
 
 omit hp
 
-instance {R : Type _} [Fintype R] : Fintype (TruncatedWittVector p n R) :=
+instance {R : Type _} [Fintypeₓ R] : Fintypeₓ (TruncatedWittVector p n R) :=
   Pi.fintype
 
 variable (p n R)
 
-theorem card {R : Type _} [Fintype R] : Fintype.card (TruncatedWittVector p n R) = Fintype.card R ^ n := by
-  simp only [TruncatedWittVector, Fintype.card_fin, Fintype.card_fun]
+theorem card {R : Type _} [Fintypeₓ R] : Fintypeₓ.card (TruncatedWittVector p n R) = Fintypeₓ.card R ^ n := by
+  simp only [TruncatedWittVector, Fintypeₓ.card_fin, Fintypeₓ.card_fun]
 
-end Fintype
+end Fintypeₓ
 
 theorem infi_ker_truncate : (⨅ i : ℕ, (@WittVector.truncate p _ i R _).ker) = ⊥ := by
   rw [Submodule.eq_bot_iff]

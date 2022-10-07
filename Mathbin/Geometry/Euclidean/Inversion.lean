@@ -41,8 +41,7 @@ theorem inversion_vsub_center (c : P) (R : ℝ) (x : P) : inversion c R x -ᵥ c
   vadd_vsub _ _
 
 @[simp]
-theorem inversion_self (c : P) (R : ℝ) : inversion c R c = c := by
-  simp [inversion]
+theorem inversion_self (c : P) (R : ℝ) : inversion c R c = c := by simp [inversion]
 
 @[simp]
 theorem inversion_dist_center (c x : P) : inversion c (dist x c) x = x := by
@@ -95,7 +94,7 @@ theorem inversion_bijective (c : P) {R : ℝ} (hR : R ≠ 0) : Bijective (invers
 /-- Distance between the images of two points under an inversion. -/
 theorem dist_inversion_inversion (hx : x ≠ c) (hy : y ≠ c) (R : ℝ) :
     dist (inversion c R x) (inversion c R y) = R ^ 2 / (dist x c * dist y c) * dist x y := by
-  dunfold inversion
+  dsimp only [inversion]
   simp_rw [dist_vadd_cancel_right, dist_eq_norm_vsub V _ c]
   simpa only [dist_vsub_cancel_right] using dist_div_norm_sq_smul (vsub_ne_zero.2 hx) (vsub_ne_zero.2 hy) R
 

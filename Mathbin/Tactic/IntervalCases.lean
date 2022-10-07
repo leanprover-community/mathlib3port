@@ -180,12 +180,12 @@ unsafe def get_bounds (n : expr) : tactic (expr × expr) := do
     | (some lb_prf, some ub_prf) => return (lb_prf, ub_prf)
 
 /-- The finset of elements of a set `s` for which we have `fintype s`. -/
-def setElems {α} [DecidableEq α] (s : Set α) [Fintype s] : Finset α :=
-  (Fintype.elems s).Image Subtype.val
+def setElems {α} [DecidableEq α] (s : Set α) [Fintypeₓ s] : Finsetₓ α :=
+  (Fintypeₓ.elems s).Image Subtype.val
 
 /-- Each element of `s` is a member of `set_elems s`. -/
-theorem mem_set_elems {α} [DecidableEq α] (s : Set α) [Fintype s] {a : α} (h : a ∈ s) : a ∈ setElems s :=
-  Finset.mem_image.2 ⟨⟨a, h⟩, Fintype.complete _, rfl⟩
+theorem mem_set_elems {α} [DecidableEq α] (s : Set α) [Fintypeₓ s] {a : α} (h : a ∈ s) : a ∈ setElems s :=
+  Finsetₓ.mem_image.2 ⟨⟨a, h⟩, Fintypeₓ.complete _, rfl⟩
 
 end IntervalCases
 

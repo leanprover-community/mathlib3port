@@ -58,7 +58,7 @@ def IsTensorProduct : Prop :=
 variable (R M N) {f}
 
 theorem TensorProduct.is_tensor_product : IsTensorProduct (TensorProduct.mk R M N) := by
-  delta' IsTensorProduct
+  delta IsTensorProduct
   convert_to Function.Bijective LinearMap.id using 2
   · apply TensorProduct.ext'
     simp
@@ -91,7 +91,7 @@ noncomputable def IsTensorProduct.lift (h : IsTensorProduct f) (f' : M₁ →ₗ
 
 theorem IsTensorProduct.lift_eq (h : IsTensorProduct f) (f' : M₁ →ₗ[R] M₂ →ₗ[R] M') (x₁ : M₁) (x₂ : M₂) :
     h.lift f' (f x₁ x₂) = f' x₁ x₂ := by
-  delta' IsTensorProduct.lift
+  delta IsTensorProduct.lift
   simp
 
 /-- The tensor product of a pair of linear maps between modules. -/
@@ -101,7 +101,7 @@ noncomputable def IsTensorProduct.map (hf : IsTensorProduct f) (hg : IsTensorPro
 
 theorem IsTensorProduct.map_eq (hf : IsTensorProduct f) (hg : IsTensorProduct g) (i₁ : M₁ →ₗ[R] N₁) (i₂ : M₂ →ₗ[R] N₂)
     (x₁ : M₁) (x₂ : M₂) : hf.map hg i₁ i₂ (f x₁ x₂) = g (i₁ x₁) (i₂ x₂) := by
-  delta' IsTensorProduct.map
+  delta IsTensorProduct.map
   simp
 
 theorem IsTensorProduct.induction_on (h : IsTensorProduct f) {C : M → Prop} (m : M) (h0 : C 0)
@@ -207,7 +207,7 @@ variable (R M N S)
 omit h f
 
 theorem TensorProduct.is_base_change : IsBaseChange S (TensorProduct.mk R S M 1) := by
-  delta' IsBaseChange
+  delta IsBaseChange
   convert TensorProduct.is_tensor_product R S M using 1
   ext s x
   change s • 1 ⊗ₜ x = s ⊗ₜ x
@@ -229,14 +229,13 @@ theorem IsBaseChange.equiv_symm_apply (m : M) : h.Equiv.symm (f m) = 1 ⊗ₜ m 
 
 variable (f)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 theorem IsBaseChange.of_lift_unique
     (h :
       ∀ (Q : Type max v₁ v₂ v₃) [AddCommMonoidₓ Q],
         ∀ [Module R Q] [Module S Q],
           ∀ [IsScalarTower R S Q], ∀ g : M →ₗ[R] Q, ∃! g' : N →ₗ[S] Q, (g'.restrictScalars R).comp f = g) :
     IsBaseChange S f := by
-  delta' IsBaseChange IsTensorProduct
+  delta IsBaseChange IsTensorProduct
   obtain ⟨g, hg, hg'⟩ :=
     h (ULift.{v₂} <| S ⊗[R] M) (ulift.module_equiv.symm.to_linear_map.comp <| TensorProduct.mk R S M 1)
   let f' : S ⊗[R] M →ₗ[R] N := _
@@ -252,7 +251,7 @@ theorem IsBaseChange.of_lift_unique
         _root_.map_mul, TensorProduct.smul_tmul', LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply]
       
     · intro x y hx hy
-      dsimp'  at hx hy⊢
+      dsimp at hx hy⊢
       simp only [hx, hy, smul_add, map_add]
       
   change Function.Bijective f''
@@ -265,8 +264,7 @@ theorem IsBaseChange.of_lift_unique
     · intro x y
       have := (congr_arg (fun a => x • a) (LinearMap.congr_fun hg y)).trans (ulift.module_equiv.symm.map_smul x _).symm
       apply (ULift.moduleEquiv : ULift.{v₂} (S ⊗ M) ≃ₗ[S] S ⊗ M).toEquiv.apply_eq_iff_eq_symm_apply.mpr
-      any_goals {
-      }
+      any_goals infer_instance
       simpa only [Algebra.of_id_apply, smul_tmul', Algebra.id.smul_eq_mul, lift.tmul',
         LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply, AlgHom.to_linear_map_apply,
         Module.algebra_map_End_apply, LinearMap.smul_apply, LinearMap.coe_mk, LinearMap.map_smulₛₗ, mk_apply,
@@ -289,7 +287,7 @@ theorem IsBaseChange.of_lift_unique
     apply hg₂
     ext y
     have := LinearMap.congr_fun hg y
-    dsimp' [ULift.moduleEquiv]  at this⊢
+    dsimp [ULift.moduleEquiv] at this⊢
     rw [this]
     simp only [lift.tmul, LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply, AlgHom.to_linear_map_apply,
       _root_.map_one, LinearMap.one_apply]
@@ -317,7 +315,7 @@ theorem IsBaseChange.of_equiv (e : M ≃ₗ[R] N) : IsBaseChange R e.toLinearMap
   refine'
     ⟨g.comp e.symm.to_linear_map, by
       ext
-      simp , _⟩
+      simp, _⟩
   rintro y (rfl : _ = _)
   ext
   simp

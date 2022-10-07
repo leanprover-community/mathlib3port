@@ -61,7 +61,7 @@ include hp
 
 private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) : ghostComponent n (teichmullerFun p r) = r ^ p ^ n :=
   by
-  rw [ghost_component_apply, aeval_witt_polynomial, Finset.sum_eq_single 0, pow_zeroₓ, one_mulₓ, tsub_zero]
+  rw [ghost_component_apply, aeval_witt_polynomial, Finsetₓ.sum_eq_single 0, pow_zeroₓ, one_mulₓ, tsub_zero]
   · rfl
     
   · intro i hi h0
@@ -76,7 +76,7 @@ private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) : ghostCompone
     · exact pow_pos hp.1.Pos _
       
     
-  · rw [Finset.mem_range]
+  · rw [Finsetₓ.mem_range]
     intro h
     exact (h (Nat.succ_posₓ n)).elim
     

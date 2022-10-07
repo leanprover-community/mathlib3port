@@ -113,7 +113,7 @@ theorem mem_image (y : β) (s : Set α) : y ∈ Image r s ↔ ∃ x ∈ s, r x y
 
 theorem image_subset : ((· ⊆ ·) ⇒ (· ⊆ ·)) r.Image r.Image := fun s t h y ⟨x, xs, rxy⟩ => ⟨x, h xs, rxy⟩
 
-theorem image_mono : Monotone r.Image :=
+theorem image_mono : Monotoneₓ r.Image :=
   r.image_subset
 
 theorem image_inter (s t : Set α) : r.Image (s ∩ t) ⊆ r.Image s ∩ r.Image t :=
@@ -161,14 +161,12 @@ theorem preimage_inter (s t : Set β) : r.Preimage (s ∩ t) ⊆ r.Preimage s �
 theorem preimage_union (s t : Set β) : r.Preimage (s ∪ t) = r.Preimage s ∪ r.Preimage t :=
   image_union _ s t
 
-theorem preimage_id (s : Set α) : Preimage (@Eq α) s = s := by
-  simp only [preimage, inv_id, image_id]
+theorem preimage_id (s : Set α) : Preimage (@Eq α) s = s := by simp only [preimage, inv_id, image_id]
 
 theorem preimage_comp (s : Rel β γ) (t : Set γ) : Preimage (r ∘ s) t = Preimage r (Preimage s t) := by
   simp only [preimage, inv_comp, image_comp]
 
-theorem preimage_univ : r.Preimage Set.Univ = r.Dom := by
-  rw [preimage, image_univ, codom_inv]
+theorem preimage_univ : r.Preimage Set.Univ = r.Dom := by rw [preimage, image_univ, codom_inv]
 
 /-- Core of a set `s : set β` w.r.t `r : rel α β` is the set of `x : α` that are related *only*
 to elements of `s`. Other generalization of `function.preimage`. -/
@@ -180,25 +178,20 @@ theorem mem_core (x : α) (s : Set β) : x ∈ r.Core s ↔ ∀ y, r x y → y �
 
 theorem core_subset : ((· ⊆ ·) ⇒ (· ⊆ ·)) r.Core r.Core := fun s t h x h' y rxy => h (h' y rxy)
 
-theorem core_mono : Monotone r.Core :=
+theorem core_mono : Monotoneₓ r.Core :=
   r.core_subset
 
 theorem core_inter (s t : Set β) : r.Core (s ∩ t) = r.Core s ∩ r.Core t :=
-  Set.ext
-    (by
-      simp [mem_core, imp_and_distrib, forall_and_distrib])
+  Set.ext (by simp [mem_core, imp_and_distrib, forall_and_distrib])
 
 theorem core_union (s t : Set β) : r.Core s ∪ r.Core t ⊆ r.Core (s ∪ t) :=
   r.core_mono.le_map_sup s t
 
 @[simp]
 theorem core_univ : r.Core Set.Univ = Set.Univ :=
-  Set.ext
-    (by
-      simp [mem_core])
+  Set.ext (by simp [mem_core])
 
-theorem core_id (s : Set α) : Core (@Eq α) s = s := by
-  simp [core]
+theorem core_id (s : Set α) : Core (@Eq α) s = s := by simp [core]
 
 theorem core_comp (s : Rel β γ) (t : Set γ) : Core (r ∘ s) t = Core r (Core s t) := by
   ext x

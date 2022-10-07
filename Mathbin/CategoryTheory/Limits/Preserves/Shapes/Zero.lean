@@ -41,9 +41,7 @@ variable [HasZeroMorphisms C] [HasZeroMorphisms D]
 
 /-- A functor preserves zero morphisms if it sends zero morphisms to zero morphisms. -/
 class PreservesZeroMorphisms (F : C ⥤ D) : Prop where
-  map_zero' : ∀ X Y : C, F.map (0 : X ⟶ Y) = 0 := by
-    run_tac
-      obviously
+  map_zero' : ∀ X Y : C, F.map (0 : X ⟶ Y) = 0 := by obviously
 
 @[simp]
 protected theorem map_zero (F : C ⥤ D) [PreservesZeroMorphisms F] (X Y : C) : F.map (0 : X ⟶ Y) = 0 :=
@@ -93,10 +91,8 @@ instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C �
 instance (priority := 100) preserves_zero_morphisms_of_full (F : C ⥤ D) [Full F] :
     PreservesZeroMorphisms F where map_zero' := fun X Y =>
     calc
-      F.map (0 : X ⟶ Y) = F.map (0 ≫ F.preimage (0 : F.obj Y ⟶ F.obj Y)) := by
-        rw [zero_comp]
-      _ = 0 := by
-        rw [F.map_comp, F.image_preimage, comp_zero]
+      F.map (0 : X ⟶ Y) = F.map (0 ≫ F.preimage (0 : F.obj Y ⟶ F.obj Y)) := by rw [zero_comp]
+      _ = 0 := by rw [F.map_comp, F.image_preimage, comp_zero]
       
 
 end ZeroMorphisms
@@ -114,22 +110,17 @@ variable [HasZeroMorphisms C] [HasZeroMorphisms D] (F : C ⥤ D)
 def mapZeroObject [PreservesZeroMorphisms F] : F.obj 0 ≅ 0 where
   Hom := 0
   inv := 0
-  hom_inv_id' := by
-    rw [← F.map_id, id_zero, F.map_zero, zero_comp]
-  inv_hom_id' := by
-    rw [id_zero, comp_zero]
+  hom_inv_id' := by rw [← F.map_id, id_zero, F.map_zero, zero_comp]
+  inv_hom_id' := by rw [id_zero, comp_zero]
 
 variable {F}
 
 theorem preserves_zero_morphisms_of_map_zero_object (i : F.obj 0 ≅ 0) : PreservesZeroMorphisms F :=
   { map_zero' := fun X Y =>
       calc
-        F.map (0 : X ⟶ Y) = F.map (0 : X ⟶ 0) ≫ F.map 0 := by
-          rw [← functor.map_comp, comp_zero]
-        _ = F.map 0 ≫ (i.Hom ≫ i.inv) ≫ F.map 0 := by
-          rw [iso.hom_inv_id, category.id_comp]
-        _ = 0 := by
-          simp only [zero_of_to_zero i.hom, zero_comp, comp_zero]
+        F.map (0 : X ⟶ Y) = F.map (0 : X ⟶ 0) ≫ F.map 0 := by rw [← functor.map_comp, comp_zero]
+        _ = F.map 0 ≫ (i.Hom ≫ i.inv) ≫ F.map 0 := by rw [iso.hom_inv_id, category.id_comp]
+        _ = 0 := by simp only [zero_of_to_zero i.hom, zero_comp, comp_zero]
          }
 
 instance (priority := 100) preserves_zero_morphisms_of_preserves_initial_object

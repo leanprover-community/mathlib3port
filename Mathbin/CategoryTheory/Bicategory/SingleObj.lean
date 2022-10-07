@@ -92,7 +92,7 @@ def endMonoidalStarFunctor : MonoidalFunctor (EndMonoidal (MonoidalSingleObj.sta
   ε := 𝟙 _
   μ := fun X Y => 𝟙 _
   μ_natural' := fun X Y X' Y' f g => by
-    dsimp'
+    dsimp
     simp only [category.id_comp, category.comp_id]
     -- Should we provide further simp lemmas so this goal becomes visible?
     exact (tensor_id_comp_id_tensor _ _).symm
@@ -105,14 +105,8 @@ and the original monoidal category.
 -/
 def endMonoidalStarFunctorIsEquivalence : IsEquivalence (endMonoidalStarFunctor C).toFunctor where
   inverse := { obj := fun X => X, map := fun X Y f => f }
-  unitIso :=
-    NatIso.ofComponents (fun X => asIso (𝟙 _))
-      (by
-        tidy)
-  counitIso :=
-    NatIso.ofComponents (fun X => asIso (𝟙 _))
-      (by
-        tidy)
+  unitIso := NatIso.ofComponents (fun X => asIso (𝟙 _)) (by tidy)
+  counitIso := NatIso.ofComponents (fun X => asIso (𝟙 _)) (by tidy)
 
 end MonoidalSingleObj
 

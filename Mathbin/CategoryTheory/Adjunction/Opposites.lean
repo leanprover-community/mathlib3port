@@ -73,11 +73,8 @@ def leftAdjointsCoyonedaEquiv {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (a
     F.op ⋙ coyoneda ≅ F'.op ⋙ coyoneda :=
   NatIso.ofComponents
     (fun X =>
-      NatIso.ofComponents (fun Y => ((adj1.homEquiv X.unop Y).trans (adj2.homEquiv X.unop Y).symm).toIso)
-        (by
-          tidy))
-    (by
-      tidy)
+      NatIso.ofComponents (fun Y => ((adj1.homEquiv X.unop Y).trans (adj2.homEquiv X.unop Y).symm).toIso) (by tidy))
+    (by tidy)
 
 /-- If `F` and `F'` are both left adjoint to `G`, then they are naturally isomorphic. -/
 def leftAdjointUniq {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G) : F ≅ F' :=
@@ -185,8 +182,7 @@ theorem unit_right_adjoint_uniq_hom_app {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F
   convert
     left_adjoint_uniq_hom_app_counit (op_adjoint_op_of_adjoint _ _ adj2) (op_adjoint_op_of_adjoint _ _ adj1)
       (Opposite.op x)
-  all_goals
-    simpa
+  all_goals simpa
 
 @[simp, reassoc]
 theorem unit_right_adjoint_uniq_hom {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F ⊣ G') :
@@ -201,8 +197,7 @@ theorem right_adjoint_uniq_hom_app_counit {F : C ⥤ D} {G G' : D ⥤ C} (adj1 :
   convert
     unit_left_adjoint_uniq_hom_app (op_adjoint_op_of_adjoint _ _ adj2) (op_adjoint_op_of_adjoint _ _ adj1)
       (Opposite.op x)
-  all_goals
-    simpa
+  all_goals simpa
 
 @[simp, reassoc]
 theorem right_adjoint_uniq_hom_counit {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F ⊣ G') :
@@ -234,7 +229,7 @@ theorem right_adjoint_uniq_trans {F : C ⥤ D} {G G' G'' : D ⥤ C} (adj1 : F �
 
 @[simp]
 theorem right_adjoint_uniq_refl {F : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) : (rightAdjointUniq adj1 adj1).Hom = 𝟙 _ := by
-  delta' right_adjoint_uniq
+  delta right_adjoint_uniq
   simp
 
 /-- Given two adjunctions, if the left adjoints are naturally isomorphic, then so are the right

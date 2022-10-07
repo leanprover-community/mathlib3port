@@ -139,8 +139,7 @@ instance [HasSmul N X] [SmulCommClass M N X] [HasUniformContinuousConstSmul M X]
     have hnm : n • m • x = (completion.map (HasSmul.smul n) ∘ completion.map (HasSmul.smul m)) x := rfl
     rw [hmn, hnm, map_comp, map_comp]
     exact congr_arg (fun f => completion.map f x) (funext (smul_comm _ _))
-    repeat'
-      exact uniform_continuous_const_smul _⟩
+    repeat' exact uniform_continuous_const_smul _⟩
 
 instance [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X] : IsCentralScalar M (Completion X) :=
   ⟨fun c a => (congr_arg fun f => Completion.map f a) <| funext (op_smul_eq_smul c)⟩
@@ -156,9 +155,7 @@ end HasSmul
 @[to_additive]
 instance [Monoidₓ M] [MulAction M X] [HasUniformContinuousConstSmul M X] : MulAction M (Completion X) where
   smul := (· • ·)
-  one_smul :=
-    (ext' (continuous_const_smul _) continuous_id) fun a => by
-      rw [← coe_smul, one_smul]
+  one_smul := (ext' (continuous_const_smul _) continuous_id) fun a => by rw [← coe_smul, one_smul]
   mul_smul := fun x y =>
     (ext' (continuous_const_smul _) ((continuous_const_smul _).const_smul _)) fun a => by
       simp only [← coe_smul, mul_smul]

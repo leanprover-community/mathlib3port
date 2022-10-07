@@ -3,13 +3,10 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Tactic.ApplyFun
-import Mathbin.Algebra.Field.Opposite
-import Mathbin.Algebra.FieldPower
 import Mathbin.Algebra.Ring.Aut
-import Mathbin.GroupTheory.GroupAction.Units
-import Mathbin.GroupTheory.GroupAction.Opposite
 import Mathbin.Algebra.Ring.CompTypeclasses
+import Mathbin.Data.Rat.Cast
+import Mathbin.GroupTheory.GroupAction.Opposite
 
 /-!
 # Star monoids, rings, and modules
@@ -55,7 +52,7 @@ variable {R : Type u}
 export HasStar (star)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident star]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident star]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typeclass for a star operation with is involutive.
 -/
 class HasInvolutiveStar (R : Type u) extends HasStar R where
@@ -74,8 +71,7 @@ theorem star_injective [HasInvolutiveStar R] : Function.Injective (star : R → 
 protected def Equivₓ.star [HasInvolutiveStar R] : Equivₓ.Perm R :=
   star_involutive.toPerm _
 
-theorem eq_star_of_eq_star [HasInvolutiveStar R] {r s : R} (h : r = star s) : s = star r := by
-  simp [h]
+theorem eq_star_of_eq_star [HasInvolutiveStar R] {r s : R} (h : r = star s) : s = star r := by simp [h]
 
 theorem eq_star_iff_eq_star [HasInvolutiveStar R] {r s : R} : r = star s ↔ s = star r :=
   ⟨eq_star_of_eq_star, eq_star_of_eq_star⟩
@@ -148,7 +144,7 @@ section
 open BigOperators
 
 @[simp]
-theorem star_prod [CommMonoidₓ R] [StarSemigroup R] {α : Type _} (s : Finset α) (f : α → R) :
+theorem star_prod [CommMonoidₓ R] [StarSemigroup R] {α : Type _} (s : Finsetₓ α) (f : α → R) :
     star (∏ x in s, f x) = ∏ x in s, star (f x) :=
   map_prod (starMulAut : R ≃* R) _ _
 
@@ -225,7 +221,7 @@ section
 open BigOperators
 
 @[simp]
-theorem star_sum [AddCommMonoidₓ R] [StarAddMonoid R] {α : Type _} (s : Finset α) (f : α → R) :
+theorem star_sum [AddCommMonoidₓ R] [StarAddMonoid R] {α : Type _} (s : Finsetₓ α) (f : α → R) :
     star (∑ x in s, f x) = ∑ x in s, star (f x) :=
   (starAddEquiv : R ≃+ R).map_sum _ _
 
@@ -310,12 +306,10 @@ theorem star_div' [Field R] [StarRing R] (x y : R) : star (x / y) = star x / sta
   map_div₀ (starRingEnd R) _ _
 
 @[simp]
-theorem star_bit0 [AddMonoidₓ R] [StarAddMonoid R] (r : R) : star (bit0 r) = bit0 (star r) := by
-  simp [bit0]
+theorem star_bit0 [AddMonoidₓ R] [StarAddMonoid R] (r : R) : star (bit0 r) = bit0 (star r) := by simp [bit0]
 
 @[simp]
-theorem star_bit1 [Semiringₓ R] [StarRing R] (r : R) : star (bit1 r) = bit1 (star r) := by
-  simp [bit1]
+theorem star_bit1 [Semiringₓ R] [StarRing R] (r : R) : star (bit1 r) = bit1 (star r) := by simp [bit1]
 
 /-- Any commutative semiring admits the trivial `*`-structure.
 
@@ -338,12 +332,8 @@ variable [Ringₓ R] [PartialOrderₓ R] [StarOrderedRing R]
 
 -- see note [lower instance priority]
 instance (priority := 100) : OrderedAddCommGroup R :=
-  { show Ringₓ R by
-      infer_instance,
-    show PartialOrderₓ R by
-      infer_instance,
-    show StarOrderedRing R by
-      infer_instance with }
+  { show Ringₓ R by infer_instance, show PartialOrderₓ R by infer_instance,
+    show StarOrderedRing R by infer_instance with }
 
 end StarOrderedRing
 
@@ -352,7 +342,7 @@ theorem star_mul_self_nonneg [NonUnitalSemiringₓ R] [PartialOrderₓ R] [StarO
 
 theorem star_mul_self_nonneg' [NonUnitalSemiringₓ R] [PartialOrderₓ R] [StarOrderedRing R] {r : R} : 0 ≤ r * star r :=
   by
-  nth_rw_rhs 0[← star_star r]
+  nth_rw_rhs 0 [← star_star r]
   exact star_mul_self_nonneg
 
 /-- A star module `A` over a star ring `R` is a module which is a star add monoid,
@@ -432,7 +422,7 @@ theorem is_unit_star [Monoidₓ R] [StarSemigroup R] {a : R} : IsUnit (star a) �
   ⟨fun h => star_star a ▸ h.star, IsUnit.star⟩
 
 theorem Ringₓ.inverse_star [Semiringₓ R] [StarRing R] (a : R) : Ring.inverse (star a) = star (Ring.inverse a) := by
-  by_cases' ha : IsUnit a
+  by_cases ha:IsUnit a
   · obtain ⟨u, rfl⟩ := ha
     rw [Ring.inverse_unit, ← Units.coe_star, Ring.inverse_unit, ← Units.coe_star_inv]
     
@@ -440,10 +430,8 @@ theorem Ringₓ.inverse_star [Semiringₓ R] [StarRing R] (a : R) : Ring.inverse
 
 instance Invertible.star {R : Type _} [Monoidₓ R] [StarSemigroup R] (r : R) [Invertible r] : Invertible (star r) where
   invOf := star (⅟ r)
-  inv_of_mul_self := by
-    rw [← star_mul, mul_inv_of_self, star_one]
-  mul_inv_of_self := by
-    rw [← star_mul, inv_of_mul_self, star_one]
+  inv_of_mul_self := by rw [← star_mul, mul_inv_of_self, star_one]
+  mul_inv_of_self := by rw [← star_mul, inv_of_mul_self, star_one]
 
 theorem star_inv_of {R : Type _} [Monoidₓ R] [StarSemigroup R] (r : R) [Invertible r] [Invertible (star r)] :
     star (⅟ r) = ⅟ (star r) := by

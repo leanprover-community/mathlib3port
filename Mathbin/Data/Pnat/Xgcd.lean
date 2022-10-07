@@ -101,11 +101,7 @@ def succ₂ (t : ℕ × ℕ) : ℕ × ℕ :=
   ⟨t.1.succ, t.2.succ⟩
 
 theorem v_eq_succ_vp : u.V = succ₂ u.vp := by
-  ext <;>
-    dsimp' [v, vp, w, z, a, b, succ₂] <;>
-      repeat'
-          rw [Nat.succ_eq_add_one] <;>
-        ring
+  ext <;> dsimp [v, vp, w, z, a, b, succ₂] <;> repeat' rw [Nat.succ_eq_add_one] <;> ring
 
 /-- is_special holds if the matrix has determinant one. -/
 def IsSpecial : Prop :=
@@ -115,22 +111,19 @@ def IsSpecial' : Prop :=
   u.w * u.z = succPnat (u.x * u.y)
 
 theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' := by
-  dsimp' [is_special, is_special']
+  dsimp [is_special, is_special']
   constructor <;> intro h
   · apply Eq
-    dsimp' [w, z, succ_pnat]
+    dsimp [w, z, succ_pnat]
     rw [← h]
-    repeat'
-      rw [Nat.succ_eq_add_one]
+    repeat' rw [Nat.succ_eq_add_one]
     ring
     
   · apply Nat.succ.injₓ
     replace h := congr_arg (coe : ℕ+ → ℕ) h
     rw [mul_coe, w, z] at h
-    repeat'
-      rw [succ_pnat_coe, Nat.succ_eq_add_one] at h
-    repeat'
-      rw [Nat.succ_eq_add_one]
+    repeat' rw [succ_pnat_coe, Nat.succ_eq_add_one] at h
+    repeat' rw [Nat.succ_eq_add_one]
     rw [← h]
     ring
     
@@ -181,15 +174,15 @@ theorem flip_b : (flip u).b = u.a :=
   rfl
 
 theorem flip_is_reduced : (flip u).IsReduced ↔ u.IsReduced := by
-  dsimp' [is_reduced, flip]
+  dsimp [is_reduced, flip]
   constructor <;> intro h <;> exact h.symm
 
 theorem flip_is_special : (flip u).IsSpecial ↔ u.IsSpecial := by
-  dsimp' [is_special, flip]
+  dsimp [is_special, flip]
   rw [mul_comm u.x, mul_comm u.zp, add_commₓ u.zp]
 
 theorem flip_v : (flip u).V = u.V.swap := by
-  dsimp' [v]
+  dsimp [v]
   ext
   · simp only
     ring
@@ -203,7 +196,7 @@ theorem rq_eq : u.R + (u.bp + 1) * u.q = u.ap + 1 :=
   Nat.mod_add_divₓ (u.ap + 1) (u.bp + 1)
 
 theorem qp_eq (hr : u.R = 0) : u.q = u.qp + 1 := by
-  by_cases' hq : u.q = 0
+  by_cases hq:u.q = 0
   · let h := u.rq_eq
     rw [hr, hq, mul_zero, add_zeroₓ] at h
     cases h
@@ -220,11 +213,11 @@ def start (a b : ℕ+) : XgcdType :=
   ⟨0, 0, 0, 0, a - 1, b - 1⟩
 
 theorem start_is_special (a b : ℕ+) : (start a b).IsSpecial := by
-  dsimp' [start, is_special]
+  dsimp [start, is_special]
   rfl
 
 theorem start_v (a b : ℕ+) : (start a b).V = ⟨a, b⟩ := by
-  dsimp' [start, v, xgcd_type.a, xgcd_type.b, w, z]
+  dsimp [start, v, xgcd_type.a, xgcd_type.b, w, z]
   rw [one_mulₓ, one_mulₓ, zero_mul, zero_mul, zero_addₓ, add_zeroₓ]
   rw [← Nat.pred_eq_sub_one, ← Nat.pred_eq_sub_one]
   rw [Nat.succ_pred_eq_of_posₓ a.pos, Nat.succ_pred_eq_of_posₓ b.pos]
@@ -233,11 +226,11 @@ def finish : XgcdType :=
   XgcdType.mk u.wp ((u.wp + 1) * u.qp + u.x) u.y (u.y * u.qp + u.zp) u.bp u.bp
 
 theorem finish_is_reduced : u.finish.IsReduced := by
-  dsimp' [is_reduced]
+  dsimp [is_reduced]
   rfl
 
 theorem finish_is_special (hs : u.IsSpecial) : u.finish.IsSpecial := by
-  dsimp' [is_special, finish]  at hs⊢
+  dsimp [is_special, finish] at hs⊢
   rw [add_mulₓ _ _ u.y, add_commₓ _ (u.x * u.y), ← hs]
   ring
 
@@ -270,7 +263,7 @@ theorem step_wf (hr : u.R ≠ 0) : sizeof u.step < sizeof u := by
   exact lt_of_succ_lt_succ h₁
 
 theorem step_is_special (hs : u.IsSpecial) : u.step.IsSpecial := by
-  dsimp' [is_special, step]  at hs⊢
+  dsimp [is_special, step] at hs⊢
   rw [mul_addₓ, mul_comm u.y u.x, ← hs]
   ring
 
@@ -341,10 +334,7 @@ theorem reduce_special' (u : XgcdType) (hs : u.IsSpecial) : u.reduce.IsSpecial' 
 
 theorem reduce_v : ∀ u : XgcdType, u.reduce.V = u.V
   | u =>
-    dite (u.R = 0)
-      (fun h => by
-        rw [reduce_a h, finish_v u h])
-      fun h => by
+    dite (u.R = 0) (fun h => by rw [reduce_a h, finish_v u h]) fun h => by
       have : sizeof u.step < sizeof u := u.step_wf h
       rw [reduce_b h, flip_v, reduce_v (step u), step_v u h, Prod.swap_swapₓ]
 
@@ -379,11 +369,11 @@ def gcdB' : ℕ+ :=
   succPnat ((xgcd a b).y + (xgcd a b).zp)
 
 theorem gcd_a'_coe : (gcdA' a b : ℕ) = gcdW a b + gcdX a b := by
-  dsimp' [gcd_a', gcd_x, gcd_w, xgcd_type.w]
+  dsimp [gcd_a', gcd_x, gcd_w, xgcd_type.w]
   rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_right_commₓ]
 
 theorem gcd_b'_coe : (gcdB' a b : ℕ) = gcdY a b + gcdZ a b := by
-  dsimp' [gcd_b', gcd_y, gcd_z, xgcd_type.z]
+  dsimp [gcd_b', gcd_y, gcd_z, xgcd_type.z]
   rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_assocₓ]
 
 theorem gcd_props :
@@ -409,8 +399,7 @@ theorem gcd_props :
   have hdet : w * z = succ_pnat (x * y) := u.reduce_special' rfl
   constructor
   exact hdet
-  have hdet' : (w * z : ℕ) = x * y + 1 := by
-    rw [← mul_coe, hdet, succ_pnat_coe]
+  have hdet' : (w * z : ℕ) = x * y + 1 := by rw [← mul_coe, hdet, succ_pnat_coe]
   have huv : u.v = ⟨a, b⟩ := xgcd_type.start_v a b
   let hv : Prod.mk (w * d + x * ur.b : ℕ) (y * d + z * ur.b : ℕ) = ⟨a, b⟩ := u.reduce_v.trans (xgcd_type.start_v a b)
   rw [← hb, ← add_mulₓ, ← add_mulₓ, ← ha', ← hb'] at hv
@@ -435,8 +424,7 @@ theorem gcd_props :
     rw [succ_pnat_coe, Nat.succ_eq_add_one, mul_coe, hwb']
     
   rw [ha'', hb'']
-  repeat'
-    rw [← mul_assoc]
+  repeat' rw [← mul_assoc]
   rw [hza', hwb']
   constructor <;> ring
 

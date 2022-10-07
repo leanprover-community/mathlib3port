@@ -45,7 +45,7 @@ open Matrix
 
 section
 
-variable (n : Type u) [DecidableEq n] [Fintype n]
+variable (n : Type u) [DecidableEq n] [Fintypeₓ n]
 
 variable (α : Type v) [CommRingₓ α] [StarRing α]
 
@@ -56,7 +56,7 @@ abbrev unitaryGroup :=
 
 end
 
-variable {n : Type u} [DecidableEq n] [Fintype n]
+variable {n : Type u} [DecidableEq n] [Fintypeₓ n]
 
 variable {α : Type v} [CommRingₓ α] [StarRing α]
 
@@ -144,17 +144,13 @@ def toLinearEquiv (A : unitaryGroup n α) : (n → α) ≃ₗ[α] n → α :=
   { Matrix.toLin' A with invFun := toLin' A⁻¹,
     left_inv := fun x =>
       calc
-        (toLin' A⁻¹).comp (toLin' A) x = (toLin' (A⁻¹ * A)) x := by
-          rw [← to_lin'_mul]
-        _ = x := by
-          rw [mul_left_invₓ, to_lin'_one, id_apply]
+        (toLin' A⁻¹).comp (toLin' A) x = (toLin' (A⁻¹ * A)) x := by rw [← to_lin'_mul]
+        _ = x := by rw [mul_left_invₓ, to_lin'_one, id_apply]
         ,
     right_inv := fun x =>
       calc
-        (toLin' A).comp (toLin' A⁻¹) x = toLin' (A * A⁻¹) x := by
-          rw [← to_lin'_mul]
-        _ = x := by
-          rw [mul_right_invₓ, to_lin'_one, id_apply]
+        (toLin' A).comp (toLin' A⁻¹) x = toLin' (A * A⁻¹) x := by rw [← to_lin'_mul]
+        _ = x := by rw [mul_right_invₓ, to_lin'_one, id_apply]
          }
 
 /-- `to_GL` is the map from the unitary group to the general linear group -/
@@ -179,9 +175,7 @@ theorem to_GL_mul (A B : unitaryGroup n α) : toGL (A * B) = toGL A * toGL B := 
 /-- `unitary_group.embedding_GL` is the embedding from `unitary_group n α`
 to `general_linear_group n α`. -/
 def embeddingGL : unitaryGroup n α →* GeneralLinearGroup α (n → α) :=
-  ⟨fun A => toGL A, by
-    simp , by
-    simp ⟩
+  ⟨fun A => toGL A, by simp, by simp⟩
 
 end UnitaryGroup
 

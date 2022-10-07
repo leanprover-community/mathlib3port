@@ -21,6 +21,8 @@ that all standard intervals are `ord_connected`.
 
 open Interval
 
+open OrderDual (toDual ofDual)
+
 namespace Set
 
 section Preorderₓ
@@ -56,10 +58,10 @@ theorem ord_connected_of_Ioo {α : Type _} [PartialOrderₓ α] {s : Set α} (hs
   rw [← Ioc_insert_left hxy, ← Ioo_insert_right hxy']
   exact insert_subset.2 ⟨hx, insert_subset.2 ⟨hy, hs x hx y hy hxy'⟩⟩
 
-theorem OrdConnected.preimage_mono {f : β → α} (hs : OrdConnected s) (hf : Monotone f) : OrdConnected (f ⁻¹' s) :=
+theorem OrdConnected.preimage_mono {f : β → α} (hs : OrdConnected s) (hf : Monotoneₓ f) : OrdConnected (f ⁻¹' s) :=
   ⟨fun x hx y hy z hz => hs.out hx hy ⟨hf hz.1, hf hz.2⟩⟩
 
-theorem OrdConnected.preimage_anti {f : β → α} (hs : OrdConnected s) (hf : Antitone f) : OrdConnected (f ⁻¹' s) :=
+theorem OrdConnected.preimage_anti {f : β → α} (hs : OrdConnected s) (hf : Antitoneₓ f) : OrdConnected (f ⁻¹' s) :=
   ⟨fun x hx y hy z hz => hs.out hy hx ⟨hf hz.2, hf hz.1⟩⟩
 
 protected theorem Icc_subset (s : Set α) [hs : OrdConnected s] {x y} (hx : x ∈ s) (hy : y ∈ s) : Icc x y ⊆ s :=
@@ -75,8 +77,7 @@ theorem OrdConnected.dual {s : Set α} (hs : OrdConnected s) : OrdConnected (Ord
   ⟨fun x hx y hy z hz => hs.out hy hx ⟨hz.2, hz.1⟩⟩
 
 theorem ord_connected_dual {s : Set α} : OrdConnected (OrderDual.ofDual ⁻¹' s) ↔ OrdConnected s :=
-  ⟨fun h => by
-    simpa only [ord_connected_def] using h.dual, fun h => h.dual⟩
+  ⟨fun h => by simpa only [ord_connected_def] using h.dual, fun h => h.dual⟩
 
 theorem ord_connected_sInter {S : Set (Set α)} (hS : ∀ s ∈ S, OrdConnected s) : OrdConnected (⋂₀ S) :=
   ⟨fun x hx y hy => subset_sInter fun s hs => (hS s hs).out (hx s hs) (hy s hs)⟩
@@ -152,16 +153,28 @@ instance [DenselyOrdered α] {s : Set α} [hs : OrdConnected s] : DenselyOrdered
     ⟨⟨x, (hs.out a.2 b.2) (Ioo_subset_Icc_self H)⟩, H⟩⟩
 
 @[instance]
+theorem ord_connected_preimage {F : Type _} [OrderHomClass F α β] (f : F) {s : Set β} [hs : OrdConnected s] :
+    OrdConnected (f ⁻¹' s) :=
+  ⟨fun x hx y hy z hz => hs.out hx hy ⟨OrderHomClass.mono _ hz.1, OrderHomClass.mono _ hz.2⟩⟩
+
+@[instance]
 theorem ord_connected_image {E : Type _} [OrderIsoClass E α β] (e : E) {s : Set α} [hs : OrdConnected s] :
     OrdConnected (e '' s) := by
-  constructor
-  rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ z ⟨hxz, hzy⟩
-  exact
-    ⟨EquivLike.inv e z, hs.out hx hy ⟨(le_map_inv_iff e).mpr hxz, (map_inv_le_iff e).mpr hzy⟩, EquivLike.right_inv e z⟩
+  erw [(e : α ≃o β).image_eq_preimage]
+  apply ord_connected_preimage
 
 @[instance]
 theorem ord_connected_range {E : Type _} [OrderIsoClass E α β] (e : E) : OrdConnected (Range e) := by
   simp_rw [← image_univ, ord_connected_image e]
+
+@[simp]
+theorem dual_ord_connected_iff {s : Set α} : OrdConnected (of_dual ⁻¹' s) ↔ OrdConnected s := by
+  simp_rw [ord_connected_def, to_dual.surjective.forall, dual_Icc, Subtype.forall']
+  exact forall_swap
+
+@[instance]
+theorem dual_ord_connected {s : Set α} [OrdConnected s] : OrdConnected (of_dual ⁻¹' s) :=
+  dual_ord_connected_iff.2 ‹_›
 
 end Preorderₓ
 
@@ -186,13 +199,16 @@ theorem OrdConnected.interval_oc_subset (hs : OrdConnected s) ⦃x⦄ (hx : x �
 theorem ord_connected_iff_interval_subset : OrdConnected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), [x, y] ⊆ s :=
   ⟨fun h => h.interval_subset, fun H => ⟨fun x hx y hy => Icc_subset_interval.trans <| H hx hy⟩⟩
 
-theorem ord_connected_iff_interval_subset_left (hx : x ∈ s) : OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [x, y] ⊆ s := by
-  refine' ⟨fun hs => hs.interval_subset hx, fun hs => ord_connected_iff_interval_subset.2 fun y hy z hz => _⟩
-  suffices h : [y, x] ∪ [x, z] ⊆ s
-  · exact interval_subset_interval_union_interval.trans h
-    
-  rw [interval_swap, union_subset_iff]
-  exact ⟨hs hy, hs hz⟩
+theorem ord_connected_of_interval_subset_left (h : ∀ y ∈ s, [x, y] ⊆ s) : OrdConnected s :=
+  ord_connected_iff_interval_subset.2 fun y hy z hz =>
+    calc
+      [y, z] ⊆ [y, x] ∪ [x, z] := interval_subset_interval_union_interval
+      _ = [x, y] ∪ [x, z] := by rw [interval_swap]
+      _ ⊆ s := union_subset (h y hy) (h z hz)
+      
+
+theorem ord_connected_iff_interval_subset_left (hx : x ∈ s) : OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [x, y] ⊆ s :=
+  ⟨fun hs => hs.interval_subset hx, ord_connected_of_interval_subset_left⟩
 
 theorem ord_connected_iff_interval_subset_right (hx : x ∈ s) : OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [y, x] ⊆ s := by
   simp_rw [ord_connected_iff_interval_subset_left hx, interval_swap]

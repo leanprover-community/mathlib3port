@@ -96,8 +96,7 @@ theorem duplicate_cons_iff {y : α} : x ∈+ y :: l ↔ y = x ∧ x ∈ l ∨ x 
 theorem Duplicate.of_duplicate_cons {y : α} (h : x ∈+ y :: l) (hx : x ≠ y) : x ∈+ l := by
   simpa [duplicate_cons_iff, hx.symm] using h
 
-theorem duplicate_cons_iff_of_ne {y : α} (hne : x ≠ y) : x ∈+ y :: l ↔ x ∈+ l := by
-  simp [duplicate_cons_iff, hne.symm]
+theorem duplicate_cons_iff_of_ne {y : α} (hne : x ≠ y) : x ∈+ y :: l ↔ x ∈+ l := by simp [duplicate_cons_iff, hne.symm]
 
 theorem Duplicate.mono_sublist {l' : List α} (hx : x ∈+ l) (h : l <+ l') : x ∈+ l' := by
   induction' h with l₁ l₂ y h IH l₁ l₂ y h IH
@@ -118,7 +117,7 @@ theorem duplicate_iff_sublist : x ∈+ l ↔ [x, x] <+ l := by
   induction' l with y l IH
   · simp
     
-  · by_cases' hx : x = y
+  · by_cases hx:x = y
     · simp [hx, cons_sublist_cons_iff, singleton_sublist]
       
     · rw [duplicate_cons_iff_of_ne hx, IH]
@@ -134,8 +133,7 @@ theorem duplicate_iff_sublist : x ∈+ l ↔ [x, x] <+ l := by
 theorem nodup_iff_forall_not_duplicate : Nodupₓ l ↔ ∀ x : α, ¬x ∈+ l := by
   simp_rw [nodup_iff_sublist, duplicate_iff_sublist]
 
-theorem exists_duplicate_iff_not_nodup : (∃ x : α, x ∈+ l) ↔ ¬Nodupₓ l := by
-  simp [nodup_iff_forall_not_duplicate]
+theorem exists_duplicate_iff_not_nodup : (∃ x : α, x ∈+ l) ↔ ¬Nodupₓ l := by simp [nodup_iff_forall_not_duplicate]
 
 theorem Duplicate.not_nodup (h : x ∈+ l) : ¬Nodupₓ l := fun H => nodup_iff_forall_not_duplicate.mp H _ h
 
@@ -149,10 +147,7 @@ instance decidableDuplicate [DecidableEq α] (x : α) : ∀ l : List α, Decidab
     | is_true h => isTrue (h.duplicate_cons y)
     | is_false h =>
       if hx : y = x ∧ x ∈ l then isTrue (hx.left.symm ▸ hx.right.duplicate_cons_self)
-      else
-        isFalse
-          (by
-            simpa [duplicate_cons_iff, h] using hx)
+      else isFalse (by simpa [duplicate_cons_iff, h] using hx)
 
 end List
 

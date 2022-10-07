@@ -167,7 +167,7 @@ theorem bdd_above_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.a
 
 theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (n₁ n₂ : ℕ) (x : X) :
     c₂.approx n₂ x ≤ c₁.approx n₁ x := by
-  by_cases' hx : x ∈ c₁.U
+  by_cases hx:x ∈ c₁.U
   · calc
       approx n₂ c₂ x = 0 := approx_of_mem_C _ _ (h hx)
       _ ≤ approx n₁ c₁ x := approx_nonneg _ _ _
@@ -198,7 +198,7 @@ theorem approx_le_succ (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ c.approx 
     exact midpoint_le_midpoint (ihn _) (ihn _)
     
 
-theorem approx_mono (c : CU X) (x : X) : Monotone fun n => c.approx n x :=
+theorem approx_mono (c : CU X) (x : X) : Monotoneₓ fun n => c.approx n x :=
   monotone_nat_of_le_succ fun n => c.approx_le_succ n x
 
 /-- A continuous function `f : X → ℝ` such that
@@ -237,8 +237,7 @@ theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=
 
 /-- Continuity of `urysohns.CU.lim`. See module docstring for a sketch of the proofs. -/
 theorem continuous_lim (c : CU X) : Continuous c.lim := by
-  obtain ⟨h0, h1234, h1⟩ : 0 < (2⁻¹ : ℝ) ∧ (2⁻¹ : ℝ) < 3 / 4 ∧ (3 / 4 : ℝ) < 1 := by
-    norm_num
+  obtain ⟨h0, h1234, h1⟩ : 0 < (2⁻¹ : ℝ) ∧ (2⁻¹ : ℝ) < 3 / 4 ∧ (3 / 4 : ℝ) < 1 := by norm_num
   refine'
     continuous_iff_continuous_at.2 fun x =>
       (Metric.nhds_basis_closed_ball_pow (h0.trans h1234) h1).tendsto_right_iff.2 fun n _ => _
@@ -248,7 +247,7 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
     rw [pow_zeroₓ]
     exact Real.dist_le_of_mem_Icc_01 (c.lim_mem_Icc _) (c.lim_mem_Icc _)
     
-  · by_cases' hxl : x ∈ c.left.U
+  · by_cases hxl:x ∈ c.left.U
     · filter_upwards [IsOpen.mem_nhds c.left.open_U hxl, ihn c.left] with _ hyl hyd
       rw [pow_succₓ, c.lim_eq_midpoint, c.lim_eq_midpoint, c.right.lim_of_mem_C _ (c.left_U_subset_right_C hyl),
         c.right.lim_of_mem_C _ (c.left_U_subset_right_C hxl)]

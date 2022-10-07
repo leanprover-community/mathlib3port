@@ -83,7 +83,7 @@ def eval : M →ₗ[R] Dual R (Dual R M) :=
 
 @[simp]
 theorem eval_apply (v : M) (a : Dual R M) : eval R M v a = a v := by
-  dunfold eval
+  dsimp only [eval]
   rw [LinearMap.flip_apply, LinearMap.id_apply]
 
 variable {R M} {M' : Type _} [AddCommMonoidₓ M'] [Module R M']
@@ -133,7 +133,7 @@ theorem to_dual_apply (i j : ι) : b.toDual (b i) (b j) = if i = j then 1 else 0
 @[simp]
 theorem to_dual_total_left (f : ι →₀ R) (i : ι) : b.toDual (Finsupp.total ι M R b f) (b i) = f i := by
   rw [Finsupp.total_apply, Finsupp.sum, LinearMap.map_sum, LinearMap.sum_apply]
-  simp_rw [LinearMap.map_smul, LinearMap.smul_apply, to_dual_apply, smul_eq_mul, mul_boole, Finset.sum_ite_eq']
+  simp_rw [LinearMap.map_smul, LinearMap.smul_apply, to_dual_apply, smul_eq_mul, mul_boole, Finsetₓ.sum_ite_eq']
   split_ifs with h
   · rfl
     
@@ -143,7 +143,7 @@ theorem to_dual_total_left (f : ι →₀ R) (i : ι) : b.toDual (Finsupp.total 
 @[simp]
 theorem to_dual_total_right (f : ι →₀ R) (i : ι) : b.toDual (b i) (Finsupp.total ι M R b f) = f i := by
   rw [Finsupp.total_apply, Finsupp.sum, LinearMap.map_sum]
-  simp_rw [LinearMap.map_smul, to_dual_apply, smul_eq_mul, mul_boole, Finset.sum_ite_eq]
+  simp_rw [LinearMap.map_smul, to_dual_apply, smul_eq_mul, mul_boole, Finsetₓ.sum_ite_eq]
   split_ifs with h
   · rfl
     
@@ -170,7 +170,7 @@ theorem to_dual_flip_apply (m₁ m₂ : M) : b.toDualFlip m₁ m₂ = b.toDual m
 theorem to_dual_eq_repr (m : M) (i : ι) : b.toDual m (b i) = b.repr m i :=
   b.to_dual_apply_left m i
 
-theorem to_dual_eq_equiv_fun [Fintype ι] (m : M) (i : ι) : b.toDual m (b i) = b.equivFun m i := by
+theorem to_dual_eq_equiv_fun [Fintypeₓ ι] (m : M) (i : ι) : b.toDual m (b i) = b.equivFun m i := by
   rw [b.equiv_fun_apply, to_dual_eq_repr]
 
 theorem to_dual_inj (m : M) (a : b.toDual m = 0) : m = 0 := by
@@ -196,7 +196,7 @@ end CommSemiringₓ
 
 section
 
-variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [Fintype ι]
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [Fintypeₓ ι]
 
 variable (b : Basis ι R M)
 
@@ -235,8 +235,8 @@ theorem dual_basis_apply_self (i j : ι) : b.dualBasis i (b j) = if j = i then 1
 theorem total_dual_basis (f : ι →₀ R) (i : ι) : Finsupp.total ι (Dual R M) R b.dualBasis f (b i) = f i := by
   cases nonempty_fintype ι
   rw [Finsupp.total_apply, Finsupp.sum_fintype, LinearMap.sum_apply]
-  · simp_rw [LinearMap.smul_apply, smul_eq_mul, dual_basis_apply_self, mul_boole, Finset.sum_ite_eq,
-      if_pos (Finset.mem_univ i)]
+  · simp_rw [LinearMap.smul_apply, smul_eq_mul, dual_basis_apply_self, mul_boole, Finsetₓ.sum_ite_eq,
+      if_pos (Finsetₓ.mem_univ i)]
     
   · intro
     rw [zero_smul]
@@ -261,7 +261,7 @@ theorem to_dual_to_dual : b.dualBasis.toDual.comp b.toDual = Dual.eval R M := by
 
 end Finite
 
-theorem dual_basis_equiv_fun [Fintype ι] (l : Dual R M) (i : ι) : b.dualBasis.equivFun l i = l (b i) := by
+theorem dual_basis_equiv_fun [Fintypeₓ ι] (l : Dual R M) (i : ι) : b.dualBasis.equivFun l i = l (b i) := by
   rw [Basis.equiv_fun_apply, dual_basis_repr]
 
 theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ := by
@@ -334,9 +334,9 @@ theorem eval_ker : (eval K V).ker = ⊥ := by
 theorem dual_dim_eq [FiniteDimensional K V] : Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) :=
   (Basis.ofVectorSpace K V).dual_dim_eq
 
-theorem erange_coe [FiniteDimensional K V] : (eval K V).range = ⊤ := by
+theorem erange_coe [FiniteDimensional K V] : (eval K V).range = ⊤ :=
   letI : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
-  exact (Basis.ofVectorSpace K V).eval_range
+  (Basis.ofVectorSpace K V).eval_range
 
 variable (K V)
 
@@ -365,7 +365,7 @@ variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [DecidableEq ι]
 structure Module.DualBases (e : ι → M) (ε : ι → Dual R M) where
   eval : ∀ i j : ι, ε i (e j) = if i = j then 1 else 0
   Total : ∀ {m : M}, (∀ i, ε i m = 0) → m = 0
-  [Finite : ∀ m : M, Fintype { i | ε i m ≠ 0 }]
+  [Finite : ∀ m : M, Fintypeₓ { i | ε i m ≠ 0 }]
 
 end DualBases
 
@@ -382,9 +382,9 @@ variable {e : ι → M} {ε : ι → Dual R M}
 /-- The coefficients of `v` on the basis `e` -/
 def coeffs [DecidableEq ι] (h : DualBases e ε) (m : M) : ι →₀ R where
   toFun := fun i => ε i m
-  support := by
+  support :=
     haveI := h.finite m
-    exact { i : ι | ε i m ≠ 0 }.toFinset
+    { i : ι | ε i m ≠ 0 }.toFinset
   mem_support_to_fun := by
     intro i
     rw [Set.mem_to_finset]
@@ -411,7 +411,7 @@ include h
 theorem dual_lc (l : ι →₀ R) (i : ι) : ε i (DualBases.lc e l) = l i := by
   erw [LinearMap.map_sum]
   simp only [h.eval, map_smul, smul_eq_mul]
-  rw [Finset.sum_eq_single i]
+  rw [Finsetₓ.sum_eq_single i]
   · simp
     
   · intro q q_in q_ne
@@ -460,10 +460,9 @@ theorem mem_of_mem_span {H : Set ι} {x : M} (hmem : x ∈ Submodule.span R (e '
   apply not_imp_comm.mp ((Finsupp.mem_supported' _ _).mp supp_l i)
   rwa [← lc_def, h.dual_lc] at hi
 
-theorem coe_dual_basis [Fintype ι] : ⇑h.Basis.dualBasis = ε :=
+theorem coe_dual_basis [Fintypeₓ ι] : ⇑h.Basis.dualBasis = ε :=
   funext fun i =>
-    h.Basis.ext fun j => by
-      rw [h.basis.dual_basis_apply_self, h.coe_basis, h.eval, if_congr eq_comm rfl rfl]
+    h.Basis.ext fun j => by rw [h.basis.dual_basis_apply_self, h.coe_basis, h.eval, if_congr eq_comm rfl rfl]
 
 end Module.DualBases
 
@@ -595,8 +594,7 @@ open FiniteDimensional
 
 variable {V₁ : Type _} [AddCommGroupₓ V₁] [Module K V₁]
 
-instance [H : FiniteDimensional K V] : FiniteDimensional K (Module.Dual K V) := by
-  infer_instance
+instance [H : FiniteDimensional K V] : FiniteDimensional K (Module.Dual K V) := by infer_instance
 
 variable [FiniteDimensional K V] [FiniteDimensional K V₁]
 
@@ -780,7 +778,7 @@ variable {ι κ : Type _}
 
 variable [DecidableEq ι] [DecidableEq κ]
 
-variable [Fintype ι] [Fintype κ]
+variable [Fintypeₓ ι] [Fintypeₓ κ]
 
 open BigOperators
 

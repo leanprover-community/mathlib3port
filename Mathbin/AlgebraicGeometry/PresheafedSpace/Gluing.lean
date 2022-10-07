@@ -144,13 +144,13 @@ theorem f_inv_app_f_app (i j k : D.J) (U : Opens (D.V (i, j)).Carrier) :
           (D.V _).Presheaf.map
             (eqToHom
               (by
-                delta' is_open_immersion.open_functor
-                dsimp' only [functor.op, IsOpenMap.functor, opens.map, unop_op]
+                delta is_open_immersion.open_functor
+                dsimp only [functor.op, IsOpenMap.functor, opens.map, unop_op]
                 congr
                 apply pullback_base)) :=
   by
   have := PresheafedSpace.congr_app (@pullback.condition _ _ _ _ _ (D.f i j) (D.f i k) _)
-  dsimp' only [comp_c_app]  at this
+  dsimp only [comp_c_app] at this
   rw [← cancel_epi (inv ((D.f_open i j).invApp U)), is_iso.inv_hom_id_assoc, is_open_immersion.inv_inv_app]
   simp_rw [category.assoc]
   erw [(π₁ i, j, k).c.naturality_assoc, reassoc_of this, ← functor.map_comp_assoc,
@@ -204,7 +204,7 @@ theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).Carrier) :
     (Opens.map (𝖣.ι j).base).obj ((D.ι_open_embedding i).IsOpenMap.Functor.obj U) =
       (D.f_open j i).openFunctor.obj ((Opens.map (𝖣.t j i).base).obj ((Opens.map (𝖣.f i j).base).obj U)) :=
   by
-  dsimp' only [opens.map, IsOpenMap.functor]
+  dsimp only [opens.map, IsOpenMap.functor]
   congr 1
   rw [← show _ = (𝖣.ι i).base from 𝖣.ι_glued_iso_inv (PresheafedSpace.forget _) i, ←
     show _ = (𝖣.ι j).base from 𝖣.ι_glued_iso_inv (PresheafedSpace.forget _) j, coe_comp, coe_comp, Set.image_comp,
@@ -239,14 +239,14 @@ theorem opens_image_preimage_map_app' (i j k : D.J) (U : Opens (D.U i).Carrier) 
           (π₂⁻¹ j, i, k) (unop _) ≫ (D.V (j, k)).Presheaf.map (eqToHom Eq) :=
   by
   constructor
-  delta' opens_image_preimage_map
+  delta opens_image_preimage_map
   simp_rw [category.assoc]
   rw [(D.f j k).c.naturality, f_inv_app_f_app_assoc]
   erw [← (D.V (j, k)).Presheaf.map_comp]
   simp_rw [← category.assoc]
   erw [← comp_c_app, ← comp_c_app]
   simp_rw [category.assoc]
-  dsimp' only [functor.op, unop_op, Quiver.Hom.unop_op]
+  dsimp only [functor.op, unop_op, Quiver.Hom.unop_op]
   rw [eq_to_hom_map (opens.map _), eq_to_hom_op, eq_to_hom_trans]
   congr
 
@@ -263,8 +263,7 @@ theorem opens_image_preimage_map_app_assoc (i j k : D.J) (U : Opens (D.U i).Carr
       ((π₁ j, i, k) ≫ D.t j i ≫ D.f i j).c.app (op U) ≫
         (π₂⁻¹ j, i, k) (unop _) ≫
           (D.V (j, k)).Presheaf.map (eqToHom (opens_image_preimage_map_app' D i j k U).some) ≫ f' :=
-  by
-  simpa only [category.assoc] using congr_arg (fun g => g ≫ f') (opens_image_preimage_map_app D i j k U)
+  by simpa only [category.assoc] using congr_arg (fun g => g ≫ f') (opens_image_preimage_map_app D i j k U)
 
 /-- (Implementation) Given an open subset of one of the spaces `U ⊆ Uᵢ`, the sheaf component of
 the image `ι '' U` in the glued space is the limit of this diagram. -/
@@ -282,7 +281,7 @@ def ιInvAppπApp {i : D.J} (U : Opens (D.U i).Carrier) (j) :
     (𝖣.U i).Presheaf.obj (op U) ⟶ (D.diagramOverOpen U).obj (op j) := by
   rcases j with (⟨j, k⟩ | j)
   · refine' D.opens_image_preimage_map i j U ≫ (D.f j k).c.app _ ≫ (D.V (j, k)).Presheaf.map (eq_to_hom _)
-    dsimp' only [functor.op, opens.map, unop_op]
+    dsimp only [functor.op, opens.map, unop_op]
     congr 2
     rw [Set.preimage_preimage]
     change (D.f j k ≫ 𝖣.ι j).base ⁻¹' _ = _
@@ -346,18 +345,17 @@ def ιInvApp {i : D.J} (U : Opens (D.U i).Carrier) : (D.U i).Presheaf.obj (op U)
             simp_rw [category.assoc]
             erw [is_open_immersion.inv_naturality_assoc, is_open_immersion.inv_naturality_assoc,
               is_open_immersion.inv_naturality_assoc, is_open_immersion.app_inv_app_assoc]
-            repeat'
-              erw [← (D.V (j, k)).Presheaf.map_comp]
+            repeat' erw [← (D.V (j, k)).Presheaf.map_comp]
             congr } }
 
 /-- `ι_inv_app` is the left inverse of `D.ι i` on `U`. -/
 theorem ι_inv_app_π {i : D.J} (U : Opens (D.U i).Carrier) :
     ∃ eq, D.ιInvApp U ≫ D.diagramOverOpenπ U i = (D.U i).Presheaf.map (eqToHom Eq) := by
   constructor
-  delta' ι_inv_app
+  delta ι_inv_app
   rw [limit.lift_π]
   change D.opens_image_preimage_map i i U = _
-  dsimp' [opens_image_preimage_map]
+  dsimp [opens_image_preimage_map]
   rw [congr_app (D.t_id _), id_c_app, ← functor.map_comp]
   erw [is_open_immersion.inv_naturality_assoc, is_open_immersion.app_inv_app'_assoc]
   simp only [eq_to_hom_op, eq_to_hom_trans, eq_to_hom_map (functor.op _), ← functor.map_comp]
@@ -387,8 +385,7 @@ theorem π_ι_inv_app_π (i j : D.J) (U : Opens (D.U i).Carrier) :
   simp_rw [category.assoc]
   rw [← functor.map_comp_assoc, is_open_immersion.inv_naturality_assoc]
   erw [is_open_immersion.app_inv_app_assoc]
-  iterate 3 
-    rw [← functor.map_comp_assoc]
+  iterate 3 rw [← functor.map_comp_assoc]
   rw [nat_trans.naturality_assoc]
   erw [← (D.V (i, j)).Presheaf.map_comp]
   convert limit.w (componentwise_diagram 𝖣.diagram.multispan _) (Quiver.Hom.op (walking_multispan.hom.fst (i, j)))
@@ -398,8 +395,7 @@ theorem π_ι_inv_app_π (i j : D.J) (U : Opens (D.U i).Carrier) :
     rw [comp_c_app]
     apply (config := { instances := false }) mono_comp
     erw [D.ι_image_preimage_eq i j U]
-    all_goals
-      infer_instance
+    all_goals infer_instance
     
 
 /-- `ι_inv_app` is the inverse of `D.ι i` on `U`. -/
@@ -591,7 +587,7 @@ theorem ι_iso_SheafedSpace_inv (i : D.J) :
   𝖣.ι_glued_iso_inv forgetToSheafedSpace i
 
 instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
-  delta' is_open_immersion
+  delta is_open_immersion
   rw [← D.ι_iso_SheafedSpace_inv]
   apply PresheafedSpace.is_open_immersion.comp
 

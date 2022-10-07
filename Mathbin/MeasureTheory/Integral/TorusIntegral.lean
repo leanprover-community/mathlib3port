@@ -151,7 +151,7 @@ theorem function_integrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
   refine' (hf.norm.const_mul (∏ i, abs (R i))).mono' _ _
   · refine' (Continuous.ae_strongly_measurable _).smul hf.1
     exact
-      continuous_finset_prod Finset.univ fun i hi =>
+      continuous_finset_prod Finsetₓ.univ fun i hi =>
         (continuous_const.mul ((continuous_of_real.comp (continuous_apply i)).mul continuous_const).cexp).mul
           continuous_const
     
@@ -202,10 +202,9 @@ theorem norm_torus_integral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ∥f (to
         calc
           ∥(∏ i : Finₓ n, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)∥ =
               (∏ i : Finₓ n, abs (R i)) * ∥f (torusMap c R θ)∥ :=
-            by
-            simp [norm_smul]
+            by simp [norm_smul]
           _ ≤ (∏ i : Finₓ n, abs (R i)) * C :=
-            mul_le_mul_of_nonneg_left (hf _) (Finset.prod_nonneg fun _ _ => abs_nonneg _)
+            mul_le_mul_of_nonneg_left (hf _) (Finsetₓ.prod_nonneg fun _ _ => abs_nonneg _)
           
     _ = ((2 * π) ^ (n : ℕ) * ∏ i, abs (R i)) * C := by
       simp only [Pi.zero_def, Real.volume_Icc_pi_to_real fun _ => real.two_pi_pos.le, sub_zero, Finₓ.prod_const,

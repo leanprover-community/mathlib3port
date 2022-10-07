@@ -46,8 +46,7 @@ inductive Lex (r : α → α → Prop) : List α → List α → Prop
 namespace Lex
 
 theorem cons_iff {r : α → α → Prop} [IsIrrefl α r] {a l₁ l₂} : Lex r (a :: l₁) (a :: l₂) ↔ Lex r l₁ l₂ :=
-  ⟨fun h => by
-    cases' h with _ _ _ _ _ h _ _ _ _ h <;> [exact h, exact (irrefl_of r a h).elim], Lex.cons⟩
+  ⟨fun h => by cases' h with _ _ _ _ _ h _ _ _ _ h <;> [exact h, exact (irrefl_of r a h).elim], Lex.cons⟩
 
 @[simp]
 theorem not_nil_right (r : α → α → Prop) (l : List α) : ¬Lex r l [] :=
@@ -98,9 +97,7 @@ instance is_strict_total_order (r : α → α → Prop) [IsStrictTotalOrder α r
   { is_strict_weak_order_of_is_order_connected with }
 
 instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r] : DecidableRel (Lex r)
-  | l₁, [] =>
-    is_false fun h => by
-      cases h
+  | l₁, [] => is_false fun h => by cases h
   | [], b :: l₂ => isTrue Lex.nil
   | a :: l₁, b :: l₂ => by
     haveI := DecidableRel l₁ l₂
@@ -146,7 +143,7 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
       
     · exact (not_lt_of_geₓ H).elim (succ_pos _)
       
-    · by_cases' ab : a = b
+    · by_cases ab:a = b
       · subst b
         apply cons
         exact IH (le_of_succ_le_succ H) (mt (congr_arg _) h)

@@ -94,7 +94,7 @@ instance {n : ℕ} : IsEmpty (Sequence₂ a₀ a₁ a₂ (n + 3)) :=
 @[simp]
 theorem lift_mk {i : ℕ} : Cardinal.lift (#Sequence₂ a₀ a₁ a₂ i) = (#Sequence₂ (ULift a₀) (ULift a₁) (ULift a₂) i) := by
   rcases i with (_ | _ | _ | i) <;>
-    simp only [sequence₂, mk_ulift, mk_fintype, Fintype.card_of_is_empty, Nat.cast_zeroₓ, lift_zero]
+    simp only [sequence₂, mk_ulift, mk_fintype, Fintypeₓ.card_of_is_empty, Nat.cast_zeroₓ, lift_zero]
 
 @[simp]
 theorem sum_card : (Cardinal.sum fun i => #Sequence₂ a₀ a₁ a₂ i) = (#a₀) + (#a₁) + (#a₂) := by
@@ -142,14 +142,6 @@ def Symbols :=
 def card : Cardinal :=
   #L.Symbols
 
-/-- A language is countable when it has countably many symbols. -/
-@[protected]
-class Countable : Prop where
-  card_le_aleph_0' : L.card ≤ ℵ₀
-
-theorem card_le_aleph_0 [L.Countable] : L.card ≤ ℵ₀ :=
-  countable.card_le_aleph_0'
-
 /-- A language is relational when it has no function symbols. -/
 class IsRelational : Prop where
   empty_functions : ∀ n, IsEmpty (L.Functions n)
@@ -158,21 +150,13 @@ class IsRelational : Prop where
 class IsAlgebraic : Prop where
   empty_relations : ∀ n, IsEmpty (L.Relations n)
 
-/-- A language is countable when it has countably many symbols. -/
-class CountableFunctions : Prop where
-  card_functions_le_aleph_0' : (#Σl, L.Functions l) ≤ ℵ₀
-
-theorem card_functions_le_aleph_0 [L.CountableFunctions] : (#Σl, L.Functions l) ≤ ℵ₀ :=
-  countable_functions.card_functions_le_aleph_0'
-
 variable {L} {L' : Language.{u', v'}}
 
 theorem card_eq_card_functions_add_card_relations :
     L.card =
       (Cardinal.sum fun l => Cardinal.lift.{v} (#L.Functions l)) +
         Cardinal.sum fun l => Cardinal.lift.{u} (#L.Relations l) :=
-  by
-  simp [card, symbols]
+  by simp [card, symbols]
 
 instance [L.IsRelational] {n : ℕ} : IsEmpty (L.Functions n) :=
   IsRelational.empty_functions n
@@ -215,38 +199,23 @@ instance subsingleton_mk₂_relations {c f₁ f₂ : Type u} {r₁ r₂ : Type v
   Nat.casesOn n ⟨fun x => Pempty.elimₓ x⟩ fun n =>
     Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => Pempty.elimₓ x⟩
 
-theorem Encodable.countable [Countable L.Symbols] : L.Countable :=
-  ⟨Cardinal.mk_le_aleph_0⟩
-
 @[simp]
-theorem empty_card : Language.empty.card = 0 := by
-  simp [card_eq_card_functions_add_card_relations]
+theorem empty_card : Language.empty.card = 0 := by simp [card_eq_card_functions_add_card_relations]
 
-instance countable_empty : Language.empty.Countable :=
-  ⟨by
-    simp ⟩
+instance is_empty_empty : IsEmpty Language.empty.Symbols := by
+  simp only [language.symbols, is_empty_sum, is_empty_sigma]
+  exact ⟨fun _ => inferInstance, fun _ => inferInstance⟩
 
-instance (priority := 100) Countable.countable_functions [L.Countable] : L.CountableFunctions :=
-  ⟨by
-    refine' lift_le_aleph_0.1 (trans _ L.card_le_aleph_0)
-    rw [card, symbols, mk_sum]
-    exact le_self_add⟩
-
-theorem Encodable.countable_functions [h : Encodable (Σl, L.Functions l)] : L.CountableFunctions :=
-  ⟨Cardinal.mk_le_aleph_0⟩
-
-instance (priority := 100) IsRelational.countable_functions [L.IsRelational] : L.CountableFunctions :=
-  encodable.countable_functions
+instance Countable.countable_functions [h : Countable L.Symbols] : Countable (Σl, L.Functions l) :=
+  @Function.Injective.countable _ _ h _ Sum.inl_injective
 
 @[simp]
 theorem card_functions_sum (i : ℕ) :
-    (#(L.Sum L').Functions i) = (#L.Functions i).lift + Cardinal.lift.{u} (#L'.Functions i) := by
-  simp [language.sum]
+    (#(L.Sum L').Functions i) = (#L.Functions i).lift + Cardinal.lift.{u} (#L'.Functions i) := by simp [language.sum]
 
 @[simp]
 theorem card_relations_sum (i : ℕ) :
-    (#(L.Sum L').Relations i) = (#L.Relations i).lift + Cardinal.lift.{v} (#L'.Relations i) := by
-  simp [language.sum]
+    (#(L.Sum L').Relations i) = (#L.Relations i).lift + Cardinal.lift.{v} (#L'.Relations i) := by simp [language.sum]
 
 @[simp]
 theorem card_sum : (L.Sum L').card = Cardinal.lift.{max u' v'} L.card + Cardinal.lift.{max u v} L'.card := by
@@ -260,8 +229,7 @@ theorem card_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) :
     (Language.mk₂ c f₁ f₂ r₁ r₂).card =
       Cardinal.lift.{v} (#c) + Cardinal.lift.{v} (#f₁) + Cardinal.lift.{v} (#f₂) + Cardinal.lift.{u} (#r₁) +
         Cardinal.lift.{u} (#r₂) :=
-  by
-  simp [card_eq_card_functions_add_card_relations, add_assocₓ]
+  by simp [card_eq_card_functions_add_card_relations, add_assocₓ]
 
 variable (L) (M : Type w)
 
@@ -279,7 +247,7 @@ variable (N : Type w') [L.Structure M] [L.Structure N]
 open Structure
 
 /-- Used for defining `first_order.language.Theory.Model.inhabited`. -/
-def trivialUnitStructure : L.Structure Unit :=
+def inhabited.trivialStructure {α : Type _} [Inhabited α] : L.Structure α :=
   ⟨default, default⟩
 
 /-! ### Maps -/
@@ -290,26 +258,17 @@ def trivialUnitStructure : L.Structure Unit :=
   tuples in the second structure where that relation is still true. -/
 structure Hom where
   toFun : M → N
-  map_fun' : ∀ {n} (f : L.Functions n) (x), to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
-    run_tac
-      obviously
-  map_rel' : ∀ {n} (r : L.Relations n) (x), RelMap r x → RelMap r (to_fun ∘ x) := by
-    run_tac
-      obviously
+  map_fun' : ∀ {n} (f : L.Functions n) (x), to_fun (funMap f x) = funMap f (to_fun ∘ x) := by obviously
+  map_rel' : ∀ {n} (r : L.Relations n) (x), RelMap r x → RelMap r (to_fun ∘ x) := by obviously
 
 -- mathport name: language.hom
 localized [FirstOrder] notation:25 A " →[" L "] " B => FirstOrder.Language.Hom L A B
 
 /-- An embedding of first-order structures is an embedding that commutes with the
   interpretations of functions and relations. -/
-@[ancestor Function.Embedding]
 structure Embedding extends M ↪ N where
-  map_fun' : ∀ {n} (f : L.Functions n) (x), to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
-    run_tac
-      obviously
-  map_rel' : ∀ {n} (r : L.Relations n) (x), RelMap r (to_fun ∘ x) ↔ RelMap r x := by
-    run_tac
-      obviously
+  map_fun' : ∀ {n} (f : L.Functions n) (x), to_fun (funMap f x) = funMap f (to_fun ∘ x) := by obviously
+  map_rel' : ∀ {n} (r : L.Relations n) (x), RelMap r (to_fun ∘ x) ↔ RelMap r x := by obviously
 
 -- mathport name: language.embedding
 localized [FirstOrder] notation:25 A " ↪[" L "] " B => FirstOrder.Language.Embedding L A B
@@ -317,12 +276,8 @@ localized [FirstOrder] notation:25 A " ↪[" L "] " B => FirstOrder.Language.Emb
 /-- An equivalence of first-order structures is an equivalence that commutes with the
   interpretations of functions and relations. -/
 structure Equiv extends M ≃ N where
-  map_fun' : ∀ {n} (f : L.Functions n) (x), to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
-    run_tac
-      obviously
-  map_rel' : ∀ {n} (r : L.Relations n) (x), RelMap r (to_fun ∘ x) ↔ RelMap r x := by
-    run_tac
-      obviously
+  map_fun' : ∀ {n} (f : L.Functions n) (x), to_fun (funMap f x) = funMap f (to_fun ∘ x) := by obviously
+  map_rel' : ∀ {n} (r : L.Relations n) (x), RelMap r (to_fun ∘ x) ↔ RelMap r x := by obviously
 
 -- mathport name: language.equiv
 localized [FirstOrder] notation:25 A " ≃[" L "] " B => FirstOrder.Language.Equiv L A B
@@ -486,8 +441,7 @@ theorem id_apply (x : M) : id L M x = x :=
 @[trans]
 def comp (hnp : N →[L] P) (hmn : M →[L] N) : M →[L] P where
   toFun := hnp ∘ hmn
-  map_rel' := fun _ _ _ h => by
-    simp [h]
+  map_rel' := fun _ _ _ h => by simp [h]
 
 @[simp]
 theorem comp_apply (g : N →[L] P) (f : M →[L] N) (x : M) : g.comp f x = g (f x) :=
@@ -840,11 +794,8 @@ def inducedStructure (e : M ≃ N) : L.Structure N :=
 /-- A bijection as a first-order isomorphism with the induced structure on the codomain. -/
 @[simps]
 def inducedStructureEquiv (e : M ≃ N) : @Language.Equiv L M N _ (inducedStructure e) :=
-  { e with
-    map_fun' := fun n f x => by
-      simp [← Function.comp.assoc e.symm e x],
-    map_rel' := fun n r x => by
-      simp [← Function.comp.assoc e.symm e x] }
+  { e with map_fun' := fun n f x => by simp [← Function.comp.assoc e.symm e x],
+    map_rel' := fun n r x => by simp [← Function.comp.assoc e.symm e x] }
 
 end Equivₓ
 

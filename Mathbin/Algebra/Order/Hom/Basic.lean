@@ -6,6 +6,7 @@ Authors: Yaël Dillies
 import Mathbin.Algebra.Hom.Group
 import Mathbin.Algebra.Order.WithZero
 import Mathbin.Order.Hom.Basic
+import Mathbin.Tactic.Positivity
 
 /-!
 # Algebraic order homomorphism classes
@@ -57,7 +58,27 @@ export MulLeAddHomClass (map_mul_le_add)
 attribute [simp] map_nonneg
 
 @[to_additive]
+theorem le_map_mul_map_div [Groupₓ α] [CommSemigroupₓ β] [LE β] [SubmultiplicativeHomClass F α β] (f : F) (a b : α) :
+    f a ≤ f b * f (a / b) := by simpa only [mul_comm, div_mul_cancel'] using map_mul_le_mul f (a / b) b
+
+@[to_additive]
+theorem le_map_div_mul_map_div [Groupₓ α] [CommSemigroupₓ β] [LE β] [SubmultiplicativeHomClass F α β] (f : F)
+    (a b c : α) : f (a / c) ≤ f (a / b) * f (b / c) := by
+  simpa only [div_mul_div_cancel'] using map_mul_le_mul f (a / b) (b / c)
+
+@[to_additive]
 theorem le_map_add_map_div [Groupₓ α] [AddCommSemigroupₓ β] [LE β] [MulLeAddHomClass F α β] (f : F) (a b : α) :
-    f a ≤ f b + f (a / b) := by
-  simpa only [add_commₓ, div_mul_cancel'] using map_mul_le_add f (a / b) b
+    f a ≤ f b + f (a / b) := by simpa only [add_commₓ, div_mul_cancel'] using map_mul_le_add f (a / b) b
+
+namespace Tactic
+
+open Positivity
+
+/-- Extension for the `positivity` tactic: nonnegative maps take nonnegative values. -/
+@[positivity]
+unsafe def positivity_map : expr → tactic strictness
+  | expr.app (quote.1 ⇑(%%ₓf)) (quote.1 (%%ₓa)) => nonnegative <$> mk_app `` map_nonneg [f, a]
+  | _ => failed
+
+end Tactic
 

@@ -27,7 +27,7 @@ open Matrix Matrix.SpecialLinearGroup
 
 open Classical BigOperators MatrixGroups
 
-attribute [local instance] Fintype.card_fin_even
+attribute [local instance] Fintypeₓ.card_fin_even
 
 /- Disable this instances as it is not the simp-normal form, and having them disabled ensures
 we state lemmas in this file without spurious `coe_fn` terms. -/
@@ -53,8 +53,10 @@ localized [UpperHalfPlane] notation "ℍ" => UpperHalfPlane
 namespace UpperHalfPlane
 
 instance : Inhabited ℍ :=
-  ⟨⟨Complex.i, by
-      simp ⟩⟩
+  ⟨⟨Complex.i, by simp⟩⟩
+
+instance canLift : CanLift ℂ ℍ coe fun z => 0 < z.im :=
+  Subtype.canLift fun z => 0 < z.im
 
 /-- Imaginary part -/
 def im (z : ℍ) :=
@@ -139,8 +141,7 @@ theorem denom_ne_zero (g : GL(2, ℝ)⁺) (z : ℍ) : denom g z ≠ 0 := by
   have DET := (mem_GL_pos _).1 g.prop
   have hz := z.prop
   simp only [general_linear_group.coe_det_apply] at DET
-  have H1 : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0 := by
-    simpa using congr_arg Complex.im H
+  have H1 : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0 := by simpa using congr_arg Complex.im H
   cases H1
   · simp only [H1, Complex.of_real_zero, denom, coe_fn_eq_coe, zero_mul, zero_addₓ, Complex.of_real_eq_zero] at H
     rw [← coe_coe, Matrix.det_fin_two (↑g : Matrix (Finₓ 2) (Finₓ 2) ℝ)] at DET
@@ -164,8 +165,7 @@ def smulAux' (g : GL(2, ℝ)⁺) (z : ℍ) : ℂ :=
 theorem smul_aux'_im (g : GL(2, ℝ)⁺) (z : ℍ) : (smulAux' g z).im = det ↑ₘg * z.im / (denom g z).normSq := by
   rw [smul_aux', Complex.div_im]
   set NsqBot := (denom g z).normSq
-  have : NsqBot ≠ 0 := by
-    simp only [denom_ne_zero g z, map_eq_zero, Ne.def, not_false_iff]
+  have : NsqBot ≠ 0 := by simp only [denom_ne_zero g z, map_eq_zero, Ne.def, not_false_iff]
   field_simp [smul_aux', -coe_coe]
   rw [Matrix.det_fin_two ↑ₘg]
   ring
@@ -182,7 +182,7 @@ theorem denom_cocycle (x y : GL(2, ℝ)⁺) (z : ℍ) : denom (x * y) z = denom 
   change _ = (_ * (_ / _) + _) * _
   field_simp [denom_ne_zero, -denom, -Num]
   simp only [Matrix.mul, dot_product, Finₓ.sum_univ_succ, denom, Num, coe_coe, Subgroup.coe_mul,
-    general_linear_group.coe_mul, Fintype.univ_of_subsingleton, Finₓ.mk_zero, Finset.sum_singleton,
+    general_linear_group.coe_mul, Fintypeₓ.univ_of_subsingleton, Finₓ.mk_zero, Finsetₓ.sum_singleton,
     Finₓ.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
   ring
 
@@ -192,7 +192,7 @@ theorem mul_smul' (x y : GL(2, ℝ)⁺) (z : ℍ) : smulAux (x * y) z = smulAux 
   rw [denom_cocycle]
   field_simp [denom_ne_zero, -denom, -Num]
   simp only [Matrix.mul, dot_product, Finₓ.sum_univ_succ, Num, denom, coe_coe, Subgroup.coe_mul,
-    general_linear_group.coe_mul, Fintype.univ_of_subsingleton, Finₓ.mk_zero, Finset.sum_singleton,
+    general_linear_group.coe_mul, Fintypeₓ.univ_of_subsingleton, Finₓ.mk_zero, Finsetₓ.sum_singleton,
     Finₓ.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
   ring
 
@@ -298,10 +298,8 @@ theorem c_mul_im_sq_le_norm_sq_denom (z : ℍ) (g : SL(2, ℝ)) : ((↑ₘg 1 0 
   let c := (↑ₘg 1 0 : ℝ)
   let d := (↑ₘg 1 1 : ℝ)
   calc
-    (c * z.im) ^ 2 ≤ (c * z.im) ^ 2 + (c * z.re + d) ^ 2 := by
-      nlinarith
-    _ = Complex.normSq (denom g z) := by
-      simp [Complex.normSq] <;> ring
+    (c * z.im) ^ 2 ≤ (c * z.im) ^ 2 + (c * z.re + d) ^ 2 := by nlinarith
+    _ = Complex.normSq (denom g z) := by simp [Complex.normSq] <;> ring
     
 
 theorem SpecialLinearGroup.im_smul_eq_div_norm_sq : (g • z).im = z.im / Complex.normSq (denom g z) := by
@@ -310,10 +308,55 @@ theorem SpecialLinearGroup.im_smul_eq_div_norm_sq : (g • z).im = z.im / Comple
     (g : SL(2, ℝ)).Prop, one_mulₓ]
 
 theorem denom_apply (g : SL(2, ℤ)) (z : ℍ) :
-    denom g z = (↑g : Matrix (Finₓ 2) (Finₓ 2) ℤ) 1 0 * z + (↑g : Matrix (Finₓ 2) (Finₓ 2) ℤ) 1 1 := by
-  simp
+    denom g z = (↑g : Matrix (Finₓ 2) (Finₓ 2) ℤ) 1 0 * z + (↑g : Matrix (Finₓ 2) (Finₓ 2) ℤ) 1 1 := by simp
 
 end SLModularAction
+
+section PosRealAction
+
+instance posRealAction : MulAction { x : ℝ // 0 < x } ℍ where
+  smul := fun x z => mk ((x : ℝ) • z) <| by simpa using mul_pos x.2 z.2
+  one_smul := fun z => Subtype.ext <| one_smul _ _
+  mul_smul := fun x y z => Subtype.ext <| mul_smul (x : ℝ) y (z : ℂ)
+
+variable (x : { x : ℝ // 0 < x }) (z : ℍ)
+
+@[simp]
+theorem coe_pos_real_smul : ↑(x • z) = (x : ℝ) • (z : ℂ) :=
+  rfl
+
+@[simp]
+theorem pos_real_im : (x • z).im = x * z.im :=
+  Complex.smul_im _ _
+
+@[simp]
+theorem pos_real_re : (x • z).re = x * z.re :=
+  Complex.smul_re _ _
+
+end PosRealAction
+
+section RealAddAction
+
+instance : AddAction ℝ ℍ where
+  vadd := fun x z => mk (x + z) <| by simpa using z.im_pos
+  zero_vadd := fun z => Subtype.ext <| by simp
+  add_vadd := fun x y z => Subtype.ext <| by simp [add_assocₓ]
+
+variable (x : ℝ) (z : ℍ)
+
+@[simp]
+theorem coe_vadd : ↑(x +ᵥ z) = (x + z : ℂ) :=
+  rfl
+
+@[simp]
+theorem vadd_re : (x +ᵥ z).re = x + z.re :=
+  rfl
+
+@[simp]
+theorem vadd_im : (x +ᵥ z).im = z.im :=
+  zero_addₓ _
+
+end RealAddAction
 
 end UpperHalfPlane
 

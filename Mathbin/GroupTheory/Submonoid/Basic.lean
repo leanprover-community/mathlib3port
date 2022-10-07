@@ -78,14 +78,13 @@ attribute [to_additive] OneMemClass
 section
 
 /-- A submonoid of a monoid `M` is a subset containing 1 and closed under multiplication. -/
-@[ancestor Subsemigroup]
 structure Submonoid (M : Type _) [MulOneClassₓ M] extends Subsemigroup M where
   one_mem' : (1 : M) ∈ carrier
 
 end
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident submonoid.to_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident submonoid.to_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `1`
 and are closed under `(*)` -/
 class SubmonoidClass (S : Type _) (M : outParam <| Type _) [MulOneClassₓ M] [SetLike S M] extends MulMemClass S M where
@@ -95,14 +94,13 @@ section
 
 /-- An additive submonoid of an additive monoid `M` is a subset containing 0 and
   closed under addition. -/
-@[ancestor AddSubsemigroup]
 structure AddSubmonoid (M : Type _) [AddZeroClassₓ M] extends AddSubsemigroup M where
   zero_mem' : (0 : M) ∈ carrier
 
 end
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_submonoid.to_add_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_submonoid.to_add_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `add_submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `0`
 and are closed under `(+)` -/
 class AddSubmonoidClass (S : Type _) (M : outParam <| Type _) [AddZeroClassₓ M] [SetLike S M] extends
@@ -132,8 +130,7 @@ namespace Submonoid
 @[to_additive]
 instance : SetLike (Submonoid M) M where
   coe := Submonoid.Carrier
-  coe_injective' := fun p q h => by
-    cases p <;> cases q <;> congr
+  coe_injective' := fun p q h => by cases p <;> cases q <;> congr
 
 @[to_additive]
 instance : SubmonoidClass (Submonoid M) M where
@@ -252,12 +249,7 @@ instance : HasInfₓ (Submonoid M) :=
   ⟨fun s =>
     { Carrier := ⋂ t ∈ s, ↑t, one_mem' := Set.mem_bInter fun i h => i.one_mem,
       mul_mem' := fun x y hx hy =>
-        Set.mem_bInter fun i h =>
-          i.mul_mem
-            (by
-              apply Set.mem_Inter₂.1 hx i h)
-            (by
-              apply Set.mem_Inter₂.1 hy i h) }⟩
+        Set.mem_bInter fun i h => i.mul_mem (by apply Set.mem_Inter₂.1 hx i h) (by apply Set.mem_Inter₂.1 hy i h) }⟩
 
 @[simp, norm_cast, to_additive]
 theorem coe_Inf (S : Set (Submonoid M)) : ((inf S : Submonoid M) : Set M) = ⋂ s ∈ S, ↑s :=
@@ -291,11 +283,7 @@ theorem subsingleton_iff : Subsingleton (Submonoid M) ↔ Subsingleton M :=
     ⟨fun x y =>
       have : ∀ i : M, i = 1 := fun i => mem_bot.mp <| Subsingleton.elim (⊤ : Submonoid M) ⊥ ▸ mem_top i
       (this x).trans (this y).symm⟩,
-    fun h =>
-    ⟨fun x y =>
-      Submonoid.ext fun i =>
-        Subsingleton.elim 1 i ▸ by
-          simp [Submonoid.one_mem]⟩⟩
+    fun h => ⟨fun x y => Submonoid.ext fun i => Subsingleton.elim 1 i ▸ by simp [Submonoid.one_mem]⟩⟩
 
 @[simp, to_additive]
 theorem nontrivial_iff : Nontrivial (Submonoid M) ↔ Nontrivial M :=
@@ -431,8 +419,7 @@ theorem supr_eq_closure {ι : Sort _} (p : ι → Submonoid M) : (⨆ i, p i) = 
 
 @[to_additive]
 theorem disjoint_def {p₁ p₂ : Submonoid M} : Disjoint p₁ p₂ ↔ ∀ {x : M}, x ∈ p₁ → x ∈ p₂ → x = 1 :=
-  show (∀ x, x ∈ p₁ ∧ x ∈ p₂ → x ∈ ({1} : Set M)) ↔ _ by
-    simp
+  show (∀ x, x ∈ p₁ ∧ x ∈ p₂ → x ∈ ({1} : Set M)) ↔ _ by simp
 
 @[to_additive]
 theorem disjoint_def' {p₁ p₂ : Submonoid M} : Disjoint p₁ p₂ ↔ ∀ {x y : M}, x ∈ p₁ → y ∈ p₂ → x = y → x = 1 :=
@@ -450,10 +437,8 @@ open Submonoid
 @[to_additive "The additive submonoid of elements `x : M` such that `f x = g x`"]
 def eqMlocus (f g : M →* N) : Submonoid M where
   Carrier := { x | f x = g x }
-  one_mem' := by
-    rw [Set.mem_set_of_eq, f.map_one, g.map_one]
-  mul_mem' := fun x y (hx : _ = _) (hy : _ = _) => by
-    simp [*]
+  one_mem' := by rw [Set.mem_set_of_eq, f.map_one, g.map_one]
+  mul_mem' := fun x y (hx : _ = _) (hy : _ = _) => by simp [*]
 
 /-- If two monoid homomorphisms are equal on a set, then they are equal on its submonoid closure. -/
 @[to_additive "If two monoid homomorphisms are equal on a set, then they are equal on its submonoid\nclosure."]
@@ -482,8 +467,7 @@ section IsUnit
 @[to_additive "The additive submonoid consisting of the additive units of an additive monoid"]
 def IsUnit.submonoid (M : Type _) [Monoidₓ M] : Submonoid M where
   Carrier := SetOf IsUnit
-  one_mem' := by
-    simp only [is_unit_one, Set.mem_set_of_eq]
+  one_mem' := by simp only [is_unit_one, Set.mem_set_of_eq]
   mul_mem' := by
     intro a b ha hb
     rw [Set.mem_set_of_eq] at *
@@ -509,15 +493,11 @@ def ofMdense {M N} [Monoidₓ M] [Monoidₓ N] {s : Set M} (f : M → N) (hs : c
   toFun := f
   map_one' := h1
   map_mul' := fun x y =>
-    dense_induction y hs (fun y hy x => hmul x y hy)
-      (by
-        simp [h1])
-      (fun y₁ y₂ h₁ h₂ x => by
-        simp only [← mul_assoc, h₁, h₂])
-      x
+    dense_induction y hs (fun y hy x => hmul x y hy) (by simp [h1])
+      (fun y₁ y₂ h₁ h₂ x => by simp only [← mul_assoc, h₁, h₂]) x
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_monoid_hom.of_mdense]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_monoid_hom.of_mdense]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, norm_cast, to_additive]
 theorem coe_of_mdense (f : M → N) (hs : closure s = ⊤) (h1 hmul) : ⇑(ofMdense f hs h1 hmul) = f :=
   rfl

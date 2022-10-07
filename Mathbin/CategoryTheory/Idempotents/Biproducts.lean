@@ -44,7 +44,7 @@ namespace Biproducts
 /-- The `bicone` used in order to obtain the existence of
 the biproduct of a functor `J ⥤ karoubi C` when the category `C` is additive. -/
 @[simps]
-def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) : Bicone F where
+def bicone [HasFiniteBiproducts C] {J : Type} [Fintypeₓ J] (F : J → Karoubi C) : Bicone F where
   x :=
     { x := biproduct fun j => (F j).x, p := biproduct.map fun j => (F j).p,
       idem := by
@@ -53,12 +53,10 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
         slice_lhs 1 2 => rw [(F j).idem] }
   π := fun j =>
     { f := (biproduct.map fun j => (F j).p) ≫ Bicone.π _ j,
-      comm := by
-        simp only [assoc, biproduct.bicone_π, biproduct.map_π, biproduct.map_π_assoc, (F j).idem] }
+      comm := by simp only [assoc, biproduct.bicone_π, biproduct.map_π, biproduct.map_π_assoc, (F j).idem] }
   ι := fun j =>
     { f := bicone.ι _ j ≫ biproduct.map fun j => (F j).p,
-      comm := by
-        rw [biproduct.ι_map, ← assoc, ← assoc, (F j).idem, assoc, biproduct.ι_map, ← assoc, (F j).idem] }
+      comm := by rw [biproduct.ι_map, ← assoc, ← assoc, (F j).idem, assoc, biproduct.ι_map, ← assoc, (F j).idem] }
   ι_π := fun j j' => by
     split_ifs
     · subst h
@@ -79,7 +77,7 @@ theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiprodu
           ext1
           ext1
           simp only [id_eq, comp_id, biproducts.bicone_X_p, biproduct.ι_map]
-          rw [sum_hom, comp_sum, Finset.sum_eq_single j]
+          rw [sum_hom, comp_sum, Finsetₓ.sum_eq_single j]
           rotate_left
           · intro j' h1 h2
             simp only [biproduct.ι_map, biproducts.bicone_ι_f, biproducts.bicone_π_f, assoc, comp, biproduct.map_π]
@@ -93,7 +91,7 @@ theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiprodu
             
           · intro h
             exfalso
-            simpa only [Finset.mem_univ, not_true] using h
+            simpa only [Finsetₓ.mem_univ, not_true] using h
             
           · simp only [biproducts.bicone_π_f, comp, biproduct.ι_map, assoc, biproducts.bicone_ι_f, biproduct.map_π]
             slice_lhs 1 2 => rw [biproduct.ι_π]
@@ -158,7 +156,7 @@ def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.x
     rw [biprod.lift_desc]
     simp only [← decomp_p]
     ext
-    dsimp' only [complement, to_karoubi]
+    dsimp only [complement, to_karoubi]
     simp only [quiver.hom.add_comm_group_add_f, add_sub_cancel'_right, id_eq]
 
 end Karoubi

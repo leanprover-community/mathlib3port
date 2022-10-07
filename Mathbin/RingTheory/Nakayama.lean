@@ -54,8 +54,7 @@ theorem eq_smul_of_le_smul_of_le_jacobson {I J : Ideal R} {N : Submodule R M} (h
   intro n hn
   cases' Submodule.exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul I N hN hIN with r hr
   cases' exists_mul_sub_mem_of_sub_one_mem_jacobson r (hIjac hr.1) with s hs
-  have : n = -(s * r - 1) • n := by
-    rw [neg_sub, sub_smul, mul_smul, hr.2 n hn, one_smul, smul_zero, sub_zero]
+  have : n = -(s * r - 1) • n := by rw [neg_sub, sub_smul, mul_smul, hr.2 n hn, one_smul, smul_zero, sub_zero]
   rw [this]
   exact Submodule.smul_mem_smul (Submodule.neg_mem _ hs) hn
 
@@ -64,8 +63,7 @@ theorem eq_smul_of_le_smul_of_le_jacobson {I J : Ideal R} {N : Submodule R M} (h
 See also `eq_smul_of_le_smul_of_le_jacobson` for a generalisation
 to the `jacobson` of any ideal -/
 theorem eq_bot_of_le_smul_of_le_jacobson_bot (I : Ideal R) (N : Submodule R M) (hN : N.Fg) (hIN : N ≤ I • N)
-    (hIjac : I ≤ jacobson ⊥) : N = ⊥ := by
-  rw [eq_smul_of_le_smul_of_le_jacobson hN hIN hIjac, Submodule.bot_smul]
+    (hIjac : I ≤ jacobson ⊥) : N = ⊥ := by rw [eq_smul_of_le_smul_of_le_jacobson hN hIN hIjac, Submodule.bot_smul]
 
 /-- *Nakayama's Lemma** - A slightly more general version of (4) in
 [Stacks 00DV](https://stacks.math.columbia.edu/tag/00DV).
@@ -80,9 +78,7 @@ theorem smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson {I J : Ideal R} {N N' : S
     simpa [comap_map_eq, sup_comm, eq_comm] using hNN'
   have :=
     @Submodule.eq_smul_of_le_smul_of_le_jacobson _ _ _ _ _ I J (N'.map N.mkq) (hN'.map _)
-      (by
-        rw [← map_smul'', this] <;> exact le_rflₓ)
-      hIJ
+      (by rw [← map_smul'', this] <;> exact le_rflₓ) hIJ
   rw [← map_smul'', ← h_comap.eq_iff, comap_map_eq, comap_map_eq, Submodule.ker_mkq, sup_comm, hNN'] at this
   rw [this, sup_comm]
 

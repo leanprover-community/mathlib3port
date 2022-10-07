@@ -41,7 +41,6 @@ we formulate the definitions and lemmas for any model.
 /-- Basic hypothesis to talk about a smooth (Lie) additive monoid or a smooth additive
 semigroup. A smooth additive monoid over `α`, for example, is obtained by requiring both the
 instances `add_monoid α` and `has_smooth_add α`. -/
-@[ancestor SmoothManifoldWithCorners]
 class HasSmoothAdd {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Add G] [TopologicalSpace G]
   [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
@@ -51,7 +50,7 @@ class HasSmoothAdd {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [
 /-- Basic hypothesis to talk about a smooth (Lie) monoid or a smooth semigroup.
 A smooth monoid over `G`, for example, is obtained by requiring both the instances `monoid G`
 and `has_smooth_mul I G`. -/
-@[ancestor SmoothManifoldWithCorners, to_additive]
+@[to_additive]
 class HasSmoothMul {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Mul G] [TopologicalSpace G]
   [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
@@ -211,8 +210,7 @@ theorem smooth_pow : ∀ n : ℕ, Smooth I I fun a : G => a ^ n
   | 0 => by
     simp only [pow_zeroₓ]
     exact smooth_const
-  | k + 1 => by
-    simpa [pow_succₓ] using smooth_id.mul (smooth_pow _)
+  | k + 1 => by simpa [pow_succₓ] using smooth_id.mul (smooth_pow _)
 
 /-- Morphism of additive smooth monoids. -/
 structure SmoothAddMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H') (G : Type _)
@@ -249,12 +247,12 @@ variable {ι 𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topolog
   [NormedAddCommGroup E] [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [CommMonoidₓ G]
   [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']
   {H' : Type _} [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {M : Type _} [TopologicalSpace M]
-  [ChartedSpace H' M] {s : Set M} {x : M} {t : Finset ι} {f : ι → M → G} {n : ℕ∞} {p : ι → Prop}
+  [ChartedSpace H' M] {s : Set M} {x : M} {t : Finsetₓ ι} {f : ι → M → G} {n : ℕ∞} {p : ι → Prop}
 
 @[to_additive]
 theorem cont_mdiff_within_at_finset_prod' (h : ∀ i ∈ t, ContMdiffWithinAt I' I n (f i) s x) :
     ContMdiffWithinAt I' I n (∏ i in t, f i) s x :=
-  Finset.prod_induction f (fun f => ContMdiffWithinAt I' I n f s x) (fun f g hf hg => hf.mul hg)
+  Finsetₓ.prod_induction f (fun f => ContMdiffWithinAt I' I n f s x) (fun f g hf hg => hf.mul hg)
     cont_mdiff_within_at_const h
 
 @[to_additive]
@@ -272,7 +270,7 @@ theorem cont_mdiff_finset_prod' (h : ∀ i ∈ t, ContMdiff I' I n (f i)) : Cont
 @[to_additive]
 theorem cont_mdiff_within_at_finset_prod (h : ∀ i ∈ t, ContMdiffWithinAt I' I n (f i) s x) :
     ContMdiffWithinAt I' I n (fun x => ∏ i in t, f i x) s x := by
-  simp only [← Finset.prod_apply]
+  simp only [← Finsetₓ.prod_apply]
   exact cont_mdiff_within_at_finset_prod' h
 
 @[to_additive]

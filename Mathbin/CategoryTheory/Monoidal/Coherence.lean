@@ -77,7 +77,7 @@ instance liftHomComp {X Y Z : C} [LiftObj X] [LiftObj Y] [LiftObj Z] (f : X ⟶ 
 instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z] (f : W ⟶ X) (g : Y ⟶ Z) [LiftHom f]
     [LiftHom g] : LiftHom (f ⊗ g) where lift := LiftHom.lift f ⊗ LiftHom.lift g
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`Hom] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`Hom] []
 -- We could likely turn this into a `Prop` valued existential if that proves useful.
 /-- A typeclass carrying a choice of monoidal structural isomorphism between two objects.
 Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.
@@ -226,7 +226,7 @@ example {W X Y Z : C} (f : W ⟶ (X ⊗ Y) ⊗ Z) : W ⟶ X ⊗ Y ⊗ Z :=
 
 @[simp]
 theorem monoidal_comp_refl {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ⊗≫ g = f ≫ g := by
-  dsimp' [monoidal_comp]
+  dsimp [monoidal_comp]
   simp
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -328,11 +328,9 @@ example {W X Y Z : C} (f : Y ⟶ Z) (g) (w : False) : (λ_ _).Hom ≫ f = g := b
   guard_target =ₐ (𝟙 _ ≫ (λ_ _).Hom) ≫ f = 𝟙 _ ≫ g
   cases w
 
-theorem insert_id_lhs {C : Type _} [Category C] {X Y : C} (f g : X ⟶ Y) (w : f ≫ 𝟙 _ = g) : f = g := by
-  simpa using w
+theorem insert_id_lhs {C : Type _} [Category C] {X Y : C} (f g : X ⟶ Y) (w : f ≫ 𝟙 _ = g) : f = g := by simpa using w
 
-theorem insert_id_rhs {C : Type _} [Category C] {X Y : C} (f g : X ⟶ Y) (w : f = g ≫ 𝟙 _) : f = g := by
-  simpa using w
+theorem insert_id_rhs {C : Type _} [Category C] {X Y : C} (f g : X ⟶ Y) (w : f = g ≫ 𝟙 _) : f = g := by simpa using w
 
 end Coherence
 
@@ -408,23 +406,23 @@ add_tactic_doc
   { Name := "coherence", category := DocCategory.tactic, declNames := [`tactic.interactive.coherence],
     tags := ["category theory"] }
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 example (f) : (λ_ (𝟙_ C)).Hom ≫ f ≫ (λ_ (𝟙_ C)).Hom = (ρ_ (𝟙_ C)).Hom ≫ f ≫ (ρ_ (𝟙_ C)).Hom := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 example {U V W X Y : C} (f : U ⟶ V ⊗ W ⊗ X) (g : (V ⊗ W) ⊗ X ⟶ Y) : f ⊗≫ g = f ≫ (α_ _ _ _).inv ≫ g := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 example {U : C} (f : U ⟶ 𝟙_ C) : f ≫ (ρ_ (𝟙_ C)).inv ≫ (λ_ (𝟙_ C)).Hom = f := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -440,8 +438,7 @@ example (W X Y Z : C) (f) :
         (α_ W (X ⊗ Y) Z).Hom ≫ (𝟙 W ⊗ (α_ X Y Z).Hom) ≫ f ≫ (α_ (W ⊗ X) Y Z).Hom ≫ (α_ W X (Y ⊗ Z)).Hom =
       (α_ (W ⊗ X) Y Z).Hom ≫
         (α_ W X (Y ⊗ Z)).Hom ≫ f ≫ ((α_ W X Y).Hom ⊗ 𝟙 Z) ≫ (α_ W (X ⊗ Y) Z).Hom ≫ (𝟙 W ⊗ (α_ X Y Z).Hom) :=
-  by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+  by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
 end Tactic
 

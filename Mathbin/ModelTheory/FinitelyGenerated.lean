@@ -40,10 +40,10 @@ namespace Substructure
 
 /-- A substructure of `M` is finitely generated if it is the closure of a finite subset of `M`. -/
 def Fg (N : L.Substructure M) : Prop :=
-  ∃ S : Finset M, closure L ↑S = N
+  ∃ S : Finsetₓ M, closure L ↑S = N
 
 theorem fg_def {N : L.Substructure M} : N.Fg ↔ ∃ S : Set M, S.Finite ∧ closure L S = N :=
-  ⟨fun ⟨t, h⟩ => ⟨_, Finset.finite_to_set t, h⟩, by
+  ⟨fun ⟨t, h⟩ => ⟨_, Finsetₓ.finite_to_set t, h⟩, by
     rintro ⟨t', h, rfl⟩
     rcases finite.exists_finset_coe h with ⟨t, rfl⟩
     exact ⟨t, rfl⟩⟩
@@ -61,12 +61,10 @@ theorem fg_iff_exists_fin_generating_family {N : L.Substructure M} :
     
 
 theorem fg_bot : (⊥ : L.Substructure M).Fg :=
-  ⟨∅, by
-    rw [Finset.coe_empty, closure_empty]⟩
+  ⟨∅, by rw [Finsetₓ.coe_empty, closure_empty]⟩
 
 theorem fg_closure {s : Set M} (hs : s.Finite) : Fg (closure L s) :=
-  ⟨hs.toFinset, by
-    rw [hs.coe_to_finset]⟩
+  ⟨hs.toFinset, by rw [hs.coe_to_finset]⟩
 
 theorem fg_closure_singleton (x : M) : Fg (closure L ({x} : Set M)) :=
   fg_closure (finite_singleton x)
@@ -74,15 +72,11 @@ theorem fg_closure_singleton (x : M) : Fg (closure L ({x} : Set M)) :=
 theorem Fg.sup {N₁ N₂ : L.Substructure M} (hN₁ : N₁.Fg) (hN₂ : N₂.Fg) : (N₁ ⊔ N₂).Fg :=
   let ⟨t₁, ht₁⟩ := fg_def.1 hN₁
   let ⟨t₂, ht₂⟩ := fg_def.1 hN₂
-  fg_def.2
-    ⟨t₁ ∪ t₂, ht₁.1.union ht₂.1, by
-      rw [closure_union, ht₁.2, ht₂.2]⟩
+  fg_def.2 ⟨t₁ ∪ t₂, ht₁.1.union ht₂.1, by rw [closure_union, ht₁.2, ht₂.2]⟩
 
 theorem Fg.map {N : Type _} [L.Structure N] (f : M →[L] N) {s : L.Substructure M} (hs : s.Fg) : (s.map f).Fg :=
   let ⟨t, ht⟩ := fg_def.1 hs
-  fg_def.2
-    ⟨f '' t, ht.1.Image _, by
-      rw [closure_image, ht.2]⟩
+  fg_def.2 ⟨f '' t, ht.1.Image _, by rw [closure_image, ht.2]⟩
 
 theorem Fg.of_map_embedding {N : Type _} [L.Structure N] (f : M ↪[L] N) {s : L.Substructure M}
     (hs : (s.map f.toHom).Fg) : s.Fg := by
@@ -145,15 +139,11 @@ theorem cg_closure_singleton (x : M) : Cg (closure L ({x} : Set M)) :=
 theorem Cg.sup {N₁ N₂ : L.Substructure M} (hN₁ : N₁.Cg) (hN₂ : N₂.Cg) : (N₁ ⊔ N₂).Cg :=
   let ⟨t₁, ht₁⟩ := cg_def.1 hN₁
   let ⟨t₂, ht₂⟩ := cg_def.1 hN₂
-  cg_def.2
-    ⟨t₁ ∪ t₂, ht₁.1.union ht₂.1, by
-      rw [closure_union, ht₁.2, ht₂.2]⟩
+  cg_def.2 ⟨t₁ ∪ t₂, ht₁.1.union ht₂.1, by rw [closure_union, ht₁.2, ht₂.2]⟩
 
 theorem Cg.map {N : Type _} [L.Structure N] (f : M →[L] N) {s : L.Substructure M} (hs : s.Cg) : (s.map f).Cg :=
   let ⟨t, ht⟩ := cg_def.1 hs
-  cg_def.2
-    ⟨f '' t, ht.1.Image _, by
-      rw [closure_image, ht.2]⟩
+  cg_def.2 ⟨f '' t, ht.1.Image _, by rw [closure_image, ht.2]⟩
 
 theorem Cg.of_map_embedding {N : Type _} [L.Structure N] (f : M ↪[L] N) {s : L.Substructure M}
     (hs : (s.map f.toHom).Cg) : s.Cg := by
@@ -168,7 +158,7 @@ theorem Cg.of_map_embedding {N : Type _} [L.Structure N] (f : M ↪[L] N) {s : L
   rw [h2] at h'
   exact hom.map_le_range h'
 
-theorem cg_iff_countable [L.CountableFunctions] {s : L.Substructure M} : s.Cg ↔ Countable s := by
+theorem cg_iff_countable [Countable (Σl, L.Functions l)] {s : L.Substructure M} : s.Cg ↔ Countable s := by
   refine' ⟨_, fun h => ⟨s, h.to_set, s.closure_eq⟩⟩
   rintro ⟨s, h, rfl⟩
   exact h.substructure_closure L
@@ -225,7 +215,7 @@ theorem Cg.map_of_surjective {N : Type _} [L.Structure N] (h : Cg L M) (f : M �
   rw [cg_def, ← hs]
   exact h.range f
 
-theorem cg_iff_countable [L.CountableFunctions] : Cg L M ↔ Countable M := by
+theorem cg_iff_countable [Countable (Σl, L.Functions l)] : Cg L M ↔ Countable M := by
   rw [cg_def, cg_iff_countable, top_equiv.to_equiv.countable_iff]
 
 theorem Fg.cg (h : Fg L M) : Cg L M :=

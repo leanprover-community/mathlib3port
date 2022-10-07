@@ -80,9 +80,9 @@ variable (r s)
 
 theorem maximals_antichain : IsAntichain r (Maximals r s) := fun a ha b hb hab h => hab <| eq_of_mem_maximals ha hb.1 h
 
-theorem minimals_antichain : IsAntichain r (Minimals r s) := by
+theorem minimals_antichain : IsAntichain r (Minimals r s) :=
   haveI := IsAntisymm.swap r
-  exact (maximals_antichain _ _).swap
+  (maximals_antichain _ _).swap
 
 end IsAntisymm
 
@@ -188,13 +188,8 @@ theorem IsGreatest.maximals_eq (h : IsGreatest s a) : Maximals (· ≤ ·) s = {
 
 theorem IsAntichain.minimals_upper_closure (hs : IsAntichain (· ≤ ·) s) :
     Minimals (· ≤ ·) (upperClosure s : Set α) = s :=
-  (hs.max_minimals fun a ⟨⟨b, hb, hba⟩, h⟩ => by
-      rwa [eq_of_mem_minimals ‹a ∈ _› (subset_upper_closure hb) hba])
-    fun a ha =>
-    ⟨a,
-      ⟨subset_upper_closure ha, fun b ⟨c, hc, hcb⟩ hba => by
-        rwa [hs.eq' ha hc (hcb.trans hba)]⟩,
-      le_rflₓ⟩
+  (hs.max_minimals fun a ⟨⟨b, hb, hba⟩, h⟩ => by rwa [eq_of_mem_minimals ‹a ∈ _› (subset_upper_closure hb) hba])
+    fun a ha => ⟨a, ⟨subset_upper_closure ha, fun b ⟨c, hc, hcb⟩ hba => by rwa [hs.eq' ha hc (hcb.trans hba)]⟩, le_rflₓ⟩
 
 theorem IsAntichain.maximals_lower_closure (hs : IsAntichain (· ≤ ·) s) :
     Maximals (· ≤ ·) (lowerClosure s : Set α) = s :=

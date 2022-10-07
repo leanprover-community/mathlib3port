@@ -178,8 +178,8 @@ theorem FamilyOfElements.Compatible.sieve_extend {x : FamilyOfElements P R} (hx 
     x.sieveExtend.Compatible := by
   intro _ _ _ _ _ _ _ h₁ h₂ comm
   iterate 2 
-    erw [← functor_to_types.map_comp_apply]
-    rw [← op_comp]
+  erw [← functor_to_types.map_comp_apply]
+  rw [← op_comp]
   apply hx
   simp [comm, h₁.some_spec.some_spec.some_spec.2, h₂.some_spec.some_spec.some_spec.2]
 
@@ -275,10 +275,7 @@ def FamilyOfElements.functorPullback (x : FamilyOfElements P T) : FamilyOfElemen
 
 theorem FamilyOfElements.Compatible.functor_pullback (h : x.Compatible) : (x.FunctorPullback F).Compatible := by
   intro Z₁ Z₂ W g₁ g₂ f₁ f₂ h₁ h₂ eq
-  exact
-    h (F.map g₁) (F.map g₂) h₁ h₂
-      (by
-        simp only [← F.map_comp, Eq])
+  exact h (F.map g₁) (F.map g₂) h₁ h₂ (by simp only [← F.map_comp, Eq])
 
 end FunctorPullback
 
@@ -344,7 +341,7 @@ def FamilyOfElements.IsAmalgamation (x : FamilyOfElements P R) (t : P.obj (op X)
 theorem FamilyOfElements.IsAmalgamation.comp_presheaf_map {x : FamilyOfElements P R} {t} (f : P ⟶ Q)
     (h : x.IsAmalgamation t) : (x.compPresheafMap f).IsAmalgamation (f.app (op X) t) := by
   intro Y g hg
-  dsimp' [family_of_elements.comp_presheaf_map]
+  dsimp [family_of_elements.comp_presheaf_map]
   change (f.app _ ≫ Q.map _) _ = _
   simp [← f.naturality, h g hg]
 
@@ -361,7 +358,7 @@ theorem is_amalgamation_restrict {R₁ R₂ : Presieve X} (h : R₁ ≤ R₂) (x
 theorem is_amalgamation_sieve_extend {R : Presieve X} (x : FamilyOfElements P R) (t : P.obj (op X))
     (ht : x.IsAmalgamation t) : x.sieveExtend.IsAmalgamation t := by
   intro Y f hf
-  dsimp' [family_of_elements.sieve_extend]
+  dsimp [family_of_elements.sieve_extend]
   rw [← ht _, ← functor_to_types.map_comp_apply, ← op_comp, hf.some_spec.some_spec.some_spec.2]
 
 /-- A presheaf is separated for a presieve if there is at most one amalgamation. -/
@@ -390,14 +387,8 @@ theorem is_separated_for_iff_generate : IsSeparatedFor P R ↔ IsSeparatedFor P 
     
 
 theorem is_separated_for_top (P : Cᵒᵖ ⥤ Type w) : IsSeparatedFor P (⊤ : Presieve X) := fun x t₁ t₂ h₁ h₂ => by
-  have q₁ :=
-    h₁ (𝟙 X)
-      (by
-        simp )
-  have q₂ :=
-    h₂ (𝟙 X)
-      (by
-        simp )
+  have q₁ := h₁ (𝟙 X) (by simp)
+  have q₂ := h₂ (𝟙 X) (by simp)
   simp only [op_id, functor_to_types.map_id_apply] at q₁ q₂
   rw [q₁, q₂]
 
@@ -440,7 +431,7 @@ def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
       
     · rw [compatible_iff_sieve_compatible]
       intro Y Z f g hf
-      dsimp'
+      dsimp
       rw [← functor_to_types.naturality _ _ α g.op]
       rfl
       
@@ -463,7 +454,7 @@ theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor �
   constructor
   · rintro rfl Y f hf
     rw [yoneda_equiv_naturality]
-    dsimp'
+    dsimp
     simp
     
   -- See note [dsimp, simp].
@@ -472,7 +463,7 @@ theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor �
     have : _ = x.app Y _ := h f hf
     rw [yoneda_equiv_naturality] at this
     rw [← this]
-    dsimp'
+    dsimp
     simp
     
 
@@ -623,13 +614,11 @@ theorem is_sheaf_for_iso {P' : Cᵒᵖ ⥤ Type w} (i : P ≅ P') : IsSheafFor P
   use i.hom.app _ t
   fconstructor
   · convert family_of_elements.is_amalgamation.comp_presheaf_map i.hom ht1
-    dsimp' [x']
+    dsimp [x']
     simp
     
   · intro y hy
-    rw
-      [show y = (i.inv.app (op X) ≫ i.hom.app (op X)) y by
-        simp ]
+    rw [show y = (i.inv.app (op X) ≫ i.hom.app (op X)) y by simp]
     simp [ht2 (i.inv.app _ y) (family_of_elements.is_amalgamation.comp_presheaf_map i.inv hy)]
     
 
@@ -665,10 +654,7 @@ This is closely related to [Elephant] C2.1.6.
 -/
 theorem is_sheaf_for_subsieve (P : Cᵒᵖ ⥤ Type w) {S : Sieve X} {R : Presieve X} (h : (S : Presieve X) ≤ R)
     (trans : ∀ ⦃Y⦄ (f : Y ⟶ X), IsSheafFor P (S.pullback f)) : IsSheafFor P R :=
-  is_sheaf_for_subsieve_aux P h
-    (by
-      simpa using trans (𝟙 _))
-    fun Y f hf => (trans f).IsSeparatedFor
+  is_sheaf_for_subsieve_aux P h (by simpa using trans (𝟙 _)) fun Y f hf => (trans f).IsSeparatedFor
 
 /-- A presheaf is separated for a topology if it is separated for every sieve in the topology. -/
 def IsSeparated (P : Cᵒᵖ ⥤ Type w) : Prop :=
@@ -720,8 +706,7 @@ theorem is_sheaf_pretopology [HasPullbacks C] (K : Pretopology C) :
     
 
 /-- Any presheaf is a sheaf for the bottom (trivial) grothendieck topology. -/
-theorem is_sheaf_bot : IsSheaf (⊥ : GrothendieckTopology C) P := fun X => by
-  simp [is_sheaf_for_top_sieve]
+theorem is_sheaf_bot : IsSheaf (⊥ : GrothendieckTopology C) P := fun X => by simp [is_sheaf_for_top_sieve]
 
 end Presieve
 

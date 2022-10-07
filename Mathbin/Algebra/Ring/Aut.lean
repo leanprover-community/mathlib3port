@@ -44,26 +44,19 @@ instance : Groupₓ (RingAut R) := by
       { mul := fun g h => RingEquiv.trans h g, one := RingEquiv.refl R, inv := RingEquiv.symm, div := _,
         npow := @npowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩,
         zpow := @zpowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩ ⟨RingEquiv.symm⟩ } <;>
-    intros <;>
-      ext <;>
-        try
-            rfl <;>
-          apply Equivₓ.left_inv
+    intros <;> ext <;> try rfl <;> apply Equivₓ.left_inv
 
 instance : Inhabited (RingAut R) :=
   ⟨1⟩
 
 /-- Monoid homomorphism from ring automorphisms to additive automorphisms. -/
-def toAddAut : RingAut R →* AddAut R := by
-  refine_struct { toFun := RingEquiv.toAddEquiv } <;> intros <;> rfl
+def toAddAut : RingAut R →* AddAut R := by refine_struct { toFun := RingEquiv.toAddEquiv } <;> intros <;> rfl
 
 /-- Monoid homomorphism from ring automorphisms to multiplicative automorphisms. -/
-def toMulAut : RingAut R →* MulAut R := by
-  refine_struct { toFun := RingEquiv.toMulEquiv } <;> intros <;> rfl
+def toMulAut : RingAut R →* MulAut R := by refine_struct { toFun := RingEquiv.toMulEquiv } <;> intros <;> rfl
 
 /-- Monoid homomorphism from ring automorphisms to permutations. -/
-def toPerm : RingAut R →* Equivₓ.Perm R := by
-  refine_struct { toFun := RingEquiv.toEquiv } <;> intros <;> rfl
+def toPerm : RingAut R →* Equivₓ.Perm R := by refine_struct { toFun := RingEquiv.toEquiv } <;> intros <;> rfl
 
 end RingAut
 

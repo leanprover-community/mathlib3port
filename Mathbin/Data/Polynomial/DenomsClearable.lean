@@ -16,7 +16,7 @@ the image of the homomorphism `i`.
 -/
 
 
-open Polynomial Finset
+open Polynomial Finsetₓ
 
 open Polynomial
 
@@ -38,8 +38,7 @@ def DenomsClearable (a b : R) (N : ℕ) (f : R[X]) (i : R →+* K) : Prop :=
   ∃ (D : R)(bi : K), bi * i b = 1 ∧ i D = i b ^ N * eval (i a * bi) (f.map i)
 
 theorem denoms_clearable_zero (N : ℕ) (a : R) (bu : bi * i b = 1) : DenomsClearable a b N 0 i :=
-  ⟨0, bi, bu, by
-    simp only [eval_zero, RingHom.map_zero, mul_zero, Polynomial.map_zero]⟩
+  ⟨0, bi, bu, by simp only [eval_zero, RingHom.map_zero, mul_zero, Polynomial.map_zero]⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) }
 theorem denoms_clearable_C_mul_X_pow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : ℕ} (r : R) (nN : n ≤ N) :

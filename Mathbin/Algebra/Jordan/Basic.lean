@@ -21,6 +21,10 @@ A more general concept of a (non-commutative) Jordan ring can also be defined, a
 (non-commutative, non-associative) ring `A` where, for each `a` in `A`, the operators of left and
 right multiplication by `a` and `a^2` commute.
 
+Every associative algebra can be equipped with a symmetrized multiplication (characterized by
+`sym_alg.sym_mul_sym`) making it into a commutative Jordan algebra (`sym_alg.is_comm_jordan`).
+Jordan algebras arising this way are said to be special.
+
 A real Jordan algebra `A` can be introduced by
 ```lean
 variables {A : Type*} [non_unital_non_assoc_ring A] [module ℝ A] [smul_comm_class ℝ A A]
@@ -52,10 +56,6 @@ their considerable algebraic interest ([mccrimmon2004]) these structures have be
 deep connections to mathematical physics, functional analysis and differential geometry. For more
 information about these connections the interested reader is referred to [alfsenshultz2003],
 [chu2012], [friedmanscarr2005], [iordanescu2003] and [upmeier1987].
-
-Every associative algebra can be equipped with a symmetrized multiplication (characterized by
-`sym_alg.sym_mul_sym`) making it into a commutative Jordan algebra. Jordan algebras arising this way
-are said to be special.
 
 There are also exceptional Jordan algebras which can be shown not to be the symmetrization of any
 associative algebra. The 3x3 matrices of octonions is the canonical example.
@@ -91,8 +91,7 @@ class IsCommJordan [Mul A] where
 -- see Note [lower instance priority]
 /-- A (commutative) Jordan multiplication is also a Jordan multipication -/
 instance (priority := 100) IsCommJordan.toIsJordan [Mul A] [IsCommJordan A] : IsJordan A where
-  lmul_comm_rmul := fun a b => by
-    rw [IsCommJordan.mul_comm, IsCommJordan.mul_comm a b]
+  lmul_comm_rmul := fun a b => by rw [IsCommJordan.mul_comm, IsCommJordan.mul_comm a b]
   lmul_lmul_comm_lmul := fun a b => by
     rw [IsCommJordan.mul_comm (a * a) (a * b), IsCommJordan.lmul_comm_rmul_rmul, IsCommJordan.mul_comm b (a * a)]
   lmul_comm_rmul_rmul := IsCommJordan.lmul_comm_rmul_rmul
@@ -105,16 +104,11 @@ instance (priority := 100) IsCommJordan.toIsJordan [Mul A] [IsCommJordan A] : Is
 -- see Note [lower instance priority]
 /-- Semigroup multiplication satisfies the (non-commutative) Jordan axioms-/
 instance (priority := 100) Semigroupₓ.isJordan [Semigroupₓ A] : IsJordan A where
-  lmul_comm_rmul := fun a b => by
-    rw [mul_assoc]
-  lmul_lmul_comm_lmul := fun a b => by
-    rw [mul_assoc, mul_assoc]
-  lmul_comm_rmul_rmul := fun a b => by
-    rw [mul_assoc]
-  lmul_lmul_comm_rmul := fun a b => by
-    rw [← mul_assoc]
-  rmul_comm_rmul_rmul := fun a b => by
-    rw [← mul_assoc, ← mul_assoc]
+  lmul_comm_rmul := fun a b => by rw [mul_assoc]
+  lmul_lmul_comm_lmul := fun a b => by rw [mul_assoc, mul_assoc]
+  lmul_comm_rmul_rmul := fun a b => by rw [mul_assoc]
+  lmul_lmul_comm_rmul := fun a b => by rw [← mul_assoc]
+  rmul_comm_rmul_rmul := fun a b => by rw [← mul_assoc, ← mul_assoc]
 
 -- see Note [lower instance priority]
 instance (priority := 100) CommSemigroupₓ.isCommJordan [CommSemigroupₓ A] : IsCommJordan A where
@@ -179,8 +173,7 @@ theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
     2 • (⁅L a, L (b * c)⁆ + ⁅L b, L (c * a)⁆ + ⁅L c, L (a * b)⁆) = 0 := by
   symm
   calc
-    0 = ⁅L (a + b + c), L ((a + b + c) * (a + b + c))⁆ := by
-      rw [(commute_lmul_lmul_sq (a + b + c)).lie_eq]
+    0 = ⁅L (a + b + c), L ((a + b + c) * (a + b + c))⁆ := by rw [(commute_lmul_lmul_sq (a + b + c)).lie_eq]
     _ =
         ⁅L a + L b + L c,
           L (a * a) + L (a * b) + L (a * c) + (L (b * a) + L (b * b) + L (b * c)) +
@@ -192,8 +185,7 @@ theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
         ⁅L a + L b + L c,
           L (a * a) + L (a * b) + L (c * a) + (L (a * b) + L (b * b) + L (b * c)) +
             (L (c * a) + L (b * c) + L (c * c))⁆ :=
-      by
-      rw [IsCommJordan.mul_comm b a, IsCommJordan.mul_comm c a, IsCommJordan.mul_comm c b]
+      by rw [IsCommJordan.mul_comm b a, IsCommJordan.mul_comm c a, IsCommJordan.mul_comm c b]
     _ = ⁅L a + L b + L c, L (a * a) + L (b * b) + L (c * c) + 2 • L (a * b) + 2 • L (c * a) + 2 • L (b * c)⁆ := by
       rw [two_smul, two_smul, two_smul]
       simp only [lie_add, add_lie, commute_lmul_lmul_sq, zero_addₓ, add_zeroₓ]
@@ -219,25 +211,22 @@ theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
         ⁅L a, L (b * b)⁆ + ⁅L a, L (c * c)⁆ + 2 • ⁅L a, L (a * b)⁆ + 2 • ⁅L a, L (c * a)⁆ + 2 • ⁅L a, L (b * c)⁆ +
             (⁅L b, L (a * a)⁆ + ⁅L b, L (c * c)⁆ + 2 • ⁅L b, L (a * b)⁆ + 2 • ⁅L b, L (c * a)⁆ + 2 • ⁅L b, L (b * c)⁆) +
           (⁅L c, L (a * a)⁆ + ⁅L c, L (b * b)⁆ + 2 • ⁅L c, L (a * b)⁆ + 2 • ⁅L c, L (c * a)⁆ + 2 • ⁅L c, L (b * c)⁆) :=
-      by
-      simp only [lie_nsmul]
+      by simp only [lie_nsmul]
     _ =
         ⁅L a, L (b * b)⁆ + ⁅L b, L (a * a)⁆ + 2 • (⁅L a, L (a * b)⁆ + ⁅L b, L (a * b)⁆) +
               (⁅L a, L (c * c)⁆ + ⁅L c, L (a * a)⁆ + 2 • (⁅L a, L (c * a)⁆ + ⁅L c, L (c * a)⁆)) +
             (⁅L b, L (c * c)⁆ + ⁅L c, L (b * b)⁆ + 2 • (⁅L b, L (b * c)⁆ + ⁅L c, L (b * c)⁆)) +
           (2 • ⁅L a, L (b * c)⁆ + 2 • ⁅L b, L (c * a)⁆ + 2 • ⁅L c, L (a * b)⁆) :=
-      by
-      abel
+      by abel
     _ = 2 • ⁅L a, L (b * c)⁆ + 2 • ⁅L b, L (c * a)⁆ + 2 • ⁅L c, L (a * b)⁆ := by
       rw [add_left_eq_self]
-      nth_rw 1[IsCommJordan.mul_comm a b]
-      nth_rw 0[IsCommJordan.mul_comm c a]
-      nth_rw 1[IsCommJordan.mul_comm b c]
+      nth_rw 1 [IsCommJordan.mul_comm a b]
+      nth_rw 0 [IsCommJordan.mul_comm c a]
+      nth_rw 1 [IsCommJordan.mul_comm b c]
       rw [two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add, two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add,
         two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add, ← lie_skew (L (a * a)), ← lie_skew (L (b * b)), ←
         lie_skew (L (c * c)), ← lie_skew (L (a * a)), ← lie_skew (L (b * b)), ← lie_skew (L (c * c))]
       abel
-    _ = 2 • (⁅L a, L (b * c)⁆ + ⁅L b, L (c * a)⁆ + ⁅L c, L (a * b)⁆) := by
-      rw [nsmul_add, nsmul_add]
+    _ = 2 • (⁅L a, L (b * c)⁆ + ⁅L b, L (c * a)⁆ + ⁅L c, L (a * b)⁆) := by rw [nsmul_add, nsmul_add]
     
 

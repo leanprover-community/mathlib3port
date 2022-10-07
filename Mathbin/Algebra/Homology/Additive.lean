@@ -49,15 +49,11 @@ instance : Sub (C ⟶ D) :=
 
 instance hasNatScalar : HasSmul ℕ (C ⟶ D) :=
   ⟨fun n f =>
-    { f := fun i => n • f.f i,
-      comm' := fun i j h => by
-        simp [preadditive.nsmul_comp, preadditive.comp_nsmul] }⟩
+    { f := fun i => n • f.f i, comm' := fun i j h => by simp [preadditive.nsmul_comp, preadditive.comp_nsmul] }⟩
 
 instance hasIntScalar : HasSmul ℤ (C ⟶ D) :=
   ⟨fun n f =>
-    { f := fun i => n • f.f i,
-      comm' := fun i j h => by
-        simp [preadditive.zsmul_comp, preadditive.comp_zsmul] }⟩
+    { f := fun i => n • f.f i, comm' := fun i j h => by simp [preadditive.zsmul_comp, preadditive.comp_zsmul] }⟩
 
 @[simp]
 theorem zero_f_apply (i : ι) : (0 : C ⟶ D).f i = 0 :=
@@ -84,19 +80,8 @@ theorem zsmul_f_apply (n : ℤ) (f : C ⟶ D) (i : ι) : (n • f).f i = n • f
   rfl
 
 instance : AddCommGroupₓ (C ⟶ D) :=
-  Function.Injective.addCommGroup Hom.f HomologicalComplex.hom_f_injective
-    (by
-      tidy)
-    (by
-      tidy)
-    (by
-      tidy)
-    (by
-      tidy)
-    (by
-      tidy)
-    (by
-      tidy)
+  Function.Injective.addCommGroup Hom.f HomologicalComplex.hom_f_injective (by tidy) (by tidy) (by tidy) (by tidy)
+    (by tidy) (by tidy)
 
 instance : Preadditive (HomologicalComplex V c) where
 
@@ -121,7 +106,7 @@ variable [HasEqualizers V] [HasCokernels V]
 
 instance homology_additive :
     (homologyFunctor V c i).Additive where map_add' := fun C D f g => by
-    dsimp' [homologyFunctor]
+    dsimp [homologyFunctor]
     ext
     simp only [homology.π_map, preadditive.comp_add, ← preadditive.add_comp]
     congr
@@ -142,14 +127,12 @@ def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape �
     HomologicalComplex V c ⥤ HomologicalComplex W c where
   obj := fun C =>
     { x := fun i => F.obj (C.x i), d := fun i j => F.map (C.d i j),
-      shape' := fun i j w => by
-        rw [C.shape _ _ w, F.map_zero],
-      d_comp_d' := fun i j k _ _ => by
-        rw [← F.map_comp, C.d_comp_d, F.map_zero] }
+      shape' := fun i j w => by rw [C.shape _ _ w, F.map_zero],
+      d_comp_d' := fun i j k _ _ => by rw [← F.map_comp, C.d_comp_d, F.map_zero] }
   map := fun C D f =>
     { f := fun i => F.map (f.f i),
       comm' := fun i j h => by
-        dsimp'
+        dsimp
         rw [← F.map_comp, ← F.map_comp, f.comm] }
 
 instance Functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
@@ -164,24 +147,21 @@ def NatTrans.mapHomologicalComplex {F G : V ⥤ W} [F.Additive] [G.Additive] (α
 
 @[simp]
 theorem NatTrans.map_homological_complex_id (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
-    NatTrans.mapHomologicalComplex (𝟙 F) c = 𝟙 (F.mapHomologicalComplex c) := by
-  tidy
+    NatTrans.mapHomologicalComplex (𝟙 F) c = 𝟙 (F.mapHomologicalComplex c) := by tidy
 
 @[simp]
 theorem NatTrans.map_homological_complex_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive] [G.Additive]
     [H.Additive] (α : F ⟶ G) (β : G ⟶ H) :
     NatTrans.mapHomologicalComplex (α ≫ β) c =
       NatTrans.mapHomologicalComplex α c ≫ NatTrans.mapHomologicalComplex β c :=
-  by
-  tidy
+  by tidy
 
 @[simp, reassoc]
 theorem NatTrans.map_homological_complex_naturality {c : ComplexShape ι} {F G : V ⥤ W} [F.Additive] [G.Additive]
     (α : F ⟶ G) {C D : HomologicalComplex V c} (f : C ⟶ D) :
     (F.mapHomologicalComplex c).map f ≫ (NatTrans.mapHomologicalComplex α c).app D =
       (NatTrans.mapHomologicalComplex α c).app C ≫ (G.mapHomologicalComplex c).map f :=
-  by
-  tidy
+  by tidy
 
 end CategoryTheory
 
@@ -216,23 +196,11 @@ def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι)
     single V c j ⋙ F.mapHomologicalComplex _ ≅ F ⋙ single W c j :=
   NatIso.ofComponents
     (fun X =>
-      { Hom :=
-          { f := fun i =>
-              if h : i = j then
-                eqToHom
-                  (by
-                    simp [h])
-              else 0 },
-        inv :=
-          { f := fun i =>
-              if h : i = j then
-                eqToHom
-                  (by
-                    simp [h])
-              else 0 },
+      { Hom := { f := fun i => if h : i = j then eqToHom (by simp [h]) else 0 },
+        inv := { f := fun i => if h : i = j then eqToHom (by simp [h]) else 0 },
         hom_inv_id' := by
           ext i
-          dsimp'
+          dsimp
           split_ifs with h
           · simp [h]
             
@@ -241,7 +209,7 @@ def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι)
             ,
         inv_hom_id' := by
           ext i
-          dsimp'
+          dsimp
           split_ifs with h
           · simp [h]
             
@@ -250,38 +218,26 @@ def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι)
              })
     fun X Y f => by
     ext i
-    dsimp'
+    dsimp
     split_ifs with h <;> simp [h]
 
 variable (F : V ⥤ W) [Functor.Additive F] (c)
 
 @[simp]
 theorem single_map_homological_complex_hom_app_self (j : ι) (X : V) :
-    ((singleMapHomologicalComplex F c j).Hom.app X).f j =
-      eqToHom
-        (by
-          simp ) :=
-  by
-  simp [single_map_homological_complex]
+    ((singleMapHomologicalComplex F c j).Hom.app X).f j = eqToHom (by simp) := by simp [single_map_homological_complex]
 
 @[simp]
 theorem single_map_homological_complex_hom_app_ne {i j : ι} (h : i ≠ j) (X : V) :
-    ((singleMapHomologicalComplex F c j).Hom.app X).f i = 0 := by
-  simp [single_map_homological_complex, h]
+    ((singleMapHomologicalComplex F c j).Hom.app X).f i = 0 := by simp [single_map_homological_complex, h]
 
 @[simp]
 theorem single_map_homological_complex_inv_app_self (j : ι) (X : V) :
-    ((singleMapHomologicalComplex F c j).inv.app X).f j =
-      eqToHom
-        (by
-          simp ) :=
-  by
-  simp [single_map_homological_complex]
+    ((singleMapHomologicalComplex F c j).inv.app X).f j = eqToHom (by simp) := by simp [single_map_homological_complex]
 
 @[simp]
 theorem single_map_homological_complex_inv_app_ne {i j : ι} (h : i ≠ j) (X : V) :
-    ((singleMapHomologicalComplex F c j).inv.app X).f i = 0 := by
-  simp [single_map_homological_complex, h]
+    ((singleMapHomologicalComplex F c j).inv.app X).f i = 0 := by simp [single_map_homological_complex, h]
 
 end HomologicalComplex
 
@@ -309,20 +265,20 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] : single₀ V ⋙ 
             simp
             
           · unfold_aux
-            dsimp'
+            dsimp
             simp only [comp_f, id_f, zero_comp]
             exact (zero_of_source_iso_zero _ F.map_zero_object).symm
             ,
         inv_hom_id' := by
           ext (_ | i) <;>
             · unfold_aux
-              dsimp'
+              dsimp
               simp
                })
     fun X Y f => by
     ext (_ | i) <;>
       · unfold_aux
-        dsimp'
+        dsimp
         simp
         
 
@@ -372,20 +328,20 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] : single₀ V ⋙ 
             simp
             
           · unfold_aux
-            dsimp'
+            dsimp
             simp only [comp_f, id_f, zero_comp]
             exact (zero_of_source_iso_zero _ F.map_zero_object).symm
             ,
         inv_hom_id' := by
           ext (_ | i) <;>
             · unfold_aux
-              dsimp'
+              dsimp
               simp
                })
     fun X Y f => by
     ext (_ | i) <;>
       · unfold_aux
-        dsimp'
+        dsimp
         simp
         
 

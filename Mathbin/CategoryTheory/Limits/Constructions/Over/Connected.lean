@@ -49,8 +49,7 @@ def raiseCone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget
   π := { app := fun j => Over.homMk (c.π.app j) (nat_trans_from_is_connected (c.π ≫ natTransInOver F) j _) }
 
 theorem raised_cone_lowers_to_original [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget B))
-    (t : IsLimit c) : (forget B).mapCone (raiseCone c) = c := by
-  tidy
+    (t : IsLimit c) : (forget B).mapCone (raiseCone c) = c := by tidy
 
 /-- (Impl) Show that the raised cone is a limit. -/
 def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F ⋙ forget B)} (t : IsLimit c) :
@@ -58,8 +57,8 @@ def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F �
   lift := fun s =>
     Over.homMk (t.lift ((forget B).mapCone s))
       (by
-        dsimp'
-        simp )
+        dsimp
+        simp)
   uniq' := fun s m K => by
     ext1
     apply t.hom_ext

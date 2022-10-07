@@ -108,8 +108,8 @@ unsafe def monotonicity.check (lm_n : Name) : tactic MonoKey := do
       (← do
         dbg_trace "[mono] Looking for relation in {← lm_t}")
   let s := simp_lemmas.mk
-  let s ← s.add_simp `` Monotone
-  let s ← s.add_simp `` StrictMono
+  let s ← s.add_simp `` Monotoneₓ
+  let s ← s.add_simp `` StrictMonoₓ
   let lm_t ← s.dsimplify [] lm_t { failIfUnchanged := false }
   when_tracing `mono.relation
       (← do

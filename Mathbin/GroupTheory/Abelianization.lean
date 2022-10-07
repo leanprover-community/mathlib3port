@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Michael Howes
 -/
 import Mathbin.GroupTheory.Commutator
-import Mathbin.GroupTheory.QuotientGroup
+import Mathbin.GroupTheory.Finiteness
 
 /-!
 # The abelianization of a group
@@ -46,6 +46,15 @@ theorem commutator_eq_normal_closure : commutator G = Subgroup.normalClosure { g
 instance commutator_characteristic : (commutator G).Characteristic :=
   Subgroup.commutator_characteristic ⊤ ⊤
 
+instance [Finite { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g }] : Groupₓ.Fg (commutator G) := by
+  rw [commutator_eq_closure]
+  apply Groupₓ.closure_finite_fg
+
+theorem rank_commutator_le_card [Finite { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g }] :
+    Groupₓ.rank (commutator G) ≤ Nat.card { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g } := by
+  rw [Subgroup.rank_congr (commutator_eq_closure G)]
+  apply Subgroup.rank_closure_finite_le_nat_card
+
 theorem commutator_centralizer_commutator_le_center :
     ⁅(commutator G).Centralizer, (commutator G).Centralizer⁆ ≤ Subgroup.center G := by
   rw [← Subgroup.centralizer_top, ← Subgroup.commutator_eq_bot_iff_le_centralizer]
@@ -69,14 +78,12 @@ instance : CommGroupₓ (Abelianization G) :=
       (Quotientₓ.induction_on₂' x y) fun a b =>
         Quotientₓ.sound' <|
           QuotientGroup.left_rel_apply.mpr <|
-            Subgroup.subset_closure
-              ⟨b⁻¹, Subgroup.mem_top b⁻¹, a⁻¹, Subgroup.mem_top a⁻¹, by
-                group⟩ }
+            Subgroup.subset_closure ⟨b⁻¹, Subgroup.mem_top b⁻¹, a⁻¹, Subgroup.mem_top a⁻¹, by group⟩ }
 
 instance : Inhabited (Abelianization G) :=
   ⟨1⟩
 
-instance [Fintype G] [DecidablePred (· ∈ commutator G)] : Fintype (Abelianization G) :=
+instance [Fintypeₓ G] [DecidablePred (· ∈ commutator G)] : Fintypeₓ (Abelianization G) :=
   QuotientGroup.fintype (commutator G)
 
 variable {G}

@@ -22,7 +22,7 @@ subspaces of affine spaces.
 
 noncomputable section
 
-open BigOperators Classical Affine
+open BigOperators Affine
 
 section AffineSpace'
 
@@ -73,13 +73,15 @@ instance finite_dimensional_direction_affine_span_image_of_finite [Finite ι] (p
 
 /-- An affine-independent family of points in a finite-dimensional affine space is finite. -/
 noncomputable def fintypeOfFinDimAffineIndependent [FiniteDimensional k V] {p : ι → P} (hi : AffineIndependent k p) :
-    Fintype ι :=
-  if hι : IsEmpty ι then @Fintype.ofIsEmpty _ hι
-  else by
-    let q := (not_is_empty_iff.mp hι).some
-    rw [affine_independent_iff_linear_independent_vsub k p q] at hi
-    letI : IsNoetherian k V := IsNoetherian.iff_fg.2 inferInstance
-    exact fintypeOfFintypeNe _ (@Fintype.ofFinite _ hi.finite_of_is_noetherian)
+    Fintypeₓ ι := by
+  classical <;>
+    exact
+      if hι : IsEmpty ι then @Fintypeₓ.ofIsEmpty _ hι
+      else by
+        let q := (not_is_empty_iff.mp hι).some
+        rw [affine_independent_iff_linear_independent_vsub k p q] at hi
+        letI : IsNoetherian k V := IsNoetherian.iff_fg.2 inferInstance
+        exact fintypeOfFintypeNe _ (@Fintypeₓ.ofFinite _ hi.finite_of_is_noetherian)
 
 /-- An affine-independent subset of a finite-dimensional affine space is finite. -/
 theorem finite_of_fin_dim_affine_independent [FiniteDimensional k V] {s : Set P}
@@ -90,78 +92,75 @@ variable {k}
 
 /-- The `vector_span` of a finite subset of an affinely independent
 family has dimension one less than its cardinality. -/
-theorem AffineIndependent.finrank_vector_span_image_finset {p : ι → P} (hi : AffineIndependent k p) {s : Finset ι}
-    {n : ℕ} (hc : Finset.card s = n + 1) : finrank k (vectorSpan k (s.Image p : Set P)) = n := by
+theorem AffineIndependent.finrank_vector_span_image_finset {p : ι → P} (hi : AffineIndependent k p) {s : Finsetₓ ι}
+    {n : ℕ} (hc : Finsetₓ.card s = n + 1) : finrank k (vectorSpan k (s.Image p : Set P)) = n := by
   have hi' := hi.range.mono (Set.image_subset_range p ↑s)
-  have hc' : (s.image p).card = n + 1 := by
-    rwa [s.card_image_of_injective hi.injective]
-  have hn : (s.image p).Nonempty := by
-    simp [hc', ← Finset.card_pos]
+  have hc' : (s.image p).card = n + 1 := by rwa [s.card_image_of_injective hi.injective]
+  have hn : (s.image p).Nonempty := by simp [hc', ← Finsetₓ.card_pos]
   rcases hn with ⟨p₁, hp₁⟩
-  have hp₁' : p₁ ∈ p '' s := by
-    simpa using hp₁
-  rw [affine_independent_set_iff_linear_independent_vsub k hp₁', ← Finset.coe_singleton, ← Finset.coe_image, ←
-    Finset.coe_sdiff, Finset.sdiff_singleton_eq_erase, ← Finset.coe_image] at hi'
-  have hc : (Finset.image (fun p : P => p -ᵥ p₁) ((Finset.image p s).erase p₁)).card = n := by
-    rw [Finset.card_image_of_injective _ (vsub_left_injective _), Finset.card_erase_of_mem hp₁]
+  have hp₁' : p₁ ∈ p '' s := by simpa using hp₁
+  rw [affine_independent_set_iff_linear_independent_vsub k hp₁', ← Finsetₓ.coe_singleton, ← Finsetₓ.coe_image, ←
+    Finsetₓ.coe_sdiff, Finsetₓ.sdiff_singleton_eq_erase, ← Finsetₓ.coe_image] at hi'
+  have hc : (Finsetₓ.image (fun p : P => p -ᵥ p₁) ((Finsetₓ.image p s).erase p₁)).card = n := by
+    rw [Finsetₓ.card_image_of_injective _ (vsub_left_injective _), Finsetₓ.card_erase_of_mem hp₁]
     exact Nat.pred_eq_of_eq_succ hc'
   rwa [vector_span_eq_span_vsub_finset_right_ne k hp₁, finrank_span_finset_eq_card, hc]
 
 /-- The `vector_span` of a finite affinely independent family has
 dimension one less than its cardinality. -/
-theorem AffineIndependent.finrank_vector_span [Fintype ι] {p : ι → P} (hi : AffineIndependent k p) {n : ℕ}
-    (hc : Fintype.card ι = n + 1) : finrank k (vectorSpan k (Set.Range p)) = n := by
-  rw [← Finset.card_univ] at hc
-  rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image]
+theorem AffineIndependent.finrank_vector_span [Fintypeₓ ι] {p : ι → P} (hi : AffineIndependent k p) {n : ℕ}
+    (hc : Fintypeₓ.card ι = n + 1) : finrank k (vectorSpan k (Set.Range p)) = n := by
+  rw [← Finsetₓ.card_univ] at hc
+  rw [← Set.image_univ, ← Finsetₓ.coe_univ, ← Finsetₓ.coe_image]
   exact hi.finrank_vector_span_image_finset hc
 
 /-- The `vector_span` of a finite affinely independent family whose
 cardinality is one more than that of the finite-dimensional space is
 `⊤`. -/
-theorem AffineIndependent.vector_span_eq_top_of_card_eq_finrank_add_one [FiniteDimensional k V] [Fintype ι] {p : ι → P}
-    (hi : AffineIndependent k p) (hc : Fintype.card ι = finrank k V + 1) : vectorSpan k (Set.Range p) = ⊤ :=
+theorem AffineIndependent.vector_span_eq_top_of_card_eq_finrank_add_one [FiniteDimensional k V] [Fintypeₓ ι] {p : ι → P}
+    (hi : AffineIndependent k p) (hc : Fintypeₓ.card ι = finrank k V + 1) : vectorSpan k (Set.Range p) = ⊤ :=
   eq_top_of_finrank_eq <| hi.finrank_vector_span hc
 
 variable (k)
 
 /-- The `vector_span` of `n + 1` points in an indexed family has
 dimension at most `n`. -/
-theorem finrank_vector_span_image_finset_le (p : ι → P) (s : Finset ι) {n : ℕ} (hc : Finset.card s = n + 1) :
+theorem finrank_vector_span_image_finset_le (p : ι → P) (s : Finsetₓ ι) {n : ℕ} (hc : Finsetₓ.card s = n + 1) :
     finrank k (vectorSpan k (s.Image p : Set P)) ≤ n := by
   have hn : (s.image p).Nonempty := by
-    rw [Finset.Nonempty.image_iff, ← Finset.card_pos, hc]
+    rw [Finsetₓ.Nonempty.image_iff, ← Finsetₓ.card_pos, hc]
     apply Nat.succ_posₓ
   rcases hn with ⟨p₁, hp₁⟩
   rw [vector_span_eq_span_vsub_finset_right_ne k hp₁]
   refine' le_transₓ (finrank_span_finset_le_card (((s.image p).erase p₁).Image fun p => p -ᵥ p₁)) _
-  rw [Finset.card_image_of_injective _ (vsub_left_injective p₁), Finset.card_erase_of_mem hp₁, tsub_le_iff_right, ← hc]
-  apply Finset.card_image_le
+  rw [Finsetₓ.card_image_of_injective _ (vsub_left_injective p₁), Finsetₓ.card_erase_of_mem hp₁, tsub_le_iff_right, ←
+    hc]
+  apply Finsetₓ.card_image_le
 
 /-- The `vector_span` of an indexed family of `n + 1` points has
 dimension at most `n`. -/
-theorem finrank_vector_span_range_le [Fintype ι] (p : ι → P) {n : ℕ} (hc : Fintype.card ι = n + 1) :
+theorem finrank_vector_span_range_le [Fintypeₓ ι] (p : ι → P) {n : ℕ} (hc : Fintypeₓ.card ι = n + 1) :
     finrank k (vectorSpan k (Set.Range p)) ≤ n := by
-  rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image]
-  rw [← Finset.card_univ] at hc
+  rw [← Set.image_univ, ← Finsetₓ.coe_univ, ← Finsetₓ.coe_image]
+  rw [← Finsetₓ.card_univ] at hc
   exact finrank_vector_span_image_finset_le _ _ _ hc
 
 /-- `n + 1` points are affinely independent if and only if their
 `vector_span` has dimension `n`. -/
-theorem affine_independent_iff_finrank_vector_span_eq [Fintype ι] (p : ι → P) {n : ℕ} (hc : Fintype.card ι = n + 1) :
+theorem affine_independent_iff_finrank_vector_span_eq [Fintypeₓ ι] (p : ι → P) {n : ℕ} (hc : Fintypeₓ.card ι = n + 1) :
     AffineIndependent k p ↔ finrank k (vectorSpan k (Set.Range p)) = n := by
-  have hn : Nonempty ι := by
-    simp [← Fintype.card_pos_iff, hc]
+  have hn : Nonempty ι := by simp [← Fintypeₓ.card_pos_iff, hc]
   cases' hn with i₁
   rw [affine_independent_iff_linear_independent_vsub _ _ i₁, linear_independent_iff_card_eq_finrank_span, eq_comm,
     vector_span_range_eq_span_range_vsub_right_ne k p i₁]
   congr
-  rw [← Finset.card_univ] at hc
-  rw [Fintype.subtype_card]
-  simp [Finset.filter_ne', Finset.card_erase_of_mem, hc]
+  rw [← Finsetₓ.card_univ] at hc
+  rw [Fintypeₓ.subtype_card]
+  simp [Finsetₓ.filter_ne', Finsetₓ.card_erase_of_mem, hc]
 
 /-- `n + 1` points are affinely independent if and only if their
 `vector_span` has dimension at least `n`. -/
-theorem affine_independent_iff_le_finrank_vector_span [Fintype ι] (p : ι → P) {n : ℕ} (hc : Fintype.card ι = n + 1) :
+theorem affine_independent_iff_le_finrank_vector_span [Fintypeₓ ι] (p : ι → P) {n : ℕ} (hc : Fintypeₓ.card ι = n + 1) :
     AffineIndependent k p ↔ n ≤ finrank k (vectorSpan k (Set.Range p)) := by
   rw [affine_independent_iff_finrank_vector_span_eq k p hc]
   constructor
@@ -173,14 +172,14 @@ theorem affine_independent_iff_le_finrank_vector_span [Fintype ι] (p : ι → P
 
 /-- `n + 2` points are affinely independent if and only if their
 `vector_span` does not have dimension at most `n`. -/
-theorem affine_independent_iff_not_finrank_vector_span_le [Fintype ι] (p : ι → P) {n : ℕ}
-    (hc : Fintype.card ι = n + 2) : AffineIndependent k p ↔ ¬finrank k (vectorSpan k (Set.Range p)) ≤ n := by
+theorem affine_independent_iff_not_finrank_vector_span_le [Fintypeₓ ι] (p : ι → P) {n : ℕ}
+    (hc : Fintypeₓ.card ι = n + 2) : AffineIndependent k p ↔ ¬finrank k (vectorSpan k (Set.Range p)) ≤ n := by
   rw [affine_independent_iff_le_finrank_vector_span k p hc, ← Nat.lt_iff_add_one_le, lt_iff_not_geₓ]
 
 /-- `n + 2` points have a `vector_span` with dimension at most `n` if
 and only if they are not affinely independent. -/
-theorem finrank_vector_span_le_iff_not_affine_independent [Fintype ι] (p : ι → P) {n : ℕ}
-    (hc : Fintype.card ι = n + 2) : finrank k (vectorSpan k (Set.Range p)) ≤ n ↔ ¬AffineIndependent k p :=
+theorem finrank_vector_span_le_iff_not_affine_independent [Fintypeₓ ι] (p : ι → P) {n : ℕ}
+    (hc : Fintypeₓ.card ι = n + 2) : finrank k (vectorSpan k (Set.Range p)) ≤ n ↔ ¬AffineIndependent k p :=
   (not_iff_comm.1 (affine_independent_iff_not_finrank_vector_span_le k p hc).symm).symm
 
 variable {k}
@@ -189,28 +188,28 @@ variable {k}
 family lies in a submodule with dimension one less than its
 cardinality, it equals that submodule. -/
 theorem AffineIndependent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one {p : ι → P}
-    (hi : AffineIndependent k p) {s : Finset ι} {sm : Submodule k V} [FiniteDimensional k sm]
-    (hle : vectorSpan k (s.Image p : Set P) ≤ sm) (hc : Finset.card s = finrank k sm + 1) :
+    (hi : AffineIndependent k p) {s : Finsetₓ ι} {sm : Submodule k V} [FiniteDimensional k sm]
+    (hle : vectorSpan k (s.Image p : Set P) ≤ sm) (hc : Finsetₓ.card s = finrank k sm + 1) :
     vectorSpan k (s.Image p : Set P) = sm :=
   eq_of_le_of_finrank_eq hle <| hi.finrank_vector_span_image_finset hc
 
 /-- If the `vector_span` of a finite affinely independent
 family lies in a submodule with dimension one less than its
 cardinality, it equals that submodule. -/
-theorem AffineIndependent.vector_span_eq_of_le_of_card_eq_finrank_add_one [Fintype ι] {p : ι → P}
+theorem AffineIndependent.vector_span_eq_of_le_of_card_eq_finrank_add_one [Fintypeₓ ι] {p : ι → P}
     (hi : AffineIndependent k p) {sm : Submodule k V} [FiniteDimensional k sm] (hle : vectorSpan k (Set.Range p) ≤ sm)
-    (hc : Fintype.card ι = finrank k sm + 1) : vectorSpan k (Set.Range p) = sm :=
+    (hc : Fintypeₓ.card ι = finrank k sm + 1) : vectorSpan k (Set.Range p) = sm :=
   eq_of_le_of_finrank_eq hle <| hi.finrank_vector_span hc
 
 /-- If the `affine_span` of a finite subset of an affinely independent
 family lies in an affine subspace whose direction has dimension one
 less than its cardinality, it equals that subspace. -/
 theorem AffineIndependent.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one {p : ι → P}
-    (hi : AffineIndependent k p) {s : Finset ι} {sp : AffineSubspace k P} [FiniteDimensional k sp.direction]
-    (hle : affineSpan k (s.Image p : Set P) ≤ sp) (hc : Finset.card s = finrank k sp.direction + 1) :
+    (hi : AffineIndependent k p) {s : Finsetₓ ι} {sp : AffineSubspace k P} [FiniteDimensional k sp.direction]
+    (hle : affineSpan k (s.Image p : Set P) ≤ sp) (hc : Finsetₓ.card s = finrank k sp.direction + 1) :
     affineSpan k (s.Image p : Set P) = sp := by
   have hn : (s.image p).Nonempty := by
-    rw [Finset.Nonempty.image_iff, ← Finset.card_pos, hc]
+    rw [Finsetₓ.Nonempty.image_iff, ← Finsetₓ.card_pos, hc]
     apply Nat.succ_posₓ
   refine' eq_of_direction_eq_of_nonempty_of_le _ ((affine_span_nonempty k _).2 hn) hle
   have hd := direction_le hle
@@ -220,22 +219,22 @@ theorem AffineIndependent.affine_span_image_finset_eq_of_le_of_card_eq_finrank_a
 /-- If the `affine_span` of a finite affinely independent family lies
 in an affine subspace whose direction has dimension one less than its
 cardinality, it equals that subspace. -/
-theorem AffineIndependent.affine_span_eq_of_le_of_card_eq_finrank_add_one [Fintype ι] {p : ι → P}
+theorem AffineIndependent.affine_span_eq_of_le_of_card_eq_finrank_add_one [Fintypeₓ ι] {p : ι → P}
     (hi : AffineIndependent k p) {sp : AffineSubspace k P} [FiniteDimensional k sp.direction]
-    (hle : affineSpan k (Set.Range p) ≤ sp) (hc : Fintype.card ι = finrank k sp.direction + 1) :
+    (hle : affineSpan k (Set.Range p) ≤ sp) (hc : Fintypeₓ.card ι = finrank k sp.direction + 1) :
     affineSpan k (Set.Range p) = sp := by
-  rw [← Finset.card_univ] at hc
-  rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image] at hle⊢
+  rw [← Finsetₓ.card_univ] at hc
+  rw [← Set.image_univ, ← Finsetₓ.coe_univ, ← Finsetₓ.coe_image] at hle⊢
   exact hi.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one hle hc
 
 /-- The `affine_span` of a finite affinely independent family is `⊤` iff the
 family's cardinality is one more than that of the finite-dimensional space. -/
-theorem AffineIndependent.affine_span_eq_top_iff_card_eq_finrank_add_one [FiniteDimensional k V] [Fintype ι] {p : ι → P}
-    (hi : AffineIndependent k p) : affineSpan k (Set.Range p) = ⊤ ↔ Fintype.card ι = finrank k V + 1 := by
+theorem AffineIndependent.affine_span_eq_top_iff_card_eq_finrank_add_one [FiniteDimensional k V] [Fintypeₓ ι]
+    {p : ι → P} (hi : AffineIndependent k p) : affineSpan k (Set.Range p) = ⊤ ↔ Fintypeₓ.card ι = finrank k V + 1 := by
   constructor
   · intro h_tot
-    let n := Fintype.card ι - 1
-    have hn : Fintype.card ι = n + 1 := (Nat.succ_pred_eq_of_posₓ (card_pos_of_affine_span_eq_top k V P h_tot)).symm
+    let n := Fintypeₓ.card ι - 1
+    have hn : Fintypeₓ.card ι = n + 1 := (Nat.succ_pred_eq_of_posₓ (card_pos_of_affine_span_eq_top k V P h_tot)).symm
     rw [hn, ← finrank_top, ← (vector_span_eq_top_of_affine_span_eq_top k V P) h_tot, ← hi.finrank_vector_span hn]
     
   · intro hc
@@ -374,12 +373,12 @@ theorem collinear_pair (p₁ p₂ : P) : Collinear k ({p₁, p₂} : Set P) := b
 /-- Three points are affinely independent if and only if they are not
 collinear. -/
 theorem affine_independent_iff_not_collinear (p : Finₓ 3 → P) : AffineIndependent k p ↔ ¬Collinear k (Set.Range p) := by
-  rw [collinear_iff_finrank_le_one, affine_independent_iff_not_finrank_vector_span_le k p (Fintype.card_fin 3)]
+  rw [collinear_iff_finrank_le_one, affine_independent_iff_not_finrank_vector_span_le k p (Fintypeₓ.card_fin 3)]
 
 /-- Three points are collinear if and only if they are not affinely
 independent. -/
 theorem collinear_iff_not_affine_independent (p : Finₓ 3 → P) : Collinear k (Set.Range p) ↔ ¬AffineIndependent k p := by
-  rw [collinear_iff_finrank_le_one, finrank_vector_span_le_iff_not_affine_independent k p (Fintype.card_fin 3)]
+  rw [collinear_iff_finrank_le_one, finrank_vector_span_le_iff_not_affine_independent k p (Fintypeₓ.card_fin 3)]
 
 end AffineSpace'
 
@@ -396,7 +395,7 @@ variable [Field k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
 /-- Adding a point to a finite-dimensional subspace increases the dimension by at most one. -/
 theorem finrank_vector_span_insert_le (s : AffineSubspace k P) (p : P) :
     finrank k (vectorSpan k (insert p (s : Set P))) ≤ finrank k s.direction + 1 := by
-  by_cases' hf : FiniteDimensional k s.direction
+  by_cases hf:FiniteDimensional k s.direction
   swap
   · have hf' : ¬FiniteDimensional k (vectorSpan k (insert p (s : Set P))) := by
       intro h

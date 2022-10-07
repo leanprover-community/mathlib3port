@@ -40,9 +40,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace 
 the vector measure which maps the set `s` to `∫ₛ f ∂μ`. -/
 def Measure.withDensityᵥ {m : MeasurableSpace α} (μ : Measure α) (f : α → E) : VectorMeasure α E :=
   if hf : Integrable f μ then
-    { measureOf' := fun s => if MeasurableSet s then ∫ x in s, f x ∂μ else 0,
-      empty' := by
-        simp ,
+    { measureOf' := fun s => if MeasurableSet s then ∫ x in s, f x ∂μ else 0, empty' := by simp,
       not_measurable' := fun s hs => if_neg hs,
       m_Union' := fun s hs₁ hs₂ => by
         convert has_sum_integral_Union hs₁ hs₂ hf.integrable_on
@@ -72,7 +70,7 @@ theorem with_densityᵥ_zero : μ.withDensityᵥ (0 : α → E) = 0 := by
 
 @[simp]
 theorem with_densityᵥ_neg : μ.withDensityᵥ (-f) = -μ.withDensityᵥ f := by
-  by_cases' hf : integrable f μ
+  by_cases hf:integrable f μ
   · ext1 i hi
     rw [vector_measure.neg_apply, with_densityᵥ_apply hf hi, ← integral_neg, with_densityᵥ_apply hf.neg hi]
     rfl
@@ -113,12 +111,12 @@ theorem with_densityᵥ_sub' (hf : Integrable f μ) (hg : Integrable g μ) :
 @[simp]
 theorem with_densityᵥ_smul {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] (f : α → E)
     (r : 𝕜) : μ.withDensityᵥ (r • f) = r • μ.withDensityᵥ f := by
-  by_cases' hf : integrable f μ
+  by_cases hf:integrable f μ
   · ext1 i hi
     rw [with_densityᵥ_apply (hf.smul r) hi, vector_measure.smul_apply, with_densityᵥ_apply hf hi, ← integral_smul r f]
     rfl
     
-  · by_cases' hr : r = 0
+  · by_cases hr:r = 0
     · rw [hr, zero_smul, zero_smul, with_densityᵥ_zero]
       
     · rw [with_densityᵥ, with_densityᵥ, dif_neg hf, dif_neg, smul_zero]
@@ -132,7 +130,7 @@ theorem with_densityᵥ_smul' {𝕜 : Type _} [NontriviallyNormedField 𝕜] [No
 
 theorem Measure.with_densityᵥ_absolutely_continuous (μ : Measure α) (f : α → ℝ) :
     μ.withDensityᵥ f ≪ᵥ μ.toEnnrealVectorMeasure := by
-  by_cases' hf : integrable f μ
+  by_cases hf:integrable f μ
   · refine' vector_measure.absolutely_continuous.mk fun i hi₁ hi₂ => _
     rw [to_ennreal_vector_measure_apply_measurable hi₁] at hi₂
     rw [with_densityᵥ_apply hf hi₁, measure.restrict_zero_set hi₂, integral_zero_measure]
@@ -148,7 +146,7 @@ theorem Integrable.ae_eq_of_with_densityᵥ_eq {f g : α → E} (hf : Integrable
   rw [← with_densityᵥ_apply hf hi, hfg, with_densityᵥ_apply hg hi]
 
 theorem WithDensityᵥEq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) : μ.withDensityᵥ f = μ.withDensityᵥ g := by
-  by_cases' hf : integrable f μ
+  by_cases hf:integrable f μ
   · ext i hi
     rw [with_densityᵥ_apply hf hi, with_densityᵥ_apply (hf.congr h) hi]
     exact integral_congr_ae (ae_restrict_of_ae h)

@@ -115,26 +115,20 @@ theorem leibniz : X (f * f') = f • X f' + f' • X f :=
   X.leibniz' _ _
 
 instance : Zero (LeftInvariantDerivation I G) :=
-  ⟨⟨0, fun g => by
-      simp only [LinearMap.map_zero, Derivation.coe_zero]⟩⟩
+  ⟨⟨0, fun g => by simp only [LinearMap.map_zero, Derivation.coe_zero]⟩⟩
 
 instance : Inhabited (LeftInvariantDerivation I G) :=
   ⟨0⟩
 
 instance :
-    Add (LeftInvariantDerivation I G) where add := fun X Y =>
-    ⟨X + Y, fun g => by
-      simp only [LinearMap.map_add, Derivation.coe_add, left_invariant', Pi.add_apply]⟩
+    Add
+      (LeftInvariantDerivation I
+        G) where add := fun X Y =>
+    ⟨X + Y, fun g => by simp only [LinearMap.map_add, Derivation.coe_add, left_invariant', Pi.add_apply]⟩
 
-instance :
-    Neg (LeftInvariantDerivation I G) where neg := fun X =>
-    ⟨-X, fun g => by
-      simp [left_invariant']⟩
+instance : Neg (LeftInvariantDerivation I G) where neg := fun X => ⟨-X, fun g => by simp [left_invariant']⟩
 
-instance :
-    Sub (LeftInvariantDerivation I G) where sub := fun X Y =>
-    ⟨X - Y, fun g => by
-      simp [left_invariant']⟩
+instance : Sub (LeftInvariantDerivation I G) where sub := fun X Y => ⟨X - Y, fun g => by simp [left_invariant']⟩
 
 @[simp]
 theorem coe_add : ⇑(X + Y) = X + Y :=
@@ -161,22 +155,22 @@ theorem lift_zero : (↑(0 : LeftInvariantDerivation I G) : Derivation 𝕜 C^�
   rfl
 
 instance hasNatScalar :
-    HasSmul ℕ (LeftInvariantDerivation I G) where smul := fun r X =>
-    ⟨r • X, fun g => by
-      simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
+    HasSmul ℕ
+      (LeftInvariantDerivation I
+        G) where smul := fun r X => ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
 
 instance hasIntScalar :
-    HasSmul ℤ (LeftInvariantDerivation I G) where smul := fun r X =>
-    ⟨r • X, fun g => by
-      simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
+    HasSmul ℤ
+      (LeftInvariantDerivation I
+        G) where smul := fun r X => ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
 
 instance : AddCommGroupₓ (LeftInvariantDerivation I G) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 instance :
-    HasSmul 𝕜 (LeftInvariantDerivation I G) where smul := fun r X =>
-    ⟨r • X, fun g => by
-      simp_rw [LinearMap.map_smul, left_invariant']⟩
+    HasSmul 𝕜
+      (LeftInvariantDerivation I
+        G) where smul := fun r X => ⟨r • X, fun g => by simp_rw [LinearMap.map_smul, left_invariant']⟩
 
 variable (r X)
 

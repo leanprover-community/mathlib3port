@@ -14,8 +14,9 @@ Defines a category, as a type class parametrised by the type of objects.
 ## Notations
 
 Introduces notations
-* `X ⟶ Y` for the morphism spaces,
-* `f ≫ g` for composition in the 'arrows' convention.
+* `X ⟶ Y` for the morphism spaces (type as `\hom`),
+* `𝟙 X` for the identity morphism on `X` (type as `\b1`),
+* `f ≫ g` for composition in the 'arrows' convention (type as `\gg`).
 
 Users may like to add `f ⊚ g` for composition in the standard convention, using
 ```lean
@@ -95,15 +96,9 @@ specified explicitly, as `category.{v} C`. (See also `large_category` and `small
 See <https://stacks.math.columbia.edu/tag/0014>.
 -/
 class Category (obj : Type u) extends CategoryStruct.{v} obj : Type max u (v + 1) where
-  id_comp' : ∀ {X Y : obj} (f : hom X Y), 𝟙 X ≫ f = f := by
-    run_tac
-      obviously
-  comp_id' : ∀ {X Y : obj} (f : hom X Y), f ≫ 𝟙 Y = f := by
-    run_tac
-      obviously
-  assoc' : ∀ {W X Y Z : obj} (f : hom W X) (g : hom X Y) (h : hom Y Z), (f ≫ g) ≫ h = f ≫ g ≫ h := by
-    run_tac
-      obviously
+  id_comp' : ∀ {X Y : obj} (f : hom X Y), 𝟙 X ≫ f = f := by obviously
+  comp_id' : ∀ {X Y : obj} (f : hom X Y), f ≫ 𝟙 Y = f := by obviously
+  assoc' : ∀ {W X Y Z : obj} (f : hom W X) (g : hom X Y) (h : hom Y Z), (f ≫ g) ≫ h = f ≫ g ≫ h := by obviously
 
 -- `restate_axiom` is a command that creates a lemma from a structure field,
 -- discarding any auto_param wrappers from the type.
@@ -138,12 +133,10 @@ initialize_simps_projections category (to_category_struct_to_quiver_hom → Hom,
   to_category_struct_id → id, -toCategoryStruct)
 
 /-- postcompose an equation between morphisms by another morphism -/
-theorem eq_whisker {f g : X ⟶ Y} (w : f = g) (h : Y ⟶ Z) : f ≫ h = g ≫ h := by
-  rw [w]
+theorem eq_whisker {f g : X ⟶ Y} (w : f = g) (h : Y ⟶ Z) : f ≫ h = g ≫ h := by rw [w]
 
 /-- precompose an equation between morphisms by another morphism -/
-theorem whisker_eq (f : X ⟶ Y) {g h : Y ⟶ Z} (w : g = h) : f ≫ g = f ≫ h := by
-  rw [w]
+theorem whisker_eq (f : X ⟶ Y) {g h : Y ⟶ Z} (w : g = h) : f ≫ g = f ≫ h := by rw [w]
 
 -- mathport name: «expr =≫ »
 infixr:80 " =≫ " => eq_whisker
@@ -161,13 +154,11 @@ theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} (h : X ⟶ Y), h �
 
 theorem eq_of_comp_left_eq' (f g : X ⟶ Y) (w : (fun {Z : C} (h : Y ⟶ Z) => f ≫ h) = fun {Z : C} (h : Y ⟶ Z) => g ≫ h) :
     f = g :=
-  eq_of_comp_left_eq fun Z h => by
-    convert congr_fun (congr_fun w Z) h
+  eq_of_comp_left_eq fun Z h => by convert congr_fun (congr_fun w Z) h
 
 theorem eq_of_comp_right_eq' (f g : Y ⟶ Z) (w : (fun {X : C} (h : X ⟶ Y) => h ≫ f) = fun {X : C} (h : X ⟶ Y) => h ≫ g) :
     f = g :=
-  eq_of_comp_right_eq fun X h => by
-    convert congr_fun (congr_fun w X) h
+  eq_of_comp_right_eq fun X h => by convert congr_fun (congr_fun w X) h
 
 theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} (g : X ⟶ Y), f ≫ g = g) : f = 𝟙 X := by
   convert w (𝟙 X)
@@ -178,20 +169,16 @@ theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} (g : Y ⟶ X), g ≫ 
   tidy
 
 theorem comp_ite {P : Prop} [Decidable P] {X Y Z : C} (f : X ⟶ Y) (g g' : Y ⟶ Z) :
-    (f ≫ if P then g else g') = if P then f ≫ g else f ≫ g' := by
-  split_ifs <;> rfl
+    (f ≫ if P then g else g') = if P then f ≫ g else f ≫ g' := by split_ifs <;> rfl
 
 theorem ite_comp {P : Prop} [Decidable P] {X Y Z : C} (f f' : X ⟶ Y) (g : Y ⟶ Z) :
-    (if P then f else f') ≫ g = if P then f ≫ g else f' ≫ g := by
-  split_ifs <;> rfl
+    (if P then f else f') ≫ g = if P then f ≫ g else f' ≫ g := by split_ifs <;> rfl
 
 theorem comp_dite {P : Prop} [Decidable P] {X Y Z : C} (f : X ⟶ Y) (g : P → (Y ⟶ Z)) (g' : ¬P → (Y ⟶ Z)) :
-    (f ≫ if h : P then g h else g' h) = if h : P then f ≫ g h else f ≫ g' h := by
-  split_ifs <;> rfl
+    (f ≫ if h : P then g h else g' h) = if h : P then f ≫ g h else f ≫ g' h := by split_ifs <;> rfl
 
 theorem dite_comp {P : Prop} [Decidable P] {X Y Z : C} (f : P → (X ⟶ Y)) (f' : ¬P → (X ⟶ Y)) (g : Y ⟶ Z) :
-    (if h : P then f h else f' h) ≫ g = if h : P then f h ≫ g else f' h ≫ g := by
-  split_ifs <;> rfl
+    (if h : P then f h else f' h) ≫ g = if h : P then f h ≫ g else f' h ≫ g := by split_ifs <;> rfl
 
 /-- A morphism `f` is an epimorphism if it can be "cancelled" when precomposed:
 `f ≫ g = f ≫ h` implies `g = h`.
@@ -210,12 +197,10 @@ class Mono (f : X ⟶ Y) : Prop where
   right_cancellation : ∀ {Z : C} (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h
 
 instance (X : C) : Epi (𝟙 X) :=
-  ⟨fun Z g h w => by
-    simpa using w⟩
+  ⟨fun Z g h w => by simpa using w⟩
 
 instance (X : C) : Mono (𝟙 X) :=
-  ⟨fun Z g h w => by
-    simpa using w⟩
+  ⟨fun Z g h w => by simpa using w⟩
 
 theorem cancel_epi (f : X ⟶ Y) [Epi f] {g h : Y ⟶ Z} : f ≫ g = f ≫ h ↔ g = h :=
   ⟨fun p => Epi.left_cancellation g h p, congr_arg _⟩
@@ -249,7 +234,7 @@ theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : 
   constructor
   intro Z a b w
   replace w := congr_arg (fun k => k ≫ g) w
-  dsimp'  at w
+  dsimp at w
   rw [category.assoc, category.assoc] at w
   exact (cancel_mono _).1 w
 
@@ -261,7 +246,7 @@ theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Epi (f ≫ g)] : Epi
   constructor
   intro Z a b w
   replace w := congr_arg (fun k => f ≫ k) w
-  dsimp'  at w
+  dsimp at w
   rw [← category.assoc, ← category.assoc] at w
   exact (cancel_epi _).1 w
 
@@ -284,8 +269,7 @@ instance uliftCategory : Category.{v} (ULift.{u'} C) where
   comp := fun _ _ _ f g => f ≫ g
 
 -- We verify that this previous instance can lift small categories to large categories.
-example (D : Type u) [SmallCategory D] : LargeCategory (ULift.{u + 1} D) := by
-  infer_instance
+example (D : Type u) [SmallCategory D] : LargeCategory (ULift.{u + 1} D) := by infer_instance
 
 end
 

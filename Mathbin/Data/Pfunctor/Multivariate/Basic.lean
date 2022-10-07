@@ -86,13 +86,12 @@ theorem const.get_map (f : α ⟹ β) (x : (const n A).Obj α) : const.get (f <$
   rfl
 
 @[simp]
-theorem const.get_mk (x : A) : const.get (const.mk n x : (const n A).Obj α) = x := by
-  rfl
+theorem const.get_mk (x : A) : const.get (const.mk n x : (const n A).Obj α) = x := by rfl
 
 @[simp]
 theorem const.mk_get (x : (const n A).Obj α) : const.mk n (const.get x) = x := by
   cases x
-  dsimp' [const.get, const.mk]
+  dsimp [const.get, const.mk]
   congr with _⟨⟩
 
 end Const
@@ -117,16 +116,15 @@ theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
   cases x
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem comp.get_mk (x : P.Obj fun i => (Q i).Obj α) : comp.get (comp.mk x) = x := by
   cases x
-  simp [comp.get, comp.mk]
+  simp! [comp.get, comp.mk]
 
 @[simp]
 theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x := by
   cases x
-  dsimp' [comp.get, comp.mk]
+  dsimp [comp.get, comp.mk]
   ext : 2 <;> intros
   rfl
   rfl
@@ -156,14 +154,11 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj �
 theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.B a ⟹ α) :
     @Liftp.{u} _ P.Obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) := by
   simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
-  · casesm* Exists _, _ ∧ _
+  · casesm*Exists _, _ ∧ _
     subst_vars
     assumption
     
-  repeat'
-    first |
-      constructor|
-      assumption
+  repeat' first |constructor|assumption
 
 theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : P.Obj α) :
     Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) := by
@@ -184,7 +179,7 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
     
   rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
   use ⟨a, fun i j => ⟨(f₀ i j, f₁ i j), h i j⟩⟩
-  dsimp'
+  dsimp
   constructor
   · rw [xeq]
     rfl

@@ -61,8 +61,7 @@ theorem encode_list_cons (a : α) (l : List α) : encode (a::l) = succ (mkpair (
 
 @[simp]
 theorem decode_list_zero : decode (List α) 0 = some [] :=
-  show decodeList 0 = some [] by
-    rw [decode_list]
+  show decodeList 0 = some [] by rw [decode_list]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation
 @[simp]
@@ -80,7 +79,7 @@ theorem length_le_encode : ∀ l : List α, length l ≤ encode l
 
 end List
 
-section Finset
+section Finsetₓ
 
 variable [Encodable α]
 
@@ -90,8 +89,7 @@ private def enle : α → α → Prop :=
 private theorem enle.is_linear_order : IsLinearOrder α Enle :=
   (RelEmbedding.preimage ⟨encode, encode_injective⟩ (· ≤ ·)).IsLinearOrder
 
-private def decidable_enle (a b : α) : Decidable (Enle a b) := by
-  unfold enle Order.Preimage <;> infer_instance
+private def decidable_enle (a b : α) : Decidable (Enle a b) := by unfold enle Order.Preimage <;> infer_instance
 
 attribute [local instance] enle.is_linear_order decidable_enle
 
@@ -105,14 +103,13 @@ def decodeMultiset (n : ℕ) : Option (Multiset α) :=
 
 /-- If `α` is encodable, then so is `multiset α`. -/
 instance _root_.multiset.encodable : Encodable (Multiset α) :=
-  ⟨encodeMultiset, decodeMultiset, fun s => by
-    simp [encode_multiset, decode_multiset, encodek]⟩
+  ⟨encodeMultiset, decodeMultiset, fun s => by simp [encode_multiset, decode_multiset, encodek]⟩
 
 /-- If `α` is countable, then so is `multiset α`. -/
 instance _root_.multiset.countable {α : Type _} [Countable α] : Countable (Multiset α) :=
   Quotientₓ.countable
 
-end Finset
+end Finsetₓ
 
 /-- A listable type with decidable equality is encodable. -/
 def encodableOfList [DecidableEq α] (l : List α) (H : ∀ x, x ∈ l) : Encodable α :=
@@ -120,16 +117,16 @@ def encodableOfList [DecidableEq α] (l : List α) (H : ∀ x, x ∈ l) : Encoda
 
 /-- A finite type is encodable. Because the encoding is not unique, we wrap it in `trunc` to
 preserve computability. -/
-def _root_.fintype.trunc_encodable (α : Type _) [DecidableEq α] [Fintype α] : Trunc (Encodable α) :=
-  @Quot.recOnSubsingleton _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _ Finset.univ.1
-    (fun l H => Trunc.mk <| encodableOfList l H) Finset.mem_univ
+def _root_.fintype.trunc_encodable (α : Type _) [DecidableEq α] [Fintypeₓ α] : Trunc (Encodable α) :=
+  @Quot.recOnSubsingleton _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _ Finsetₓ.univ.1
+    (fun l H => Trunc.mk <| encodableOfList l H) Finsetₓ.mem_univ
 
 /-- A noncomputable way to arbitrarily choose an ordering on a finite type.
 It is not made into a global instance, since it involves an arbitrary choice.
 This can be locally made into an instance with `local attribute [instance] fintype.to_encodable`. -/
-noncomputable def _root_.fintype.to_encodable (α : Type _) [Fintype α] : Encodable α := by
+noncomputable def _root_.fintype.to_encodable (α : Type _) [Fintypeₓ α] : Encodable α := by
   classical
-  exact (Fintype.truncEncodable α).out
+  exact (Fintypeₓ.truncEncodable α).out
 
 /-- If `α` is encodable, then so is `vector α n`. -/
 instance _root_.vector.encodable [Encodable α] {n} : Encodable (Vector α n) :=
@@ -155,52 +152,52 @@ instance _root_.array.countable [Countable α] {n} : Countable (Arrayₓ n α) :
   Countable.of_equiv _ (Equivₓ.vectorEquivArray _ _)
 
 /-- If `α` is encodable, then so is `finset α`. -/
-instance _root_.finset.encodable [Encodable α] : Encodable (Finset α) :=
+instance _root_.finset.encodable [Encodable α] : Encodable (Finsetₓ α) :=
   haveI := decidable_eq_of_encodable α
   of_equiv { s : Multiset α // s.Nodup }
     ⟨fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => rfl, fun ⟨a, b⟩ => rfl⟩
 
 /-- If `α` is countable, then so is `finset α`. -/
-instance _root_.finset.countable [Countable α] : Countable (Finset α) :=
-  Finset.val_injective.Countable
+instance _root_.finset.countable [Countable α] : Countable (Finsetₓ α) :=
+  Finsetₓ.val_injective.Countable
 
 -- TODO: Unify with `fintype_pi` and find a better name
 /-- When `α` is finite and `β` is encodable, `α → β` is encodable too. Because the encoding is not
 unique, we wrap it in `trunc` to preserve computability. -/
-def fintypeArrow (α : Type _) (β : Type _) [DecidableEq α] [Fintype α] [Encodable β] : Trunc (Encodable (α → β)) :=
-  (Fintype.truncEquivFin α).map fun f =>
-    Encodable.ofEquiv (Finₓ (Fintype.card α) → β) <| Equivₓ.arrowCongr f (Equivₓ.refl _)
+def fintypeArrow (α : Type _) (β : Type _) [DecidableEq α] [Fintypeₓ α] [Encodable β] : Trunc (Encodable (α → β)) :=
+  (Fintypeₓ.truncEquivFin α).map fun f =>
+    Encodable.ofEquiv (Finₓ (Fintypeₓ.card α) → β) <| Equivₓ.arrowCongr f (Equivₓ.refl _)
 
 /-- When `α` is finite and all `π a` are encodable, `Π a, π a` is encodable too. Because the
 encoding is not unique, we wrap it in `trunc` to preserve computability. -/
-def fintypePi (α : Type _) (π : α → Type _) [DecidableEq α] [Fintype α] [∀ a, Encodable (π a)] :
+def fintypePi (α : Type _) (π : α → Type _) [DecidableEq α] [Fintypeₓ α] [∀ a, Encodable (π a)] :
     Trunc (Encodable (∀ a, π a)) :=
-  (Fintype.truncEncodable α).bind fun a =>
+  (Fintypeₓ.truncEncodable α).bind fun a =>
     (@fintypeArrow α (Σa, π a) _ _ (@Sigma.encodable _ _ a _)).bind fun f =>
       Trunc.mk <| @Encodable.ofEquiv _ _ (@Subtype.encodable _ _ f _) (Equivₓ.piEquivSubtypeSigma α π)
 
 /-- The elements of a `fintype` as a sorted list. -/
-def sortedUniv (α) [Fintype α] [Encodable α] : List α :=
-  Finset.univ.sort (Encodable.encode' α ⁻¹'o (· ≤ ·))
+def sortedUniv (α) [Fintypeₓ α] [Encodable α] : List α :=
+  Finsetₓ.univ.sort (Encodable.encode' α ⁻¹'o (· ≤ ·))
 
 @[simp]
-theorem mem_sorted_univ {α} [Fintype α] [Encodable α] (x : α) : x ∈ sortedUniv α :=
-  (Finset.mem_sort _).2 (Finset.mem_univ _)
+theorem mem_sorted_univ {α} [Fintypeₓ α] [Encodable α] (x : α) : x ∈ sortedUniv α :=
+  (Finsetₓ.mem_sort _).2 (Finsetₓ.mem_univ _)
 
 @[simp]
-theorem length_sorted_univ (α) [Fintype α] [Encodable α] : (sortedUniv α).length = Fintype.card α :=
-  Finset.length_sort _
+theorem length_sorted_univ (α) [Fintypeₓ α] [Encodable α] : (sortedUniv α).length = Fintypeₓ.card α :=
+  Finsetₓ.length_sort _
 
 @[simp]
-theorem sorted_univ_nodup (α) [Fintype α] [Encodable α] : (sortedUniv α).Nodup :=
-  Finset.sort_nodup _ _
+theorem sorted_univ_nodup (α) [Fintypeₓ α] [Encodable α] : (sortedUniv α).Nodup :=
+  Finsetₓ.sort_nodup _ _
 
 @[simp]
-theorem sorted_univ_to_finset (α) [Fintype α] [Encodable α] [DecidableEq α] : (sortedUniv α).toFinset = Finset.univ :=
-  Finset.sort_to_finset _ _
+theorem sorted_univ_to_finset (α) [Fintypeₓ α] [Encodable α] [DecidableEq α] : (sortedUniv α).toFinset = Finsetₓ.univ :=
+  Finsetₓ.sort_to_finset _ _
 
 /-- An encodable `fintype` is equivalent to the same size `fin`. -/
-def fintypeEquivFin {α} [Fintype α] [Encodable α] : α ≃ Finₓ (Fintype.card α) := by
+def fintypeEquivFin {α} [Fintypeₓ α] [Encodable α] : α ≃ Finₓ (Fintypeₓ.card α) := by
   haveI : DecidableEq α := Encodable.decidableEqOfEncodable _
   trans
   · exact ((sorted_univ_nodup α).nthLeEquivOfForallMemList _ mem_sorted_univ).symm
@@ -208,8 +205,8 @@ def fintypeEquivFin {α} [Fintype α] [Encodable α] : α ≃ Finₓ (Fintype.ca
   exact Equivₓ.cast (congr_arg _ (length_sorted_univ α))
 
 /-- If `α` and `β` are encodable and `α` is a fintype, then `α → β` is encodable as well. -/
-instance fintypeArrowOfEncodable {α β : Type _} [Encodable α] [Fintype α] [Encodable β] : Encodable (α → β) :=
-  ofEquiv (Finₓ (Fintype.card α) → β) <| Equivₓ.arrowCongr fintypeEquivFin (Equivₓ.refl _)
+instance fintypeArrowOfEncodable {α β : Type _} [Encodable α] [Fintypeₓ α] [Encodable β] : Encodable (α → β) :=
+  ofEquiv (Finₓ (Fintypeₓ.card α) → β) <| Equivₓ.arrowCongr fintypeEquivFin (Equivₓ.refl _)
 
 end Encodable
 
@@ -223,8 +220,7 @@ section List
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encodeList a = n
-  | 0 => by
-    rw [decode_list] <;> exact ⟨_, rfl, rfl⟩
+  | 0 => by rw [decode_list] <;> exact ⟨_, rfl, rfl⟩
   | succ v => by
     cases' e : unpair v with v₁ v₂
     have h := unpair_right_le v
@@ -241,8 +237,7 @@ instance denumerableList : Denumerable (List α) :=
   ⟨denumerable_list_aux⟩
 
 @[simp]
-theorem list_of_nat_zero : ofNat (List α) 0 = [] := by
-  rw [← @encode_list_nil α, of_nat_encode]
+theorem list_of_nat_zero : ofNat (List α) 0 = [] := by rw [← @encode_list_nil α, of_nat_encode]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
@@ -276,8 +271,7 @@ def raise : List ℕ → ℕ → List ℕ
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem lower_raise : ∀ l n, lower (raise l n) n = l
   | [], n => rfl
-  | m::l, n => by
-    rw [raise, lower, add_tsub_cancel_right, lower_raise]
+  | m::l, n => by rw [raise, lower, add_tsub_cancel_right, lower_raise]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -306,12 +300,11 @@ instance multiset : Denumerable (Multiset α) :=
       Multiset.map (ofNat α) (raise (ofNat (List ℕ) n) 0), fun s => by
       have := raise_lower (List.sorted_cons.2 ⟨fun n _ => zero_le n, (s.map encode).sort_sorted _⟩) <;>
         simp [-Multiset.coe_map, this],
-      fun n => by
-      simp [-Multiset.coe_map, List.merge_sort_eq_self _ (raise_sorted _ _), lower_raise]⟩
+      fun n => by simp [-Multiset.coe_map, List.merge_sort_eq_self _ (raise_sorted _ _), lower_raise]⟩
 
 end Multiset
 
-section Finset
+section Finsetₓ
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -333,8 +326,7 @@ def raise' : List ℕ → ℕ → List ℕ
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem lower_raise' : ∀ l n, lower' (raise' l n) n = l
   | [], n => rfl
-  | m::l, n => by
-    simp [raise', lower', add_tsub_cancel_right, lower_raise']
+  | m::l, n => by simp [raise', lower', add_tsub_cancel_right, lower_raise']
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem raise_lower' : ∀ {l n}, (∀ m ∈ l, n ≤ m) → List.Sorted (· < ·) l → raise' (lower' l n) n = l
@@ -356,22 +348,22 @@ theorem raise'_sorted : ∀ l n, List.Sorted (· < ·) (raise' l n)
   | m::l, n => List.chain_iff_pairwise.1 (raise'_chain _ (lt_succ_selfₓ _))
 
 /-- Makes `raise' l n` into a finset. Elements are distinct thanks to `raise'_sorted`. -/
-def raise'Finset (l : List ℕ) (n : ℕ) : Finset ℕ :=
+def raise'Finset (l : List ℕ) (n : ℕ) : Finsetₓ ℕ :=
   ⟨raise' l n, (raise'_sorted _ _).imp (@ne_of_ltₓ _ _)⟩
 
 /-- If `α` is denumerable, then so is `finset α`. Warning: this is *not* the same encoding as used
 in `finset.encodable`. -/
-instance finset : Denumerable (Finset α) :=
+instance finset : Denumerable (Finsetₓ α) :=
   mk'
-    ⟨fun s : Finset α => encode <| lower' ((s.map (eqv α).toEmbedding).sort (· ≤ ·)) 0, fun n =>
-      Finset.map (eqv α).symm.toEmbedding (raise'Finset (ofNat (List ℕ) n) 0), fun s =>
-      Finset.eq_of_veq <| by
-        simp [-Multiset.coe_map, raise'_finset, raise_lower' (fun n _ => zero_le n) (Finset.sort_sorted_lt _)],
+    ⟨fun s : Finsetₓ α => encode <| lower' ((s.map (eqv α).toEmbedding).sort (· ≤ ·)) 0, fun n =>
+      Finsetₓ.map (eqv α).symm.toEmbedding (raise'Finset (ofNat (List ℕ) n) 0), fun s =>
+      Finsetₓ.eq_of_veq <| by
+        simp [-Multiset.coe_map, raise'_finset, raise_lower' (fun n _ => zero_le n) (Finsetₓ.sort_sorted_lt _)],
       fun n => by
-      simp [-Multiset.coe_map, Finset.map, raise'_finset, Finset.sort,
+      simp [-Multiset.coe_map, Finsetₓ.map, raise'_finset, Finsetₓ.sort,
         List.merge_sort_eq_self (· ≤ ·) ((raise'_sorted _ _).imp (@le_of_ltₓ _ _)), lower_raise']⟩
 
-end Finset
+end Finsetₓ
 
 end Denumerable
 
@@ -381,10 +373,7 @@ namespace Equivₓ
 def listUnitEquiv : List Unit ≃ ℕ where
   toFun := List.length
   invFun := List.repeat ()
-  left_inv := fun u =>
-    List.length_injective
-      (by
-        simp )
+  left_inv := fun u => List.length_injective (by simp)
   right_inv := fun n => List.length_repeat () n
 
 /-- `list ℕ` is equivalent to `ℕ`. -/

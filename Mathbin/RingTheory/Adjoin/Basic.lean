@@ -61,9 +61,8 @@ theorem adjoin_eq (S : Subalgebra R A) : adjoin R ↑S = S :=
 theorem adjoin_Union {α : Type _} (s : α → Set A) : adjoin R (Set.Union s) = ⨆ i : α, adjoin R (s i) :=
   (@Algebra.gc R A _ _ _).l_supr
 
-theorem adjoin_attach_bUnion [DecidableEq A] {α : Type _} {s : Finset α} (f : s → Finset A) :
-    adjoin R (s.attach.bUnion f : Set A) = ⨆ x, adjoin R (f x) := by
-  simpa [adjoin_Union]
+theorem adjoin_attach_bUnion [DecidableEq A] {α : Type _} {s : Finsetₓ α} (f : s → Finsetₓ A) :
+    adjoin R (s.attach.bUnion f : Set A) = ⨆ x, adjoin R (f x) := by simpa [adjoin_Union]
 
 @[elabAsElim]
 theorem adjoin_induction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : ∀ x ∈ s, p x)
@@ -172,8 +171,7 @@ theorem span_le_adjoin (s : Set A) : span R s ≤ (adjoin R s).toSubmodule :=
   span_le.mpr subset_adjoin
 
 theorem adjoin_to_submodule_le {s : Set A} {t : Submodule R A} :
-    (adjoin R s).toSubmodule ≤ t ↔ ↑(Submonoid.closure s) ⊆ (t : Set A) := by
-  rw [adjoin_eq_span, span_le]
+    (adjoin R s).toSubmodule ≤ t ↔ ↑(Submonoid.closure s) ⊆ (t : Set A) := by rw [adjoin_eq_span, span_le]
 
 theorem adjoin_eq_span_of_subset {s : Set A} (hs : ↑(Submonoid.closure s) ⊆ (span R s : Set A)) :
     (adjoin R s).toSubmodule = span R s :=
@@ -202,9 +200,7 @@ theorem mem_adjoin_of_map_mul {s} {x : A} {f : A →ₗ[R] B} (hf : ∀ a₁ a�
   refine'
     @adjoin_induction R A _ _ _ _ (fun a => f a ∈ adjoin R (f '' (s ∪ {1}))) x h
       (fun a ha => subset_adjoin ⟨a, ⟨Set.subset_union_left _ _ ha, rfl⟩⟩) (fun r => _)
-      (fun y z hy hz => by
-        simpa [hy, hz] using Subalgebra.add_mem _ hy hz)
-      fun y z hy hz => by
+      (fun y z hy hz => by simpa [hy, hz] using Subalgebra.add_mem _ hy hz) fun y z hy hz => by
       simpa [hy, hz, hf y z] using Subalgebra.mul_mem _ hy hz
   have : f 1 ∈ adjoin R (f '' (s ∪ {1})) := subset_adjoin ⟨1, ⟨Set.subset_union_right _ _ <| Set.mem_singleton 1, rfl⟩⟩
   replace this := Subalgebra.smul_mem (adjoin R (f '' (s ∪ {1}))) this r
@@ -241,17 +237,10 @@ def adjoinCommSemiringOfComm {s : Set A} (hcomm : ∀ a ∈ s, ∀ b ∈ s, a * 
       ext
       simp only [Subalgebra.coe_mul]
       exact
-        adjoin_induction₂ x.prop y.prop hcomm
-          (fun _ _ => by
-            rw [commutes])
-          (fun r x hx => commutes r x) (fun r x hx => (commutes r x).symm)
-          (fun _ _ _ h₁ h₂ => by
-            simp only [add_mulₓ, mul_addₓ, h₁, h₂])
-          (fun _ _ _ h₁ h₂ => by
-            simp only [add_mulₓ, mul_addₓ, h₁, h₂])
-          (fun x₁ x₂ y₁ h₁ h₂ => by
-            rw [mul_assoc, h₂, ← mul_assoc y₁, ← h₁, mul_assoc x₁])
-          fun x₁ x₂ y₁ h₁ h₂ => by
+        adjoin_induction₂ x.prop y.prop hcomm (fun _ _ => by rw [commutes]) (fun r x hx => commutes r x)
+          (fun r x hx => (commutes r x).symm) (fun _ _ _ h₁ h₂ => by simp only [add_mulₓ, mul_addₓ, h₁, h₂])
+          (fun _ _ _ h₁ h₂ => by simp only [add_mulₓ, mul_addₓ, h₁, h₂])
+          (fun x₁ x₂ y₁ h₁ h₂ => by rw [mul_assoc, h₂, ← mul_assoc y₁, ← h₁, mul_assoc x₁]) fun x₁ x₂ y₁ h₁ h₂ => by
           rw [mul_assoc x₂, ← h₂, ← mul_assoc x₂, ← h₁, ← mul_assoc] }
 
 theorem adjoin_singleton_one : adjoin R ({1} : Set A) = ⊥ :=
@@ -299,8 +288,8 @@ theorem pow_smul_mem_of_smul_subset_of_mem_adjoin [CommSemiringₓ B] [Algebra R
   rw [Finsupp.smul_sum]
   refine' B'.to_submodule.sum_mem _
   intro a ha
-  have : n ≥ n₁ a := le_transₓ (Finset.le_sup ha) hn
-  dsimp' only
+  have : n ≥ n₁ a := le_transₓ (Finsetₓ.le_sup ha) hn
+  dsimp only
   rw [← tsub_add_cancel_of_le this, pow_addₓ, ← smul_smul, ← IsScalarTower.algebra_map_smul A (l a) (a : B),
     smul_smul (r ^ n₁ a), mul_comm, ← smul_smul, smul_def, map_pow, IsScalarTower.algebra_map_smul]
   apply Subalgebra.mul_mem _ (Subalgebra.pow_mem _ hr _) _

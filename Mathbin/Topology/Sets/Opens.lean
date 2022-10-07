@@ -86,7 +86,7 @@ open OrderDual (ofDual toDual)
 
 /-- The galois coinsertion between sets and opens. -/
 def gi : GaloisCoinsertion Subtype.val (@interior α _) where
-  choice := fun s hs => ⟨s, interior_eq_iff_open.mp <| le_antisymmₓ interior_subset hs⟩
+  choice := fun s hs => ⟨s, interior_eq_iff_is_open.mp <| le_antisymmₓ interior_subset hs⟩
   gc := gc
   u_l_le := fun _ => interior_subset
   choice_eq := fun s hs => le_antisymmₓ hs interior_subset
@@ -141,11 +141,11 @@ theorem coe_Sup {S : Set (Opens α)} : (↑(sup S) : Set α) = ⋃ i ∈ S, ↑i
   rfl
 
 @[simp, norm_cast]
-theorem coe_finset_sup (f : ι → Opens α) (s : Finset ι) : (↑(s.sup f) : Set α) = s.sup (coe ∘ f) :=
+theorem coe_finset_sup (f : ι → Opens α) (s : Finsetₓ ι) : (↑(s.sup f) : Set α) = s.sup (coe ∘ f) :=
   map_finset_sup (⟨⟨coe, coe_sup⟩, coe_bot⟩ : SupBotHom (Opens α) (Set α)) _ _
 
 @[simp, norm_cast]
-theorem coe_finset_inf (f : ι → Opens α) (s : Finset ι) : (↑(s.inf f) : Set α) = s.inf (coe ∘ f) :=
+theorem coe_finset_inf (f : ι → Opens α) (s : Finsetₓ ι) : (↑(s.inf f) : Set α) = s.inf (coe ∘ f) :=
   map_finset_inf (⟨⟨coe, coe_inf⟩, coe_top⟩ : InfTopHom (Opens α) (Set α)) _ _
 
 instance : Inter (Opens α) :=
@@ -184,8 +184,7 @@ theorem supr_mk {ι} (s : ι → Set α) (h : ∀ i, IsOpen (s i)) :
   simp
 
 @[simp, norm_cast]
-theorem coe_supr {ι} (s : ι → Opens α) : ((⨆ i, s i : Opens α) : Set α) = ⋃ i, s i := by
-  simp [supr_def]
+theorem coe_supr {ι} (s : ι → Opens α) : ((⨆ i, s i : Opens α) : Set α) = ⋃ i, s i := by simp [supr_def]
 
 @[simp]
 theorem mem_supr {ι} {x : α} {s : ι → Opens α} : x ∈ supr s ↔ ∃ i, x ∈ s i := by
@@ -193,14 +192,11 @@ theorem mem_supr {ι} {x : α} {s : ι → Opens α} : x ∈ supr s ↔ ∃ i, x
   simp
 
 @[simp]
-theorem mem_Sup {Us : Set (Opens α)} {x : α} : x ∈ sup Us ↔ ∃ u ∈ Us, x ∈ u := by
-  simp_rw [Sup_eq_supr, mem_supr]
+theorem mem_Sup {Us : Set (Opens α)} {x : α} : x ∈ sup Us ↔ ∃ u ∈ Us, x ∈ u := by simp_rw [Sup_eq_supr, mem_supr]
 
 instance : Frame (Opens α) :=
   { Opens.completeLattice with sup := sup,
-    inf_Sup_le_supr_inf := fun a s =>
-      (ext <| by
-          simp only [coe_inf, coe_supr, coe_Sup, Set.inter_Union₂]).le }
+    inf_Sup_le_supr_inf := fun a s => (ext <| by simp only [coe_inf, coe_supr, coe_Sup, Set.inter_Union₂]).le }
 
 theorem open_embedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set.inclusion i) :=
   { inj := Set.inclusion_injective i, induced := (@induced_compose _ _ _ _ (Set.inclusion i) coe).symm,
@@ -214,6 +210,12 @@ theorem not_nonempty_iff_eq_bot (U : Opens α) : ¬Set.Nonempty (U : Set α) ↔
 theorem ne_bot_iff_nonempty (U : Opens α) : U ≠ ⊥ ↔ Set.Nonempty (U : Set α) := by
   rw [Ne.def, ← opens.not_nonempty_iff_eq_bot, not_not]
 
+/-- An open set in the indiscrete topology is either empty or the whole space. -/
+theorem eq_bot_or_top {α} [t : TopologicalSpace α] (h : t = ⊤) (U : Opens α) : U = ⊥ ∨ U = ⊤ := by
+  simp_rw [← ext_iff]
+  subst h
+  exact (is_open_top_iff U.1).1 U.2
+
 /-- A set of `opens α` is a basis if the set of corresponding sets is a topological basis. -/
 def IsBasis (B : Set (Opens α)) : Prop :=
   IsTopologicalBasis ((coe : _ → Set α) '' B)
@@ -224,7 +226,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α
     rcases h.mem_nhds_iff.mp (IsOpen.mem_nhds hU hx) with ⟨sV, ⟨⟨V, H₁, H₂⟩, hsV⟩⟩
     refine' ⟨V, H₁, _⟩
     cases V
-    dsimp'  at H₂
+    dsimp at H₂
     subst H₂
     exact hsV
     
@@ -238,7 +240,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (Us «expr ⊆ » B)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (Us «expr ⊆ » B)
 theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = sup Us := by
   constructor
   · intro hB U
@@ -274,30 +276,23 @@ theorem is_compact_element_iff (s : Opens α) : CompleteLattice.IsCompactElement
   rw [is_compact_iff_finite_subcover, CompleteLattice.is_compact_element_iff]
   refine' ⟨_, fun H ι U hU => _⟩
   · introv H hU hU'
-    obtain ⟨t, ht⟩ :=
-      H ι (fun i => ⟨U i, hU i⟩)
-        (by
-          simpa)
+    obtain ⟨t, ht⟩ := H ι (fun i => ⟨U i, hU i⟩) (by simpa)
     refine' ⟨t, Set.Subset.trans ht _⟩
-    rw [coe_finset_sup, Finset.sup_eq_supr]
+    rw [coe_finset_sup, Finsetₓ.sup_eq_supr]
     rfl
     
-  · obtain ⟨t, ht⟩ :=
-      H (fun i => U i) (fun i => (U i).Prop)
-        (by
-          simpa using show (s : Set α) ⊆ ↑(supr U) from hU)
+  · obtain ⟨t, ht⟩ := H (fun i => U i) (fun i => (U i).Prop) (by simpa using show (s : Set α) ⊆ ↑(supr U) from hU)
     refine' ⟨t, Set.Subset.trans ht _⟩
     simp only [Set.Union_subset_iff]
     show ∀ i ∈ t, U i ≤ t.sup U
-    exact fun i => Finset.le_sup
+    exact fun i => Finsetₓ.le_sup
     
 
 /-- The preimage of an open set, as an open set. -/
 def comap (f : C(α, β)) : FrameHom (Opens β) (Opens α) where
   toFun := fun s => ⟨f ⁻¹' s, s.2.Preimage f.Continuous⟩
   map_Sup' := fun s =>
-    ext <| by
-      simp only [coe_Sup, preimage_Union, coe_mk, mem_image, Union_exists, bUnion_and', Union_Union_eq_right]
+    ext <| by simp only [coe_Sup, preimage_Union, coe_mk, mem_image, Union_exists, bUnion_and', Union_Union_eq_right]
   map_inf' := fun a b => rfl
   map_top' := rfl
 

@@ -71,11 +71,9 @@ def combineCones (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.obj k)) :
     { obj := fun k => (c k).Cone.x, map := fun k₁ k₂ f => (c k₂).IsLimit.lift ⟨_, (c k₁).Cone.π ≫ F.flip.map f⟩,
       map_id' := fun k =>
         (c k).IsLimit.hom_ext fun j => by
-          dsimp'
-          simp ,
-      map_comp' := fun k₁ k₂ k₃ f₁ f₂ =>
-        (c k₃).IsLimit.hom_ext fun j => by
-          simp }
+          dsimp
+          simp,
+      map_comp' := fun k₁ k₂ k₃ f₁ f₂ => (c k₃).IsLimit.hom_ext fun j => by simp }
   π :=
     { app := fun j => { app := fun k => (c k).Cone.π.app j },
       naturality' := fun j₁ j₂ g => NatTrans.ext _ _ <| funext fun k => (c k).Cone.π.naturality g }
@@ -83,9 +81,7 @@ def combineCones (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.obj k)) :
 /-- The stitched together cones each project down to the original given cones (up to iso). -/
 def evaluateCombinedCones (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.obj k)) (k : K) :
     ((evaluation K C).obj k).mapCone (combineCones F c) ≅ (c k).Cone :=
-  Cones.ext (Iso.refl _)
-    (by
-      tidy)
+  Cones.ext (Iso.refl _) (by tidy)
 
 /-- Stitching together limiting cones gives a limiting cone. -/
 def combinedIsLimit (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.obj k)) : IsLimit (combineCones F c) :=
@@ -104,7 +100,7 @@ def evaluationJointlyReflectsColimits {F : J ⥤ K ⥤ C} (c : Cocone F)
           rw [(t X).fac_assoc _ j]
           erw [← (c.ι.app j).naturality_assoc f]
           erw [(t Y).fac ⟨s.X.obj _, whisker_right s.ι _⟩ j]
-          dsimp'
+          dsimp
           simp }
   fac' := fun s j => NatTrans.ext _ _ <| funext fun k => (t k).fac _ j
   uniq' := fun s m w =>
@@ -124,11 +120,9 @@ def combineCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj
     { obj := fun k => (c k).Cocone.x, map := fun k₁ k₂ f => (c k₁).IsColimit.desc ⟨_, F.flip.map f ≫ (c k₂).Cocone.ι⟩,
       map_id' := fun k =>
         (c k).IsColimit.hom_ext fun j => by
-          dsimp'
-          simp ,
-      map_comp' := fun k₁ k₂ k₃ f₁ f₂ =>
-        (c k₁).IsColimit.hom_ext fun j => by
-          simp }
+          dsimp
+          simp,
+      map_comp' := fun k₁ k₂ k₃ f₁ f₂ => (c k₁).IsColimit.hom_ext fun j => by simp }
   ι :=
     { app := fun j => { app := fun k => (c k).Cocone.ι.app j },
       naturality' := fun j₁ j₂ g => NatTrans.ext _ _ <| funext fun k => (c k).Cocone.ι.naturality g }
@@ -136,9 +130,7 @@ def combineCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj
 /-- The stitched together cocones each project down to the original given cocones (up to iso). -/
 def evaluateCombinedCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj k)) (k : K) :
     ((evaluation K C).obj k).mapCocone (combineCocones F c) ≅ (c k).Cocone :=
-  Cocones.ext (Iso.refl _)
-    (by
-      tidy)
+  Cocones.ext (Iso.refl _) (by tidy)
 
 /-- Stitching together colimiting cocones gives a colimiting cocone. -/
 def combinedIsColimit (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj k)) : IsColimit (combineCocones F c) :=
@@ -181,13 +173,13 @@ def limitObjIsoLimitCompEvaluation [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (k
 @[simp, reassoc]
 theorem limit_obj_iso_limit_comp_evaluation_hom_π [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (limitObjIsoLimitCompEvaluation F k).Hom ≫ limit.π (F ⋙ (evaluation K C).obj k) j = (limit.π F j).app k := by
-  dsimp' [limit_obj_iso_limit_comp_evaluation]
+  dsimp [limit_obj_iso_limit_comp_evaluation]
   simp
 
 @[simp, reassoc]
 theorem limit_obj_iso_limit_comp_evaluation_inv_π_app [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (limitObjIsoLimitCompEvaluation F k).inv ≫ (limit.π F j).app k = limit.π (F ⋙ (evaluation K C).obj k) j := by
-  dsimp' [limit_obj_iso_limit_comp_evaluation]
+  dsimp [limit_obj_iso_limit_comp_evaluation]
   rw [iso.inv_comp_eq]
   simp
 
@@ -197,15 +189,14 @@ theorem limit_map_limit_obj_iso_limit_comp_evaluation_hom [HasLimitsOfShape J C]
       (limitObjIsoLimitCompEvaluation _ _).Hom ≫ limMap (whiskerLeft _ ((evaluation _ _).map f)) :=
   by
   ext
-  dsimp'
+  dsimp
   simp
 
 @[simp, reassoc]
 theorem limit_obj_iso_limit_comp_evaluation_inv_limit_map [HasLimitsOfShape J C] {i j : K} (F : J ⥤ K ⥤ C) (f : i ⟶ j) :
     (limitObjIsoLimitCompEvaluation _ _).inv ≫ (limit F).map f =
       limMap (whiskerLeft _ ((evaluation _ _).map f)) ≫ (limitObjIsoLimitCompEvaluation _ _).inv :=
-  by
-  rw [iso.inv_comp_eq, ← category.assoc, iso.eq_comp_inv, limit_map_limit_obj_iso_limit_comp_evaluation_hom]
+  by rw [iso.inv_comp_eq, ← category.assoc, iso.eq_comp_inv, limit_map_limit_obj_iso_limit_comp_evaluation_hom]
 
 @[ext]
 theorem limit_obj_ext {H : J ⥤ K ⥤ C} [HasLimitsOfShape J C] {k : K} {W : C} {f g : W ⟶ (limit H).obj k}
@@ -232,14 +223,14 @@ def colimitObjIsoColimitCompEvaluation [HasColimitsOfShape J C] (F : J ⥤ K ⥤
 theorem colimit_obj_iso_colimit_comp_evaluation_ι_inv [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     colimit.ι (F ⋙ (evaluation K C).obj k) j ≫ (colimitObjIsoColimitCompEvaluation F k).inv = (colimit.ι F j).app k :=
   by
-  dsimp' [colimit_obj_iso_colimit_comp_evaluation]
+  dsimp [colimit_obj_iso_colimit_comp_evaluation]
   simp
 
 @[simp, reassoc]
 theorem colimit_obj_iso_colimit_comp_evaluation_ι_app_hom [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (colimit.ι F j).app k ≫ (colimitObjIsoColimitCompEvaluation F k).Hom = colimit.ι (F ⋙ (evaluation K C).obj k) j :=
   by
-  dsimp' [colimit_obj_iso_colimit_comp_evaluation]
+  dsimp [colimit_obj_iso_colimit_comp_evaluation]
   rw [← iso.eq_comp_inv]
   simp
 
@@ -250,7 +241,7 @@ theorem colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map [HasColimitsOfSh
       colimMap (whiskerLeft _ ((evaluation _ _).map f)) ≫ (colimitObjIsoColimitCompEvaluation _ _).inv :=
   by
   ext
-  dsimp'
+  dsimp
   simp
 
 @[simp, reassoc]
@@ -269,8 +260,7 @@ theorem colimit_obj_ext {H : J ⥤ K ⥤ C} [HasColimitsOfShape J C] {k : K} {W 
   simpa using w j
 
 instance evaluationPreservesLimits [HasLimits C] (k : K) :
-    PreservesLimits ((evaluation K C).obj k) where PreservesLimitsOfShape := fun J 𝒥 => by
-    skip <;> infer_instance
+    PreservesLimits ((evaluation K C).obj k) where PreservesLimitsOfShape := fun J 𝒥 => by skip <;> infer_instance
 
 /-- `F : D ⥤ K ⥤ C` preserves the limit of some `G : J ⥤ D` if it does for each `k : K`. -/
 def preservesLimitOfEvaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
@@ -297,8 +287,7 @@ instance preservesLimitsConst : PreservesLimitsOfSize.{w', w} (const D : C ⥤ _
   (preservesLimitsOfEvaluation _) fun X => preserves_limits_of_nat_iso <| iso.symm <| constCompEvaluationObj _ _
 
 instance evaluationPreservesColimits [HasColimits C] (k : K) :
-    PreservesColimits ((evaluation K C).obj k) where PreservesColimitsOfShape := fun J 𝒥 => by
-    skip <;> infer_instance
+    PreservesColimits ((evaluation K C).obj k) where PreservesColimitsOfShape := fun J 𝒥 => by skip <;> infer_instance
 
 /-- `F : D ⥤ K ⥤ C` preserves the colimit of some `G : J ⥤ D` if it does for each `k : K`. -/
 def preservesColimitOfEvaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
@@ -331,16 +320,14 @@ open CategoryTheory.prod
 the individual limits on objects. -/
 @[simps]
 def limitIsoFlipCompLim [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) : limit F ≅ F.flip ⋙ lim :=
-  NatIso.ofComponents (limitObjIsoLimitCompEvaluation F) <| by
-    tidy
+  NatIso.ofComponents (limitObjIsoLimitCompEvaluation F) <| by tidy
 
 /-- A variant of `limit_iso_flip_comp_lim` where the arguemnts of `F` are flipped. -/
 @[simps]
 def limitFlipIsoCompLim [HasLimitsOfShape J C] (F : K ⥤ J ⥤ C) : limit F.flip ≅ F ⋙ lim :=
   (NatIso.ofComponents fun k =>
       limitObjIsoLimitCompEvaluation F.flip k ≪≫ HasLimit.isoOfNatIso (flipCompEvaluation _ _)) <|
-    by
-    tidy
+    by tidy
 
 /-- For a functor `G : J ⥤ K ⥤ C`, its limit `K ⥤ C` is given by `(G' : K ⥤ J ⥤ C) ⋙ lim`.
 Note that this does not require `K` to be small.
@@ -353,16 +340,14 @@ def limitIsoSwapCompLim [HasLimitsOfShape J C] (G : J ⥤ K ⥤ C) : limit G ≅
 the individual colimits on objects. -/
 @[simps]
 def colimitIsoFlipCompColim [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) : colimit F ≅ F.flip ⋙ colim :=
-  NatIso.ofComponents (colimitObjIsoColimitCompEvaluation F) <| by
-    tidy
+  NatIso.ofComponents (colimitObjIsoColimitCompEvaluation F) <| by tidy
 
 /-- A variant of `colimit_iso_flip_comp_colim` where the arguemnts of `F` are flipped. -/
 @[simps]
 def colimitFlipIsoCompColim [HasColimitsOfShape J C] (F : K ⥤ J ⥤ C) : colimit F.flip ≅ F ⋙ colim :=
   (NatIso.ofComponents fun k =>
       colimitObjIsoColimitCompEvaluation _ _ ≪≫ HasColimit.isoOfNatIso (flipCompEvaluation _ _)) <|
-    by
-    tidy
+    by tidy
 
 /-- For a functor `G : J ⥤ K ⥤ C`, its colimit `K ⥤ C` is given by `(G' : K ⥤ J ⥤ C) ⋙ colim`.
 Note that this does not require `K` to be small.

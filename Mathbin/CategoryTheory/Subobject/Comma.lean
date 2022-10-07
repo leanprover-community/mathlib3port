@@ -58,7 +58,7 @@ theorem project_subobject_factors [HasLimits C] [PreservesLimits T] {A : Structu
     ∀ P : Subobject A, ∃ q, q ≫ T.map (projectSubobject P).arrow = A.Hom :=
   (Subobject.ind _) fun P f hf =>
     ⟨P.Hom ≫ T.map (Subobject.underlyingIso _).inv, by
-      dsimp'
+      dsimp
       simp [← T.map_comp]⟩
 
 /-- A subobject of the underlying object of a structured arrow can be lifted to a subobject of
@@ -84,15 +84,15 @@ theorem lift_project_subobject [HasLimits C] [PreservesLimits T] {A : Structured
         · exact
             (cancel_mono (T.map f.right)).1
               (by
-                dsimp'
+                dsimp
                 simpa [← T.map_comp] using hq)
           
         
       · exact
           ext _ _
             (by
-              dsimp'
-              simp )
+              dsimp
+              simp)
         )
 
 /-- If `A : S → T.obj B` is a structured arrow for `S : D` and `T : C ⥤ D`, then we can explicitly
@@ -104,10 +104,7 @@ def subobjectEquiv [HasLimits C] [PreservesLimits T] (A : StructuredArrow S T) :
   toFun := fun P => ⟨projectSubobject P, project_subobject_factors P⟩
   invFun := fun P => liftSubobject P.val P.Prop.some_spec
   left_inv := fun P => lift_project_subobject _ _
-  right_inv := fun P =>
-    Subtype.ext
-      (by
-        simp )
+  right_inv := fun P => Subtype.ext (by simp)
   map_rel_iff' :=
     Subobject.ind₂ _
       (by
@@ -153,9 +150,9 @@ theorem project_quotient_factors [HasColimits C] [PreservesColimits S] {A : Cost
     ∀ P : Subobject (op A), ∃ q, S.map (projectQuotient P).arrow.unop ≫ q = A.Hom :=
   (Subobject.ind _) fun P f hf =>
     ⟨S.map (Subobject.underlyingIso _).unop.inv ≫ P.unop.Hom, by
-      dsimp'
+      dsimp
       rw [← category.assoc, ← S.map_comp, ← unop_comp]
-      simp ⟩
+      simp⟩
 
 /-- A quotient of the underlying object of a costructured arrow can be lifted to a quotient of
     the costructured arrow, provided that there is a morphism making the quotient into a
@@ -170,7 +167,9 @@ def liftQuotient {A : CostructuredArrow S T} (P : Subobject (op A.left)) {q} (hq
 theorem unop_left_comp_underlying_iso_hom_unop {A : CostructuredArrow S T} {P : (CostructuredArrow S T)ᵒᵖ}
     (f : P ⟶ op A) [Mono f.unop.left.op] :
     f.unop.left ≫ (Subobject.underlyingIso f.unop.left.op).Hom.unop = (Subobject.mk f.unop.left.op).arrow.unop := by
-  conv_lhs => congr rw [← Quiver.Hom.unop_op f.unop.left]
+  conv_lhs =>
+  congr
+  rw [← Quiver.Hom.unop_op f.unop.left]
   rw [← unop_comp, subobject.underlying_iso_hom_comp_eq_mk]
 
 /-- Projecting and then lifting a quotient recovers the original quotient, because there is at most
@@ -193,8 +192,8 @@ theorem lift_project_quotient [HasColimits C] [PreservesColimits S] {A : Costruc
           Quiver.Hom.unop_inj
             (ext _ _
               (by
-                dsimp'
-                simp ))
+                dsimp
+                simp))
         )
 
 /-- Technical lemma for `quotient_equiv`. -/
@@ -202,7 +201,9 @@ theorem unop_left_comp_of_mk_le_mk_unop {A : CostructuredArrow S T} {P Q : (Cost
     {g : Q ⟶ op A} [Mono f.unop.left.op] [Mono g.unop.left.op]
     (h : Subobject.mk f.unop.left.op ≤ Subobject.mk g.unop.left.op) :
     g.unop.left ≫ (Subobject.ofMkLeMk f.unop.left.op g.unop.left.op h).unop = f.unop.left := by
-  conv_lhs => congr rw [← Quiver.Hom.unop_op g.unop.left]
+  conv_lhs =>
+  congr
+  rw [← Quiver.Hom.unop_op g.unop.left]
   rw [← unop_comp]
   simp only [subobject.of_mk_le_mk_comp, Quiver.Hom.unop_op]
 
@@ -214,19 +215,16 @@ def quotientEquiv [HasColimits C] [PreservesColimits S] (A : CostructuredArrow S
   toFun := fun P => ⟨projectQuotient P, project_quotient_factors P⟩
   invFun := fun P => liftQuotient P.val P.Prop.some_spec
   left_inv := fun P => lift_project_quotient _ _
-  right_inv := fun P =>
-    Subtype.ext
-      (by
-        simp )
+  right_inv := fun P => Subtype.ext (by simp)
   map_rel_iff' :=
     Subobject.ind₂ _
       (by
         intro P Q f g hf hg
         refine' ⟨fun h => subobject.mk_le_mk_of_comm _ (Quiver.Hom.unop_inj (ext _ _ _)), fun h => _⟩
         · refine' (hom_mk (subobject.of_mk_le_mk _ _ h).unop ((cancel_epi (S.map g.unop.left)).1 _)).op
-          dsimp' only [mono_over.mk'_arrow]
+          dsimp only [mono_over.mk'_arrow]
           rw [← category.assoc, ← S.map_comp, unop_left_comp_of_mk_le_mk_unop]
-          dsimp'
+          dsimp
           simp
           
         · exact unop_left_comp_of_mk_le_mk_unop _

@@ -51,11 +51,9 @@ section HeytingAlgebra
 
 variable [HeytingAlgebra α] {a b : α}
 
-theorem is_regular_bot : IsRegular (⊥ : α) := by
-  rw [IsRegular, compl_bot, compl_top]
+theorem is_regular_bot : IsRegular (⊥ : α) := by rw [IsRegular, compl_bot, compl_top]
 
-theorem is_regular_top : IsRegular (⊤ : α) := by
-  rw [IsRegular, compl_top, compl_bot]
+theorem is_regular_top : IsRegular (⊤ : α) := by rw [IsRegular, compl_top, compl_bot]
 
 theorem IsRegular.inf (ha : IsRegular a) (hb : IsRegular b) : IsRegular (a ⊓ b) := by
   rw [IsRegular, compl_compl_inf_distrib, ha.eq, hb.eq]
@@ -77,9 +75,7 @@ protected theorem IsRegular.disjoint_compl_right_iff (hb : IsRegular b) : Disjoi
 @[reducible]
 def _root_.boolean_algebra.of_regular (h : ∀ a : α, IsRegular (a ⊔ aᶜ)) : BooleanAlgebra α :=
   have : ∀ a : α, IsCompl a (aᶜ) := fun a =>
-    ⟨disjoint_compl_right,
-      codisjoint_iff.2 <| by
-        erw [← (h a).Eq, compl_sup, inf_compl_eq_bot, compl_bot]⟩
+    ⟨disjoint_compl_right, codisjoint_iff.2 <| by erw [← (h a).Eq, compl_sup, inf_compl_eq_bot, compl_bot]⟩
   { ‹HeytingAlgebra α›, GeneralizedHeytingAlgebra.toDistribLattice with
     himp_eq := fun a b => eq_of_forall_le_iffₓ fun c => le_himp_iff.trans (this _).le_sup_right_iff_inf_left_le.symm,
     inf_compl_le_bot := fun a => (this _).1, top_le_sup_compl := fun a => (this _).2 }
@@ -186,18 +182,18 @@ instance : BooleanAlgebra (Regular α) :=
   { Regular.lattice, Regular.boundedOrder, Regular.hasHimp, Regular.hasCompl with
     le_sup_inf := fun a b c =>
       coe_le_coe.1 <| by
-        dsimp'
+        dsimp
         rw [sup_inf_left, compl_compl_inf_distrib],
     inf_compl_le_bot := fun a => coe_le_coe.1 disjoint_compl_right,
     top_le_sup_compl := fun a =>
       coe_le_coe.1 <| by
-        dsimp'
+        dsimp
         rw [compl_sup, inf_compl_eq_bot, compl_bot]
         rfl,
     himp_eq := fun a b =>
       coe_injective
         (by
-          dsimp'
+          dsimp
           rw [compl_sup, a.prop.eq]
           refine' eq_of_forall_le_iffₓ fun c => le_himp_iff.trans _
           rw [le_compl_iff_disjoint_right, disjoint_left_comm, b.prop.disjoint_compl_left_iff]) }

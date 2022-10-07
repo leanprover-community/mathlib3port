@@ -71,8 +71,7 @@ def torsionOf (x : M) : Ideal R :=
   (LinearMap.toSpanSingleton R M x).ker
 
 @[simp]
-theorem torsion_of_zero : torsionOf R M (0 : M) = ⊤ := by
-  simp [torsion_of]
+theorem torsion_of_zero : torsionOf R M (0 : M) = ⊤ := by simp [torsion_of]
 
 variable {R M}
 
@@ -84,9 +83,7 @@ variable (R)
 
 @[simp]
 theorem torsion_of_eq_top_iff (m : M) : torsionOf R M m = ⊤ ↔ m = 0 := by
-  refine'
-    ⟨fun h => _, fun h => by
-      simp [h]⟩
+  refine' ⟨fun h => _, fun h => by simp [h]⟩
   rw [← one_smul R m, ← mem_torsion_of_iff m (1 : R), h]
   exact Submodule.mem_top
 
@@ -166,11 +163,8 @@ def torsion' (S : Type _) [CommMonoidₓ S] [DistribMulAction S M] [SmulCommClas
   Carrier := { x | ∃ a : S, a • x = 0 }
   zero_mem' := ⟨1, smul_zero _⟩
   add_mem' := fun x y ⟨a, hx⟩ ⟨b, hy⟩ =>
-    ⟨b * a, by
-      rw [smul_add, mul_smul, mul_comm, mul_smul, hx, hy, smul_zero, smul_zero, add_zeroₓ]⟩
-  smul_mem' := fun a x ⟨b, h⟩ =>
-    ⟨b, by
-      rw [smul_comm, h, smul_zero]⟩
+    ⟨b * a, by rw [smul_add, mul_smul, mul_comm, mul_smul, hx, hy, smul_zero, smul_zero, add_zeroₓ]⟩
+  smul_mem' := fun a x ⟨b, h⟩ => ⟨b, by rw [smul_comm, h, smul_zero]⟩
 
 /-- The torsion submodule, containing all elements `x` of `M` such that  `a • x = 0` for some
   non-zero-divisor `a` in `R`. -/
@@ -334,7 +328,7 @@ section Coprime
 
 open BigOperators
 
-variable {ι : Type _} {p : ι → Ideal R} {S : Finset ι}
+variable {ι : Type _} {p : ι → Ideal R} {S : Finsetₓ ι}
 
 variable (hp : (S : Set ι).Pairwise fun i j => p i ⊔ p j = ⊤)
 
@@ -372,7 +366,7 @@ theorem supr_torsion_by_ideal_eq_torsion_by_infi :
       intro j
       rw [mem_infi]
       intro hj
-      by_cases' ij : j = i
+      by_cases ij:j = i
       · rw [ij]
         exact Ideal.mul_mem_right _ _ ha
         
@@ -382,15 +376,15 @@ theorem supr_torsion_by_ideal_eq_torsion_by_infi :
         
       
     · simp_rw [coe_mk]
-      rw [← Finset.sum_smul, hμ, one_smul]
+      rw [← Finsetₓ.sum_smul, hμ, one_smul]
       
     
 
 theorem sup_indep_torsion_by_ideal : S.SupIndep fun i => torsionBySet R M <| p i := fun T hT i hi hiT => by
-  rw [disjoint_iff, Finset.sup_eq_supr,
+  rw [disjoint_iff, Finsetₓ.sup_eq_supr,
     supr_torsion_by_ideal_eq_torsion_by_infi fun i hi j hj ij => hp (hT hi) (hT hj) ij]
   have := @GaloisConnection.u_inf _ _ (OrderDual.toDual _) (OrderDual.toDual _) _ _ _ _ (torsion_gc R M)
-  dsimp'  at this⊢
+  dsimp at this⊢
   rw [← this, Ideal.sup_infi_eq_top, top_coe, torsion_by_univ]
   intro j hj
   apply hp hi (hT hj)
@@ -405,7 +399,7 @@ include hq
 
 theorem supr_torsion_by_eq_torsion_by_prod : (⨆ i ∈ S, torsionBy R M <| q i) = torsionBy R M (∏ i in S, q i) := by
   rw [← torsion_by_span_singleton_eq, Ideal.submodule_span_eq, ← Ideal.finset_inf_span_singleton _ _ hq,
-    Finset.inf_eq_infi, ← supr_torsion_by_ideal_eq_torsion_by_infi]
+    Finsetₓ.inf_eq_infi, ← supr_torsion_by_ideal_eq_torsion_by_infi]
   · congr
     ext : 1
     congr
@@ -434,7 +428,7 @@ namespace Submodule
 
 open BigOperators
 
-variable {ι : Type _} [DecidableEq ι] {S : Finset ι}
+variable {ι : Type _} [DecidableEq ι] {S : Finsetₓ ι}
 
 /-- If the `p i` are pairwise coprime, a `⨅ i, p i`-torsion module is the internal direct sum of
 its `p i`-torsion submodules.-/
@@ -452,7 +446,7 @@ its `q i`-torsion submodules.-/
 theorem torsion_by_is_internal {q : ι → R} (hq : (S : Set ι).Pairwise <| (IsCoprime on q))
     (hM : Module.IsTorsionBy R M <| ∏ i in S, q i) : DirectSum.IsInternal fun i : S => torsionBy R M <| q i := by
   rw [← Module.is_torsion_by_span_singleton_iff, Ideal.submodule_span_eq, ← Ideal.finset_inf_span_singleton _ _ hq,
-    Finset.inf_eq_infi] at hM
+    Finsetₓ.inf_eq_infi] at hM
   convert
     torsion_by_set_is_internal (fun i hi j hj ij => (Ideal.sup_eq_top_iff_is_coprime (q i) _).mpr <| hq hi hj ij) hM
   ext : 1
@@ -553,7 +547,7 @@ instance : HasSmul S (torsion' R M S) :=
     ⟨s • x, by
       obtain ⟨x, a, h⟩ := x
       use a
-      dsimp'
+      dsimp
       rw [smul_comm, h, smul_zero]⟩⟩
 
 instance : DistribMulAction S (torsion' R M S) :=
@@ -607,7 +601,7 @@ theorem is_torsion_by_ideal_of_finite_of_is_torsion [Module.Finite R M] (hM : Mo
     intro x hx
     apply torsion_by_set_le_torsion_by_set_of_subset
     · apply Ideal.le_of_dvd
-      exact Finset.dvd_prod_of_mem _ hx
+      exact Finsetₓ.dvd_prod_of_mem _ hx
       
     · rw [mem_torsion_by_set_iff]
       rintro ⟨a, ha⟩
@@ -622,8 +616,8 @@ theorem coe_torsion_eq_annihilator_ne_bot : (torsion R M : Set M) = { x : M | (R
   simp_rw [Submodule.ne_bot_iff, mem_annihilator, mem_span_singleton]
   exact
     ⟨fun ⟨a, hax⟩ =>
-      ⟨a, fun _ ⟨b, hb⟩ => by
-        rw [← hb, smul_comm, ← Submonoid.smul_def, hax, smul_zero], nonZeroDivisors.coe_ne_zero _⟩,
+      ⟨a, fun _ ⟨b, hb⟩ => by rw [← hb, smul_comm, ← Submonoid.smul_def, hax, smul_zero],
+        nonZeroDivisors.coe_ne_zero _⟩,
       fun ⟨a, hax, ha⟩ => ⟨⟨_, mem_non_zero_divisors_of_ne_zero ha⟩, hax x ⟨1, one_smul _ _⟩⟩⟩
 
 /-- A module over a domain has `no_zero_smul_divisors` iff its torsion submodule is trivial. -/
@@ -642,7 +636,7 @@ theorem no_zero_smul_divisors_iff_torsion_eq_bot : NoZeroSmulDivisors R M ↔ to
     
   · exact
       { eq_zero_or_eq_zero_of_smul_eq_zero := fun a x hax => by
-          by_cases' ha : a = 0
+          by_cases ha:a = 0
           · left
             exact ha
             

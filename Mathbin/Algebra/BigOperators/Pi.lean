@@ -31,28 +31,26 @@ theorem multiset_prod_apply {α : Type _} {β : α → Type _} [∀ a, CommMonoi
 end Pi
 
 @[simp, to_additive]
-theorem Finset.prod_apply {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoidₓ (β a)] (a : α) (s : Finset γ)
+theorem Finsetₓ.prod_apply {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoidₓ (β a)] (a : α) (s : Finsetₓ γ)
     (g : γ → ∀ a, β a) : (∏ c in s, g c) a = ∏ c in s, g c a :=
   (Pi.evalMonoidHom β a).map_prod _ _
 
 /-- An 'unapplied' analogue of `finset.prod_apply`. -/
 @[to_additive "An 'unapplied' analogue of `finset.sum_apply`."]
-theorem Finset.prod_fn {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoidₓ (β a)] (s : Finset γ) (g : γ → ∀ a, β a) :
+theorem Finsetₓ.prod_fn {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoidₓ (β a)] (s : Finsetₓ γ) (g : γ → ∀ a, β a) :
     (∏ c in s, g c) = fun a => ∏ c in s, g c a :=
-  funext fun a => Finset.prod_apply _ _ _
+  funext fun a => Finsetₓ.prod_apply _ _ _
 
 @[simp, to_additive]
-theorem Fintype.prod_apply {α : Type _} {β : α → Type _} {γ : Type _} [Fintype γ] [∀ a, CommMonoidₓ (β a)] (a : α)
+theorem Fintypeₓ.prod_apply {α : Type _} {β : α → Type _} {γ : Type _} [Fintypeₓ γ] [∀ a, CommMonoidₓ (β a)] (a : α)
     (g : γ → ∀ a, β a) : (∏ c, g c) a = ∏ c, g c a :=
-  Finset.prod_apply a Finset.univ g
+  Finsetₓ.prod_apply a Finsetₓ.univ g
 
 @[to_additive prod_mk_sum]
-theorem prod_mk_prod {α β γ : Type _} [CommMonoidₓ α] [CommMonoidₓ β] (s : Finset γ) (f : γ → α) (g : γ → β) :
+theorem prod_mk_prod {α β γ : Type _} [CommMonoidₓ α] [CommMonoidₓ β] (s : Finsetₓ γ) (f : γ → α) (g : γ → β) :
     (∏ x in s, f x, ∏ x in s, g x) = ∏ x in s, (f x, g x) :=
   haveI := Classical.decEq γ
-  Finset.induction_on s rfl
-    (by
-      simp (config := { contextual := true })[Prod.ext_iffₓ])
+  Finsetₓ.induction_on s rfl (by simp (config := { contextual := true }) [Prod.ext_iffₓ])
 
 section Single
 
@@ -61,7 +59,7 @@ variable {I : Type _} [DecidableEq I] {Z : I → Type _}
 variable [∀ i, AddCommMonoidₓ (Z i)]
 
 -- As we only defined `single` into `add_monoid`, we only prove the `finset.sum` version here.
-theorem Finset.univ_sum_single [Fintype I] (f : ∀ i, Z i) : (∑ i, Pi.single i (f i)) = f := by
+theorem Finsetₓ.univ_sum_single [Fintypeₓ I] (f : ∀ i, Z i) : (∑ i, Pi.single i (f i)) = f := by
   ext a
   simp
 
@@ -69,7 +67,7 @@ theorem AddMonoidHom.functions_ext [Finite I] (G : Type _) [AddCommMonoidₓ G] 
     (H : ∀ i x, g (Pi.single i x) = h (Pi.single i x)) : g = h := by
   cases nonempty_fintype I
   ext k
-  rw [← Finset.univ_sum_single k, g.map_sum, h.map_sum]
+  rw [← Finsetₓ.univ_sum_single k, g.map_sum, h.map_sum]
   simp only [H]
 
 /-- This is used as the ext lemma instead of `add_monoid_hom.functions_ext` for reasons explained in
@@ -101,7 +99,7 @@ end RingHom
 
 namespace Prod
 
-variable {α β γ : Type _} [CommMonoidₓ α] [CommMonoidₓ β] {s : Finset γ} {f : γ → α × β}
+variable {α β γ : Type _} [CommMonoidₓ α] [CommMonoidₓ β] {s : Finsetₓ γ} {f : γ → α × β}
 
 @[to_additive]
 theorem fst_prod : (∏ c in s, f c).1 = ∏ c in s, (f c).1 :=

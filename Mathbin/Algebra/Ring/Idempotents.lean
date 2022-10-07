@@ -64,12 +64,11 @@ theorem one_sub_iff {p : R} : IsIdempotentElem (1 - p) ↔ IsIdempotentElem p :=
 theorem pow {p : N} (n : ℕ) (h : IsIdempotentElem p) : IsIdempotentElem (p ^ n) :=
   Nat.recOn n ((pow_zeroₓ p).symm ▸ one) fun n ih =>
     show p ^ n.succ * p ^ n.succ = p ^ n.succ by
-      nth_rw 2[← h.eq]
+      nth_rw 2 [← h.eq]
       rw [← sq, ← sq, ← pow_mulₓ, ← pow_mul']
 
 theorem pow_succ_eq {p : N} (n : ℕ) (h : IsIdempotentElem p) : p ^ (n + 1) = p :=
-  Nat.recOn n ((Nat.zero_add 1).symm ▸ pow_oneₓ p) fun n ih => by
-    rw [pow_succₓ, ih, h.eq]
+  Nat.recOn n ((Nat.zero_add 1).symm ▸ pow_oneₓ p) fun n ih => by rw [pow_succₓ, ih, h.eq]
 
 @[simp]
 theorem iff_eq_one {p : G} : IsIdempotentElem p ↔ p = 1 :=

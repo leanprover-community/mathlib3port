@@ -105,10 +105,10 @@ theorem CHSH_id [CommRingₓ R] {A₀ A₁ B₀ B₁ : R} (A₀_inv : A₀ ^ 2 =
   -- Without one, it is somewhat tedious!
   rw [← sub_eq_zero]
   repeat'
-    ring_nf
-    simp only [A₁_inv, B₁_inv, sub_eq_add_neg, add_mulₓ, mul_addₓ, sub_mul, mul_sub, add_assocₓ, neg_add, neg_sub,
-      sub_add, sub_sub, neg_mul, ← sq, A₀_inv, B₀_inv, ← sq, ← mul_assoc, one_mulₓ, mul_oneₓ, add_right_negₓ, add_zeroₓ,
-      sub_eq_add_neg, A₀_inv, mul_oneₓ, add_right_negₓ, zero_mul]
+  ring_nf
+  simp only [A₁_inv, B₁_inv, sub_eq_add_neg, add_mulₓ, mul_addₓ, sub_mul, mul_sub, add_assocₓ, neg_add, neg_sub,
+    sub_add, sub_sub, neg_mul, ← sq, A₀_inv, B₀_inv, ← sq, ← mul_assoc, one_mulₓ, mul_oneₓ, add_right_negₓ, add_zeroₓ,
+    sub_eq_add_neg, A₀_inv, mul_oneₓ, add_right_negₓ, zero_mul]
 
 /-- Given a CHSH tuple (A₀, A₁, B₀, B₁) in a *commutative* ordered `*`-algebra over ℝ,
 `A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ 2`.
@@ -121,16 +121,19 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
   have i₁ : 0 ≤ P := by
     have idem : P * P = 4 * P := CHSH_id T.A₀_inv T.A₁_inv T.B₀_inv T.B₁_inv
     have idem' : P = (1 / 4 : ℝ) • (P * P) := by
-      have h : 4 * P = (4 : ℝ) • P := by
-        simp [Algebra.smul_def]
+      have h : 4 * P = (4 : ℝ) • P := by simp [Algebra.smul_def]
       rw [idem, h, ← mul_smul]
       norm_num
     have sa : star P = P := by
-      dsimp' [P]
+      dsimp [P]
       simp only [star_add, star_sub, star_mul, star_bit0, star_one, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa, mul_comm B₀,
         mul_comm B₁]
     rw [idem']
-    conv_rhs => congr skip congr rw [← sa]
+    conv_rhs =>
+    congr
+    skip
+    congr
+    rw [← sa]
     convert smul_le_smul_of_nonneg (star_mul_self_nonneg : 0 ≤ star P * P) _
     · simp
       
@@ -162,16 +165,8 @@ we prepare some easy lemmas about √2.
 -- defeated me. Thanks for the rescue from Shing Tak Lam!
 theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 * (√2⁻¹ * 2⁻¹)) := by
   ring_nf
-  field_simp [(@Real.sqrt_pos 2).2
-      (by
-        norm_num)]
-  convert
-      congr_arg (· ^ 2)
-        (@Real.sq_sqrt 2
-          (by
-            norm_num)) using
-      1 <;>
-    simp only [← pow_mulₓ] <;> norm_num
+  field_simp [(@Real.sqrt_pos 2).2 (by norm_num)]
+  convert congr_arg (· ^ 2) (@Real.sq_sqrt 2 (by norm_num)) using 1 <;> simp only [← pow_mulₓ] <;> norm_num
 
 theorem sqrt_two_inv_mul_self : √2⁻¹ * √2⁻¹ = (2⁻¹ : ℝ) := by
   rw [← mul_inv]
@@ -198,7 +193,7 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
   let P := √2⁻¹ • (A₁ + A₀) - B₀
   let Q := √2⁻¹ • (A₁ - A₀) + B₁
   have w : √2 ^ 3 • 1 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁ = √2⁻¹ • (P ^ 2 + Q ^ 2) := by
-    dsimp' [P, Q]
+    dsimp [P, Q]
     -- distribute out all the powers and products appearing on the RHS
     simp only [sq, sub_mul, mul_sub, add_mulₓ, mul_addₓ, smul_add, smul_sub]
     -- pull all coefficients out to the front, and combine `√2`s where possible
@@ -214,31 +209,31 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
     simp only [neg_mul, Int.cast_bit0, one_mulₓ, mul_inv_cancel_of_invertible, Int.cast_oneₓ, one_smul, Int.cast_neg,
       add_right_injₓ, neg_smul, ← add_smul]
     congr
-    exact
-      mul_left_cancel₀
-        (by
-          norm_num)
-        tsirelson_inequality_aux
+    exact mul_left_cancel₀ (by norm_num) tsirelson_inequality_aux
   have pos : 0 ≤ √2⁻¹ • (P ^ 2 + Q ^ 2) := by
     have P_sa : star P = P := by
-      dsimp' [P]
+      dsimp [P]
       simp only [star_smul, star_add, star_sub, star_id_of_comm, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa]
     have Q_sa : star Q = Q := by
-      dsimp' [Q]
+      dsimp [Q]
       simp only [star_smul, star_add, star_sub, star_id_of_comm, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa]
     have P2_nonneg : 0 ≤ P ^ 2 := by
       rw [sq]
-      conv => congr skip congr rw [← P_sa]
+      conv =>
+      congr
+      skip
+      congr
+      rw [← P_sa]
       convert (star_mul_self_nonneg : 0 ≤ star P * P)
     have Q2_nonneg : 0 ≤ Q ^ 2 := by
       rw [sq]
-      conv => congr skip congr rw [← Q_sa]
+      conv =>
+      congr
+      skip
+      congr
+      rw [← Q_sa]
       convert (star_mul_self_nonneg : 0 ≤ star Q * Q)
-    convert
-      smul_le_smul_of_nonneg (add_nonneg P2_nonneg Q2_nonneg)
-        (le_of_ltₓ
-          (show 0 < √2⁻¹ by
-            norm_num))
+    convert smul_le_smul_of_nonneg (add_nonneg P2_nonneg Q2_nonneg) (le_of_ltₓ (show 0 < √2⁻¹ by norm_num))
     -- `norm_num` can't directly show `0 ≤ √2⁻¹`
     simp
   apply le_of_sub_nonneg

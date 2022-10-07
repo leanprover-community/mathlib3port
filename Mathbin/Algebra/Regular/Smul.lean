@@ -62,10 +62,7 @@ theorem smul (ra : IsSmulRegular M a) (rs : IsSmulRegular M s) : IsSmulRegular M
 /-- If an element `b` becomes `M`-regular after multiplying it on the left by an `M`-regular
 element, then `b` is `M`-regular. -/
 theorem of_smul (a : R) (ab : IsSmulRegular M (a • s)) : IsSmulRegular M s :=
-  @Function.Injective.of_comp _ _ _ (fun m : M => a • m) _ fun c d cd =>
-    ab
-      (by
-        rwa [smul_assoc, smul_assoc])
+  @Function.Injective.of_comp _ _ _ (fun m : M => a • m) _ fun c d cd => ab (by rwa [smul_assoc, smul_assoc])
 
 /-- An element is `M`-regular if and only if multiplying it on the left by an `M`-regular element
 is `M`-regular. -/
@@ -113,8 +110,7 @@ variable (M)
 
 /-- One is `M`-regular always. -/
 @[simp]
-theorem one : IsSmulRegular M (1 : R) := fun a b ab => by
-  rwa [one_smul, one_smul] at ab
+theorem one : IsSmulRegular M (1 : R) := fun a b ab => by rwa [one_smul, one_smul] at ab
 
 variable {M}
 
@@ -162,11 +158,7 @@ variable [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] [Zero M] [MulActionWithZero
 
 /-- The element `0` is `M`-regular if and only if `M` is trivial. -/
 protected theorem subsingleton (h : IsSmulRegular M (0 : R)) : Subsingleton M :=
-  ⟨fun a b =>
-    h
-      (by
-        repeat'
-          rw [MulActionWithZero.zero_smul])⟩
+  ⟨fun a b => h (by repeat' rw [MulActionWithZero.zero_smul])⟩
 
 /-- The element `0` is `M`-regular if and only if `M` is trivial. -/
 theorem zero_iff_subsingleton : IsSmulRegular M (0 : R) ↔ Subsingleton M :=
@@ -195,11 +187,7 @@ variable [CommSemigroupₓ R] [HasSmul R M] [IsScalarTower R R M]
 /-- A product is `M`-regular if and only if the factors are. -/
 theorem mul_iff : IsSmulRegular M (a * b) ↔ IsSmulRegular M a ∧ IsSmulRegular M b := by
   rw [← mul_and_mul_iff]
-  exact
-    ⟨fun ab =>
-      ⟨ab, by
-        rwa [mul_comm]⟩,
-      fun rab => rab.1⟩
+  exact ⟨fun ab => ⟨ab, by rwa [mul_comm]⟩, fun rab => rab.1⟩
 
 end CommSemigroupₓ
 

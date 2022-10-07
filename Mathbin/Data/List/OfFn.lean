@@ -58,12 +58,10 @@ theorem nth_of_fn_aux {n} (f : Finₓ n → α) (i) :
 /-- The `n`th element of a list -/
 @[simp]
 theorem nth_of_fn {n} (f : Finₓ n → α) (i) : nth (ofFnₓ f) i = ofFnNthValₓ f i :=
-  (nth_of_fn_aux f _ _ _ _) fun i => by
-    simp only [of_fn_nth_val, dif_neg (not_ltₓ.2 (Nat.le_add_leftₓ n i))] <;> rfl
+  (nth_of_fn_aux f _ _ _ _) fun i => by simp only [of_fn_nth_val, dif_neg (not_ltₓ.2 (Nat.le_add_leftₓ n i))] <;> rfl
 
 theorem nth_le_of_fn {n} (f : Finₓ n → α) (i : Finₓ n) : nthLe (ofFnₓ f) i ((length_of_fn f).symm ▸ i.2) = f i :=
-  Option.some.injₓ <| by
-    rw [← nth_le_nth] <;> simp only [List.nth_of_fn, of_fn_nth_val, Finₓ.eta, dif_pos i.is_lt]
+  Option.some.injₓ <| by rw [← nth_le_nth] <;> simp only [List.nth_of_fn, of_fn_nth_val, Finₓ.eta, dif_pos i.is_lt]
 
 @[simp]
 theorem nth_le_of_fn' {n} (f : Finₓ n → α) {i : ℕ} (h : i < (ofFnₓ f).length) :
@@ -72,11 +70,7 @@ theorem nth_le_of_fn' {n} (f : Finₓ n → α) {i : ℕ} (h : i < (ofFnₓ f).l
 
 @[simp]
 theorem map_of_fn {β : Type _} {n : ℕ} (f : Finₓ n → α) (g : α → β) : map g (ofFnₓ f) = ofFnₓ (g ∘ f) :=
-  ext_le
-    (by
-      simp )
-    fun i h h' => by
-    simp
+  ext_le (by simp) fun i h h' => by simp
 
 /-- Arrays converted to lists are the same as `of_fn` on the indexing function of the array. -/
 theorem array_eq_of_fn {n} (a : Arrayₓ n α) : a.toList = ofFnₓ a.read := by
@@ -174,8 +168,7 @@ theorem of_fn_mul' {m n} (f : Finₓ (m * n) → α) :
                   m * i + j < m * (i + 1) := (add_lt_add_left j.Prop _).trans_eq (mul_add_one _ _).symm
                   _ ≤ _ := Nat.mul_le_mul_leftₓ _ i.Prop
                   ⟩) :=
-  by
-  simp_rw [mul_comm m n, mul_comm m, of_fn_mul, Finₓ.cast_mk]
+  by simp_rw [mul_comm m n, mul_comm m, of_fn_mul, Finₓ.cast_mk]
 
 theorem of_fn_nth_le : ∀ l : List α, (ofFnₓ fun i => nthLe l i i.2) = l
   | [] => rfl
@@ -189,23 +182,15 @@ theorem of_fn_nth_le : ∀ l : List α, (ofFnₓ fun i => nthLe l i i.2) = l
 -- is much more useful
 theorem mem_of_fn {n} (f : Finₓ n → α) (a : α) : a ∈ ofFnₓ f ↔ a ∈ Set.Range f := by
   simp only [mem_iff_nth_le, Set.mem_range, nth_le_of_fn']
-  exact
-    ⟨fun ⟨i, hi, h⟩ => ⟨_, h⟩, fun ⟨i, hi⟩ =>
-      ⟨i.1, (length_of_fn f).symm ▸ i.2, by
-        simpa using hi⟩⟩
+  exact ⟨fun ⟨i, hi, h⟩ => ⟨_, h⟩, fun ⟨i, hi⟩ => ⟨i.1, (length_of_fn f).symm ▸ i.2, by simpa using hi⟩⟩
 
 @[simp]
 theorem forall_mem_of_fn_iff {n : ℕ} {f : Finₓ n → α} {P : α → Prop} : (∀ i ∈ ofFnₓ f, P i) ↔ ∀ j : Finₓ n, P (f j) :=
-  by
-  simp only [mem_of_fn, Set.forall_range_iff]
+  by simp only [mem_of_fn, Set.forall_range_iff]
 
 @[simp]
 theorem of_fn_const (n : ℕ) (c : α) : (ofFnₓ fun i : Finₓ n => c) = repeat c n :=
-  (Nat.recOn n
-      (by
-        simp ))
-    fun n ihn => by
-    simp [ihn]
+  (Nat.recOn n (by simp)) fun n ihn => by simp [ihn]
 
 /-- Lists are equivalent to the sigma type of tuples of a given length. -/
 @[simps]
@@ -241,8 +226,7 @@ theorem of_fn_inj' {m n : ℕ} {f : Finₓ m → α} {g : Finₓ n → α} :
 
 /-- Note we can only state this when the two functions are indexed by defeq `n`. -/
 theorem of_fn_injective {n : ℕ} : Function.Injective (ofFnₓ : (Finₓ n → α) → List α) := fun f g h =>
-  eq_of_heq <| by
-    injection of_fn_inj'.mp h
+  eq_of_heq <| by injection of_fn_inj'.mp h
 
 /-- A special case of `list.of_fn_inj'` for when the two functions are indexed by defeq `n`. -/
 @[simp]

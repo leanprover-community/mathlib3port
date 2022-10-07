@@ -53,8 +53,7 @@ theorem algebra_map_mem (r : R) : algebraMap R A r ∈ (1 : SubMulAction R A) :=
   ⟨r, (algebra_map_eq_smul_one r).symm⟩
 
 theorem mem_one' {x : A} : x ∈ (1 : SubMulAction R A) ↔ ∃ y, algebraMap R A y = x :=
-  exists_congr fun r => by
-    rw [algebra_map_eq_smul_one]
+  exists_congr fun r => by rw [algebra_map_eq_smul_one]
 
 end SubMulAction
 
@@ -100,8 +99,7 @@ theorem one_eq_span : (1 : Submodule R A) = R ∙ 1 := by
 theorem one_eq_span_one_set : (1 : Submodule R A) = span R 1 :=
   one_eq_span
 
-theorem one_le : (1 : Submodule R A) ≤ P ↔ (1 : A) ∈ P := by
-  simpa only [one_eq_span, span_le, Set.singleton_subset_iff]
+theorem one_le : (1 : Submodule R A) ≤ P ↔ (1 : A) ∈ P := by simpa only [one_eq_span, span_le, Set.singleton_subset_iff]
 
 protected theorem map_one {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') :
     map f.toLinearMap (1 : Submodule R A) = 1 := by
@@ -139,7 +137,7 @@ theorem mul_le : M * N ≤ P ↔ ∀ m ∈ M, ∀ n ∈ N, m * n ∈ P :=
   map₂_le
 
 theorem mul_to_add_submonoid (M N : Submodule R A) : (M * N).toAddSubmonoid = M.toAddSubmonoid * N.toAddSubmonoid := by
-  dsimp' [Mul.mul]
+  dsimp [Mul.mul]
   simp_rw [← LinearMap.mul_left_to_add_monoid_hom R, LinearMap.mulLeft, ← map_to_add_submonoid _ N, map₂]
   rw [supr_to_add_submonoid]
   rfl
@@ -251,8 +249,7 @@ theorem comap_unop_mul :
     comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) (M * N) =
       comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) N *
         comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) M :=
-  by
-  simp_rw [← map_equiv_eq_comap_symm, map_op_mul]
+  by simp_rw [← map_equiv_eq_comap_symm, map_op_mul]
 
 theorem map_unop_mul (M N : Submodule R Aᵐᵒᵖ) :
     map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) (M * N) =
@@ -267,8 +264,7 @@ theorem comap_op_mul (M N : Submodule R Aᵐᵒᵖ) :
     comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (M * N) =
       comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) N *
         comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) M :=
-  by
-  simp_rw [comap_equiv_eq_map_symm, map_unop_mul]
+  by simp_rw [comap_equiv_eq_map_symm, map_unop_mul]
 
 section
 
@@ -290,12 +286,11 @@ open Classical
 
 theorem mem_span_mul_finite_of_mem_span_mul {R A} [Semiringₓ R] [AddCommMonoidₓ A] [Mul A] [Module R A] {S : Set A}
     {S' : Set A} {x : A} (hx : x ∈ span R (S * S')) :
-    ∃ T T' : Finset A, ↑T ⊆ S ∧ ↑T' ⊆ S' ∧ x ∈ span R (T * T' : Set A) := by
+    ∃ T T' : Finsetₓ A, ↑T ⊆ S ∧ ↑T' ⊆ S' ∧ x ∈ span R (T * T' : Set A) := by
   obtain ⟨U, h, hU⟩ := mem_span_finite_of_mem_span hx
-  obtain ⟨T, T', hS, hS', h⟩ := Finset.subset_mul h
+  obtain ⟨T, T', hS, hS', h⟩ := Finsetₓ.subset_mul h
   use T, T', hS, hS'
-  have h' : (U : Set A) ⊆ T * T' := by
-    assumption_mod_cast
+  have h' : (U : Set A) ⊆ T * T' := by assumption_mod_cast
   have h'' := span_mono h' hU
   assumption
 
@@ -311,10 +306,9 @@ theorem mul_supr (t : Submodule R A) (s : ι → Submodule R A) : (t * ⨆ i, s 
   map₂_supr_right _ t s
 
 theorem mem_span_mul_finite_of_mem_mul {P Q : Submodule R A} {x : A} (hx : x ∈ P * Q) :
-    ∃ T T' : Finset A, (T : Set A) ⊆ P ∧ (T' : Set A) ⊆ Q ∧ x ∈ span R (T * T' : Set A) :=
+    ∃ T T' : Finsetₓ A, (T : Set A) ⊆ P ∧ (T' : Set A) ⊆ Q ∧ x ∈ span R (T * T' : Set A) :=
   Submodule.mem_span_mul_finite_of_mem_span_mul
-    (by
-      rwa [← Submodule.span_eq P, ← Submodule.span_eq Q, Submodule.span_mul_span] at hx)
+    (by rwa [← Submodule.span_eq P, ← Submodule.span_eq Q, Submodule.span_mul_span] at hx)
 
 variable {M N P}
 
@@ -328,13 +322,10 @@ instance : Semiringₓ (Submodule R A) :=
 variable (M)
 
 theorem span_pow (s : Set A) : ∀ n : ℕ, span R s ^ n = span R (s ^ n)
-  | 0 => by
-    rw [pow_zeroₓ, pow_zeroₓ, one_eq_span_one_set]
-  | n + 1 => by
-    rw [pow_succₓ, pow_succₓ, span_pow, span_mul_span]
+  | 0 => by rw [pow_zeroₓ, pow_zeroₓ, one_eq_span_one_set]
+  | n + 1 => by rw [pow_succₓ, pow_succₓ, span_pow, span_mul_span]
 
-theorem pow_eq_span_pow_set (n : ℕ) : M ^ n = span R ((M : Set A) ^ n) := by
-  rw [← span_pow, span_eq]
+theorem pow_eq_span_pow_set (n : ℕ) : M ^ n = span R ((M : Set A) ^ n) := by rw [← span_pow, span_eq]
 
 theorem pow_subset_pow {n : ℕ} : (↑M : Set A) ^ n ⊆ ↑(M ^ n : Submodule R A) :=
   (pow_eq_span_pow_set M n).symm ▸ subset_span
@@ -429,8 +420,7 @@ def equivOpposite : Submodule R Aᵐᵒᵖ ≃+* (Submodule R A)ᵐᵒᵖ where
   invFun := fun p => p.unop.comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A)
   left_inv := fun p => SetLike.coe_injective <| rfl
   right_inv := fun p => unop_injective <| SetLike.coe_injective rfl
-  map_add' := fun p q => by
-    simp [comap_equiv_eq_map_symm, ← op_add]
+  map_add' := fun p q => by simp [comap_equiv_eq_map_symm, ← op_add]
   map_mul' := fun p q => congr_arg op <| comap_op_mul _ _
 
 protected theorem map_pow {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') (n : ℕ) :
@@ -450,14 +440,12 @@ theorem comap_op_pow (n : ℕ) (M : Submodule R Aᵐᵒᵖ) :
 theorem map_op_pow (n : ℕ) :
     map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (M ^ n) =
       map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) M ^ n :=
-  by
-  rw [map_equiv_eq_comap_symm, map_equiv_eq_comap_symm, comap_unop_pow]
+  by rw [map_equiv_eq_comap_symm, map_equiv_eq_comap_symm, comap_unop_pow]
 
 theorem map_unop_pow (n : ℕ) (M : Submodule R Aᵐᵒᵖ) :
     map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) (M ^ n) =
       map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) M ^ n :=
-  by
-  rw [← comap_equiv_eq_map_symm, ← comap_equiv_eq_map_symm, comap_op_pow]
+  by rw [← comap_equiv_eq_map_symm, ← comap_equiv_eq_map_symm, comap_op_pow]
 
 /-- `span` is a semiring homomorphism (recall multiplication is pointwise multiplication of subsets
 on either side). -/
@@ -466,8 +454,7 @@ def span.ringHom : SetSemiring A →+* Submodule R A where
   map_zero' := span_empty
   map_one' := one_eq_span.symm
   map_add' := span_union
-  map_mul' := fun s t => by
-    erw [span_mul_span, ← image_mul_prod]
+  map_mul' := fun s t => by erw [span_mul_span, ← image_mul_prod]
 
 section
 
@@ -508,19 +495,18 @@ protected theorem mul_comm : M * N = N * M :=
 instance : CommSemiringₓ (Submodule R A) :=
   { Submodule.semiring with mul_comm := Submodule.mul_comm }
 
-theorem prod_span {ι : Type _} (s : Finset ι) (M : ι → Set A) :
+theorem prod_span {ι : Type _} (s : Finsetₓ ι) (M : ι → Set A) :
     (∏ i in s, Submodule.span R (M i)) = Submodule.span R (∏ i in s, M i) := by
   letI := Classical.decEq ι
-  refine' Finset.induction_on s _ _
+  refine' Finsetₓ.induction_on s _ _
   · simp [one_eq_span, Set.singleton_one]
     
   · intro _ _ H ih
-    rw [Finset.prod_insert H, Finset.prod_insert H, ih, span_mul_span]
+    rw [Finsetₓ.prod_insert H, Finsetₓ.prod_insert H, ih, span_mul_span]
     
 
-theorem prod_span_singleton {ι : Type _} (s : Finset ι) (x : ι → A) :
-    (∏ i in s, span R ({x i} : Set A)) = span R {∏ i in s, x i} := by
-  rw [prod_span, Set.finset_prod_singleton]
+theorem prod_span_singleton {ι : Type _} (s : Finsetₓ ι) (x : ι → A) :
+    (∏ i in s, span R ({x i} : Set A)) = span R {∏ i in s, x i} := by rw [prod_span, Set.finset_prod_singleton]
 
 variable (R A)
 
@@ -528,19 +514,13 @@ variable (R A)
 instance moduleSet : Module (SetSemiring A) (Submodule R A) where
   smul := fun s P => span R s * P
   smul_add := fun _ _ _ => mul_addₓ _ _ _
-  add_smul := fun s t P =>
-    show span R (s ⊔ t) * P = _ by
-      erw [span_union, right_distrib]
-  mul_smul := fun s t P =>
-    show _ = _ * (_ * _) by
-      rw [← mul_assoc, span_mul_span, ← image_mul_prod]
+  add_smul := fun s t P => show span R (s ⊔ t) * P = _ by erw [span_union, right_distrib]
+  mul_smul := fun s t P => show _ = _ * (_ * _) by rw [← mul_assoc, span_mul_span, ← image_mul_prod]
   one_smul := fun P =>
     show span R {(1 : A)} * P = _ by
       conv_lhs => erw [← span_eq P]
       erw [span_mul_span, one_mulₓ, span_eq]
-  zero_smul := fun P =>
-    show span R ∅ * P = ⊥ by
-      erw [span_empty, bot_mul]
+  zero_smul := fun P => show span R ∅ * P = ⊥ by erw [span_empty, bot_mul]
   smul_zero := fun _ => mul_bot _
 
 variable {R A}
@@ -599,14 +579,12 @@ theorem mem_div_iff_smul_subset {x : A} {I J : Submodule R A} : x ∈ I / J ↔ 
 theorem le_div_iff {I J K : Submodule R A} : I ≤ J / K ↔ ∀ x ∈ I, ∀ z ∈ K, x * z ∈ J :=
   Iff.refl _
 
-theorem le_div_iff_mul_le {I J K : Submodule R A} : I ≤ J / K ↔ I * K ≤ J := by
-  rw [le_div_iff, mul_le]
+theorem le_div_iff_mul_le {I J K : Submodule R A} : I ≤ J / K ↔ I * K ≤ J := by rw [le_div_iff, mul_le]
 
 @[simp]
 theorem one_le_one_div {I : Submodule R A} : 1 ≤ 1 / I ↔ I ≤ 1 := by
   constructor
-  all_goals
-    intro hI
+  all_goals intro hI
   · rwa [le_div_iff_mul_le, one_mulₓ] at hI
     
   · rwa [le_div_iff_mul_le, one_mulₓ]

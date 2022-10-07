@@ -67,8 +67,7 @@ theorem ucs_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.IsCartanS
 theorem is_cartan_subalgebra_iff_is_ucs_limit : H.IsCartanSubalgebra ↔ H.toLieSubmodule.IsUcsLimit := by
   constructor
   · intro h
-    have h₁ : _root_.lie_algebra.is_nilpotent R H := by
-      infer_instance
+    have h₁ : _root_.lie_algebra.is_nilpotent R H := by infer_instance
     obtain ⟨k, hk⟩ := H.to_lie_submodule.is_nilpotent_iff_exists_self_le_ucs.mp h₁
     replace hk : H.to_lie_submodule = LieSubmodule.ucs k ⊥ :=
       le_antisymmₓ hk (LieSubmodule.ucs_le_of_centralizer_eq_self H.centralizer_eq_self_of_is_cartan_subalgebra k)
@@ -78,7 +77,7 @@ theorem is_cartan_subalgebra_iff_is_ucs_limit : H.IsCartanSubalgebra ↔ H.toLie
   · rintro ⟨k, hk⟩
     exact
       { nilpotent := by
-          dunfold LieAlgebra.IsNilpotent
+          dsimp only [LieAlgebra.IsNilpotent]
           erw [H.to_lie_submodule.is_nilpotent_iff_exists_lcs_eq_bot]
           use k
           rw [_root_.eq_bot_iff, LieSubmodule.lcs_le_iff, hk k (le_reflₓ k)]
@@ -104,6 +103,5 @@ open LieIdeal
 instance LieAlgebra.top_is_cartan_subalgebra_of_nilpotent [LieAlgebra.IsNilpotent R L] :
     LieSubalgebra.IsCartanSubalgebra (⊤ : LieSubalgebra R L) where
   nilpotent := inferInstance
-  self_normalizing := by
-    rw [← top_coe_lie_subalgebra, normalizer_eq_top, top_coe_lie_subalgebra]
+  self_normalizing := by rw [← top_coe_lie_subalgebra, normalizer_eq_top, top_coe_lie_subalgebra]
 

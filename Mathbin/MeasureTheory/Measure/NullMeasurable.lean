@@ -62,10 +62,7 @@ namespace MeasureTheory
 
 /-- A type tag for `α` with `measurable_set` given by `null_measurable_set`. -/
 @[nolint unused_arguments]
-def NullMeasurableSpace (α : Type _) [MeasurableSpace α]
-    (μ : Measure α := by
-      run_tac
-        volume_tac) :
+def NullMeasurableSpace (α : Type _) [MeasurableSpace α] (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) :
     Type _ :=
   α
 
@@ -89,10 +86,7 @@ instance : MeasurableSpace (NullMeasurableSpace α μ) where
 
 /-- A set is called `null_measurable_set` if it can be approximated by a measurable set up to
 a set of null measure. -/
-def NullMeasurableSet [MeasurableSpace α] (s : Set α)
-    (μ : Measure α := by
-      run_tac
-        volume_tac) :
+def NullMeasurableSet [MeasurableSpace α] (s : Set α) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) :
     Prop :=
   @MeasurableSet (NullMeasurableSpace α μ) _ s
 
@@ -191,15 +185,14 @@ protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)] 
     NullMeasurableSet (insert a s) μ :=
   hs.insert a
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊇ » s)
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s := by
   rcases h with ⟨t, htm, hst⟩
   refine' ⟨t ∪ to_measurable μ (s \ t), _, htm.union (measurable_set_to_measurable _ _), _⟩
   · exact diff_subset_iff.1 (subset_to_measurable _ _)
     
-  · have : to_measurable μ (s \ t) =ᵐ[μ] (∅ : Set α) := by
-      simp [ae_le_set.1 hst.le]
+  · have : to_measurable μ (s \ t) =ᵐ[μ] (∅ : Set α) := by simp [ae_le_set.1 hst.le]
     simpa only [union_empty] using hst.symm.union this
     
 
@@ -210,7 +203,7 @@ theorem to_measurable_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ s =�
 theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ (sᶜ)ᶜ =ᵐ[μ] s := by
   simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   ⟨ToMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _, (measurable_set_to_measurable _ _).compl,
@@ -253,7 +246,7 @@ theorem measure_Union₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AeDi
 
 theorem measure_union₀_aux (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) (hd : AeDisjoint μ s t) :
     μ (s ∪ t) = μ s + μ t := by
-  rw [union_eq_Union, measure_Union₀, tsum_fintype, Fintype.sum_bool, cond, cond]
+  rw [union_eq_Union, measure_Union₀, tsum_fintype, Fintypeₓ.sum_bool, cond, cond]
   exacts[(pairwise_on_bool ae_disjoint.symmetric).2 hd, fun b => Bool.casesOn b ht hs]
 
 /-- A null measurable set `t` is Carathéodory measurable: for any `s`, we have
@@ -272,8 +265,7 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) : �
       
     
   · calc
-      μ s = μ (s ∩ t ∪ s \ t) := by
-        rw [inter_union_diff]
+      μ s = μ (s ∩ t ∪ s \ t) := by rw [inter_union_diff]
       _ ≤ μ (s ∩ t) + μ (s \ t) := measure_union_le _ _
       
     
@@ -308,8 +300,8 @@ theorem null_measurable_set_eq {a : α} : NullMeasurableSet { x | x = a } μ :=
 protected theorem _root_.set.finite.null_measurable_set (hs : s.Finite) : NullMeasurableSet s μ :=
   Finite.measurable_set hs
 
-protected theorem _root_.finset.null_measurable_set (s : Finset α) : NullMeasurableSet (↑s) μ :=
-  Finset.measurable_set s
+protected theorem _root_.finset.null_measurable_set (s : Finsetₓ α) : NullMeasurableSet (↑s) μ :=
+  Finsetₓ.measurable_set s
 
 end MeasurableSingletonClass
 
@@ -317,9 +309,9 @@ theorem _root_.set.finite.null_measurable_set_bUnion {f : ι → Set α} {s : Se
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋃ b ∈ s, f b) μ :=
   Finite.measurable_set_bUnion hs h
 
-theorem _root_.finset.null_measurable_set_bUnion {f : ι → Set α} (s : Finset ι)
+theorem _root_.finset.null_measurable_set_bUnion {f : ι → Set α} (s : Finsetₓ ι)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋃ b ∈ s, f b) μ :=
-  Finset.measurable_set_bUnion s h
+  Finsetₓ.measurable_set_bUnion s h
 
 theorem _root_.set.finite.null_measurable_set_sUnion {s : Set (Set α)} (hs : s.Finite)
     (h : ∀ t ∈ s, NullMeasurableSet t μ) : NullMeasurableSet (⋃₀s) μ :=
@@ -329,7 +321,7 @@ theorem _root_.set.finite.null_measurable_set_bInter {f : ι → Set α} {s : Se
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋂ b ∈ s, f b) μ :=
   Finite.measurable_set_bInter hs h
 
-theorem _root_.finset.null_measurable_set_bInter {f : ι → Set α} (s : Finset ι)
+theorem _root_.finset.null_measurable_set_bInter {f : ι → Set α} (s : Finsetₓ ι)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋂ b ∈ s, f b) μ :=
   s.finite_to_set.null_measurable_set_bInter h
 
@@ -348,11 +340,7 @@ variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α 
 
 /-- A function `f : α → β` is null measurable if the preimage of a measurable set is a null
 measurable set. -/
-def NullMeasurable (f : α → β)
-    (μ : Measure α := by
-      run_tac
-        volume_tac) :
-    Prop :=
+def NullMeasurable (f : α → β) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) : Prop :=
   ∀ ⦃s : Set β⦄, MeasurableSet s → NullMeasurableSet (f ⁻¹' s) μ
 
 protected theorem _root_.measurable.null_measurable (h : Measurable f) : NullMeasurable f μ := fun s hs =>
@@ -366,10 +354,7 @@ theorem Measurable.comp_null_measurable {g : β → γ} (hg : Measurable g) (hf 
   hg.comp hf
 
 theorem NullMeasurable.congr {g : α → β} (hf : NullMeasurable f μ) (hg : f =ᵐ[μ] g) : NullMeasurable g μ := fun s hs =>
-  (hf hs).congr <|
-    eventually_eq_set.2 <|
-      hg.mono fun x hx => by
-        rw [mem_preimage, mem_preimage, hx]
+  (hf hs).congr <| eventually_eq_set.2 <| hg.mono fun x hx => by rw [mem_preimage, mem_preimage, hx]
 
 end NullMeasurable
 

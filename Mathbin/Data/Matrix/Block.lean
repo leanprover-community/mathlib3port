@@ -122,13 +122,13 @@ theorem from_blocks_conj_transpose [HasStar α] (A : Matrix n l α) (B : Matrix 
 theorem from_blocks_submatrix_sum_swap_left (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α)
     (f : p → Sum l m) : (fromBlocks A B C D).submatrix Sum.swap f = (fromBlocks C D A B).submatrix id f := by
   ext i j
-  cases i <;> dsimp' <;> cases f j <;> rfl
+  cases i <;> dsimp <;> cases f j <;> rfl
 
 @[simp]
 theorem from_blocks_submatrix_sum_swap_right (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α)
     (f : p → Sum n o) : (fromBlocks A B C D).submatrix f Sum.swap = (fromBlocks B A D C).submatrix f id := by
   ext i j
-  cases j <;> dsimp' <;> cases f i <;> rfl
+  cases j <;> dsimp <;> cases f i <;> rfl
 
 theorem from_blocks_submatrix_sum_swap_sum_swap {l m n o α : Type _} (A : Matrix n l α) (B : Matrix n m α)
     (C : Matrix o l α) (D : Matrix o m α) : (fromBlocks A B C D).submatrix Sum.swap Sum.swap = fromBlocks D C B A := by
@@ -169,13 +169,18 @@ theorem from_blocks_smul [HasSmul R α] (x : R) (A : Matrix n l α) (B : Matrix 
   ext i j
   rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> simp [from_blocks]
 
+theorem from_blocks_neg [Neg R] (A : Matrix n l R) (B : Matrix n m R) (C : Matrix o l R) (D : Matrix o m R) :
+    -fromBlocks A B C D = fromBlocks (-A) (-B) (-C) (-D) := by
+  ext i j
+  cases i <;> cases j <;> simp [from_blocks]
+
 theorem from_blocks_add [Add α] (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α)
     (A' : Matrix n l α) (B' : Matrix n m α) (C' : Matrix o l α) (D' : Matrix o m α) :
     fromBlocks A B C D + fromBlocks A' B' C' D' = fromBlocks (A + A') (B + B') (C + C') (D + D') := by
   ext i j
   rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> rfl
 
-theorem from_blocks_multiply [Fintype l] [Fintype m] [NonUnitalNonAssocSemiringₓ α] (A : Matrix n l α)
+theorem from_blocks_multiply [Fintypeₓ l] [Fintypeₓ m] [NonUnitalNonAssocSemiringₓ α] (A : Matrix n l α)
     (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α) (A' : Matrix l p α) (B' : Matrix l q α) (C' : Matrix m p α)
     (D' : Matrix m q α) :
     fromBlocks A B C D ⬝ fromBlocks A' B' C' D' =
@@ -184,10 +189,10 @@ theorem from_blocks_multiply [Fintype l] [Fintype m] [NonUnitalNonAssocSemiring�
   ext i j
   rcases i with ⟨⟩ <;>
     rcases j with ⟨⟩ <;>
-      simp only [from_blocks, mul_apply, Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr, Pi.add_apply, of_apply]
+      simp only [from_blocks, mul_apply, Fintypeₓ.sum_sum_type, Sum.elim_inl, Sum.elim_inr, Pi.add_apply, of_apply]
 
-theorem from_blocks_mul_vec [Fintype l] [Fintype m] [NonUnitalNonAssocSemiringₓ α] (A : Matrix n l α) (B : Matrix n m α)
-    (C : Matrix o l α) (D : Matrix o m α) (x : Sum l m → α) :
+theorem from_blocks_mul_vec [Fintypeₓ l] [Fintypeₓ m] [NonUnitalNonAssocSemiringₓ α] (A : Matrix n l α)
+    (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α) (x : Sum l m → α) :
     mulVecₓ (fromBlocks A B C D) x =
       Sum.elim (mulVecₓ A (x ∘ Sum.inl) + mulVecₓ B (x ∘ Sum.inr))
         (mulVecₓ C (x ∘ Sum.inl) + mulVecₓ D (x ∘ Sum.inr)) :=
@@ -195,8 +200,8 @@ theorem from_blocks_mul_vec [Fintype l] [Fintype m] [NonUnitalNonAssocSemiring�
   ext i
   cases i <;> simp [mul_vec, dot_product]
 
-theorem vec_mul_from_blocks [Fintype n] [Fintype o] [NonUnitalNonAssocSemiringₓ α] (A : Matrix n l α) (B : Matrix n m α)
-    (C : Matrix o l α) (D : Matrix o m α) (x : Sum n o → α) :
+theorem vec_mul_from_blocks [Fintypeₓ n] [Fintypeₓ o] [NonUnitalNonAssocSemiringₓ α] (A : Matrix n l α)
+    (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α) (x : Sum n o → α) :
     vecMulₓ x (fromBlocks A B C D) =
       Sum.elim (vecMulₓ (x ∘ Sum.inl) A + vecMulₓ (x ∘ Sum.inr) C)
         (vecMulₓ (x ∘ Sum.inl) B + vecMulₓ (x ∘ Sum.inr) D) :=
@@ -322,10 +327,10 @@ theorem block_diagonal_sub [AddGroupₓ α] (M N : o → Matrix m n α) :
   map_sub (blockDiagonalAddMonoidHom m n o α) M N
 
 @[simp]
-theorem block_diagonal_mul [Fintype n] [Fintype o] [NonUnitalNonAssocSemiringₓ α] (M : o → Matrix m n α)
+theorem block_diagonal_mul [Fintypeₓ n] [Fintypeₓ o] [NonUnitalNonAssocSemiringₓ α] (M : o → Matrix m n α)
     (N : o → Matrix n p α) : (blockDiagonalₓ fun k => M k ⬝ N k) = blockDiagonalₓ M ⬝ blockDiagonalₓ N := by
   ext ⟨i, k⟩ ⟨j, k'⟩
-  simp only [block_diagonal_apply, mul_apply, ← Finset.univ_product_univ, Finset.sum_product]
+  simp only [block_diagonal_apply, mul_apply, ← Finsetₓ.univ_product_univ, Finsetₓ.sum_product]
   split_ifs with h <;> simp [h]
 
 section
@@ -334,7 +339,7 @@ variable (α m o)
 
 /-- `matrix.block_diagonal` as a `ring_hom`. -/
 @[simps]
-def blockDiagonalRingHom [DecidableEq m] [Fintype o] [Fintype m] [NonAssocSemiringₓ α] :
+def blockDiagonalRingHom [DecidableEq m] [Fintypeₓ o] [Fintypeₓ m] [NonAssocSemiringₓ α] :
     (o → Matrix m m α) →+* Matrix (m × o) (m × o) α :=
   { blockDiagonalAddMonoidHom m m o α with toFun := blockDiagonalₓ, map_one' := block_diagonal_one,
     map_mul' := block_diagonal_mul }
@@ -342,7 +347,7 @@ def blockDiagonalRingHom [DecidableEq m] [Fintype o] [Fintype m] [NonAssocSemiri
 end
 
 @[simp]
-theorem block_diagonal_pow [DecidableEq m] [Fintype o] [Fintype m] [Semiringₓ α] (M : o → Matrix m m α) (n : ℕ) :
+theorem block_diagonal_pow [DecidableEq m] [Fintypeₓ o] [Fintypeₓ m] [Semiringₓ α] (M : o → Matrix m m α) (n : ℕ) :
     blockDiagonalₓ (M ^ n) = blockDiagonalₓ M ^ n :=
   map_pow (blockDiagonalRingHom m o α) M n
 
@@ -551,18 +556,16 @@ theorem block_diagonal'_sub [AddGroupₓ α] (M N : ∀ i, Matrix (m' i) (n' i) 
   map_sub (blockDiagonal'AddMonoidHom m' n' α) M N
 
 @[simp]
-theorem block_diagonal'_mul [NonUnitalNonAssocSemiringₓ α] [∀ i, Fintype (n' i)] [Fintype o]
+theorem block_diagonal'_mul [NonUnitalNonAssocSemiringₓ α] [∀ i, Fintypeₓ (n' i)] [Fintypeₓ o]
     (M : ∀ i, Matrix (m' i) (n' i) α) (N : ∀ i, Matrix (n' i) (p' i) α) :
     (blockDiagonal'ₓ fun k => M k ⬝ N k) = blockDiagonal'ₓ M ⬝ blockDiagonal'ₓ N := by
   ext ⟨k, i⟩ ⟨k', j⟩
-  simp only [block_diagonal'_apply, mul_apply, ← Finset.univ_sigma_univ, Finset.sum_sigma]
-  rw [Fintype.sum_eq_single k]
+  simp only [block_diagonal'_apply, mul_apply, ← Finsetₓ.univ_sigma_univ, Finsetₓ.sum_sigma]
+  rw [Fintypeₓ.sum_eq_single k]
   · split_ifs <;> simp
     
   · intro j' hj'
-    exact
-      Finset.sum_eq_zero fun _ _ => by
-        rw [dif_neg hj'.symm, zero_mul]
+    exact Finsetₓ.sum_eq_zero fun _ _ => by rw [dif_neg hj'.symm, zero_mul]
     
 
 section
@@ -571,7 +574,7 @@ variable (α m')
 
 /-- `matrix.block_diagonal'` as a `ring_hom`. -/
 @[simps]
-def blockDiagonal'RingHom [∀ i, DecidableEq (m' i)] [Fintype o] [∀ i, Fintype (m' i)] [NonAssocSemiringₓ α] :
+def blockDiagonal'RingHom [∀ i, DecidableEq (m' i)] [Fintypeₓ o] [∀ i, Fintypeₓ (m' i)] [NonAssocSemiringₓ α] :
     (∀ i, Matrix (m' i) (m' i) α) →+* Matrix (Σi, m' i) (Σi, m' i) α :=
   { blockDiagonal'AddMonoidHom m' m' α with toFun := blockDiagonal'ₓ, map_one' := block_diagonal'_one,
     map_mul' := block_diagonal'_mul }
@@ -579,7 +582,7 @@ def blockDiagonal'RingHom [∀ i, DecidableEq (m' i)] [Fintype o] [∀ i, Fintyp
 end
 
 @[simp]
-theorem block_diagonal'_pow [∀ i, DecidableEq (m' i)] [Fintype o] [∀ i, Fintype (m' i)] [Semiringₓ α]
+theorem block_diagonal'_pow [∀ i, DecidableEq (m' i)] [Fintypeₓ o] [∀ i, Fintypeₓ (m' i)] [Semiringₓ α]
     (M : ∀ i, Matrix (m' i) (m' i) α) (n : ℕ) : blockDiagonal'ₓ (M ^ n) = blockDiagonal'ₓ M ^ n :=
   map_pow (blockDiagonal'RingHom m' α) M n
 

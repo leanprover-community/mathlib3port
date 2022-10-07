@@ -111,6 +111,9 @@ instance [SemilatticeSup α] {a : α} : SemilatticeSup (Ici a) :=
 instance [Lattice α] {a : α} : Lattice (Ici a) :=
   { Ici.semilatticeInf, Ici.semilatticeSup with }
 
+instance [DistribLattice α] {a : α} : DistribLattice (Ici a) :=
+  { Ici.lattice with le_sup_inf := fun a b c => le_sup_inf }
+
 instance [Preorderₓ α] {a : α} : OrderBot (Ici a) where
   bot := ⟨a, le_reflₓ a⟩
   bot_le := fun x => x.Prop

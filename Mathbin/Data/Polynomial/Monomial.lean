@@ -29,28 +29,27 @@ theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} : (monomial i 1 : R[X]) =
   exact add_monoid_algebra.of_injective.eq_iff
 
 instance [Nontrivial R] : Infinite R[X] :=
-  (Infinite.of_injective fun i => monomial i 1) fun m n h => by
-    simpa [monomial_one_eq_iff] using h
+  (Infinite.of_injective fun i => monomial i 1) fun m n h => by simpa [monomial_one_eq_iff] using h
 
-theorem card_support_le_one_iff_monomial {f : R[X]} : Finset.card f.Support ≤ 1 ↔ ∃ n a, f = monomial n a := by
+theorem card_support_le_one_iff_monomial {f : R[X]} : Finsetₓ.card f.Support ≤ 1 ↔ ∃ n a, f = monomial n a := by
   constructor
   · intro H
-    rw [Finset.card_le_one_iff_subset_singleton] at H
+    rw [Finsetₓ.card_le_one_iff_subset_singleton] at H
     rcases H with ⟨n, hn⟩
     refine' ⟨n, f.coeff n, _⟩
     ext i
-    by_cases' hi : i = n
+    by_cases hi:i = n
     · simp [hi, coeff_monomial]
       
     · have : f.coeff i = 0 := by
         rw [← not_mem_support_iff]
-        exact fun hi' => hi (Finset.mem_singleton.1 (hn hi'))
+        exact fun hi' => hi (Finsetₓ.mem_singleton.1 (hn hi'))
       simp [this, Ne.symm hi, coeff_monomial]
       
     
   · rintro ⟨n, a, rfl⟩
-    rw [← Finset.card_singleton n]
-    apply Finset.card_le_of_subset
+    rw [← Finsetₓ.card_singleton n]
+    apply Finsetₓ.card_le_of_subset
     exact support_monomial' _ _
     
 

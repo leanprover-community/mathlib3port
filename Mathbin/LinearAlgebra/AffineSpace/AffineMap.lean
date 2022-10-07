@@ -146,8 +146,7 @@ variable (k P1)
 def const (p : P2) : P1 →ᵃ[k] P2 where
   toFun := Function.const P1 p
   linear := 0
-  map_vadd' := fun p v => by
-    simp
+  map_vadd' := fun p v => by simp
 
 @[simp]
 theorem coe_const (p : P2) : ⇑(const k P1 p) = Function.const P1 p :=
@@ -178,8 +177,7 @@ a point `p` such that for any other point `p'` we have `f p' = f' (p' -ᵥ p) +�
 def mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p : P1) (h : ∀ p' : P1, f p' = f' (p' -ᵥ p) +ᵥ f p) : P1 →ᵃ[k] P2 where
   toFun := f
   linear := f'
-  map_vadd' := fun p' v => by
-    rw [h, h p', vadd_vsub_assoc, f'.map_add, vadd_vadd]
+  map_vadd' := fun p' v => by rw [h, h p', vadd_vsub_assoc, f'.map_add, vadd_vadd]
 
 @[simp]
 theorem coe_mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p h) : ⇑(mk' f f' p h) = f :=
@@ -195,9 +193,7 @@ variable {R : Type _} [Monoidₓ R] [DistribMulAction R V2] [SmulCommClass k R V
 
 /-- The space of affine maps to a module inherits an `R`-action from the action on its codomain. -/
 instance : MulAction R (P1 →ᵃ[k] V2) where
-  smul := fun c f =>
-    ⟨c • f, c • f.linear, fun p v => by
-      simp [smul_add]⟩
+  smul := fun c f => ⟨c • f, c • f.linear, fun p v => by simp [smul_add]⟩
   one_smul := fun f => ext fun p => one_smul _ _
   mul_smul := fun c₁ c₂ f => ext fun p => mul_smul _ _ _
 
@@ -217,19 +213,11 @@ end HasSmul
 instance : Zero (P1 →ᵃ[k] V2) where zero := ⟨0, 0, fun p v => (zero_vadd _ _).symm⟩
 
 instance :
-    Add (P1 →ᵃ[k] V2) where add := fun f g =>
-    ⟨f + g, f.linear + g.linear, fun p v => by
-      simp [add_add_add_commₓ]⟩
+    Add (P1 →ᵃ[k] V2) where add := fun f g => ⟨f + g, f.linear + g.linear, fun p v => by simp [add_add_add_commₓ]⟩
 
-instance :
-    Sub (P1 →ᵃ[k] V2) where sub := fun f g =>
-    ⟨f - g, f.linear - g.linear, fun p v => by
-      simp [sub_add_sub_comm]⟩
+instance : Sub (P1 →ᵃ[k] V2) where sub := fun f g => ⟨f - g, f.linear - g.linear, fun p v => by simp [sub_add_sub_comm]⟩
 
-instance :
-    Neg (P1 →ᵃ[k] V2) where neg := fun f =>
-    ⟨-f, -f.linear, fun p v => by
-      simp [add_commₓ]⟩
+instance : Neg (P1 →ᵃ[k] V2) where neg := fun f => ⟨-f, -f.linear, fun p v => by simp [add_commₓ]⟩
 
 @[simp, norm_cast]
 theorem coe_zero : ⇑(0 : P1 →ᵃ[k] V2) = 0 :=
@@ -270,9 +258,7 @@ instance : AddCommGroupₓ (P1 →ᵃ[k] V2) :=
 /-- The space of affine maps from `P1` to `P2` is an affine space over the space of affine maps
 from `P1` to the vector space `V2` corresponding to `P2`. -/
 instance : affine_space (P1 →ᵃ[k] V2) (P1 →ᵃ[k] P2) where
-  vadd := fun f g =>
-    ⟨fun p => f p +ᵥ g p, f.linear + g.linear, fun p v => by
-      simp [vadd_vadd, add_right_commₓ]⟩
+  vadd := fun f g => ⟨fun p => f p +ᵥ g p, f.linear + g.linear, fun p v => by simp [vadd_vadd, add_right_commₓ]⟩
   zero_vadd := fun f => ext fun p => zero_vadd _ (f p)
   add_vadd := fun f₁ f₂ f₃ => ext fun p => add_vadd (f₁ p) (f₂ p) (f₃ p)
   vsub := fun f g =>
@@ -474,20 +460,17 @@ theorem line_map_vadd_apply (p : P1) (v : V1) (c : k) : lineMap p (v +ᵥ p) c =
 theorem line_map_linear (p₀ p₁ : P1) : (lineMap p₀ p₁ : k →ᵃ[k] P1).linear = LinearMap.id.smul_right (p₁ -ᵥ p₀) :=
   add_zeroₓ _
 
-theorem line_map_same_apply (p : P1) (c : k) : lineMap p p c = p := by
-  simp [line_map_apply]
+theorem line_map_same_apply (p : P1) (c : k) : lineMap p p c = p := by simp [line_map_apply]
 
 @[simp]
 theorem line_map_same (p : P1) : lineMap p p = const k k p :=
   ext <| line_map_same_apply p
 
 @[simp]
-theorem line_map_apply_zero (p₀ p₁ : P1) : lineMap p₀ p₁ (0 : k) = p₀ := by
-  simp [line_map_apply]
+theorem line_map_apply_zero (p₀ p₁ : P1) : lineMap p₀ p₁ (0 : k) = p₀ := by simp [line_map_apply]
 
 @[simp]
-theorem line_map_apply_one (p₀ p₁ : P1) : lineMap p₀ p₁ (1 : k) = p₁ := by
-  simp [line_map_apply]
+theorem line_map_apply_one (p₀ p₁ : P1) : lineMap p₀ p₁ (1 : k) = p₁ := by simp [line_map_apply]
 
 include V2
 
@@ -549,10 +532,8 @@ are the same. -/
 theorem decomp (f : V1 →ᵃ[k] V2) : (f : V1 → V2) = f.linear + fun z => f 0 := by
   ext x
   calc
-    f x = f.linear x +ᵥ f 0 := by
-      simp [← f.map_vadd]
-    _ = (f.linear.to_fun + fun z : V1 => f 0) x := by
-      simp
+    f x = f.linear x +ᵥ f 0 := by simp [← f.map_vadd]
+    _ = (f.linear.to_fun + fun z : V1 => f 0) x := by simp
     
 
 /-- Decomposition of an affine map in the special case when the point space and vector space
@@ -650,10 +631,8 @@ def toConstProdLinearMap : (V1 →ᵃ[k] V2) ≃ₗ[R] V2 × (V1 →ₗ[k] V2) w
   right_inv := by
     rintro ⟨v, f⟩
     ext <;> simp
-  map_add' := by
-    simp
-  map_smul' := by
-    simp
+  map_add' := by simp
+  map_smul' := by simp
 
 end Module
 
@@ -690,8 +669,7 @@ theorem homothety_apply_same (c : P1) (r : k) : homothety c r c = c :=
   line_map_same_apply c r
 
 theorem homothety_mul_apply (c : P1) (r₁ r₂ : k) (p : P1) :
-    homothety c (r₁ * r₂) p = homothety c r₁ (homothety c r₂ p) := by
-  simp [homothety_apply, mul_smul]
+    homothety c (r₁ * r₂) p = homothety c r₁ (homothety c r₂ p) := by simp [homothety_apply, mul_smul]
 
 theorem homothety_mul (c : P1) (r₁ r₂ : k) : homothety c (r₁ * r₂) = (homothety c r₁).comp (homothety c r₂) :=
   ext <| homothety_mul_apply c r₁ r₂
@@ -703,8 +681,7 @@ theorem homothety_zero (c : P1) : homothety c (0 : k) = const k P1 c := by
 
 @[simp]
 theorem homothety_add (c : P1) (r₁ r₂ : k) : homothety c (r₁ + r₂) = r₁ • (id k P1 -ᵥ const k P1 c) +ᵥ homothety c r₂ :=
-  by
-  simp only [homothety_def, add_smul, vadd_vadd]
+  by simp only [homothety_def, add_smul, vadd_vadd]
 
 /-- `homothety` as a multiplicative monoid homomorphism. -/
 def homothetyHom (c : P1) : k →* P1 →ᵃ[k] P1 :=

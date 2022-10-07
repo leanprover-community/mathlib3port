@@ -35,11 +35,7 @@ namespace MeasureTheory
 
 /-- A function `f : X → E` is locally integrable if it is integrable on all compact sets.
   See `measure_theory.locally_integrable_iff` for the justification of this name. -/
-def LocallyIntegrable (f : X → E)
-    (μ : Measure X := by
-      run_tac
-        volume_tac) :
-    Prop :=
+def LocallyIntegrable (f : X → E) (μ : Measure X := by exact MeasureTheory.MeasureSpace.volume) : Prop :=
   ∀ ⦃K⦄, IsCompact K → IntegrableOn f K μ
 
 theorem Integrable.locally_integrable (hf : Integrable f μ) : LocallyIntegrable f μ := fun K hK => hf.IntegrableOn
@@ -150,14 +146,14 @@ theorem Continuous.integrable_of_has_compact_support (hf : Continuous f) (hcf : 
 
 end borel
 
-section Monotone
+section Monotoneₓ
 
 variable [BorelSpace X] [MetrizableSpace X] [ConditionallyCompleteLinearOrder X] [ConditionallyCompleteLinearOrder E]
   [OrderTopology X] [OrderTopology E] [SecondCountableTopology E] [IsLocallyFiniteMeasure μ] {s : Set X}
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr E]]
-theorem MonotoneOn.integrable_on_compact (hs : IsCompact s) (hmono : MonotoneOn f s) : IntegrableOn f s μ := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr E]]"
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]
+theorem MonotoneOnₓ.integrable_on_compact (hs : IsCompact s) (hmono : MonotoneOnₓ f s) : IntegrableOn f s μ := by
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]"
   obtain rfl | h := s.eq_empty_or_nonempty
   · exact integrable_on_empty
     
@@ -172,14 +168,14 @@ theorem MonotoneOn.integrable_on_compact (hs : IsCompact s) (hmono : MonotoneOn 
       (ae_measurable_restrict_of_monotone_on hs.measurable_set hmono).AeStronglyMeasurable
       ((ae_restrict_iff' hs.measurable_set).mpr <| (ae_of_all _) fun y hy => hC (f y) (mem_image_of_mem f hy))
 
-theorem AntitoneOn.integrable_on_compact (hs : IsCompact s) (hanti : AntitoneOn f s) : IntegrableOn f s μ :=
+theorem AntitoneOnₓ.integrable_on_compact (hs : IsCompact s) (hanti : AntitoneOnₓ f s) : IntegrableOn f s μ :=
   hanti.dual_right.integrable_on_compact hs
 
-theorem Monotone.locally_integrable (hmono : Monotone f) : LocallyIntegrable f μ := fun s hs =>
+theorem Monotoneₓ.locally_integrable (hmono : Monotoneₓ f) : LocallyIntegrable f μ := fun s hs =>
   (hmono.MonotoneOn _).integrable_on_compact hs
 
-theorem Antitone.locally_integrable (hanti : Antitone f) : LocallyIntegrable f μ :=
+theorem Antitoneₓ.locally_integrable (hanti : Antitoneₓ f) : LocallyIntegrable f μ :=
   hanti.dual_right.LocallyIntegrable
 
-end Monotone
+end Monotoneₓ
 

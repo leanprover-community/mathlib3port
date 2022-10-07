@@ -58,8 +58,7 @@ theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g 
   trans aeval x (aeval (fun i => g (X i)) (f (X i)))
   · apply eval₂_hom_congr rfl rfl
     rw [AlgHom.comp_apply]
-    suffices g = aeval fun i => g (X i) by
-      rw [← this]
+    suffices g = aeval fun i => g (X i) by rw [← this]
     exact aeval_unique g
     
   · simp only [comap, aeval_eq_eval₂_hom, map_eval₂_hom, AlgHom.comp_apply]

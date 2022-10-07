@@ -46,7 +46,7 @@ theorem val_sub_subst {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     apply le_max_rightₓ
   | t -* s, h1 => by
     simp only [sub_subst, val_sub]
-    by_cases' h2 : t = x ∧ s = y
+    by_cases h2:t = x ∧ s = y
     · rw [if_pos h2]
       simp only [val_var, one_mulₓ]
       rw [update_eq, h2.left, h2.right]

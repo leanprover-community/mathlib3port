@@ -51,7 +51,7 @@ variable (f : (∀ a, Part <| β a) →o ∀ a, Part <| β a)
 
 theorem approx_mono' {i : ℕ} : Fix.approx f i ≤ Fix.approx f (succ i) := by
   induction i
-  dsimp' [approx]
+  dsimp [approx]
   apply @bot_le _ _ _ (f ⊥)
   intro
   apply f.monotone
@@ -68,7 +68,7 @@ theorem approx_mono ⦃i j : ℕ⦄ (hij : i ≤ j) : approx f i ≤ approx f j 
   exact le_transₓ (ih ‹_›) (approx_mono' f)
 
 theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx f i a := by
-  by_cases' h₀ : ∃ i : ℕ, (approx f i a).Dom
+  by_cases h₀:∃ i : ℕ, (approx f i a).Dom
   · simp only [Part.fix_def f h₀]
     constructor <;> intro hh
     exact ⟨_, hh⟩
@@ -98,7 +98,7 @@ theorem approx_le_fix (i : ℕ) : approx f i ≤ Part.fix f := fun a b hh => by
   exact ⟨_, hh⟩
 
 theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x := by
-  by_cases' hh : ∃ i b, b ∈ approx f i x
+  by_cases hh:∃ i b, b ∈ approx f i x
   · rcases hh with ⟨i, b, hb⟩
     exists i
     intro b' h'
@@ -154,7 +154,7 @@ theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) := by
       apply approx_mono' f
       
     apply' le_ωSup_of_le i.succ
-    dsimp' [approx]
+    dsimp [approx]
     rfl'
     
   · apply ωSup_le _ _ _
@@ -169,7 +169,7 @@ theorem fix_le {X : ∀ a, Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X := 
   simp only [fix.approx_chain, OrderHom.coe_fun_mk]
   intro i
   induction i
-  dsimp' [fix.approx]
+  dsimp [fix.approx]
   apply' bot_le
   trans' f X
   apply f.monotone i_ih
@@ -208,14 +208,12 @@ def toUnitMono (f : Part α →o Part α) : (Unit → Part α) →o Unit → Par
 theorem to_unit_cont (f : Part α →o Part α) (hc : Continuous f) : Continuous (toUnitMono f)
   | c => by
     ext ⟨⟩ : 1
-    dsimp' [OmegaCompletePartialOrder.ωSup]
+    dsimp [OmegaCompletePartialOrder.ωSup]
     erw [hc, chain.map_comp]
     rfl
 
 instance : LawfulFix (Part α) :=
-  ⟨fun f hc =>
-    show Part.fix (toUnitMono f) () = _ by
-      rw [Part.fix_eq (to_unit_cont f hc)] <;> rfl⟩
+  ⟨fun f hc => show Part.fix (toUnitMono f) () = _ by rw [Part.fix_eq (to_unit_cont f hc)] <;> rfl⟩
 
 end Part
 
@@ -228,7 +226,7 @@ instance {β} : LawfulFix (α → Part β) :=
 
 variable {γ : ∀ a : α, β a → Type _}
 
-section Monotone
+section Monotoneₓ
 
 variable (α β γ)
 
@@ -250,17 +248,17 @@ open OmegaCompletePartialOrder.Chain
 
 theorem continuous_curry : continuous <| monotoneCurry α β γ := fun c => by
   ext x y
-  dsimp' [curry, ωSup]
+  dsimp [curry, ωSup]
   rw [map_comp, map_comp]
   rfl
 
 theorem continuous_uncurry : continuous <| monotoneUncurry α β γ := fun c => by
   ext x y
-  dsimp' [uncurry, ωSup]
+  dsimp [uncurry, ωSup]
   rw [map_comp, map_comp]
   rfl
 
-end Monotone
+end Monotoneₓ
 
 open HasFix
 
@@ -282,8 +280,10 @@ end Curry
 
 instance Pi.lawfulFix' [LawfulFix <| ∀ x : Sigma β, γ x.1 x.2] :
     LawfulFix (∀ x y, γ x y) where fix_eq := fun f hc => by
-    dsimp' [fix]
-    conv => lhs erw [LawfulFix.fix_eq (uncurry_curry_continuous hc)]
+    dsimp [fix]
+    conv =>
+    lhs
+    erw [LawfulFix.fix_eq (uncurry_curry_continuous hc)]
     rfl
 
 end Pi

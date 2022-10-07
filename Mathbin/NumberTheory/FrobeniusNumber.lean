@@ -6,6 +6,8 @@ Authors: Alex Zhao
 import Mathbin.Data.Nat.Modeq
 import Mathbin.GroupTheory.Submonoid.Basic
 import Mathbin.GroupTheory.Submonoid.Membership
+import Mathbin.Tactic.Ring
+import Mathbin.Tactic.Zify
 
 /-!
 # Frobenius Number in Two Variables
@@ -63,16 +65,14 @@ theorem is_frobenius_number_pair (cop : Coprime m n) (hm : 1 < m) (hn : 1 < n) :
     ring
     
   · intro k hk
-    dsimp'  at hk
+    dsimp at hk
     contrapose! hk
     let x := chinese_remainder cop 0 k
     have hx : x.val < m * n := chinese_remainder_lt_mul cop 0 k (ne_bot_of_gt hm) (ne_bot_of_gt hn)
     suffices key : x.1 ≤ k
     · obtain ⟨a, ha⟩ := modeq_zero_iff_dvd.mp x.2.1
       obtain ⟨b, hb⟩ := (modeq_iff_dvd' key).mp x.2.2
-      exact
-        ⟨a, b, by
-          rw [mul_comm, ← ha, mul_comm, ← hb, Nat.add_sub_of_leₓ key]⟩
+      exact ⟨a, b, by rw [mul_comm, ← ha, mul_comm, ← hb, Nat.add_sub_of_leₓ key]⟩
       
     refine' modeq.le_of_lt_add x.2.2 (lt_of_le_of_ltₓ _ (add_lt_add_right hk n))
     rw [Nat.sub_add_cancelₓ (le_tsub_of_add_le_left hmn)]

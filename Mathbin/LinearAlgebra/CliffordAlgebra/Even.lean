@@ -98,10 +98,8 @@ def even.ι : EvenHom Q (even Q) where
   contract_mid := fun m₁ m₂ m₃ =>
     Subtype.ext <|
       calc
-        ι Q m₁ * ι Q m₂ * (ι Q m₂ * ι Q m₃) = ι Q m₁ * (ι Q m₂ * ι Q m₂ * ι Q m₃) := by
-          simp only [mul_assoc]
-        _ = Q m₂ • (ι Q m₁ * ι Q m₃) := by
-          rw [Algebra.smul_def, ι_sq_scalar, Algebra.left_comm]
+        ι Q m₁ * ι Q m₂ * (ι Q m₂ * ι Q m₃) = ι Q m₁ * (ι Q m₂ * ι Q m₂ * ι Q m₃) := by simp only [mul_assoc]
+        _ = Q m₂ • (ι Q m₁ * ι Q m₃) := by rw [Algebra.smul_def, ι_sq_scalar, Algebra.left_comm]
         
 
 instance : Inhabited (EvenHom Q (even Q)) :=
@@ -156,14 +154,12 @@ private def f_fold : M →ₗ[R] A × s f →ₗ[R] A × s f :=
       Prod.extₓ (LinearMap.map_add _ m₁ m₂)
         (Subtype.ext <|
           LinearMap.ext fun m₃ =>
-            show f.bilin m₃ (m₁ + m₂) * a.1 = f.bilin m₃ m₁ * a.1 + f.bilin m₃ m₂ * a.1 by
-              rw [map_add, add_mulₓ]))
+            show f.bilin m₃ (m₁ + m₂) * a.1 = f.bilin m₃ m₁ * a.1 + f.bilin m₃ m₂ * a.1 by rw [map_add, add_mulₓ]))
     (fun c m a =>
       Prod.extₓ (LinearMap.map_smul _ c m)
         (Subtype.ext <|
           LinearMap.ext fun m₃ =>
-            show f.bilin m₃ (c • m) * a.1 = c • (f.bilin m₃ m * a.1) by
-              rw [LinearMap.map_smul, smul_mul_assoc]))
+            show f.bilin m₃ (c • m) * a.1 = c • (f.bilin m₃ m * a.1) by rw [LinearMap.map_smul, smul_mul_assoc]))
     (fun m a₁ a₂ => Prod.extₓ rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_addₓ _ _ _)) fun c m a =>
     Prod.extₓ rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_smul_comm _ _ _)
 
@@ -227,7 +223,7 @@ theorem aux_mul (x y : even Q) : aux f (x * y) = aux f x * aux f y := by
   cases x
   cases y
   refine' (congr_arg Prod.fst (foldr_mul _ _ _ _ _ _)).trans _
-  dsimp' only
+  dsimp only
   refine' even_induction Q _ _ _ _ x_property
   · intro r
     rw [foldr_algebra_map, aux_algebra_map]

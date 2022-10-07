@@ -36,26 +36,24 @@ def ico (n m : ℕ) : List ℕ :=
 
 namespace Ico
 
-theorem zero_bot (n : ℕ) : ico 0 n = range n := by
-  rw [Ico, tsub_zero, range_eq_range']
+theorem zero_bot (n : ℕ) : ico 0 n = range n := by rw [Ico, tsub_zero, range_eq_range']
 
 @[simp]
 theorem length (n m : ℕ) : length (ico n m) = m - n := by
-  dsimp' [Ico]
+  dsimp [Ico]
   simp only [length_range']
 
 theorem pairwise_lt (n m : ℕ) : Pairwiseₓ (· < ·) (ico n m) := by
-  dsimp' [Ico]
+  dsimp [Ico]
   simp only [pairwise_lt_range']
 
 theorem nodup (n m : ℕ) : Nodupₓ (ico n m) := by
-  dsimp' [Ico]
+  dsimp [Ico]
   simp only [nodup_range']
 
 @[simp]
 theorem mem {n m l : ℕ} : l ∈ ico n m ↔ n ≤ l ∧ l < m := by
-  suffices n ≤ l ∧ l < n + (m - n) ↔ n ≤ l ∧ l < m by
-    simp [Ico, this]
+  suffices n ≤ l ∧ l < n + (m - n) ↔ n ≤ l ∧ l < m by simp [Ico, this]
   cases' le_totalₓ n m with hnm hmn
   · rw [add_tsub_cancel_of_le hnm]
     
@@ -64,8 +62,7 @@ theorem mem {n m l : ℕ} : l ∈ ico n m ↔ n ≤ l ∧ l < m := by
       and_congr_right fun hnl => Iff.intro (fun hln => (not_le_of_gtₓ hln hnl).elim) fun hlm => lt_of_lt_of_leₓ hlm hmn
     
 
-theorem eq_nil_of_le {n m : ℕ} (h : m ≤ n) : ico n m = [] := by
-  simp [Ico, tsub_eq_zero_iff_le.mpr h]
+theorem eq_nil_of_le {n m : ℕ} (h : m ≤ n) : ico n m = [] := by simp [Ico, tsub_eq_zero_iff_le.mpr h]
 
 theorem map_add (n m k : ℕ) : (ico n m).map ((· + ·) k) = ico (n + k) (m + k) := by
   rw [Ico, Ico, map_add_range', add_tsub_add_eq_tsub_right, add_commₓ n k]
@@ -79,14 +76,10 @@ theorem self_empty {n : ℕ} : ico n n = [] :=
 
 @[simp]
 theorem eq_empty_iff {n m : ℕ} : ico n m = [] ↔ m ≤ n :=
-  Iff.intro
-    (fun h =>
-      tsub_eq_zero_iff_le.mp <| by
-        rw [← length, h, List.length])
-    eq_nil_of_le
+  Iff.intro (fun h => tsub_eq_zero_iff_le.mp <| by rw [← length, h, List.length]) eq_nil_of_le
 
 theorem append_consecutive {n m l : ℕ} (hnm : n ≤ m) (hml : m ≤ l) : ico n m ++ ico m l = ico n l := by
-  dunfold Ico
+  dsimp only [Ico]
   convert range'_append _ _ _
   · exact (add_tsub_cancel_of_le hnm).symm
     
@@ -108,7 +101,7 @@ theorem bag_inter_consecutive (n m l : ℕ) : List.bagInterₓ (ico n m) (ico m 
 
 @[simp]
 theorem succ_singleton {n : ℕ} : ico n (n + 1) = [n] := by
-  dsimp' [Ico]
+  dsimp [Ico]
   simp [add_tsub_cancel_left]
 
 theorem succ_top {n m : ℕ} (h : n ≤ m) : ico n (m + 1) = ico n m ++ [m] := by
@@ -121,12 +114,12 @@ theorem eq_cons {n m : ℕ} (h : n < m) : ico n m = n :: ico (n + 1) m := by
 
 @[simp]
 theorem pred_singleton {m : ℕ} (h : 0 < m) : ico (m - 1) m = [m - 1] := by
-  dsimp' [Ico]
+  dsimp [Ico]
   rw [tsub_tsub_cancel_of_le (succ_le_of_lt h)]
   simp
 
 theorem chain'_succ (n m : ℕ) : Chain' (fun a b => b = succ a) (ico n m) := by
-  by_cases' n < m
+  by_cases n < m
   · rw [eq_cons h]
     exact chain_succ_range' _ _
     
@@ -135,8 +128,7 @@ theorem chain'_succ (n m : ℕ) : Chain' (fun a b => b = succ a) (ico n m) := by
     
 
 @[simp]
-theorem not_mem_top {n m : ℕ} : m ∉ ico n m := by
-  simp
+theorem not_mem_top {n m : ℕ} : m ∉ ico n m := by simp
 
 theorem filter_lt_of_top_le {n m l : ℕ} (hml : m ≤ l) : ((ico n m).filter fun x => x < l) = ico n m :=
   filter_eq_self.2 fun k hk => lt_of_lt_of_leₓ (mem.1 hk).2 hml
@@ -197,12 +189,12 @@ theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((ico n m).filter fun x => 
 3. n ∈ Ico a b
 -/
 theorem trichotomy (n a b : ℕ) : n < a ∨ b ≤ n ∨ n ∈ ico a b := by
-  by_cases' h₁ : n < a
+  by_cases h₁:n < a
   · left
     exact h₁
     
   · right
-    by_cases' h₂ : n ∈ Ico a b
+    by_cases h₂:n ∈ Ico a b
     · right
       exact h₂
       

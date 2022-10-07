@@ -133,9 +133,7 @@ theorem desc_map_mk {i : I} (X Y : C i) (f : X ⟶ Y) : (desc F).map (SigmaHom.m
 `F i`.
 -/
 def inclDesc (i : I) : incl i ⋙ desc F ≅ F i :=
-  NatIso.ofComponents (fun X => Iso.refl _)
-    (by
-      tidy)
+  NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
 
 @[simp]
 theorem incl_desc_hom_app (i : I) (X : C i) : (inclDesc F i).Hom.app X = 𝟙 ((F i).obj X) :=
@@ -199,10 +197,7 @@ variable (I)
 /-- The functor `sigma.map` applied to the identity function is just the identity functor. -/
 @[simps]
 def mapId : map C (id : I → I) ≅ 𝟭 (Σi, C i) :=
-  natIso fun i =>
-    NatIso.ofComponents (fun X => Iso.refl _)
-      (by
-        tidy)
+  natIso fun i => NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
 
 variable {I} {K : Type w₃}
 

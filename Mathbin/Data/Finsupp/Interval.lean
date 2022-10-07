@@ -26,7 +26,7 @@ supported.
 
 noncomputable section
 
-open Finset Finsupp Function
+open Finsetₓ Finsupp Function
 
 open BigOperators Classical Pointwise
 
@@ -40,7 +40,7 @@ variable [Zero α] {f : ι →₀ α} {i : ι} {a : α}
 
 /-- Pointwise `finset.singleton` bundled as a `finsupp`. -/
 @[simps]
-def rangeSingleton (f : ι →₀ α) : ι →₀ Finset α where
+def rangeSingleton (f : ι →₀ α) : ι →₀ Finsetₓ α where
   toFun := fun i => {f i}
   Support := f.Support
   mem_support_to_fun := fun i => by
@@ -58,7 +58,7 @@ variable [Zero α] [PartialOrderₓ α] [LocallyFiniteOrder α] {f g : ι →₀
 
 /-- Pointwise `finset.Icc` bundled as a `finsupp`. -/
 @[simps]
-def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α where
+def rangeIcc (f g : ι →₀ α) : ι →₀ Finsetₓ α where
   toFun := fun i => icc (f i) (g i)
   Support := f.Support ∪ g.Support
   mem_support_to_fun := fun i => by

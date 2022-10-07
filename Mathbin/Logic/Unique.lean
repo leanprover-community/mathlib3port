@@ -129,8 +129,7 @@ instance (priority := 100) : Subsingleton α :=
   subsingleton_of_forall_eq _ eq_default
 
 theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ p default :=
-  ⟨fun h => h _, fun h x => by
-    rwa [Unique.eq_default x]⟩
+  ⟨fun h => h _, fun h x => by rwa [Unique.eq_default x]⟩
 
 theorem exists_iff {p : α → Prop} : Exists p ↔ p default :=
   ⟨fun ⟨a, ha⟩ => eq_default a ▸ ha, Exists.introₓ default⟩
@@ -139,8 +138,7 @@ end
 
 @[ext]
 protected theorem subsingleton_unique' : ∀ h₁ h₂ : Unique α, h₁ = h₂
-  | ⟨⟨x⟩, h⟩, ⟨⟨y⟩, _⟩ => by
-    congr <;> rw [h x, h y]
+  | ⟨⟨x⟩, h⟩, ⟨⟨y⟩, _⟩ => by congr <;> rw [h x, h y]
 
 instance subsingleton_unique : Subsingleton (Unique α) :=
   ⟨Unique.subsingleton_unique'⟩
@@ -154,8 +152,7 @@ def mk' (α : Sort u) [h₁ : Inhabited α] [Subsingleton α] : Unique α :=
 end Unique
 
 theorem unique_iff_subsingleton_and_nonempty (α : Sort u) : Nonempty (Unique α) ↔ Subsingleton α ∧ Nonempty α :=
-  ⟨fun ⟨u⟩ => by
-    constructor <;> exact inferInstance, fun ⟨hs, hn⟩ =>
+  ⟨fun ⟨u⟩ => by constructor <;> exact inferInstance, fun ⟨hs, hn⟩ =>
     ⟨by
       skip
       inhabit α
@@ -182,8 +179,7 @@ theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (
   rw [Subsingleton.elim x default]
 
 theorem heq_const_of_unique [Unique α] {β : α → Sort v} (f : ∀ a, β a) : HEq f (Function.const α (f default)) :=
-  (Function.hfunext rfl) fun i _ _ => by
-    rw [Subsingleton.elim i default]
+  (Function.hfunext rfl) fun i _ _ => by rw [Subsingleton.elim i default]
 
 namespace Function
 
@@ -235,13 +231,11 @@ section Subtype
 
 instance Unique.subtypeEq (y : α) : Unique { x // x = y } where
   default := ⟨y, rfl⟩
-  uniq := fun ⟨x, hx⟩ => by
-    simpa using hx
+  uniq := fun ⟨x, hx⟩ => by simpa using hx
 
 instance Unique.subtypeEq' (y : α) : Unique { x // y = x } where
   default := ⟨y, rfl⟩
-  uniq := fun ⟨x, hx⟩ => by
-    simpa using hx.symm
+  uniq := fun ⟨x, hx⟩ => by simpa using hx.symm
 
 end Subtype
 

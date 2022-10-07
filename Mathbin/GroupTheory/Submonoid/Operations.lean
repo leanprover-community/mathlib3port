@@ -76,10 +76,8 @@ section
 def Submonoid.toAddSubmonoid : Submonoid M ≃o AddSubmonoid (Additive M) where
   toFun := fun S => { Carrier := Additive.toMul ⁻¹' S, zero_mem' := S.one_mem', add_mem' := fun _ _ => S.mul_mem' }
   invFun := fun S => { Carrier := Additive.ofMul ⁻¹' S, one_mem' := S.zero_mem', mul_mem' := fun _ _ => S.add_mem' }
-  left_inv := fun x => by
-    cases x <;> rfl
-  right_inv := fun x => by
-    cases x <;> rfl
+  left_inv := fun x => by cases x <;> rfl
+  right_inv := fun x => by cases x <;> rfl
   map_rel_iff' := fun a b => Iff.rfl
 
 /-- Additive submonoids of an additive monoid `additive M` are isomorphic to submonoids of `M`. -/
@@ -110,10 +108,8 @@ def AddSubmonoid.toSubmonoid : AddSubmonoid A ≃o Submonoid (Multiplicative A) 
     { Carrier := Multiplicative.toAdd ⁻¹' S, one_mem' := S.zero_mem', mul_mem' := fun _ _ => S.add_mem' }
   invFun := fun S =>
     { Carrier := Multiplicative.ofAdd ⁻¹' S, zero_mem' := S.one_mem', add_mem' := fun _ _ => S.mul_mem' }
-  left_inv := fun x => by
-    cases x <;> rfl
-  right_inv := fun x => by
-    cases x <;> rfl
+  left_inv := fun x => by cases x <;> rfl
+  right_inv := fun x => by cases x <;> rfl
   map_rel_iff' := fun a b => Iff.rfl
 
 /-- Submonoids of a monoid `multiplicative A` are isomorphic to additive submonoids of `A`. -/
@@ -151,12 +147,8 @@ include mc
 @[to_additive "The preimage of an `add_submonoid` along an `add_monoid` homomorphism is an\n`add_submonoid`."]
 def comap (f : F) (S : Submonoid N) : Submonoid M where
   Carrier := f ⁻¹' S
-  one_mem' :=
-    show f 1 ∈ S by
-      rw [map_one] <;> exact S.one_mem
-  mul_mem' := fun a b ha hb =>
-    show f (a * b) ∈ S by
-      rw [map_mul] <;> exact S.mul_mem ha hb
+  one_mem' := show f 1 ∈ S by rw [map_one] <;> exact S.one_mem
+  mul_mem' := fun a b ha hb => show f (a * b) ∈ S by rw [map_mul] <;> exact S.mul_mem ha hb
 
 @[simp, to_additive]
 theorem coe_comap (S : Submonoid N) (f : F) : (S.comap f : Set M) = f ⁻¹' S :=
@@ -174,9 +166,7 @@ theorem comap_comap (S : Submonoid P) (g : N →* P) (f : M →* N) : (S.comap g
 
 @[simp, to_additive]
 theorem comap_id (S : Submonoid P) : S.comap (MonoidHom.id P) = S :=
-  ext
-    (by
-      simp )
+  ext (by simp)
 
 include mc
 
@@ -187,9 +177,7 @@ def map (f : F) (S : Submonoid M) : Submonoid N where
   one_mem' := ⟨1, S.one_mem, map_one f⟩
   mul_mem' := by
     rintro _ _ ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩
-    exact
-      ⟨x * y, S.mul_mem hx hy, by
-        rw [map_mul] <;> rfl⟩
+    exact ⟨x * y, S.mul_mem hx hy, by rw [map_mul] <;> rfl⟩
 
 @[simp, to_additive]
 theorem coe_map (f : F) (S : Submonoid M) : (S.map f : Set N) = f '' S :=
@@ -243,11 +231,11 @@ theorem map_comap_le {S : Submonoid N} {f : F} : (S.comap f).map f ≤ S :=
   (gc_map_comap f).l_u_le _
 
 @[to_additive]
-theorem monotone_map {f : F} : Monotone (map f) :=
+theorem monotone_map {f : F} : Monotoneₓ (map f) :=
   (gc_map_comap f).monotone_l
 
 @[to_additive]
-theorem monotone_comap {f : F} : Monotone (comap f) :=
+theorem monotone_comap {f : F} : Monotoneₓ (comap f) :=
   (gc_map_comap f).monotone_u
 
 @[simp, to_additive]
@@ -297,8 +285,7 @@ include hf
 /-- `map f` and `comap f` form a `galois_coinsertion` when `f` is injective. -/
 @[to_additive " `map f` and `comap f` form a `galois_coinsertion` when `f` is injective. "]
 def gciMapComap : GaloisCoinsertion (map f) (comap f) :=
-  (gc_map_comap f).toGaloisCoinsertion fun S x => by
-    simp [mem_comap, mem_map, hf.eq_iff]
+  (gc_map_comap f).toGaloisCoinsertion fun S x => by simp [mem_comap, mem_map, hf.eq_iff]
 
 @[to_additive]
 theorem comap_map_eq_of_injective (S : Submonoid M) : (S.map f).comap f = S :=
@@ -333,7 +320,7 @@ theorem map_le_map_iff_of_injective {S T : Submonoid M} : S.map f ≤ T.map f �
   (gciMapComap hf).l_le_l_iff
 
 @[to_additive]
-theorem map_strict_mono_of_injective : StrictMono (map f) :=
+theorem map_strict_mono_of_injective : StrictMonoₓ (map f) :=
   (gciMapComap hf).strict_mono_l
 
 end GaloisCoinsertion
@@ -349,9 +336,7 @@ include hf
 def giMapComap : GaloisInsertion (map f) (comap f) :=
   (gc_map_comap f).toGaloisInsertion fun S x h =>
     let ⟨y, hy⟩ := hf x
-    mem_map.2
-      ⟨y, by
-        simp [hy, h]⟩
+    mem_map.2 ⟨y, by simp [hy, h]⟩
 
 @[to_additive]
 theorem map_comap_eq_of_surjective (S : Submonoid N) : (S.comap f).map f = S :=
@@ -386,7 +371,7 @@ theorem comap_le_comap_iff_of_surjective {S T : Submonoid N} : S.comap f ≤ T.c
   (giMapComap hf).u_le_u_iff
 
 @[to_additive]
-theorem comap_strict_mono_of_surjective : StrictMono (comap f) :=
+theorem comap_strict_mono_of_surjective : StrictMonoₓ (comap f) :=
   (giMapComap hf).strict_mono_u
 
 end GaloisInsertion
@@ -662,13 +647,11 @@ theorem prod_mono {s₁ s₂ : Submonoid M} {t₁ t₂ : Submonoid N} (hs : s₁
 
 @[to_additive prod_top]
 theorem prod_top (s : Submonoid M) : s.Prod (⊤ : Submonoid N) = s.comap (MonoidHom.fst M N) :=
-  ext fun x => by
-    simp [mem_prod, MonoidHom.coe_fst]
+  ext fun x => by simp [mem_prod, MonoidHom.coe_fst]
 
 @[to_additive top_prod]
 theorem top_prod (s : Submonoid N) : (⊤ : Submonoid M).Prod s = s.comap (MonoidHom.snd M N) :=
-  ext fun x => by
-    simp [mem_prod, MonoidHom.coe_snd]
+  ext fun x => by simp [mem_prod, MonoidHom.coe_snd]
 
 @[simp, to_additive top_prod_top]
 theorem top_prod_top : (⊤ : Submonoid M).Prod (⊤ : Submonoid N) = ⊤ :=
@@ -676,8 +659,7 @@ theorem top_prod_top : (⊤ : Submonoid M).Prod (⊤ : Submonoid N) = ⊤ :=
 
 @[to_additive]
 theorem bot_prod_bot : (⊥ : Submonoid M).Prod (⊥ : Submonoid N) = ⊥ :=
-  SetLike.coe_injective <| by
-    simp [coe_prod, Prod.one_eq_mk]
+  SetLike.coe_injective <| by simp [coe_prod, Prod.one_eq_mk]
 
 /-- The product of submonoids is isomorphic to their product as monoids. -/
 @[to_additive prod_equiv "The product of additive submonoids is isomorphic to their product\nas additive monoids"]
@@ -832,11 +814,7 @@ include mc
 
 @[to_additive]
 theorem mrange_top_iff_surjective {f : F} : mrange f = (⊤ : Submonoid N) ↔ Function.Surjective f :=
-  SetLike.ext'_iff.trans <|
-    Iff.trans
-      (by
-        rw [coe_mrange, coe_top])
-      Set.range_iff_surjective
+  SetLike.ext'_iff.trans <| Iff.trans (by rw [coe_mrange, coe_top]) Set.range_iff_surjective
 
 /-- The range of a surjective monoid hom is the whole of the codomain. -/
 @[to_additive "The range of a surjective `add_monoid` hom is the whole of the codomain."]
@@ -982,12 +960,10 @@ namespace Submonoid
 open MonoidHom
 
 @[to_additive]
-theorem mrange_inl : (inl M N).mrange = prod ⊤ ⊥ := by
-  simpa only [mrange_eq_map] using map_inl ⊤
+theorem mrange_inl : (inl M N).mrange = prod ⊤ ⊥ := by simpa only [mrange_eq_map] using map_inl ⊤
 
 @[to_additive]
-theorem mrange_inr : (inr M N).mrange = prod ⊥ ⊤ := by
-  simpa only [mrange_eq_map] using map_inr ⊤
+theorem mrange_inr : (inr M N).mrange = prod ⊥ ⊤ := by simpa only [mrange_eq_map] using map_inr ⊤
 
 @[to_additive]
 theorem mrange_inl' : (inl M N).mrange = comap (snd M N) ⊥ :=
@@ -1032,16 +1008,14 @@ theorem eq_top_iff' : S = ⊤ ↔ ∀ x : M, x ∈ S :=
 
 @[to_additive]
 theorem eq_bot_iff_forall : S = ⊥ ↔ ∀ x ∈ S, x = (1 : M) :=
-  SetLike.ext_iff.trans <| by
-    simp (config := { contextual := true })[iff_def, S.one_mem]
+  SetLike.ext_iff.trans <| by simp (config := { contextual := true }) [iff_def, S.one_mem]
 
 @[to_additive]
 theorem nontrivial_iff_exists_ne_one (S : Submonoid M) : Nontrivial S ↔ ∃ x ∈ S, x ≠ (1 : M) :=
   calc
     Nontrivial S ↔ ∃ x : S, x ≠ 1 := nontrivial_iff_exists_ne 1
     _ ↔ ∃ (x : _)(hx : x ∈ S), (⟨x, hx⟩ : S) ≠ ⟨1, S.one_mem⟩ := Subtype.exists
-    _ ↔ ∃ x ∈ S, x ≠ (1 : M) := by
-      simp only [Ne.def]
+    _ ↔ ∃ x ∈ S, x ≠ (1 : M) := by simp only [Ne.def]
     
 
 /-- A submonoid is either the trivial submonoid or nontrivial. -/
@@ -1079,8 +1053,7 @@ def ofLeftInverse' (f : M →* N) {g : N → M} (h : Function.LeftInverse g f) :
     right_inv := fun x =>
       Subtype.ext <|
         let ⟨x', hx'⟩ := MonoidHom.mem_mrange.mp x.Prop
-        show f (g x) = x by
-          rw [← hx', h x'] }
+        show f (g x) = x by rw [← hx', h x'] }
 
 /-- A `mul_equiv` `φ` between two monoids `M` and `N` induces a `mul_equiv` between
 a submonoid `S ≤ M` and the submonoid `φ(S) ≤ N`.
@@ -1158,8 +1131,7 @@ instance [AddMonoidₓ α] [DistribMulAction M' α] (S : Submonoid M') : Distrib
 instance [Monoidₓ α] [MulDistribMulAction M' α] (S : Submonoid M') : MulDistribMulAction S α :=
   MulDistribMulAction.compHom _ S.Subtype
 
-example {S : Submonoid M'} : IsScalarTower S M' M' := by
-  infer_instance
+example {S : Submonoid M'} : IsScalarTower S M' M' := by infer_instance
 
 end Submonoid
 

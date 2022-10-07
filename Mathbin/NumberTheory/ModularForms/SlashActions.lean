@@ -76,8 +76,7 @@ localized [ModularForms] notation:100 f " ∣[" k "]" γ:100 => ModularForms.sla
 theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (f ∣[k]A) ∣[k]B = f ∣[k](A * B) := by
   ext1
   simp_rw [slash, UpperHalfPlane.denom_cocycle A B x]
-  have e3 : (A * B) • x = A • B • x := by
-    convert UpperHalfPlane.mul_smul' A B x
+  have e3 : (A * B) • x = A • B • x := by convert UpperHalfPlane.mul_smul' A B x
   rw [e3]
   simp only [UpperHalfPlane.num, UpperHalfPlane.denom, of_real_mul, Subgroup.coe_mul, coe_coe, UpperHalfPlane.coe_smul,
     Units.coe_mul, Matrix.mul_eq_mul, Matrix.det_mul, UpperHalfPlane.smulAux, UpperHalfPlane.smulAux',
@@ -89,8 +88,7 @@ theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (
         (k - 1) =
       ((↑(↑A : GL (Finₓ 2) ℝ) : Matrix (Finₓ 2) (Finₓ 2) ℝ).det : ℂ) ^ (k - 1) *
         ((↑(↑B : GL (Finₓ 2) ℝ) : Matrix (Finₓ 2) (Finₓ 2) ℝ).det : ℂ) ^ (k - 1) :=
-    by
-    simp_rw [← mul_zpow]
+    by simp_rw [← mul_zpow]
   simp_rw [this, ← mul_assoc, ← mul_zpow]
 
 theorem slash_add (k : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) : (f + g) ∣[k]A = f ∣[k]A + g ∣[k]A := by
@@ -118,14 +116,10 @@ instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ) ℂ where
     rw [slash]
     simp only [Pi.zero_apply, zero_mul]
     rfl
-  one_mul := by
-    apply slash_mul_one
-  right_action := by
-    apply slash_right_action
-  smul_action := by
-    apply smul_slash
-  AddAction := by
-    apply slash_add
+  one_mul := by apply slash_mul_one
+  right_action := by apply slash_right_action
+  smul_action := by apply smul_slash
+  AddAction := by apply slash_add
 
 instance subgroupAction (Γ : Subgroup SL(2, ℤ)) : SlashAction ℤ Γ (ℍ → ℂ) ℂ :=
   monoidHomSlashAction

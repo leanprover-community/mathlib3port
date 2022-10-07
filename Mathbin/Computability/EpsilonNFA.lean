@@ -47,8 +47,7 @@ theorem subset_ε_closure (S : Set σ) : S ⊆ M.εClosure S :=
 
 @[simp]
 theorem ε_closure_empty : M.εClosure ∅ = ∅ :=
-  eq_empty_of_forall_not_mem fun s hs => by
-    induction' hs with t ht _ _ _ _ ih <;> assumption
+  eq_empty_of_forall_not_mem fun s hs => by induction' hs with t ht _ _ _ _ ih <;> assumption
 
 @[simp]
 theorem ε_closure_univ : M.εClosure Univ = univ :=
@@ -65,15 +64,14 @@ theorem mem_step_set_iff : s ∈ M.StepSet S a ↔ ∃ t ∈ S, s ∈ M.εClosur
   mem_Union₂
 
 @[simp]
-theorem step_set_empty (a : α) : M.StepSet ∅ a = ∅ := by
-  simp_rw [step_set, Union_false, Union_empty]
+theorem step_set_empty (a : α) : M.StepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
 
 variable (M)
 
 /-- `M.eval_from S x` computes all possible paths through `M` with input `x` starting at an element
 of `S`. -/
 def EvalFrom (start : Set σ) : List α → Set σ :=
-  List.foldlₓ M.StepSet (M.εClosure start)
+  List.foldl M.StepSet (M.εClosure start)
 
 @[simp]
 theorem eval_from_nil (S : Set σ) : M.evalFrom S [] = M.εClosure S :=
@@ -136,10 +134,10 @@ theorem to_NFA_correct : M.toNFA.Accepts = M.Accepts := by
   rw [accepts, NFA.Accepts, eval, NFA.Eval, ← to_NFA_eval_from_match]
   rfl
 
-theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
+theorem pumping_lemma [Fintypeₓ σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintypeₓ.card (Set σ) ≤ List.length x) :
     ∃ a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
+        a.length + b.length ≤ Fintypeₓ.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
   by
   rw [← to_NFA_correct] at hx⊢
   exact M.to_NFA.pumping_lemma hx hlen

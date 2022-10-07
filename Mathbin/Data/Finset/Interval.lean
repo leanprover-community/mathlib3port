@@ -21,11 +21,11 @@ and
 
 variable {α : Type _}
 
-namespace Finset
+namespace Finsetₓ
 
-variable [DecidableEq α] (s t : Finset α)
+variable [DecidableEq α] (s t : Finsetₓ α)
 
-instance : LocallyFiniteOrder (Finset α) where
+instance : LocallyFiniteOrder (Finsetₓ α) where
   finsetIcc := fun s t => t.Powerset.filter ((· ⊆ ·) s)
   finsetIco := fun s t => t.ssubsets.filter ((· ⊆ ·) s)
   finsetIoc := fun s t => t.Powerset.filter ((· ⊂ ·) s)
@@ -87,7 +87,7 @@ theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.Image (
 
 /-- Cardinality of a non-empty `Icc` of finsets. -/
 theorem card_Icc_finset (h : s ⊆ t) : (icc s t).card = 2 ^ (t.card - s.card) := by
-  rw [← card_sdiff h, ← card_powerset, Icc_eq_image_powerset h, Finset.card_image_iff]
+  rw [← card_sdiff h, ← card_powerset, Icc_eq_image_powerset h, Finsetₓ.card_image_iff]
   rintro u hu v hv (huv : s ⊔ u = s ⊔ v)
   rw [mem_coe, mem_powerset] at hu hv
   rw [← (disjoint_sdiff.mono_right hu : Disjoint s u).sup_sdiff_cancel_left, ←
@@ -105,5 +105,5 @@ theorem card_Ioc_finset (h : s ⊆ t) : (ioc s t).card = 2 ^ (t.card - s.card) -
 theorem card_Ioo_finset (h : s ⊆ t) : (ioo s t).card = 2 ^ (t.card - s.card) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc_finset h]
 
-end Finset
+end Finsetₓ
 

@@ -140,10 +140,7 @@ instance (priority := 100) HasBoundedSmul.has_continuous_smul :
     have : 0 ≤ dist b 0 := dist_nonneg
     let δ : ℝ := min 1 ((dist a 0 + dist b 0 + 2)⁻¹ * ε)
     have hδ_pos : 0 < δ := by
-      refine'
-        lt_min_iff.mpr
-          ⟨by
-            norm_num, mul_pos _ hε⟩
+      refine' lt_min_iff.mpr ⟨by norm_num, mul_pos _ hε⟩
       rw [inv_pos]
       linarith
     refine' ⟨δ, hδ_pos, _⟩
@@ -165,34 +162,25 @@ instance (priority := 100) HasBoundedSmul.has_continuous_smul :
       
     · have : δ ≤ _ := min_le_rightₓ _ _
       have : δ ≤ _ := min_le_leftₓ _ _
-      have : (dist a 0 + dist b 0 + 2)⁻¹ * (ε * (dist a 0 + dist b 0 + δ)) < ε := by
-        rw [inv_mul_lt_iff] <;> nlinarith
+      have : (dist a 0 + dist b 0 + 2)⁻¹ * (ε * (dist a 0 + dist b 0 + δ)) < ε := by rw [inv_mul_lt_iff] <;> nlinarith
       nlinarith
       
 
 -- this instance could be deduced from `normed_space.has_bounded_smul`, but we prove it separately
 -- here so that it is available earlier in the hierarchy
 instance Real.has_bounded_smul : HasBoundedSmul ℝ ℝ where
-  dist_smul_pair' := fun x y₁ y₂ => by
-    simpa [Real.dist_eq, mul_sub] using (abs_mul x (y₁ - y₂)).le
-  dist_pair_smul' := fun x₁ x₂ y => by
-    simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
+  dist_smul_pair' := fun x y₁ y₂ => by simpa [Real.dist_eq, mul_sub] using (abs_mul x (y₁ - y₂)).le
+  dist_pair_smul' := fun x₁ x₂ y => by simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
 
 instance Nnreal.has_bounded_smul : HasBoundedSmul ℝ≥0 ℝ≥0 where
-  dist_smul_pair' := fun x y₁ y₂ => by
-    convert dist_smul_pair (x : ℝ) (y₁ : ℝ) y₂ using 1
-  dist_pair_smul' := fun x₁ x₂ y => by
-    convert dist_pair_smul (x₁ : ℝ) x₂ (y : ℝ) using 1
+  dist_smul_pair' := fun x y₁ y₂ => by convert dist_smul_pair (x : ℝ) (y₁ : ℝ) y₂ using 1
+  dist_pair_smul' := fun x₁ x₂ y => by convert dist_pair_smul (x₁ : ℝ) x₂ (y : ℝ) using 1
 
 /-- If a scalar is central, then its right action is bounded when its left action is. -/
 instance HasBoundedSmul.op [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : HasBoundedSmul αᵐᵒᵖ β where
-  dist_smul_pair' :=
-    MulOpposite.rec fun x y₁ y₂ => by
-      simpa only [op_smul_eq_smul] using dist_smul_pair x y₁ y₂
+  dist_smul_pair' := MulOpposite.rec fun x y₁ y₂ => by simpa only [op_smul_eq_smul] using dist_smul_pair x y₁ y₂
   dist_pair_smul' :=
-    MulOpposite.rec fun x₁ =>
-      MulOpposite.rec fun x₂ y => by
-        simpa only [op_smul_eq_smul] using dist_pair_smul x₁ x₂ y
+    MulOpposite.rec fun x₁ => MulOpposite.rec fun x₂ y => by simpa only [op_smul_eq_smul] using dist_pair_smul x₁ x₂ y
 
 end HasBoundedSmul
 

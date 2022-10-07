@@ -172,9 +172,9 @@ theorem trop_order_iso_coe_fn [Preorderₓ R] : (tropOrderIso : R → Tropical R
 theorem trop_order_iso_symm_coe_fn [Preorderₓ R] : (tropOrderIso.symm : Tropical R → R) = untrop :=
   rfl
 
-theorem trop_monotone [Preorderₓ R] : Monotone (trop : R → Tropical R) := fun _ _ => id
+theorem trop_monotone [Preorderₓ R] : Monotoneₓ (trop : R → Tropical R) := fun _ _ => id
 
-theorem untrop_monotone [Preorderₓ R] : Monotone (untrop : Tropical R → R) := fun _ _ => id
+theorem untrop_monotone [Preorderₓ R] : Monotoneₓ (untrop : Tropical R → R) := fun _ _ => id
 
 instance [PartialOrderₓ R] : PartialOrderₓ (Tropical R) :=
   { Tropical.preorder with le_antisymm := fun _ _ h h' => untrop_injective (le_antisymmₓ h h') }
@@ -271,15 +271,11 @@ theorem trop_sup_def (x y : Tropical R) : x ⊔ y = trop (untrop x ⊔ untrop y)
 
 @[simp]
 theorem add_eq_left ⦃x y : Tropical R⦄ (h : x ≤ y) : x + y = x :=
-  untrop_injective
-    (by
-      simpa using h)
+  untrop_injective (by simpa using h)
 
 @[simp]
 theorem add_eq_right ⦃x y : Tropical R⦄ (h : y ≤ x) : x + y = y :=
-  untrop_injective
-    (by
-      simpa using h)
+  untrop_injective (by simpa using h)
 
 theorem add_eq_left_iff {x y : Tropical R} : x + y = x ↔ x ≤ y := by
   rw [trop_add_def, trop_eq_iff_eq_untrop, ← untrop_le_iff, min_eq_left_iff]
@@ -349,10 +345,7 @@ theorem untrop_one [Zero R] : untrop (1 : Tropical R) = 0 :=
 
 instance [LinearOrderₓ R] [OrderTop R] [Zero R] : AddMonoidWithOneₓ (Tropical R) :=
   { Tropical.hasOne, Tropical.addCommMonoid with natCast := fun n => if n = 0 then 0 else 1, nat_cast_zero := rfl,
-    nat_cast_succ := fun n =>
-      (untrop_inj_iff _ _).1
-        (by
-          cases n <;> simp [Nat.castₓ]) }
+    nat_cast_succ := fun n => (untrop_inj_iff _ _).1 (by cases n <;> simp [Nat.castₓ]) }
 
 instance [Zero R] : Nontrivial (Tropical (WithTop R)) :=
   ⟨⟨0, 1, trop_injective.Ne WithTop.top_ne_coe⟩⟩
@@ -496,8 +489,7 @@ theorem succ_nsmul {R} [LinearOrderₓ R] [OrderTop R] (x : Tropical R) (n : ℕ
 --   a + b = 1 ↔ a = 1 ∨ b = 1 := sorry
 @[simp]
 theorem mul_eq_zero_iff {R : Type _} [LinearOrderedAddCommMonoid R] {a b : Tropical (WithTop R)} :
-    a * b = 0 ↔ a = 0 ∨ b = 0 := by
-  simp [← untrop_inj_iff, WithTop.add_eq_top]
+    a * b = 0 ↔ a = 0 ∨ b = 0 := by simp [← untrop_inj_iff, WithTop.add_eq_top]
 
 instance {R : Type _} [LinearOrderedAddCommMonoid R] : NoZeroDivisors (Tropical (WithTop R)) :=
   ⟨fun _ _ => mul_eq_zero_iff.mp⟩

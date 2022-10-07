@@ -142,11 +142,7 @@ variable (C)
 class HasZeroObject : Prop where
   zero : ∃ X : C, IsZero X
 
-instance has_zero_object_punit :
-    HasZeroObject (Discrete PUnit) where zero :=
-    ⟨⟨⟨⟩⟩, by
-      tidy, by
-      tidy⟩
+instance has_zero_object_punit : HasZeroObject (Discrete PUnit) where zero := ⟨⟨⟨⟩⟩, by tidy, by tidy⟩
 
 section
 
@@ -205,21 +201,13 @@ theorem to_zero_ext {X : C} (f g : X ⟶ 0) : f = g :=
 theorem from_zero_ext {X : C} (f g : 0 ⟶ X) : f = g :=
   (is_zero_zero C).eq_of_src _ _
 
-instance (X : C) : Subsingleton (X ≅ 0) := by
-  tidy
+instance (X : C) : Subsingleton (X ≅ 0) := by tidy
 
-instance {X : C} (f : 0 ⟶ X) :
-    Mono f where right_cancellation := fun Z g h w => by
-    ext
+instance {X : C} (f : 0 ⟶ X) : Mono f where right_cancellation := fun Z g h w => by ext
 
-instance {X : C} (f : X ⟶ 0) :
-    Epi f where left_cancellation := fun Z g h w => by
-    ext
+instance {X : C} (f : X ⟶ 0) : Epi f where left_cancellation := fun Z g h w => by ext
 
-instance zero_to_zero_is_iso (f : (0 : C) ⟶ 0) : IsIso f := by
-  convert
-    show is_iso (𝟙 (0 : C)) by
-      infer_instance
+instance zero_to_zero_is_iso (f : (0 : C) ⟶ 0) : IsIso f := by convert show is_iso (𝟙 (0 : C)) by infer_instance
 
 /-- A zero object is in particular initial. -/
 def zeroIsInitial : IsInitial (0 : C) :=

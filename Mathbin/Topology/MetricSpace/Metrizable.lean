@@ -53,9 +53,9 @@ instance pseudo_metrizable_space_prod [PseudoMetrizableSpace X] [PseudoMetrizabl
 /-- Given an inducing map of a topological space into a pseudo metrizable space, the source space
 is also pseudo metrizable. -/
 theorem _root_.inducing.pseudo_metrizable_space [PseudoMetrizableSpace Y] {f : X → Y} (hf : Inducing f) :
-    PseudoMetrizableSpace X := by
+    PseudoMetrizableSpace X :=
   letI : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
-  exact ⟨⟨hf.comap_pseudo_metric_space, rfl⟩⟩
+  ⟨⟨hf.comap_pseudo_metric_space, rfl⟩⟩
 
 /-- Every pseudo-metrizable space is first countable. -/
 instance (priority := 100) PseudoMetrizableSpace.first_countable_topology [h : PseudoMetrizableSpace X] :
@@ -104,9 +104,9 @@ instance metrizable_space_prod [MetrizableSpace X] [MetrizableSpace Y] : Metriza
 
 /-- Given an embedding of a topological space into a metrizable space, the source space is also
 metrizable. -/
-theorem _root_.embedding.metrizable_space [MetrizableSpace Y] {f : X → Y} (hf : Embedding f) : MetrizableSpace X := by
+theorem _root_.embedding.metrizable_space [MetrizableSpace Y] {f : X → Y} (hf : Embedding f) : MetrizableSpace X :=
   letI : MetricSpace Y := metrizable_space_metric Y
-  exact ⟨⟨hf.comap_metric_space f, rfl⟩⟩
+  ⟨⟨hf.comap_metric_space f, rfl⟩⟩
 
 instance MetrizableSpace.subtype [MetrizableSpace X] (s : Set X) : MetrizableSpace s :=
   embedding_subtype_coe.MetrizableSpace
@@ -119,7 +119,7 @@ instance metrizable_space_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (
 variable (X) [T3Space X] [SecondCountableTopology X]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident f, ",", ident hf, "⟩", ":", expr «expr∃ , »((f : X → bounded_continuous_function(s, exprℝ())),
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident f, ",", ident hf, "⟩", ":", expr «expr∃ , »((f : X → bounded_continuous_function(s, exprℝ())),
     embedding f)]]
 /-- A T₃ topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
 -/
@@ -136,7 +136,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
   letI : TopologicalSpace s := ⊥
   haveI : DiscreteTopology s := ⟨rfl⟩
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident f, \",\", ident hf, \"⟩\", \":\", expr «expr∃ , »((f : X → bounded_continuous_function(s, exprℝ())),\n    embedding f)]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident f, \",\", ident hf, \"⟩\", \":\", expr «expr∃ , »((f : X → bounded_continuous_function(s, exprℝ())),\n    embedding f)]]"
   · exact
       ⟨fun x => (f x).extend (Encodable.encode' s) 0,
         (BoundedContinuousFunction.isometry_extend (Encodable.encode' s) (0 : ℕ →ᵇ ℝ)).Embedding.comp hf⟩
@@ -156,9 +156,8 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
     rcases exists_continuous_zero_one_of_closed is_closed_closure (hB.is_open UV.2.1.2).is_closed_compl (hd UV) with
       ⟨f, hf₀, hf₁, hf01⟩
     exact
-      ⟨ε UV • f, fun x hx => by
-        simp [hf₀ (subset_closure hx)], fun x hx => by
-        simp [hf₁ hx], fun x => ⟨mul_nonneg (ε01 _).1.le (hf01 _).1, mul_le_of_le_one_right (ε01 _).1.le (hf01 _).2⟩⟩
+      ⟨ε UV • f, fun x hx => by simp [hf₀ (subset_closure hx)], fun x hx => by simp [hf₁ hx], fun x =>
+        ⟨mul_nonneg (ε01 _).1.le (hf01 _).1, mul_le_of_le_one_right (ε01 _).1.le (hf01 _).2⟩⟩
   choose f hf0 hfε hf0ε
   have hf01 : ∀ UV x, f UV x ∈ Icc (0 : ℝ) 1 := fun UV x => Icc_subset_Icc_right (ε01 _).2 (hf0ε _ _)
   -- The embedding is given by `F x UV = f UV x`.
@@ -177,8 +176,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
     apply (ε01 UV).1.Ne
     calc
       (0 : ℝ) = F x UV := (hf0 UV hxU).symm
-      _ = F y UV := by
-        rw [hxy]
+      _ = F y UV := by rw [hxy]
       _ = ε UV := hfε UV fun h : y ∈ V => hVy h rfl
       
     
@@ -203,17 +201,13 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
         `(U, V) ∈ T`. For `(U, V) ∉ T`, the same inequality is true because both `F y (U, V)` and
         `F x (U, V)` belong to the interval `[0, ε (U, V)]`. -/
     refine' (nhds_basis_closed_ball.comap _).ge_iff.2 fun δ δ0 => _
-    have h_fin : { UV : s | δ ≤ ε UV }.Finite := by
-      simpa only [← not_ltₓ] using hε (gt_mem_nhds δ0)
+    have h_fin : { UV : s | δ ≤ ε UV }.Finite := by simpa only [← not_ltₓ] using hε (gt_mem_nhds δ0)
     have : ∀ᶠ y in 𝓝 x, ∀ UV, δ ≤ ε UV → dist (F y UV) (F x UV) ≤ δ := by
       refine' (eventually_all_finite h_fin).2 fun UV hUV => _
       exact (f UV).Continuous.Tendsto x (closed_ball_mem_nhds _ δ0)
     refine' this.mono fun y hy => (BoundedContinuousFunction.dist_le δ0.le).2 fun UV => _
     cases' le_totalₓ δ (ε UV) with hle hle
-    exacts[hy _ hle,
-      (Real.dist_le_of_mem_Icc (hf0ε _ _) (hf0ε _ _)).trans
-        (by
-          rwa [sub_zero])]
+    exacts[hy _ hle, (Real.dist_le_of_mem_Icc (hf0ε _ _) (hf0ε _ _)).trans (by rwa [sub_zero])]
     
 
 /-- *Urysohn's metrization theorem* (Tychonoff's version): a T₃ topological space with second

@@ -99,23 +99,17 @@ def pullback {X Y : Topᵒᵖ} (f : X ⟶ Y) (R : TopCommRing) : continuousFunct
   toFun := fun g => f.unop ≫ g
   map_one' := rfl
   map_zero' := rfl
-  map_add' := by
-    tidy
-  map_mul' := by
-    tidy
+  map_add' := by tidy
+  map_mul' := by tidy
 
 /-- A homomorphism of topological rings can be postcomposed with functions from a source space `X`;
 this is a ring homomorphism (with respect to the pointwise ring operations on functions). -/
 def map (X : Top.{u}ᵒᵖ) {R S : TopCommRing.{u}} (φ : R ⟶ S) : continuousFunctions X R ⟶ continuousFunctions X S where
   toFun := fun g => g ≫ (forget₂ TopCommRing Top).map φ
-  map_one' := by
-    ext <;> exact φ.1.map_one
-  map_zero' := by
-    ext <;> exact φ.1.map_zero
-  map_add' := by
-    intros <;> ext <;> apply φ.1.map_add
-  map_mul' := by
-    intros <;> ext <;> apply φ.1.map_mul
+  map_one' := by ext <;> exact φ.1.map_one
+  map_zero' := by ext <;> exact φ.1.map_zero
+  map_add' := by intros <;> ext <;> apply φ.1.map_add
+  map_mul' := by intros <;> ext <;> apply φ.1.map_mul
 
 end ContinuousFunctions
 

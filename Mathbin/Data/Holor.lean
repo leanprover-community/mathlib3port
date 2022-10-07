@@ -53,8 +53,7 @@ def drop : ∀ {ds₁ : List ℕ}, HolorIndex (ds₁ ++ ds₂) → HolorIndex ds
   | ds, is => ⟨List.dropₓ (length ds) is.1, forall₂_drop_append is.1 ds ds₂ is.2⟩
 
 theorem cast_type (is : List ℕ) (eq : ds₁ = ds₂) (h : Forall₂ (· < ·) is ds₁) :
-    (cast (congr_arg HolorIndex Eq) ⟨is, h⟩).val = is := by
-  subst Eq <;> rfl
+    (cast (congr_arg HolorIndex Eq) ⟨is, h⟩).val = is := by subst Eq <;> rfl
 
 def assocRight : HolorIndex (ds₁ ++ ds₂ ++ ds₃) → HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) :=
   cast (congr_arg HolorIndex (append_assoc ds₁ ds₂ ds₃))
@@ -63,21 +62,13 @@ def assocLeft : HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) → HolorIndex (ds₁ ++ 
   cast (congr_arg HolorIndex (append_assoc ds₁ ds₂ ds₃).symm)
 
 theorem take_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.take = t.take.take
-  | ⟨is, h⟩ =>
-    Subtype.eq <| by
-      simp [assoc_right, take, cast_type, List.take_take, Nat.le_add_rightₓ, min_eq_leftₓ]
+  | ⟨is, h⟩ => Subtype.eq <| by simp [assoc_right, take, cast_type, List.take_take, Nat.le_add_rightₓ, min_eq_leftₓ]
 
 theorem drop_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.drop.take = t.take.drop
-  | ⟨is, h⟩ =>
-    Subtype.eq
-      (by
-        simp [assoc_right, take, drop, cast_type, List.drop_take])
+  | ⟨is, h⟩ => Subtype.eq (by simp [assoc_right, take, drop, cast_type, List.drop_take])
 
 theorem drop_drop : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.drop.drop = t.drop
-  | ⟨is, h⟩ =>
-    Subtype.eq
-      (by
-        simp [add_commₓ, assoc_right, drop, cast_type, List.drop_drop])
+  | ⟨is, h⟩ => Subtype.eq (by simp [add_commₓ, assoc_right, drop, cast_type, List.drop_drop])
 
 end HolorIndex
 
@@ -147,8 +138,7 @@ def mul [s : Mul α] (x : Holor α ds₁) (y : Holor α ds₂) : Holor α (ds₁
 local infixl:70 " ⊗ " => mul
 
 theorem cast_type (eq : ds₁ = ds₂) (a : Holor α ds₁) :
-    cast (congr_arg (Holor α) Eq) a = fun t => a (cast (congr_arg HolorIndex Eq.symm) t) := by
-  subst Eq <;> rfl
+    cast (congr_arg (Holor α) Eq) a = fun t => a (cast (congr_arg HolorIndex Eq.symm) t) := by subst Eq <;> rfl
 
 def assocRight : Holor α (ds₁ ++ ds₂ ++ ds₃) → Holor α (ds₁ ++ (ds₂ ++ ds₃)) :=
   cast (congr_arg (Holor α) (append_assoc ds₁ ds₂ ds₃))
@@ -168,8 +158,7 @@ theorem mul_assoc0 [Semigroupₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (
     rw [append_assoc]
 
 theorem mul_assoc [Semigroupₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
-    HEq (mul (mul x y) z) (mul x (mul y z)) := by
-  simp [cast_heq, mul_assoc0, assoc_left]
+    HEq (mul (mul x y) z) (mul x (mul y z)) := by simp [cast_heq, mul_assoc0, assoc_left]
 
 theorem mul_left_distrib [Distribₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₂) :
     x ⊗ (y + z) = x ⊗ y + x ⊗ z :=
@@ -235,39 +224,35 @@ theorem slice_eq (x : Holor α (d::ds)) (y : Holor α (d::ds)) (h : slice x = sl
       have hisds : Forall₂ (· < ·) is ds := (forall₂_cons.1 hiisdds).2
       calc
         x ⟨i::is, _⟩ = slice x i hid ⟨is, hisds⟩ := congr_arg (fun t => x t) (Subtype.eq rfl)
-        _ = slice y i hid ⟨is, hisds⟩ := by
-          rw [h]
+        _ = slice y i hid ⟨is, hisds⟩ := by rw [h]
         _ = y ⟨i::is, _⟩ := congr_arg (fun t => y t) (Subtype.eq rfl)
         
 
 theorem slice_unit_vec_mul [Ringₓ α] {i : ℕ} {j : ℕ} (hid : i < d) (x : Holor α ds) :
     slice (unitVec d j ⊗ x) i hid = if i = j then x else 0 :=
   funext fun t : HolorIndex ds =>
-    if h : i = j then by
-      simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h]
-    else by
-      simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h] <;> rfl
+    if h : i = j then by simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h]
+    else by simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h] <;> rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d::ds)) (y : Holor α (d::ds)) :
     slice x i hid + slice y i hid = slice (x + y) i hid :=
-  funext fun t => by
-    simp [slice, (· + ·)]
+  funext fun t => by simp [slice, (· + ·)]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem slice_zero [Zero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d::ds)) i hid = 0 :=
   rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem slice_sum [AddCommMonoidₓ α] {β : Type} (i : ℕ) (hid : i < d) (s : Finset β) (f : β → Holor α (d::ds)) :
+theorem slice_sum [AddCommMonoidₓ α] {β : Type} (i : ℕ) (hid : i < d) (s : Finsetₓ β) (f : β → Holor α (d::ds)) :
     (∑ x in s, slice (f x) i hid) = slice (∑ x in s, f x) i hid := by
   letI := Classical.decEq β
-  refine' Finset.induction_on s _ _
+  refine' Finsetₓ.induction_on s _ _
   · simp [slice_zero]
     
   · intro _ _ h_not_in ih
-    rw [Finset.sum_insert h_not_in, ih, slice_add, Finset.sum_insert h_not_in]
+    rw [Finsetₓ.sum_insert h_not_in, ih, slice_add, Finsetₓ.sum_insert h_not_in]
     
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -275,22 +260,22 @@ theorem slice_sum [AddCommMonoidₓ α] {β : Type} (i : ℕ) (hid : i < d) (s :
 summing up. -/
 @[simp]
 theorem sum_unit_vec_mul_slice [Ringₓ α] (x : Holor α (d::ds)) :
-    (∑ i in (Finset.range d).attach, unitVec d i ⊗ slice x i (Nat.succ_le_of_ltₓ (Finset.mem_range.1 i.Prop))) = x := by
+    (∑ i in (Finsetₓ.range d).attach, unitVec d i ⊗ slice x i (Nat.succ_le_of_ltₓ (Finsetₓ.mem_range.1 i.Prop))) = x :=
+  by
   apply slice_eq _ _ _
   ext i hid
   rw [← slice_sum]
   simp only [slice_unit_vec_mul hid]
-  rw [Finset.sum_eq_single (Subtype.mk i <| Finset.mem_range.2 hid)]
+  rw [Finsetₓ.sum_eq_single (Subtype.mk i <| Finsetₓ.mem_range.2 hid)]
   · simp
     
-  · intro (b : { x // x ∈ Finset.range d })(hb : b ∈ (Finset.range d).attach)(hbi : b ≠ ⟨i, _⟩)
-    have hbi' : i ≠ b := by
-      simpa only [Ne.def, Subtype.ext_iff, Subtype.coe_mk] using hbi.symm
+  · intro (b : { x // x ∈ Finsetₓ.range d })(hb : b ∈ (Finsetₓ.range d).attach)(hbi : b ≠ ⟨i, _⟩)
+    have hbi' : i ≠ b := by simpa only [Ne.def, Subtype.ext_iff, Subtype.coe_mk] using hbi.symm
     simp [hbi']
     
-  · intro (hid' : Subtype.mk i _ ∉ Finset.attach (Finset.range d))
+  · intro (hid' : Subtype.mk i _ ∉ Finsetₓ.attach (Finsetₓ.range d))
     exfalso
-    exact absurd (Finset.mem_attach _ _) hid'
+    exact absurd (Finsetₓ.mem_attach _ _) hid'
     
 
 -- CP rank
@@ -316,8 +301,7 @@ theorem cprank_max_1 [Monoidₓ α] [AddMonoidₓ α] {x : Holor α ds} (h : Cpr
 
 theorem cprank_max_add [Monoidₓ α] [AddMonoidₓ α] :
     ∀ {m : ℕ} {n : ℕ} {x : Holor α ds} {y : Holor α ds}, CprankMax m x → CprankMax n y → CprankMax (m + n) (x + y)
-  | 0, n, x, y, cprank_max.zero, hy => by
-    simp [hy]
+  | 0, n, x, y, cprank_max.zero, hy => by simp [hy]
   | m + 1, n, _, y, cprank_max.succ k x₁ x₂ hx₁ hx₂, hy => by
     simp only [add_commₓ, add_assocₓ]
     apply cprank_max.succ
@@ -327,8 +311,7 @@ theorem cprank_max_add [Monoidₓ α] [AddMonoidₓ α] :
       
 
 theorem cprank_max_mul [Ringₓ α] : ∀ (n : ℕ) (x : Holor α [d]) (y : Holor α ds), CprankMax n y → CprankMax n (x ⊗ y)
-  | 0, x, _, cprank_max.zero => by
-    simp [mul_zero x, cprank_max.zero]
+  | 0, x, _, cprank_max.zero => by simp [mul_zero x, cprank_max.zero]
   | n + 1, x, _, cprank_max.succ k y₁ y₂ hy₁ hy₂ => by
     rw [mul_left_distrib]
     rw [Nat.add_comm]
@@ -338,41 +321,37 @@ theorem cprank_max_mul [Ringₓ α] : ∀ (n : ℕ) (x : Holor α [d]) (y : Holo
     · exact cprank_max_mul k x y₂ hy₂
       
 
-theorem cprank_max_sum [Ringₓ α] {β} {n : ℕ} (s : Finset β) (f : β → Holor α ds) :
+theorem cprank_max_sum [Ringₓ α] {β} {n : ℕ} (s : Finsetₓ β) (f : β → Holor α ds) :
     (∀ x ∈ s, CprankMax n (f x)) → CprankMax (s.card * n) (∑ x in s, f x) :=
   letI := Classical.decEq β
-  Finset.induction_on s
-    (by
-      simp [cprank_max.zero])
+  Finsetₓ.induction_on s (by simp [cprank_max.zero])
     (by
       intro x s(h_x_notin_s : x ∉ s)ih h_cprank
-      simp only [Finset.sum_insert h_x_notin_s, Finset.card_insert_of_not_mem h_x_notin_s]
+      simp only [Finsetₓ.sum_insert h_x_notin_s, Finsetₓ.card_insert_of_not_mem h_x_notin_s]
       rw [Nat.right_distrib]
       simp only [Nat.one_mul, Nat.add_comm]
-      have ih' : cprank_max (Finset.card s * n) (∑ x in s, f x) := by
+      have ih' : cprank_max (Finsetₓ.card s * n) (∑ x in s, f x) := by
         apply ih
         intro (x : β)(h_x_in_s : x ∈ s)
-        simp only [h_cprank, Finset.mem_insert_of_mem, h_x_in_s]
-      exact cprank_max_add (h_cprank x (Finset.mem_insert_self x s)) ih')
+        simp only [h_cprank, Finsetₓ.mem_insert_of_mem, h_x_in_s]
+      exact cprank_max_add (h_cprank x (Finsetₓ.mem_insert_self x s)) ih')
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, CprankMax ds.Prod x
   | [], x => cprank_max_nil x
   | d::ds, x => by
     have h_summands :
-      ∀ i : { x // x ∈ Finset.range d }, CprankMax ds.Prod (unitVec d i.1 ⊗ slice x i.1 (mem_range.1 i.2)) := fun i =>
+      ∀ i : { x // x ∈ Finsetₓ.range d }, CprankMax ds.Prod (unitVec d i.1 ⊗ slice x i.1 (mem_range.1 i.2)) := fun i =>
       cprank_max_mul _ _ _ (cprank_max_upper_bound (slice x i.1 (mem_range.1 i.2)))
-    have h_dds_prod : (List.cons d ds).Prod = Finset.card (Finset.range d) * Prod ds := by
-      simp [Finset.card_range]
+    have h_dds_prod : (List.cons d ds).Prod = Finsetₓ.card (Finsetₓ.range d) * Prod ds := by simp [Finsetₓ.card_range]
     have :
-      CprankMax (Finset.card (Finset.attach (Finset.range d)) * Prod ds)
-        (∑ i in Finset.attach (Finset.range d), unitVec d i.val ⊗ slice x i.val (mem_range.1 i.2)) :=
-      cprank_max_sum (Finset.range d).attach _ fun i _ => h_summands i
+      CprankMax (Finsetₓ.card (Finsetₓ.attach (Finsetₓ.range d)) * Prod ds)
+        (∑ i in Finsetₓ.attach (Finsetₓ.range d), unitVec d i.val ⊗ slice x i.val (mem_range.1 i.2)) :=
+      cprank_max_sum (Finsetₓ.range d).attach _ fun i _ => h_summands i
     have h_cprank_max_sum :
-      CprankMax (Finset.card (Finset.range d) * Prod ds)
-        (∑ i in Finset.attach (Finset.range d), unitVec d i.val ⊗ slice x i.val (mem_range.1 i.2)) :=
-      by
-      rwa [Finset.card_attach] at this
+      CprankMax (Finsetₓ.card (Finsetₓ.range d) * Prod ds)
+        (∑ i in Finsetₓ.attach (Finsetₓ.range d), unitVec d i.val ⊗ slice x i.val (mem_range.1 i.2)) :=
+      by rwa [Finsetₓ.card_attach] at this
     rw [← sum_unit_vec_mul_slice x]
     rw [h_dds_prod]
     exact h_cprank_max_sum

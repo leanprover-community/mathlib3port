@@ -36,8 +36,7 @@ def Isometry [PseudoEmetricSpace α] [PseudoEmetricSpace β] (f : α → β) : P
 /-- On pseudometric spaces, a map is an isometry if and only if it preserves nonnegative
 distances. -/
 theorem isometry_iff_nndist_eq [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β} :
-    Isometry f ↔ ∀ x y, nndist (f x) (f y) = nndist x y := by
-  simp only [Isometry, edist_nndist, Ennreal.coe_eq_coe]
+    Isometry f ↔ ∀ x y, nndist (f x) (f y) = nndist x y := by simp only [Isometry, edist_nndist, Ennreal.coe_eq_coe]
 
 /-- On pseudometric spaces, a map is an isometry if and only if it preserves distances. -/
 theorem isometry_iff_dist_eq [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β} :
@@ -76,8 +75,7 @@ theorem antilipschitz (h : Isometry f) : AntilipschitzWith 1 f := fun x y => by
 
 /-- Any map on a subsingleton is an isometry -/
 @[nontriviality]
-theorem _root_.isometry_subsingleton [Subsingleton α] : Isometry f := fun x y => by
-  rw [Subsingleton.elim x y] <;> simp
+theorem _root_.isometry_subsingleton [Subsingleton α] : Isometry f := fun x y => by rw [Subsingleton.elim x y] <;> simp
 
 /-- The identity is an isometry -/
 theorem _root_.isometry_id : Isometry (id : α → α) := fun x y => rfl
@@ -117,8 +115,7 @@ theorem preimage_emetric_ball (h : Isometry f) (x : α) (r : ℝ≥0∞) : f ⁻
 
 /-- Isometries preserve the diameter in pseudoemetric spaces. -/
 theorem ediam_image (hf : Isometry f) (s : Set α) : Emetric.diam (f '' s) = Emetric.diam s :=
-  eq_of_forall_ge_iffₓ fun d => by
-    simp only [Emetric.diam_le_iff, ball_image_iff, hf.edist_eq]
+  eq_of_forall_ge_iffₓ fun d => by simp only [Emetric.diam_le_iff, ball_image_iff, hf.edist_eq]
 
 theorem ediam_range (hf : Isometry f) : Emetric.diam (Range f) = Emetric.diam (Univ : Set α) := by
   rw [← image_univ]
@@ -217,9 +214,7 @@ induced metric space structure on the source space. -/
 theorem UniformEmbedding.to_isometry {α β} [UniformSpace α] [MetricSpace β] {f : α → β} (h : UniformEmbedding f) :
     @Isometry α β
       (@PseudoMetricSpace.toPseudoEmetricSpace α (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
-      (by
-        infer_instance)
-      f :=
+      (by infer_instance) f :=
   by
   apply Isometry.of_dist_eq
   intro x y
@@ -230,9 +225,7 @@ induced metric space structure on the source space. -/
 theorem Embedding.to_isometry {α β} [TopologicalSpace α] [MetricSpace β] {f : α → β} (h : Embedding f) :
     @Isometry α β
       (@PseudoMetricSpace.toPseudoEmetricSpace α (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
-      (by
-        infer_instance)
-      f :=
+      (by infer_instance) f :=
   by
   apply Isometry.of_dist_eq
   intro x y
@@ -295,7 +288,7 @@ theorem ediam_image (h : α ≃ᵢ β) (s : Set α) : Emetric.diam (h '' s) = Em
 
 theorem to_equiv_inj : ∀ ⦃h₁ h₂ : α ≃ᵢ β⦄, h₁.toEquiv = h₂.toEquiv → h₁ = h₂
   | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by
-    dsimp'  at H
+    dsimp at H
     subst e₁
 
 @[ext]
@@ -479,8 +472,7 @@ theorem diam_image (s : Set α) : Metric.diam (h '' s) = Metric.diam s :=
   h.Isometry.diam_image s
 
 @[simp]
-theorem diam_preimage (s : Set β) : Metric.diam (h ⁻¹' s) = Metric.diam s := by
-  rw [← image_symm, diam_image]
+theorem diam_preimage (s : Set β) : Metric.diam (h ⁻¹' s) = Metric.diam s := by rw [← image_symm, diam_image]
 
 theorem diam_univ : Metric.diam (Univ : Set α) = Metric.diam (Univ : Set β) :=
   congr_arg Ennreal.toReal h.ediam_univ
@@ -518,7 +510,6 @@ end Isometric
 range of the isometry. -/
 @[simps (config := { simpRhs := true }) toEquiv apply]
 def Isometry.isometricOnRange [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : Isometry f) : α ≃ᵢ Range f where
-  isometry_to_fun := fun x y => by
-    simpa [Subtype.edist_eq] using h x y
+  isometry_to_fun := fun x y => by simpa [Subtype.edist_eq] using h x y
   toEquiv := Equivₓ.ofInjective f h.Injective
 

@@ -114,8 +114,7 @@ with respect to the pointwise operations on sets. -/
 def imageHom [MulOneClassₓ α] [MulOneClassₓ β] (f : α →* β) : SetSemiring α →+* SetSemiring β where
   toFun := Image f
   map_zero' := image_empty _
-  map_one' := by
-    rw [image_one, map_one, singleton_one]
+  map_one' := by rw [image_one, map_one, singleton_one]
   map_add' := image_union _
   map_mul' := fun _ _ => image_mul f
 

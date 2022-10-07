@@ -95,14 +95,12 @@ theorem quotient_inf_equiv_sup_quotient_apply_mk (p p' : Submodule R M) (x : p) 
 
 theorem quotient_inf_equiv_sup_quotient_symm_apply_left (p p' : Submodule R M) (x : p ⊔ p') (hx : (x : M) ∈ p) :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = Submodule.Quotient.mk ⟨x, hx⟩ :=
-  (LinearEquiv.symm_apply_eq _).2 <| by
-    simp [of_le_apply]
+  (LinearEquiv.symm_apply_eq _).2 <| by simp [of_le_apply]
 
 @[simp]
 theorem quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff {p p' : Submodule R M} {x : p ⊔ p'} :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 ↔ (x : M) ∈ p' :=
-  (LinearEquiv.symm_apply_eq _).trans <| by
-    simp [of_le_apply]
+  (LinearEquiv.symm_apply_eq _).trans <| by simp [of_le_apply]
 
 theorem quotient_inf_equiv_sup_quotient_symm_apply_right (p p' : Submodule R M) {x : p ⊔ p'} (hx : (x : M) ∈ p') :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 :=
@@ -141,13 +139,8 @@ theorem quotient_quotient_equiv_quotient_aux_mk_mk (x : M) :
 def quotientQuotientEquivQuotient : ((M ⧸ S) ⧸ T.map S.mkq) ≃ₗ[R] M ⧸ T :=
   { quotientQuotientEquivQuotientAux S T h with toFun := quotientQuotientEquivQuotientAux S T h,
     invFun := mapq _ _ (mkq S) (le_comap_map _ _),
-    left_inv := fun x =>
-      (Quotientₓ.induction_on' x) fun x =>
-        (Quotientₓ.induction_on' x) fun x => by
-          simp ,
-    right_inv := fun x =>
-      (Quotientₓ.induction_on' x) fun x => by
-        simp }
+    left_inv := fun x => (Quotientₓ.induction_on' x) fun x => (Quotientₓ.induction_on' x) fun x => by simp,
+    right_inv := fun x => (Quotientₓ.induction_on' x) fun x => by simp }
 
 end Submodule
 

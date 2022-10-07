@@ -55,7 +55,7 @@ local notation "𝕎" => WittVector p
 -- type as `\bbW`
 noncomputable section
 
-open MvPolynomial Finset
+open MvPolynomial Finsetₓ
 
 open BigOperators
 
@@ -72,7 +72,7 @@ def frobeniusPolyRat (n : ℕ) : MvPolynomial ℕ ℚ :=
 
 theorem bind₁_frobenius_poly_rat_witt_polynomial (n : ℕ) :
     bind₁ (frobeniusPolyRat p) (wittPolynomial p ℚ n) = wittPolynomial p ℚ (n + 1) := by
-  delta' frobenius_poly_rat
+  delta frobenius_poly_rat
   rw [← bind₁_bind₁, bind₁_X_in_terms_of_W_witt_polynomial, bind₁_X_right]
 
 /-- An auxiliary definition, to avoid an excessive amount of finiteness proofs
@@ -109,8 +109,7 @@ theorem frobenius_poly_aux_eq (n : ℕ) :
                 ↑((p ^ (n - i)).choose (j + 1) / p ^ (n - i - v p ⟨j + 1, Nat.succ_posₓ j⟩) *
                     ↑p ^ (j - v p ⟨j + 1, Nat.succ_posₓ j⟩) :
                     ℕ) :=
-  by
-  rw [frobenius_poly_aux, ← Finₓ.sum_univ_eq_sum_range]
+  by rw [frobenius_poly_aux, ← Finₓ.sum_univ_eq_sum_range]
 
 /-- The polynomials that give the coefficients of `frobenius x`,
 in terms of the coefficients of `x`. -/
@@ -177,8 +176,7 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
   intro n IH
   rw [X_in_terms_of_W_eq]
   simp only [AlgHom.map_sum, AlgHom.map_sub, AlgHom.map_mul, AlgHom.map_pow, bind₁_C_right]
-  have h1 : ↑p ^ n * ⅟ (↑p : ℚ) ^ n = 1 := by
-    rw [← mul_powₓ, mul_inv_of_self, one_pow]
+  have h1 : ↑p ^ n * ⅟ (↑p : ℚ) ^ n = 1 := by rw [← mul_powₓ, mul_inv_of_self, one_pow]
   rw [bind₁_X_right, Function.comp_app, witt_polynomial_eq_sum_C_mul_X_pow, sum_range_succ, sum_range_succ, tsub_self,
     add_tsub_cancel_left, pow_zeroₓ, pow_oneₓ, pow_oneₓ, sub_mul, add_mulₓ, add_mulₓ, mul_right_commₓ,
     mul_right_commₓ (C (↑p ^ (n + 1))), ← C_mul, ← C_mul, pow_succₓ, mul_assoc (↑p) (↑p ^ n), h1, mul_oneₓ, C_1,
@@ -217,7 +215,7 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
       intro
       apply pow_ne_zero
       exact_mod_cast hp.1.ne_zero
-    simpa [aux, -one_div] with field_simps using this.symm
+    simpa [aux, -one_div, field_simps] using this.symm
   rw [mul_comm _ (p : ℚ), mul_assoc, mul_assoc, ← pow_addₓ, map_frobenius_poly.key₂ p hi hj]
   ring_exp
 
@@ -239,8 +237,7 @@ def frobeniusFun (x : 𝕎 R) : 𝕎 R :=
   (mk p) fun n => MvPolynomial.aeval x.coeff (frobeniusPoly p n)
 
 theorem coeff_frobenius_fun (x : 𝕎 R) (n : ℕ) :
-    coeff (frobeniusFun x) n = MvPolynomial.aeval x.coeff (frobeniusPoly p n) := by
-  rw [frobenius_fun, coeff_mk]
+    coeff (frobeniusFun x) n = MvPolynomial.aeval x.coeff (frobeniusPoly p n) := by rw [frobenius_fun, coeff_mk]
 
 variable (p)
 
@@ -280,10 +277,8 @@ def frobenius : 𝕎 R →+* 𝕎 R where
       is_poly.ext ((frobenius_fun_is_poly p).comp WittVector.one_is_poly)
         (WittVector.one_is_poly.comp (frobenius_fun_is_poly p)) _ _ 0
     ghost_simp
-  map_add' := by
-    ghost_calc _ _ <;> ghost_simp
-  map_mul' := by
-    ghost_calc _ _ <;> ghost_simp
+  map_add' := by ghost_calc _ _ <;> ghost_simp
+  map_mul' := by ghost_calc _ _ <;> ghost_simp
 
 theorem coeff_frobenius (x : 𝕎 R) (n : ℕ) : coeff (frobenius x) n = MvPolynomial.aeval x.coeff (frobeniusPoly p n) :=
   coeff_frobenius_fun _ _

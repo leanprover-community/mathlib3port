@@ -52,7 +52,7 @@ random variables. Let `Yₙ` be the truncation of `Xₙ` up to `n`. We claim tha
 
 noncomputable section
 
-open MeasureTheory Filter Finset Asymptotics
+open MeasureTheory Filter Finsetₓ Asymptotics
 
 open Set (indicator)
 
@@ -87,8 +87,7 @@ theorem abs_truncation_le_bound (f : α → ℝ) (A : ℝ) (x : α) : abs (trunc
     
 
 @[simp]
-theorem truncation_zero (f : α → ℝ) : truncation f 0 = 0 := by
-  simp [truncation]
+theorem truncation_zero (f : α → ℝ) : truncation f 0 = 0 := by simp [truncation]
 
 theorem abs_truncation_le_abs_self (f : α → ℝ) (A : ℝ) (x : α) : abs (truncation f A x) ≤ abs (f x) := by
   simp only [truncation, indicator, Set.mem_Icc, id.def, Function.comp_app]
@@ -109,9 +108,8 @@ theorem truncation_eq_of_nonneg {f : α → ℝ} {A : ℝ} (h : ∀ x, 0 ≤ f x
   ext x
   rcases(h x).lt_or_eq with (hx | hx)
   · simp only [truncation, indicator, hx, Set.mem_Ioc, id.def, Function.comp_app, true_andₓ]
-    by_cases' h'x : f x ≤ A
-    · have : -A < f x := by
-        linarith [h x]
+    by_cases h'x:f x ≤ A
+    · have : -A < f x := by linarith [h x]
       simp only [this, true_andₓ]
       
     · simp only [h'x, and_falseₓ]
@@ -165,8 +163,7 @@ theorem moment_truncation_eq_interval_integral_of_nonneg (hf : AeStronglyMeasura
       filter_upwards [this] with x hx
       simp only [indicator, Set.mem_Ioc, Pi.zero_apply, ite_eq_right_iff, and_imp]
       intro h'x h''x
-      have : x = 0 := by
-        linarith
+      have : x = 0 := by linarith
       simp [this, zero_pow' _ hn]
       
     · exact ((measurable_id.indicator M).pow_const n).AeStronglyMeasurable
@@ -244,11 +241,11 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
             (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
         · rintro ⟨i, j⟩ hij
           simp only [mem_sigma, mem_range, mem_Ico] at hij
-          simp only [hij, Nat.lt_succ_iffₓ.2 hij.2.1, mem_sigma, mem_range, lt_min_iff, and_selfₓ]
+          simp only [hij, Nat.lt_succ_iff.2 hij.2.1, mem_sigma, mem_range, lt_min_iff, and_selfₓ]
           
         · rintro ⟨i, j⟩ hij
           simp only [mem_sigma, mem_range, lt_min_iff] at hij
-          simp only [hij, Nat.lt_succ_iffₓ.1 hij.2.1, mem_sigma, mem_range, mem_Ico, and_selfₓ]
+          simp only [hij, Nat.lt_succ_iff.1 hij.2.1, mem_sigma, mem_range, mem_Ico, and_selfₓ]
           
         · rintro ⟨i, j⟩ hij
           rfl
@@ -311,8 +308,7 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
   calc
     (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioc (j : ℝ) N }) =
         ∑ j in range K, Ennreal.ofReal (∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) :=
-      by
-      simp_rw [B]
+      by simp_rw [B]
     _ = Ennreal.ofReal (∑ j in range K, ∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) := by
       rw [Ennreal.of_real_sum_of_nonneg]
       simp only [integral_const, Algebra.id.smul_eq_mul, mul_oneₓ, Ennreal.to_real_nonneg, implies_true_iff]
@@ -341,7 +337,7 @@ theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg
         obtain ⟨N, hN⟩ : ∃ N : ℕ, X ω ≤ N := exists_nat_ge (X ω)
         exact Set.mem_Union.2 ⟨N, hω, hN⟩
         
-      · simp (config := { contextual := true })only [Set.mem_Ioc, Set.mem_Ioi, Set.Union_subset_iff,
+      · simp (config := { contextual := true }) only [Set.mem_Ioc, Set.mem_Ioi, Set.Union_subset_iff,
           Set.set_of_subset_set_of, implies_true_iff]
         
     rw [this]
@@ -397,8 +393,7 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
       simp only [Nat.cast_addₓ, Nat.cast_oneₓ, le_add_iff_nonneg_right, zero_le_one]
     _ ≤ ∑ k in range K, ∫ x in k..(k + 1 : ℕ), 2 * x ∂ρ := by
       apply sum_le_sum fun k hk => _
-      have Ik : (k : ℝ) ≤ (k + 1 : ℕ) := by
-        simp
+      have Ik : (k : ℝ) ≤ (k + 1 : ℕ) := by simp
       rw [← intervalIntegral.integral_const_mul, intervalIntegral.integral_of_le Ik, intervalIntegral.integral_of_le Ik]
       refine' set_integral_mono_on _ _ measurable_set_Ioc fun x hx => _
       · apply Continuous.integrable_on_Ioc
@@ -408,8 +403,7 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
         exact continuous_const.mul continuous_id'
         
       · calc
-          2 / (↑k + 1) * x ^ 2 = x / (k + 1) * (2 * x) := by
-            ring_exp
+          2 / (↑k + 1) * x ^ 2 = x / (k + 1) * (2 * x) := by ring_exp
           _ ≤ 1 * (2 * x) :=
             mul_le_mul_of_nonneg_right
               (by
@@ -417,8 +411,7 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
                 simp only [Nat.cast_addₓ, Nat.cast_oneₓ]
                 linarith only [show (0 : ℝ) ≤ k from Nat.cast_nonneg k])
               (mul_nonneg zero_le_two ((Nat.cast_nonneg k).trans hx.1.le))
-          _ = 2 * x := by
-            rw [one_mulₓ]
+          _ = 2 * x := by rw [one_mulₓ]
           
         
     _ = 2 * ∫ x in (0 : ℝ)..K, x ∂ρ := by
@@ -473,7 +466,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
   set Y := fun n : ℕ => truncation (X n) n with hY
   set S := fun n => ∑ i in range n, Y i with hS
   let u : ℕ → ℕ := fun n => ⌊c ^ n⌋₊
-  have u_mono : Monotone u := fun i j hij => Nat.floor_mono (pow_le_pow c_one.le hij)
+  have u_mono : Monotoneₓ u := fun i j hij => Nat.floor_mono (pow_le_pow c_one.le hij)
   have I1 : ∀ K, (∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * Var[Y j]) ≤ 2 * 𝔼[X 0] := by
     intro K
     calc
@@ -583,7 +576,7 @@ theorem strong_law_aux2 {c : ℝ} (c_one : 1 < c) :
           (∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω) - 𝔼[∑ i in range ⌊c ^ n⌋₊, truncation (X i) i]) =o[at_top]
         fun n : ℕ => (⌊c ^ n⌋₊ : ℝ) :=
   by
-  obtain ⟨v, -, v_pos, v_lim⟩ : ∃ v : ℕ → ℝ, StrictAnti v ∧ (∀ n : ℕ, 0 < v n) ∧ tendsto v at_top (𝓝 0) :=
+  obtain ⟨v, -, v_pos, v_lim⟩ : ∃ v : ℕ → ℝ, StrictAntiₓ v ∧ (∀ n : ℕ, 0 < v n) ∧ tendsto v at_top (𝓝 0) :=
     exists_seq_strict_anti_tendsto (0 : ℝ)
   have := fun i => strong_law_aux1 X hint hindep hident hnonneg c_one (v_pos i)
   filter_upwards [ae_all_iff.2 this] with ω hω
@@ -688,7 +681,7 @@ corresponding fact along the sequences `c^n`, and the fact that any integer can 
 between `c^n` and `c^(n+1)` with comparably small error if `c` is close enough to `1`
 (which is formalized in `tendsto_div_of_monotone_of_tendsto_div_floor_pow`). -/
 theorem strong_law_aux7 : ∀ᵐ ω, Tendsto (fun n : ℕ => (∑ i in range n, X i ω) / n) atTop (𝓝 𝔼[X 0]) := by
-  obtain ⟨c, -, cone, clim⟩ : ∃ c : ℕ → ℝ, StrictAnti c ∧ (∀ n : ℕ, 1 < c n) ∧ tendsto c at_top (𝓝 1) :=
+  obtain ⟨c, -, cone, clim⟩ : ∃ c : ℕ → ℝ, StrictAntiₓ c ∧ (∀ n : ℕ, 1 < c n) ∧ tendsto c at_top (𝓝 1) :=
     exists_seq_strict_anti_tendsto (1 : ℝ)
   have : ∀ k, ∀ᵐ ω, tendsto (fun n : ℕ => (∑ i in range ⌊c k ^ n⌋₊, X i ω) / ⌊c k ^ n⌋₊) at_top (𝓝 𝔼[X 0]) := fun k =>
     strong_law_aux6 X hint hindep hident hnonneg (cone k)

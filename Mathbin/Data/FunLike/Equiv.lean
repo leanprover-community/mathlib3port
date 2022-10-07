@@ -179,6 +179,26 @@ theorem surjective_comp (e : E) (f : β → γ) : Function.Surjective (f ∘ e) 
 theorem bijective_comp (e : E) (f : β → γ) : Function.Bijective (f ∘ e) ↔ Function.Bijective f :=
   (EquivLike.bijective e).of_comp_iff f
 
+/-- This lemma is only supposed to be used in the generic context, when working with instances
+of classes extending `equiv_like`.
+For concrete isomorphism types such as `equiv`, you should use `equiv.symm_apply_apply`
+or its equivalent.
+
+TODO: define a generic form of `equiv.symm`. -/
+@[simp]
+theorem inv_apply_apply (e : E) (a : α) : EquivLike.inv e (e a) = a :=
+  left_inv _ _
+
+/-- This lemma is only supposed to be used in the generic context, when working with instances
+of classes extending `equiv_like`.
+For concrete isomorphism types such as `equiv`, you should use `equiv.apply_symm_apply`
+or its equivalent.
+
+TODO: define a generic form of `equiv.symm`. -/
+@[simp]
+theorem apply_inv_apply (e : E) (b : β) : e (EquivLike.inv e b) = b :=
+  right_inv _ _
+
 omit iE
 
 include iF

@@ -8,6 +8,7 @@ import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.Analysis.SpecialFunctions.Exponential
 import Mathbin.Analysis.Complex.Liouville
 import Mathbin.Analysis.Analytic.RadiusLiminf
+import Mathbin.Topology.Algebra.Module.CharacterSpace
 
 /-!
 # The spectrum of elements in a complete normed algebra
@@ -75,20 +76,16 @@ theorem mem_resolvent_set_of_spectral_radius_lt {a : A} {k : 𝕜} (h : spectral
 variable [CompleteSpace A]
 
 theorem is_open_resolvent_set (a : A) : IsOpen (ρ a) :=
-  Units.is_open.Preimage ((algebraMapClm 𝕜 A).Continuous.sub continuous_const)
+  Units.is_open.Preimage ((continuous_algebra_map 𝕜 A).sub continuous_const)
 
 theorem is_closed (a : A) : IsClosed (σ a) :=
   (is_open_resolvent_set a).is_closed_compl
 
 theorem mem_resolvent_of_norm_lt [NormOneClass A] {a : A} {k : 𝕜} (h : ∥a∥ < ∥k∥) : k ∈ ρ a := by
   rw [ResolventSet, Set.mem_set_of_eq, Algebra.algebra_map_eq_smul_one]
-  have hk : k ≠ 0 :=
-    ne_zero_of_norm_ne_zero
-      (by
-        linarith [norm_nonneg a])
+  have hk : k ≠ 0 := ne_zero_of_norm_ne_zero (by linarith [norm_nonneg a])
   let ku := Units.map ↑ₐ.toMonoidHom (Units.mk0 k hk)
-  have hku : ∥-a∥ < ∥(↑ku⁻¹ : A)∥⁻¹ := by
-    simpa [ku, algebra_map_isometry] using h
+  have hku : ∥-a∥ < ∥(↑ku⁻¹ : A)∥⁻¹ := by simpa [ku, algebra_map_isometry] using h
   simpa [ku, sub_eq_add_neg, Algebra.algebra_map_eq_smul_one] using (ku.add (-a) hku).IsUnit
 
 theorem norm_le_norm_of_mem [NormOneClass A] {a : A} {k : 𝕜} (hk : k ∈ σ a) : ∥k∥ ≤ ∥a∥ :=
@@ -122,8 +119,7 @@ theorem spectral_radius_le_pow_nnnorm_pow_one_div [NormOneClass A] (a : A) (n : 
   have nnnorm_pow_le : (↑(∥k∥₊ ^ (n + 1)) : ℝ≥0∞) ≤ ↑∥a ^ (n + 1)∥₊ := by
     simpa only [norm_to_nnreal, nnnorm_pow k (n + 1)] using coe_mono (Real.to_nnreal_mono (norm_le_norm_of_mem pow_mem))
   -- take (n + 1)ᵗʰ roots and clean up the left-hand side
-  have hn : 0 < ((n + 1 : ℕ) : ℝ) := by
-    exact_mod_cast Nat.succ_pos'
+  have hn : 0 < ((n + 1 : ℕ) : ℝ) := by exact_mod_cast Nat.succ_pos'
   convert monotone_rpow_of_nonneg (one_div_pos.mpr hn).le nnnorm_pow_le
   erw [coe_pow, ← rpow_nat_cast, ← rpow_mul, mul_one_div_cancel hn.ne', rpow_one]
   rw [Nat.cast_succₓ]
@@ -144,8 +140,7 @@ local notation "↑ₐ" => algebraMap 𝕜 A
 
 theorem has_deriv_at_resolvent {a : A} {k : 𝕜} (hk : k ∈ ρ a) : HasDerivAt (resolvent a) (-(resolvent a k ^ 2)) k := by
   have H₁ : HasFderivAt Ring.inverse _ (↑ₐ k - a) := has_fderiv_at_ring_inverse hk.unit
-  have H₂ : HasDerivAt (fun k => ↑ₐ k - a) 1 k := by
-    simpa using (Algebra.linearMap 𝕜 A).HasDerivAt.sub_const a
+  have H₂ : HasDerivAt (fun k => ↑ₐ k - a) 1 k := by simpa using (Algebra.linearMap 𝕜 A).HasDerivAt.sub_const a
   simpa [resolvent, sq, hk.unit_spec, ← Ring.inverse_unit hk.unit] using H₁.comp_has_deriv_at k H₂
 
 /- TODO: Once there is sufficient API for bornology, we should get a nice filter / asymptotics
@@ -170,7 +165,10 @@ theorem norm_resolvent_le_forall (a : A) : ∀ ε > 0, ∃ R > 0, ∀ z : 𝕜, 
       ∥(z : 𝕜)∥⁻¹ * ∥a∥ ≤ δ * (∥a∥ + 1)⁻¹ * ∥a∥ :=
         mul_le_mul_of_nonneg_right (hz.trans (min_le_leftₓ _ _)) (norm_nonneg _)
       _ < δ := by
-        conv => rw [mul_assoc]rhs rw [(mul_oneₓ δ).symm]
+        conv =>
+        rw [mul_assoc]
+        rhs
+        rw [(mul_oneₓ δ).symm]
         exact mul_lt_mul_of_pos_left ((inv_mul_lt_iff ha₁).mpr ((mul_oneₓ (∥a∥ + 1)).symm ▸ lt_add_one _)) δ_pos
       
   rw [← inv_smul_smul z (resolvent a (z : 𝕜)), units_smul_resolvent_self, resolvent, Algebra.algebra_map_eq_smul_one,
@@ -208,7 +206,7 @@ theorem has_fpower_series_on_ball_inverse_one_sub_smul [CompleteSpace A] (a : A)
         
       · refine'
           le_transₓ (le_transₓ (mul_le_mul_right' (nnnorm_pow_le' a n.succ_pos) (r ^ n.succ)) _) (le_max_leftₓ _ _)
-        · by_cases' ∥a∥₊ = 0
+        · by_cases∥a∥₊ = 0
           · simp only [h, zero_mul, zero_le', pow_succₓ]
             
           · rw [← coe_inv h, coe_lt_coe, Nnreal.lt_inv_iff_mul_lt h] at hr
@@ -219,7 +217,7 @@ theorem has_fpower_series_on_ball_inverse_one_sub_smul [CompleteSpace A] (a : A)
     r_pos := Ennreal.inv_pos.mpr coe_ne_top,
     HasSum := fun y hy => by
       have norm_lt : ∥y • a∥ < 1 := by
-        by_cases' h : ∥a∥₊ = 0
+        by_cases h:∥a∥₊ = 0
         · simp only [nnnorm_eq_zero.mp h, norm_zero, zero_lt_one, smul_zero]
           
         · have nnnorm_lt : ∥y∥₊ < ∥a∥₊⁻¹ := by
@@ -234,7 +232,7 @@ variable {𝕜}
 
 theorem is_unit_one_sub_smul_of_lt_inv_radius {a : A} {z : 𝕜} (h : ↑∥z∥₊ < (spectralRadius 𝕜 a)⁻¹) :
     IsUnit (1 - z • a) := by
-  by_cases' hz : z = 0
+  by_cases hz:z = 0
   · simp only [hz, is_unit_one, sub_zero, zero_smul]
     
   · let u := Units.mk0 z hz
@@ -282,8 +280,7 @@ theorem limsup_pow_nnnorm_pow_one_div_le_spectral_radius (a : A) :
     simp only [p.radius_eq_liminf, ← norm_to_nnreal, norm_mk_pi_field]
     refine' congr_arg _ (funext fun n => congr_arg _ _)
     rw [norm_to_nnreal, Ennreal.coe_rpow_def ∥a ^ n∥₊ (1 / n : ℝ), if_neg]
-    exact fun ha => by
-      linarith [ha.2, (one_div_nonneg.mpr n.cast_nonneg : 0 ≤ (1 / n : ℝ))]
+    exact fun ha => by linarith [ha.2, (one_div_nonneg.mpr n.cast_nonneg : 0 ≤ (1 / n : ℝ))]
     
   · have H₁ := (differentiable_on_inverse_one_sub_smul r_lt).HasFpowerSeriesOnBall r_pos
     exact ((has_fpower_series_on_ball_inverse_one_sub_smul ℂ a).exchange_radius H₁).r_le
@@ -293,12 +290,7 @@ theorem limsup_pow_nnnorm_pow_one_div_le_spectral_radius (a : A) :
 `spectral_radius` of `a` is the limit of the sequence `∥a ^ n∥₊ ^ (1 / n)` -/
 theorem pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius [NormOneClass A] (a : A) :
     Tendsto (fun n : ℕ => (∥a ^ n∥₊ ^ (1 / n : ℝ) : ℝ≥0∞)) atTop (𝓝 (spectralRadius ℂ a)) := by
-  refine'
-    tendsto_of_le_liminf_of_limsup_le _ _
-      (by
-        infer_auto_param)
-      (by
-        infer_auto_param)
+  refine' tendsto_of_le_liminf_of_limsup_le _ _ (by infer_auto_param) (by infer_auto_param)
   · rw [← liminf_nat_add _ 1, liminf_eq_supr_infi_of_nat]
     refine' le_transₓ _ (le_supr _ 0)
     simp only [Nat.cast_succₓ]
@@ -316,10 +308,7 @@ theorem pow_norm_pow_one_div_tendsto_nhds_spectral_radius [NormOneClass A] (a : 
   convert pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius a
   ext1
   rw [← of_real_rpow_of_nonneg (norm_nonneg _) _, ← coe_nnnorm, coe_nnreal_eq]
-  exact
-    one_div_nonneg.mpr
-      (by
-        exact_mod_cast zero_le _)
+  exact one_div_nonneg.mpr (by exact_mod_cast zero_le _)
 
 end GelfandFormula
 
@@ -330,8 +319,7 @@ theorem nonempty {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpac
     is differentiable on `ℂ`. -/
   rw [← Set.ne_empty_iff_nonempty]
   by_contra h
-  have H₀ : ResolventSet ℂ a = Set.Univ := by
-    rwa [Spectrum, Set.compl_empty_iff] at h
+  have H₀ : ResolventSet ℂ a = Set.Univ := by rwa [Spectrum, Set.compl_empty_iff] at h
   have H₁ : Differentiable ℂ fun z : ℂ => resolvent a z := fun z =>
     (has_deriv_at_resolvent (H₀.symm ▸ Set.mem_univ z : z ∈ ResolventSet ℂ a)).DifferentiableAt
   /- The norm of the resolvent is small for all sufficently large `z`, and by compactness and
@@ -355,10 +343,7 @@ theorem nonempty {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpac
     refine' norm_eq_zero.mp (le_antisymmₓ (le_of_forall_pos_le_add fun ε hε => _) (norm_nonneg _))
     rcases H₂ ε hε with ⟨R, R_pos, hR⟩
     simpa only [H₃ R] using
-      (zero_addₓ ε).symm.subst
-        (hR R
-          (by
-            exact_mod_cast (Real.norm_of_nonneg R_pos.lt.le).symm.le))
+      (zero_addₓ ε).symm.subst (hR R (by exact_mod_cast (Real.norm_of_nonneg R_pos.lt.le).symm.le))
   -- `not_is_unit_zero` is where we need `nontrivial A`, it is unavoidable.
   exact not_is_unit_zero (H₅.subst (is_unit_resolvent.mp (mem_resolvent_set_iff.mp (H₀.symm ▸ Set.mem_univ 0))))
 
@@ -410,10 +395,7 @@ theorem exp_mem_exp [IsROrC 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [Complet
     rw [norm_smul, mul_comm, norm_inv, IsROrC.norm_eq_abs, IsROrC.abs_cast_nat, ← div_eq_mul_inv]
     exact
       div_le_div (pow_nonneg (norm_nonneg _) n) (norm_pow_le' (a - ↑ₐ z) (zero_lt_iff.mpr hn))
-        (by
-          exact_mod_cast Nat.factorial_pos n)
-        (by
-          exact_mod_cast Nat.factorial_le (lt_add_one n).le)
+        (by exact_mod_cast Nat.factorial_pos n) (by exact_mod_cast Nat.factorial_le (lt_add_one n).le)
   have h₀ : (∑' n : ℕ, ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ (n + 1)) = (a - ↑ₐ z) * b := by
     simpa only [mul_smul_comm, pow_succₓ] using hb.tsum_mul_left (a - ↑ₐ z)
   have h₁ : (∑' n : ℕ, ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ (n + 1)) = b * (a - ↑ₐ z) := by
@@ -476,4 +458,35 @@ theorem to_continuous_linear_map_norm [NormOneClass A] (φ : A →ₐ[𝕜] 𝕜
 end NontriviallyNormedField
 
 end AlgHom
+
+namespace WeakDual
+
+namespace CharacterSpace
+
+variable [NormedField 𝕜] [NormedRing A] [CompleteSpace A] [NormOneClass A]
+
+variable [NormedAlgebra 𝕜 A]
+
+/-- The equivalence between characters and algebra homomorphisms into the base field. -/
+def equivAlgHom : CharacterSpace 𝕜 A ≃ (A →ₐ[𝕜] 𝕜) where
+  toFun := toAlgHom
+  invFun := fun f =>
+    { val := f.toContinuousLinearMap,
+      property := by
+        rw [eq_set_map_one_map_mul]
+        exact ⟨map_one f, map_mul f⟩ }
+  left_inv := fun f => Subtype.ext <| ContinuousLinearMap.ext fun x => rfl
+  right_inv := fun f => AlgHom.ext fun x => rfl
+
+@[simp]
+theorem equiv_alg_hom_coe (f : CharacterSpace 𝕜 A) : ⇑(equivAlgHom f) = f :=
+  rfl
+
+@[simp]
+theorem equiv_alg_hom_symm_coe (f : A →ₐ[𝕜] 𝕜) : ⇑(equivAlgHom.symm f) = f :=
+  rfl
+
+end CharacterSpace
+
+end WeakDual
 

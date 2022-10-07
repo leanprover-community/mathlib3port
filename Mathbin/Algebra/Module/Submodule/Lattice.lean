@@ -38,9 +38,7 @@ namespace Submodule
 
 /-- The set `{0}` is the bottom element of the lattice of submodules. -/
 instance : HasBot (Submodule R M) :=
-  ⟨{ (⊥ : AddSubmonoid M) with Carrier := {0},
-      smul_mem' := by
-        simp (config := { contextual := true }) }⟩
+  ⟨{ (⊥ : AddSubmonoid M) with Carrier := {0}, smul_mem' := by simp (config := { contextual := true }) }⟩
 
 instance inhabited' : Inhabited (Submodule R M) :=
   ⟨⊥⟩
@@ -68,16 +66,14 @@ theorem mem_bot {x : M} : x ∈ (⊥ : Submodule R M) ↔ x = 0 :=
 end
 
 @[simp]
-theorem restrict_scalars_eq_bot_iff {p : Submodule R M} : restrictScalars S p = ⊥ ↔ p = ⊥ := by
-  simp [SetLike.ext_iff]
+theorem restrict_scalars_eq_bot_iff {p : Submodule R M} : restrictScalars S p = ⊥ ↔ p = ⊥ := by simp [SetLike.ext_iff]
 
 instance uniqueBot : Unique (⊥ : Submodule R M) :=
   ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.Mem⟩
 
 instance : OrderBot (Submodule R M) where
   bot := ⊥
-  bot_le := fun p x => by
-    simp (config := { contextual := true })[zero_mem]
+  bot_le := fun p x => by simp (config := { contextual := true }) [zero_mem]
 
 protected theorem eq_bot_iff (p : Submodule R M) : p = ⊥ ↔ ∀ x ∈ p, x = (0 : M) :=
   ⟨fun h => h.symm ▸ fun x hx => (mem_bot R).mp hx, fun h => eq_bot_iff.mpr fun x hx => (mem_bot R).mpr (h x hx)⟩
@@ -152,8 +148,7 @@ theorem restrict_scalars_top : restrictScalars S (⊤ : Submodule R M) = ⊤ :=
 end
 
 @[simp]
-theorem restrict_scalars_eq_top_iff {p : Submodule R M} : restrictScalars S p = ⊤ ↔ p = ⊤ := by
-  simp [SetLike.ext_iff]
+theorem restrict_scalars_eq_top_iff {p : Submodule R M} : restrictScalars S p = ⊤ ↔ p = ⊤ := by simp [SetLike.ext_iff]
 
 instance : OrderTop (Submodule R M) where
   top := ⊤
@@ -168,9 +163,7 @@ This is the module version of `add_submonoid.top_equiv`. -/
 @[simps]
 def topEquiv : (⊤ : Submodule R M) ≃ₗ[R] M where
   toFun := fun x => x
-  invFun := fun x =>
-    ⟨x, by
-      simp ⟩
+  invFun := fun x => ⟨x, by simp⟩
   map_add' := by
     intros
     rfl
@@ -187,13 +180,9 @@ def topEquiv : (⊤ : Submodule R M) ≃ₗ[R] M where
 
 instance : HasInfₓ (Submodule R M) :=
   ⟨fun S =>
-    { Carrier := ⋂ s ∈ S, (s : Set M),
-      zero_mem' := by
-        simp [zero_mem],
-      add_mem' := by
-        simp (config := { contextual := true })[add_mem],
-      smul_mem' := by
-        simp (config := { contextual := true })[smul_mem] }⟩
+    { Carrier := ⋂ s ∈ S, (s : Set M), zero_mem' := by simp [zero_mem],
+      add_mem' := by simp (config := { contextual := true }) [add_mem],
+      smul_mem' := by simp (config := { contextual := true }) [smul_mem] }⟩
 
 private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → inf S ≤ p :=
   Set.bInter_subset_of_mem
@@ -203,13 +192,9 @@ private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀ q ∈ S, p ≤ q) �
 
 instance : HasInf (Submodule R M) :=
   ⟨fun p q =>
-    { Carrier := p ∩ q,
-      zero_mem' := by
-        simp [zero_mem],
-      add_mem' := by
-        simp (config := { contextual := true })[add_mem],
-      smul_mem' := by
-        simp (config := { contextual := true })[smul_mem] }⟩
+    { Carrier := p ∩ q, zero_mem' := by simp [zero_mem],
+      add_mem' := by simp (config := { contextual := true }) [add_mem],
+      smul_mem' := by simp (config := { contextual := true }) [smul_mem] }⟩
 
 instance : CompleteLattice (Submodule R M) :=
   { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
@@ -232,12 +217,12 @@ theorem Inf_coe (P : Set (Submodule R M)) : (↑(inf P) : Set M) = ⋂ p ∈ P, 
   rfl
 
 @[simp]
-theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) : (↑(s.inf p) : Set M) = ⋂ i ∈ s, ↑(p i) := by
+theorem finset_inf_coe {ι} (s : Finsetₓ ι) (p : ι → Submodule R M) : (↑(s.inf p) : Set M) = ⋂ i ∈ s, ↑(p i) := by
   letI := Classical.decEq ι
   refine' s.induction_on _ fun i s hi ih => _
   · simp
     
-  · rw [Finset.inf_insert, inf_coe, ih]
+  · rw [Finsetₓ.inf_insert, inf_coe, ih]
     simp
     
 
@@ -254,7 +239,7 @@ theorem mem_infi {ι} (p : ι → Submodule R M) {x} : (x ∈ ⨅ i, p i) ↔ �
   rw [← SetLike.mem_coe, infi_coe, Set.mem_Inter] <;> rfl
 
 @[simp]
-theorem mem_finset_inf {ι} {s : Finset ι} {p : ι → Submodule R M} {x : M} : x ∈ s.inf p ↔ ∀ i ∈ s, x ∈ p i := by
+theorem mem_finset_inf {ι} {s : Finsetₓ ι} {p : ι → Submodule R M} {x : M} : x ∈ s.inf p ↔ ∀ i ∈ s, x ∈ p i := by
   simp only [← SetLike.mem_coe, finset_inf_coe, Set.mem_Inter]
 
 theorem mem_sup_left {S T : Submodule R M} : ∀ {x : M}, x ∈ S → x ∈ S ⊔ T :=
@@ -277,11 +262,11 @@ theorem mem_supr_of_mem {ι : Sort _} {b : M} {p : ι → Submodule R M} (i : ι
 
 open BigOperators
 
-theorem sum_mem_supr {ι : Type _} [Fintype ι] {f : ι → M} {p : ι → Submodule R M} (h : ∀ i, f i ∈ p i) :
+theorem sum_mem_supr {ι : Type _} [Fintypeₓ ι] {f : ι → M} {p : ι → Submodule R M} (h : ∀ i, f i ∈ p i) :
     (∑ i, f i) ∈ ⨆ i, p i :=
   sum_mem fun i hi => mem_supr_of_mem i (h i)
 
-theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → Submodule R M} (h : ∀ i ∈ s, f i ∈ p i) :
+theorem sum_mem_bsupr {ι : Type _} {s : Finsetₓ ι} {f : ι → M} {p : ι → Submodule R M} (h : ∀ i ∈ s, f i ∈ p i) :
     (∑ i in s, f i) ∈ ⨆ i ∈ s, p i :=
   sum_mem fun i hi => mem_supr_of_mem i <| mem_supr_of_mem hi (h i hi)
 
@@ -292,8 +277,7 @@ theorem mem_Sup_of_mem {S : Set (Submodule R M)} {s : Submodule R M} (hs : s ∈
   show s ≤ sup S from le_Sup hs
 
 theorem disjoint_def {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x ∈ p, x ∈ p' → x = (0 : M) :=
-  show (∀ x, x ∈ p ∧ x ∈ p' → x ∈ ({0} : Set M)) ↔ _ by
-    simp
+  show (∀ x, x ∈ p ∧ x ∈ p' → x ∈ ({0} : Set M)) ↔ _ by simp
 
 theorem disjoint_def' {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x ∈ p, ∀ y ∈ p', x = y → x = (0 : M) :=
   disjoint_def.trans ⟨fun h x hx y hy hxy => h x hx <| hxy.symm ▸ hy, fun h x hx hx' => h _ hx x hx' rfl⟩

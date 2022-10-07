@@ -67,7 +67,8 @@ which contains the original set, and contains all points determined by the (nonz
 nonzero vectors, each of which determine points in the span. -/
 inductive SpanCarrier (S : Set (ℙ K V)) : Set (ℙ K V)
   | of (x : ℙ K V) (hx : x ∈ S) : span_carrier x
-  | mem_add (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) (hvw : v + w ≠ 0) :
+  |
+  mem_add (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) (hvw : v + w ≠ 0) :
     span_carrier (Projectivization.mk K v hv) →
       span_carrier (Projectivization.mk K w hw) → span_carrier (Projectivization.mk K (v + w) hvw)
 
@@ -145,7 +146,7 @@ theorem span_le_subspace_iff {S : Set (ℙ K V)} {W : Subspace K V} : span S ≤
 /-- If a set of points is a subset of another set of points, then its span will be contained in the
 span of that set. -/
 @[mono]
-theorem monotone_span : Monotone (span : Set (ℙ K V) → Subspace K V) :=
+theorem monotone_span : Monotoneₓ (span : Set (ℙ K V) → Subspace K V) :=
   gi.gc.monotone_l
 
 theorem subset_span_trans {S T U : Set (ℙ K V)} (hST : S ⊆ span T) (hTU : T ⊆ span U) : S ⊆ span U :=
@@ -162,11 +163,9 @@ theorem span_Union {ι} (s : ι → Set (ℙ K V)) : span (⋃ i, s i) = ⨆ i, 
 
 /-- The supremum of a subspace and the span of a set of points is equal to the span of the union of
 the subspace and the set of points. -/
-theorem sup_span {S : Set (ℙ K V)} {W : Subspace K V} : W ⊔ span S = span (W ∪ S) := by
-  rw [span_union, span_coe]
+theorem sup_span {S : Set (ℙ K V)} {W : Subspace K V} : W ⊔ span S = span (W ∪ S) := by rw [span_union, span_coe]
 
-theorem span_sup {S : Set (ℙ K V)} {W : Subspace K V} : span S ⊔ W = span (S ∪ W) := by
-  rw [span_union, span_coe]
+theorem span_sup {S : Set (ℙ K V)} {W : Subspace K V} : span S ⊔ W = span (S ∪ W) := by rw [span_union, span_coe]
 
 /-- A point in a projective space is contained in the span of a set of points if and only if the
 point is contained in all subspaces of the projective space which contain the set of points. -/

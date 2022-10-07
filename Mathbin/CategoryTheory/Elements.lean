@@ -79,8 +79,7 @@ noncomputable instance groupoidOfElements {G : Type u} [Groupoid.{v} G] (F : G �
   inv := fun p q f =>
     ⟨inv f.val,
       calc
-        F.map (inv f.val) q.2 = F.map (inv f.val) (F.map f.val p.2) := by
-          rw [f.2]
+        F.map (inv f.val) q.2 = F.map (inv f.val) (F.map f.val p.2) := by rw [f.2]
         _ = (F.map f.val ≫ F.map (inv f.val)) p.2 := rfl
         _ = p.2 := by
           rw [← F.map_comp]
@@ -108,9 +107,7 @@ def π : F.Elements ⥤ C where
 @[simps]
 def map {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) : F₁.Elements ⥤ F₂.Elements where
   obj := fun t => ⟨t.1, α.app t.1 t.2⟩
-  map := fun t₁ t₂ k =>
-    ⟨k.1, by
-      simpa [← k.2] using (functor_to_types.naturality _ _ α k.1 t₁.2).symm⟩
+  map := fun t₁ t₂ k => ⟨k.1, by simpa [← k.2] using (functor_to_types.naturality _ _ α k.1 t₁.2).symm⟩
 
 @[simp]
 theorem map_π {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) : map α ⋙ π F₂ = π F₁ :=
@@ -119,10 +116,7 @@ theorem map_π {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) : map α ⋙ π F
 /-- The forward direction of the equivalence `F.elements ≅ (*, F)`. -/
 def toStructuredArrow : F.Elements ⥤ StructuredArrow PUnit F where
   obj := fun X => StructuredArrow.mk fun _ => X.2
-  map := fun X Y f =>
-    StructuredArrow.homMk f.val
-      (by
-        tidy)
+  map := fun X Y f => StructuredArrow.homMk f.val (by tidy)
 
 @[simp]
 theorem to_structured_arrow_obj (X) :
@@ -152,16 +146,8 @@ theorem from_structured_arrow_map {X Y} (f : X ⟶ Y) :
 @[simps]
 def structuredArrowEquivalence : F.Elements ≌ StructuredArrow PUnit F :=
   Equivalence.mk (toStructuredArrow F) (fromStructuredArrow F)
-    (NatIso.ofComponents
-      (fun X =>
-        eqToIso
-          (by
-            tidy))
-      (by
-        tidy))
-    (NatIso.ofComponents (fun X => { Hom := { right := 𝟙 _ }, inv := { right := 𝟙 _ } })
-      (by
-        tidy))
+    (NatIso.ofComponents (fun X => eqToIso (by tidy)) (by tidy))
+    (NatIso.ofComponents (fun X => { Hom := { right := 𝟙 _ }, inv := { right := 𝟙 _ } }) (by tidy))
 
 open Opposite
 
@@ -241,7 +227,7 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
   rcases Y with ⟨Y_left, ⟨⟨⟩⟩⟩
   cases f
   simp [costructured_arrow.hom_mk]
-  delta' costructured_arrow.mk
+  delta costructured_arrow.mk
   congr
   · ext x f
     convert congr_fun (X_hom.naturality f.op).symm (𝟙 X_left)

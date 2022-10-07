@@ -43,13 +43,13 @@ def toMon : Monad C → Mon_ (C ⥤ C) := fun M =>
   { x := (M : C ⥤ C), one := M.η, mul := M.μ,
     one_mul' := by
       ext
-      simp ,-- `obviously` provides this, but slowly
+      simp,-- `obviously` provides this, but slowly
     mul_one' := by
       ext
-      simp ,-- `obviously` provides this, but slowly
+      simp,-- `obviously` provides this, but slowly
     mul_assoc' := by
       ext
-      dsimp'
+      dsimp
       simp [M.assoc] }
 
 variable (C)
@@ -153,7 +153,7 @@ def monadMonEquiv : Monad C ≌ Mon_ (C ⥤ C) where
   functor_unit_iso_comp' := by
     intro X
     ext
-    dsimp'
+    dsimp
     simp
 
 -- `obviously`, slowly

@@ -166,7 +166,7 @@ theorem ne_neg_of_mem_sphere {r : ℝ} (hr : r ≠ 0) (x : Sphere (0 : E) r) : x
     ((self_eq_neg 𝕜 _).mp
       (by
         conv_lhs => rw [h]
-        simp ))
+        simp))
 
 theorem ne_neg_of_mem_unit_sphere (x : Sphere (0 : E) 1) : x ≠ -x :=
   ne_neg_of_mem_sphere 𝕜 one_ne_zero x

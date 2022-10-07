@@ -16,13 +16,13 @@ intervals as finsets and fintypes.
 -/
 
 
-open Finset Int
+open Finsetₓ Int
 
 instance : LocallyFiniteOrder ℤ where
-  finsetIcc := fun a b => (Finset.range (b + 1 - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding a
-  finsetIco := fun a b => (Finset.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding a
-  finsetIoc := fun a b => (Finset.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
-  finsetIoo := fun a b => (Finset.range (b - a - 1).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
+  finsetIcc := fun a b => (Finsetₓ.range (b + 1 - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding a
+  finsetIco := fun a b => (Finsetₓ.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding a
+  finsetIoc := fun a b => (Finsetₓ.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
+  finsetIoo := fun a b => (Finsetₓ.range (b - a - 1).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
   finset_mem_Icc := fun a b x => by
     simp_rw [mem_map, exists_propₓ, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
       add_left_embedding_apply]
@@ -81,79 +81,73 @@ namespace Int
 variable (a b : ℤ)
 
 theorem Icc_eq_finset_map :
-    icc a b = (Finset.range (b + 1 - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
+    icc a b = (Finsetₓ.range (b + 1 - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
   rfl
 
 theorem Ico_eq_finset_map :
-    ico a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
+    ico a b = (Finsetₓ.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
   rfl
 
 theorem Ioc_eq_finset_map :
-    ioc a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
+    ioc a b = (Finsetₓ.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
   rfl
 
 theorem Ioo_eq_finset_map :
-    ioo a b = (Finset.range (b - a - 1).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
+    ioo a b = (Finsetₓ.range (b - a - 1).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
   rfl
 
 @[simp]
 theorem card_Icc : (icc a b).card = (b + 1 - a).toNat := by
-  change (Finset.map _ _).card = _
-  rw [Finset.card_map, Finset.card_range]
+  change (Finsetₓ.map _ _).card = _
+  rw [Finsetₓ.card_map, Finsetₓ.card_range]
 
 @[simp]
 theorem card_Ico : (ico a b).card = (b - a).toNat := by
-  change (Finset.map _ _).card = _
-  rw [Finset.card_map, Finset.card_range]
+  change (Finsetₓ.map _ _).card = _
+  rw [Finsetₓ.card_map, Finsetₓ.card_range]
 
 @[simp]
 theorem card_Ioc : (ioc a b).card = (b - a).toNat := by
-  change (Finset.map _ _).card = _
-  rw [Finset.card_map, Finset.card_range]
+  change (Finsetₓ.map _ _).card = _
+  rw [Finsetₓ.card_map, Finsetₓ.card_range]
 
 @[simp]
 theorem card_Ioo : (ioo a b).card = (b - a - 1).toNat := by
-  change (Finset.map _ _).card = _
-  rw [Finset.card_map, Finset.card_range]
+  change (Finsetₓ.map _ _).card = _
+  rw [Finsetₓ.card_map, Finsetₓ.card_range]
 
-theorem card_Icc_of_le (h : a ≤ b + 1) : ((icc a b).card : ℤ) = b + 1 - a := by
-  rw [card_Icc, to_nat_sub_of_le h]
+theorem card_Icc_of_le (h : a ≤ b + 1) : ((icc a b).card : ℤ) = b + 1 - a := by rw [card_Icc, to_nat_sub_of_le h]
 
-theorem card_Ico_of_le (h : a ≤ b) : ((ico a b).card : ℤ) = b - a := by
-  rw [card_Ico, to_nat_sub_of_le h]
+theorem card_Ico_of_le (h : a ≤ b) : ((ico a b).card : ℤ) = b - a := by rw [card_Ico, to_nat_sub_of_le h]
 
-theorem card_Ioc_of_le (h : a ≤ b) : ((ioc a b).card : ℤ) = b - a := by
-  rw [card_Ioc, to_nat_sub_of_le h]
+theorem card_Ioc_of_le (h : a ≤ b) : ((ioc a b).card : ℤ) = b - a := by rw [card_Ioc, to_nat_sub_of_le h]
 
-theorem card_Ioo_of_lt (h : a < b) : ((ioo a b).card : ℤ) = b - a - 1 := by
-  rw [card_Ioo, sub_sub, to_nat_sub_of_le h]
+theorem card_Ioo_of_lt (h : a < b) : ((ioo a b).card : ℤ) = b - a - 1 := by rw [card_Ioo, sub_sub, to_nat_sub_of_le h]
 
 @[simp]
-theorem card_fintype_Icc : Fintype.card (Set.Icc a b) = (b + 1 - a).toNat := by
-  rw [← card_Icc, Fintype.card_of_finset]
+theorem card_fintype_Icc : Fintypeₓ.card (Set.Icc a b) = (b + 1 - a).toNat := by
+  rw [← card_Icc, Fintypeₓ.card_of_finset]
 
 @[simp]
-theorem card_fintype_Ico : Fintype.card (Set.Ico a b) = (b - a).toNat := by
-  rw [← card_Ico, Fintype.card_of_finset]
+theorem card_fintype_Ico : Fintypeₓ.card (Set.Ico a b) = (b - a).toNat := by rw [← card_Ico, Fintypeₓ.card_of_finset]
 
 @[simp]
-theorem card_fintype_Ioc : Fintype.card (Set.Ioc a b) = (b - a).toNat := by
-  rw [← card_Ioc, Fintype.card_of_finset]
+theorem card_fintype_Ioc : Fintypeₓ.card (Set.Ioc a b) = (b - a).toNat := by rw [← card_Ioc, Fintypeₓ.card_of_finset]
 
 @[simp]
-theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = (b - a - 1).toNat := by
-  rw [← card_Ioo, Fintype.card_of_finset]
+theorem card_fintype_Ioo : Fintypeₓ.card (Set.Ioo a b) = (b - a - 1).toNat := by
+  rw [← card_Ioo, Fintypeₓ.card_of_finset]
 
-theorem card_fintype_Icc_of_le (h : a ≤ b + 1) : (Fintype.card (Set.Icc a b) : ℤ) = b + 1 - a := by
+theorem card_fintype_Icc_of_le (h : a ≤ b + 1) : (Fintypeₓ.card (Set.Icc a b) : ℤ) = b + 1 - a := by
   rw [card_fintype_Icc, to_nat_sub_of_le h]
 
-theorem card_fintype_Ico_of_le (h : a ≤ b) : (Fintype.card (Set.Ico a b) : ℤ) = b - a := by
+theorem card_fintype_Ico_of_le (h : a ≤ b) : (Fintypeₓ.card (Set.Ico a b) : ℤ) = b - a := by
   rw [card_fintype_Ico, to_nat_sub_of_le h]
 
-theorem card_fintype_Ioc_of_le (h : a ≤ b) : (Fintype.card (Set.Ioc a b) : ℤ) = b - a := by
+theorem card_fintype_Ioc_of_le (h : a ≤ b) : (Fintypeₓ.card (Set.Ioc a b) : ℤ) = b - a := by
   rw [card_fintype_Ioc, to_nat_sub_of_le h]
 
-theorem card_fintype_Ioo_of_lt (h : a < b) : (Fintype.card (Set.Ioo a b) : ℤ) = b - a - 1 := by
+theorem card_fintype_Ioo_of_lt (h : a < b) : (Fintypeₓ.card (Set.Ioo a b) : ℤ) = b - a - 1 := by
   rw [card_fintype_Ioo, sub_sub, to_nat_sub_of_le h]
 
 theorem image_Ico_mod (n a : ℤ) (h : 0 ≤ a) : (ico n (n + a)).Image (· % a) = ico 0 a := by

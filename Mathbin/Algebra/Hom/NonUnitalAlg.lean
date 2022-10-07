@@ -100,8 +100,7 @@ theorem to_fun_eq_coe (f : A →ₙₐ[R] B) : f.toFun = ⇑f :=
 
 initialize_simps_projections NonUnitalAlgHom (toFun → apply)
 
-theorem coe_injective : @Function.Injective (A →ₙₐ[R] B) (A → B) coeFn := by
-  rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
+theorem coe_injective : @Function.Injective (A →ₙₐ[R] B) (A → B) coeFn := by rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
 
 instance : NonUnitalAlgHomClass (A →ₙₐ[R] B) R A B where
   coe := toFun
@@ -190,14 +189,10 @@ protected theorem map_zero (f : A →ₙₐ[R] B) : f 0 = 0 :=
   map_zero _
 
 instance : Zero (A →ₙₐ[R] B) :=
-  ⟨{ (0 : A →+[R] B) with
-      map_mul' := by
-        simp }⟩
+  ⟨{ (0 : A →+[R] B) with map_mul' := by simp }⟩
 
 instance : One (A →ₙₐ[R] A) :=
-  ⟨{ (1 : A →+[R] A) with
-      map_mul' := by
-        simp }⟩
+  ⟨{ (1 : A →+[R] A) with map_mul' := by simp }⟩
 
 @[simp]
 theorem coe_zero : ((0 : A →ₙₐ[R] B) : A → B) = 0 :=
@@ -270,25 +265,19 @@ variable {R A B}
 @[simps]
 def prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : A →ₙₐ[R] B × C where
   toFun := Pi.prod f g
-  map_zero' := by
-    simp only [Pi.prod, Prod.zero_eq_mk, map_zero]
-  map_add' := fun x y => by
-    simp only [Pi.prod, Prod.mk_add_mk, map_add]
-  map_mul' := fun x y => by
-    simp only [Pi.prod, Prod.mk_mul_mk, map_mul]
-  map_smul' := fun c x => by
-    simp only [Pi.prod, Prod.smul_mk, map_smul, RingHom.id_apply]
+  map_zero' := by simp only [Pi.prod, Prod.zero_eq_mk, map_zero]
+  map_add' := fun x y => by simp only [Pi.prod, Prod.mk_add_mk, map_add]
+  map_mul' := fun x y => by simp only [Pi.prod, Prod.mk_mul_mk, map_mul]
+  map_smul' := fun c x => by simp only [Pi.prod, Prod.smul_mk, map_smul, RingHom.id_apply]
 
 theorem coe_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
 
 @[simp]
-theorem fst_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : (fst R B C).comp (prod f g) = f := by
-  ext <;> rfl
+theorem fst_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : (fst R B C).comp (prod f g) = f := by ext <;> rfl
 
 @[simp]
-theorem snd_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : (snd R B C).comp (prod f g) = g := by
-  ext <;> rfl
+theorem snd_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : (snd R B C).comp (prod f g) = g := by ext <;> rfl
 
 @[simp]
 theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
@@ -300,10 +289,8 @@ their codomains. -/
 def prodEquiv : (A →ₙₐ[R] B) × (A →ₙₐ[R] C) ≃ (A →ₙₐ[R] B × C) where
   toFun := fun f => f.1.Prod f.2
   invFun := fun f => ((fst _ _ _).comp f, (snd _ _ _).comp f)
-  left_inv := fun f => by
-    ext <;> rfl
-  right_inv := fun f => by
-    ext <;> rfl
+  left_inv := fun f => by ext <;> rfl
+  right_inv := fun f => by ext <;> rfl
 
 variable (R A B)
 

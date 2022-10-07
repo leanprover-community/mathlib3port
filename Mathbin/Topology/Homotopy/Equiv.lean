@@ -148,8 +148,7 @@ def trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) : X ≃ₕ Z where
     refine' homotopic.trans ((homotopic.refl _).hcomp h₁.right_inv) _
     rw [id_comp]
 
-theorem symm_trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) : (h₁.trans h₂).symm = h₂.symm.trans h₁.symm := by
-  ext <;> rfl
+theorem symm_trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) : (h₁.trans h₂).symm = h₂.symm.trans h₁.symm := by ext <;> rfl
 
 end HomotopyEquiv
 

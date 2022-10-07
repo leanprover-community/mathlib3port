@@ -42,8 +42,7 @@ def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
     { x := ModuleCat.of R (M × N),
       π :=
         { app := fun j => Discrete.casesOn j fun j => WalkingPair.casesOn j (LinearMap.fst R M N) (LinearMap.snd R M N),
-          naturality' := by
-            rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟨⟩⟩⟩ <;> rfl } }
+          naturality' := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟨⟩⟩⟩ <;> rfl } }
   IsLimit :=
     { lift := fun s => LinearMap.prod (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩),
       fac' := by
@@ -51,8 +50,7 @@ def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
           · ext x
             simp
             ,
-      uniq' := fun s m w => by
-        ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
+      uniq' := fun s m w => by ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 
 @[simp]
 theorem binary_product_limit_cone_cone_π_app_left (M N : ModuleCat.{v} R) :
@@ -109,10 +107,10 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f) where
       fac' := fun s j => by
         cases j
         ext
-        simp ,
+        simp,
       uniq' := fun s m w => by
         ext x j
-        dsimp' only [has_limit.lift]
+        dsimp only [has_limit.lift]
         simp only [LinearMap.coe_mk]
         exact congr_arg (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }
 
@@ -126,12 +124,12 @@ variable {J : Type} (f : J → ModuleCat.{v} R)
 on the dependent function type
 -/
 @[simps hom_apply]
-noncomputable def biproductIsoPi [Fintype J] (f : J → ModuleCat.{v} R) :
+noncomputable def biproductIsoPi [Fintypeₓ J] (f : J → ModuleCat.{v} R) :
     (⨁ f : ModuleCat.{v} R) ≅ ModuleCat.of R (∀ j, f j) :=
   IsLimit.conePointUniqueUpToIso (Biproduct.isLimit f) (productLimitCone f).IsLimit
 
 @[simp, elementwise]
-theorem biproduct_iso_pi_inv_comp_π [Fintype J] (f : J → ModuleCat.{v} R) (j : J) :
+theorem biproduct_iso_pi_inv_comp_π [Fintypeₓ J] (f : J → ModuleCat.{v} R) (j : J) :
     (biproductIsoPi f).inv ≫ biproduct.π f j = (LinearMap.proj j : (∀ j, f j) →ₗ[R] f j) :=
   IsLimit.cone_point_unique_up_to_iso_inv_comp _ _ (Discrete.mk j)
 

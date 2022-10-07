@@ -365,11 +365,7 @@ open Classical
 -- see Note [lower instance priority]
 instance (priority := 100) : LocalRing K :=
   LocalRing.of_is_unit_or_is_unit_one_sub_self fun a =>
-    if h : a = 0 then
-      Or.inr
-        (by
-          rw [h, sub_zero] <;> exact is_unit_one)
-    else Or.inl <| IsUnit.mk0 a h
+    if h : a = 0 then Or.inr (by rw [h, sub_zero] <;> exact is_unit_one) else Or.inl <| IsUnit.mk0 a h
 
 end Field
 

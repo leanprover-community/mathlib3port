@@ -36,7 +36,7 @@ theorem set_of_liouville_with_subset_aux :
         (fun x : ℝ => x + m) ⁻¹'
           ⋃ n > (0 : ℕ),
             { x : ℝ |
-              ∃ᶠ b : ℕ in at_top, ∃ a ∈ Finset.icc (0 : ℤ) b, abs (x - (a : ℤ) / b) < 1 / b ^ (2 + 1 / n : ℝ) } :=
+              ∃ᶠ b : ℕ in at_top, ∃ a ∈ Finsetₓ.icc (0 : ℤ) b, abs (x - (a : ℤ) / b) < 1 / b ^ (2 + 1 / n : ℝ) } :=
   by
   rintro x ⟨p, hp, hxp⟩
   rcases exists_nat_one_div_lt (sub_pos.2 hp) with ⟨n, hn⟩
@@ -45,7 +45,7 @@ theorem set_of_liouville_with_subset_aux :
     ∀ y : ℝ,
       LiouvilleWith p y →
         y ∈ Ico (0 : ℝ) 1 →
-          ∃ᶠ b : ℕ in at_top, ∃ a ∈ Finset.icc (0 : ℤ) b, abs (y - a / b) < 1 / b ^ (2 + 1 / (n + 1 : ℕ) : ℝ)
+          ∃ᶠ b : ℕ in at_top, ∃ a ∈ Finsetₓ.icc (0 : ℤ) b, abs (y - a / b) < 1 / b ^ (2 + 1 / (n + 1 : ℕ) : ℝ)
     by
     simp only [mem_Union, mem_preimage]
     have hx : x + ↑(-⌊x⌋) ∈ Ico (0 : ℝ) 1 := by
@@ -71,8 +71,8 @@ theorem set_of_liouville_with_subset_aux :
     
   rw [sub_div' _ _ _ hb0.ne', abs_div, abs_of_pos hb0, div_lt_div_right hb0, abs_sub_lt_iff, sub_lt_iff_lt_add,
     sub_lt_iff_lt_add, ← sub_lt_iff_lt_add'] at hlt
-  rw [Finset.mem_Icc, ← Int.lt_add_one_iffₓ, ← Int.lt_add_one_iffₓ, ← neg_lt_iff_pos_add, add_commₓ, ← @Int.cast_lt ℝ, ←
-    @Int.cast_lt ℝ]
+  rw [Finsetₓ.mem_Icc, ← Int.lt_add_one_iffₓ, ← Int.lt_add_one_iffₓ, ← neg_lt_iff_pos_add, add_commₓ, ← @Int.cast_lt ℝ,
+    ← @Int.cast_lt ℝ]
   push_cast
   refine' ⟨lt_of_le_of_ltₓ _ hlt.1, hlt.2.trans_le _⟩
   · simp only [mul_nonneg hx01.left b.cast_nonneg, neg_le_sub_iff_le_add, le_add_iff_nonneg_left]
@@ -107,18 +107,17 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
     intro a b
     rw [Real.volume_ball, mul_one_div, ← Nnreal.coe_two, ← Nnreal.coe_nat_cast, ← Nnreal.coe_rpow, ← Nnreal.coe_div,
       Ennreal.of_real_coe_nnreal]
-  have : ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ -r) : ℝ≥0) := by
+  have : ∀ b : ℕ, volume (⋃ a ∈ Finsetₓ.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ -r) : ℝ≥0) := by
     intro b
     calc
-      volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=
+      volume (⋃ a ∈ Finsetₓ.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finsetₓ.icc (0 : ℤ) b, volume (B a b) :=
         measure_bUnion_finset_le _ _
       _ = ((b + 1) * (2 / b ^ r) : ℝ≥0) := by
-        simp only [hB, Int.card_Icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.coe_nat_succ, Int.to_nat_coe_nat, ←
-          Nat.cast_succₓ, Ennreal.coe_mul, Ennreal.coe_nat]
+        simp only [hB, Int.card_Icc, Finsetₓ.sum_const, nsmul_eq_mul, sub_zero, ← Int.coe_nat_succ, Int.to_nat_coe_nat,
+          ← Nat.cast_succₓ, Ennreal.coe_mul, Ennreal.coe_nat]
       _ = _ := _
       
-    have : 1 - r ≠ 0 := by
-      linarith
+    have : 1 - r ≠ 0 := by linarith
     rw [Ennreal.coe_eq_coe]
     simp [add_mulₓ, div_eq_mul_inv, Nnreal.rpow_neg, Nnreal.rpow_sub' _ this, mul_addₓ, mul_left_commₓ]
   refine' ne_top_of_le_ne_top (Ennreal.tsum_coe_ne_top_iff_summable.2 _) (Ennreal.tsum_le_tsum this)
@@ -128,11 +127,7 @@ theorem ae_not_liouville_with : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x
   simpa only [ae_iff, not_forall, not_not, set_of_exists] using volume_Union_set_of_liouville_with
 
 theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
-  ae_not_liouville_with.mono fun x h₁ h₂ =>
-    h₁ 3
-      (by
-        norm_num)
-      (h₂.LiouvilleWith 3)
+  ae_not_liouville_with.mono fun x h₁ h₂ => h₁ 3 (by norm_num) (h₂.LiouvilleWith 3)
 
 /-- The set of Liouville numbers has Lebesgue measure zero. -/
 @[simp]

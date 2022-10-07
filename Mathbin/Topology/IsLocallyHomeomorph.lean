@@ -40,13 +40,9 @@ theorem mk (h : ∀ x : X, ∃ e : LocalHomeomorph X Y, x ∈ e.Source ∧ ∀ x
   intro x
   obtain ⟨e, hx, he⟩ := h x
   exact
-    ⟨{ e with toFun := f,
-        map_source' := fun x hx => by
-          rw [he x hx] <;> exact e.map_source' hx,
-        left_inv' := fun x hx => by
-          rw [he x hx] <;> exact e.left_inv' hx,
-        right_inv' := fun y hy => by
-          rw [he _ (e.map_target' hy)] <;> exact e.right_inv' hy,
+    ⟨{ e with toFun := f, map_source' := fun x hx => by rw [he x hx] <;> exact e.map_source' hx,
+        left_inv' := fun x hx => by rw [he x hx] <;> exact e.left_inv' hx,
+        right_inv' := fun y hy => by rw [he _ (e.map_target' hy)] <;> exact e.right_inv' hy,
         continuous_to_fun := (continuous_on_congr he).mpr e.continuous_to_fun },
       hx, rfl⟩
 

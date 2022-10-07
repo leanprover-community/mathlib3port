@@ -123,11 +123,9 @@ theorem mem_principal : x ∈ principal y ↔ y ≤ x :=
   ideal.mem_principal
 
 -- defeq abuse
-theorem antitone_principal : Antitone (principal : P → Pfilter P) := by
-  delta' Antitone <;> simp
+theorem antitone_principal : Antitoneₓ (principal : P → Pfilter P) := by delta Antitoneₓ <;> simp
 
-theorem principal_le_principal_iff {p q : P} : principal q ≤ principal p ↔ p ≤ q := by
-  simp
+theorem principal_le_principal_iff {p q : P} : principal q ≤ principal p ↔ p ≤ q := by simp
 
 end Preorderₓ
 

@@ -240,8 +240,7 @@ theorem bounded_inter_not (H : ∀ a b, ∃ m, ∀ c, r c a ∨ r c b → r c m)
   exact ⟨m, fun c hc => hm c (or_iff_not_imp_left.2 fun hca => hb c ⟨hc, hca⟩)⟩
 
 theorem unbounded_inter_not (H : ∀ a b, ∃ m, ∀ c, r c a ∨ r c b → r c m) (a : α) :
-    Unbounded r (s ∩ { b | ¬r b a }) ↔ Unbounded r s := by
-  simp_rw [← not_bounded_iff, bounded_inter_not H]
+    Unbounded r (s ∩ { b | ¬r b a }) ↔ Unbounded r s := by simp_rw [← not_bounded_iff, bounded_inter_not H]
 
 /-! #### Less or equal -/
 

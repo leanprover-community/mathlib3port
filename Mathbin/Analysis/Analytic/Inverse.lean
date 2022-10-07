@@ -30,7 +30,7 @@ we prove that they coincide and study their properties (notably convergence).
 
 open BigOperators Classical TopologicalSpace
 
-open Finset Filter
+open Finsetₓ Filter
 
 namespace FormalMultilinearSeries
 
@@ -62,13 +62,11 @@ noncomputable def leftInv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[�
         (left_inv (c : Composition (n + 2)).length).compAlongComposition (p.compContinuousLinearMap i.symm) c
 
 @[simp]
-theorem left_inv_coeff_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) : p.left_inv i 0 = 0 := by
-  rw [left_inv]
+theorem left_inv_coeff_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) : p.left_inv i 0 = 0 := by rw [left_inv]
 
 @[simp]
 theorem left_inv_coeff_one (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) :
-    p.left_inv i 1 = (continuousMultilinearCurryFin1 𝕜 F E).symm i.symm := by
-  rw [left_inv]
+    p.left_inv i 1 = (continuousMultilinearCurryFin1 𝕜 F E).symm i.symm := by rw [left_inv]
 
 /-- The left inverse does not depend on the zeroth coefficient of a formal multilinear
 series. -/
@@ -85,10 +83,10 @@ theorem left_inv_remove_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[
     
   -- TODO: why?
   simp only [left_inv, neg_inj]
-  refine' Finset.sum_congr rfl fun c cuniv => _
+  refine' Finsetₓ.sum_congr rfl fun c cuniv => _
   rcases c with ⟨c, hc⟩
   ext v
-  dsimp'
+  dsimp
   simp [IH _ hc]
 
 /-- The left inverse to a formal multilinear series is indeed a left inverse, provided its linear
@@ -105,28 +103,25 @@ theorem left_inv_comp (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F
       ContinuousLinearEquiv.symm_apply_apply, continuous_multilinear_curry_fin1_symm_apply]
     
   have A :
-    (Finset.univ : Finset (Composition (n + 2))) =
+    (Finsetₓ.univ : Finsetₓ (Composition (n + 2))) =
       { c | Composition.length c < n + 2 }.toFinset ∪ {Composition.ones (n + 2)} :=
     by
     refine' subset.antisymm (fun c hc => _) (subset_univ _)
-    by_cases' h : c.length < n + 2
+    by_cases h:c.length < n + 2
     · simp [h]
       
     · simp [Composition.eq_ones_iff_le_length.2 (not_ltₓ.1 h)]
       
   have B :
     Disjoint ({ c | Composition.length c < n + 2 } : Set (Composition (n + 2))).toFinset {Composition.ones (n + 2)} :=
-    by
-    simp
+    by simp
   have C :
     ((p.left_inv i (Composition.ones (n + 2)).length) fun j : Finₓ (Composition.ones n.succ.succ).length =>
         p 1 fun k => v ((Finₓ.castLe (Composition.length_le _)) j)) =
       p.left_inv i (n + 2) fun j : Finₓ (n + 2) => p 1 fun k => v j :=
     by
     apply FormalMultilinearSeries.congr _ (Composition.ones_length _) fun j hj1 hj2 => _
-    exact
-      FormalMultilinearSeries.congr _ rfl fun k hk1 hk2 => by
-        congr
+    exact FormalMultilinearSeries.congr _ rfl fun k hk1 hk2 => by congr
   have D :
     (p.left_inv i (n + 2) fun j : Finₓ (n + 2) => p 1 fun k => v j) =
       -∑ c : Composition (n + 2) in { c : Composition (n + 2) | c.length < n + 2 }.toFinset,
@@ -145,10 +140,7 @@ theorem left_inv_comp (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F
     congr
     ext k
     simp [h]
-  simp [FormalMultilinearSeries.comp,
-    show n + 2 ≠ 1 by
-      decide,
-    A, Finset.sum_union B, apply_composition_ones, C, D]
+  simp [FormalMultilinearSeries.comp, show n + 2 ≠ 1 by decide, A, Finsetₓ.sum_union B, apply_composition_ones, C, D]
 
 /-! ### The right inverse of a formal multilinear series -/
 
@@ -179,10 +171,9 @@ theorem right_inv_coeff_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[
 
 @[simp]
 theorem right_inv_coeff_one (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) :
-    p.right_inv i 1 = (continuousMultilinearCurryFin1 𝕜 F E).symm i.symm := by
-  rw [right_inv]
+    p.right_inv i 1 = (continuousMultilinearCurryFin1 𝕜 F E).symm i.symm := by rw [right_inv]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]
 /-- The right inverse does not depend on the zeroth coefficient of a formal multilinear
 series. -/
 theorem right_inv_remove_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) :
@@ -197,8 +188,8 @@ theorem right_inv_remove_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L
   simp only [right_inv, neg_inj]
   rw [remove_zero_comp_of_pos _ _ (add_pos_of_nonneg_of_pos n.zero_le zero_lt_two)]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]"
-  by_cases' hk : k < n + 2 <;> simp [hk, IH]
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]"
+  by_cases hk:k < n + 2 <;> simp [hk, IH]
 
 theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 𝕜 E F) (q : FormalMultilinearSeries 𝕜 F E)
     (v : Finₓ n → F) :
@@ -207,9 +198,10 @@ theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 
         p 1 fun i => q n v :=
   by
   have A :
-    (Finset.univ : Finset (Composition n)) = { c | 1 < Composition.length c }.toFinset ∪ {Composition.single n hn} := by
+    (Finsetₓ.univ : Finsetₓ (Composition n)) = { c | 1 < Composition.length c }.toFinset ∪ {Composition.single n hn} :=
+    by
     refine' subset.antisymm (fun c hc => _) (subset_univ _)
-    by_cases' h : 1 < c.length
+    by_cases h:1 < c.length
     · simp [h]
       
     · have : c.length = 1 := by
@@ -226,7 +218,7 @@ theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 
     by
     apply p.congr (Composition.single_length hn) fun j hj1 hj2 => _
     simp [apply_composition_single]
-  simp [FormalMultilinearSeries.comp, A, Finset.sum_union B, C]
+  simp [FormalMultilinearSeries.comp, A, Finsetₓ.sum_union B, C]
 
 theorem comp_right_inv_aux2 (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) (n : ℕ) (v : Finₓ (n + 2) → F) :
     (∑ c : Composition (n + 2) in { c : Composition (n + 2) | 1 < c.length }.toFinset,
@@ -234,8 +226,7 @@ theorem comp_right_inv_aux2 (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[�
       ∑ c : Composition (n + 2) in { c : Composition (n + 2) | 1 < c.length }.toFinset,
         p c.length ((p.right_inv i).applyComposition c v) :=
   by
-  have N : 0 < n + 2 := by
-    decide
+  have N : 0 < n + 2 := by decide
   refine' sum_congr rfl fun c hc => p.congr rfl fun j hj1 hj2 => _
   have : ∀ k, c.blocks_fun k < n + 2 := by
     simp only [Set.mem_to_finset, Set.mem_set_of_eq] at hc
@@ -255,17 +246,14 @@ theorem comp_right_inv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] 
   · simp only [comp_coeff_one, h, right_inv, ContinuousLinearEquiv.apply_symm_apply, id_apply_one,
       ContinuousLinearEquiv.coe_apply, continuous_multilinear_curry_fin1_symm_apply]
     
-  have N : 0 < n + 2 := by
-    decide
-  simp [comp_right_inv_aux1 N, h, right_inv, lt_irreflₓ n,
-    show n + 2 ≠ 1 by
-      decide,
-    ← sub_eq_add_neg, sub_eq_zero, comp_right_inv_aux2]
+  have N : 0 < n + 2 := by decide
+  simp [comp_right_inv_aux1 N, h, right_inv, lt_irreflₓ n, show n + 2 ≠ 1 by decide, ← sub_eq_add_neg, sub_eq_zero,
+    comp_right_inv_aux2]
 
 theorem right_inv_coeff (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) (n : ℕ) (hn : 2 ≤ n) :
     p.right_inv i n =
       -(i.symm : F →L[𝕜] E).compContinuousMultilinearMap
-          (∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition n)),
+          (∑ c in ({ c | 1 < Composition.length c }.toFinset : Finsetₓ (Composition n)),
             p.compAlongComposition (p.right_inv i) c) :=
   by
   cases n
@@ -277,8 +265,7 @@ theorem right_inv_coeff (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜]
   simp only [right_inv, neg_inj]
   congr 1
   ext v
-  have N : 0 < n + 2 := by
-    decide
+  have N : 0 < n + 2 := by decide
   have : ((p 1) fun i : Finₓ 1 => 0) = 0 := ContinuousMultilinearMap.map_zero _
   simp [comp_right_inv_aux1 N, lt_irreflₓ n, this, comp_right_inv_aux2]
 
@@ -288,16 +275,11 @@ theorem right_inv_coeff (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜]
 private theorem left_inv_eq_right_inv_aux (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
     (h : p 1 = (continuousMultilinearCurryFin1 𝕜 E F).symm i) (h0 : p 0 = 0) : leftInv p i = rightInv p i :=
   calc
-    leftInv p i = (leftInv p i).comp (id 𝕜 F) := by
-      simp
-    _ = (leftInv p i).comp (p.comp (rightInv p i)) := by
-      rw [comp_right_inv p i h h0]
-    _ = ((leftInv p i).comp p).comp (rightInv p i) := by
-      rw [comp_assoc]
-    _ = (id 𝕜 E).comp (rightInv p i) := by
-      rw [left_inv_comp p i h]
-    _ = rightInv p i := by
-      simp
+    leftInv p i = (leftInv p i).comp (id 𝕜 F) := by simp
+    _ = (leftInv p i).comp (p.comp (rightInv p i)) := by rw [comp_right_inv p i h h0]
+    _ = ((leftInv p i).comp p).comp (rightInv p i) := by rw [comp_assoc]
+    _ = (id 𝕜 E).comp (rightInv p i) := by rw [left_inv_comp p i h]
+    _ = rightInv p i := by simp
     
 
 /-- The left inverse and the right inverse of a formal multilinear series coincide. This is not at
@@ -306,12 +288,9 @@ fact that composition is associative on formal multilinear series). -/
 theorem left_inv_eq_right_inv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
     (h : p 1 = (continuousMultilinearCurryFin1 𝕜 E F).symm i) : leftInv p i = rightInv p i :=
   calc
-    leftInv p i = leftInv p.removeZero i := by
-      rw [left_inv_remove_zero]
-    _ = rightInv p.removeZero i := by
-      apply left_inv_eq_right_inv_aux <;> simp [h]
-    _ = rightInv p i := by
-      rw [right_inv_remove_zero]
+    leftInv p i = leftInv p.removeZero i := by rw [left_inv_remove_zero]
+    _ = rightInv p.removeZero i := by apply left_inv_eq_right_inv_aux <;> simp [h]
+    _ = rightInv p i := by rw [right_inv_remove_zero]
     
 
 /-!
@@ -391,16 +370,16 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
     (ha : 0 ≤ a) :
     (∑ k in ico 2 (n + 1),
         a ^ k *
-          ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+          ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finsetₓ (Composition k)),
             r ^ c.length * ∏ j, p (c.blocksFun j)) ≤
       ∑ j in ico 2 (n + 1), r ^ j * (∑ k in ico 1 n, a ^ k * p k) ^ j :=
   calc
     (∑ k in ico 2 (n + 1),
           a ^ k *
-            ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+            ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finsetₓ (Composition k)),
               r ^ c.length * ∏ j, p (c.blocksFun j)) =
         ∑ k in ico 2 (n + 1),
-          ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+          ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finsetₓ (Composition k)),
             ∏ j, r * (a ^ c.blocksFun j * p (c.blocksFun j)) :=
       by
       simp_rw [mul_sum]
@@ -428,24 +407,21 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
       symm
       apply comp_change_of_variables_sum
       rintro ⟨k, blocks_fun⟩ H
-      have K : (comp_change_of_variables 2 (n + 1) n ⟨k, blocks_fun⟩ H).snd.length = k := by
-        simp
-      congr 2 <;>
-        try
-          rw [K]
+      have K : (comp_change_of_variables 2 (n + 1) n ⟨k, blocks_fun⟩ H).snd.length = k := by simp
+      congr 2 <;> try rw [K]
       rw [Finₓ.heq_fun_iff K.symm]
       intro j
       rw [comp_change_of_variables_blocks_fun]
     _ = ∑ j in ico 2 (n + 1), r ^ j * (∑ k in ico 1 n, a ^ k * p k) ^ j := by
       rw [comp_partial_sum_source, ←
-        sum_sigma' (Ico 2 (n + 1)) (fun k : ℕ => (Fintype.piFinset fun i : Finₓ k => Ico 1 n : Finset (Finₓ k → ℕ)))
+        sum_sigma' (Ico 2 (n + 1)) (fun k : ℕ => (Fintypeₓ.piFinset fun i : Finₓ k => Ico 1 n : Finsetₓ (Finₓ k → ℕ)))
           fun n e => ∏ j : Finₓ n, r * (a ^ e j * p (e j))]
       apply sum_congr rfl fun j hj => _
       simp only [← @MultilinearMap.mk_pi_algebra_apply ℝ (Finₓ j) _ _ ℝ]
       simp only [←
         MultilinearMap.map_sum_finset (MultilinearMap.mkPiAlgebra ℝ (Finₓ j) ℝ) fun k (m : ℕ) => r * (a ^ m * p m)]
       simp only [MultilinearMap.mk_pi_algebra_apply]
-      dsimp'
+      dsimp
       simp [prod_const, ← mul_sum, mul_powₓ]
     
 
@@ -470,7 +446,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1) (p 
           ∑ k in ico 2 (n + 1),
             a ^ k *
               ∥(i.symm : F →L[𝕜] E).compContinuousMultilinearMap
-                  (∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+                  (∑ c in ({ c | 1 < Composition.length c }.toFinset : Finsetₓ (Composition k)),
                     p.compAlongComposition (p.right_inv i) c)∥ :=
       by
       congr 1
@@ -481,7 +457,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1) (p 
           ∑ k in ico 2 (n + 1),
             a ^ k *
               (I *
-                ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+                ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finsetₓ (Composition k)),
                   C * r ^ c.length * ∏ j, ∥p.right_inv i (c.blocksFun j)∥) :=
       by
       apply_rules [add_le_add, le_reflₓ, sum_le_sum fun j hj => _, mul_le_mul_of_nonneg_left, pow_nonneg, ha]
@@ -497,7 +473,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1) (p 
           I * C *
             ∑ k in ico 2 (n + 1),
               a ^ k *
-                ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+                ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finsetₓ (Composition k)),
                   r ^ c.length * ∏ j, ∥p.right_inv i (c.blocksFun j)∥ :=
       by
       simp_rw [mul_assoc C, ← mul_sum, ← mul_assoc, mul_comm _ ∥↑i.symm∥, mul_assoc, ← mul_sum, ← mul_assoc,
@@ -533,8 +509,7 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
     have B : ∀ᶠ a in 𝓝 0, r * (I + 1) * a < 1 / 2 := by
       apply (tendsto_order.1 this).2
       simp [zero_lt_one]
-    have C : ∀ᶠ a in 𝓝[>] (0 : ℝ), (0 : ℝ) < a := by
-      filter_upwards [self_mem_nhds_within] with _ ha using ha
+    have C : ∀ᶠ a in 𝓝[>] (0 : ℝ), (0 : ℝ) < a := by filter_upwards [self_mem_nhds_within] with _ ha using ha
     rcases(C.and ((A.and B).filter_mono inf_le_left)).exists with ⟨a, ha⟩
     exact ⟨a, ha.1, ha.2.1.le, ha.2.2.le⟩
   -- check by induction that the partial sums are suitably bounded, using the choice of `a` and the
@@ -547,44 +522,30 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
       exact mul_nonneg (add_nonneg (norm_nonneg _) zero_le_one) apos.le
       
     · intro n one_le_n hn
-      have In : 2 ≤ n + 1 := by
-        linarith
+      have In : 2 ≤ n + 1 := by linarith
       have Snonneg : 0 ≤ S n := sum_nonneg fun x hx => mul_nonneg (pow_nonneg apos.le _) (norm_nonneg _)
       have rSn : r * S n ≤ 1 / 2 :=
         calc
           r * S n ≤ r * ((I + 1) * a) := mul_le_mul_of_nonneg_left hn rpos.le
-          _ ≤ 1 / 2 := by
-            rwa [← mul_assoc]
+          _ ≤ 1 / 2 := by rwa [← mul_assoc]
           
       calc
         S (n + 1) ≤ I * a + I * C * ∑ k in Ico 2 (n + 1), (r * S n) ^ k :=
           radius_right_inv_pos_of_radius_pos_aux2 In p i rpos.le apos.le Cpos.le ple
         _ = I * a + I * C * (((r * S n) ^ 2 - (r * S n) ^ (n + 1)) / (1 - r * S n)) := by
           rw [geom_sum_Ico' _ In]
-          exact
-            ne_of_ltₓ
-              (rSn.trans_lt
-                (by
-                  norm_num))
+          exact ne_of_ltₓ (rSn.trans_lt (by norm_num))
         _ ≤ I * a + I * C * ((r * S n) ^ 2 / (1 / 2)) := by
           apply_rules [add_le_add, le_reflₓ, mul_le_mul_of_nonneg_left, mul_nonneg, norm_nonneg, Cpos.le]
-          refine'
-            div_le_div (sq_nonneg _) _
-              (by
-                norm_num)
-              (by
-                linarith)
+          refine' div_le_div (sq_nonneg _) _ (by norm_num) (by linarith)
           simp only [sub_le_self_iff]
           apply pow_nonneg (mul_nonneg rpos.le Snonneg)
-        _ = I * a + 2 * I * C * (r * S n) ^ 2 := by
-          ring
+        _ = I * a + 2 * I * C * (r * S n) ^ 2 := by ring
         _ ≤ I * a + 2 * I * C * (r * ((I + 1) * a)) ^ 2 := by
           apply_rules [add_le_add, le_reflₓ, mul_le_mul_of_nonneg_left, mul_nonneg, norm_nonneg, Cpos.le, zero_le_two,
             pow_le_pow_of_le_left, rpos.le]
-        _ = (I + 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) * a := by
-          ring
-        _ ≤ (I + 1) * a := by
-          apply_rules [mul_le_mul_of_nonneg_right, apos.le, add_le_add, le_reflₓ]
+        _ = (I + 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) * a := by ring
+        _ ≤ (I + 1) * a := by apply_rules [mul_le_mul_of_nonneg_right, apos.le, add_le_add, le_reflₓ]
         
       
   -- conclude that all coefficients satisfy `aⁿ Qₙ ≤ (I + 1) a`.
@@ -594,28 +555,19 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
     exact_mod_cast apos
     
   apply le_radius_of_bound _ ((I + 1) * a) fun n => _
-  by_cases' hn : n = 0
-  · have : ∥p.right_inv i n∥ = ∥p.right_inv i 0∥ := by
-      congr <;>
-        try
-          rw [hn]
+  by_cases hn:n = 0
+  · have : ∥p.right_inv i n∥ = ∥p.right_inv i 0∥ := by congr <;> try rw [hn]
     simp only [this, norm_zero, zero_mul, right_inv_coeff_zero]
     apply_rules [mul_nonneg, add_nonneg, norm_nonneg, zero_le_one, apos.le]
     
   · have one_le_n : 1 ≤ n := bot_lt_iff_ne_bot.2 hn
     calc
       ∥p.right_inv i n∥ * ↑a' ^ n = a ^ n * ∥p.right_inv i n∥ := mul_comm _ _
-      _ ≤ ∑ k in Ico 1 (n + 1), a ^ k * ∥p.right_inv i k∥ := by
-        have : ∀ k ∈ Ico 1 (n + 1), 0 ≤ a ^ k * ∥p.right_inv i k∥ := fun k hk =>
+      _ ≤ ∑ k in Ico 1 (n + 1), a ^ k * ∥p.right_inv i k∥ :=
+        haveI : ∀ k ∈ Ico 1 (n + 1), 0 ≤ a ^ k * ∥p.right_inv i k∥ := fun k hk =>
           mul_nonneg (pow_nonneg apos.le _) (norm_nonneg _)
-        exact
-          single_le_sum this
-            (by
-              simp [one_le_n])
-      _ ≤ (I + 1) * a :=
-        IRec (n + 1)
-          (by
-            decide)
+        single_le_sum this (by simp [one_le_n])
+      _ ≤ (I + 1) * a := IRec (n + 1) (by decide)
       
     
 

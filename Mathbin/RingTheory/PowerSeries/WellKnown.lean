@@ -47,8 +47,7 @@ theorem inv_units_sub_mul_X (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * c R 
     
 
 @[simp]
-theorem inv_units_sub_mul_sub (u : Rˣ) : invUnitsSub u * (c R u - X) = 1 := by
-  simp [mul_sub, sub_sub_cancel]
+theorem inv_units_sub_mul_sub (u : Rˣ) : invUnitsSub u * (c R u - X) = 1 := by simp [mul_sub, sub_sub_cancel]
 
 theorem map_inv_units_sub (f : R →+* S) (u : Rˣ) : map f (invUnitsSub u) = invUnitsSub (Units.map (f : R →* S) u) := by
   ext
@@ -86,8 +85,7 @@ theorem constant_coeff_exp : constantCoeff A (exp A) = 1 := by
   simp
 
 @[simp]
-theorem coeff_sin_bit0 : coeff A (bit0 n) (sin A) = 0 := by
-  rw [sin, coeff_mk, if_pos (even_bit0 n)]
+theorem coeff_sin_bit0 : coeff A (bit0 n) (sin A) = 0 := by rw [sin, coeff_mk, if_pos (even_bit0 n)]
 
 @[simp]
 theorem coeff_sin_bit1 : coeff A (bit1 n) (sin A) = -1 ^ n * coeff A (bit1 n) (exp A) := by
@@ -100,8 +98,7 @@ theorem coeff_cos_bit0 : coeff A (bit0 n) (cos A) = -1 ^ n * coeff A (bit0 n) (e
     coeff_exp]
 
 @[simp]
-theorem coeff_cos_bit1 : coeff A (bit1 n) (cos A) = 0 := by
-  rw [cos, coeff_mk, if_neg n.not_even_bit1]
+theorem coeff_cos_bit1 : coeff A (bit1 n) (cos A) = 0 := by rw [cos, coeff_mk, if_neg n.not_even_bit1]
 
 @[simp]
 theorem map_exp : map (f : A →+* A') (exp A) = exp A' := by
@@ -122,7 +119,7 @@ end Field
 
 open RingHom
 
-open Finset Nat
+open Finsetₓ Nat
 
 variable {A : Type _} [CommRingₓ A]
 
@@ -137,8 +134,7 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
   suffices
     a ^ x * b ^ (n - x) * (algebraMap ℚ A (1 / ↑x.factorial) * algebraMap ℚ A (1 / ↑(n - x).factorial)) =
       a ^ x * b ^ (n - x) * (↑(n.choose x) * (algebraMap ℚ A) (1 / ↑n.factorial))
-    by
-    convert this using 1 <;> ring
+    by convert this using 1 <;> ring
   congr 1
   rw [← map_nat_cast (algebraMap ℚ A) (n.choose x), ← map_mul, ← map_mul]
   refine' RingHom.congr_arg _ _
@@ -171,8 +167,8 @@ theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (
 /-- Shows that
 $\sum_{k = 0}^{n - 1} (e^{X})^k = \sum_{p = 0}^{\infty} \sum_{k = 0}^{n - 1} \frac{k^p}{p!}X^p$. -/
 theorem exp_pow_sum [Algebra ℚ A] (n : ℕ) :
-    ((Finset.range n).Sum fun k => exp A ^ k) =
-      PowerSeries.mk fun p => (Finset.range n).Sum fun k => k ^ p * algebraMap ℚ A p.factorial⁻¹ :=
+    ((Finsetₓ.range n).Sum fun k => exp A ^ k) =
+      PowerSeries.mk fun p => (Finsetₓ.range n).Sum fun k => k ^ p * algebraMap ℚ A p.factorial⁻¹ :=
   by
   simp only [exp_pow_eq_rescale_exp, rescale]
   ext

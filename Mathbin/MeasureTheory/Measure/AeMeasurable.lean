@@ -82,7 +82,7 @@ theorem sum_measure [Countable ι] {μ : ι → Measureₓ α} (h : ∀ i, AeMea
       ⟨⋃ i, (h i).mk f ⁻¹' t ∩ s iᶜ,
         MeasurableSet.Union fun i => (measurable_mk _ ht).inter (measurable_set_to_measurable _ _).compl, _⟩
     ext ⟨x, hx⟩
-    simp only [mem_preimage, mem_Union, Subtype.coe_mk, Set.restrict, mem_inter_eq, mem_compl_iff] at hx⊢
+    simp only [mem_preimage, mem_Union, Subtype.coe_mk, Set.restrict, mem_inter_iff, mem_compl_iff] at hx⊢
     constructor
     · rintro ⟨i, hxt, hxs⟩
       rwa [hs _ _ hxs]
@@ -173,13 +173,13 @@ theorem exists_ae_eq_range_subset (H : AeMeasurable f μ) {t : Set β} (ht : ∀
   · exact Measurable.piecewise (measurable_set_to_measurable _ _) measurable_const H.measurable_mk
     
   · rintro _ ⟨x, rfl⟩
-    by_cases' hx : x ∈ s
+    by_cases hx:x ∈ s
     · simpa [g, hx] using h₀.some_mem
       
     · simp only [g, hx, piecewise_eq_of_not_mem, not_false_iff]
       contrapose! hx
       apply subset_to_measurable
-      simp (config := { contextual := true })only [hx, mem_compl_eq, mem_set_of_eq, not_and, not_false_iff,
+      simp (config := { contextual := true }) only [hx, mem_compl_iff, mem_set_of_eq, not_and, not_false_iff,
         implies_true_iff]
       
     
@@ -191,7 +191,7 @@ theorem exists_ae_eq_range_subset (H : AeMeasurable f μ) {t : Set β} (ht : ∀
     simp only [g, hx, piecewise_eq_of_not_mem, not_false_iff]
     contrapose! hx
     apply subset_to_measurable
-    simp only [hx, mem_compl_eq, mem_set_of_eq, false_andₓ, not_false_iff]
+    simp only [hx, mem_compl_iff, mem_set_of_eq, false_andₓ, not_false_iff]
     
 
 theorem exists_measurable_nonneg {β} [Preorderₓ β] [Zero β] {mβ : MeasurableSpace β} {f : α → β} (hf : AeMeasurable f μ)
@@ -217,8 +217,7 @@ end AeMeasurable
 theorem ae_measurable_interval_oc_iff [LinearOrderₓ α] {f : α → β} {a b : α} :
     (AeMeasurable f <| μ.restrict <| Ι a b) ↔
       (AeMeasurable f <| μ.restrict <| Ioc a b) ∧ (AeMeasurable f <| μ.restrict <| Ioc b a) :=
-  by
-  rw [interval_oc_eq_union, ae_measurable_union_iff]
+  by rw [interval_oc_eq_union, ae_measurable_union_iff]
 
 theorem ae_measurable_iff_measurable [μ.IsComplete] : AeMeasurable f μ ↔ Measurable f :=
   ⟨fun h => h.NullMeasurable.measurable_of_complete, fun h => h.AeMeasurable⟩
@@ -324,6 +323,5 @@ theorem MeasureTheory.Measure.restrict_map_of_ae_measurable {f : α → δ} (hf 
     
 
 theorem MeasureTheory.Measure.map_mono_of_ae_measurable {f : α → δ} (h : μ ≤ ν) (hf : AeMeasurable f ν) :
-    μ.map f ≤ ν.map f := fun s hs => by
-  simpa [hf, hs, hf.mono_measure h] using measure.le_iff'.1 h (f ⁻¹' s)
+    μ.map f ≤ ν.map f := fun s hs => by simpa [hf, hs, hf.mono_measure h] using measure.le_iff'.1 h (f ⁻¹' s)
 

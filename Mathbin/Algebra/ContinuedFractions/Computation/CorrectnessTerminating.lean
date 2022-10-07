@@ -110,13 +110,10 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
     cases this
     cases' Decidable.em (Int.fract v = 0) with fract_eq_zero fract_ne_zero
     -- int.fract v = 0; we must then have `v = ⌊v⌋`
-    · suffices v = ⌊v⌋ by
-        simpa [continuants_aux, fract_eq_zero, comp_exact_value]
+    · suffices v = ⌊v⌋ by simpa [continuants_aux, fract_eq_zero, comp_exact_value]
       calc
-        v = Int.fract v + ⌊v⌋ := by
-          rw [Int.fract_add_floor]
-        _ = ⌊v⌋ := by
-          simp [fract_eq_zero]
+        v = Int.fract v + ⌊v⌋ := by rw [Int.fract_add_floor]
+        _ = ⌊v⌋ := by simp [fract_eq_zero]
         
       
     -- int.fract v ≠ 0; the claim then easily follows by unfolding a single computation step
@@ -135,14 +132,12 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
     set ppconts := g.continuants_aux n with ppconts_eq
     cases' Decidable.em (ifp_succ_n.fr = 0) with ifp_succ_n_fr_eq_zero ifp_succ_n_fr_ne_zero
     -- ifp_succ_n.fr = 0
-    · suffices v = conts.a / conts.b by
-        simpa [comp_exact_value, ifp_succ_n_fr_eq_zero]
+    · suffices v = conts.a / conts.b by simpa [comp_exact_value, ifp_succ_n_fr_eq_zero]
       -- use the IH and the fact that ifp_n.fr⁻¹ = ⌊ifp_n.fr⁻¹⌋ to prove this case
       obtain ⟨ifp_n', nth_stream_eq', ifp_n_fract_inv_eq_floor⟩ :
         ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr⁻¹ = ⌊ifp_n.fr⁻¹⌋
       exact int_fract_pair.exists_succ_nth_stream_of_fr_zero succ_nth_stream_eq ifp_succ_n_fr_eq_zero
-      have : ifp_n' = ifp_n := by
-        injection Eq.trans nth_stream_eq'.symm nth_stream_eq
+      have : ifp_n' = ifp_n := by injection Eq.trans nth_stream_eq'.symm nth_stream_eq
       cases this
       have s_nth_eq : g.s.nth n = some ⟨1, ⌊ifp_n.fr⁻¹⌋⟩ :=
         nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq nth_fract_ne_zero
@@ -161,8 +156,7 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
       obtain ⟨ifp_n', nth_stream_eq', ifp_n_fract_ne_zero, ⟨refl⟩⟩ :
         ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of ifp_n.fr⁻¹ = ifp_succ_n
       exact int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq
-      have : ifp_n' = ifp_n := by
-        injection Eq.trans nth_stream_eq'.symm nth_stream_eq
+      have : ifp_n' = ifp_n := by injection Eq.trans nth_stream_eq'.symm nth_stream_eq
       cases this
       -- get the correspondence between ifp_n and g.s.nth n
       have s_nth_eq : g.s.nth n = some ⟨1, (⌊ifp_n.fr⁻¹⌋ : K)⟩ :=
@@ -182,8 +176,7 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
       have tmp_calc := comp_exact_value_correctness_of_stream_eq_some_aux_comp pA ppA ifp_succ_n_fr_ne_zero
       have tmp_calc' := comp_exact_value_correctness_of_stream_eq_some_aux_comp pB ppB ifp_succ_n_fr_ne_zero
       rw [inv_eq_one_div] at tmp_calc tmp_calc'
-      have : Int.fract (1 / ifp_n.fr) ≠ 0 := by
-        simpa using ifp_succ_n_fr_ne_zero
+      have : Int.fract (1 / ifp_n.fr) ≠ 0 := by simpa using ifp_succ_n_fr_ne_zero
       -- now unfold the recurrence one step and simplify both sides to arrive at the conclusion
       field_simp [conts, comp_exact_value, continuants_aux_recurrence s_nth_eq ppconts_eq pconts_eq, next_continuants,
         next_numerator, next_denominator, this, tmp_calc, tmp_calc']
@@ -198,29 +191,28 @@ open GeneralizedContinuedFraction (of_terminated_at_n_iff_succ_nth_int_fract_pai
 theorem of_correctness_of_nth_stream_eq_none (nth_stream_eq_none : IntFractPair.stream v n = none) :
     v = (of v).convergents (n - 1) := by
   induction' n with n IH
-  case nat.zero =>
-    contradiction
+  case zero => contradiction
   -- int_fract_pair.stream v 0 ≠ none
-  case nat.succ =>
-    rename' nth_stream_eq_none => succ_nth_stream_eq_none
-    let g := of v
-    change v = g.convergents n
-    have : int_fract_pair.stream v n = none ∨ ∃ ifp, int_fract_pair.stream v n = some ifp ∧ ifp.fr = 0 :=
-      int_fract_pair.succ_nth_stream_eq_none_iff.elim_left succ_nth_stream_eq_none
-    rcases this with (⟨nth_stream_eq_none⟩ | ⟨ifp_n, nth_stream_eq, nth_stream_fr_eq_zero⟩)
-    · cases' n with n'
-      · contradiction
-        
-      -- int_fract_pair.stream v 0 ≠ none
-      · have : g.terminated_at n' :=
-          of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elim_right nth_stream_eq_none
-        have : g.convergents (n' + 1) = g.convergents n' := convergents_stable_of_terminated n'.le_succ this
-        rw [this]
-        exact IH nth_stream_eq_none
-        
+case succ =>
+  rename' nth_stream_eq_none => succ_nth_stream_eq_none
+  let g := of v
+  change v = g.convergents n
+  have : int_fract_pair.stream v n = none ∨ ∃ ifp, int_fract_pair.stream v n = some ifp ∧ ifp.fr = 0 :=
+    int_fract_pair.succ_nth_stream_eq_none_iff.elim_left succ_nth_stream_eq_none
+  rcases this with (⟨nth_stream_eq_none⟩ | ⟨ifp_n, nth_stream_eq, nth_stream_fr_eq_zero⟩)
+  · cases' n with n'
+    · contradiction
       
-    · simpa [nth_stream_fr_eq_zero, comp_exact_value] using comp_exact_value_correctness_of_stream_eq_some nth_stream_eq
+    -- int_fract_pair.stream v 0 ≠ none
+    · have : g.terminated_at n' :=
+        of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elim_right nth_stream_eq_none
+      have : g.convergents (n' + 1) = g.convergents n' := convergents_stable_of_terminated n'.le_succ this
+      rw [this]
+      exact IH nth_stream_eq_none
       
+    
+  · simpa [nth_stream_fr_eq_zero, comp_exact_value] using comp_exact_value_correctness_of_stream_eq_some nth_stream_eq
+    
 
 /-- If `generalized_continued_fraction.of v` terminated at step `n`, then the `n`th convergent is
 exactly `v`.

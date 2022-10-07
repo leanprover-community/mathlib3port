@@ -119,10 +119,7 @@ attribute [local instance] SmulCommClass.symm
 `P`, change the order of variables and get a linear map from `N` to linear maps from `M` to `P`. -/
 def flip (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) : N →ₛₗ[σ₁₂] M →ₛₗ[ρ₁₂] P :=
   mk₂'ₛₗ σ₁₂ ρ₁₂ (fun n m => f m n) (fun n₁ n₂ m => (f m).map_add _ _) (fun c n m => (f m).map_smulₛₗ _ _)
-    (fun n m₁ m₂ => by
-      rw [f.map_add] <;> rfl)
-    fun c n m => by
-    rw [f.map_smulₛₗ] <;> rfl
+    (fun n m₁ m₂ => by rw [f.map_add] <;> rfl) fun c n m => by rw [f.map_smulₛₗ] <;> rfl
 
 end
 
@@ -139,9 +136,7 @@ open BigOperators
 variable {R}
 
 theorem flip_inj {f g : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (H : flip f = flip g) : f = g :=
-  ext₂ fun m n =>
-    show flip f n m = flip g n m by
-      rw [H]
+  ext₂ fun m n => show flip f n m = flip g n m by rw [H]
 
 theorem map_zero₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (y) : f 0 y = 0 :=
   (flip f y).map_zero
@@ -161,19 +156,15 @@ theorem map_smul₂ (f : M₂ →ₗ[R] N₂ →ₛₗ[σ₁₂] P₂) (r : R) (
 theorem map_smulₛₗ₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (r : R) (x y) : f (r • x) y = ρ₁₂ r • f x y :=
   (flip f y).map_smulₛₗ _ _
 
-theorem map_sum₂ {ι : Type _} (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (t : Finset ι) (x : ι → M) (y) :
+theorem map_sum₂ {ι : Type _} (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (t : Finsetₓ ι) (x : ι → M) (y) :
     f (∑ i in t, x i) y = ∑ i in t, f (x i) y :=
   (flip f y).map_sum
 
 /-- Restricting a bilinear map in the second entry -/
 def domRestrict₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) : M →ₛₗ[ρ₁₂] q →ₛₗ[σ₁₂] P where
   toFun := fun m => (f m).domRestrict q
-  map_add' := fun m₁ m₂ =>
-    LinearMap.ext fun _ => by
-      simp only [map_add, dom_restrict_apply, add_apply]
-  map_smul' := fun c m =>
-    LinearMap.ext fun _ => by
-      simp only [f.map_smulₛₗ, dom_restrict_apply, smul_apply]
+  map_add' := fun m₁ m₂ => LinearMap.ext fun _ => by simp only [map_add, dom_restrict_apply, add_apply]
+  map_smul' := fun c m => LinearMap.ext fun _ => by simp only [f.map_smulₛₗ, dom_restrict_apply, smul_apply]
 
 theorem dom_restrict₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) (x : M) (y : q) :
     f.domRestrict₂ q x y = f x y :=

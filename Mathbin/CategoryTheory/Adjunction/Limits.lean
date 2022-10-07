@@ -245,7 +245,7 @@ def coconesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
   app := fun j => (adj.homEquiv (K.obj j) Y) (t.app j)
   naturality' := fun j j' f => by
     erw [← adj.hom_equiv_naturality_left, t.naturality]
-    dsimp'
+    dsimp
     simp
 
 /-- auxiliary construction for `cocones_iso` -/
@@ -255,7 +255,7 @@ def coconesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
   app := fun j => (adj.homEquiv (K.obj j) Y).symm (t.app j)
   naturality' := fun j j' f => by
     erw [← adj.hom_equiv_naturality_left_symm, ← adj.hom_equiv_naturality_right_symm, t.naturality]
-    dsimp'
+    dsimp
     simp
 
 /-- auxiliary construction for `cones_iso` -/
@@ -287,9 +287,7 @@ the functor associating to each `Y` the cocones over `K` with cone point `G.obj 
 -/
 def coconesIso {J : Type u} [Category.{v} J] {K : J ⥤ C} :
     (cocones J D).obj (op (K ⋙ F)) ≅ G ⋙ (cocones J C).obj (op K) :=
-  NatIso.ofComponents (fun Y => { Hom := coconesIsoComponentHom adj Y, inv := coconesIsoComponentInv adj Y })
-    (by
-      tidy)
+  NatIso.ofComponents (fun Y => { Hom := coconesIsoComponentHom adj Y, inv := coconesIsoComponentInv adj Y }) (by tidy)
 
 -- Note: this is natural in K, but we do not yet have the tools to formulate that.
 /-- When `F ⊣ G`,
@@ -298,9 +296,7 @@ is naturally isomorphic to
 the functor associating to each `X` the cones over `K ⋙ G` with cone point `X`.
 -/
 def conesIso {J : Type u} [Category.{v} J] {K : J ⥤ D} : F.op ⋙ (cones J D).obj K ≅ (cones J C).obj (K ⋙ G) :=
-  NatIso.ofComponents (fun X => { Hom := conesIsoComponentHom adj X, inv := conesIsoComponentInv adj X })
-    (by
-      tidy)
+  NatIso.ofComponents (fun X => { Hom := conesIsoComponentHom adj X, inv := conesIsoComponentInv adj X }) (by tidy)
 
 end CategoryTheory.Adjunction
 

@@ -18,7 +18,7 @@ objects, and helping to evaluate it for specific `k`.
 -/
 
 
-open Finset
+open Finsetₓ
 
 namespace Nat
 
@@ -33,12 +33,11 @@ def count (n : ℕ) : ℕ :=
   (List.range n).countp p
 
 @[simp]
-theorem count_zero : count p 0 = 0 := by
-  rw [count, List.range_zero, List.countpₓ]
+theorem count_zero : count p 0 = 0 := by rw [count, List.range_zero, List.countpₓ]
 
 /-- A fintype instance for the set relevant to `nat.count`. Locally an instance in locale `count` -/
-def CountSet.fintype (n : ℕ) : Fintype { i // i < n ∧ p i } := by
-  apply Fintype.ofFinset ((Finset.range n).filter p)
+def CountSet.fintype (n : ℕ) : Fintypeₓ { i // i < n ∧ p i } := by
+  apply Fintypeₓ.ofFinset ((Finsetₓ.range n).filter p)
   intro x
   rw [mem_filter, mem_range]
   rfl
@@ -50,17 +49,16 @@ theorem count_eq_card_filter_range (n : ℕ) : count p n = ((range n).filter p).
   rfl
 
 /-- `count p n` can be expressed as the cardinality of `{k // k < n ∧ p k}`. -/
-theorem count_eq_card_fintype (n : ℕ) : count p n = Fintype.card { k : ℕ // k < n ∧ p k } := by
-  rw [count_eq_card_filter_range, ← Fintype.card_of_finset, ← count_set.fintype]
+theorem count_eq_card_fintype (n : ℕ) : count p n = Fintypeₓ.card { k : ℕ // k < n ∧ p k } := by
+  rw [count_eq_card_filter_range, ← Fintypeₓ.card_of_finset, ← count_set.fintype]
   rfl
 
 theorem count_succ (n : ℕ) : count p (n + 1) = count p n + if p n then 1 else 0 := by
   split_ifs <;> simp [count, List.range_succ, h]
 
 @[mono]
-theorem count_monotone : Monotone (count p) :=
-  monotone_nat_of_le_succ fun n => by
-    by_cases' h : p n <;> simp [count_succ, h]
+theorem count_monotone : Monotoneₓ (count p) :=
+  monotone_nat_of_le_succ fun n => by by_cases h:p n <;> simp [count_succ, h]
 
 theorem count_add (a b : ℕ) : count p (a + b) = count p a + count (fun k => p (a + k)) b := by
   have : Disjoint ((range a).filter p) (((range b).map <| addLeftEmbedding a).filter p) := by
@@ -76,8 +74,7 @@ theorem count_add' (a b : ℕ) : count p (a + b) = count (fun k => p (k + b)) a 
   rw [add_commₓ, count_add, add_commₓ]
   simp_rw [add_commₓ b]
 
-theorem count_one : count p 1 = if p 0 then 1 else 0 := by
-  simp [count_succ]
+theorem count_one : count p 1 = if p 0 then 1 else 0 := by simp [count_succ]
 
 theorem count_succ' (n : ℕ) : count p (n + 1) = count (fun k => p (k + 1)) n + if p 0 then 1 else 0 := by
   rw [count_add', count_one]
@@ -86,13 +83,13 @@ variable {p}
 
 @[simp]
 theorem count_lt_count_succ_iff {n : ℕ} : count p n < count p (n + 1) ↔ p n := by
-  by_cases' h : p n <;> simp [count_succ, h]
+  by_cases h:p n <;> simp [count_succ, h]
 
 theorem count_succ_eq_succ_count_iff {n : ℕ} : count p (n + 1) = count p n + 1 ↔ p n := by
-  by_cases' h : p n <;> simp [h, count_succ]
+  by_cases h:p n <;> simp [h, count_succ]
 
 theorem count_succ_eq_count_iff {n : ℕ} : count p (n + 1) = count p n ↔ ¬p n := by
-  by_cases' h : p n <;> simp [h, count_succ]
+  by_cases h:p n <;> simp [h, count_succ]
 
 alias count_succ_eq_succ_count_iff ↔ _ count_succ_eq_succ_count
 
@@ -118,7 +115,7 @@ theorem count_injective {m n : ℕ} (hm : p m) (hn : p n) (heq : count p m = cou
 
 theorem count_le_card (hp : (SetOf p).Finite) (n : ℕ) : count p n ≤ hp.toFinset.card := by
   rw [count_eq_card_filter_range]
-  exact Finset.card_mono fun x hx => hp.mem_to_finset.2 (mem_filter.1 hx).2
+  exact Finsetₓ.card_mono fun x hx => hp.mem_to_finset.2 (mem_filter.1 hx).2
 
 theorem count_lt_card {n : ℕ} (hp : (SetOf p).Finite) (hpn : p n) : count p n < hp.toFinset.card :=
   (count_lt_count_succ_iff.2 hpn).trans_le (count_le_card hp _)

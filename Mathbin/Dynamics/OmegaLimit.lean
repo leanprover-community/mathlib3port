@@ -101,8 +101,7 @@ theorem maps_to_omega_limit {α' β' : Type _} [TopologicalSpace β'] {f : Filte
   maps_to_omega_limit' _ hs (eventually_of_forall fun t x hx => hg t x) hgc
 
 theorem omega_limit_image_eq {α' : Type _} (ϕ : τ → α' → β) (f : Filter τ) (g : α → α') :
-    ω f ϕ (g '' s) = ω f (fun t x => ϕ t (g x)) s := by
-  simp only [OmegaLimit, image2_image_right]
+    ω f ϕ (g '' s) = ω f (fun t x => ϕ t (g x)) s := by simp only [OmegaLimit, image2_image_right]
 
 theorem omega_limit_preimage_subset {α' : Type _} (ϕ : τ → α' → β) (s : Set α') (f : Filter τ) (g : α → α') :
     ω f (fun t x => ϕ t (g x)) (g ⁻¹' s) ⊆ ω f ϕ s :=
@@ -124,9 +123,7 @@ theorem mem_omega_limit_iff_frequently (y : β) : y ∈ ω f ϕ s ↔ ∀ n ∈ 
   constructor
   · intro h _ hn _ hu
     rcases h _ hu _ hn with ⟨_, _, _, _, ht, hx, hϕtx⟩
-    exact
-      ⟨_, ht, _, hx, by
-        rwa [mem_preimage, hϕtx]⟩
+    exact ⟨_, ht, _, hx, by rwa [mem_preimage, hϕtx]⟩
     
   · intro h _ hu _ hn
     rcases h _ hn hu with ⟨_, ht, _, hx, hϕtx⟩
@@ -230,8 +227,7 @@ theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_li
     exact subset.trans (inter_subset_right _ _) hn₂
   rcases hk.elim_finite_subcover_image hj₁ hj₂ with ⟨g, hg₁ : ∀ u ∈ g, u ∈ f, hg₂, hg₃⟩
   let w := (⋂ u ∈ g, u) ∩ v
-  have hw₂ : w ∈ f := by
-    simpa [*]
+  have hw₂ : w ∈ f := by simpa [*]
   have hw₃ : k \ n ⊆ Closure (image2 ϕ w s)ᶜ :=
     calc
       k \ n ⊆ ⋃ u ∈ g, j u := hg₃
@@ -246,8 +242,7 @@ theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_li
     calc
       Closure (image2 ϕ w s) ⊆ _ := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
       
-  have hnc : nᶜ ⊆ k \ n ∪ kᶜ := by
-    rw [union_comm, ← inter_subset, diff_eq, inter_comm]
+  have hnc : nᶜ ⊆ k \ n ∪ kᶜ := by rw [union_comm, ← inter_subset, diff_eq, inter_comm]
   have hw : Closure (image2 ϕ w s) ⊆ n := compl_subset_compl.mp (subset.trans hnc (union_subset hw₃ hw₄))
   exact ⟨_, hw₂, hw⟩
 
@@ -289,14 +284,7 @@ theorem nonempty_omega_limit_of_is_compact_absorbing [NeBot f] {c : Set β} (hc�
   · rintro ⟨u₁, hu₁⟩ ⟨u₂, hu₂⟩
     use ⟨u₁ ∩ u₂, inter_mem hu₁ hu₂⟩
     constructor
-    all_goals
-      exact
-        closure_mono
-          (image2_subset
-            (inter_subset_inter_left _
-              (by
-                simp ))
-            subset.rfl)
+    all_goals exact closure_mono (image2_subset (inter_subset_inter_left _ (by simp)) subset.rfl)
     
   · intro u
     have hn : (image2 ϕ (u ∩ v) s).Nonempty := nonempty.image2 (nonempty_of_mem (inter_mem u.prop hv₁)) hs
@@ -357,8 +345,7 @@ open OmegaLimit
 theorem omega_limit_image_eq (hf : ∀ t, Tendsto (· + t) f f) (t : τ) : ω f ϕ (ϕ t '' s) = ω f ϕ s :=
   Subset.antisymm (omega_limit_image_subset _ _ _ _ (hf t)) <|
     calc
-      ω f ϕ s = ω f ϕ (ϕ (-t) '' (ϕ t '' s)) := by
-        simp [image_image, ← map_add]
+      ω f ϕ s = ω f ϕ (ϕ (-t) '' (ϕ t '' s)) := by simp [image_image, ← map_add]
       _ ⊆ ω f ϕ (ϕ t '' s) := omega_limit_image_subset _ _ _ _ (hf _)
       
 

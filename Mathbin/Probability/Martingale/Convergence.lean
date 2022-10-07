@@ -142,7 +142,7 @@ We use the spelling `< ∞` instead of the standard `≠ ∞` in the assumptions
 to change `<` to `≠` under binders. -/
 theorem tendsto_of_uncrossing_lt_top (hf₁ : (liminfₓ atTop fun n => (∥f n ω∥₊ : ℝ≥0∞)) < ∞)
     (hf₂ : ∀ a b : ℚ, a < b → upcrossings a b f ω < ∞) : ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
-  by_cases' h : is_bounded_under (· ≤ ·) at_top fun n => abs (f n ω)
+  by_cases h:is_bounded_under (· ≤ ·) at_top fun n => abs (f n ω)
   · rw [is_bounded_under_le_abs] at h
     refine' tendsto_of_no_upcrossings Ratₓ.dense_range_cast _ h.1 h.2
     · intro a ha b hb hab
@@ -180,7 +180,7 @@ theorem Submartingale.upcrossings_ae_lt_top' [IsFiniteMeasure μ] (hf : Submarti
               fun n => le_transₓ _ (hR' n)⟩)
       refine' lintegral_mono fun ω => _
       rw [Ennreal.of_real_le_iff_le_to_real, Ennreal.coe_to_real, coe_nnnorm]
-      by_cases' hnonneg : 0 ≤ f n ω - a
+      by_cases hnonneg:0 ≤ f n ω - a
       · rw [LatticeOrderedCommGroup.pos_of_nonneg _ hnonneg, Real.norm_eq_abs, abs_of_nonneg hnonneg]
         
       · rw [LatticeOrderedCommGroup.pos_of_nonpos _ (not_leₓ.1 hnonneg).le]
@@ -348,11 +348,10 @@ theorem Martingale.eq_condexp_of_tendsto_snorm {μ : Measure Ω} (hf : Martingal
     snorm_eq_zero_iff
       (((hf.strongly_measurable n).mono (ℱ.le _)).sub (strongly_measurable_condexp.mono (ℱ.le _))).AeStronglyMeasurable
       one_ne_zero]
-  have ht : tendsto (fun m => snorm (μ[f m - g|ℱ n]) 1 μ) at_top (𝓝 0) := by
-    have hint : ∀ m, integrable (f m - g) μ := fun m => (hf.integrable m).sub hg
-    exact
-      tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hgtends (fun m => zero_le _) fun m =>
-        snorm_one_condexp_le_snorm _
+  have ht : tendsto (fun m => snorm (μ[f m - g|ℱ n]) 1 μ) at_top (𝓝 0) :=
+    haveI hint : ∀ m, integrable (f m - g) μ := fun m => (hf.integrable m).sub hg
+    tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hgtends (fun m => zero_le _) fun m =>
+      snorm_one_condexp_le_snorm _
   have hev : ∀ m ≥ n, snorm (μ[f m - g|ℱ n]) 1 μ = snorm (f n - μ[g|ℱ n]) 1 μ := by
     refine' fun m hm => snorm_congr_ae ((condexp_sub (hf.integrable m) hg).trans _)
     filter_upwards [hf.2 n m hm] with x hx
@@ -398,7 +397,7 @@ theorem Integrable.tendsto_ae_condexp (hg : Integrable g μ) (hgmeas : strongly_
   refine'
     @MeasurableSpace.induction_on_inter _ _ _ (⨆ n, ℱ n) (MeasurableSpace.measurable_space_supr_eq ℱ) _ _ _ _ _ _ hs
   · rintro s ⟨n, hs⟩ t ⟨m, ht⟩ -
-    by_cases' hnm : n ≤ m
+    by_cases hnm:n ≤ m
     · exact ⟨m, (ℱ.mono hnm _ hs).inter ht⟩
       
     · exact ⟨n, hs.inter (ℱ.mono (not_leₓ.1 hnm).le _ ht)⟩

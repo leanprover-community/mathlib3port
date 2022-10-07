@@ -43,7 +43,6 @@ open Manifold
 -- See note [Design choices about smooth algebraic structures]
 /-- A Lie (additive) group is a group and a smooth manifold at the same time in which
 the addition and negation operations are smooth. -/
-@[ancestor HasSmoothAdd]
 class LieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [AddGroupₓ G] [TopologicalSpace G]
   [ChartedSpace H G] extends HasSmoothAdd I G : Prop where
@@ -52,7 +51,7 @@ class LieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [T
 -- See note [Design choices about smooth algebraic structures]
 /-- A Lie group is a group and a smooth manifold at the same time in which
 the multiplication and inverse operations are smooth. -/
-@[ancestor HasSmoothMul, to_additive]
+@[to_additive]
 class LieGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Groupₓ G] [TopologicalSpace G]
   [ChartedSpace H G] extends HasSmoothMul I G : Prop where

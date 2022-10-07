@@ -43,9 +43,7 @@ variable [L.Structure M] [L.Structure N] [L.Structure P] [L.Structure Q]
   realizations of formulas. -/
 structure ElementaryEmbedding where
   toFun : M → N
-  map_formula' : ∀ ⦃n⦄ (φ : L.Formula (Finₓ n)) (x : Finₓ n → M), φ.realize (to_fun ∘ x) ↔ φ.realize x := by
-    run_tac
-      obviously
+  map_formula' : ∀ ⦃n⦄ (φ : L.Formula (Finₓ n)) (x : Finₓ n → M), φ.realize (to_fun ∘ x) ↔ φ.realize x := by obviously
 
 -- mathport name: elementary_embedding
 localized [FirstOrder] notation:25 A " ↪ₑ[" L "] " B => FirstOrder.Language.ElementaryEmbedding L A B
@@ -75,15 +73,15 @@ theorem map_bounded_formula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.Bo
   · infer_instance
     
   have h :=
-    f.map_formula' ((φ.restrict_free_var id).toFormula.relabel (Fintype.equivFin _))
-      (Sum.elim (v ∘ coe) xs ∘ (Fintype.equivFin _).symm)
+    f.map_formula' ((φ.restrict_free_var id).toFormula.relabel (Fintypeₓ.equivFin _))
+      (Sum.elim (v ∘ coe) xs ∘ (Fintypeₓ.equivFin _).symm)
   simp only [formula.realize_relabel, bounded_formula.realize_to_formula, iff_eq_eq] at h
-  rw [← Function.comp.assoc _ _ (Fintype.equivFin _).symm,
-    Function.comp.assoc _ (Fintype.equivFin _).symm (Fintype.equivFin _), Equivₓ.symm_comp_self, Function.comp.right_id,
-    Function.comp.assoc, Sum.elim_comp_inl, Function.comp.assoc _ _ Sum.inr, Sum.elim_comp_inr, ←
-    Function.comp.assoc] at h
+  rw [← Function.comp.assoc _ _ (Fintypeₓ.equivFin _).symm,
+    Function.comp.assoc _ (Fintypeₓ.equivFin _).symm (Fintypeₓ.equivFin _), Equivₓ.symm_comp_self,
+    Function.comp.right_id, Function.comp.assoc, Sum.elim_comp_inl, Function.comp.assoc _ _ Sum.inr, Sum.elim_comp_inr,
+    ← Function.comp.assoc] at h
   refine' h.trans _
-  rw [Function.comp.assoc _ _ (Fintype.equivFin _), Equivₓ.symm_comp_self, Function.comp.right_id, Sum.elim_comp_inl,
+  rw [Function.comp.assoc _ _ (Fintypeₓ.equivFin _), Equivₓ.symm_comp_self, Function.comp.right_id, Sum.elim_comp_inl,
     Sum.elim_comp_inr, ← Set.inclusion_eq_id, bounded_formula.realize_restrict_free_var Set.Subset.rfl]
 
 @[simp]
@@ -121,9 +119,9 @@ theorem map_fun (φ : M ↪ₑ[L] N) {n : ℕ} (f : L.Functions n) (x : Finₓ n
   rw [eq_comm, h]
 
 @[simp]
-theorem map_rel (φ : M ↪ₑ[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) : RelMap r (φ ∘ x) ↔ RelMap r x := by
-  have h := φ.map_formula (r.formula var) x
-  exact h
+theorem map_rel (φ : M ↪ₑ[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) : RelMap r (φ ∘ x) ↔ RelMap r x :=
+  haveI h := φ.map_formula (r.formula var) x
+  h
 
 instance strongHomClass : StrongHomClass L (M ↪ₑ[L] N) M N where
   map_fun := map_fun

@@ -48,25 +48,23 @@ def homDiagram {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ Cat.objects.{v, v})) :
     exact congr_fun (limit.w (F ⋙ Cat.objects) f) Y
   map_id' := fun X => by
     ext f
-    dsimp'
+    dsimp
     simp [functor.congr_hom (F.map_id X) f]
   map_comp' := fun X Y Z f g => by
     ext h
-    dsimp'
+    dsimp
     simp [functor.congr_hom (F.map_comp f g) h, eq_to_hom_map]
     rfl
 
 @[simps]
 instance (F : J ⥤ Cat.{v, v}) : Category (limit (F ⋙ Cat.objects)) where
   Hom := fun X Y => limit (homDiagram X Y)
-  id := fun X =>
-    Types.Limit.mk.{v, v} (homDiagram X X) (fun j => 𝟙 _) fun j j' f => by
-      simp
+  id := fun X => Types.Limit.mk.{v, v} (homDiagram X X) (fun j => 𝟙 _) fun j j' f => by simp
   comp := fun X Y Z f g =>
     Types.Limit.mk.{v, v} (homDiagram X Z) (fun j => limit.π (homDiagram X Y) j f ≫ limit.π (homDiagram Y Z) j g)
       fun j j' h => by
       rw [← congr_fun (limit.w (hom_diagram X Y) h) f, ← congr_fun (limit.w (hom_diagram Y Z) h) g]
-      dsimp'
+      dsimp
       simp
   id_comp' := fun _ _ _ => by
     ext
@@ -104,19 +102,21 @@ def limitConeLift (F : J ⥤ Cat.{v, v}) (s : Cone F) : s.x ⟶ limitConeX F whe
       refine' eq_to_hom _ ≫ (s.π.app j).map f ≫ eq_to_hom _ <;> simp
       
     · intro j j' h
-      dsimp'
+      dsimp
       simp only [category.assoc, functor.map_comp, eq_to_hom_map, eq_to_hom_trans, eq_to_hom_trans_assoc]
       rw [← functor.comp_map]
       have := (s.π.naturality h).symm
-      conv at this => congr skip dsimp simp
+      conv at this =>
+      congr
+      skip
+      dsimp
+      simp
       erw [functor.congr_hom this f]
-      dsimp'
+      dsimp
       simp
       
-  map_id' := fun X => by
-    simp
-  map_comp' := fun X Y Z f g => by
-    simp
+  map_id' := fun X => by simp
+  map_comp' := fun X Y Z f g => by simp
 
 @[simp]
 theorem limit_π_hom_diagram_eq_to_hom {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ Cat.objects.{v, v})) (j : J) (h : X = Y) :
@@ -127,22 +127,18 @@ theorem limit_π_hom_diagram_eq_to_hom {F : J ⥤ Cat.{v, v}} (X Y : limit (F �
 /-- Auxiliary definition: the proposed cone is a limit cone. -/
 def limitConeIsLimit (F : J ⥤ Cat.{v, v}) : IsLimit (limitCone F) where
   lift := limitConeLift F
-  fac' := fun s j =>
-    CategoryTheory.Functor.ext
-      (by
-        tidy)
-      fun X Y f => Types.Limit.π_mk _ _ _ _
+  fac' := fun s j => CategoryTheory.Functor.ext (by tidy) fun X Y f => Types.Limit.π_mk _ _ _ _
   uniq' := fun s m w => by
     symm
     fapply CategoryTheory.Functor.ext
     · intro X
       ext
-      dsimp'
+      dsimp
       simp only [types.limit.lift_π_apply', ← w j]
       rfl
       
     · intro X Y f
-      dsimp'
+      dsimp
       simp [fun j => functor.congr_hom (w j).symm f]
       congr
       
@@ -162,12 +158,7 @@ instance :
         v} where PreservesLimitsOfShape := fun J _ =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (has_limits.limit_cone_is_limit F)
-          (limits.is_limit.of_iso_limit (limit.is_limit (F ⋙ Cat.objects))
-            (cones.ext
-              (by
-                rfl)
-              (by
-                tidy))) }
+          (limits.is_limit.of_iso_limit (limit.is_limit (F ⋙ Cat.objects)) (cones.ext (by rfl) (by tidy))) }
 
 end Cat
 

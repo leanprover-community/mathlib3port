@@ -69,13 +69,7 @@ structure Content (G : Type w) [TopologicalSpace G] where
   sup_le' : ∀ K₁ K₂ : Compacts G, to_fun (K₁ ⊔ K₂) ≤ to_fun K₁ + to_fun K₂
 
 instance : Inhabited (Content G) :=
-  ⟨{ toFun := fun K => 0,
-      mono' := by
-        simp ,
-      sup_disjoint' := by
-        simp ,
-      sup_le' := by
-        simp }⟩
+  ⟨{ toFun := fun K => 0, mono' := by simp, sup_disjoint' := by simp, sup_le' := by simp }⟩
 
 /-- Although the `to_fun` field of a content takes values in `ℝ≥0`, we register a coercion to
 functions taking values in `ℝ≥0∞` as most constructions below rely on taking suprs and infs, which
@@ -90,8 +84,7 @@ variable (μ : Content G)
 theorem apply_eq_coe_to_fun (K : Compacts G) : μ K = μ.toFun K :=
   rfl
 
-theorem mono (K₁ K₂ : Compacts G) (h : (K₁ : Set G) ⊆ K₂) : μ K₁ ≤ μ K₂ := by
-  simp [apply_eq_coe_to_fun, μ.mono' _ _ h]
+theorem mono (K₁ K₂ : Compacts G) (h : (K₁ : Set G) ⊆ K₂) : μ K₁ ≤ μ K₂ := by simp [apply_eq_coe_to_fun, μ.mono' _ _ h]
 
 theorem sup_disjoint (K₁ K₂ : Compacts G) (h : Disjoint (K₁ : Set G) K₂) : μ (K₁ ⊔ K₂) = μ K₁ + μ K₂ := by
   simp [apply_eq_coe_to_fun, μ.sup_disjoint' _ _ h]
@@ -146,7 +139,9 @@ theorem inner_content_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ �
   · exact ⟨⊥, empty_subset _, le_add_left h⟩
     
   have := Ennreal.sub_lt_self hU h.ne_bot h'ε
-  conv at this => rhs rw [inner_content]
+  conv at this =>
+  rhs
+  rw [inner_content]
   simp only [lt_supr_iff] at this
   rcases this with ⟨U, h1U, h2U⟩
   refine' ⟨U, h1U, _⟩
@@ -157,13 +152,13 @@ theorem inner_content_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ �
 contents. -/
 theorem inner_content_Sup_nat [T2Space G] (U : ℕ → Opens G) :
     μ.innerContent (⨆ i : ℕ, U i) ≤ ∑' i : ℕ, μ.innerContent (U i) := by
-  have h3 : ∀ (t : Finset ℕ) (K : ℕ → compacts G), μ (t.sup K) ≤ t.Sum fun i => μ (K i) := by
+  have h3 : ∀ (t : Finsetₓ ℕ) (K : ℕ → compacts G), μ (t.sup K) ≤ t.Sum fun i => μ (K i) := by
     intro t K
-    refine' Finset.induction_on t _ _
-    · simp only [μ.empty, nonpos_iff_eq_zero, Finset.sum_empty, Finset.sup_empty]
+    refine' Finsetₓ.induction_on t _ _
+    · simp only [μ.empty, nonpos_iff_eq_zero, Finsetₓ.sum_empty, Finsetₓ.sup_empty]
       
     · intro n s hn ih
-      rw [Finset.sup_insert, Finset.sum_insert hn]
+      rw [Finsetₓ.sup_insert, Finsetₓ.sum_insert hn]
       exact le_transₓ (μ.sup_le _ _) (add_le_add_left ih _)
       
   refine' supr₂_le fun K hK => _
@@ -172,17 +167,15 @@ theorem inner_content_Sup_nat [T2Space G] (U : ℕ → Opens G) :
   · convert hK
     rw [opens.supr_def, Subtype.coe_mk]
     
-  rcases K.compact.finite_compact_cover t (coe ∘ U) (fun i _ => (U _).Prop)
-      (by
-        simp only [ht]) with
+  rcases K.compact.finite_compact_cover t (coe ∘ U) (fun i _ => (U _).Prop) (by simp only [ht]) with
     ⟨K', h1K', h2K', h3K'⟩
   let L : ℕ → compacts G := fun n => ⟨K' n, h1K' n⟩
   convert le_transₓ (h3 t L) _
   · ext1
-    rw [compacts.coe_finset_sup, Finset.sup_eq_supr]
+    rw [compacts.coe_finset_sup, Finsetₓ.sup_eq_supr]
     exact h3K'
     
-  refine' le_transₓ (Finset.sum_le_sum _) (Ennreal.sum_le_tsum t)
+  refine' le_transₓ (Finsetₓ.sum_le_sum _) (Ennreal.sum_le_tsum t)
   intro i hi
   refine' le_transₓ _ (le_supr _ (L i))
   refine' le_transₓ _ (le_supr _ (h2K' i))
@@ -216,13 +209,12 @@ theorem inner_content_pos_of_is_mul_left_invariant [T2Space G] [Groupₓ G] [Top
   have : (Interior (U : Set G)).Nonempty
   rwa [U.prop.interior_eq]
   rcases compact_covered_by_mul_left_translates K.2 this with ⟨s, hs⟩
-  suffices μ K ≤ s.card * μ.inner_content U by
-    exact (ennreal.mul_pos_iff.mp <| hK.bot_lt.trans_le this).2
+  suffices μ K ≤ s.card * μ.inner_content U by exact (ennreal.mul_pos_iff.mp <| hK.bot_lt.trans_le this).2
   have : (K : Set G) ⊆ ↑(⨆ g ∈ s, opens.comap (Homeomorph.mulLeft g).toContinuousMap U) := by
     simpa only [opens.supr_def, opens.coe_comap, Subtype.coe_mk]
   refine' (μ.le_inner_content _ _ this).trans _
   refine' (rel_supr_sum μ.inner_content μ.inner_content_empty (· ≤ ·) μ.inner_content_Sup_nat _ _).trans _
-  simp only [μ.is_mul_left_invariant_inner_content h3, Finset.sum_const, nsmul_eq_mul, le_reflₓ]
+  simp only [μ.is_mul_left_invariant_inner_content h3, Finsetₓ.sum_const, nsmul_eq_mul, le_reflₓ]
 
 theorem inner_content_mono' ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2 : U ⊆ V) :
     μ.innerContent ⟨U, hU⟩ ≤ μ.innerContent ⟨V, hV⟩ :=
@@ -284,8 +276,7 @@ theorem outer_measure_lt_top_of_is_compact [LocallyCompactSpace G] {K : Set G} (
   rcases exists_compact_superset hK with ⟨F, h1F, h2F⟩
   calc
     μ.outer_measure K ≤ μ.outer_measure (Interior F) := outer_measure.mono' _ h2F
-    _ ≤ μ ⟨F, h1F⟩ := by
-      apply μ.outer_measure_le ⟨Interior F, is_open_interior⟩ ⟨F, h1F⟩ interior_subset
+    _ ≤ μ ⟨F, h1F⟩ := by apply μ.outer_measure_le ⟨Interior F, is_open_interior⟩ ⟨F, h1F⟩ interior_subset
     _ < ⊤ := μ.lt_top _
     
 
@@ -299,7 +290,7 @@ theorem outer_measure_caratheodory (A : Set G) :
     measurable_set[μ.OuterMeasure.caratheodory] A ↔
       ∀ U : Opens G, μ.OuterMeasure (U ∩ A) + μ.OuterMeasure (U \ A) ≤ μ.OuterMeasure U :=
   by
-  dsimp' [opens]
+  dsimp [opens]
   rw [Subtype.forall]
   apply induced_outer_measure_caratheodory
   apply inner_content_Union_nat
@@ -341,8 +332,7 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory := by
   refine' supr_le _
   rintro ⟨M, hM⟩
   simp only [subset_diff] at hM
-  have : (↑(L ⊔ M) : Set G) ⊆ U' := by
-    simp only [union_subset_iff, compacts.coe_sup, hM, hL, and_selfₓ]
+  have : (↑(L ⊔ M) : Set G) ⊆ U' := by simp only [union_subset_iff, compacts.coe_sup, hM, hL, and_selfₓ]
   rw [μ.outer_measure_of_is_open (↑U') U'.2]
   refine' le_transₓ (ge_of_eqₓ _) (μ.le_inner_content _ _ this)
   exact μ.sup_disjoint _ _ hM.2.symm

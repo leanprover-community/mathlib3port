@@ -13,9 +13,9 @@ especially properties of `finset.univ : finset (fin n)`.
 -/
 
 
-open Finset
+open Finsetₓ
 
-open Fintype
+open Fintypeₓ
 
 namespace Finₓ
 
@@ -60,9 +60,7 @@ theorem card_filter_univ_succ' (p : Finₓ (n + 1) → Prop) [DecidablePred p] :
 
 theorem card_filter_univ_succ (p : Finₓ (n + 1) → Prop) [DecidablePred p] :
     (univ.filter p).card = if p 0 then (univ.filter (p ∘ Finₓ.succ)).card + 1 else (univ.filter (p ∘ Finₓ.succ)).card :=
-  (card_filter_univ_succ' p).trans
-    (by
-      split_ifs <;> simp [add_commₓ 1])
+  (card_filter_univ_succ' p).trans (by split_ifs <;> simp [add_commₓ 1])
 
 theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : Vector α n) :
     (univ.filter fun i => a = v.nth i).card = v.toList.count a := by

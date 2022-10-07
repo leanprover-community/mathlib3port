@@ -129,10 +129,7 @@ variable {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 /-- The morphism between cycles induced by a chain map.
 -/
 abbrev cyclesMap (f : C₁ ⟶ C₂) (i : ι) : (C₁.cycles i : V) ⟶ (C₂.cycles i : V) :=
-  Subobject.factorThru _ ((C₁.cycles i).arrow ≫ f.f i)
-    (kernel_subobject_factors _ _
-      (by
-        simp ))
+  Subobject.factorThru _ ((C₁.cycles i).arrow ≫ f.f i) (kernel_subobject_factors _ _ (by simp))
 
 @[simp, reassoc, elementwise]
 theorem cycles_map_arrow (f : C₁ ⟶ C₂) (i : ι) : cyclesMap f i ≫ (C₂.cycles i).arrow = (C₁.cycles i).arrow ≫ f.f i := by
@@ -140,12 +137,12 @@ theorem cycles_map_arrow (f : C₁ ⟶ C₂) (i : ι) : cyclesMap f i ≫ (C₂.
 
 @[simp]
 theorem cycles_map_id (i : ι) : cyclesMap (𝟙 C₁) i = 𝟙 _ := by
-  dunfold cyclesMap
+  dsimp only [cyclesMap]
   simp
 
 @[simp]
 theorem cycles_map_comp (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) : cyclesMap (f ≫ g) i = cyclesMap f i ≫ cyclesMap g i := by
-  dunfold cyclesMap
+  dsimp only [cyclesMap]
   simp [subobject.factor_thru_right]
 
 variable (V c)

@@ -78,8 +78,7 @@ def chooseNat (x y : ℕ) (p : x ≤ y) : Genₓ (x .. y) :=
 /-- Generate a `nat` example between `x` and `y`. -/
 def chooseNat' (x y : ℕ) (p : x < y) : Genₓ (Set.Ico x y) :=
   have : ∀ i, x < i → i ≤ y → i.pred < y := fun i h₀ h₁ =>
-    show i.pred.succ ≤ y by
-      rwa [succ_pred_eq_of_pos] <;> apply lt_of_le_of_ltₓ (Nat.zero_leₓ _) h₀
+    show i.pred.succ ≤ y by rwa [succ_pred_eq_of_pos] <;> apply lt_of_le_of_ltₓ (Nat.zero_leₓ _) h₀
   (Subtype.map pred fun i (h : x + 1 ≤ i ∧ i ≤ y) => ⟨le_pred_of_ltₓ h.1, this _ h.1 h.2⟩) <$> choose (x + 1) y p
 
 open Nat
@@ -114,11 +113,7 @@ by the size parameter of `gen`. -/
 def listOf (cmd : Genₓ α) : Genₓ (List α) :=
   sized fun sz => do
     do
-      let ⟨n⟩ ←
-        Uliftable.up <|
-            choose_nat 0 (sz + 1)
-              (by
-                decide)
+      let ⟨n⟩ ← Uliftable.up <| choose_nat 0 (sz + 1) (by decide)
       let v ← vector_of n cmd
       return v
 
@@ -168,9 +163,7 @@ def freq (xs : List (ℕ+ × Genₓ α)) (pos : 0 < xs.length) : Genₓ α :=
           assumption
   have : 0 ≤ s - 1 := le_tsub_of_add_le_right ha
   (Uliftable.adaptUp Genₓ.{0} Genₓ.{u} (chooseNat 0 (s - 1) this)) fun i =>
-    freqAux xs i.1
-      (by
-        rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)
+    freqAux xs i.1 (by rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Generate a random permutation of a given list. -/
@@ -178,11 +171,7 @@ def permutationOf {α : Type u} : ∀ xs : List α, Genₓ (Subtype <| List.Perm
   | [] => pure ⟨[], List.Perm.nil⟩
   | x::xs => do
     let ⟨xs', h⟩ ← permutation_of xs
-    let ⟨⟨n, _, h'⟩⟩ ←
-      Uliftable.up <|
-          chooseNat 0 xs'.length
-            (by
-              decide)
+    let ⟨⟨n, _, h'⟩⟩ ← Uliftable.up <| chooseNat 0 xs'.length (by decide)
     pure ⟨List.insertNthₓ n x xs', List.Perm.trans (List.Perm.cons _ h) (List.perm_insert_nth _ _ h').symm⟩
 
 end Gen

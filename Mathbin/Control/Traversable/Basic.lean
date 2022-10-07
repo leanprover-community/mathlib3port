@@ -128,7 +128,7 @@ theorem preserves_seq {α β : Type u} : ∀ (x : F (α → β)) (y : F α), η 
 
 @[functor_norm]
 theorem preserves_map {α β} (x : α → β) (y : F α) : η (x <$> y) = x <$> η y := by
-  rw [← pure_seq_eq_map, η.preserves_seq] <;> simp' with functor_norm
+  rw [← pure_seq_eq_map, η.preserves_seq] <;> simp [functor_norm]
 
 theorem preserves_map' {α β} (x : α → β) : @η _ ∘ Functor.map x = Functor.map x ∘ @η _ := by
   ext y
@@ -139,10 +139,8 @@ end Preserves
 /-- The identity applicative transformation from an applicative functor to itself. -/
 def idTransformation : ApplicativeTransformation F F where
   app := fun α => id
-  preserves_pure' := by
-    simp
-  preserves_seq' := fun α β x y => by
-    simp
+  preserves_pure' := by simp
+  preserves_seq' := fun α β x y => by simp
 
 instance : Inhabited (ApplicativeTransformation F F) :=
   ⟨idTransformation⟩
@@ -154,10 +152,8 @@ variable {H : Type u → Type s} [Applicativeₓ H] [IsLawfulApplicative H]
 /-- The composition of applicative transformations. -/
 def comp (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G) : ApplicativeTransformation F H where
   app := fun α x => η' (η x)
-  preserves_pure' := fun α x => by
-    simp' with functor_norm
-  preserves_seq' := fun α β x y => by
-    simp' with functor_norm
+  preserves_pure' := fun α x => by simp [functor_norm]
+  preserves_seq' := fun α β x y => by simp [functor_norm]
 
 @[simp]
 theorem comp_apply (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G) {α : Type u} (x : F α) :
@@ -228,8 +224,7 @@ class IsLawfulTraversable (t : Type u → Type u) [Traversable t] extends IsLawf
 instance : Traversable id :=
   ⟨fun _ _ _ _ => id⟩
 
-instance : IsLawfulTraversable id := by
-  refine' { .. } <;> intros <;> rfl
+instance : IsLawfulTraversable id := by refine' { .. } <;> intros <;> rfl
 
 section
 

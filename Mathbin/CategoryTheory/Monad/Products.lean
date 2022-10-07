@@ -55,8 +55,8 @@ def coalgebraToOver : Coalgebra (prodComonad X) ⥤ Over X where
     Over.homMk f.f
       (by
         rw [over.mk_hom, ← f.h_assoc]
-        dsimp'
-        simp )
+        dsimp
+        simp)
 
 /-- The backward direction of the equivalence from coalgebras for the product comonad to the over
 category.
@@ -77,17 +77,15 @@ def coalgebraEquivOver : Coalgebra (prodComonad X) ≌ Over X where
         Coalgebra.isoMk (Iso.refl _)
           (prod.hom_ext
             (by
-              dsimp'
-              simp )
+              dsimp
+              simp)
             (by
-              dsimp'
+              dsimp
               simpa using A.counit)))
       fun A₁ A₂ f => by
       ext
       simp
-  counitIso :=
-    NatIso.ofComponents (fun f => Over.isoMk (Iso.refl _)) fun f g k => by
-      tidy
+  counitIso := NatIso.ofComponents (fun f => Over.isoMk (Iso.refl _)) fun f g k => by tidy
 
 end
 
@@ -114,8 +112,8 @@ def algebraToUnder : Monad.Algebra (coprodMonad X) ⥤ Under X where
     Under.homMk f.f
       (by
         rw [under.mk_hom, assoc, ← f.h]
-        dsimp'
-        simp )
+        dsimp
+        simp)
 
 /-- The backward direction of the equivalence from algebras for the coproduct monad to the under
 category.
@@ -135,23 +133,14 @@ def algebraEquivUnder : Monad.Algebra (coprodMonad X) ≌ Under X where
     NatIso.ofComponents
       (fun A =>
         Monad.Algebra.isoMk (Iso.refl _)
-          (coprod.hom_ext
+          (coprod.hom_ext (by tidy)
             (by
-              tidy)
-            (by
-              dsimp'
+              dsimp
               simpa using A.unit.symm)))
       fun A₁ A₂ f => by
       ext
       simp
-  counitIso :=
-    NatIso.ofComponents
-      (fun f =>
-        Under.isoMk (Iso.refl _)
-          (by
-            tidy))
-      fun f g k => by
-      tidy
+  counitIso := NatIso.ofComponents (fun f => Under.isoMk (Iso.refl _) (by tidy)) fun f g k => by tidy
 
 end
 

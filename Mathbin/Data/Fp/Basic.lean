@@ -43,8 +43,7 @@ def emin : ℤ :=
 def ValidFinite (e : ℤ) (m : ℕ) : Prop :=
   emin ≤ e + prec - 1 ∧ e + prec - 1 ≤ emax ∧ e = max (e + m.size - prec) emin
 
-instance decValidFinite (e m) : Decidable (ValidFinite e m) := by
-  unfold valid_finite <;> infer_instance
+instance decValidFinite (e m) : Decidable (ValidFinite e m) := by unfold valid_finite <;> infer_instance
 
 inductive Float
   | inf : Bool → float
@@ -74,12 +73,8 @@ theorem Float.Zero.valid : ValidFinite emin 0 :=
       simp only [emin, emax] at *
       ring_nf
       assumption
-    le_transₓ C.prec_max
-      (Nat.le_mul_of_pos_left
-        (by
-          decide)),
-    by
-    rw [max_eq_rightₓ] <;> simp [sub_eq_add_neg]⟩
+    le_transₓ C.prec_max (Nat.le_mul_of_pos_left (by decide)),
+    by rw [max_eq_rightₓ] <;> simp [sub_eq_add_neg]⟩
 
 def Float.zero (s : Bool) : Float :=
   Float.finite s emin 0 Float.Zero.valid
@@ -125,20 +120,14 @@ unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
 
 unsafe def next_up_pos (e m) (v : ValidFinite e m) : Float :=
   let m' := m.succ
-  if ss : m'.size = m.size then
-    Float.finite false e m'
-      (by
-        unfold valid_finite  at * <;> rw [ss] <;> exact v)
+  if ss : m'.size = m.size then Float.finite false e m' (by unfold valid_finite at * <;> rw [ss] <;> exact v)
   else if h : e = emax then Float.inf false else Float.finite false e.succ (Nat.div2 m') undefined
 
 unsafe def next_dn_pos (e m) (v : ValidFinite e m) : Float :=
   match m with
   | 0 => next_up_pos _ _ Float.Zero.valid
   | Nat.succ m' =>
-    if ss : m'.size = m.size then
-      Float.finite false e m'
-        (by
-          unfold valid_finite  at * <;> rw [ss] <;> exact v)
+    if ss : m'.size = m.size then Float.finite false e m' (by unfold valid_finite at * <;> rw [ss] <;> exact v)
     else if h : e = emin then Float.finite false emin m' undefined else Float.finite false e.pred (bit1 m') undefined
 
 unsafe def next_up : Float → Float

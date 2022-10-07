@@ -41,7 +41,7 @@ incidence matrix for each `simple_graph α` has the same type.
 -/
 
 
-open Finset Matrix SimpleGraph Sym2
+open Finsetₓ Matrix SimpleGraph Sym2
 
 open BigOperators Matrix
 
@@ -60,8 +60,7 @@ theorem inc_matrix_apply [Zero R] [One R] {a : α} {e : Sym2 α} : G.incMatrix R
 
 /-- Entries of the incidence matrix can be computed given additional decidable instances. -/
 theorem inc_matrix_apply' [Zero R] [One R] [DecidableEq α] [DecidableRel G.Adj] {a : α} {e : Sym2 α} :
-    G.incMatrix R a e = if e ∈ G.IncidenceSet a then 1 else 0 := by
-  convert rfl
+    G.incMatrix R a e = if e ∈ G.IncidenceSet a then 1 else 0 := by convert rfl
 
 section MulZeroOneClassₓ
 
@@ -70,7 +69,7 @@ variable [MulZeroOneClassₓ R] {a b : α} {e : Sym2 α}
 theorem inc_matrix_apply_mul_inc_matrix_apply :
     G.incMatrix R a e * G.incMatrix R b e = (G.IncidenceSet a ∩ G.IncidenceSet b).indicator 1 e := by
   classical
-  simp only [inc_matrix, Set.indicator_apply, ← ite_and_mul_zero, Pi.one_apply, mul_oneₓ, Set.mem_inter_eq]
+  simp only [inc_matrix, Set.indicator_apply, ← ite_and_mul_zero, Pi.one_apply, mul_oneₓ, Set.mem_inter_iff]
 
 theorem inc_matrix_apply_mul_inc_matrix_apply_of_not_adj (hab : a ≠ b) (h : ¬G.Adj a b) :
     G.incMatrix R a e * G.incMatrix R b e = 0 := by
@@ -98,7 +97,7 @@ end MulZeroOneClassₓ
 
 section NonAssocSemiringₓ
 
-variable [Fintype α] [NonAssocSemiringₓ R] {a b : α} {e : Sym2 α}
+variable [Fintypeₓ α] [NonAssocSemiringₓ R] {a b : α} {e : Sym2 α}
 
 theorem sum_inc_matrix_apply [DecidableEq α] [DecidableRel G.Adj] : (∑ e, G.incMatrix R a e) = G.degree a := by
   simp [inc_matrix_apply', sum_boole, Set.filter_mem_univ_eq_to_finset]
@@ -146,7 +145,7 @@ end NonAssocSemiringₓ
 
 section Semiringₓ
 
-variable [Fintype (Sym2 α)] [Semiringₓ R] {a b : α} {e : Sym2 α}
+variable [Fintypeₓ (Sym2 α)] [Semiringₓ R] {a b : α} {e : Sym2 α}
 
 theorem inc_matrix_mul_transpose_apply_of_adj (h : G.Adj a b) : (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a b = (1 : R) := by
   classical
@@ -157,7 +156,7 @@ theorem inc_matrix_mul_transpose_apply_of_adj (h : G.Adj a b) : (G.incMatrix R �
   rw [← coe_eq_singleton, coe_filter_univ]
   exact G.incidence_set_inter_incidence_set_of_adj h
 
-theorem inc_matrix_mul_transpose [Fintype α] [DecidableEq α] [DecidableRel G.Adj] :
+theorem inc_matrix_mul_transpose [Fintypeₓ α] [DecidableEq α] [DecidableRel G.Adj] :
     G.incMatrix R ⬝ (G.incMatrix R)ᵀ = fun a b => if a = b then G.degree a else if G.Adj a b then 1 else 0 := by
   ext a b
   split_ifs with h h'

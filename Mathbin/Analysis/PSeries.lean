@@ -40,7 +40,7 @@ terms of the partial sums of the other series.
 -/
 
 
-namespace Finset
+namespace Finsetₓ
 
 variable {M : Type _} [OrderedAddCommMonoid M] {f : ℕ → M}
 
@@ -82,7 +82,7 @@ theorem sum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m)
   convert add_le_add_left (nsmul_le_nsmul_of_le_right (sum_condensed_le' hf n) 2) (f 1)
   simp [sum_range_succ', add_commₓ, pow_succₓ, mul_nsmul, sum_nsmul]
 
-end Finset
+end Finsetₓ
 
 namespace Ennreal
 
@@ -91,7 +91,7 @@ variable {f : ℕ → ℝ≥0∞}
 theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) : (∑' k, f k) ≤ f 0 + ∑' k : ℕ, 2 ^ k * f (2 ^ k) :=
   by
   rw [Ennreal.tsum_eq_supr_nat' (Nat.tendsto_pow_at_top_at_top_of_one_lt _root_.one_lt_two)]
-  refine' supr_le fun n => (Finset.le_sum_condensed hf n).trans (add_le_add_left _ _)
+  refine' supr_le fun n => (Finsetₓ.le_sum_condensed hf n).trans (add_le_add_left _ _)
   simp only [nsmul_eq_mul, Nat.cast_powₓ, Nat.cast_two]
   apply Ennreal.sum_le_tsum
 
@@ -100,8 +100,8 @@ theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
   rw [Ennreal.tsum_eq_supr_nat' (tendsto_at_top_mono Nat.le_succₓ tendsto_id), two_mul, ← two_nsmul]
   refine'
     supr_le fun n =>
-      le_transₓ _ (add_le_add_left (nsmul_le_nsmul_of_le_right (Ennreal.sum_le_tsum <| Finset.ico 2 (2 ^ n + 1)) _) _)
-  simpa using Finset.sum_condensed_le hf n
+      le_transₓ _ (add_le_add_left (nsmul_le_nsmul_of_le_right (Ennreal.sum_le_tsum <| Finsetₓ.ico 2 (2 ^ n + 1)) _) _)
+  simpa using Finsetₓ.sum_condensed_le hf n
 
 end Ennreal
 
@@ -152,7 +152,7 @@ theorem Real.summable_nat_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ :
   · rw [← summable_condensed_iff_of_nonneg]
     · simp_rw [Nat.cast_powₓ, Nat.cast_two, ← rpow_nat_cast, ← rpow_mul zero_lt_two.le, mul_comm _ p,
         rpow_mul zero_lt_two.le, rpow_nat_cast, ← inv_pow, ← mul_powₓ, summable_geometric_iff_norm_lt_1]
-      nth_rw 0[← rpow_one 2]
+      nth_rw 0 [← rpow_one 2]
       rw [← division_def, ← rpow_sub zero_lt_two, norm_eq_abs, abs_of_pos (rpow_pos_of_pos zero_lt_two _),
         rpow_lt_one_iff zero_lt_two.le]
       norm_num
@@ -184,8 +184,7 @@ theorem Real.summable_nat_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → �
 
 /-- Test for convergence of the `p`-series: the real-valued series `∑' n : ℕ, 1 / n ^ p` converges
 if and only if `1 < p`. -/
-theorem Real.summable_one_div_nat_rpow {p : ℝ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ) ↔ 1 < p := by
-  simp
+theorem Real.summable_one_div_nat_rpow {p : ℝ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ) ↔ 1 < p := by simp
 
 /-- Test for convergence of the `p`-series: the real-valued series `∑' n : ℕ, (n ^ p)⁻¹` converges
 if and only if `1 < p`. -/
@@ -195,8 +194,7 @@ theorem Real.summable_nat_pow_inv {p : ℕ} : Summable (fun n => (n ^ p)⁻¹ : 
 
 /-- Test for convergence of the `p`-series: the real-valued series `∑' n : ℕ, 1 / n ^ p` converges
 if and only if `1 < p`. -/
-theorem Real.summable_one_div_nat_pow {p : ℕ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ) ↔ 1 < p := by
-  simp
+theorem Real.summable_one_div_nat_pow {p : ℕ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ) ↔ 1 < p := by simp
 
 /-- Harmonic series is not unconditionally summable. -/
 theorem Real.not_summable_nat_cast_inv : ¬Summable (fun n => n⁻¹ : ℕ → ℝ) := by
@@ -209,7 +207,7 @@ theorem Real.not_summable_one_div_nat_cast : ¬Summable (fun n => 1 / n : ℕ �
 
 /-- **Divergence of the Harmonic Series** -/
 theorem Real.tendsto_sum_range_one_div_nat_succ_at_top :
-    Tendsto (fun n => ∑ i in Finset.range n, (1 / (i + 1) : ℝ)) atTop atTop := by
+    Tendsto (fun n => ∑ i in Finsetₓ.range n, (1 / (i + 1) : ℝ)) atTop atTop := by
   rw [← not_summable_iff_tendsto_nat_at_top_of_nonneg]
   · exact_mod_cast mt (summable_nat_add_iff 1).1 Real.not_summable_one_div_nat_cast
     
@@ -221,15 +219,13 @@ theorem Nnreal.summable_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ : �
   simp [← Nnreal.summable_coe]
 
 @[simp]
-theorem Nnreal.summable_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → ℝ≥0) ↔ p < -1 := by
-  simp [← Nnreal.summable_coe]
+theorem Nnreal.summable_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → ℝ≥0) ↔ p < -1 := by simp [← Nnreal.summable_coe]
 
-theorem Nnreal.summable_one_div_rpow {p : ℝ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ≥0) ↔ 1 < p := by
-  simp
+theorem Nnreal.summable_one_div_rpow {p : ℝ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ≥0) ↔ 1 < p := by simp
 
 section
 
-open Finset
+open Finsetₓ
 
 variable {α : Type _} [LinearOrderedField α]
 
@@ -242,10 +238,8 @@ theorem sum_Ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) : (∑ i 
   apply (add_le_add IH le_rflₓ).trans
   simp only [sub_eq_add_neg, add_assocₓ, Nat.cast_addₓ, Nat.cast_oneₓ, le_add_neg_iff_add_le, add_le_iff_nonpos_right,
     neg_add_le_iff_le_add, add_zeroₓ]
-  have A : 0 < (n : α) := by
-    simpa using hk.bot_lt.trans_le hn
-  have B : 0 < (n : α) + 1 := by
-    linarith
+  have A : 0 < (n : α) := by simpa using hk.bot_lt.trans_le hn
+  have B : 0 < (n : α) + 1 := by linarith
   field_simp [B.ne']
   rw [div_le_div_iff _ A, ← sub_nonneg]
   · ring_nf
@@ -278,14 +272,12 @@ theorem sum_Ioo_inv_sq_le (k n : ℕ) : (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) 
       · simp only [Nat.cast_succₓ, one_div, sub_le_self_iff, inv_nonneg, Nat.cast_nonneg]
         
     _ ≤ 1 / (k + 1) + 1 / (k + 1) := by
-      have A : (1 : α) ≤ k + 1 := by
-        simp only [le_add_iff_nonneg_left, Nat.cast_nonneg]
+      have A : (1 : α) ≤ k + 1 := by simp only [le_add_iff_nonneg_left, Nat.cast_nonneg]
       simp_rw [← one_div]
       apply add_le_add_right
       refine' div_le_div zero_le_one le_rflₓ (zero_lt_one.trans_le A) _
       simpa using pow_le_pow A one_le_two
-    _ = 2 / (k + 1) := by
-      ring
+    _ = 2 / (k + 1) := by ring
     
 
 end

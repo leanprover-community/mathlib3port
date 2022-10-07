@@ -35,13 +35,7 @@ section cast
 
 @[simp, norm_cast]
 theorem cast_mul [NonAssocRing α] : ∀ m n, ((m * n : ℤ) : α) = m * n := fun m =>
-  Int.inductionOn' m 0
-    (by
-      simp )
-    (fun k _ ih n => by
-      simp [add_mulₓ, ih])
-    fun k _ ih n => by
-    simp [sub_mul, ih]
+  Int.inductionOn' m 0 (by simp) (fun k _ ih n => by simp [add_mulₓ, ih]) fun k _ ih n => by simp [sub_mul, ih]
 
 @[simp, norm_cast]
 theorem cast_ite [AddGroupWithOneₓ α] (P : Prop) [Decidable P] (m n : ℤ) : ((ite P m n : ℤ) : α) = ite P m n :=
@@ -64,8 +58,7 @@ theorem coe_cast_ring_hom [NonAssocRing α] : ⇑(castRingHom α) = coe :=
   rfl
 
 theorem cast_commute [NonAssocRing α] : ∀ (m : ℤ) (x : α), Commute (↑m) x
-  | (n : ℕ), x => by
-    simpa using n.cast_commute x
+  | (n : ℕ), x => by simpa using n.cast_commute x
   | -[1 + n], x => by
     simpa only [cast_neg_succ_of_nat, Commute.neg_left_iff, Commute.neg_right_iff] using (n + 1).cast_commute (-x)
 
@@ -75,7 +68,7 @@ theorem cast_comm [NonAssocRing α] (m : ℤ) (x : α) : (m : α) * x = x * m :=
 theorem commute_cast [NonAssocRing α] (x : α) (m : ℤ) : Commute x m :=
   (m.cast_commute x).symm
 
-theorem cast_mono [OrderedRing α] : Monotone (coe : ℤ → α) := by
+theorem cast_mono [OrderedRing α] : Monotoneₓ (coe : ℤ → α) := by
   intro m n h
   rw [← sub_nonneg] at h
   lift n - m to ℕ using h with k
@@ -84,21 +77,16 @@ theorem cast_mono [OrderedRing α] : Monotone (coe : ℤ → α) := by
 
 @[simp]
 theorem cast_nonneg [OrderedRing α] [Nontrivial α] : ∀ {n : ℤ}, (0 : α) ≤ n ↔ 0 ≤ n
-  | (n : ℕ) => by
-    simp
+  | (n : ℕ) => by simp
   | -[1 + n] => by
-    have : -(n : α) < 1 :=
-      lt_of_le_of_ltₓ
-        (by
-          simp )
-        zero_lt_one
+    have : -(n : α) < 1 := lt_of_le_of_ltₓ (by simp) zero_lt_one
     simpa [(neg_succ_lt_zero n).not_le, ← sub_eq_add_neg, le_neg] using this.not_le
 
 @[simp, norm_cast]
 theorem cast_le [OrderedRing α] [Nontrivial α] {m n : ℤ} : (m : α) ≤ n ↔ m ≤ n := by
   rw [← sub_nonneg, ← cast_sub, cast_nonneg, sub_nonneg]
 
-theorem cast_strict_mono [OrderedRing α] [Nontrivial α] : StrictMono (coe : ℤ → α) :=
+theorem cast_strict_mono [OrderedRing α] [Nontrivial α] : StrictMonoₓ (coe : ℤ → α) :=
   strict_mono_of_le_iff_le fun m n => cast_le.symm
 
 @[simp, norm_cast]
@@ -106,16 +94,13 @@ theorem cast_lt [OrderedRing α] [Nontrivial α] {m n : ℤ} : (m : α) < n ↔ 
   cast_strict_mono.lt_iff_lt
 
 @[simp]
-theorem cast_nonpos [OrderedRing α] [Nontrivial α] {n : ℤ} : (n : α) ≤ 0 ↔ n ≤ 0 := by
-  rw [← cast_zero, cast_le]
+theorem cast_nonpos [OrderedRing α] [Nontrivial α] {n : ℤ} : (n : α) ≤ 0 ↔ n ≤ 0 := by rw [← cast_zero, cast_le]
 
 @[simp]
-theorem cast_pos [OrderedRing α] [Nontrivial α] {n : ℤ} : (0 : α) < n ↔ 0 < n := by
-  rw [← cast_zero, cast_lt]
+theorem cast_pos [OrderedRing α] [Nontrivial α] {n : ℤ} : (0 : α) < n ↔ 0 < n := by rw [← cast_zero, cast_lt]
 
 @[simp]
-theorem cast_lt_zero [OrderedRing α] [Nontrivial α] {n : ℤ} : (n : α) < 0 ↔ n < 0 := by
-  rw [← cast_zero, cast_lt]
+theorem cast_lt_zero [OrderedRing α] [Nontrivial α] {n : ℤ} : (n : α) < 0 ↔ n < 0 := by rw [← cast_zero, cast_lt]
 
 section LinearOrderedRing
 
@@ -123,18 +108,16 @@ variable [LinearOrderedRing α] {a b : ℤ} (n : ℤ)
 
 @[simp, norm_cast]
 theorem cast_min : (↑(min a b) : α) = min a b :=
-  Monotone.map_min cast_mono
+  Monotoneₓ.map_min cast_mono
 
 @[simp, norm_cast]
 theorem cast_max : (↑(max a b) : α) = max a b :=
-  Monotone.map_max cast_mono
+  Monotoneₓ.map_max cast_mono
 
 @[simp, norm_cast]
-theorem cast_abs : ((abs a : ℤ) : α) = abs a := by
-  simp [abs_eq_max_neg]
+theorem cast_abs : ((abs a : ℤ) : α) = abs a := by simp [abs_eq_max_neg]
 
-theorem cast_one_le_of_pos (h : 0 < a) : (1 : α) ≤ a := by
-  exact_mod_cast Int.add_one_le_of_ltₓ h
+theorem cast_one_le_of_pos (h : 0 < a) : (1 : α) ≤ a := by exact_mod_cast Int.add_one_le_of_ltₓ h
 
 theorem cast_le_neg_one_of_neg (h : a < 0) : (a : α) ≤ -1 := by
   rw [← Int.cast_oneₓ, ← Int.cast_neg, cast_le]
@@ -149,17 +132,11 @@ theorem nneg_mul_add_sq_of_abs_le_one {x : α} (hx : abs x ≤ 1) : (0 : α) ≤
     rw [add_right_negₓ]
   rw [← mul_addₓ, mul_nonneg_iff]
   rcases lt_trichotomyₓ n 0 with (h | rfl | h)
-  · exact
-      Or.inr
-        ⟨by
-          exact_mod_cast h.le, hnx' h⟩
+  · exact Or.inr ⟨by exact_mod_cast h.le, hnx' h⟩
     
   · simp [le_totalₓ 0 x]
     
-  · exact
-      Or.inl
-        ⟨by
-          exact_mod_cast h.le, hnx h⟩
+  · exact Or.inl ⟨by exact_mod_cast h.le, hnx h⟩
     
 
 theorem cast_nat_abs : (n.natAbs : α) = abs n := by
@@ -183,11 +160,8 @@ namespace Prod
 variable [AddGroupWithOneₓ α] [AddGroupWithOneₓ β]
 
 instance : AddGroupWithOneₓ (α × β) :=
-  { Prod.addMonoidWithOne, Prod.addGroup with intCast := fun n => (n, n),
-    int_cast_of_nat := fun _ => by
-      simp <;> rfl,
-    int_cast_neg_succ_of_nat := fun _ => by
-      simp <;> rfl }
+  { Prod.addMonoidWithOne, Prod.addGroup with intCast := fun n => (n, n), int_cast_of_nat := fun _ => by simp <;> rfl,
+    int_cast_neg_succ_of_nat := fun _ => by simp <;> rfl }
 
 @[simp]
 theorem fst_int_cast (n : ℤ) : (n : α × β).fst = n :=
@@ -216,8 +190,7 @@ theorem ext_int [AddMonoidₓ A] {f g : ℤ →+ A} (h1 : f 1 = g 1) : f = g :=
 variable [AddGroupWithOneₓ A]
 
 theorem eq_int_cast_hom (f : ℤ →+ A) (h1 : f 1 = 1) : f = Int.castAddHom A :=
-  ext_int <| by
-    simp [h1]
+  ext_int <| by simp [h1]
 
 end AddMonoidHom
 
@@ -267,11 +240,11 @@ end MonoidWithZeroHom
 /-- If two `monoid_with_zero_hom`s agree on `-1` and the _positive_ naturals then they are equal. -/
 theorem ext_int' [MonoidWithZeroₓ α] [MonoidWithZeroHomClass F ℤ α] {f g : F} (h_neg_one : f (-1) = g (-1))
     (h_pos : ∀ n : ℕ, 0 < n → f n = g n) : f = g :=
-  (FunLike.ext _ _) fun n => by
-    have :=
+  (FunLike.ext _ _) fun n =>
+    haveI :=
       FunLike.congr_fun
         (@MonoidWithZeroHom.ext_int _ _ (f : ℤ →*₀ α) (g : ℤ →*₀ α) h_neg_one <| MonoidWithZeroHom.ext_nat h_pos) n
-    exact this
+    this
 
 section NonAssocRing
 

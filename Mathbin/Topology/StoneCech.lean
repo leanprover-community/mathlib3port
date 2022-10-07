@@ -160,10 +160,7 @@ variable [CompactSpace γ]
 theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.extend f) := by
   have : ∀ b : Ultrafilter α, ∃ c, Tendsto f (comap pure (𝓝 b)) (𝓝 c) := fun b =>
     -- b.map f is an ultrafilter on γ, which is compact, so it converges to some c in γ.
-    let ⟨c, _, h⟩ :=
-      compact_univ.ultrafilter_le_nhds (b.map f)
-        (by
-          rw [le_principal_iff] <;> exact univ_mem)
+    let ⟨c, _, h⟩ := compact_univ.ultrafilter_le_nhds (b.map f) (by rw [le_principal_iff] <;> exact univ_mem)
     ⟨c, le_transₓ (map_mono (ultrafilter_comap_pure_nhds _)) h⟩
   letI : TopologicalSpace α := ⊥
   haveI : NormalSpace γ := normal_of_compact_t2
@@ -215,11 +212,9 @@ def StoneCech : Type u :=
 
 variable {α}
 
-instance : TopologicalSpace (StoneCech α) := by
-  unfold StoneCech <;> infer_instance
+instance : TopologicalSpace (StoneCech α) := by unfold StoneCech <;> infer_instance
 
-instance [Inhabited α] : Inhabited (StoneCech α) := by
-  unfold StoneCech <;> infer_instance
+instance [Inhabited α] : Inhabited (StoneCech α) := by unfold StoneCech <;> infer_instance
 
 /-- The natural map from α to its Stone-Čech compactification. -/
 def stoneCechUnit (x : α) : StoneCech α :=
@@ -264,8 +259,7 @@ theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x)
   trans f x
   swap
   symm
-  all_goals
-    refine' ultrafilter_extend_eq_iff.mpr (le_transₓ (map_mono _) (hf.tendsto _))
+  all_goals refine' ultrafilter_extend_eq_iff.mpr (le_transₓ (map_mono _) (hf.tendsto _))
   · apply pure_le_nhds
     
   · exact ux
@@ -273,8 +267,7 @@ theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x)
 
 theorem continuous_stone_cech_unit : Continuous (stoneCechUnit : α → StoneCech α) :=
   continuous_iff_ultrafilter.mpr fun x g gx => by
-    have : ↑(g.map pure) ≤ 𝓝 g := by
-      rw [ultrafilter_converges_iff] <;> exact (bind_pureₓ _).symm
+    have : ↑(g.map pure) ≤ 𝓝 g := by rw [ultrafilter_converges_iff] <;> exact (bind_pureₓ _).symm
     have : (g.map stoneCechUnit : Filter (StoneCech α)) ≤ 𝓝 ⟦g⟧ :=
       continuous_at_iff_ultrafilter.mp (continuous_quotient_mk.Tendsto g) _ this
     rwa [show ⟦g⟧ = ⟦pure x⟧ from Quotientₓ.sound <| convergent_eqv_pure gx] at this

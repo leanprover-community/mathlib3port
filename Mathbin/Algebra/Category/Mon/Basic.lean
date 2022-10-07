@@ -29,7 +29,7 @@ def Mon : Type (u + 1) :=
   Bundled Monoidₓ
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident AddMon]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident AddMon]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Mon
 
 /-- `monoid_hom` doesn't actually assume associativity. This alias is needed to make the category
@@ -59,14 +59,14 @@ def of (M : Type u) [Monoidₓ M] : Mon :=
   Bundled.of M
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident AddMon.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident AddMon.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typecheck a `monoid_hom` as a morphism in `Mon`. -/
 @[to_additive]
 def ofHom {X Y : Type u} [Monoidₓ X] [Monoidₓ Y] (f : X →* Y) : of X ⟶ of Y :=
   f
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident AddMon.of_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident AddMon.of_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp]
 theorem of_hom_apply {X Y : Type u} [Monoidₓ X] [Monoidₓ Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
   rfl
@@ -95,7 +95,7 @@ def CommMon : Type (u + 1) :=
   Bundled CommMonoidₓ
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident AddCommMon]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident AddCommMon]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace CommMon
 
 @[to_additive]
@@ -116,7 +116,7 @@ def of (M : Type u) [CommMonoidₓ M] : CommMon :=
   Bundled.of M
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident AddCommMon.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident AddCommMon.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[to_additive]
 instance : Inhabited CommMon :=
   ⟨-- The default instance for `comm_monoid punit` is derived via `punit.comm_ring`,
@@ -157,10 +157,8 @@ example (R : CommMon.{u}) : R ⟶ R :=
       match_target(R : Type u)
       match_hyp x : (R : Type u)
       exact x * x,
-    map_one' := by
-      simp ,
-    map_mul' := fun x y => by
-      rw [mul_assoc x y (x * y), ← mul_assoc y x y, mul_comm y x, mul_assoc, mul_assoc] }
+    map_one' := by simp,
+    map_mul' := fun x y => by rw [mul_assoc x y (x * y), ← mul_assoc y x y, mul_comm y x, mul_assoc, mul_assoc] }
 
 variable {X Y : Type u}
 
@@ -245,6 +243,5 @@ reflect isomorphisms.
 -/
 
 
-example : ReflectsIsomorphisms (forget₂ CommMon Mon) := by
-  infer_instance
+example : ReflectsIsomorphisms (forget₂ CommMon Mon) := by infer_instance
 

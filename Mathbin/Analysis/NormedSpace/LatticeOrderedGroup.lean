@@ -50,7 +50,7 @@ class NormedLatticeAddCommGroup (α : Type _) extends NormedAddCommGroup α, Lat
 theorem solid {α : Type _} [NormedLatticeAddCommGroup α] {a b : α} (h : |a| ≤ |b|) : ∥a∥ ≤ ∥b∥ :=
   NormedLatticeAddCommGroup.solid a b h
 
-noncomputable instance : NormedLatticeAddCommGroup ℝ where
+instance : NormedLatticeAddCommGroup ℝ where
   add_le_add_left := fun _ _ h _ => add_le_add le_rflₓ h
   solid := fun _ _ => id
 
@@ -74,10 +74,10 @@ open LatticeOrderedCommGroup
 theorem dual_solid (a b : α) (h : b ⊓ -b ≤ a ⊓ -a) : ∥a∥ ≤ ∥b∥ := by
   apply solid
   rw [abs_eq_sup_neg]
-  nth_rw 0[← neg_negₓ a]
+  nth_rw 0 [← neg_negₓ a]
   rw [← neg_inf_eq_sup_neg]
   rw [abs_eq_sup_neg]
-  nth_rw 0[← neg_negₓ b]
+  nth_rw 0 [← neg_negₓ b]
   rwa [← neg_inf_eq_sup_neg, neg_le_neg_iff, @inf_comm _ _ _ b, @inf_comm _ _ _ a]
 
 -- see Note [lower instance priority]
@@ -96,8 +96,7 @@ theorem norm_inf_sub_inf_le_add_norm (a b c d : α) : ∥a ⊓ b - c ⊓ d∥ �
   refine' le_transₓ (solid _) (norm_add_le |a - c| |b - d|)
   rw [abs_of_nonneg (|a - c| + |b - d|) (add_nonneg (abs_nonneg (a - c)) (abs_nonneg (b - d)))]
   calc
-    |a ⊓ b - c ⊓ d| = |a ⊓ b - c ⊓ b + (c ⊓ b - c ⊓ d)| := by
-      rw [sub_add_sub_cancel]
+    |a ⊓ b - c ⊓ d| = |a ⊓ b - c ⊓ b + (c ⊓ b - c ⊓ d)| := by rw [sub_add_sub_cancel]
     _ ≤ |a ⊓ b - c ⊓ b| + |c ⊓ b - c ⊓ d| := abs_add_le _ _
     _ ≤ |a - c| + |b - d| := by
       apply add_le_add
@@ -113,8 +112,7 @@ theorem norm_sup_sub_sup_le_add_norm (a b c d : α) : ∥a ⊔ b - c ⊔ d∥ �
   refine' le_transₓ (solid _) (norm_add_le |a - c| |b - d|)
   rw [abs_of_nonneg (|a - c| + |b - d|) (add_nonneg (abs_nonneg (a - c)) (abs_nonneg (b - d)))]
   calc
-    |a ⊔ b - c ⊔ d| = |a ⊔ b - c ⊔ b + (c ⊔ b - c ⊔ d)| := by
-      rw [sub_add_sub_cancel]
+    |a ⊔ b - c ⊔ d| = |a ⊔ b - c ⊔ b + (c ⊔ b - c ⊔ d)| := by rw [sub_add_sub_cancel]
     _ ≤ |a ⊔ b - c ⊔ b| + |c ⊔ b - c ⊔ d| := abs_add_le _ _
     _ ≤ |a - c| + |b - d| := by
       apply add_le_add

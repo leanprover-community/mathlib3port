@@ -34,24 +34,13 @@ variable (B : Type u) [Bicategory.{w, v} B]
 isomorphisms given by equalities.
 -/
 class Bicategory.Strict : Prop where
-  id_comp' : ∀ {a b : B} (f : a ⟶ b), 𝟙 a ≫ f = f := by
-    run_tac
-      obviously
-  comp_id' : ∀ {a b : B} (f : a ⟶ b), f ≫ 𝟙 b = f := by
-    run_tac
-      obviously
-  assoc' : ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d), (f ≫ g) ≫ h = f ≫ g ≫ h := by
-    run_tac
-      obviously
-  left_unitor_eq_to_iso' : ∀ {a b : B} (f : a ⟶ b), λ_ f = eqToIso (id_comp' f) := by
-    run_tac
-      obviously
-  right_unitor_eq_to_iso' : ∀ {a b : B} (f : a ⟶ b), ρ_ f = eqToIso (comp_id' f) := by
-    run_tac
-      obviously
+  id_comp' : ∀ {a b : B} (f : a ⟶ b), 𝟙 a ≫ f = f := by obviously
+  comp_id' : ∀ {a b : B} (f : a ⟶ b), f ≫ 𝟙 b = f := by obviously
+  assoc' : ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d), (f ≫ g) ≫ h = f ≫ g ≫ h := by obviously
+  left_unitor_eq_to_iso' : ∀ {a b : B} (f : a ⟶ b), λ_ f = eqToIso (id_comp' f) := by obviously
+  right_unitor_eq_to_iso' : ∀ {a b : B} (f : a ⟶ b), ρ_ f = eqToIso (comp_id' f) := by obviously
   associator_eq_to_iso' : ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d), α_ f g h = eqToIso (assoc' f g h) := by
-    run_tac
-      obviously
+    obviously
 
 restate_axiom bicategory.strict.id_comp'
 

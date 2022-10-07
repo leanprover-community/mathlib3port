@@ -16,10 +16,10 @@ universe u u' v w z
 whose rows are indexed by the fintype `m` and
 whose columns are indexed by the fintype `n`. -/
 @[nolint unused_arguments]
-def Dmatrix (m : Type u) (n : Type u') [Fintype m] [Fintype n] (α : m → n → Type v) : Type max u u' v :=
+def Dmatrix (m : Type u) (n : Type u') [Fintypeₓ m] [Fintypeₓ n] (α : m → n → Type v) : Type max u u' v :=
   ∀ i j, α i j
 
-variable {l m n o : Type _} [Fintype l] [Fintype m] [Fintype n] [Fintype o]
+variable {l m n o : Type _} [Fintypeₓ l] [Fintypeₓ m] [Fintypeₓ n] [Fintypeₓ o]
 
 variable {α : m → n → Type v}
 
@@ -30,8 +30,7 @@ section Ext
 variable {M N : Dmatrix m n α}
 
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
-  ⟨fun h => funext fun i => funext <| h i, fun h => by
-    simp [h]⟩
+  ⟨fun h => funext fun i => funext <| h i, fun h => by simp [h]⟩
 
 @[ext]
 theorem ext : (∀ i j, M i j = N i j) → M = N :=
@@ -157,8 +156,7 @@ induced by an `add_monoid_hom` between their coefficients. -/
 def AddMonoidHom.mapDmatrix [∀ i j, AddMonoidₓ (α i j)] {β : m → n → Type w} [∀ i j, AddMonoidₓ (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) : Dmatrix m n α →+ Dmatrix m n β where
   toFun := fun M => M.map fun i j => @f i j
-  map_zero' := by
-    simp
+  map_zero' := by simp
   map_add' := Dmatrix.map_add f
 
 @[simp]

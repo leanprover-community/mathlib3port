@@ -58,7 +58,7 @@ In this file we use the following notation
 
 open MvPolynomial
 
-open Finset hiding map
+open Finsetₓ hiding map
 
 open Finsupp (single)
 
@@ -239,25 +239,24 @@ theorem X_in_terms_of_W_vars_aux (n : ℕ) : n ∈ (xInTermsOfW p ℚ n).vars �
   · apply nonzero_of_invertible
     
   on_goal 1 =>
-    simp only [true_andₓ, true_orₓ, eq_self_iff_true, mem_union, mem_singleton]
-    intro i
-    rw [mem_union, mem_union]
-    apply Or.impₓ id
-  on_goal 2 =>
-    rw [vars_X, disjoint_singleton_left]
+  simp only [true_andₓ, true_orₓ, eq_self_iff_true, mem_union, mem_singleton]
+  intro i
+  rw [mem_union, mem_union]
+  apply Or.impₓ id
+  on_goal 2 => rw [vars_X, disjoint_singleton_left]
   all_goals
-    intro H
-    replace H := vars_sum_subset _ _ H
-    rw [mem_bUnion] at H
-    rcases H with ⟨j, hj, H⟩
-    rw [vars_C_mul] at H
-    swap
-    · apply pow_ne_zero
-      exact_mod_cast hp.1.ne_zero
-      
-    rw [mem_range] at hj
-    replace H := (ih j hj).2 (vars_pow _ _ H)
-    rw [mem_range] at H
+  intro H
+  replace H := vars_sum_subset _ _ H
+  rw [mem_bUnion] at H
+  rcases H with ⟨j, hj, H⟩
+  rw [vars_C_mul] at H
+  swap
+  · apply pow_ne_zero
+    exact_mod_cast hp.1.ne_zero
+    
+  rw [mem_range] at hj
+  replace H := (ih j hj).2 (vars_pow _ _ H)
+  rw [mem_range] at H
   · rw [mem_range]
     exact lt_of_lt_of_leₓ H hj
     

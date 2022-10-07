@@ -21,7 +21,7 @@ instance equivFunctorPerm : EquivFunctor Perm where map := fun α β e p => (e.s
 
 -- There is a classical instance of `is_lawful_functor finset` available,
 -- but we provide this computable alternative separately.
-instance equivFunctorFinset : EquivFunctor Finset where map := fun α β e s => s.map e.toEmbedding
+instance equivFunctorFinset : EquivFunctor Finsetₓ where map := fun α β e s => s.map e.toEmbedding
 
-instance equivFunctorFintype : EquivFunctor Fintype where map := fun α β e s => Fintype.ofBijective e e.bijective
+instance equivFunctorFintype : EquivFunctor Fintypeₓ where map := fun α β e s => Fintypeₓ.ofBijective e e.bijective
 

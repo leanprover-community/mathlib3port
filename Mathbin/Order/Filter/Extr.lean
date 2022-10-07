@@ -249,40 +249,41 @@ theorem IsExtrOn.inter (hf : IsExtrOn f s a) (t) : IsExtrOn f (s ∩ t) a :=
 /-! ### Composition with (anti)monotone functions -/
 
 
-theorem IsMinFilter.comp_mono (hf : IsMinFilter f l a) {g : β → γ} (hg : Monotone g) : IsMinFilter (g ∘ f) l a :=
+theorem IsMinFilter.comp_mono (hf : IsMinFilter f l a) {g : β → γ} (hg : Monotoneₓ g) : IsMinFilter (g ∘ f) l a :=
   (mem_of_superset hf) fun x hx => hg hx
 
-theorem IsMaxFilter.comp_mono (hf : IsMaxFilter f l a) {g : β → γ} (hg : Monotone g) : IsMaxFilter (g ∘ f) l a :=
+theorem IsMaxFilter.comp_mono (hf : IsMaxFilter f l a) {g : β → γ} (hg : Monotoneₓ g) : IsMaxFilter (g ∘ f) l a :=
   (mem_of_superset hf) fun x hx => hg hx
 
-theorem IsExtrFilter.comp_mono (hf : IsExtrFilter f l a) {g : β → γ} (hg : Monotone g) : IsExtrFilter (g ∘ f) l a :=
+theorem IsExtrFilter.comp_mono (hf : IsExtrFilter f l a) {g : β → γ} (hg : Monotoneₓ g) : IsExtrFilter (g ∘ f) l a :=
   hf.elim (fun hf => (hf.comp_mono hg).is_extr) fun hf => (hf.comp_mono hg).is_extr
 
-theorem IsMinFilter.comp_antitone (hf : IsMinFilter f l a) {g : β → γ} (hg : Antitone g) : IsMaxFilter (g ∘ f) l a :=
+theorem IsMinFilter.comp_antitone (hf : IsMinFilter f l a) {g : β → γ} (hg : Antitoneₓ g) : IsMaxFilter (g ∘ f) l a :=
   hf.dual.comp_mono fun x y h => hg h
 
-theorem IsMaxFilter.comp_antitone (hf : IsMaxFilter f l a) {g : β → γ} (hg : Antitone g) : IsMinFilter (g ∘ f) l a :=
+theorem IsMaxFilter.comp_antitone (hf : IsMaxFilter f l a) {g : β → γ} (hg : Antitoneₓ g) : IsMinFilter (g ∘ f) l a :=
   hf.dual.comp_mono fun x y h => hg h
 
-theorem IsExtrFilter.comp_antitone (hf : IsExtrFilter f l a) {g : β → γ} (hg : Antitone g) : IsExtrFilter (g ∘ f) l a :=
+theorem IsExtrFilter.comp_antitone (hf : IsExtrFilter f l a) {g : β → γ} (hg : Antitoneₓ g) :
+    IsExtrFilter (g ∘ f) l a :=
   hf.dual.comp_mono fun x y h => hg h
 
-theorem IsMinOn.comp_mono (hf : IsMinOn f s a) {g : β → γ} (hg : Monotone g) : IsMinOn (g ∘ f) s a :=
+theorem IsMinOn.comp_mono (hf : IsMinOn f s a) {g : β → γ} (hg : Monotoneₓ g) : IsMinOn (g ∘ f) s a :=
   hf.comp_mono hg
 
-theorem IsMaxOn.comp_mono (hf : IsMaxOn f s a) {g : β → γ} (hg : Monotone g) : IsMaxOn (g ∘ f) s a :=
+theorem IsMaxOn.comp_mono (hf : IsMaxOn f s a) {g : β → γ} (hg : Monotoneₓ g) : IsMaxOn (g ∘ f) s a :=
   hf.comp_mono hg
 
-theorem IsExtrOn.comp_mono (hf : IsExtrOn f s a) {g : β → γ} (hg : Monotone g) : IsExtrOn (g ∘ f) s a :=
+theorem IsExtrOn.comp_mono (hf : IsExtrOn f s a) {g : β → γ} (hg : Monotoneₓ g) : IsExtrOn (g ∘ f) s a :=
   hf.comp_mono hg
 
-theorem IsMinOn.comp_antitone (hf : IsMinOn f s a) {g : β → γ} (hg : Antitone g) : IsMaxOn (g ∘ f) s a :=
+theorem IsMinOn.comp_antitone (hf : IsMinOn f s a) {g : β → γ} (hg : Antitoneₓ g) : IsMaxOn (g ∘ f) s a :=
   hf.comp_antitone hg
 
-theorem IsMaxOn.comp_antitone (hf : IsMaxOn f s a) {g : β → γ} (hg : Antitone g) : IsMinOn (g ∘ f) s a :=
+theorem IsMaxOn.comp_antitone (hf : IsMaxOn f s a) {g : β → γ} (hg : Antitoneₓ g) : IsMinOn (g ∘ f) s a :=
   hf.comp_antitone hg
 
-theorem IsExtrOn.comp_antitone (hf : IsExtrOn f s a) {g : β → γ} (hg : Antitone g) : IsExtrOn (g ∘ f) s a :=
+theorem IsExtrOn.comp_antitone (hf : IsExtrOn f s a) {g : β → γ} (hg : Antitoneₓ g) : IsExtrOn (g ∘ f) s a :=
   hf.comp_antitone hg
 
 theorem IsMinFilter.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
@@ -327,8 +328,7 @@ theorem IsExtrOn.on_preimage (g : δ → α) {b : δ} (hf : IsExtrOn f s (g b)) 
   hf.elim (fun hf => (hf.on_preimage g).is_extr) fun hf => (hf.on_preimage g).is_extr
 
 theorem IsMinOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMinOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
-    IsMinOn (f ∘ g) t b := fun y hy => by
-  simpa only [mem_set_of_eq, ha, (· ∘ ·)] using hf (hg hy)
+    IsMinOn (f ∘ g) t b := fun y hy => by simpa only [mem_set_of_eq, ha, (· ∘ ·)] using hf (hg hy)
 
 theorem IsMaxOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMaxOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
     IsMaxOn (f ∘ g) t b :=
@@ -525,9 +525,9 @@ section ConditionallyCompleteLinearOrder
 
 variable [ConditionallyCompleteLinearOrder α] {f : β → α} {s : Set β} {x₀ : β}
 
-theorem IsMaxOn.supr_eq (hx₀ : x₀ ∈ s) (h : IsMaxOn f s x₀) : (⨆ x : s, f x) = f x₀ := by
+theorem IsMaxOn.supr_eq (hx₀ : x₀ ∈ s) (h : IsMaxOn f s x₀) : (⨆ x : s, f x) = f x₀ :=
   haveI : Nonempty s := ⟨⟨x₀, hx₀⟩⟩
-  exact csupr_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.Prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
+  csupr_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.Prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
 
 theorem IsMinOn.infi_eq (hx₀ : x₀ ∈ s) (h : IsMinOn f s x₀) : (⨅ x : s, f x) = f x₀ :=
   @IsMaxOn.supr_eq αᵒᵈ β _ _ _ _ hx₀ h

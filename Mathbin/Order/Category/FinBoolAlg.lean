@@ -29,7 +29,7 @@ open CategoryTheory OrderDual Opposite
 /-- The category of finite boolean algebras with bounded lattice morphisms. -/
 structure FinBoolAlg where
   toBoolAlg : BoolAlg
-  [isFintype : Fintype to_BoolAlg]
+  [isFintype : Fintypeₓ to_BoolAlg]
 
 namespace FinBoolAlg
 
@@ -46,11 +46,11 @@ theorem coe_to_BoolAlg (X : FinBoolAlg) : ↥X.toBoolAlg = ↥X :=
   rfl
 
 /-- Construct a bundled `FinBoolAlg` from `boolean_algebra` + `fintype`. -/
-def of (α : Type _) [BooleanAlgebra α] [Fintype α] : FinBoolAlg :=
+def of (α : Type _) [BooleanAlgebra α] [Fintypeₓ α] : FinBoolAlg :=
   ⟨⟨α⟩⟩
 
 @[simp]
-theorem coe_of (α : Type _) [BooleanAlgebra α] [Fintype α] : ↥(of α) = α :=
+theorem coe_of (α : Type _) [BooleanAlgebra α] [Fintypeₓ α] : ↥(of α) = α :=
   rfl
 
 instance : Inhabited FinBoolAlg :=
@@ -79,9 +79,9 @@ instance hasForgetToFinPartialOrder :
       map := fun X Y f => show OrderHom X Y from ↑(show BoundedLatticeHom X Y from f) }
 
 instance forget_to_FinPartialOrder_faithful : Faithful (forget₂ FinBoolAlg FinPartialOrder) :=
-  ⟨fun X Y f g h => by
-    have := congr_arg (coeFn : _ → X → Y) h
-    exact FunLike.coe_injective this⟩
+  ⟨fun X Y f g h =>
+    haveI := congr_arg (coeFn : _ → X → Y) h
+    FunLike.coe_injective this⟩
 
 /-- Constructs an equivalence between finite Boolean algebras from an order isomorphism between
 them. -/
@@ -112,7 +112,7 @@ end FinBoolAlg
 
 /-- The powerset functor. `set` as a functor. -/
 @[simps]
-def fintypeToFinBoolAlgOp : Fintypeₓ ⥤ FinBoolAlgᵒᵖ where
+def fintypeToFinBoolAlgOp : Fintypeₓₓ ⥤ FinBoolAlgᵒᵖ where
   obj := fun X => op <| FinBoolAlg.of (Set X)
   map := fun X Y f => Quiver.Hom.op <| (CompleteLatticeHom.setPreimage f : BoundedLatticeHom (Set Y) (Set X))
 

@@ -82,8 +82,7 @@ theorem tsnd_tfst {α₀ α₁ β₀ β₁} (f : α₀ → F α₁) (f' : β₀ 
 
 @[higher_order tsnd_comp_tsnd]
 theorem comp_tsnd {α β₀ β₁ β₂} (g : β₀ → F β₁) (g' : β₁ → G β₂) (x : t α β₀) :
-    Comp.mk (tsnd g' <$> tsnd g x) = tsnd (comp.mk ∘ map g' ∘ g) x := by
-  rw [← comp_bitraverse] <;> simp [tsnd] <;> rfl
+    Comp.mk (tsnd g' <$> tsnd g x) = tsnd (comp.mk ∘ map g' ∘ g) x := by rw [← comp_bitraverse] <;> simp [tsnd] <;> rfl
 
 open Bifunctor
 

@@ -23,28 +23,24 @@ section Semiringₓ
 
 variable [Semiringₓ R] [CharP R 2]
 
-theorem two_eq_zero : (2 : R) = 0 := by
-  rw [← Nat.cast_two, CharP.cast_eq_zero]
+theorem two_eq_zero : (2 : R) = 0 := by rw [← Nat.cast_two, CharP.cast_eq_zero]
 
 @[simp]
-theorem add_self_eq_zero (x : R) : x + x = 0 := by
-  rw [← two_smul R x, two_eq_zero, zero_smul]
+theorem add_self_eq_zero (x : R) : x + x = 0 := by rw [← two_smul R x, two_eq_zero, zero_smul]
 
 @[simp]
 theorem bit0_eq_zero : (bit0 : R → R) = 0 := by
   funext
   exact add_self_eq_zero _
 
-theorem bit0_apply_eq_zero (x : R) : (bit0 x : R) = 0 := by
-  simp
+theorem bit0_apply_eq_zero (x : R) : (bit0 x : R) = 0 := by simp
 
 @[simp]
 theorem bit1_eq_one : (bit1 : R → R) = 1 := by
   funext
   simp [bit1]
 
-theorem bit1_apply_eq_one (x : R) : (bit1 x : R) = 1 := by
-  simp
+theorem bit1_apply_eq_one (x : R) : (bit1 x : R) = 1 := by simp
 
 end Semiringₓ
 
@@ -53,15 +49,13 @@ section Ringₓ
 variable [Ringₓ R] [CharP R 2]
 
 @[simp]
-theorem neg_eq (x : R) : -x = x := by
-  rw [neg_eq_iff_add_eq_zero, ← two_smul R x, two_eq_zero, zero_smul]
+theorem neg_eq (x : R) : -x = x := by rw [neg_eq_iff_add_eq_zero, ← two_smul R x, two_eq_zero, zero_smul]
 
 theorem neg_eq' : Neg.neg = (id : R → R) :=
   funext neg_eq
 
 @[simp]
-theorem sub_eq_add (x y : R) : x - y = x + y := by
-  rw [sub_eq_add_neg, neg_eq]
+theorem sub_eq_add (x y : R) : x - y = x + y := by rw [sub_eq_add_neg, neg_eq]
 
 theorem sub_eq_add' : Sub.sub = ((· + ·) : R → R → R) :=
   funext fun x => funext fun y => sub_eq_add x y
@@ -75,8 +69,7 @@ variable [CommSemiringₓ R] [CharP R 2]
 theorem add_sq (x y : R) : (x + y) ^ 2 = x ^ 2 + y ^ 2 :=
   add_pow_char _ _ _
 
-theorem add_mul_self (x y : R) : (x + y) * (x + y) = x * x + y * y := by
-  rw [← pow_two, ← pow_two, ← pow_two, add_sq]
+theorem add_mul_self (x y : R) : (x + y) * (x + y) = x * x + y * y := by rw [← pow_two, ← pow_two, ← pow_two, add_sq]
 
 open BigOperators
 
@@ -92,10 +85,10 @@ theorem multiset_sum_sq (l : Multiset R) : l.Sum ^ 2 = (l.map (· ^ 2)).Sum :=
 theorem multiset_sum_mul_self (l : Multiset R) : l.Sum * l.Sum = (Multiset.map (fun x => x * x) l).Sum := by
   simp_rw [← pow_two, multiset_sum_sq]
 
-theorem sum_sq (s : Finset ι) (f : ι → R) : (∑ i in s, f i) ^ 2 = ∑ i in s, f i ^ 2 :=
+theorem sum_sq (s : Finsetₓ ι) (f : ι → R) : (∑ i in s, f i) ^ 2 = ∑ i in s, f i ^ 2 :=
   sum_pow_char _ _ _
 
-theorem sum_mul_self (s : Finset ι) (f : ι → R) : ((∑ i in s, f i) * ∑ i in s, f i) = ∑ i in s, f i * f i := by
+theorem sum_mul_self (s : Finsetₓ ι) (f : ι → R) : ((∑ i in s, f i) * ∑ i in s, f i) = ∑ i in s, f i * f i := by
   simp_rw [← pow_two, sum_sq]
 
 end CommSemiringₓ

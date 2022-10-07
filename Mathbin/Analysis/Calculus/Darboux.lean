@@ -50,17 +50,14 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
     · subst c
       refine' absurd (sub_nonpos.1 <| nonpos_of_mul_nonneg_right _ (sub_lt_zero.2 hab')) (not_le_of_ltₓ hmb)
       have : a - b ∈ PosTangentConeAt (Icc a b) b :=
-        mem_pos_tangent_cone_at_of_segment_subset
-          (by
-            rw [segment_symm, segment_eq_Icc hab])
+        mem_pos_tangent_cone_at_of_segment_subset (by rw [segment_symm, segment_eq_Icc hab])
       simpa [-sub_nonneg, -ContinuousLinearMap.map_sub] using
         hc.localize.has_fderiv_within_at_nonneg (hg b (right_mem_Icc.2 hab)) this
       
     exact ⟨hac, hbc⟩
   use c, cmem
   rw [← sub_eq_zero]
-  have : Icc a b ∈ 𝓝 c := by
-    rwa [← mem_interior_iff_mem_nhds, interior_Icc]
+  have : Icc a b ∈ 𝓝 c := by rwa [← mem_interior_iff_mem_nhds, interior_Icc]
   exact (hc.is_local_min this).has_deriv_at_eq_zero ((hg c cmem).HasDerivAt this)
 
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a > m > f' b`, then `f' c = m` for some `c ∈ [a, b]`.

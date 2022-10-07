@@ -47,8 +47,7 @@ def choose : ℕ → ℕ → ℕ
   | n + 1, k + 1 => choose n k + choose n (k + 1)
 
 @[simp]
-theorem choose_zero_right (n : ℕ) : choose n 0 = 1 := by
-  cases n <;> rfl
+theorem choose_zero_right (n : ℕ) : choose n 0 = 1 := by cases n <;> rfl
 
 @[simp]
 theorem choose_zero_succ (k : ℕ) : choose 0 (succ k) = 0 :=
@@ -58,10 +57,7 @@ theorem choose_succ_succ (n k : ℕ) : choose (succ n) (succ k) = choose n k + c
   rfl
 
 theorem choose_eq_zero_of_lt : ∀ {n k}, n < k → choose n k = 0
-  | _, 0, hk =>
-    absurd hk
-      (by
-        decide)
+  | _, 0, hk => absurd hk (by decide)
   | 0, k + 1, hk => choose_zero_succ _
   | n + 1, k + 1, hk => by
     have hnk : n < k := lt_of_succ_lt_succₓ hk
@@ -77,8 +73,7 @@ theorem choose_succ_self (n : ℕ) : choose n (succ n) = 0 :=
   choose_eq_zero_of_lt (lt_succ_selfₓ _)
 
 @[simp]
-theorem choose_one_right (n : ℕ) : choose n 1 = n := by
-  induction n <;> simp [*, choose, add_commₓ]
+theorem choose_one_right (n : ℕ) : choose n 1 = n := by induction n <;> simp [*, choose, add_commₓ]
 
 -- The `n+1`-st triangle number is `n` more than the `n`-th triangle number
 theorem triangle_succ (n : ℕ) : (n + 1) * (n + 1 - 1) / 2 = n * (n - 1) / 2 + n := by
@@ -96,14 +91,8 @@ theorem choose_two_right (n : ℕ) : choose n 2 = n * (n - 1) / 2 := by
     
 
 theorem choose_pos : ∀ {n k}, k ≤ n → 0 < choose n k
-  | 0, _, hk => by
-    rw [Nat.eq_zero_of_le_zeroₓ hk] <;>
-      exact by
-        decide
-  | n + 1, 0, hk => by
-    simp <;>
-      exact by
-        decide
+  | 0, _, hk => by rw [Nat.eq_zero_of_le_zeroₓ hk] <;> exact by decide
+  | n + 1, 0, hk => by simp <;> exact by decide
   | n + 1, k + 1, hk => by
     rw [choose_succ_succ] <;> exact add_pos_of_pos_of_nonneg (choose_pos (le_of_succ_le_succ hk)) (Nat.zero_leₓ _)
 
@@ -111,21 +100,16 @@ theorem choose_eq_zero_iff {n k : ℕ} : n.choose k = 0 ↔ n < k :=
   ⟨fun h => lt_of_not_geₓ (mt Nat.choose_pos h.symm.not_lt), Nat.choose_eq_zero_of_lt⟩
 
 theorem succ_mul_choose_eq : ∀ n k, succ n * choose n k = choose (succ n) (succ k) * succ k
-  | 0, 0 => by
-    decide
-  | 0, k + 1 => by
-    simp [choose]
-  | n + 1, 0 => by
-    simp
+  | 0, 0 => by decide
+  | 0, k + 1 => by simp [choose]
+  | n + 1, 0 => by simp
   | n + 1, k + 1 => by
     rw [choose_succ_succ (succ n) (succ k), add_mulₓ, ← succ_mul_choose_eq, mul_succ, ← succ_mul_choose_eq,
       add_right_commₓ, ← mul_addₓ, ← choose_succ_succ, ← succ_mul]
 
 theorem choose_mul_factorial_mul_factorial : ∀ {n k}, k ≤ n → choose n k * k ! * (n - k)! = n !
-  | 0, _, hk => by
-    simp [Nat.eq_zero_of_le_zeroₓ hk]
-  | n + 1, 0, hk => by
-    simp
+  | 0, _, hk => by simp [Nat.eq_zero_of_le_zeroₓ hk]
+  | n + 1, 0, hk => by simp
   | n + 1, succ k, hk => by
     cases' lt_or_eq_of_leₓ hk with hk₁ hk₁
     · have h : choose n k * k.succ ! * (n - k)! = (k + 1) * n ! := by
@@ -150,8 +134,7 @@ theorem choose_mul {n k s : ℕ} (hkn : k ≤ n) (hsk : s ≤ k) :
   calc
     n.choose k * k.choose s * ((n - k)! * (k - s)! * s !) = n.choose k * (k.choose s * s ! * (k - s)!) * (n - k)! := by
       rw [mul_assoc, mul_assoc, mul_assoc, mul_assoc _ s !, mul_assoc, mul_comm (n - k)!, mul_comm s !]
-    _ = n ! := by
-      rw [choose_mul_factorial_mul_factorial hsk, choose_mul_factorial_mul_factorial hkn]
+    _ = n ! := by rw [choose_mul_factorial_mul_factorial hsk, choose_mul_factorial_mul_factorial hkn]
     _ = n.choose s * s ! * ((n - s).choose (k - s) * (k - s)! * (n - s - (k - s))!) := by
       rw [choose_mul_factorial_mul_factorial (tsub_le_tsub_right hkn _),
         choose_mul_factorial_mul_factorial (hsk.trans hkn)]
@@ -201,8 +184,7 @@ theorem choose_succ_right_eq (n k : ℕ) : choose n (k + 1) * (k + 1) = choose n
 @[simp]
 theorem choose_succ_self_right : ∀ n : ℕ, (n + 1).choose n = n + 1
   | 0 => rfl
-  | n + 1 => by
-    rw [choose_succ_succ, choose_succ_self_right, choose_self]
+  | n + 1 => by rw [choose_succ_succ, choose_succ_self_right, choose_self]
 
 theorem choose_mul_succ_eq (n k : ℕ) : n.choose k * (n + 1) = (n + 1).choose k * (n + 1 - k) := by
   induction' k with k ih
@@ -282,8 +264,7 @@ theorem choose_le_middle (r n : ℕ) : choose n r ≤ choose n (n / 2) := by
 /-! #### Inequalities about increasing the first argument -/
 
 
-theorem choose_le_succ (a c : ℕ) : choose a c ≤ choose a.succ c := by
-  cases c <;> simp [Nat.choose_succ_succ]
+theorem choose_le_succ (a c : ℕ) : choose a c ≤ choose a.succ c := by cases c <;> simp [Nat.choose_succ_succ]
 
 theorem choose_le_add (a b c : ℕ) : choose a c ≤ choose (a + b) c := by
   induction' b with b_n b_ih
@@ -294,7 +275,7 @@ theorem choose_le_add (a b c : ℕ) : choose a c ≤ choose (a + b) c := by
 theorem choose_le_choose {a b : ℕ} (c : ℕ) (h : a ≤ b) : choose a c ≤ choose b c :=
   add_tsub_cancel_of_le h ▸ choose_le_add a (b - a) c
 
-theorem choose_mono (b : ℕ) : Monotone fun a => choose a b := fun _ _ => choose_le_choose b
+theorem choose_mono (b : ℕ) : Monotoneₓ fun a => choose a b := fun _ _ => choose_le_choose b
 
 /-! #### Multichoose
 
@@ -323,16 +304,13 @@ def multichoose : ℕ → ℕ → ℕ
   | n + 1, k + 1 => multichoose n (k + 1) + multichoose (n + 1) k
 
 @[simp]
-theorem multichoose_zero_right (n : ℕ) : multichoose n 0 = 1 := by
-  cases n <;> simp [multichoose]
+theorem multichoose_zero_right (n : ℕ) : multichoose n 0 = 1 := by cases n <;> simp [multichoose]
 
 @[simp]
-theorem multichoose_zero_succ (k : ℕ) : multichoose 0 (k + 1) = 0 := by
-  simp [multichoose]
+theorem multichoose_zero_succ (k : ℕ) : multichoose 0 (k + 1) = 0 := by simp [multichoose]
 
 theorem multichoose_succ_succ (n k : ℕ) : multichoose (n + 1) (k + 1) = multichoose n (k + 1) + multichoose (n + 1) k :=
-  by
-  simp [multichoose]
+  by simp [multichoose]
 
 @[simp]
 theorem multichoose_one (k : ℕ) : multichoose 1 k = 1 := by
@@ -357,10 +335,8 @@ theorem multichoose_one_right (n : ℕ) : multichoose n 1 = n := by
   simp [multichoose_succ_succ n 0, IH]
 
 theorem multichoose_eq : ∀ n k : ℕ, multichoose n k = (n + k - 1).choose k
-  | _, 0 => by
-    simp
-  | 0, k + 1 => by
-    simp
+  | _, 0 => by simp
+  | 0, k + 1 => by simp
   | n + 1, k + 1 => by
     rw [multichoose_succ_succ, add_commₓ, Nat.succ_add_sub_one, ← add_assocₓ, Nat.choose_succ_succ]
     simp [multichoose_eq]

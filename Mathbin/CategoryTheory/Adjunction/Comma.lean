@@ -59,8 +59,7 @@ def leftAdjointOfStructuredArrowInitialsAux (A : C) (B : D) : ((⊥_ StructuredA
 is shown that it is a left adjoint in `adjunction_of_structured_arrow_initials`.
 -/
 def leftAdjointOfStructuredArrowInitials : C ⥤ D :=
-  Adjunction.leftAdjointOfEquiv (leftAdjointOfStructuredArrowInitialsAux G) fun _ _ => by
-    simp
+  Adjunction.leftAdjointOfEquiv (leftAdjointOfStructuredArrowInitialsAux G) fun _ _ => by simp
 
 /-- If each structured arrow category on `G` has an initial object, we have a constructed left adjoint
 to `G`.
@@ -87,8 +86,7 @@ def rightAdjointOfCostructuredArrowTerminalsAux (B : D) (A : C) :
     (G.obj B ⟶ A) ≃ (B ⟶ (⊤_ CostructuredArrow G A).left) where
   toFun := fun g => CommaMorphism.left (terminal.from (CostructuredArrow.mk g))
   invFun := fun g => G.map g ≫ (⊤_ CostructuredArrow G A).Hom
-  left_inv := by
-    tidy
+  left_inv := by tidy
   right_inv := fun g => by
     let B' : costructured_arrow G A := costructured_arrow.mk (G.map g ≫ (⊤_ costructured_arrow G A).Hom)
     let g' : B' ⟶ ⊤_ costructured_arrow G A := costructured_arrow.hom_mk g rfl
@@ -130,13 +128,10 @@ attribute [local tidy] tactic.discrete_cases
 category on `G`. -/
 def mkInitialOfLeftAdjoint (h : F ⊣ G) (A : C) :
     IsInitial (StructuredArrow.mk (h.Unit.app A) : StructuredArrow A G) where
-  desc := fun B =>
-    StructuredArrow.homMk ((h.homEquiv _ _).symm B.x.Hom)
-      (by
-        tidy)
+  desc := fun B => StructuredArrow.homMk ((h.homEquiv _ _).symm B.x.Hom) (by tidy)
   uniq' := fun s m w => by
     ext
-    dsimp'
+    dsimp
     rw [Equivₓ.eq_symm_apply, adjunction.hom_equiv_unit]
     apply structured_arrow.w m
 
@@ -144,13 +139,10 @@ def mkInitialOfLeftAdjoint (h : F ⊣ G) (A : C) :
 category on `F`. -/
 def mkTerminalOfRightAdjoint (h : F ⊣ G) (A : D) :
     IsTerminal (CostructuredArrow.mk (h.counit.app A) : CostructuredArrow F A) where
-  lift := fun B =>
-    CostructuredArrow.homMk (h.homEquiv _ _ B.x.Hom)
-      (by
-        tidy)
+  lift := fun B => CostructuredArrow.homMk (h.homEquiv _ _ B.x.Hom) (by tidy)
   uniq' := fun s m w => by
     ext
-    dsimp'
+    dsimp
     rw [h.eq_hom_equiv_apply, adjunction.hom_equiv_counit]
     exact costructured_arrow.w m
 

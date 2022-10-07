@@ -89,8 +89,7 @@ of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
 def lift {A : Type _} [Semiringₓ A] [Algebra R A] : (M →ₗ[R] A) ≃ (TensorAlgebra R M →ₐ[R] A) where
   toFun :=
     RingQuot.liftAlgHom R ∘ fun f =>
-      ⟨FreeAlgebra.lift R ⇑f, fun x y (h : Rel R M x y) => by
-        induction h <;> simp [Algebra.smul_def]⟩
+      ⟨FreeAlgebra.lift R ⇑f, fun x y (h : Rel R M x y) => by induction h <;> simp [Algebra.smul_def]⟩
   invFun := fun F => F.toLinearMap.comp (ι R)
   left_inv := fun f =>
     LinearMap.ext fun x => (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply f x)
@@ -107,7 +106,7 @@ theorem ι_comp_lift {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R]
 
 @[simp]
 theorem lift_ι_apply {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R] A) (x) : lift R f (ι R x) = f x := by
-  dsimp' [lift, ι]
+  dsimp [lift, ι]
   rfl
 
 @[simp]
@@ -190,8 +189,7 @@ algebra structure. -/
 def ιInv : TensorAlgebra R M →ₗ[R] M :=
   (TrivSqZeroExt.sndHom R M).comp toTrivSqZeroExt.toLinearMap
 
-theorem ι_left_inverse : Function.LeftInverse ιInv (ι R : M → TensorAlgebra R M) := fun x => by
-  simp [ι_inv]
+theorem ι_left_inverse : Function.LeftInverse ιInv (ι R : M → TensorAlgebra R M) := fun x => by simp [ι_inv]
 
 variable (R)
 
@@ -200,8 +198,7 @@ theorem ι_inj (x y : M) : ι R x = ι R y ↔ x = y :=
   ι_left_inverse.Injective.eq_iff
 
 @[simp]
-theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 := by
-  rw [← ι_inj R x 0, LinearMap.map_zero]
+theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 := by rw [← ι_inj R x 0, LinearMap.map_zero]
 
 variable {R}
 
@@ -256,8 +253,7 @@ def toTensor : FreeAlgebra R M →ₐ[R] TensorAlgebra R M :=
   FreeAlgebra.lift R (TensorAlgebra.ι R)
 
 @[simp]
-theorem to_tensor_ι (m : M) : (FreeAlgebra.ι R m).toTensor = TensorAlgebra.ι R m := by
-  simp [to_tensor]
+theorem to_tensor_ι (m : M) : (FreeAlgebra.ι R m).toTensor = TensorAlgebra.ι R m := by simp [to_tensor]
 
 end FreeAlgebra
 

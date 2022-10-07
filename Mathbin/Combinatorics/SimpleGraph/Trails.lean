@@ -43,7 +43,7 @@ namespace Walk
 
 /-- The edges of a trail as a finset, since each edge in a trail appears exactly once. -/
 @[reducible]
-def IsTrail.edgesFinset {u v : V} {p : G.Walk u v} (h : p.IsTrail) : Finset (Sym2 V) :=
+def IsTrail.edgesFinset {u v : V} {p : G.Walk u v} (h : p.IsTrail) : Finsetₓ (Sym2 V) :=
   ⟨p.edges, h.edges_nodup⟩
 
 variable [DecidableEq V]
@@ -94,7 +94,7 @@ def IsEulerian {u v : V} (p : G.Walk u v) : Prop :=
 theorem IsEulerian.is_trail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.IsTrail := by
   rw [is_trail_def, List.nodup_iff_count_le_one]
   intro e
-  by_cases' he : e ∈ p.edges
+  by_cases he:e ∈ p.edges
   · exact (h e (edges_subset_edge_set _ he)).le
     
   · simp [he]
@@ -102,13 +102,11 @@ theorem IsEulerian.is_trail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.Is
 
 theorem IsEulerian.mem_edges_iff {u v : V} {p : G.Walk u v} (h : p.IsEulerian) {e : Sym2 V} :
     e ∈ p.edges ↔ e ∈ G.EdgeSet :=
-  ⟨fun h => p.edges_subset_edge_set h, fun he => by
-    simpa using (h e he).Ge⟩
+  ⟨fun h => p.edges_subset_edge_set h, fun he => by simpa using (h e he).Ge⟩
 
 /-- The edge set of an Eulerian graph is finite. -/
-def IsEulerian.fintypeEdgeSet {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : Fintype G.EdgeSet :=
-  (Fintype.ofFinset h.IsTrail.edgesFinset) fun e => by
-    simp only [Finset.mem_mk, Multiset.mem_coe, h.mem_edges_iff]
+def IsEulerian.fintypeEdgeSet {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : Fintypeₓ G.EdgeSet :=
+  (Fintypeₓ.ofFinset h.IsTrail.edgesFinset) fun e => by simp only [Finsetₓ.mem_mk, Multiset.mem_coe, h.mem_edges_iff]
 
 theorem IsTrail.is_eulerian_of_forall_mem {u v : V} {p : G.Walk u v} (h : p.IsTrail)
     (hc : ∀ e, e ∈ G.EdgeSet → e ∈ p.edges) : p.IsEulerian := fun e he =>
@@ -123,12 +121,12 @@ theorem is_eulerian_iff {u v : V} (p : G.Walk u v) : p.IsEulerian ↔ p.IsTrail 
     exact h.is_eulerian_of_forall_mem hl
     
 
-theorem IsEulerian.edges_finset_eq [Fintype G.EdgeSet] {u v : V} {p : G.Walk u v} (h : p.IsEulerian) :
+theorem IsEulerian.edges_finset_eq [Fintypeₓ G.EdgeSet] {u v : V} {p : G.Walk u v} (h : p.IsEulerian) :
     h.IsTrail.edgesFinset = G.edgeFinset := by
   ext e
   simp [h.mem_edges_iff]
 
-theorem IsEulerian.even_degree_iff {x u v : V} {p : G.Walk u v} (ht : p.IsEulerian) [Fintype V] [DecidableRel G.Adj] :
+theorem IsEulerian.even_degree_iff {x u v : V} {p : G.Walk u v} (ht : p.IsEulerian) [Fintypeₓ V] [DecidableRel G.Adj] :
     Even (G.degree x) ↔ u ≠ v → x ≠ u ∧ x ≠ v := by
   convert ht.is_trail.even_countp_edges_iff x
   rw [← Multiset.coe_countp, Multiset.countp_eq_card_filter, ← card_incidence_finset_eq_degree]
@@ -137,18 +135,18 @@ theorem IsEulerian.even_degree_iff {x u v : V} {p : G.Walk u v} (ht : p.IsEuleri
   convert_to _ = (ht.is_trail.edges_finset.filter (Membership.Mem x)).val
   rw [ht.edges_finset_eq, G.incidence_finset_eq_filter x]
 
-theorem IsEulerian.card_filter_odd_degree [Fintype V] [DecidableRel G.Adj] {u v : V} {p : G.Walk u v}
-    (ht : p.IsEulerian) {s} (h : s = (Finset.univ : Finset V).filter fun v => Odd (G.degree v)) :
+theorem IsEulerian.card_filter_odd_degree [Fintypeₓ V] [DecidableRel G.Adj] {u v : V} {p : G.Walk u v}
+    (ht : p.IsEulerian) {s} (h : s = (Finsetₓ.univ : Finsetₓ V).filter fun v => Odd (G.degree v)) :
     s.card = 0 ∨ s.card = 2 := by
   subst s
-  simp only [Nat.odd_iff_not_even, Finset.card_eq_zero]
+  simp only [Nat.odd_iff_not_even, Finsetₓ.card_eq_zero]
   simp only [ht.even_degree_iff, Ne.def, not_forall, not_and, not_not, exists_propₓ]
   obtain rfl | hn := eq_or_ne u v
   · left
     simp
     
   · right
-    convert_to _ = ({u, v} : Finset V).card
+    convert_to _ = ({u, v} : Finsetₓ V).card
     · simp [hn]
       
     · congr
@@ -157,8 +155,8 @@ theorem IsEulerian.card_filter_odd_degree [Fintype V] [DecidableRel G.Adj] {u v 
       
     
 
-theorem IsEulerian.card_odd_degree [Fintype V] [DecidableRel G.Adj] {u v : V} {p : G.Walk u v} (ht : p.IsEulerian) :
-    Fintype.card { v : V | Odd (G.degree v) } = 0 ∨ Fintype.card { v : V | Odd (G.degree v) } = 2 := by
+theorem IsEulerian.card_odd_degree [Fintypeₓ V] [DecidableRel G.Adj] {u v : V} {p : G.Walk u v} (ht : p.IsEulerian) :
+    Fintypeₓ.card { v : V | Odd (G.degree v) } = 0 ∨ Fintypeₓ.card { v : V | Odd (G.degree v) } = 2 := by
   rw [← Set.to_finset_card]
   apply is_eulerian.card_filter_odd_degree ht
   ext v

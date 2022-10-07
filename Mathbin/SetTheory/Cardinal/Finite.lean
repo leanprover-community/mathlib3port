@@ -34,7 +34,7 @@ protected def card (α : Type _) : ℕ :=
   (mk α).toNat
 
 @[simp]
-theorem card_eq_fintype_card [Fintype α] : Nat.card α = Fintype.card α :=
+theorem card_eq_fintype_card [Fintypeₓ α] : Nat.card α = Fintypeₓ.card α :=
   mk_to_nat_eq_card
 
 @[simp]
@@ -47,21 +47,20 @@ theorem card_congr (f : α ≃ β) : Nat.card α = Nat.card β :=
 theorem card_eq_of_bijective (f : α → β) (hf : Function.Bijective f) : Nat.card α = Nat.card β :=
   card_congr (Equivₓ.ofBijective f hf)
 
-theorem card_eq_of_equiv_fin {α : Type _} {n : ℕ} (f : α ≃ Finₓ n) : Nat.card α = n := by
-  simpa using card_congr f
+theorem card_eq_of_equiv_fin {α : Type _} {n : ℕ} (f : α ≃ Finₓ n) : Nat.card α = n := by simpa using card_congr f
 
 /-- If the cardinality is positive, that means it is a finite type, so there is
 an equivalence between `α` and `fin (nat.card α)`. See also `finite.equiv_fin`. -/
 def equivFinOfCardPos {α : Type _} (h : Nat.card α ≠ 0) : α ≃ Finₓ (Nat.card α) := by
   cases fintypeOrInfinite α
-  · simpa using Fintype.equivFin α
+  · simpa using Fintypeₓ.equivFin α
     
   · simpa using h
     
 
 theorem card_of_subsingleton (a : α) [Subsingleton α] : Nat.card α = 1 := by
-  letI := Fintype.ofSubsingleton a
-  rw [card_eq_fintype_card, Fintype.card_of_subsingleton a]
+  letI := Fintypeₓ.ofSubsingleton a
+  rw [card_eq_fintype_card, Fintypeₓ.card_of_subsingleton a]
 
 @[simp]
 theorem card_unique [Unique α] : Nat.card α = 1 :=
@@ -70,8 +69,7 @@ theorem card_unique [Unique α] : Nat.card α = 1 :=
 theorem card_eq_one_iff_unique : Nat.card α = 1 ↔ Subsingleton α ∧ Nonempty α :=
   Cardinal.to_nat_eq_one_iff_unique
 
-theorem card_of_is_empty [IsEmpty α] : Nat.card α = 0 := by
-  simp
+theorem card_of_is_empty [IsEmpty α] : Nat.card α = 0 := by simp
 
 @[simp]
 theorem card_prod (α β : Type _) : Nat.card (α × β) = Nat.card α * Nat.card β := by
@@ -85,7 +83,7 @@ theorem card_ulift (α : Type _) : Nat.card (ULift α) = Nat.card α :=
 theorem card_plift (α : Type _) : Nat.card (Plift α) = Nat.card α :=
   card_congr Equivₓ.plift
 
-theorem card_pi {β : α → Type _} [Fintype α] : Nat.card (∀ a, β a) = ∏ a, Nat.card (β a) := by
+theorem card_pi {β : α → Type _} [Fintypeₓ α] : Nat.card (∀ a, β a) = ∏ a, Nat.card (β a) := by
   simp_rw [Nat.card, mk_pi, prod_eq_of_fintype, to_nat_lift, to_nat_finset_prod]
 
 @[simp]
@@ -106,7 +104,7 @@ def card (α : Type _) : PartEnat :=
   (mk α).toPartEnat
 
 @[simp]
-theorem card_eq_coe_fintype_card [Fintype α] : card α = Fintype.card α :=
+theorem card_eq_coe_fintype_card [Fintypeₓ α] : card α = Fintypeₓ.card α :=
   mk_to_part_enat_eq_coe_card
 
 @[simp]

@@ -59,11 +59,11 @@ variable {s t : Set E} {a : ℝ} {x : E}
 theorem gauge_def : gauge s x = inf ({ r ∈ Set.Ioi 0 | x ∈ r • s }) :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]
 /-- An alternative definition of the gauge using scalar multiplication on the element rather than on
 the set. -/
 theorem gauge_def' : gauge s x = inf ({ r ∈ Set.Ioi 0 | r⁻¹ • x ∈ s }) := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
   exact and_congr_right fun hr => mem_smul_set_iff_inv_smul_mem₀ hr.ne' _ _
 
 private theorem gauge_set_bdd_below : BddBelow { r : ℝ | 0 < r ∧ x ∈ r • s } :=
@@ -87,7 +87,7 @@ but, the real infimum of the empty set in Lean being defined as `0`, it holds un
 @[simp]
 theorem gauge_zero : gauge s 0 = 0 := by
   rw [gauge_def']
-  by_cases' (0 : E) ∈ s
+  by_cases(0 : E) ∈ s
   · simp only [smul_zero, sep_true, h, cInf_Ioi]
     
   · simp only [smul_zero, sep_false, h, Real.Inf_empty]
@@ -108,7 +108,7 @@ theorem gauge_zero' : gauge (0 : Set E) = 0 := by
 @[simp]
 theorem gauge_empty : gauge (∅ : Set E) = 0 := by
   ext
-  simp only [gauge_def', Real.Inf_empty, mem_empty_eq, Pi.zero_apply, sep_false]
+  simp only [gauge_def', Real.Inf_empty, mem_empty_iff_false, Pi.zero_apply, sep_false]
 
 theorem gauge_of_subset_zero (h : s ⊆ 0) : gauge s = 0 := by
   obtain rfl | rfl := subset_singleton_iff_eq.1 h
@@ -119,9 +119,7 @@ theorem gauge_nonneg (x : E) : 0 ≤ gauge s x :=
   (Real.Inf_nonneg _) fun x hx => hx.1.le
 
 theorem gauge_neg (symmetric : ∀ x ∈ s, -x ∈ s) (x : E) : gauge s (-x) = gauge s x := by
-  have : ∀ x, -x ∈ s ↔ x ∈ s := fun x =>
-    ⟨fun h => by
-      simpa using Symmetric _ h, Symmetric x⟩
+  have : ∀ x, -x ∈ s ↔ x ∈ s := fun x => ⟨fun h => by simpa using Symmetric _ h, Symmetric x⟩
   rw [gauge_def', gauge_def']
   simp_rw [smul_neg, this]
 
@@ -132,6 +130,7 @@ theorem gauge_le_of_mem (ha : 0 ≤ a) (hx : x ∈ a • s) : gauge s x ≤ a :=
   · exact cInf_le gauge_set_bdd_below ⟨ha', hx⟩
     
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 theorem gauge_le_eq (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : Absorbent ℝ s) (ha : 0 ≤ a) :
     { x | gauge s x ≤ a } = ⋂ (r : ℝ) (H : a < r), r • s := by
   ext
@@ -140,10 +139,11 @@ theorem gauge_le_eq (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : Abso
   · have hr' := ha.trans_lt hr
     rw [mem_smul_set_iff_inv_smul_mem₀ hr'.ne']
     obtain ⟨δ, δ_pos, hδr, hδ⟩ := exists_lt_of_gauge_lt hs₂ (h.trans_lt hr)
-    suffices (r⁻¹ * δ) • δ⁻¹ • x ∈ s by
-      rwa [smul_smul, mul_inv_cancel_right₀ δ_pos.ne'] at this
+    suffices (r⁻¹ * δ) • δ⁻¹ • x ∈ s by rwa [smul_smul, mul_inv_cancel_right₀ δ_pos.ne'] at this
     rw [mem_smul_set_iff_inv_smul_mem₀ δ_pos.ne'] at hδ
-    refine' hs₁.smul_mem_of_zero_mem hs₀ hδ ⟨mul_nonneg (inv_nonneg.2 hr'.le) δ_pos.le, _⟩
+    refine'
+      hs₁.smul_mem_of_zero_mem hs₀ hδ
+        ⟨by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]", _⟩
     rw [inv_mul_le_iff hr', mul_oneₓ]
     exact hδr.le
     
@@ -170,14 +170,13 @@ theorem gauge_lt_one_subset_self (hs : Convex ℝ s) (h₀ : (0 : E) ∈ s) (abs
   exact hs.smul_mem_of_zero_mem h₀ hy (Ioo_subset_Icc_self hr)
 
 theorem gauge_le_one_of_mem {x : E} (hx : x ∈ s) : gauge s x ≤ 1 :=
-  gauge_le_of_mem zero_le_one <| by
-    rwa [one_smul]
+  gauge_le_of_mem zero_le_one <| by rwa [one_smul]
 
 theorem self_subset_gauge_le_one : s ⊆ { x | gauge s x ≤ 1 } := fun x => gauge_le_one_of_mem
 
 theorem Convex.gauge_le (hs : Convex ℝ s) (h₀ : (0 : E) ∈ s) (absorbs : Absorbent ℝ s) (a : ℝ) :
     Convex ℝ { x | gauge s x ≤ a } := by
-  by_cases' ha : 0 ≤ a
+  by_cases ha:0 ≤ a
   · rw [gauge_le_eq hs h₀ Absorbs ha]
     exact convex_Inter fun i => convex_Inter fun hi => hs.smul _
     
@@ -186,12 +185,9 @@ theorem Convex.gauge_le (hs : Convex ℝ s) (h₀ : (0 : E) ∈ s) (absorbs : Ab
     
 
 theorem Balanced.star_convex (hs : Balanced ℝ s) : StarConvex ℝ 0 s :=
-  star_convex_zero_iff.2 fun x hx a ha₀ ha₁ =>
-    hs _
-      (by
-        rwa [Real.norm_of_nonneg ha₀])
-      (smul_mem_smul_set hx)
+  star_convex_zero_iff.2 fun x hx a ha₀ ha₁ => hs _ (by rwa [Real.norm_of_nonneg ha₀]) (smul_mem_smul_set hx)
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 theorem le_gauge_of_not_mem (hs₀ : StarConvex ℝ 0 s) (hs₂ : Absorbs ℝ s {x}) (hx : x ∉ a • s) : a ≤ gauge s x := by
   rw [star_convex_zero_iff] at hs₀
   obtain ⟨r, hr, h⟩ := hs₂
@@ -199,7 +195,11 @@ theorem le_gauge_of_not_mem (hs₀ : StarConvex ℝ 0 s) (hs₂ : Absorbs ℝ s 
   rintro b ⟨hb, x, hx', rfl⟩
   refine' not_ltₓ.1 fun hba => hx _
   have ha := hb.trans hba
-  refine' ⟨(a⁻¹ * b) • x, hs₀ hx' (mul_nonneg (inv_nonneg.2 ha.le) hb.le) _, _⟩
+  refine'
+    ⟨(a⁻¹ * b) • x,
+      hs₀ hx' (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+        _,
+      _⟩
   · rw [← div_eq_inv_mul]
     exact div_le_one_of_le hba.le ha.le
     
@@ -207,8 +207,7 @@ theorem le_gauge_of_not_mem (hs₀ : StarConvex ℝ 0 s) (hs₂ : Absorbs ℝ s 
     
 
 theorem one_le_gauge_of_not_mem (hs₁ : StarConvex ℝ 0 s) (hs₂ : Absorbs ℝ s {x}) (hx : x ∉ s) : 1 ≤ gauge s x :=
-  le_gauge_of_not_mem hs₁ hs₂ <| by
-    rwa [one_smul]
+  le_gauge_of_not_mem hs₁ hs₂ <| by rwa [one_smul]
 
 section LinearOrderedField
 
@@ -222,7 +221,7 @@ theorem gauge_smul_of_nonneg [MulActionWithZero α E] [IsScalarTower α ℝ (Set
   rw [gauge_def', gauge_def', ← Real.Inf_smul_of_nonneg ha]
   congr 1
   ext r
-  simp_rw [Set.mem_smul_set, Set.mem_sep_eq]
+  simp_rw [Set.mem_smul_set, Set.mem_sep_iff]
   constructor
   · rintro ⟨hr, hx⟩
     simp_rw [mem_Ioi] at hr⊢
@@ -250,7 +249,7 @@ theorem gauge_smul_left_of_nonneg [MulActionWithZero α E] [SmulCommClass α ℝ
   rw [gauge_def', Pi.smul_apply, gauge_def', ← Real.Inf_smul_of_nonneg (inv_nonneg.2 ha)]
   congr 1
   ext r
-  simp_rw [Set.mem_smul_set, Set.mem_sep_eq]
+  simp_rw [Set.mem_smul_set, Set.mem_sep_iff]
   constructor
   · rintro ⟨hr, y, hy, h⟩
     simp_rw [mem_Ioi] at hr⊢
@@ -310,12 +309,10 @@ variable [TopologicalSpace E] [HasContinuousSmul ℝ E]
 theorem interior_subset_gauge_lt_one (s : Set E) : Interior s ⊆ { x | gauge s x < 1 } := by
   intro x hx
   let f : ℝ → E := fun t => t • x
-  have hf : Continuous f := by
-    continuity
+  have hf : Continuous f := by continuity
   let s' := f ⁻¹' Interior s
   have hs' : IsOpen s' := hf.is_open_preimage _ is_open_interior
-  have one_mem : (1 : ℝ) ∈ s' := by
-    simpa only [s', f, Set.mem_preimage, one_smul]
+  have one_mem : (1 : ℝ) ∈ s' := by simpa only [s', f, Set.mem_preimage, one_smul]
   obtain ⟨ε, hε₀, hε⟩ := (Metric.nhds_basis_closed_ball.1 _).1 (is_open_iff_mem_nhds.1 hs' 1 one_mem)
   rw [Real.closed_ball_eq_Icc] at hε
   have hε₁ : 0 < 1 + ε := hε₀.trans (lt_one_add ε)
@@ -334,13 +331,11 @@ theorem gauge_lt_one_eq_self_of_open (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈
   exact hs₂.interior_eq.symm
 
 theorem gauge_lt_one_of_mem_of_open (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : IsOpen s) {x : E} (hx : x ∈ s) :
-    gauge s x < 1 := by
-  rwa [← gauge_lt_one_eq_self_of_open hs₁ hs₀ hs₂] at hx
+    gauge s x < 1 := by rwa [← gauge_lt_one_eq_self_of_open hs₁ hs₀ hs₂] at hx
 
 theorem gauge_lt_of_mem_smul (x : E) (ε : ℝ) (hε : 0 < ε) (hs₀ : (0 : E) ∈ s) (hs₁ : Convex ℝ s) (hs₂ : IsOpen s)
     (hx : x ∈ ε • s) : gauge s x < ε := by
-  have : ε⁻¹ • x ∈ s := by
-    rwa [← mem_smul_set_iff_inv_smul_mem₀ hε.ne']
+  have : ε⁻¹ • x ∈ s := by rwa [← mem_smul_set_iff_inv_smul_mem₀ hε.ne']
   have h_gauge_lt := gauge_lt_one_of_mem_of_open hs₁ hs₀ hs₂ this
   rwa [gauge_smul_of_nonneg (inv_nonneg.2 hε.le), smul_eq_mul, inv_mul_lt_iff hε, mul_oneₓ] at h_gauge_lt
   infer_instance
@@ -354,8 +349,7 @@ theorem gauge_add_le (hs : Convex ℝ s) (absorbs : Absorbent ℝ s) (x y : E) :
   obtain ⟨b, hb, hb', hy⟩ := exists_lt_of_gauge_lt Absorbs (lt_add_of_pos_right (gauge s y) (half_pos hε))
   rw [mem_smul_set_iff_inv_smul_mem₀ ha.ne'] at hx
   rw [mem_smul_set_iff_inv_smul_mem₀ hb.ne'] at hy
-  suffices gauge s (x + y) ≤ a + b by
-    linarith
+  suffices gauge s (x + y) ≤ a + b by linarith
   have hab : 0 < a + b := add_pos ha hb
   apply gauge_le_of_mem hab.le
   have := convex_iff_div.1 hs hx hy ha.le hb.le hab
@@ -382,6 +376,7 @@ theorem gauge_seminorm_ball_one (hs : IsOpen s) : (gaugeSeminorm hs₀ hs₁ hs�
 
 end IsROrC
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 /-- Any seminorm arises as the gauge of its unit ball. -/
 @[simp]
 protected theorem Seminorm.gauge_ball (p : Seminorm ℝ E) : gauge (p.ball 0 1) = p := by
@@ -401,7 +396,8 @@ protected theorem Seminorm.gauge_ball (p : Seminorm ℝ E) : gauge (p.ball 0 1) 
     rw [map_smul_eq_mul, Real.norm_eq_abs, abs_of_pos hr]
     exact mul_le_of_le_one_right hr.le hy.le
     
-  · have hpε : 0 < p x + ε := add_pos_of_nonneg_of_pos (map_nonneg _ _) hε
+  · have hpε : 0 < p x + ε := by
+      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
     refine' hr ⟨hpε, (p x + ε)⁻¹ • x, _, smul_inv_smul₀ hpε.ne' _⟩
     rw [p.mem_ball_zero, map_smul_eq_mul, Real.norm_eq_abs, abs_of_pos (inv_pos.2 hpε), inv_mul_lt_iff hpε, mul_oneₓ]
     exact lt_add_of_pos_right _ hε
@@ -417,12 +413,14 @@ section Norm
 
 variable [SeminormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E} {r : ℝ} {x : E}
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 theorem gauge_unit_ball (x : E) : gauge (Metric.Ball (0 : E) 1) x = ∥x∥ := by
   obtain rfl | hx := eq_or_ne x 0
   · rw [norm_zero, gauge_zero]
     
   refine' (le_of_forall_pos_le_add fun ε hε => _).antisymm _
-  · have := add_pos_of_nonneg_of_pos (norm_nonneg x) hε
+  · have : 0 < ∥x∥ + ε := by
+      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
     refine' gauge_le_of_mem this.le _
     rw [smul_ball this.ne', smul_zero, Real.norm_of_nonneg this.le, mul_oneₓ, mem_ball_zero_iff]
     exact lt_add_of_pos_right _ hε

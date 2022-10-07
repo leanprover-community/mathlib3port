@@ -54,8 +54,7 @@ instance Lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁l, h₁r⟩ ⟨h₂l, h₂r⟩
       · left
         apply lt_transₓ
-        repeat'
-          assumption
+        repeat' assumption
         
       · left
         assumption
@@ -65,8 +64,7 @@ instance Lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ
         
       · right
         apply le_transₓ
-        repeat'
-          assumption
+        repeat' assumption
         ,
     lt_iff_le_not_le := by
       refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_ltₓ, _⟩, _⟩

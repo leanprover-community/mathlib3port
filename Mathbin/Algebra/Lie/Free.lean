@@ -90,8 +90,7 @@ theorem Rel.add_left (a : lib R X) {b c : lib R X} (h : Rel R X b c) : Rel R X (
   rw [add_commₓ _ b, add_commₓ _ c]
   exact h.add_right _
 
-theorem Rel.neg {a b : lib R X} (h : Rel R X a b) : Rel R X (-a) (-b) := by
-  simpa only [neg_one_smul] using h.smul (-1)
+theorem Rel.neg {a b : lib R X} (h : Rel R X a b) : Rel R X (-a) (-b) := by simpa only [neg_one_smul] using h.smul (-1)
 
 theorem Rel.sub_left (a : lib R X) {b c : lib R X} (h : Rel R X b c) : Rel R X (a - b) (a - c) := by
   simpa only [sub_eq_add_neg] using h.neg.add_left a
@@ -192,18 +191,12 @@ theorem lift_aux_map_mul (f : X → L) (a b : lib R X) : liftAux R f (a * b) = �
 
 theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X a b) : liftAux R f a = liftAux R f b := by
   induction h
-  case rel.lie_self a' =>
-    simp only [lift_aux_map_mul, NonUnitalAlgHom.map_zero, lie_self]
-  case rel.leibniz_lie a' b' c' =>
-    simp only [lift_aux_map_mul, lift_aux_map_add, sub_add_cancel, lie_lie]
-  case rel.smul t a' b' h₁ h₂ =>
-    simp only [lift_aux_map_smul, h₂]
-  case rel.add_right a' b' c' h₁ h₂ =>
-    simp only [lift_aux_map_add, h₂]
-  case rel.mul_left a' b' c' h₁ h₂ =>
-    simp only [lift_aux_map_mul, h₂]
-  case rel.mul_right a' b' c' h₁ h₂ =>
-    simp only [lift_aux_map_mul, h₂]
+  case lie_self a' => simp only [lift_aux_map_mul, NonUnitalAlgHom.map_zero, lie_self]
+  case leibniz_lie a' b' c' => simp only [lift_aux_map_mul, lift_aux_map_add, sub_add_cancel, lie_lie]
+  case smul t a' b' h₁ h₂ => simp only [lift_aux_map_smul, h₂]
+  case add_right a' b' c' h₁ h₂ => simp only [lift_aux_map_add, h₂]
+  case mul_left a' b' c' h₁ h₂ => simp only [lift_aux_map_mul, h₂]
+  case mul_right a' b' c' h₁ h₂ => simp only [lift_aux_map_mul, h₂]
 
 /-- The quotient map as a `non_unital_alg_hom`. -/
 def mk : lib R X →ₙₐ[R] CommutatorRing (FreeLieAlgebra R X) where
@@ -279,10 +272,10 @@ def universalEnvelopingEquivFreeAlgebra : UniversalEnvelopingAlgebra R (FreeLieA
     (FreeAlgebra.lift R <| UniversalEnvelopingAlgebra.ι R ∘ FreeLieAlgebra.of R)
     (by
       ext
-      simp )
+      simp)
     (by
       ext
-      simp )
+      simp)
 
 end FreeLieAlgebra
 

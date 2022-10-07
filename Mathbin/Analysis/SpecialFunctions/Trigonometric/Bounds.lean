@@ -42,21 +42,11 @@ theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x := by
   · exact (sin_le_one x).trans_lt h'
     
   have hx : abs x = x := abs_of_nonneg h.le
-  have :=
-    le_of_abs_le
-      (sin_bound <|
-        show abs x ≤ 1 by
-          rwa [hx])
+  have := le_of_abs_le (sin_bound <| show abs x ≤ 1 by rwa [hx])
   rw [sub_le_iff_le_add', hx] at this
   apply this.trans_lt
   rw [sub_add, sub_lt_self_iff, sub_pos, div_eq_mul_inv (x ^ 3)]
-  refine'
-    mul_lt_mul' _
-      (by
-        norm_num)
-      (by
-        norm_num)
-      (pow_pos h 3)
+  refine' mul_lt_mul' _ (by norm_num) (by norm_num) (pow_pos h 3)
   apply pow_le_pow_of_le_one h.le h'
   norm_num
 
@@ -67,30 +57,18 @@ tight; the tighter inequality is sin x > x - x ^ 3 / 6 for all x > 0, but this i
 a simpler proof. -/
 theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < sin x := by
   have hx : abs x = x := abs_of_nonneg h.le
-  have :=
-    neg_le_of_abs_le
-      (sin_bound <|
-        show abs x ≤ 1 by
-          rwa [hx])
+  have := neg_le_of_abs_le (sin_bound <| show abs x ≤ 1 by rwa [hx])
   rw [le_sub_iff_add_le, hx] at this
   refine' lt_of_lt_of_leₓ _ this
-  have : x ^ 3 / 4 - x ^ 3 / 6 = x ^ 3 * 12⁻¹ := by
-    norm_num[div_eq_mul_inv, ← mul_sub]
+  have : x ^ 3 / 4 - x ^ 3 / 6 = x ^ 3 * 12⁻¹ := by norm_num [div_eq_mul_inv, ← mul_sub]
   rw [add_commₓ, sub_add, sub_neg_eq_add, sub_lt_sub_iff_left, ← lt_sub_iff_add_lt', this]
-  refine'
-    mul_lt_mul' _
-      (by
-        norm_num)
-      (by
-        norm_num)
-      (pow_pos h 3)
+  refine' mul_lt_mul' _ (by norm_num) (by norm_num) (pow_pos h 3)
   apply pow_le_pow_of_le_one h.le h'
   norm_num
 
 /-- The derivative of `tan x - x` is `1/(cos x)^2 - 1` away from the zeroes of cos. -/
 theorem deriv_tan_sub_id (x : ℝ) (h : cos x ≠ 0) : deriv (fun y : ℝ => tan y - y) x = 1 / cos x ^ 2 - 1 :=
-  HasDerivAt.deriv <| by
-    simpa using (has_deriv_at_tan h).add (has_deriv_at_id x).neg
+  HasDerivAt.deriv <| by simpa using (has_deriv_at_tan h).add (has_deriv_at_id x).neg
 
 /-- For all `0 ≤ x < π/2` we have `x < tan x`.
 
@@ -126,8 +104,7 @@ theorem lt_tan (x : ℝ) (h1 : 0 < x) (h2 : x < π / 2) : x < tan x := by
       
     simpa only [sq, mul_self_pos] using this.ne'
   have mono := Convex.strict_mono_on_of_deriv_pos (convex_Ico 0 (π / 2)) tan_minus_id_cts deriv_pos
-  have zero_in_U : (0 : ℝ) ∈ U := by
-    rwa [left_mem_Ico]
+  have zero_in_U : (0 : ℝ) ∈ U := by rwa [left_mem_Ico]
   have x_in_U : x ∈ U := ⟨h1.le, h2⟩
   simpa only [tan_zero, sub_zero, sub_pos] using mono zero_in_U x_in_U h1
 

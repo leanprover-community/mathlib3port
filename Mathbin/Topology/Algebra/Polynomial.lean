@@ -45,7 +45,7 @@ variable {R S : Type _} [Semiringₓ R] [TopologicalSpace R] [TopologicalSemirin
 
 @[continuity]
 protected theorem continuous_eval₂ [Semiringₓ S] (p : S[X]) (f : S →+* R) : Continuous fun x => p.eval₂ f x := by
-  dsimp' only [eval₂_eq_sum, Finsupp.sum]
+  dsimp only [eval₂_eq_sum, Finsupp.sum]
   exact continuous_finset_sum _ fun c hc => continuous_const.mul (continuous_pow _)
 
 @[continuity]
@@ -122,9 +122,7 @@ theorem tendsto_norm_at_top (p : R[X]) (h : 0 < degree p) {l : Filter α} {z : �
 theorem exists_forall_norm_le [ProperSpace R] (p : R[X]) : ∃ x, ∀ y, ∥p.eval x∥ ≤ ∥p.eval y∥ :=
   if hp0 : 0 < degree p then
     p.Continuous.norm.exists_forall_le <| p.tendsto_norm_at_top hp0 tendsto_norm_cocompact_at_top
-  else
-    ⟨p.coeff 0, by
-      rw [eq_C_of_degree_le_zero (le_of_not_gtₓ hp0)] <;> simp ⟩
+  else ⟨p.coeff 0, by rw [eq_C_of_degree_le_zero (le_of_not_gtₓ hp0)] <;> simp⟩
 
 section Roots
 
@@ -136,19 +134,25 @@ variable {F K : Type _} [Field F] [NormedField K]
 
 open Multiset
 
+theorem eq_one_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (hB : B < 0) (h1 : p.Monic) (h2 : Splits f p)
+    (h3 : ∀ z ∈ (map f p).roots, ∥z∥ ≤ B) : p = 1 :=
+  h1.nat_degree_eq_zero_iff_eq_one.mp
+    (by
+      contrapose! hB
+      rw [nat_degree_eq_card_roots h2] at hB
+      obtain ⟨z, hz⟩ := multiset.card_pos_iff_exists_mem.mp (zero_lt_iff.mpr hB)
+      exact le_transₓ (norm_nonneg _) (h3 z hz))
+
 theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 : p.Monic) (h2 : Splits f p)
     (h3 : ∀ z ∈ (map f p).roots, ∥z∥ ≤ B) : ∥(map f p).coeff i∥ ≤ B ^ (p.natDegree - i) * p.natDegree.choose i := by
   have hcd : card (map f p).roots = p.nat_degree := (nat_degree_eq_card_roots h2).symm
-  by_cases' hB : 0 ≤ B
-  · by_cases' hi : i ≤ p.nat_degree
+  obtain hB | hB := le_or_ltₓ 0 B
+  · by_cases hi:i ≤ p.nat_degree
     · rw [eq_prod_roots_of_splits h2, monic.def.mp h1, RingHom.map_one, RingHom.map_one, one_mulₓ]
       rw [prod_X_sub_C_coeff]
       swap
       rwa [hcd]
-      rw [norm_mul,
-        (by
-          norm_num : ∥(-1 : K) ^ (card (map f p).roots - i)∥ = 1),
-        one_mulₓ]
+      rw [norm_mul, (by norm_num : ∥(-1 : K) ^ (card (map f p).roots - i)∥ = 1), one_mulₓ]
       apply le_transₓ (le_sum_of_subadditive norm _ _ _)
       rotate_left
       exact norm_zero
@@ -170,9 +174,7 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
           exact ⟨norm_nonneg z, h3 z (mem_of_le (mem_powerset_len.mp ht.left).left hz.left)⟩
         lift B to ℝ≥0 using hB
         lift Multiset.map normHom t to Multiset ℝ≥0 using fun x hx => (hbounds x hx).left with normt hn
-        rw
-          [(by
-            rw_mod_cast[← ht.right, Function.comp_applyₓ, ← prod_hom t normHom, ← hn] : r = normt.prod)]
+        rw [(by rw_mod_cast [← ht.right, Function.comp_applyₓ, ← prod_hom t normHom, ← hn] : r = normt.prod)]
         convert Multiset.prod_le_pow_card normt _ _
         · rw [(_ : card normt = card (Multiset.map coe normt))]
           rwa [hn, ← hcd, card_map, (mem_powerset_len.mp ht.left).right.symm]
@@ -186,31 +188,40 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
       
     · push_neg  at hi
       rw [Nat.choose_eq_zero_of_lt hi, coeff_eq_zero_of_nat_degree_lt, norm_zero]
-      rw_mod_cast[mul_zero]
+      rw_mod_cast [mul_zero]
       · rwa [monic.nat_degree_map h1]
         infer_instance
         
       
     
-  · push_neg  at hB
-    have noroots : (map f p).roots = 0 := by
-      contrapose! hB
-      obtain ⟨z, hz⟩ := exists_mem_of_ne_zero hB
-      exact le_transₓ (norm_nonneg z) (h3 z hz)
-    suffices p.nat_degree = 0 by
-      by_cases' hi : i = 0
-      · rw [this, hi, (monic.nat_degree_eq_zero_iff_eq_one h1).mp this]
-        simp only [Polynomial.map_one, coeff_one_zero, norm_one, pow_zeroₓ, Nat.choose_self, Nat.cast_oneₓ, mul_oneₓ]
-        
-      · replace hi := zero_lt_iff.mpr hi
-        rw [← this] at hi
-        rw [Nat.choose_eq_zero_of_lt hi, coeff_eq_zero_of_nat_degree_lt, norm_zero]
-        rw_mod_cast[mul_zero]
-        · rwa [monic.nat_degree_map h1]
-          infer_instance
-          
-        
-    rw [← hcd, noroots, card_zero]
+  · rw [eq_one_of_roots_le hB h1 h2 h3, Polynomial.map_one, nat_degree_one, zero_tsub, pow_zeroₓ, one_mulₓ, coeff_one]
+    split_ifs <;> norm_num [h]
+    
+
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
+/-- The coefficients of the monic polynomials of bounded degree with bounded roots are
+uniformely bounded. -/
+theorem coeff_bdd_of_roots_le {B : ℝ} {d : ℕ} (f : F →+* K) {p : F[X]} (h1 : p.Monic) (h2 : Splits f p)
+    (h3 : p.natDegree ≤ d) (h4 : ∀ z ∈ (map f p).roots, ∥z∥ ≤ B) (i : ℕ) :
+    ∥(map f p).coeff i∥ ≤ max B 1 ^ d * d.choose (d / 2) := by
+  obtain hB | hB := le_or_ltₓ 0 B
+  · apply (coeff_le_of_roots_le i h1 h2 h4).trans
+    calc
+      _ ≤ max B 1 ^ (p.nat_degree - i) * p.nat_degree.choose i :=
+        mul_le_mul_of_nonneg_right (pow_le_pow_of_le_left hB (le_max_leftₓ _ _) _) _
+      _ ≤ max B 1 ^ d * p.nat_degree.choose i :=
+        mul_le_mul_of_nonneg_right ((pow_mono (le_max_rightₓ _ _)) (le_transₓ (Nat.sub_leₓ _ _) h3)) _
+      _ ≤ max B 1 ^ d * d.choose (d / 2) :=
+        mul_le_mul_of_nonneg_left (nat.cast_le.mpr ((i.choose_mono h3).trans (i.choose_le_middle d))) _
+      
+    all_goals trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+    
+  · rw [eq_one_of_roots_le hB h1 h2 h4, Polynomial.map_one, coeff_one]
+    refine' trans _ (one_le_mul_of_one_le_of_one_le (one_le_pow_of_one_le (le_max_rightₓ B 1) d) _)
+    · split_ifs <;> norm_num
+      
+    · exact_mod_cast nat.succ_le_iff.mpr (Nat.choose_pos (d.div_le_self 2))
+      
     
 
 end Roots

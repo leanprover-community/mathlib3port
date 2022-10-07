@@ -57,15 +57,16 @@ variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 
 /-- A path from the root of a tree to one of its node -/
 inductive M.Path : P.last.M → Fin2 n → Type u
-  | root (x : P.last.M) (a : P.A) (f : P.last.B a → P.last.M) (h : Pfunctor.M.dest x = ⟨a, f⟩) (i : Fin2 n)
+  |
+  root (x : P.last.M) (a : P.A) (f : P.last.B a → P.last.M) (h : Pfunctor.M.dest x = ⟨a, f⟩) (i : Fin2 n)
     (c : P.drop.B a i) : M.path x i
-  | child (x : P.last.M) (a : P.A) (f : P.last.B a → P.last.M) (h : Pfunctor.M.dest x = ⟨a, f⟩) (j : P.last.B a)
+  |
+  child (x : P.last.M) (a : P.A) (f : P.last.B a → P.last.M) (h : Pfunctor.M.dest x = ⟨a, f⟩) (j : P.last.B a)
     (i : Fin2 n) (c : M.path (f j) i) : M.path x i
 
 instance M.Path.inhabited (x : P.last.M) {i} [Inhabited (P.drop.B x.head i)] : Inhabited (M.Path P x i) :=
   ⟨M.Path.root _ (Pfunctor.M.head x) (Pfunctor.M.children x)
-      (Pfunctor.M.casesOn' x <| by
-        intros <;> simp [Pfunctor.M.dest_mk] <;> ext <;> rw [Pfunctor.M.children_mk] <;> rfl)
+      (Pfunctor.M.casesOn' x <| by intros <;> simp [Pfunctor.M.dest_mk] <;> ext <;> rw [Pfunctor.M.children_mk] <;> rfl)
       _ default⟩
 
 /-- Polynomial functor of the M-type of `P`. `A` is a data-less
@@ -80,8 +81,7 @@ def mp : Mvpfunctor n where
 def M (α : Typevec n) : Type _ :=
   P.mp.Obj α
 
-instance mvfunctorM : Mvfunctor P.M := by
-  delta' M <;> infer_instance
+instance mvfunctorM : Mvfunctor P.M := by delta M <;> infer_instance
 
 instance inhabitedM {α : Typevec _} [I : Inhabited P.A] [∀ i : Fin2 n, Inhabited (α i)] : Inhabited (P.M α) :=
   @Obj.inhabited _ (mp P) _ (@Pfunctor.M.inhabited P.last I) _
@@ -151,8 +151,7 @@ def M.mk {α : Typevec n} : P.Obj (α.Append1 (P.M α)) → P.M α :=
 
 theorem M.dest'_eq_dest' {α : Typevec n} {x : P.last.M} {a₁ : P.A} {f₁ : P.last.B a₁ → P.last.M}
     (h₁ : Pfunctor.M.dest x = ⟨a₁, f₁⟩) {a₂ : P.A} {f₂ : P.last.B a₂ → P.last.M} (h₂ : Pfunctor.M.dest x = ⟨a₂, f₂⟩)
-    (f' : M.Path P x ⟹ α) : M.dest' P h₁ f' = M.dest' P h₂ f' := by
-  cases h₁.symm.trans h₂ <;> rfl
+    (f' : M.Path P x ⟹ α) : M.dest' P h₁ f' = M.dest' P h₂ f' := by cases h₁.symm.trans h₂ <;> rfl
 
 theorem M.dest_eq_dest' {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
     (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : M.dest P ⟨x, f'⟩ = M.dest' P h f' :=
@@ -168,10 +167,12 @@ theorem M.dest_corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.Append
   trans
   apply M.dest_corec'
   cases' g x with a f
-  dsimp'
+  dsimp
   rw [Mvpfunctor.map_eq]
   congr
-  conv => rhs rw [← split_drop_fun_last_fun f, append_fun_comp_split_fun]
+  conv =>
+  rhs
+  rw [← split_drop_fun_last_fun f, append_fun_comp_split_fun]
   rfl
 
 theorem M.bisim_lemma {α : Typevec n} {a₁ : (mp P).A} {f₁ : (mp P).B a₁ ⟹ α} {a' : P.A} {f' : (P.B a').drop ⟹ α}
@@ -179,7 +180,7 @@ theorem M.bisim_lemma {α : Typevec n} {a₁ : (mp P).A} {f₁ : (mp P).B a₁ �
     ∃ (g₁' : _)(e₁' : Pfunctor.M.dest a₁ = ⟨a', g₁'⟩),
       f' = M.pathDestLeft P e₁' f₁ ∧ f₁' = fun x : (last P).B a' => ⟨g₁' x, M.pathDestRight P e₁' f₁ x⟩ :=
   by
-  generalize ef : @split_fun n _ (append1 α (M P α)) f' f₁' = ff  at e₁
+  generalize ef : @split_fun n _ (append1 α (M P α)) f' f₁' = ff at e₁
   cases' e₁' : Pfunctor.M.dest a₁ with a₁' g₁'
   rw [M.dest_eq_dest' _ e₁'] at e₁
   cases e₁
@@ -192,7 +193,7 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
     (x y) (r : R x y) : x = y := by
   cases' x with a₁ f₁
   cases' y with a₂ f₂
-  dsimp' [Mp]  at *
+  dsimp [Mp] at *
   have : a₁ = a₂ := by
     refine' Pfunctor.M.bisim (fun a₁ a₂ => ∃ x y, R x y ∧ x.1 = a₁ ∧ y.1 = a₂) _ _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
     rintro _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
@@ -203,13 +204,12 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
     exact ⟨_, _, _, rfl, rfl, fun b => ⟨_, _, h' b, rfl, rfl⟩⟩
   subst this
   congr with i p
-  induction' p with x a f h' i c x a f h' i c p IH generalizing f₁ f₂ <;>
-    try
-      rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h''⟩
-      rcases M.bisim_lemma P e₁ with ⟨g₁', e₁', rfl, rfl⟩
-      rcases M.bisim_lemma P e₂ with ⟨g₂', e₂', e₃, rfl⟩
-      cases h'.symm.trans e₁'
-      cases h'.symm.trans e₂'
+  induction' p with x a f h' i c x a f h' i c p IH generalizing f₁ f₂ <;> try
+    rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h''⟩
+    rcases M.bisim_lemma P e₁ with ⟨g₁', e₁', rfl, rfl⟩
+    rcases M.bisim_lemma P e₂ with ⟨g₂', e₂', e₃, rfl⟩
+    cases h'.symm.trans e₁'
+    cases h'.symm.trans e₂'
   · exact (congr_fun (congr_fun e₃ i) c : _)
     
   · exact IH _ _ (h'' _)
@@ -263,15 +263,16 @@ theorem M.bisim' {α : Typevec n} (R : P.M α → P.M α → Prop)
     · rw [← Quot.factor_mk_eq R (EqvGen R) this]
       rwa [append_fun_comp_id, ← Mvfunctor.map_map, ← Mvfunctor.map_map, h]
       
-    all_goals
-      cc
+    all_goals cc
     
 
 theorem M.dest_map {α β : Typevec n} (g : α ⟹ β) (x : P.M α) :
     M.dest P (g <$$> x) = (appendFun g fun x => g <$$> x) <$$> M.dest P x := by
   cases' x with a f
   rw [map_eq]
-  conv => rhs rw [M.dest, M.dest', map_eq, append_fun_comp_split_fun]
+  conv =>
+  rhs
+  rw [M.dest, M.dest', map_eq, append_fun_comp_split_fun]
   rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation

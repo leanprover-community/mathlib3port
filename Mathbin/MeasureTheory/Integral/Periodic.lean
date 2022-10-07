@@ -20,9 +20,7 @@ open Set Function MeasureTheory MeasureTheory.Measure TopologicalSpace
 open MeasureTheory
 
 theorem is_add_fundamental_domain_Ioc {T : ℝ} (hT : 0 < T) (t : ℝ)
-    (μ : Measureₓ ℝ := by
-      run_tac
-        volume_tac) :
+    (μ : Measureₓ ℝ := by exact MeasureTheory.MeasureSpace.volume) :
     IsAddFundamentalDomain (AddSubgroup.zmultiples T) (Ioc t (t + T)) μ := by
   refine' is_add_fundamental_domain.mk' measurable_set_Ioc.null_measurable_set fun x => _
   have : bijective (cod_restrict (fun n : ℤ => n • T) (AddSubgroup.zmultiples T) _) :=
@@ -114,11 +112,8 @@ theorem Inf_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
     (inf ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x) ≤ ∫ x in 0 ..t, g x := by
   let ε := Int.fract (t / T) * T
   conv_rhs =>
-    rw [←
-      Int.fract_div_mul_self_add_zsmul_eq T t
-        (by
-          linarith),
-      ← integral_add_adjacent_intervals (h_int 0 ε) (h_int _ _)]
+    rw [← Int.fract_div_mul_self_add_zsmul_eq T t (by linarith), ←
+      integral_add_adjacent_intervals (h_int 0 ε) (h_int _ _)]
   rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_addₓ,
     add_le_add_iff_right]
   exact
@@ -132,11 +127,8 @@ theorem integral_le_Sup_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
     (∫ x in 0 ..t, g x) ≤ sup ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x := by
   let ε := Int.fract (t / T) * T
   conv_lhs =>
-    rw [←
-      Int.fract_div_mul_self_add_zsmul_eq T t
-        (by
-          linarith),
-      ← integral_add_adjacent_intervals (h_int 0 ε) (h_int _ _)]
+    rw [← Int.fract_div_mul_self_add_zsmul_eq T t (by linarith), ←
+      integral_add_adjacent_intervals (h_int 0 ε) (h_int _ _)]
   rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_addₓ,
     add_le_add_iff_right]
   exact

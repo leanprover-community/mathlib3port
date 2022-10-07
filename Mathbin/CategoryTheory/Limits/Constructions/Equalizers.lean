@@ -54,7 +54,7 @@ def equalizerCone (F : walking_parallel_pair ⥤ C) : Cone F :=
     (Fork.ofι (pullbackFst F)
       (by
         conv_rhs => rw [pullback_fst_eq_pullback_snd]
-        convert pullback.condition =≫ limits.prod.snd using 1 <;> simp ))
+        convert pullback.condition =≫ limits.prod.snd using 1 <;> simp))
 
 /-- Show the equalizing cone is a limit -/
 def equalizerConeIsLimit (F : walking_parallel_pair ⥤ C) : IsLimit (equalizerCone F) where
@@ -63,8 +63,7 @@ def equalizerConeIsLimit (F : walking_parallel_pair ⥤ C) : IsLimit (equalizerC
     apply pullback.lift (c.π.app _) (c.π.app _)
     apply limit.hom_ext
     rintro (_ | _) <;> simp
-  fac' := by
-    rintro c (_ | _) <;> simp
+  fac' := by rintro c (_ | _) <;> simp
   uniq' := by
     intro c _ J
     have J0 := J walking_parallel_pair.zero
@@ -118,7 +117,7 @@ def preservesEqualizersOfPreservesPullbacksAndBinaryProducts [HasBinaryProducts 
         uniq' := fun s m h => by
           rw [iso.eq_comp_inv]
           have := h walking_parallel_pair.zero
-          dsimp' [equalizer_cone]  at this
+          dsimp [equalizer_cone] at this
           ext <;>
             simp only [preserves_pullback.iso_hom_snd, category.assoc, preserves_pullback.iso_hom_fst,
               pullback.lift_fst, pullback.lift_snd, category.comp_id, ← pullback_fst_eq_pullback_snd, ← this] }⟩
@@ -148,7 +147,7 @@ def coequalizerCocone (F : walking_parallel_pair ⥤ C) : Cocone F :=
     (Cofork.ofπ (pushoutInl F)
       (by
         conv_rhs => rw [pushout_inl_eq_pushout_inr]
-        convert limits.coprod.inr ≫= pushout.condition using 1 <;> simp ))
+        convert limits.coprod.inr ≫= pushout.condition using 1 <;> simp))
 
 /-- Show the equalizing cocone is a colimit -/
 def coequalizerCoconeIsColimit (F : walking_parallel_pair ⥤ C) : IsColimit (coequalizerCocone F) where
@@ -157,12 +156,10 @@ def coequalizerCoconeIsColimit (F : walking_parallel_pair ⥤ C) : IsColimit (co
     apply pushout.desc (c.ι.app _) (c.ι.app _)
     apply colimit.hom_ext
     rintro (_ | _) <;> simp
-  fac' := by
-    rintro c (_ | _) <;> simp
+  fac' := by rintro c (_ | _) <;> simp
   uniq' := by
     intro c _ J
-    have J1 : pushout_inl F ≫ m = c.ι.app walking_parallel_pair.one := by
-      simpa using J walking_parallel_pair.one
+    have J1 : pushout_inl F ≫ m = c.ι.app walking_parallel_pair.one := by simpa using J walking_parallel_pair.one
     apply pushout.hom_ext
     · rw [colimit.ι_desc]
       exact J1
@@ -216,7 +213,7 @@ def preservesCoequalizersOfPreservesPushoutsAndBinaryCoproducts [HasBinaryCoprod
         uniq' := fun s m h => by
           rw [iso.eq_inv_comp]
           have := h walking_parallel_pair.one
-          dsimp' [coequalizer_cocone]  at this
+          dsimp [coequalizer_cocone] at this
           ext <;>
             simp only [preserves_pushout.inl_iso_hom_assoc, category.id_comp, pushout.inl_desc, pushout.inr_desc,
               preserves_pushout.inr_iso_hom_assoc, ← pushout_inl_eq_pushout_inr, ← this] }⟩

@@ -265,14 +265,13 @@ open BigOperators
 
 @[simp, to_additive]
 theorem coe_prod {α : Type _} {β : Type _} [CommMonoidₓ β] [TopologicalSpace α] [TopologicalSpace β]
-    [HasContinuousMul β] {ι : Type _} (s : Finset ι) (f : ι → C(α, β)) : ⇑(∏ i in s, f i) = ∏ i in s, (f i : α → β) :=
+    [HasContinuousMul β] {ι : Type _} (s : Finsetₓ ι) (f : ι → C(α, β)) : ⇑(∏ i in s, f i) = ∏ i in s, (f i : α → β) :=
   (coeFnMonoidHom : C(α, β) →* _).map_prod f s
 
 @[to_additive]
 theorem prod_apply {α : Type _} {β : Type _} [CommMonoidₓ β] [TopologicalSpace α] [TopologicalSpace β]
-    [HasContinuousMul β] {ι : Type _} (s : Finset ι) (f : ι → C(α, β)) (a : α) : (∏ i in s, f i) a = ∏ i in s, f i a :=
-  by
-  simp
+    [HasContinuousMul β] {ι : Type _} (s : Finsetₓ ι) (f : ι → C(α, β)) (a : α) : (∏ i in s, f i) a = ∏ i in s, f i a :=
+  by simp
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Groupₓ β] [TopologicalGroup β] :
@@ -549,14 +548,10 @@ variable {α : Type _} [TopologicalSpace α] {R : Type _} [CommSemiringₓ R] {A
 /-- Continuous constant functions as a `ring_hom`. -/
 def ContinuousMap.c : R →+* C(α, A) where
   toFun := fun c : R => ⟨fun x : α => (algebraMap R A) c, continuous_const⟩
-  map_one' := by
-    ext x <;> exact (algebraMap R A).map_one
-  map_mul' := fun c₁ c₂ => by
-    ext x <;> exact (algebraMap R A).map_mul _ _
-  map_zero' := by
-    ext x <;> exact (algebraMap R A).map_zero
-  map_add' := fun c₁ c₂ => by
-    ext x <;> exact (algebraMap R A).map_add _ _
+  map_one' := by ext x <;> exact (algebraMap R A).map_one
+  map_mul' := fun c₁ c₂ => by ext x <;> exact (algebraMap R A).map_mul _ _
+  map_zero' := by ext x <;> exact (algebraMap R A).map_zero
+  map_add' := fun c₁ c₂ => by ext x <;> exact (algebraMap R A).map_add _ _
 
 @[simp]
 theorem ContinuousMap.C_apply (r : R) (a : α) : ContinuousMap.c r a = algebraMap R A r :=
@@ -566,10 +561,8 @@ variable [HasContinuousConstSmul R A] [HasContinuousConstSmul R A₂]
 
 instance ContinuousMap.algebra : Algebra R C(α, A) where
   toRingHom := ContinuousMap.c
-  commutes' := fun c f => by
-    ext x <;> exact Algebra.commutes' _ _
-  smul_def' := fun c f => by
-    ext x <;> exact Algebra.smul_def' _ _
+  commutes' := fun c f => by ext x <;> exact Algebra.commutes' _ _
+  smul_def' := fun c f => by ext x <;> exact Algebra.smul_def' _ _
 
 variable (R)
 
@@ -599,7 +592,7 @@ used for stating the Stone-Weierstrass theorem.
 abbrev Subalgebra.SeparatesPoints (s : Subalgebra R C(α, A)) : Prop :=
   Set.SeparatesPoints ((fun f : C(α, A) => (f : α → A)) '' (s : Set C(α, A)))
 
-theorem Subalgebra.separates_points_monotone : Monotone fun s : Subalgebra R C(α, A) => s.SeparatesPoints :=
+theorem Subalgebra.separates_points_monotone : Monotoneₓ fun s : Subalgebra R C(α, A) => s.SeparatesPoints :=
   fun s s' r h x y n => by
   obtain ⟨f, m, w⟩ := h n
   rcases m with ⟨f, ⟨m, rfl⟩⟩
@@ -637,7 +630,7 @@ By an affine transformation in the field we can arrange so that `f x = a` and `f
 -/
 theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h : s.SeparatesPoints) :
     (s : Set C(α, 𝕜)).SeparatesPointsStrongly := fun v x y => by
-  by_cases' n : x = y
+  by_cases n:x = y
   · subst n
     use (v x • 1 : C(α, 𝕜))
     · apply s.smul_mem
@@ -656,7 +649,7 @@ theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h
     -- TODO should there be a tactic for this?
     -- We could add an attribute `@[subobject_mem]`, and a tactic
     -- ``def subobject_mem := `[solve_by_elim with subobject_mem { max_depth := 10 }]``
-    solve_by_elim(config := { max_depth := 6 }) [Subalgebra.add_mem, Subalgebra.smul_mem, Subalgebra.sub_mem,
+    solve_by_elim (config := { max_depth := 6 }) [Subalgebra.add_mem, Subalgebra.smul_mem, Subalgebra.sub_mem,
       Subalgebra.algebra_map_mem]
     
   · simp [f', coe_fn_coe_base']
@@ -670,7 +663,7 @@ instance ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace �
     [TopologicalSpace R] [TopologicalSemiring R] [Subsingleton α] : Subsingleton (Subalgebra R C(α, R)) := by
   fconstructor
   intro s₁ s₂
-  by_cases' n : Nonempty α
+  by_cases n:Nonempty α
   · obtain ⟨x⟩ := n
     ext f
     have h : f = algebraMap R C(α, R) (f x) := by
@@ -709,18 +702,12 @@ instance module' {α : Type _} [TopologicalSpace α] (R : Type _) [Ringₓ R] [T
     (M : Type _) [TopologicalSpace M] [AddCommMonoidₓ M] [HasContinuousAdd M] [Module R M] [HasContinuousSmul R M] :
     Module C(α, R) C(α, M) where
   smul := (· • ·)
-  smul_add := fun c f g => by
-    ext x <;> exact smul_add (c x) (f x) (g x)
-  add_smul := fun c₁ c₂ f => by
-    ext x <;> exact add_smul (c₁ x) (c₂ x) (f x)
-  mul_smul := fun c₁ c₂ f => by
-    ext x <;> exact mul_smul (c₁ x) (c₂ x) (f x)
-  one_smul := fun f => by
-    ext x <;> exact one_smul R (f x)
-  zero_smul := fun f => by
-    ext x <;> exact zero_smul _ _
-  smul_zero := fun r => by
-    ext x <;> exact smul_zero _
+  smul_add := fun c f g => by ext x <;> exact smul_add (c x) (f x) (g x)
+  add_smul := fun c₁ c₂ f => by ext x <;> exact add_smul (c₁ x) (c₂ x) (f x)
+  mul_smul := fun c₁ c₂ f => by ext x <;> exact mul_smul (c₁ x) (c₂ x) (f x)
+  one_smul := fun f => by ext x <;> exact one_smul R (f x)
+  zero_smul := fun f => by ext x <;> exact zero_smul _ _
+  smul_zero := fun r => by ext x <;> exact smul_zero _
 
 end ContinuousMap
 
@@ -758,13 +745,11 @@ variable {α : Type _} [TopologicalSpace α]
 variable {β : Type _} [LinearOrderedField β] [TopologicalSpace β] [OrderTopology β] [TopologicalRing β]
 
 theorem inf_eq (f g : C(α, β)) : f ⊓ g = (2⁻¹ : β) • (f + g - abs (f - g)) :=
-  ext fun x => by
-    simpa using min_eq_half_add_sub_abs_sub
+  ext fun x => by simpa using min_eq_half_add_sub_abs_sub
 
 -- Not sure why this is grosser than `inf_eq`:
 theorem sup_eq (f g : C(α, β)) : f ⊔ g = (2⁻¹ : β) • (f + g + abs (f - g)) :=
-  ext fun x => by
-    simpa [mul_addₓ] using @max_eq_half_add_add_abs_sub _ _ (f x) (g x)
+  ext fun x => by simpa [mul_addₓ] using @max_eq_half_add_add_abs_sub _ _ (f x) (g x)
 
 end Lattice
 

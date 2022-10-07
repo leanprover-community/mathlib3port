@@ -50,7 +50,7 @@ stars and bars, multichoose
 -/
 
 
-open Finset Fintype Function Sum Nat
+open Finsetₓ Fintypeₓ Function Sum Nat
 
 variable {α β : Type _}
 
@@ -66,10 +66,8 @@ as demonstrated by respectively erasing or appending `0`.
 protected def e1 {n k : ℕ} : { s : Sym (Finₓ n.succ) k.succ // ↑0 ∈ s } ≃ Sym (Finₓ n.succ) k where
   toFun := fun s => s.1.erase 0 s.2
   invFun := fun s => ⟨cons 0 s, mem_cons_self 0 s⟩
-  left_inv := fun s => by
-    simp
-  right_inv := fun s => by
-    simp
+  left_inv := fun s => by simp
+  right_inv := fun s => by simp
 
 /-- The multisets of size `k` over `fin n+2` not containing `0`
 are equivalent to those of size `k` over `fin n+1`,
@@ -82,12 +80,12 @@ protected def e2 {n k : ℕ} : { s : Sym (Finₓ n.succ.succ) k // ↑0 ∉ s } 
   left_inv := fun s => by
     obtain ⟨s, hs⟩ := s
     simp only [Finₓ.zero_succ_above, map_map, comp_app]
-    nth_rw_rhs 0[← map_id' s]
+    nth_rw_rhs 0 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
     simp [Finₓ.pred_above_zero (ne_of_mem_of_not_memₓ hv hs)]
   right_inv := fun s => by
     simp only [Finₓ.zero_succ_above, map_map, comp_app]
-    nth_rw_rhs 0[← map_id' s]
+    nth_rw_rhs 0 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
     rw [← Finₓ.zero_succ_above v, ← Finₓ.cast_succ_zero, Finₓ.pred_above_succ_above 0 v]
 
@@ -109,22 +107,21 @@ theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Finₓ n) k) = mult
       infer_instance
       
     rw [← card_sum]
-    refine' Fintype.card_congr (Equivₓ.symm _)
+    refine' Fintypeₓ.card_congr (Equivₓ.symm _)
     apply (Equivₓ.sumCongr sym.E1.symm sym.E2.symm).trans
     apply Equivₓ.sumCompl
     
 
 /-- For any fintype `α` of cardinality `n`, `card (sym α k) = multichoose (card α) k` -/
-theorem card_sym_eq_multichoose (α : Type _) (k : ℕ) [Fintype α] [Fintype (Sym α k)] :
+theorem card_sym_eq_multichoose (α : Type _) (k : ℕ) [Fintypeₓ α] [Fintypeₓ (Sym α k)] :
     card (Sym α k) = multichoose (card α) k := by
   rw [← card_sym_fin_eq_multichoose]
   exact card_congr (equiv_congr (equiv_fin α))
 
 /-- The *stars and bars* lemma: the cardinality of `sym α k` is equal to
 `nat.choose (card α + k - 1) k`. -/
-theorem card_sym_eq_choose {α : Type _} [Fintype α] (k : ℕ) [Fintype (Sym α k)] :
-    card (Sym α k) = (card α + k - 1).choose k := by
-  rw [card_sym_eq_multichoose, Nat.multichoose_eq]
+theorem card_sym_eq_choose {α : Type _} [Fintypeₓ α] (k : ℕ) [Fintypeₓ (Sym α k)] :
+    card (Sym α k) = (card α + k - 1).choose k := by rw [card_sym_eq_multichoose, Nat.multichoose_eq]
 
 end Sym
 
@@ -135,7 +132,7 @@ namespace Sym2
 variable [DecidableEq α]
 
 /-- The `diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.card`. -/
-theorem card_image_diag (s : Finset α) : (s.diag.Image Quotientₓ.mk).card = s.card := by
+theorem card_image_diag (s : Finsetₓ α) : (s.diag.Image Quotientₓ.mk).card = s.card := by
   rw [card_image_of_inj_on, diag_card]
   rintro ⟨x₀, x₁⟩ hx _ _ h
   cases Quotientₓ.eq.1 h
@@ -145,18 +142,16 @@ theorem card_image_diag (s : Finset α) : (s.diag.Image Quotientₓ.mk).card = s
     rw [hx.2]
     
 
-theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.offDiag.Image Quotientₓ.mk).card = s.offDiag.card := by
-  rw
-    [card_eq_sum_card_fiberwise
+theorem two_mul_card_image_off_diag (s : Finsetₓ α) : 2 * (s.offDiag.Image Quotientₓ.mk).card = s.offDiag.card := by
+  rw [card_eq_sum_card_fiberwise
       (fun x => mem_image_of_mem _ : ∀ x ∈ s.off_diag, Quotientₓ.mk x ∈ s.off_diag.image Quotientₓ.mk),
     sum_const_nat (Quotientₓ.ind _), mul_comm]
   rintro ⟨x, y⟩ hxy
   simp_rw [mem_image, exists_propₓ, mem_off_diag, Quotientₓ.eq] at hxy
   obtain ⟨a, ⟨ha₁, ha₂, ha⟩, h⟩ := hxy
-  obtain ⟨hx, hy, hxy⟩ : x ∈ s ∧ y ∈ s ∧ x ≠ y := by
-    cases h <;> have := ha.symm <;> exact ⟨‹_›, ‹_›, ‹_›⟩
+  obtain ⟨hx, hy, hxy⟩ : x ∈ s ∧ y ∈ s ∧ x ≠ y := by cases h <;> have := ha.symm <;> exact ⟨‹_›, ‹_›, ‹_›⟩
   have hxy' : y ≠ x := hxy.symm
-  have : (s.off_diag.filter fun z => ⟦z⟧ = ⟦(x, y)⟧) = ({(x, y), (y, x)} : Finset _) := by
+  have : (s.off_diag.filter fun z => ⟦z⟧ = ⟦(x, y)⟧) = ({(x, y), (y, x)} : Finsetₓ _) := by
     ext ⟨x₁, y₁⟩
     rw [mem_filter, mem_insert, mem_singleton, Sym2.eq_iff, Prod.mk.inj_iffₓ, Prod.mk.inj_iffₓ, and_iff_right_iff_imp]
     rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_off_diag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
@@ -168,28 +163,28 @@ theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.offDiag.Image Quoti
 /-- The `off_diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.off_diag.card / 2`.
 This is because every element `⟦(x, y)⟧` of `sym2 α` not on the diagonal comes from exactly two
 pairs: `(x, y)` and `(y, x)`. -/
-theorem card_image_off_diag (s : Finset α) : (s.offDiag.Image Quotientₓ.mk).card = s.card.choose 2 := by
+theorem card_image_off_diag (s : Finsetₓ α) : (s.offDiag.Image Quotientₓ.mk).card = s.card.choose 2 := by
   rw [Nat.choose_two_right, mul_tsub, mul_oneₓ, ← off_diag_card,
     Nat.div_eq_of_eq_mul_rightₓ zero_lt_two (two_mul_card_image_off_diag s).symm]
 
-theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.IsDiag } = card α := by
-  convert card_image_diag (univ : Finset α)
-  rw [Fintype.card_of_subtype, ← filter_image_quotient_mk_is_diag]
+theorem card_subtype_diag [Fintypeₓ α] : card { a : Sym2 α // a.IsDiag } = card α := by
+  convert card_image_diag (univ : Finsetₓ α)
+  rw [Fintypeₓ.card_of_subtype, ← filter_image_quotient_mk_is_diag]
   rintro x
   rw [mem_filter, univ_product_univ, mem_image]
   obtain ⟨a, ha⟩ := Quotientₓ.exists_rep x
   exact and_iff_right ⟨a, mem_univ _, ha⟩
 
-theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.IsDiag } = (card α).choose 2 := by
-  convert card_image_off_diag (univ : Finset α)
-  rw [Fintype.card_of_subtype, ← filter_image_quotient_mk_not_is_diag]
+theorem card_subtype_not_diag [Fintypeₓ α] : card { a : Sym2 α // ¬a.IsDiag } = (card α).choose 2 := by
+  convert card_image_off_diag (univ : Finsetₓ α)
+  rw [Fintypeₓ.card_of_subtype, ← filter_image_quotient_mk_not_is_diag]
   rintro x
   rw [mem_filter, univ_product_univ, mem_image]
   obtain ⟨a, ha⟩ := Quotientₓ.exists_rep x
   exact and_iff_right ⟨a, mem_univ _, ha⟩
 
 /-- Finset **stars and bars** for the case `n = 2`. -/
-theorem _root_.finset.card_sym2 (s : Finset α) : s.Sym2.card = s.card * (s.card + 1) / 2 := by
+theorem _root_.finset.card_sym2 (s : Finsetₓ α) : s.Sym2.card = s.card * (s.card + 1) / 2 := by
   rw [← image_diag_union_image_off_diag, card_union_eq, Sym2.card_image_diag, Sym2.card_image_off_diag,
     Nat.choose_two_right, add_commₓ, ← Nat.triangle_succ, Nat.succ_sub_one, mul_comm]
   rintro m he
@@ -200,8 +195,8 @@ theorem _root_.finset.card_sym2 (s : Finset α) : s.Sym2.card = s.card * (s.card
   exact is_diag_mk_of_mem_diag ha
 
 /-- Type **stars and bars** for the case `n = 2`. -/
-protected theorem card [Fintype α] : card (Sym2 α) = card α * (card α + 1) / 2 :=
-  Finset.card_sym2 _
+protected theorem card [Fintypeₓ α] : card (Sym2 α) = card α * (card α + 1) / 2 :=
+  Finsetₓ.card_sym2 _
 
 end Sym2
 

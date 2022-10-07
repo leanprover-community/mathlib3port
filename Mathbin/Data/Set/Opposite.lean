@@ -32,35 +32,27 @@ theorem mem_op {s : Set α} {a : αᵒᵖ} : a ∈ s.op ↔ unop a ∈ s :=
   Iff.rfl
 
 @[simp]
-theorem op_mem_op {s : Set α} {a : α} : op a ∈ s.op ↔ a ∈ s := by
-  rw [mem_op, unop_op]
+theorem op_mem_op {s : Set α} {a : α} : op a ∈ s.op ↔ a ∈ s := by rw [mem_op, unop_op]
 
 @[simp]
 theorem mem_unop {s : Set αᵒᵖ} {a : α} : a ∈ s.unop ↔ op a ∈ s :=
   Iff.rfl
 
 @[simp]
-theorem unop_mem_unop {s : Set αᵒᵖ} {a : αᵒᵖ} : unop a ∈ s.unop ↔ a ∈ s := by
-  rw [mem_unop, op_unop]
+theorem unop_mem_unop {s : Set αᵒᵖ} {a : αᵒᵖ} : unop a ∈ s.unop ↔ a ∈ s := by rw [mem_unop, op_unop]
 
 @[simp]
 theorem op_unop (s : Set α) : s.op.unop = s :=
-  ext
-    (by
-      simp only [mem_unop, op_mem_op, iff_selfₓ, implies_true_iff])
+  ext (by simp only [mem_unop, op_mem_op, iff_selfₓ, implies_true_iff])
 
 @[simp]
 theorem unop_op (s : Set αᵒᵖ) : s.unop.op = s :=
-  ext
-    (by
-      simp only [mem_op, unop_mem_unop, iff_selfₓ, implies_true_iff])
+  ext (by simp only [mem_op, unop_mem_unop, iff_selfₓ, implies_true_iff])
 
 /-- The members of the opposite of a set are in bijection with the members of the set itself. -/
 @[simps]
 def opEquivSelf (s : Set α) : s.op ≃ s :=
-  ⟨fun x => ⟨unop x, x.2⟩, fun x => ⟨op x, x.2⟩, fun x => by
-    simp , fun x => by
-    simp ⟩
+  ⟨fun x => ⟨unop x, x.2⟩, fun x => ⟨op x, x.2⟩, fun x => by simp, fun x => by simp⟩
 
 /-- Taking opposites as an equivalence of powersets. -/
 @[simps]
@@ -69,21 +61,17 @@ def opEquiv : Set α ≃ Set αᵒᵖ :=
 
 @[simp]
 theorem singleton_op (x : α) : ({x} : Set α).op = {op x} :=
-  ext fun y => by
-    simpa only [mem_op, mem_singleton_iff] using unop_eq_iff_eq_op
+  ext fun y => by simpa only [mem_op, mem_singleton_iff] using unop_eq_iff_eq_op
 
 @[simp]
 theorem singleton_unop (x : αᵒᵖ) : ({x} : Set αᵒᵖ).unop = {unop x} :=
-  ext fun y => by
-    simpa only [mem_unop, mem_singleton_iff] using op_eq_iff_eq_unop
+  ext fun y => by simpa only [mem_unop, mem_singleton_iff] using op_eq_iff_eq_unop
 
 @[simp]
-theorem singleton_op_unop (x : α) : ({op x} : Set αᵒᵖ).unop = {x} := by
-  simp only [singleton_unop, Opposite.unop_op]
+theorem singleton_op_unop (x : α) : ({op x} : Set αᵒᵖ).unop = {x} := by simp only [singleton_unop, Opposite.unop_op]
 
 @[simp]
-theorem singleton_unop_op (x : αᵒᵖ) : ({unop x} : Set α).op = {x} := by
-  simp only [singleton_op, Opposite.op_unop]
+theorem singleton_unop_op (x : αᵒᵖ) : ({unop x} : Set α).op = {x} := by simp only [singleton_op, Opposite.op_unop]
 
 end Set
 

@@ -27,12 +27,8 @@ this function is part of an equivalence, provided by `equiv_functor.map_equiv`.
 -/
 class EquivFunctor (f : Type u₀ → Type u₁) where
   map : ∀ {α β}, α ≃ β → f α → f β
-  map_refl' : ∀ α, map (Equivₓ.refl α) = @id (f α) := by
-    run_tac
-      obviously
-  map_trans' : ∀ {α β γ} (k : α ≃ β) (h : β ≃ γ), map (k.trans h) = map h ∘ map k := by
-    run_tac
-      obviously
+  map_refl' : ∀ α, map (Equivₓ.refl α) = @id (f α) := by obviously
+  map_trans' : ∀ {α β γ} (k : α ≃ β) (h : β ≃ γ), map (k.trans h) = map h ∘ map k := by obviously
 
 restate_axiom EquivFunctor.map_refl'
 
@@ -65,8 +61,7 @@ theorem map_equiv_symm_apply (y : f β) : (mapEquiv f e).symm y = EquivFunctor.m
   rfl
 
 @[simp]
-theorem map_equiv_refl (α) : mapEquiv f (Equivₓ.refl α) = Equivₓ.refl (f α) := by
-  simpa [EquivFunctor.mapEquiv]
+theorem map_equiv_refl (α) : mapEquiv f (Equivₓ.refl α) = Equivₓ.refl (f α) := by simpa [EquivFunctor.mapEquiv]
 
 @[simp]
 theorem map_equiv_symm : (mapEquiv f e).symm = mapEquiv f e.symm :=
@@ -79,8 +74,7 @@ or `map_comp_map` when not applied.
 @[simp]
 theorem map_equiv_trans {γ : Type u₀} (ab : α ≃ β) (bc : β ≃ γ) :
     (mapEquiv f ab).trans (mapEquiv f bc) = mapEquiv f (ab.trans bc) :=
-  Equivₓ.ext fun x => by
-    simp [map_equiv, map_trans']
+  Equivₓ.ext fun x => by simp [map_equiv, map_trans']
 
 end
 
@@ -96,11 +90,7 @@ instance (priority := 100) ofIsLawfulFunctor (f : Type u₀ → Type u₁) [Func
 
 theorem mapEquiv.injective (f : Type u₀ → Type u₁) [Applicativeₓ f] [IsLawfulApplicative f] {α β : Type u₀}
     (h : ∀ γ, Function.Injective (pure : γ → f γ)) : Function.Injective (@EquivFunctor.mapEquiv f _ α β) :=
-  fun e₁ e₂ H =>
-  Equivₓ.ext fun x =>
-    h β
-      (by
-        simpa [EquivFunctor.map] using Equivₓ.congr_fun H (pure x))
+  fun e₁ e₂ H => Equivₓ.ext fun x => h β (by simpa [EquivFunctor.map] using Equivₓ.congr_fun H (pure x))
 
 end EquivFunctor
 

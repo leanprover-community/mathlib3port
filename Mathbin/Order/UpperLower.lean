@@ -377,12 +377,10 @@ theorem coe_Inf (S : Set (UpperSet α)) : (↑(inf S) : Set α) = ⋃ s ∈ S, �
   rfl
 
 @[simp, norm_cast]
-theorem coe_supr (f : ι → UpperSet α) : (↑(⨆ i, f i) : Set α) = ⋂ i, f i := by
-  simp [supr]
+theorem coe_supr (f : ι → UpperSet α) : (↑(⨆ i, f i) : Set α) = ⋂ i, f i := by simp [supr]
 
 @[simp, norm_cast]
-theorem coe_infi (f : ι → UpperSet α) : (↑(⨅ i, f i) : Set α) = ⋃ i, f i := by
-  simp [infi]
+theorem coe_infi (f : ι → UpperSet α) : (↑(⨅ i, f i) : Set α) = ⋃ i, f i := by simp [infi]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
@@ -613,23 +611,19 @@ protected theorem compl_bot : (⊥ : UpperSet α).compl = ⊥ :=
 
 @[simp]
 protected theorem compl_Sup (S : Set (UpperSet α)) : (sup S).compl = ⨆ s ∈ S, UpperSet.compl s :=
-  LowerSet.ext <| by
-    simp only [coe_compl, coe_Sup, compl_Inter₂, LowerSet.coe_supr₂]
+  LowerSet.ext <| by simp only [coe_compl, coe_Sup, compl_Inter₂, LowerSet.coe_supr₂]
 
 @[simp]
 protected theorem compl_Inf (S : Set (UpperSet α)) : (inf S).compl = ⨅ s ∈ S, UpperSet.compl s :=
-  LowerSet.ext <| by
-    simp only [coe_compl, coe_Inf, compl_Union₂, LowerSet.coe_infi₂]
+  LowerSet.ext <| by simp only [coe_compl, coe_Inf, compl_Union₂, LowerSet.coe_infi₂]
 
 @[simp]
 protected theorem compl_supr (f : ι → UpperSet α) : (⨆ i, f i).compl = ⨆ i, (f i).compl :=
-  LowerSet.ext <| by
-    simp only [coe_compl, coe_supr, compl_Inter, LowerSet.coe_supr]
+  LowerSet.ext <| by simp only [coe_compl, coe_supr, compl_Inter, LowerSet.coe_supr]
 
 @[simp]
 protected theorem compl_infi (f : ι → UpperSet α) : (⨅ i, f i).compl = ⨅ i, (f i).compl :=
-  LowerSet.ext <| by
-    simp only [coe_compl, coe_infi, compl_Union, LowerSet.coe_infi]
+  LowerSet.ext <| by simp only [coe_compl, coe_infi, compl_Union, LowerSet.coe_infi]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
@@ -678,20 +672,16 @@ protected theorem compl_bot : (⊥ : LowerSet α).compl = ⊥ :=
   UpperSet.ext compl_empty
 
 protected theorem compl_Sup (S : Set (LowerSet α)) : (sup S).compl = ⨆ s ∈ S, LowerSet.compl s :=
-  UpperSet.ext <| by
-    simp only [coe_compl, coe_Sup, compl_Union₂, UpperSet.coe_supr₂]
+  UpperSet.ext <| by simp only [coe_compl, coe_Sup, compl_Union₂, UpperSet.coe_supr₂]
 
 protected theorem compl_Inf (S : Set (LowerSet α)) : (inf S).compl = ⨅ s ∈ S, LowerSet.compl s :=
-  UpperSet.ext <| by
-    simp only [coe_compl, coe_Inf, compl_Inter₂, UpperSet.coe_infi₂]
+  UpperSet.ext <| by simp only [coe_compl, coe_Inf, compl_Inter₂, UpperSet.coe_infi₂]
 
 protected theorem compl_supr (f : ι → LowerSet α) : (⨆ i, f i).compl = ⨆ i, (f i).compl :=
-  UpperSet.ext <| by
-    simp only [coe_compl, coe_supr, compl_Union, UpperSet.coe_supr]
+  UpperSet.ext <| by simp only [coe_compl, coe_supr, compl_Union, UpperSet.coe_supr]
 
 protected theorem compl_infi (f : ι → LowerSet α) : (⨅ i, f i).compl = ⨅ i, (f i).compl :=
-  UpperSet.ext <| by
-    simp only [coe_compl, coe_infi, compl_Inter, UpperSet.coe_infi]
+  UpperSet.ext <| by simp only [coe_compl, coe_infi, compl_Inter, UpperSet.coe_infi]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
@@ -788,19 +778,16 @@ variable [CompleteLattice α]
 
 @[simp]
 theorem Ici_Sup (S : Set α) : ici (sup S) = ⨆ a ∈ S, ici a :=
-  SetLike.ext fun c => by
-    simp only [mem_Ici_iff, mem_supr_iff, Sup_le_iff]
+  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, Sup_le_iff]
 
 @[simp]
 theorem Ici_supr (f : ι → α) : ici (⨆ i, f i) = ⨆ i, ici (f i) :=
-  SetLike.ext fun c => by
-    simp only [mem_Ici_iff, mem_supr_iff, supr_le_iff]
+  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, supr_le_iff]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 @[simp]
-theorem Ici_supr₂ (f : ∀ i, κ i → α) : ici (⨆ (i) (j), f i j) = ⨆ (i) (j), ici (f i j) := by
-  simp_rw [Ici_supr]
+theorem Ici_supr₂ (f : ∀ i, κ i → α) : ici (⨆ (i) (j), f i j) = ⨆ (i) (j), ici (f i j) := by simp_rw [Ici_supr]
 
 /-- `upper_set.Ici` as a `Sup_hom`. -/
 def iciSupHomₓ : SupHomₓ α (UpperSet α) :=
@@ -886,19 +873,16 @@ variable [CompleteLattice α]
 
 @[simp]
 theorem Iic_Inf (S : Set α) : iic (inf S) = ⨅ a ∈ S, iic a :=
-  SetLike.ext fun c => by
-    simp only [mem_Iic_iff, mem_infi₂_iff, le_Inf_iff]
+  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi₂_iff, le_Inf_iff]
 
 @[simp]
 theorem Iic_infi (f : ι → α) : iic (⨅ i, f i) = ⨅ i, iic (f i) :=
-  SetLike.ext fun c => by
-    simp only [mem_Iic_iff, mem_infi_iff, le_infi_iff]
+  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi_iff, le_infi_iff]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 @[simp]
-theorem Iic_infi₂ (f : ∀ i, κ i → α) : iic (⨅ (i) (j), f i j) = ⨅ (i) (j), iic (f i j) := by
-  simp_rw [Iic_infi]
+theorem Iic_infi₂ (f : ∀ i, κ i → α) : iic (⨅ (i) (j), f i j) = ⨅ (i) (j), iic (f i j) := by simp_rw [Iic_infi]
 
 /-- `lower_set.Iic` as an `Inf_hom`. -/
 def iicInfHomₓ : InfHomₓ α (LowerSet α) :=
@@ -984,10 +968,10 @@ def giLowerClosureCoe : GaloisInsertion (lowerClosure : Set α → LowerSet α) 
   le_l_u := fun _ => subset_lower_closure
   choice_eq := fun s hs => SetLike.coe_injective <| subset_lower_closure.antisymm hs
 
-theorem upper_closure_anti : Antitone (upperClosure : Set α → UpperSet α) :=
+theorem upper_closure_anti : Antitoneₓ (upperClosure : Set α → UpperSet α) :=
   gc_upper_closure_coe.monotone_l
 
-theorem lower_closure_mono : Monotone (lowerClosure : Set α → LowerSet α) :=
+theorem lower_closure_mono : Monotoneₓ (lowerClosure : Set α → LowerSet α) :=
   gc_lower_closure_coe.monotone_l
 
 @[simp]

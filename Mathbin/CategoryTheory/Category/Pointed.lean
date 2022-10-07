@@ -67,8 +67,7 @@ instance (X : Pointed) : Inhabited (Hom X X) :=
 /-- Composition of morphisms of `Pointed`. -/
 @[simps]
 def comp {X Y Z : Pointed.{u}} (f : Hom X Y) (g : Hom Y Z) : Hom X Z :=
-  ⟨g.toFun ∘ f.toFun, by
-    rw [Function.comp_applyₓ, f.map_point, g.map_point]⟩
+  ⟨g.toFun ∘ f.toFun, by rw [Function.comp_applyₓ, f.map_point, g.map_point]⟩
 
 end Hom
 

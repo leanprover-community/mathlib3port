@@ -37,15 +37,14 @@ theorem exists_pair_ne (α : Type _) [Nontrivial α] : ∃ x y : α, x ≠ y :=
 -- See Note [decidable namespace]
 protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) : ∃ y, y ≠ x := by
   rcases exists_pair_ne α with ⟨y, y', h⟩
-  by_cases' hx : x = y
+  by_cases hx:x = y
   · rw [← hx] at h
     exact ⟨y', h.symm⟩
     
   · exact ⟨y, Ne.symm hx⟩
     
 
-theorem exists_ne [Nontrivial α] (x : α) : ∃ y, y ≠ x := by
-  classical <;> exact Decidable.exists_ne x
+theorem exists_ne [Nontrivial α] (x : α) : ∃ y, y ≠ x := by classical <;> exact Decidable.exists_ne x
 
 -- `x` and `y` are explicit here, as they are often needed to guide typechecking of `h`.
 theorem nontrivial_of_ne (x y : α) (h : x ≠ y) : Nontrivial α :=
@@ -144,7 +143,7 @@ which it does not take a given value. -/
 protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β} (hf : Function.Injective f) (y : β) :
     ∃ x, f x ≠ y := by
   rcases exists_pair_ne α with ⟨x₁, x₂, hx⟩
-  by_cases' h : f x₂ = y
+  by_cases h:f x₂ = y
   · exact ⟨x₁, (hf.ne_iff' h).2 hx⟩
     
   · exact ⟨x₂, h⟩

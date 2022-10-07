@@ -25,15 +25,14 @@ open Set Function
 
 open Classical
 
-variable {ι α β : Type _}
+variable {ι α β : Type _} {l : Filter α}
 
 namespace Filter
 
 /-- The cofinite filter is the filter of subsets whose complements are finite. -/
 def cofinite : Filter α where
   Sets := { s | sᶜ.Finite }
-  univ_sets := by
-    simp only [compl_univ, finite_empty, mem_set_of_eq]
+  univ_sets := by simp only [compl_univ, finite_empty, mem_set_of_eq]
   sets_of_superset := fun s t (hs : sᶜ.Finite) (st : s ⊆ t) => hs.Subset <| compl_subset_compl.2 st
   inter_sets := fun s t (hs : sᶜ.Finite) (ht : tᶜ.Finite) => by
     simp only [compl_inter, finite.union, ht, hs, mem_set_of_eq]
@@ -61,7 +60,7 @@ theorem _root_.set.finite.compl_mem_cofinite {s : Set α} (hs : s.Finite) : sᶜ
 theorem _root_.set.finite.eventually_cofinite_nmem {s : Set α} (hs : s.Finite) : ∀ᶠ x in cofinite, x ∉ s :=
   hs.compl_mem_cofinite
 
-theorem _root_.finset.eventually_cofinite_nmem (s : Finset α) : ∀ᶠ x in cofinite, x ∉ s :=
+theorem _root_.finset.eventually_cofinite_nmem (s : Finsetₓ α) : ∀ᶠ x in cofinite, x ∉ s :=
   s.finite_to_set.eventually_cofinite_nmem
 
 theorem _root_.set.infinite_iff_frequently_cofinite {s : Set α} : Set.Infinite s ↔ ∃ᶠ x in cofinite, x ∈ s :=
@@ -70,12 +69,12 @@ theorem _root_.set.infinite_iff_frequently_cofinite {s : Set α} : Set.Infinite 
 theorem eventually_cofinite_ne (x : α) : ∀ᶠ a in cofinite, a ≠ x :=
   (Set.finite_singleton x).eventually_cofinite_nmem
 
-theorem le_cofinite_iff_compl_singleton_mem {l : Filter α} : l ≤ cofinite ↔ ∀ x, {x}ᶜ ∈ l := by
+theorem le_cofinite_iff_compl_singleton_mem : l ≤ cofinite ↔ ∀ x, {x}ᶜ ∈ l := by
   refine' ⟨fun h x => h (finite_singleton x).compl_mem_cofinite, fun h s (hs : sᶜ.Finite) => _⟩
   rw [← compl_compl s, ← bUnion_of_singleton (sᶜ), compl_Union₂, Filter.bInter_mem hs]
   exact fun x _ => h x
 
-theorem le_cofinite_iff_eventually_ne {l : Filter α} : l ≤ cofinite ↔ ∀ x, ∀ᶠ y in l, y ≠ x :=
+theorem le_cofinite_iff_eventually_ne : l ≤ cofinite ↔ ∀ x, ∀ᶠ y in l, y ≠ x :=
   le_cofinite_iff_compl_singleton_mem
 
 /-- If `α` is a preorder with no maximal element, then `at_top ≤ cofinite`. -/
@@ -88,13 +87,20 @@ theorem comap_cofinite_le (f : α → β) : comap f cofinite ≤ cofinite :=
 
 /-- The coproduct of the cofinite filters on two types is the cofinite filter on their product. -/
 theorem coprod_cofinite : (cofinite : Filter α).coprod (cofinite : Filter β) = cofinite :=
-  Filter.coext fun s => by
-    simp only [compl_mem_coprod, mem_cofinite, compl_compl, finite_image_fst_and_snd_iff]
+  Filter.coext fun s => by simp only [compl_mem_coprod, mem_cofinite, compl_compl, finite_image_fst_and_snd_iff]
 
 /-- Finite product of finite sets is finite -/
 theorem Coprod_cofinite {α : ι → Type _} [Finite ι] : (Filter.coprodₓ fun i => (cofinite : Filter (α i))) = cofinite :=
-  Filter.coext fun s => by
-    simp only [compl_mem_Coprod, mem_cofinite, compl_compl, forall_finite_image_eval_iff]
+  Filter.coext fun s => by simp only [compl_mem_Coprod, mem_cofinite, compl_compl, forall_finite_image_eval_iff]
+
+@[simp]
+theorem disjoint_cofinite_left : Disjoint cofinite l ↔ ∃ s ∈ l, Set.Finite s := by
+  simp only [has_basis_cofinite.disjoint_iff l.basis_sets, id, disjoint_compl_left_iff_subset]
+  exact ⟨fun ⟨s, hs, t, ht, hts⟩ => ⟨t, ht, hs.Subset hts⟩, fun ⟨s, hs, hsf⟩ => ⟨s, hsf, s, hs, subset.rfl⟩⟩
+
+@[simp]
+theorem disjoint_cofinite_right : Disjoint l cofinite ↔ ∃ s ∈ l, Set.Finite s :=
+  Disjoint.comm.trans disjoint_cofinite_left
 
 end Filter
 

@@ -54,7 +54,7 @@ variable {x : B}
 
 /-- A minimal polynomial is monic. -/
 theorem monic (hx : IsIntegral A x) : Monic (minpoly A x) := by
-  delta' minpoly
+  delta minpoly
   rw [dif_pos hx]
   exact (WellFounded.min_mem degree_lt_wf _ hx).1
 
@@ -70,7 +70,7 @@ variable (A x)
 /-- An element is a root of its minimal polynomial. -/
 @[simp]
 theorem aeval : aeval x (minpoly A x) = 0 := by
-  delta' minpoly
+  delta minpoly
   split_ifs with hx
   · exact (WellFounded.min_mem degree_lt_wf _ hx).2
     
@@ -85,7 +85,7 @@ theorem ne_one [Nontrivial B] : minpoly A x ≠ 1 := by
 
 theorem map_ne_one [Nontrivial B] {R : Type _} [Semiringₓ R] [Nontrivial R] (f : A →+* R) : (minpoly A x).map f ≠ 1 :=
   by
-  by_cases' hx : IsIntegral A x
+  by_cases hx:IsIntegral A x
   · exact mt ((monic hx).eq_one_of_map_eq_one f) (ne_one A x)
     
   · rw [eq_zero hx, Polynomial.map_zero]
@@ -95,7 +95,7 @@ theorem map_ne_one [Nontrivial B] {R : Type _} [Semiringₓ R] [Nontrivial R] (f
 /-- A minimal polynomial is not a unit. -/
 theorem not_is_unit [Nontrivial B] : ¬IsUnit (minpoly A x) := by
   haveI : Nontrivial A := (algebraMap A B).domain_nontrivial
-  by_cases' hx : IsIntegral A x
+  by_cases hx:IsIntegral A x
   · exact mt (eq_one_of_is_unit_of_monic (monic hx)) (ne_one A x)
     
   · rw [eq_zero hx]
@@ -115,7 +115,7 @@ theorem mem_range_of_degree_eq_one (hx : (minpoly A x).degree = 1) : x ∈ (alge
 /-- The defining property of the minimal polynomial of an element `x`:
 it is the monic polynomial with smallest degree that has `x` as its root. -/
 theorem min {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0) : degree (minpoly A x) ≤ degree p := by
-  delta' minpoly
+  delta minpoly
   split_ifs with hx
   · exact le_of_not_ltₓ (WellFounded.not_lt_min degree_lt_wf _ hx ⟨pmonic, hp⟩)
     
@@ -128,12 +128,7 @@ theorem subsingleton [Subsingleton B] : minpoly A x = 1 := by
   have := minpoly.min A x monic_one (Subsingleton.elim _ _)
   rw [degree_one] at this
   cases' le_or_ltₓ (minpoly A x).degree 0 with h h
-  · rwa
-      [(monic
-          ⟨1, monic_one, by
-            simp ⟩ :
-          (minpoly A x).Monic).degree_le_zero_iff_eq_one] at
-      h
+  · rwa [(monic ⟨1, monic_one, by simp⟩ : (minpoly A x).Monic).degree_le_zero_iff_eq_one] at h
     
   · exact (this.not_lt h).elim
     
@@ -240,12 +235,9 @@ theorem irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) := by
   have prod : minpoly A x = a * C b.leading_coeff * (b * C a.leading_coeff) := by
     symm
     calc
-      a * C b.leading_coeff * (b * C a.leading_coeff) = a * b * (C a.leading_coeff * C b.leading_coeff) := by
-        ring
-      _ = a * b * C (a.leading_coeff * b.leading_coeff) := by
-        simp only [RingHom.map_mul]
-      _ = a * b := by
-        rw [coeff_prod, C_1, mul_oneₓ]
+      a * C b.leading_coeff * (b * C a.leading_coeff) = a * b * (C a.leading_coeff * C b.leading_coeff) := by ring
+      _ = a * b * C (a.leading_coeff * b.leading_coeff) := by simp only [RingHom.map_mul]
+      _ = a * b := by rw [coeff_prod, C_1, mul_oneₓ]
       _ = minpoly A x := hab_eq
       
   have hzero := aeval A x
@@ -281,10 +273,7 @@ the assumptions on `A` in exchange for stronger assumptions on `B`. -/
 theorem degree_le_of_ne_zero {p : A[X]} (pnz : p ≠ 0) (hp : Polynomial.aeval x p = 0) :
     degree (minpoly A x) ≤ degree p :=
   calc
-    degree (minpoly A x) ≤ degree (p * c (leadingCoeff p)⁻¹) :=
-      min A x (monic_mul_leading_coeff_inv pnz)
-        (by
-          simp [hp])
+    degree (minpoly A x) ≤ degree (p * c (leadingCoeff p)⁻¹) := min A x (monic_mul_leading_coeff_inv pnz) (by simp [hp])
     _ = degree p := degree_mul_leading_coeff_inv p pnz
     
 
@@ -301,10 +290,7 @@ theorem unique {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0)
   symm
   apply eq_of_sub_eq_zero
   by_contra hnz
-  have :=
-    degree_le_of_ne_zero A x hnz
-      (by
-        simp [hp])
+  have := degree_le_of_ne_zero A x hnz (by simp [hp])
   contrapose! this
   apply degree_sub_lt _ (NeZero hx)
   · rw [(monic hx).leadingCoeff, pmonic.leading_coeff]
@@ -316,7 +302,7 @@ theorem unique {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0)
 See also `minpoly.gcd_domain_dvd` which relaxes the assumptions on `A` in exchange for stronger
 assumptions on `B`. -/
 theorem dvd {p : A[X]} (hp : Polynomial.aeval x p = 0) : minpoly A x ∣ p := by
-  by_cases' hp0 : p = 0
+  by_cases hp0:p = 0
   · simp only [hp0, dvd_zero]
     
   have hx : IsIntegral A x := by
@@ -335,15 +321,15 @@ theorem dvd {p : A[X]} (hp : Polynomial.aeval x p = 0) : minpoly A x ∣ p := by
 theorem dvd_map_of_is_scalar_tower (A K : Type _) {R : Type _} [CommRingₓ A] [Field K] [CommRingₓ R] [Algebra A K]
     [Algebra A R] [Algebra K R] [IsScalarTower A K R] (x : R) : minpoly K x ∣ (minpoly A x).map (algebraMap A K) := by
   refine' minpoly.dvd K x _
-  rw [← IsScalarTower.aeval_apply, minpoly.aeval]
+  rw [aeval_map_algebra_map, minpoly.aeval]
 
 /-- If `y` is a conjugate of `x` over a field `K`, then it is a conjugate over a subring `R`. -/
 theorem aeval_of_is_scalar_tower (R : Type _) {K T U : Type _} [CommRingₓ R] [Field K] [CommRingₓ T] [Algebra R K]
     [Algebra K T] [Algebra R T] [IsScalarTower R K T] [CommSemiringₓ U] [Algebra K U] [Algebra R U]
     [IsScalarTower R K U] (x : T) (y : U) (hy : Polynomial.aeval y (minpoly K x) = 0) :
-    Polynomial.aeval y (minpoly R x) = 0 := by
-  rw [IsScalarTower.aeval_apply R K]
-  exact eval₂_eq_zero_of_dvd_of_eval₂_eq_zero (algebraMap K U) y (minpoly.dvd_map_of_is_scalar_tower R K x) hy
+    Polynomial.aeval y (minpoly R x) = 0 :=
+  aeval_map_algebra_map K y (minpoly R x) ▸
+    eval₂_eq_zero_of_dvd_of_eval₂_eq_zero (algebraMap K U) y (minpoly.dvd_map_of_is_scalar_tower R K x) hy
 
 variable {A x}
 
@@ -360,8 +346,7 @@ theorem eq_of_irreducible [Nontrivial B] {p : A[X]} (hp1 : Irreducible p) (hp2 :
   apply eq_of_irreducible_of_monic
   · exact
       Associated.irreducible
-        ⟨⟨C p.leading_coeff⁻¹, C p.leading_coeff, by
-            rwa [← C_mul, inv_mul_cancel, C_1], by
+        ⟨⟨C p.leading_coeff⁻¹, C p.leading_coeff, by rwa [← C_mul, inv_mul_cancel, C_1], by
             rwa [← C_mul, mul_inv_cancel, C_1]⟩,
           rfl⟩
         hp1
@@ -379,21 +364,17 @@ since `is_integral R y` depends on y.
 theorem eq_of_algebra_map_eq {K S T : Type _} [Field K] [CommRingₓ S] [CommRingₓ T] [Algebra K S] [Algebra K T]
     [Algebra S T] [IsScalarTower K S T] (hST : Function.Injective (algebraMap S T)) {x : S} {y : T}
     (hx : IsIntegral K x) (h : y = algebraMap S T x) : minpoly K x = minpoly K y :=
-  minpoly.unique _ _ (minpoly.monic hx)
-    (by
-      rw [h, ← IsScalarTower.algebra_map_aeval, minpoly.aeval, RingHom.map_zero])
+  minpoly.unique _ _ (minpoly.monic hx) (by rw [h, aeval_algebra_map_apply, minpoly.aeval, RingHom.map_zero])
     fun q q_monic root_q =>
     minpoly.min _ _ q_monic
-      (IsScalarTower.aeval_eq_zero_of_aeval_algebra_map_eq_zero K S T hST
-        (h ▸ root_q : Polynomial.aeval (algebraMap S T x) q = 0))
+      ((aeval_algebra_map_eq_zero_iff_of_injective hST).mp (h ▸ root_q : Polynomial.aeval (algebraMap S T x) q = 0))
 
 theorem add_algebra_map {B : Type _} [CommRingₓ B] [Algebra A B] {x : B} (hx : IsIntegral A x) (a : A) :
     minpoly A (x + algebraMap A B a) = (minpoly A x).comp (X - c a) := by
   refine' (minpoly.unique _ _ ((minpoly.monic hx).comp_X_sub_C _) _ fun q qmo hq => _).symm
   · simp [aeval_comp]
     
-  · have : (Polynomial.aeval x) (q.comp (X + C a)) = 0 := by
-      simpa [aeval_comp] using hq
+  · have : (Polynomial.aeval x) (q.comp (X + C a)) = 0 := by simpa [aeval_comp] using hq
     have H := minpoly.min A x (qmo.comp_X_add_C _) this
     rw [degree_eq_nat_degree qmo.ne_zero, degree_eq_nat_degree ((minpoly.monic hx).comp_X_sub_C _).ne_zero,
       WithBot.coe_le_coe, nat_degree_comp, nat_degree_X_sub_C, mul_oneₓ]
@@ -409,7 +390,7 @@ section AlgHomFintype
 
 /-- A technical finiteness result. -/
 noncomputable def Fintype.subtypeProd {E : Type _} {X : Set E} (hX : X.Finite) {L : Type _} (F : E → Multiset L) :
-    Fintype (∀ x : X, { l : L // l ∈ F x }) :=
+    Fintypeₓ (∀ x : X, { l : L // l ∈ F x }) :=
   let hX := Finite.fintype hX
   Pi.fintype
 
@@ -427,15 +408,14 @@ noncomputable def rootsOfMinPolyPiType (φ : E →ₐ[F] K) (x : Range (FiniteDi
 
 theorem aux_inj_roots_of_min_poly : Injective (rootsOfMinPolyPiType F E K) := by
   intro f g h
-  suffices (f : E →ₗ[F] K) = g by
-    rwa [FunLike.ext'_iff] at this⊢
+  suffices (f : E →ₗ[F] K) = g by rwa [FunLike.ext'_iff] at this⊢
   rw [funext_iff] at h
   exact LinearMap.ext_on (FiniteDimensional.finBasis F E).span_eq fun e he => subtype.ext_iff.mp (h ⟨e, he⟩)
 
 /-- Given field extensions `E/F` and `K/F`, with `E/F` finite, there are finitely many `F`-algebra
   homomorphisms `E →ₐ[K] K`. -/
-noncomputable instance AlgHom.fintype : Fintype (E →ₐ[F] K) :=
-  @Fintype.ofInjective _ _
+noncomputable instance AlgHom.fintype : Fintypeₓ (E →ₐ[F] K) :=
+  @Fintypeₓ.ofInjective _ _
     (Fintype.subtypeProd (finite_range (FiniteDimensional.finBasis F E)) fun e =>
       ((minpoly F e).map (algebraMap F K)).roots)
     _ (aux_inj_roots_of_min_poly F E K)
@@ -459,8 +439,7 @@ theorem gcd_domain_eq_field_fractions : minpoly K (algebraMap S L s) = (minpoly 
       (Polynomial.IsPrimitive.irreducible_iff_irreducible_map_fraction_map (Polynomial.Monic.is_primitive (monic hs))).1
         (Irreducible hs)
     
-  · rw [aeval_map, aeval_def, IsScalarTower.algebra_map_eq R S L, ← eval₂_map, eval₂_at_apply, eval_map, ← aeval_def,
-      aeval, map_zero]
+  · rw [aeval_map_algebra_map, aeval_algebra_map_apply, aeval, map_zero]
     
   · exact (monic hs).map _
     
@@ -483,15 +462,13 @@ theorem gcd_domain_dvd {P : R[X]} (hP : P ≠ 0) (hroot : Polynomial.aeval s P =
   let K := FractionRing R
   let L := FractionRing S
   let P₁ := P.prim_part
-  suffices minpoly R s ∣ P₁ by
-    exact dvd_trans this (prim_part_dvd _)
+  suffices minpoly R s ∣ P₁ by exact dvd_trans this (prim_part_dvd _)
   apply (is_primitive.dvd_iff_fraction_map_dvd_fraction_map K (monic hs).IsPrimitive P.is_primitive_prim_part).2
   let y := algebraMap S L s
   have hy : IsIntegral R y := hs.algebra_map
   rw [← gcd_domain_eq_field_fractions K L hs]
   refine' dvd _ _ _
-  rw [aeval_map, aeval_def, IsScalarTower.algebra_map_eq R S L, ← eval₂_map, eval₂_at_apply, eval_map, ← aeval_def,
-    aeval_prim_part_eq_zero hP hroot, map_zero]
+  rw [aeval_map_algebra_map, aeval_algebra_map_apply, aeval_prim_part_eq_zero hP hroot, map_zero]
 
 /-- If an element `x` is a root of a nonzero polynomial `p`, then the degree of `p` is at least the
 degree of the minimal polynomial of `x`. See also `minpoly.degree_le_of_ne_zero` which relaxes the
@@ -514,10 +491,7 @@ theorem gcd_domain_unique {P : R[X]} (hmo : P.Monic) (hP : Polynomial.aeval s P 
   symm
   apply eq_of_sub_eq_zero
   by_contra hnz
-  have :=
-    gcd_domain_degree_le_of_ne_zero hs hnz
-      (by
-        simp [hP])
+  have := gcd_domain_degree_le_of_ne_zero hs hnz (by simp [hP])
   contrapose! this
   refine' degree_sub_lt _ (NeZero hs) _
   · exact le_antisymmₓ (min R s hmo hP) (Pmin (minpoly R s) (monic hs) (aeval R s))
@@ -561,10 +535,8 @@ variable {x : B}
 theorem prime (hx : IsIntegral A x) : Prime (minpoly A x) := by
   refine' ⟨NeZero hx, not_is_unit A x, _⟩
   rintro p q ⟨d, h⟩
-  have : Polynomial.aeval x (p * q) = 0 := by
-    simp [h, aeval A x]
-  replace : Polynomial.aeval x p = 0 ∨ Polynomial.aeval x q = 0 := by
-    simpa
+  have : Polynomial.aeval x (p * q) = 0 := by simp [h, aeval A x]
+  replace : Polynomial.aeval x p = 0 ∨ Polynomial.aeval x q = 0 := by simpa
   exact Or.impₓ (dvd A x) (dvd A x) this
 
 /-- If `L/K` is a field extension and an element `y` of `K` is a root of the minimal polynomial

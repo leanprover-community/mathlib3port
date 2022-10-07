@@ -131,7 +131,7 @@ theorem const_inner {𝕜 β} [IsROrC 𝕜] [InnerProductSpace 𝕜 β] {f : α 
   rcases hfm with ⟨f', hf'_meas, hf_ae⟩
   refine'
     ⟨fun x => (inner c (f' x) : 𝕜), (@strongly_measurable_const _ _ m _ _).inner hf'_meas, hf_ae.mono fun x hx => _⟩
-  dsimp' only
+  dsimp only
   rw [hx]
 
 /-- An `m`-strongly measurable function almost everywhere equal to `f`. -/
@@ -147,8 +147,7 @@ theorem ae_eq_mk {f : α → β} (hfm : AeStronglyMeasurable' m f μ) : f =ᵐ[�
 theorem continuous_comp {γ} [TopologicalSpace γ] {f : α → β} {g : β → γ} (hg : Continuous g)
     (hf : AeStronglyMeasurable' m f μ) : AeStronglyMeasurable' m (g ∘ f) μ :=
   ⟨fun x => g (hf.mk _ x), @Continuous.comp_strongly_measurable _ _ _ m _ _ _ _ hg hf.strongly_measurable_mk,
-    hf.ae_eq_mk.mono fun x hx => by
-      rw [Function.comp_applyₓ, hx]⟩
+    hf.ae_eq_mk.mono fun x hx => by rw [Function.comp_applyₓ, hx]⟩
 
 end AeStronglyMeasurable'
 
@@ -180,7 +179,7 @@ theorem AeStronglyMeasurable'.ae_strongly_measurable'_of_measurable_space_le_on 
   have h_ind_eq : s.indicator (hf.mk f) =ᵐ[μ] f := by
     refine' Filter.EventuallyEq.trans _ (indicator_ae_eq_of_restrict_compl_ae_eq_zero (hm _ hs_m) hf_zero)
     filter_upwards [hf.ae_eq_mk] with x hx
-    by_cases' hxs : x ∈ s
+    by_cases hxs:x ∈ s
     · simp [hxs, hx]
       
     · simp [hxs]
@@ -381,9 +380,7 @@ theorem Lp_meas_subgroup_to_Lp_trim_add (hm : m ≤ m0) (f g : lpMeasSubgroup F 
       (eventually_eq.add (Lp_meas_subgroup_to_Lp_trim_ae_eq hm f).symm (Lp_meas_subgroup_to_Lp_trim_ae_eq hm g).symm)
   refine' (Lp.coe_fn_add _ _).trans _
   simp_rw [Lp_meas_subgroup_coe]
-  exact
-    eventually_of_forall fun x => by
-      rfl
+  exact eventually_of_forall fun x => by rfl
 
 theorem Lp_meas_subgroup_to_Lp_trim_neg (hm : m ≤ m0) (f : lpMeasSubgroup F m p μ) :
     lpMeasSubgroupToLpTrim F p μ hm (-f) = -lpMeasSubgroupToLpTrim F p μ hm f := by
@@ -396,14 +393,11 @@ theorem Lp_meas_subgroup_to_Lp_trim_neg (hm : m ≤ m0) (f : lpMeasSubgroup F m 
   refine' eventually_eq.trans _ (eventually_eq.neg (Lp_meas_subgroup_to_Lp_trim_ae_eq hm f).symm)
   refine' (Lp.coe_fn_neg _).trans _
   simp_rw [Lp_meas_subgroup_coe]
-  exact
-    eventually_of_forall fun x => by
-      rfl
+  exact eventually_of_forall fun x => by rfl
 
 theorem Lp_meas_subgroup_to_Lp_trim_sub (hm : m ≤ m0) (f g : lpMeasSubgroup F m p μ) :
     lpMeasSubgroupToLpTrim F p μ hm (f - g) = lpMeasSubgroupToLpTrim F p μ hm f - lpMeasSubgroupToLpTrim F p μ hm g :=
-  by
-  rw [sub_eq_add_neg, sub_eq_add_neg, Lp_meas_subgroup_to_Lp_trim_add, Lp_meas_subgroup_to_Lp_trim_neg]
+  by rw [sub_eq_add_neg, sub_eq_add_neg, Lp_meas_subgroup_to_Lp_trim_add, Lp_meas_subgroup_to_Lp_trim_neg]
 
 theorem Lp_meas_to_Lp_trim_smul (hm : m ≤ m0) (c : 𝕜) (f : lpMeas F 𝕜 m p μ) :
     lpMeasToLpTrim F 𝕜 p μ hm (c • f) = c • lpMeasToLpTrim F 𝕜 p μ hm f := by
@@ -539,8 +533,7 @@ theorem lp.induction_strongly_measurable_aux (hm : m ≤ m0) (hp_ne_top : p ≠ 
   intro f hf
   let f' := (⟨f, hf⟩ : Lp_meas F ℝ m p μ)
   let g := Lp_meas_to_Lp_trim_lie F ℝ p μ hm f'
-  have hfg : f' = (Lp_meas_to_Lp_trim_lie F ℝ p μ hm).symm g := by
-    simp only [LinearIsometryEquiv.symm_apply_apply]
+  have hfg : f' = (Lp_meas_to_Lp_trim_lie F ℝ p μ hm).symm g := by simp only [LinearIsometryEquiv.symm_apply_apply]
   change P ↑f'
   rw [hfg]
   refine'
@@ -610,8 +603,7 @@ theorem lp.induction_strongly_measurable (hm : m ≤ m0) (hp_ne_top : p ≠ ∞)
   have hs_g_eq : s_g =ᵐ[μ] Function.Support g := hgm.ae_eq_mk.symm.support
   have h_inter_empty : (s_f ∩ s_g : Set α) =ᵐ[μ] (∅ : Set α) := by
     refine' (hs_f_eq.inter hs_g_eq).trans _
-    suffices Function.Support f ∩ Function.Support g = ∅ by
-      rw [this]
+    suffices Function.Support f ∩ Function.Support g = ∅ by rw [this]
     exact set.disjoint_iff_inter_eq_empty.mp h_disj
   let f' := (s_f \ s_g).indicator (hfm.mk f)
   have hff' : f =ᵐ[μ] f' := by
@@ -635,9 +627,9 @@ theorem lp.induction_strongly_measurable (hm : m ≤ m0) (hp_ne_top : p ≠ ∞)
     exact hgm.ae_eq_mk.symm
   have hg'_meas : strongly_measurable[m] g' := hgm.strongly_measurable_mk.indicator (hs_g.diff hs_f)
   have hg'_Lp : mem_ℒp g' p μ := hg.ae_eq hgg'
-  have h_disj : Disjoint (Function.Support f') (Function.Support g') := by
-    have : Disjoint (s_f \ s_g) (s_g \ s_f) := disjoint_sdiff_sdiff
-    exact this.mono Set.support_indicator_subset Set.support_indicator_subset
+  have h_disj : Disjoint (Function.Support f') (Function.Support g') :=
+    haveI : Disjoint (s_f \ s_g) (s_g \ s_f) := disjoint_sdiff_sdiff
+    this.mono Set.support_indicator_subset Set.support_indicator_subset
   rw [← mem_ℒp.to_Lp_congr hf'_Lp hf hff'.symm] at hPf⊢
   rw [← mem_ℒp.to_Lp_congr hg'_Lp hg hgg'.symm] at hPg⊢
   exact h_add hf'_Lp hg'_Lp hf'_meas hg'_meas h_disj hPf hPg
@@ -711,8 +703,7 @@ theorem lp.ae_eq_zero_of_forall_set_integral_eq_zero' (hm : m ≤ m0) (f : lp E'
     (hf_zero : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫ x in s, f x ∂μ) = 0)
     (hf_meas : AeStronglyMeasurable' m f μ) : f =ᵐ[μ] 0 := by
   let f_meas : Lp_meas E' 𝕜 m p μ := ⟨f, hf_meas⟩
-  have hf_f_meas : f =ᵐ[μ] f_meas := by
-    simp only [coe_fn_coe_base', Subtype.coe_mk]
+  have hf_f_meas : f =ᵐ[μ] f_meas := by simp only [coe_fn_coe_base', Subtype.coe_mk]
   refine' hf_f_meas.trans _
   refine' Lp_meas.ae_eq_zero_of_forall_set_integral_eq_zero hm f_meas hp_ne_zero hp_ne_top _ _
   · intro s hs hμs
@@ -855,9 +846,8 @@ variable (𝕜)
 /-- Conditional expectation of a function in L2 with respect to a sigma-algebra -/
 def condexpL2 (hm : m ≤ m0) : (α →₂[μ] E) →L[𝕜] lpMeas E 𝕜 m 2 μ :=
   @orthogonalProjection 𝕜 (α →₂[μ] E) _ _ (lpMeas E 𝕜 m 2 μ)
-    (by
-      haveI : Fact (m ≤ m0) := ⟨hm⟩
-      exact inferInstance)
+    haveI : Fact (m ≤ m0) := ⟨hm⟩
+    inferInstance
 
 variable {𝕜}
 
@@ -873,9 +863,9 @@ theorem integrable_condexp_L2_of_is_finite_measure (hm : m ≤ m0) [IsFiniteMeas
     Integrable (condexpL2 𝕜 hm f) μ :=
   integrable_on_univ.mp <| integrable_on_condexp_L2_of_measure_ne_top hm (measure_ne_top _ _) f
 
-theorem norm_condexp_L2_le_one (hm : m ≤ m0) : ∥@condexpL2 α E 𝕜 _ _ _ _ _ μ hm∥ ≤ 1 := by
+theorem norm_condexp_L2_le_one (hm : m ≤ m0) : ∥@condexpL2 α E 𝕜 _ _ _ _ _ μ hm∥ ≤ 1 :=
   haveI : Fact (m ≤ m0) := ⟨hm⟩
-  exact orthogonal_projection_norm_le _
+  orthogonal_projection_norm_le _
 
 theorem norm_condexp_L2_le (hm : m ≤ m0) (f : α →₂[μ] E) : ∥condexpL2 𝕜 hm f∥ ≤ ∥f∥ :=
   ((@condexpL2 _ E 𝕜 _ _ _ _ _ μ hm).le_op_norm f).trans
@@ -892,9 +882,9 @@ theorem norm_condexp_L2_coe_le (hm : m ≤ m0) (f : α →₂[μ] E) : ∥(conde
   exact Lp.snorm_ne_top _
 
 theorem inner_condexp_L2_left_eq_right (hm : m ≤ m0) {f g : α →₂[μ] E} :
-    ⟪(condexpL2 𝕜 hm f : α →₂[μ] E), g⟫₂ = ⟪f, (condexpL2 𝕜 hm g : α →₂[μ] E)⟫₂ := by
+    ⟪(condexpL2 𝕜 hm f : α →₂[μ] E), g⟫₂ = ⟪f, (condexpL2 𝕜 hm g : α →₂[μ] E)⟫₂ :=
   haveI : Fact (m ≤ m0) := ⟨hm⟩
-  exact inner_orthogonal_projection_left_eq_right _ f g
+  inner_orthogonal_projection_left_eq_right _ f g
 
 theorem condexp_L2_indicator_of_measurable (hm : m ≤ m0) (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) (c : E) :
     (condexpL2 𝕜 hm (indicatorConstLp 2 (hm s hs) hμs c) : α →₂[μ] E) = indicatorConstLp 2 (hm s hs) hμs c := by
@@ -902,8 +892,7 @@ theorem condexp_L2_indicator_of_measurable (hm : m ≤ m0) (hs : measurable_set[
   haveI : Fact (m ≤ m0) := ⟨hm⟩
   have h_mem : indicator_const_Lp 2 (hm s hs) hμs c ∈ Lp_meas E 𝕜 m 2 μ := mem_Lp_meas_indicator_const_Lp hm hs hμs
   let ind := (⟨indicator_const_Lp 2 (hm s hs) hμs c, h_mem⟩ : Lp_meas E 𝕜 m 2 μ)
-  have h_coe_ind : (ind : α →₂[μ] E) = indicator_const_Lp 2 (hm s hs) hμs c := by
-    rfl
+  have h_coe_ind : (ind : α →₂[μ] E) = indicator_const_Lp 2 (hm s hs) hμs c := by rfl
   have h_orth_mem := orthogonal_projection_mem_subspace_eq_self ind
   rw [← h_coe_ind, h_orth_mem]
 
@@ -935,7 +924,7 @@ theorem lintegral_nnnorm_condexp_L2_le (hs : measurable_set[m] s) (hμs : μ s �
   have hg_eq_restrict : g =ᵐ[μ.restrict s] condexp_L2 ℝ hm f := ae_restrict_of_ae hg_eq
   have hg_nnnorm_eq : (fun x => (∥g x∥₊ : ℝ≥0∞)) =ᵐ[μ.restrict s] fun x => (∥condexp_L2 ℝ hm f x∥₊ : ℝ≥0∞) := by
     refine' hg_eq_restrict.mono fun x hx => _
-    dsimp' only
+    dsimp only
     rw [hx]
   rw [lintegral_congr_ae hg_nnnorm_eq.symm]
   refine' lintegral_nnnorm_le_of_forall_fin_meas_integral_eq hm (Lp.strongly_measurable f) _ _ _ _ hs hμs
@@ -956,7 +945,7 @@ theorem condexp_L2_ae_eq_zero_of_ae_eq_zero (hs : measurable_set[m] s) (hμs : �
   suffices h_nnnorm_eq_zero : (∫⁻ x in s, ∥condexp_L2 ℝ hm f x∥₊ ∂μ) = 0
   · rw [lintegral_eq_zero_iff] at h_nnnorm_eq_zero
     refine' h_nnnorm_eq_zero.mono fun x hx => _
-    dsimp' only  at hx
+    dsimp only at hx
     rw [Pi.zero_apply] at hx⊢
     · rwa [Ennreal.coe_eq_zero, nnnorm_eq_zero] at hx
       
@@ -969,7 +958,7 @@ theorem condexp_L2_ae_eq_zero_of_ae_eq_zero (hs : measurable_set[m] s) (hμs : �
   refine' (lintegral_nnnorm_condexp_L2_le hs hμs f).trans (le_of_eqₓ _)
   rw [lintegral_eq_zero_iff]
   · refine' hf.mono fun x hx => _
-    dsimp' only
+    dsimp only
     rw [hx]
     simp
     
@@ -1037,8 +1026,7 @@ theorem integral_condexp_L2_eq (hm : m ≤ m0) (f : lp E' 2 μ) (hs : measurable
     
   intro c
   simp_rw [Pi.sub_apply, inner_sub_right]
-  rw
-    [integral_sub ((integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs).const_inner c)
+  rw [integral_sub ((integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs).const_inner c)
       ((integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs).const_inner c)]
   have h_ae_eq_f := mem_ℒp.coe_fn_to_Lp ((Lp.mem_ℒp f).const_inner c)
   rw [← Lp_meas_coe, sub_eq_zero, ←
@@ -1112,8 +1100,7 @@ theorem set_lintegral_nnnorm_condexp_L2_indicator_le (hm : m ≤ m0) (hs : Measu
     (∫⁻ a in t, ∥condexpL2 𝕜 hm (indicatorConstLp 2 hs hμs x) a∥₊ ∂μ) =
         ∫⁻ a in t, ∥condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a • x∥₊ ∂μ :=
       set_lintegral_congr_fun (hm t ht)
-        ((condexp_L2_indicator_ae_eq_smul 𝕜 hm hs hμs x).mono fun a ha hat => by
-          rw [ha])
+        ((condexp_L2_indicator_ae_eq_smul 𝕜 hm hs hμs x).mono fun a ha hat => by rw [ha])
     _ = (∫⁻ a in t, ∥condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a∥₊ ∂μ) * ∥x∥₊ := by
       simp_rw [nnnorm_smul, Ennreal.coe_mul]
       rw [lintegral_mul_const, Lp_meas_coe]
@@ -1190,9 +1177,7 @@ theorem set_lintegral_nnnorm_condexp_ind_smul_le (hm : m ≤ m0) (hs : Measurabl
   calc
     (∫⁻ a in t, ∥condexpIndSmul hm hs hμs x a∥₊ ∂μ) =
         ∫⁻ a in t, ∥condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a • x∥₊ ∂μ :=
-      set_lintegral_congr_fun (hm t ht)
-        ((condexp_ind_smul_ae_eq_smul hm hs hμs x).mono fun a ha hat => by
-          rw [ha])
+      set_lintegral_congr_fun (hm t ht) ((condexp_ind_smul_ae_eq_smul hm hs hμs x).mono fun a ha hat => by rw [ha])
     _ = (∫⁻ a in t, ∥condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a∥₊ ∂μ) * ∥x∥₊ := by
       simp_rw [nnnorm_smul, Ennreal.coe_mul]
       rw [lintegral_mul_const, Lp_meas_coe]
@@ -1232,8 +1217,7 @@ theorem set_integral_condexp_L2_indicator (hs : measurable_set[m] s) (ht : Measu
         ∫ x in s, indicatorConstLp 2 ht hμt (1 : ℝ) x ∂μ :=
       @integral_condexp_L2_eq α _ ℝ _ _ _ _ _ _ _ _ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) hs hμs
     _ = (μ (t ∩ s)).toReal • 1 := set_integral_indicator_const_Lp (hm s hs) ht hμt (1 : ℝ)
-    _ = (μ (t ∩ s)).toReal := by
-      rw [smul_eq_mul, mul_oneₓ]
+    _ = (μ (t ∩ s)).toReal := by rw [smul_eq_mul, mul_oneₓ]
     
 
 theorem set_integral_condexp_ind_smul (hs : measurable_set[m] s) (ht : MeasurableSet t) (hμs : μ s ≠ ∞) (hμt : μ t ≠ ∞)
@@ -1243,8 +1227,7 @@ theorem set_integral_condexp_ind_smul (hs : measurable_set[m] s) (ht : Measurabl
         ∫ a in s, condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) a • x ∂μ :=
       set_integral_congr_ae (hm s hs) ((condexp_ind_smul_ae_eq_smul hm ht hμt x).mono fun x hx hxs => hx)
     _ = (∫ a in s, condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) a ∂μ) • x := integral_smul_const _ x
-    _ = (μ (t ∩ s)).toReal • x := by
-      rw [set_integral_condexp_L2_indicator hs ht hμs hμt]
+    _ = (μ (t ∩ s)).toReal • x := by rw [set_integral_condexp_L2_indicator hs ht hμs hμt]
     
 
 theorem condexp_L2_indicator_nonneg (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) [SigmaFinite (μ.trim hm)] :
@@ -1355,7 +1338,7 @@ theorem norm_condexp_ind_L1_fin_le (hs : MeasurableSet s) (hμs : μ s ≠ ∞) 
   have h_eq : (∫⁻ a, ∥condexp_ind_L1_fin hm hs hμs x a∥₊ ∂μ) = ∫⁻ a, ∥condexp_ind_smul hm hs hμs x a∥₊ ∂μ := by
     refine' lintegral_congr_ae _
     refine' (condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm hs hμs x).mono fun z hz => _
-    dsimp' only
+    dsimp only
     rw [hz]
   rw [h_eq, of_real_norm_eq_coe_nnnorm]
   exact lintegral_nnnorm_condexp_ind_smul_le hm hs hμs x
@@ -1407,12 +1390,12 @@ theorem condexp_ind_L1_of_not_measurable_set (hs : ¬MeasurableSet s) (x : G) : 
   simp only [condexp_ind_L1, hs, dif_neg, not_false_iff, false_andₓ]
 
 theorem condexp_ind_L1_add (x y : G) : condexpIndL1 hm μ s (x + y) = condexpIndL1 hm μ s x + condexpIndL1 hm μ s y := by
-  by_cases' hs : MeasurableSet s
+  by_cases hs:MeasurableSet s
   swap
   · simp_rw [condexp_ind_L1_of_not_measurable_set hs]
     rw [zero_addₓ]
     
-  by_cases' hμs : μ s = ∞
+  by_cases hμs:μ s = ∞
   · simp_rw [condexp_ind_L1_of_measure_eq_top hμs]
     rw [zero_addₓ]
     
@@ -1421,12 +1404,12 @@ theorem condexp_ind_L1_add (x y : G) : condexpIndL1 hm μ s (x + y) = condexpInd
     
 
 theorem condexp_ind_L1_smul (c : ℝ) (x : G) : condexpIndL1 hm μ s (c • x) = c • condexpIndL1 hm μ s x := by
-  by_cases' hs : MeasurableSet s
+  by_cases hs:MeasurableSet s
   swap
   · simp_rw [condexp_ind_L1_of_not_measurable_set hs]
     rw [smul_zero]
     
-  by_cases' hμs : μ s = ∞
+  by_cases hμs:μ s = ∞
   · simp_rw [condexp_ind_L1_of_measure_eq_top hμs]
     rw [smul_zero]
     
@@ -1436,12 +1419,12 @@ theorem condexp_ind_L1_smul (c : ℝ) (x : G) : condexpIndL1 hm μ s (c • x) =
 
 theorem condexp_ind_L1_smul' [NormedSpace ℝ F] [SmulCommClass ℝ 𝕜 F] (c : 𝕜) (x : F) :
     condexpIndL1 hm μ s (c • x) = c • condexpIndL1 hm μ s x := by
-  by_cases' hs : MeasurableSet s
+  by_cases hs:MeasurableSet s
   swap
   · simp_rw [condexp_ind_L1_of_not_measurable_set hs]
     rw [smul_zero]
     
-  by_cases' hμs : μ s = ∞
+  by_cases hμs:μ s = ∞
   · simp_rw [condexp_ind_L1_of_measure_eq_top hμs]
     rw [smul_zero]
     
@@ -1450,13 +1433,13 @@ theorem condexp_ind_L1_smul' [NormedSpace ℝ F] [SmulCommClass ℝ 𝕜 F] (c :
     
 
 theorem norm_condexp_ind_L1_le (x : G) : ∥condexpIndL1 hm μ s x∥ ≤ (μ s).toReal * ∥x∥ := by
-  by_cases' hs : MeasurableSet s
+  by_cases hs:MeasurableSet s
   swap
   · simp_rw [condexp_ind_L1_of_not_measurable_set hs]
     rw [Lp.norm_zero]
     exact mul_nonneg Ennreal.to_real_nonneg (norm_nonneg _)
     
-  by_cases' hμs : μ s = ∞
+  by_cases hμs:μ s = ∞
   · rw [condexp_ind_L1_of_measure_eq_top hμs x, Lp.norm_zero]
     exact mul_nonneg Ennreal.to_real_nonneg (norm_nonneg _)
     
@@ -1502,12 +1485,7 @@ theorem ae_strongly_measurable'_condexp_ind (hs : MeasurableSet s) (hμs : μ s 
 theorem condexp_ind_empty : condexpInd hm μ ∅ = (0 : G →L[ℝ] α →₁[μ] G) := by
   ext1
   ext1
-  refine'
-    (condexp_ind_ae_eq_condexp_ind_smul hm MeasurableSet.empty
-          (by
-            simp )
-          x).trans
-      _
+  refine' (condexp_ind_ae_eq_condexp_ind_smul hm MeasurableSet.empty (by simp) x).trans _
   rw [condexp_ind_smul_empty]
   refine' (Lp.coe_fn_zero G 2 μ).trans _
   refine' eventually_eq.trans _ (Lp.coe_fn_zero G 1 μ).symm
@@ -1557,9 +1535,9 @@ theorem condexp_ind_of_measurable (hs : measurable_set[m] s) (hμs : μ s ≠ �
   refine' (condexp_ind_smul_ae_eq_smul hm (hm s hs) hμs c).trans _
   rw [Lp_meas_coe, condexp_L2_indicator_of_measurable hm hs hμs (1 : ℝ)]
   refine' (@indicator_const_Lp_coe_fn α _ _ 2 μ _ s (hm s hs) hμs (1 : ℝ)).mono fun x hx => _
-  dsimp' only
+  dsimp only
   rw [hx]
-  by_cases' hx_mem : x ∈ s <;> simp [hx_mem]
+  by_cases hx_mem:x ∈ s <;> simp [hx_mem]
 
 theorem condexp_ind_nonneg {E} [NormedLatticeAddCommGroup E] [NormedSpace ℝ E] [OrderedSmul ℝ E] (hs : MeasurableSet s)
     (hμs : μ s ≠ ∞) (x : E) (hx : 0 ≤ x) : 0 ≤ condexpInd hm μ s x := by
@@ -1602,8 +1580,7 @@ theorem set_integral_condexp_L1_clm_of_measure_ne_top (f : α →₁[μ] F') (hs
     
   · intro f g hf_Lp hg_Lp hfg_disj hf hg
     simp_rw [(condexp_L1_clm hm μ).map_add]
-    rw
-      [set_integral_congr_ae (hm s hs)
+    rw [set_integral_congr_ae (hm s hs)
         ((Lp.coe_fn_add (condexp_L1_clm hm μ (hf_Lp.to_Lp f)) (condexp_L1_clm hm μ (hg_Lp.to_Lp g))).mono
           fun x hx hxs => hx)]
     rw [set_integral_congr_ae (hm s hs) ((Lp.coe_fn_add (hf_Lp.to_Lp f) (hg_Lp.to_Lp g)).mono fun x hx hxs => hx)]
@@ -1631,7 +1608,7 @@ theorem set_integral_condexp_L1_clm (f : α →₁[μ] F') (hs : measurable_set[
     refine' fun i => (measure_mono (Set.inter_subset_left _ _)).trans_lt _
     have hS_finite_trim := measure_spanning_sets_lt_top (μ.trim hm) i
     rwa [trim_measurable_set_eq hm (hS_meas i)] at hS_finite_trim
-  have h_mono : Monotone fun i => S i ∩ s := by
+  have h_mono : Monotoneₓ fun i => S i ∩ s := by
     intro i j hij x
     simp_rw [Set.mem_inter_iff]
     exact fun h => ⟨monotone_spanning_sets (μ.trim hm) hij h.1, h.2⟩
@@ -1668,8 +1645,7 @@ theorem ae_strongly_measurable'_condexp_L1_clm (f : α →₁[μ] F') : AeStrong
   · have :
       { f : Lp F' 1 μ | ae_strongly_measurable' m (condexp_L1_clm hm μ f) μ } =
         condexp_L1_clm hm μ ⁻¹' { f | ae_strongly_measurable' m f μ } :=
-      by
-      rfl
+      by rfl
     rw [this]
     refine' IsClosed.preimage (condexp_L1_clm hm μ).Continuous _
     exact is_closed_ae_strongly_measurable' hm
@@ -1677,8 +1653,7 @@ theorem ae_strongly_measurable'_condexp_L1_clm (f : α →₁[μ] F') : AeStrong
 
 theorem condexp_L1_clm_Lp_meas (f : lpMeas F' ℝ m 1 μ) : condexpL1Clm hm μ (f : α →₁[μ] F') = ↑f := by
   let g := Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm f
-  have hfg : f = (Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm).symm g := by
-    simp only [LinearIsometryEquiv.symm_apply_apply]
+  have hfg : f = (Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm).symm g := by simp only [LinearIsometryEquiv.symm_apply_apply]
   rw [hfg]
   refine'
     @Lp.induction α F' m _ 1 (μ.trim hm) _ Ennreal.coe_ne_top
@@ -1729,7 +1704,7 @@ theorem condexp_L1_measure_zero (hm : m ≤ m0) : condexpL1 hm (0 : Measure α) 
   set_to_fun_measure_zero _ rfl
 
 theorem ae_strongly_measurable'_condexp_L1 {f : α → F'} : AeStronglyMeasurable' m (condexpL1 hm μ f) μ := by
-  by_cases' hf : integrable f μ
+  by_cases hf:integrable f μ
   · rw [condexp_L1_eq hf]
     exact ae_strongly_measurable'_condexp_L1_clm _
     
@@ -1811,8 +1786,7 @@ irreducible_def condexp (m : MeasurableSpace α) {m0 : MeasurableSpace α} (μ :
 -- We define notation `μ[f|m]` for the conditional expectation of `f` with respect to `m`.
 localized [MeasureTheory] notation μ "[" f "|" m "]" => MeasureTheory.condexp m μ f
 
-theorem condexp_of_not_le (hm_not : ¬m ≤ m0) : μ[f|m] = 0 := by
-  rw [condexp, dif_neg hm_not]
+theorem condexp_of_not_le (hm_not : ¬m ≤ m0) : μ[f|m] = 0 := by rw [condexp, dif_neg hm_not]
 
 theorem condexp_of_not_sigma_finite (hm : m ≤ m0) (hμm_not : ¬SigmaFinite (μ.trim hm)) : μ[f|m] = 0 := by
   rw [condexp, dif_pos hm, dif_neg]
@@ -1827,7 +1801,7 @@ theorem condexp_of_sigma_finite (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)
   by
   rw [condexp, dif_pos hm]
   simp only [hμm, Ne.def, true_andₓ]
-  by_cases' hf : integrable f μ
+  by_cases hf:integrable f μ
   · rw [dif_pos hf, if_pos hf]
     
   · rw [dif_neg hf, if_neg hf]
@@ -1844,9 +1818,9 @@ theorem condexp_const (hm : m ≤ m0) (c : F') [IsFiniteMeasure μ] : μ[fun x :
 theorem condexp_ae_eq_condexp_L1 (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] (f : α → F') :
     μ[f|m] =ᵐ[μ] condexpL1 hm μ f := by
   rw [condexp_of_sigma_finite hm]
-  by_cases' hfi : integrable f μ
+  by_cases hfi:integrable f μ
   · rw [if_pos hfi]
-    by_cases' hfm : strongly_measurable[m] f
+    by_cases hfm:strongly_measurable[m] f
     · rw [if_pos hfm]
       exact (condexp_L1_of_ae_strongly_measurable' (strongly_measurable.ae_strongly_measurable' hfm) hfi).symm
       
@@ -1863,11 +1837,11 @@ theorem condexp_ae_eq_condexp_L1_clm (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] 
   rw [condexp_L1_eq hf]
 
 theorem condexp_undef (hf : ¬Integrable f μ) : μ[f|m] = 0 := by
-  by_cases' hm : m ≤ m0
+  by_cases hm:m ≤ m0
   swap
   · rw [condexp_of_not_le hm]
     
-  by_cases' hμm : sigma_finite (μ.trim hm)
+  by_cases hμm:sigma_finite (μ.trim hm)
   swap
   · rw [condexp_of_not_sigma_finite hm hμm]
     
@@ -1876,11 +1850,11 @@ theorem condexp_undef (hf : ¬Integrable f μ) : μ[f|m] = 0 := by
 
 @[simp]
 theorem condexp_zero : μ[(0 : α → F')|m] = 0 := by
-  by_cases' hm : m ≤ m0
+  by_cases hm:m ≤ m0
   swap
   · rw [condexp_of_not_le hm]
     
-  by_cases' hμm : sigma_finite (μ.trim hm)
+  by_cases hμm:sigma_finite (μ.trim hm)
   swap
   · rw [condexp_of_not_sigma_finite hm hμm]
     
@@ -1888,12 +1862,12 @@ theorem condexp_zero : μ[(0 : α → F')|m] = 0 := by
   exact condexp_of_strongly_measurable hm (@strongly_measurable_zero _ _ m _ _) (integrable_zero _ _ _)
 
 theorem strongly_measurable_condexp : strongly_measurable[m] (μ[f|m]) := by
-  by_cases' hm : m ≤ m0
+  by_cases hm:m ≤ m0
   swap
   · rw [condexp_of_not_le hm]
     exact strongly_measurable_zero
     
-  by_cases' hμm : sigma_finite (μ.trim hm)
+  by_cases hμm:sigma_finite (μ.trim hm)
   swap
   · rw [condexp_of_not_sigma_finite hm hμm]
     exact strongly_measurable_zero
@@ -1912,21 +1886,18 @@ theorem strongly_measurable_condexp : strongly_measurable[m] (μ[f|m]) := by
     
 
 theorem condexp_congr_ae (h : f =ᵐ[μ] g) : μ[f|m] =ᵐ[μ] μ[g|m] := by
-  by_cases' hm : m ≤ m0
+  by_cases hm:m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm]
     
-  by_cases' hμm : sigma_finite (μ.trim hm)
+  by_cases hμm:sigma_finite (μ.trim hm)
   swap
   · simp_rw [condexp_of_not_sigma_finite hm hμm]
     
   haveI : sigma_finite (μ.trim hm) := hμm
   exact
     (condexp_ae_eq_condexp_L1 hm f).trans
-      (Filter.EventuallyEq.trans
-        (by
-          rw [condexp_L1_congr_ae hm h])
-        (condexp_ae_eq_condexp_L1 hm g).symm)
+      (Filter.EventuallyEq.trans (by rw [condexp_L1_congr_ae hm h]) (condexp_ae_eq_condexp_L1 hm g).symm)
 
 theorem condexp_of_ae_strongly_measurable' (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] {f : α → F'}
     (hf : AeStronglyMeasurable' m f μ) (hfi : Integrable f μ) : μ[f|m] =ᵐ[μ] f := by
@@ -1934,12 +1905,12 @@ theorem condexp_of_ae_strongly_measurable' (hm : m ≤ m0) [hμm : SigmaFinite (
   rw [condexp_of_strongly_measurable hm hf.strongly_measurable_mk ((integrable_congr hf.ae_eq_mk).mp hfi)]
 
 theorem integrable_condexp : Integrable (μ[f|m]) μ := by
-  by_cases' hm : m ≤ m0
+  by_cases hm:m ≤ m0
   swap
   · rw [condexp_of_not_le hm]
     exact integrable_zero _ _ _
     
-  by_cases' hμm : sigma_finite (μ.trim hm)
+  by_cases hμm:sigma_finite (μ.trim hm)
   swap
   · rw [condexp_of_not_sigma_finite hm hμm]
     exact integrable_zero _ _ _
@@ -1974,17 +1945,16 @@ theorem ae_eq_condexp_of_forall_set_integral_eq (hm : m ≤ m0) [SigmaFinite (μ
   rw [hg_eq s hs hμs, set_integral_condexp hm hf hs]
 
 theorem condexp_bot' [hμ : μ.ae.ne_bot] (f : α → F') : μ[f|⊥] = fun _ => (μ Set.Univ).toReal⁻¹ • ∫ x, f x ∂μ := by
-  by_cases' hμ_finite : is_finite_measure μ
+  by_cases hμ_finite:is_finite_measure μ
   swap
-  · have h : ¬sigma_finite (μ.trim bot_le) := by
-      rwa [sigma_finite_trim_bot_iff]
+  · have h : ¬sigma_finite (μ.trim bot_le) := by rwa [sigma_finite_trim_bot_iff]
     rw [not_is_finite_measure_iff] at hμ_finite
     rw [condexp_of_not_sigma_finite bot_le h]
     simp only [hμ_finite, Ennreal.top_to_real, inv_zero, zero_smul]
     rfl
     
   haveI : is_finite_measure μ := hμ_finite
-  by_cases' hf : integrable f μ
+  by_cases hf:integrable f μ
   swap
   · rw [integral_undef hf, smul_zero, condexp_undef hf]
     rfl
@@ -2000,7 +1970,7 @@ theorem condexp_bot' [hμ : μ.ae.ne_bot] (f : α → F') : μ[f|⊥] = fun _ =>
   exact ⟨hμ, measure_ne_top μ Set.Univ⟩
 
 theorem condexp_bot_ae_eq (f : α → F') : μ[f|⊥] =ᵐ[μ] fun _ => (μ Set.Univ).toReal⁻¹ • ∫ x, f x ∂μ := by
-  by_cases' μ.ae.ne_bot
+  by_cases μ.ae.ne_bot
   · refine' eventually_of_forall fun x => _
     rw [condexp_bot' f]
     exact h
@@ -2014,12 +1984,12 @@ theorem condexp_bot [IsProbabilityMeasure μ] (f : α → F') : μ[f|⊥] = fun 
   rw [measure_univ, Ennreal.one_to_real, inv_one, one_smul]
 
 theorem condexp_add (hf : Integrable f μ) (hg : Integrable g μ) : μ[f + g|m] =ᵐ[μ] μ[f|m] + μ[g|m] := by
-  by_cases' hm : m ≤ m0
+  by_cases hm:m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm]
     simp
     
-  by_cases' hμm : sigma_finite (μ.trim hm)
+  by_cases hμm:sigma_finite (μ.trim hm)
   swap
   · simp_rw [condexp_of_not_sigma_finite hm hμm]
     simp
@@ -2029,25 +1999,25 @@ theorem condexp_add (hf : Integrable f μ) (hg : Integrable g μ) : μ[f + g|m] 
   rw [condexp_L1_add hf hg]
   exact (coe_fn_add _ _).trans ((condexp_ae_eq_condexp_L1 hm _).symm.add (condexp_ae_eq_condexp_L1 hm _).symm)
 
-theorem condexp_finset_sum {ι : Type _} {s : Finset ι} {f : ι → α → F'} (hf : ∀ i ∈ s, Integrable (f i) μ) :
+theorem condexp_finset_sum {ι : Type _} {s : Finsetₓ ι} {f : ι → α → F'} (hf : ∀ i ∈ s, Integrable (f i) μ) :
     μ[∑ i in s, f i|m] =ᵐ[μ] ∑ i in s, μ[f i|m] := by
-  induction' s using Finset.induction_on with i s his heq hf
-  · rw [Finset.sum_empty, Finset.sum_empty, condexp_zero]
+  induction' s using Finsetₓ.induction_on with i s his heq hf
+  · rw [Finsetₓ.sum_empty, Finsetₓ.sum_empty, condexp_zero]
     
-  · rw [Finset.sum_insert his, Finset.sum_insert his]
+  · rw [Finsetₓ.sum_insert his, Finsetₓ.sum_insert his]
     exact
-      (condexp_add (hf i <| Finset.mem_insert_self i s) <|
-            integrable_finset_sum' _ fun j hmem => hf j <| Finset.mem_insert_of_mem hmem).trans
-        ((eventually_eq.refl _ _).add (HEq fun j hmem => hf j <| Finset.mem_insert_of_mem hmem))
+      (condexp_add (hf i <| Finsetₓ.mem_insert_self i s) <|
+            integrable_finset_sum' _ fun j hmem => hf j <| Finsetₓ.mem_insert_of_mem hmem).trans
+        ((eventually_eq.refl _ _).add (HEq fun j hmem => hf j <| Finsetₓ.mem_insert_of_mem hmem))
     
 
 theorem condexp_smul (c : 𝕜) (f : α → F') : μ[c • f|m] =ᵐ[μ] c • μ[f|m] := by
-  by_cases' hm : m ≤ m0
+  by_cases hm:m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm]
     simp
     
-  by_cases' hμm : sigma_finite (μ.trim hm)
+  by_cases hμm:sigma_finite (μ.trim hm)
   swap
   · simp_rw [condexp_of_not_sigma_finite hm hμm]
     simp
@@ -2062,8 +2032,7 @@ theorem condexp_smul (c : 𝕜) (f : α → F') : μ[c • f|m] =ᵐ[μ] c • �
 theorem condexp_neg (f : α → F') : μ[-f|m] =ᵐ[μ] -μ[f|m] := by
   letI : Module ℝ (α → F') := @Pi.module α (fun _ => F') ℝ _ _ fun _ => inferInstance <;>
     calc
-      μ[-f|m] = μ[(-1 : ℝ) • f|m] := by
-        rw [neg_one_smul ℝ f]
+      μ[-f|m] = μ[(-1 : ℝ) • f|m] := by rw [neg_one_smul ℝ f]
       _ =ᵐ[μ] (-1 : ℝ) • μ[f|m] := condexp_smul (-1) f
       _ = -μ[f|m] := neg_one_smul ℝ (μ[f|m])
       
@@ -2074,12 +2043,12 @@ theorem condexp_sub (hf : Integrable f μ) (hg : Integrable g μ) : μ[f - g|m] 
 
 theorem condexp_condexp_of_le {m₁ m₂ m0 : MeasurableSpace α} {μ : Measure α} (hm₁₂ : m₁ ≤ m₂) (hm₂ : m₂ ≤ m0)
     [SigmaFinite (μ.trim hm₂)] : μ[μ[f|m₂]|m₁] =ᵐ[μ] μ[f|m₁] := by
-  by_cases' hμm₁ : sigma_finite (μ.trim (hm₁₂.trans hm₂))
+  by_cases hμm₁:sigma_finite (μ.trim (hm₁₂.trans hm₂))
   swap
   · simp_rw [condexp_of_not_sigma_finite (hm₁₂.trans hm₂) hμm₁]
     
   haveI : sigma_finite (μ.trim (hm₁₂.trans hm₂)) := hμm₁
-  by_cases' hf : integrable f μ
+  by_cases hf:integrable f μ
   swap
   · simp_rw [condexp_undef hf, condexp_zero]
     
@@ -2097,11 +2066,11 @@ theorem condexp_condexp_of_le {m₁ m₂ m0 : MeasurableSpace α} {μ : Measure 
 
 theorem condexp_mono {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E] [OrderedSmul ℝ E]
     {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ) (hfg : f ≤ᵐ[μ] g) : μ[f|m] ≤ᵐ[μ] μ[g|m] := by
-  by_cases' hm : m ≤ m0
+  by_cases hm:m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm]
     
-  by_cases' hμm : sigma_finite (μ.trim hm)
+  by_cases hμm:sigma_finite (μ.trim hm)
   swap
   · simp_rw [condexp_of_not_sigma_finite hm hμm]
     
@@ -2111,7 +2080,7 @@ theorem condexp_mono {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [Normed
 
 theorem condexp_nonneg {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E] [OrderedSmul ℝ E]
     {f : α → E} (hf : 0 ≤ᵐ[μ] f) : 0 ≤ᵐ[μ] μ[f|m] := by
-  by_cases' hfint : integrable f μ
+  by_cases hfint:integrable f μ
   · rw [(condexp_zero.symm : (0 : α → E) = μ[0|m])]
     exact condexp_mono (integrable_zero _ _ _) hfint hf
     
@@ -2120,7 +2089,7 @@ theorem condexp_nonneg {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [Norm
 
 theorem condexp_nonpos {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E] [OrderedSmul ℝ E]
     {f : α → E} (hf : f ≤ᵐ[μ] 0) : μ[f|m] ≤ᵐ[μ] 0 := by
-  by_cases' hfint : integrable f μ
+  by_cases hfint:integrable f μ
   · rw [(condexp_zero.symm : (0 : α → E) = μ[0|m])]
     exact condexp_mono hfint (integrable_zero _ _ _) hf
     
@@ -2146,11 +2115,11 @@ theorem tendsto_condexp_unique (fs gs : ℕ → α → F') (f g : α → F') (hf
     (h_int_bound_fs : Integrable bound_fs μ) (bound_gs : α → ℝ) (h_int_bound_gs : Integrable bound_gs μ)
     (hfs_bound : ∀ n, ∀ᵐ x ∂μ, ∥fs n x∥ ≤ bound_fs x) (hgs_bound : ∀ n, ∀ᵐ x ∂μ, ∥gs n x∥ ≤ bound_gs x)
     (hfg : ∀ n, μ[fs n|m] =ᵐ[μ] μ[gs n|m]) : μ[f|m] =ᵐ[μ] μ[g|m] := by
-  by_cases' hm : m ≤ m0
+  by_cases hm:m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm]
     
-  by_cases' hμm : sigma_finite (μ.trim hm)
+  by_cases hμm:sigma_finite (μ.trim hm)
   swap
   · simp_rw [condexp_of_not_sigma_finite hm hμm]
     

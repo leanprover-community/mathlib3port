@@ -212,11 +212,7 @@ begin
 end
 ```
 -/
-theorem CategoryTheory.reassoc_of {α} (hh : α) {β}
-    (x : Tactic.CalculatedProp β hh := by
-      run_tac
-        tactic.derive_reassoc_proof) :
-    β :=
+theorem CategoryTheory.reassoc_of {α} (hh : α) {β} (x : Tactic.CalculatedProp β hh := by derive_reassoc_proof) : β :=
   x
 
 /-- `reassoc_of h` takes local assumption `h` and add a ` ≫ f` term on the right of

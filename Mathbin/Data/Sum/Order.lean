@@ -45,8 +45,7 @@ instance [IsRefl α r] [IsRefl β s] : IsRefl (Sum α β) (LiftRel r s) :=
   ⟨LiftRel.refl _ _⟩
 
 instance [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (Sum α β) (LiftRel r s) :=
-  ⟨by
-    rintro _ (⟨a, _, h⟩ | ⟨a, _, h⟩) <;> exact irrefl _ h⟩
+  ⟨by rintro _ (⟨a, _, h⟩ | ⟨a, _, h⟩) <;> exact irrefl _ h⟩
 
 @[trans]
 theorem LiftRel.trans [IsTrans α r] [IsTrans β s] : ∀ {a b c}, LiftRel r s a b → LiftRel r s b c → LiftRel r s a c
@@ -57,8 +56,7 @@ instance [IsTrans α r] [IsTrans β s] : IsTrans (Sum α β) (LiftRel r s) :=
   ⟨fun _ _ _ => LiftRel.trans _ _⟩
 
 instance [IsAntisymm α r] [IsAntisymm β s] : IsAntisymm (Sum α β) (LiftRel r s) :=
-  ⟨by
-    rintro _ _ (⟨a, b, hab⟩ | ⟨a, b, hab⟩) (⟨_, _, hba⟩ | ⟨_, _, hba⟩) <;> rw [antisymm hab hba]⟩
+  ⟨by rintro _ _ (⟨a, b, hab⟩ | ⟨a, b, hab⟩) (⟨_, _, hba⟩ | ⟨_, _, hba⟩) <;> rw [antisymm hab hba]⟩
 
 end LiftRel
 
@@ -72,8 +70,7 @@ instance [IsRefl α r] [IsRefl β s] : IsRefl (Sum α β) (Lex r s) :=
     exacts[lex.inl (refl _), lex.inr (refl _)]⟩
 
 instance [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (Sum α β) (Lex r s) :=
-  ⟨by
-    rintro _ (⟨a, _, h⟩ | ⟨a, _, h⟩) <;> exact irrefl _ h⟩
+  ⟨by rintro _ (⟨a, _, h⟩ | ⟨a, _, h⟩) <;> exact irrefl _ h⟩
 
 instance [IsTrans α r] [IsTrans β s] : IsTrans (Sum α β) (Lex r s) :=
   ⟨by
@@ -81,8 +78,7 @@ instance [IsTrans α r] [IsTrans β s] : IsTrans (Sum α β) (Lex r s) :=
     exacts[lex.inl (trans hab hbc), lex.sep _ _, lex.inr (trans hab hbc), lex.sep _ _]⟩
 
 instance [IsAntisymm α r] [IsAntisymm β s] : IsAntisymm (Sum α β) (Lex r s) :=
-  ⟨by
-    rintro _ _ (⟨a, b, hab⟩ | ⟨a, b, hab⟩) (⟨_, _, hba⟩ | ⟨_, _, hba⟩) <;> rw [antisymm hab hba]⟩
+  ⟨by rintro _ _ (⟨a, b, hab⟩ | ⟨a, b, hab⟩) (⟨_, _, hba⟩ | ⟨_, _, hba⟩) <;> rw [antisymm hab hba]⟩
 
 instance [IsTotal α r] [IsTotal β s] : IsTotal (Sum α β) (Lex r s) :=
   ⟨fun a b =>
@@ -175,13 +171,13 @@ instance : Preorderₓ (Sum α β) :=
           
          }
 
-theorem inl_mono : Monotone (inl : α → Sum α β) := fun a b => LiftRel.inl
+theorem inl_mono : Monotoneₓ (inl : α → Sum α β) := fun a b => LiftRel.inl
 
-theorem inr_mono : Monotone (inr : β → Sum α β) := fun a b => LiftRel.inr
+theorem inr_mono : Monotoneₓ (inr : β → Sum α β) := fun a b => LiftRel.inr
 
-theorem inl_strict_mono : StrictMono (inl : α → Sum α β) := fun a b => LiftRel.inl
+theorem inl_strict_mono : StrictMonoₓ (inl : α → Sum α β) := fun a b => LiftRel.inl
 
-theorem inr_strict_mono : StrictMono (inr : β → Sum α β) := fun a b => LiftRel.inr
+theorem inr_strict_mono : StrictMonoₓ (inr : β → Sum α β) := fun a b => LiftRel.inr
 
 end Preorderₓ
 
@@ -378,20 +374,20 @@ instance preorder : Preorderₓ (α ⊕ₗ β) :=
           
          }
 
-theorem to_lex_mono : Monotone (@toLex (Sum α β)) := fun a b h => h.Lex
+theorem to_lex_mono : Monotoneₓ (@toLex (Sum α β)) := fun a b h => h.Lex
 
-theorem to_lex_strict_mono : StrictMono (@toLex (Sum α β)) := fun a b h => h.Lex
+theorem to_lex_strict_mono : StrictMonoₓ (@toLex (Sum α β)) := fun a b h => h.Lex
 
-theorem inl_mono : Monotone (toLex ∘ inl : α → α ⊕ₗ β) :=
+theorem inl_mono : Monotoneₓ (toLex ∘ inl : α → α ⊕ₗ β) :=
   to_lex_mono.comp inl_mono
 
-theorem inr_mono : Monotone (toLex ∘ inr : β → α ⊕ₗ β) :=
+theorem inr_mono : Monotoneₓ (toLex ∘ inr : β → α ⊕ₗ β) :=
   to_lex_mono.comp inr_mono
 
-theorem inl_strict_mono : StrictMono (toLex ∘ inl : α → α ⊕ₗ β) :=
+theorem inl_strict_mono : StrictMonoₓ (toLex ∘ inl : α → α ⊕ₗ β) :=
   to_lex_strict_mono.comp inl_strict_mono
 
-theorem inr_strict_mono : StrictMono (toLex ∘ inr : β → α ⊕ₗ β) :=
+theorem inr_strict_mono : StrictMonoₓ (toLex ∘ inr : β → α ⊕ₗ β) :=
   to_lex_strict_mono.comp inr_strict_mono
 
 end Preorderₓ
@@ -522,9 +518,7 @@ theorem sum_comm_symm (α β : Type _) [LE α] [LE β] : (OrderIso.sumComm α β
 
 /-- `equiv.sum_assoc` promoted to an order isomorphism. -/
 def sumAssoc (α β γ : Type _) [LE α] [LE β] [LE γ] : Sum (Sum α β) γ ≃o Sum α (Sum β γ) :=
-  { Equivₓ.sumAssoc α β γ with
-    map_rel_iff' := by
-      rintro ((a | a) | a) ((b | b) | b) <;> simp }
+  { Equivₓ.sumAssoc α β γ with map_rel_iff' := by rintro ((a | a) | a) ((b | b) | b) <;> simp }
 
 @[simp]
 theorem sum_assoc_apply_inl_inl : sumAssoc α β γ (inl (inl a)) = inl a :=
@@ -696,8 +690,7 @@ namespace WithTop
 /-- `with_top α` is order-isomorphic to `α ⊕ₗ punit`, by sending `⊤` to `punit.star` and `↑a` to
 `a`. -/
 def orderIsoSumLexPunit : WithTop α ≃o α ⊕ₗ PUnit :=
-  ⟨(Equivₓ.optionEquivSumPunit α).trans toLex, by
-    rintro (a | _) (b | _) <;> simp <;> exact not_top_le_coe _⟩
+  ⟨(Equivₓ.optionEquivSumPunit α).trans toLex, by rintro (a | _) (b | _) <;> simp <;> exact not_top_le_coe _⟩
 
 @[simp]
 theorem order_iso_sum_lex_punit_top : @orderIsoSumLexPunit α _ ⊤ = toLex (inr PUnit.unit) :=

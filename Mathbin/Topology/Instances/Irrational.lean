@@ -55,14 +55,10 @@ instance : OrderTopology { x // Irrational x } :=
     ⟨⟨a, ha⟩, hxa, hay⟩
 
 instance : NoMaxOrder { x // Irrational x } :=
-  ⟨fun ⟨x, hx⟩ =>
-    ⟨⟨x + (1 : ℕ), hx.addNat 1⟩, by
-      simp ⟩⟩
+  ⟨fun ⟨x, hx⟩ => ⟨⟨x + (1 : ℕ), hx.addNat 1⟩, by simp⟩⟩
 
 instance : NoMinOrder { x // Irrational x } :=
-  ⟨fun ⟨x, hx⟩ =>
-    ⟨⟨x - (1 : ℕ), hx.subNat 1⟩, by
-      simp ⟩⟩
+  ⟨fun ⟨x, hx⟩ => ⟨⟨x - (1 : ℕ), hx.subNat 1⟩, by simp⟩⟩
 
 instance : DenselyOrdered { x // Irrational x } :=
   ⟨fun x y hlt =>

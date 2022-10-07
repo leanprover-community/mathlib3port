@@ -34,7 +34,7 @@ section Ringₓ
 variable [Ringₓ R] [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 
 /-- If a free module is finite, then any basis is finite. -/
-noncomputable instance [Nontrivial R] [Module.Finite R M] : Fintype (Module.Free.ChooseBasisIndex R M) := by
+noncomputable instance [Nontrivial R] [Module.Finite R M] : Fintypeₓ (Module.Free.ChooseBasisIndex R M) := by
   obtain ⟨h⟩ := id ‹Module.Finite R M›
   choose s hs using h
   exact basisFintypeOfFiniteSpans (↑s) hs (choose_basis _ _)
@@ -62,7 +62,7 @@ theorem _root_.module.finite.of_basis {R M ι : Type _} [CommRingₓ R] [AddComm
   cases nonempty_fintype ι
   classical
   refine' ⟨⟨finset.univ.image b, _⟩⟩
-  simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
+  simp only [Set.image_univ, Finsetₓ.coe_univ, Finsetₓ.coe_image, Basis.span_eq]
 
 instance _root_.module.finite.matrix {ι₁ ι₂ : Type _} [Finite ι₁] [Finite ι₂] : Module.Finite R (Matrix ι₁ ι₂ R) := by
   cases nonempty_fintype ι₁
@@ -88,9 +88,9 @@ variable [AddCommGroupₓ N] [Module.Finite ℤ N] [Module.Free ℤ N]
 instance _root_.module.finite.add_monoid_hom : Module.Finite ℤ (M →+ N) :=
   Module.Finite.equiv (addMonoidHomLequivInt ℤ).symm
 
-instance add_monoid_hom : Module.Free ℤ (M →+ N) := by
+instance add_monoid_hom : Module.Free ℤ (M →+ N) :=
   letI : Module.Free ℤ (M →ₗ[ℤ] N) := Module.Free.linear_map _ _ _
-  exact Module.Free.of_equiv (addMonoidHomLequivInt ℤ).symm
+  Module.Free.of_equiv (addMonoidHomLequivInt ℤ).symm
 
 end Integer
 

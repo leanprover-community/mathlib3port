@@ -47,9 +47,7 @@ instance has_finite_limits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits 
   · exact construct_products.over_finite_products_of_finite_wide_pullbacks
     
   · apply @has_equalizers_of_has_pullbacks_and_binary_products _ _ _ _
-    · haveI : has_pullbacks C :=
-        ⟨by
-          infer_instance⟩
+    · haveI : has_pullbacks C := ⟨by infer_instance⟩
       exact construct_products.over_binary_product_of_pullback
       
     · infer_instance

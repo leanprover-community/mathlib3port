@@ -33,9 +33,7 @@ theorem map_is_unit_of_le (hS : S ≤ A⁰) (s : S) : IsUnit (algebraMap A K s) 
   of `A`, given that `S ≤ A⁰`. -/
 noncomputable def mapToFractionRing (B : Type _) [CommRingₓ B] [Algebra A B] [IsLocalization S B] (hS : S ≤ A⁰) :
     B →ₐ[A] K :=
-  { IsLocalization.lift (map_is_unit_of_le K S hS) with
-    commutes' := fun a => by
-      simp }
+  { IsLocalization.lift (map_is_unit_of_le K S hS) with commutes' := fun a => by simp }
 
 @[simp]
 theorem map_to_fraction_ring_apply {B : Type _} [CommRingₓ B] [Algebra A B] [IsLocalization S B] (hS : S ≤ A⁰) (b : B) :
@@ -87,7 +85,7 @@ noncomputable def subalgebra (hS : S ≤ A⁰) : Subalgebra A K :=
 namespace Subalgebra
 
 instance is_localization_subalgebra : IsLocalization S (subalgebra K S hS) := by
-  dunfold Localization.subalgebra
+  dsimp only [Localization.subalgebra]
   rw [Subalgebra.copy_eq]
   infer_instance
 
@@ -108,8 +106,7 @@ theorem mem_range_map_to_fraction_ring_iff_of_field (B : Type _) [CommRingₓ B]
     (x : K) :
     x ∈ (mapToFractionRing K S B hS).range ↔ ∃ (a s : A)(hs : s ∈ S), x = algebraMap A K a * (algebraMap A K s)⁻¹ := by
   rw [mem_range_map_to_fraction_ring_iff]
-  iterate 3 
-    congr with
+  iterate 3 congr with
   convert Iff.rfl
   rw [Units.coe_inv]
   rfl
@@ -130,7 +127,7 @@ noncomputable def ofField : Subalgebra A K :=
     apply mem_range_map_to_fraction_ring_iff_of_field
 
 instance is_localization_of_field : IsLocalization S (subalgebra.ofField K S hS) := by
-  dunfold Localization.subalgebra.ofField
+  dsimp only [Localization.subalgebra.ofField]
   rw [Subalgebra.copy_eq]
   infer_instance
 

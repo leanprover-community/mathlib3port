@@ -47,13 +47,10 @@ theorem IsConj.trans {a b c : α} : IsConj a b → IsConj b c → IsConj a c
 theorem is_conj_iff_eq {α : Type _} [CommMonoidₓ α] {a b : α} : IsConj a b ↔ a = b :=
   ⟨fun ⟨c, hc⟩ => by
     rw [SemiconjBy, mul_comm, ← Units.mul_inv_eq_iff_eq_mul, mul_assoc, c.mul_inv, mul_oneₓ] at hc
-    exact hc, fun h => by
-    rw [h]⟩
+    exact hc, fun h => by rw [h]⟩
 
 protected theorem MonoidHom.map_is_conj (f : α →* β) {a b : α} : IsConj a b → IsConj (f a) (f b)
-  | ⟨c, hc⟩ =>
-    ⟨Units.map f c, by
-      rw [Units.coe_map, SemiconjBy, ← f.map_mul, hc.eq, f.map_mul]⟩
+  | ⟨c, hc⟩ => ⟨Units.map f c, by rw [Units.coe_map, SemiconjBy, ← f.map_mul, hc.eq, f.map_mul]⟩
 
 end Monoidₓ
 
@@ -66,8 +63,7 @@ variable [CancelMonoid α]
 -- not generalised.
 @[simp]
 theorem is_conj_one_right {a : α} : IsConj 1 a ↔ a = 1 :=
-  ⟨fun ⟨c, hc⟩ => mul_right_cancelₓ (hc.symm.trans ((mul_oneₓ _).trans (one_mulₓ _).symm)), fun h => by
-    rw [h]⟩
+  ⟨fun ⟨c, hc⟩ => mul_right_cancelₓ (hc.symm.trans ((mul_oneₓ _).trans (one_mulₓ _).symm)), fun h => by rw [h]⟩
 
 @[simp]
 theorem is_conj_one_left {a : α} : IsConj a 1 ↔ a = 1 :=
@@ -191,7 +187,7 @@ theorem map_surjective {f : α →* β} (hf : Function.Surjective f) : Function.
   obtain ⟨a, rfl⟩ := hf b
   exact ⟨ConjClasses.mk a, rfl⟩
 
-instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] : Fintype (ConjClasses α) :=
+instance [Fintypeₓ α] [DecidableRel (IsConj : α → α → Prop)] : Fintypeₓ (ConjClasses α) :=
   Quotientₓ.fintype (IsConj.setoid α)
 
 library_note "slow-failing instance priority"/--
@@ -228,8 +224,8 @@ the instance priority should be even lower, see Note [lower instance priority].
 instance (priority := 900) [DecidableRel (IsConj : α → α → Prop)] : DecidableEq (ConjClasses α) :=
   Quotientₓ.decidableEq
 
-instance [DecidableEq α] [Fintype α] : DecidableRel (IsConj : α → α → Prop) := fun a b => by
-  delta' IsConj SemiconjBy
+instance [DecidableEq α] [Fintypeₓ α] : DecidableRel (IsConj : α → α → Prop) := fun a b => by
+  delta IsConj SemiconjBy
   infer_instance
 
 end Monoidₓ
@@ -274,7 +270,7 @@ theorem is_conj_iff_conjugates_of_eq {a b : α} : IsConj a b ↔ ConjugatesOf a 
     have ha := mem_conjugates_of_self
     rwa [← h] at ha⟩
 
-instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] {a : α} : Fintype (ConjugatesOf a) :=
+instance [Fintypeₓ α] [DecidableRel (IsConj : α → α → Prop)] {a : α} : Fintypeₓ (ConjugatesOf a) :=
   @Subtype.fintype _ _ (‹DecidableRel IsConj› a) _
 
 end Monoidₓ
@@ -302,14 +298,14 @@ theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ Carrier b �
 theorem carrier_eq_preimage_mk {a : ConjClasses α} : a.Carrier = ConjClasses.mk ⁻¹' {a} :=
   Set.ext fun x => mem_carrier_iff_mk_eq
 
-section Fintype
+section Fintypeₓ
 
-variable [Fintype α] [DecidableRel (IsConj : α → α → Prop)]
+variable [Fintypeₓ α] [DecidableRel (IsConj : α → α → Prop)]
 
-instance {x : ConjClasses α} : Fintype (Carrier x) :=
+instance {x : ConjClasses α} : Fintypeₓ (Carrier x) :=
   (Quotientₓ.recOnSubsingleton x) fun a => ConjugatesOf.fintype
 
-end Fintype
+end Fintypeₓ
 
 end ConjClasses
 

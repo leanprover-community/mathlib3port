@@ -110,7 +110,7 @@ section Preorderₓ
 
 variable {α} [Preorderₓ α] [Preorderₓ β] {a b : α}
 
-theorem AntisymmRel.image {a b : α} (h : AntisymmRel (· ≤ ·) a b) {f : α → β} (hf : Monotone f) :
+theorem AntisymmRel.image {a b : α} (h : AntisymmRel (· ≤ ·) a b) {f : α → β} (hf : Monotoneₓ f) :
     AntisymmRel (· ≤ ·) (f a) (f b) :=
   ⟨hf h.1, hf h.2⟩
 
@@ -156,7 +156,7 @@ theorem of_antisymmetrization_lt_of_antisymmetrization_iff {a b : Antisymmetriza
     exact (to_antisymmetrization_of_antisymmetrization _ _).symm
 
 @[mono]
-theorem to_antisymmetrization_mono : Monotone (@toAntisymmetrization α (· ≤ ·) _) := fun a b => id
+theorem to_antisymmetrization_mono : Monotoneₓ (@toAntisymmetrization α (· ≤ ·) _) := fun a b => id
 
 /-- `to_antisymmetrization` as an order homomorphism. -/
 @[simps]
@@ -200,12 +200,8 @@ noncomputable def OrderEmbedding.ofAntisymmetrization : Antisymmetrization α (�
 def OrderIso.dualAntisymmetrization : (Antisymmetrization α (· ≤ ·))ᵒᵈ ≃o Antisymmetrization αᵒᵈ (· ≤ ·) where
   toFun := (Quotientₓ.map' id) fun _ _ => And.symm
   invFun := (Quotientₓ.map' id) fun _ _ => And.symm
-  left_inv := fun a =>
-    (Quotientₓ.induction_on' a) fun a => by
-      simp_rw [Quotientₓ.map'_mk', id]
-  right_inv := fun a =>
-    (Quotientₓ.induction_on' a) fun a => by
-      simp_rw [Quotientₓ.map'_mk', id]
+  left_inv := fun a => (Quotientₓ.induction_on' a) fun a => by simp_rw [Quotientₓ.map'_mk', id]
+  right_inv := fun a => (Quotientₓ.induction_on' a) fun a => by simp_rw [Quotientₓ.map'_mk', id]
   map_rel_iff' := fun a b => (Quotientₓ.induction_on₂' a b) fun a b => Iff.rfl
 
 @[simp]

@@ -49,15 +49,9 @@ structure GlueData where
   U : J → C
   V : J × J → C
   f : ∀ i j, V (i, j) ⟶ U i
-  f_mono : ∀ i j, Mono (f i j) := by
-    run_tac
-      tactic.apply_instance
-  f_has_pullback : ∀ i j k, HasPullback (f i j) (f i k) := by
-    run_tac
-      tactic.apply_instance
-  f_id : ∀ i, IsIso (f i i) := by
-    run_tac
-      tactic.apply_instance
+  f_mono : ∀ i j, Mono (f i j) := by infer_instance
+  f_has_pullback : ∀ i j k, HasPullback (f i j) (f i k) := by infer_instance
+  f_id : ∀ i, IsIso (f i i) := by infer_instance
   t : ∀ i j, V (i, j) ⟶ V (j, i)
   t_id : ∀ i, t i i = 𝟙 _
   t' : ∀ i j k, pullback (f i j) (f i k) ⟶ pullback (f j k) (f j i)
@@ -93,8 +87,7 @@ theorem t'_iji (i j : D.J) : D.t' i j i = pullback.fst ≫ D.t i j ≫ inv pullb
 
 @[simp, reassoc, elementwise]
 theorem t_inv (i j : D.J) : D.t i j ≫ D.t j i = 𝟙 _ := by
-  have eq : (pullback_symmetry (D.f i i) (D.f i j)).Hom = pullback.snd ≫ inv pullback.fst := by
-    simp
+  have eq : (pullback_symmetry (D.f i i) (D.f i j)).Hom = pullback.snd ≫ inv pullback.fst := by simp
   have := D.cocycle i j i
   rw [D.t'_iij, D.t'_jii, D.t'_iji, fst_eq_snd_of_mono_eq, Eq] at this
   simp only [category.assoc, is_iso.inv_hom_id_assoc] at this
@@ -110,8 +103,7 @@ instance t_is_iso (i j : D.J) : IsIso (D.t i j) :=
   ⟨⟨D.t j i, D.t_inv _ _, D.t_inv _ _⟩⟩
 
 instance t'_is_iso (i j k : D.J) : IsIso (D.t' i j k) :=
-  ⟨⟨D.t' j k i ≫ D.t' k i j, D.cocycle _ _ _, by
-      simpa using D.cocycle _ _ _⟩⟩
+  ⟨⟨D.t' j k i ≫ D.t' k i j, D.cocycle _ _ _, by simpa using D.cocycle _ _ _⟩⟩
 
 @[reassoc]
 theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
@@ -189,9 +181,7 @@ theorem glue_condition (i j : D.J) : D.t i j ≫ D.f j i ≫ D.ι j = D.f i j �
 /-- The pullback cone spanned by `V i j ⟶ U i` and `V i j ⟶ U j`.
 This will often be a pullback diagram. -/
 def vPullbackCone (i j : D.J) : PullbackCone (D.ι i) (D.ι j) :=
-  PullbackCone.mk (D.f i j) (D.t i j ≫ D.f j i)
-    (by
-      simp )
+  PullbackCone.mk (D.f i j) (D.t i j ≫ D.f j i) (by simp)
 
 variable [HasColimits C]
 
@@ -209,7 +199,7 @@ theorem types_π_surjective (D : GlueData (Type _)) : Function.Surjective D.π :
   (epi_iff_surjective _).mp inferInstance
 
 theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) : ∃ (i : _)(y : D.U i), D.ι i y = x := by
-  delta' CategoryTheory.GlueData.ι
+  delta CategoryTheory.GlueData.ι
   simp_rw [← multicoequalizer.ι_sigma_π D.diagram]
   rcases D.types_π_surjective x with ⟨x', rfl⟩
   have := colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)
@@ -217,9 +207,7 @@ theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) : ∃ 
     show (colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).inv _ = x' from
       concrete_category.congr_hom (colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).hom_inv_id x']
   rcases(colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).Hom x' with ⟨i, y⟩
-  exact
-    ⟨i, y, by
-      simpa [← multicoequalizer.ι_sigma_π, -multicoequalizer.ι_sigma_π] ⟩
+  exact ⟨i, y, by simpa [← multicoequalizer.ι_sigma_π, -multicoequalizer.ι_sigma_π] ⟩
 
 variable (F : C ⥤ C') [H : ∀ i j k, PreservesLimit (cospan (D.f i j) (D.f i k)) F]
 
@@ -244,8 +232,7 @@ def mapGlueData : GlueData C' where
   t' := fun i j k =>
     (PreservesPullback.iso F (D.f i j) (D.f i k)).inv ≫
       F.map (D.t' i j k) ≫ (PreservesPullback.iso F (D.f j k) (D.f j i)).Hom
-  t_fac := fun i j k => by
-    simpa [iso.inv_comp_eq] using congr_arg (fun f => F.map f) (D.t_fac i j k)
+  t_fac := fun i j k => by simpa [iso.inv_comp_eq] using congr_arg (fun f => F.map f) (D.t_fac i j k)
   cocycle := fun i j k => by
     simp only [category.assoc, iso.hom_inv_id_assoc, ← functor.map_comp_assoc, D.cocycle, iso.inv_hom_id,
       CategoryTheory.Functor.map_id, category.id_comp]
@@ -341,16 +328,15 @@ def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι 
       (fun x => by
         cases x
         exacts[D.glued_iso F, iso.refl _])
-      (by
-        rintro (_ | _) (_ | _) (_ | _ | _) <;> simp )
+      (by rintro (_ | _) (_ | _) (_ | _ | _) <;> simp)
   apply is_limit.postcompose_hom_equiv e _ _
   apply hc.of_iso_limit
   refine' cones.ext (iso.refl _) _
   · rintro (_ | _ | _)
     change _ = _ ≫ (_ ≫ _) ≫ _
     all_goals
-      change _ = 𝟙 _ ≫ _ ≫ _
-      simpa
+    change _ = 𝟙 _ ≫ _ ≫ _
+    simpa
     
 
 omit H

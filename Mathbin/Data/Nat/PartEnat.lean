@@ -136,8 +136,7 @@ theorem top_add (x : PartEnat) : ⊤ + x = ⊤ :=
   Part.ext' (false_andₓ _) fun h => h.left.elim
 
 @[simp]
-theorem add_top (x : PartEnat) : x + ⊤ = ⊤ := by
-  rw [add_commₓ, top_add]
+theorem add_top (x : PartEnat) : x + ⊤ = ⊤ := by rw [add_commₓ, top_add]
 
 @[simp]
 theorem coe_get {x : PartEnat} (h : x.Dom) : (x.get h : PartEnat) = x := by
@@ -145,8 +144,7 @@ theorem coe_get {x : PartEnat} (h : x.Dom) : (x.get h : PartEnat) = x := by
   exact Part.ext' (iff_of_true trivialₓ h) fun _ _ => rfl
 
 @[simp, norm_cast]
-theorem get_coe' (x : ℕ) (h : (x : PartEnat).Dom) : get (x : PartEnat) h = x := by
-  rw [← coe_inj, coe_get]
+theorem get_coe' (x : ℕ) (h : (x : PartEnat).Dom) : get (x : PartEnat) h = x := by rw [← coe_inj, coe_get]
 
 theorem get_coe {x : ℕ} : get (x : PartEnat) (dom_coe x) = x :=
   get_coe' _ _
@@ -188,7 +186,7 @@ instance decidableLe (x y : PartEnat) [Decidable x.Dom] [Decidable y.Dom] : Deci
     decidableOfDecidableOfIff
         (show Decidable (∀ hy : (y : PartEnat).Dom, x.get hx ≤ (y : PartEnat).get hy) from forallPropDecidable _) <|
       by
-      dsimp' [(· ≤ ·)]
+      dsimp [(· ≤ ·)]
       simp only [hx, exists_prop_of_true, forall_true_iff]
   else
     if hy : y.Dom then is_false fun h => hx <| dom_of_le_of_dom h hy
@@ -212,7 +210,7 @@ theorem lt_def (x y : PartEnat) : x < y ↔ ∃ hx : x.Dom, ∀ hy : y.Dom, x.ge
   rw [lt_iff_le_not_leₓ, le_def, le_def, not_exists]
   constructor
   · rintro ⟨⟨hyx, H⟩, h⟩
-    by_cases' hx : x.dom
+    by_cases hx:x.dom
     · use hx
       intro hy
       specialize H hy
@@ -242,8 +240,9 @@ theorem coe_lt_coe {x y : ℕ} : (x : PartEnat) < y ↔ x < y := by
   rw [lt_iff_le_not_leₓ, lt_iff_le_not_leₓ, coe_le_coe, coe_le_coe]
 
 @[simp]
-theorem get_le_get {x y : PartEnat} {hx : x.Dom} {hy : y.Dom} : x.get hx ≤ y.get hy ↔ x ≤ y := by
-  conv => lhs rw [← coe_le_coe, coe_get, coe_get]
+theorem get_le_get {x y : PartEnat} {hx : x.Dom} {hy : y.Dom} : x.get hx ≤ y.get hy ↔ x ≤ y := by conv =>
+  lhs
+  rw [← coe_le_coe, coe_get, coe_get]
 
 theorem le_coe_iff (x : PartEnat) (n : ℕ) : x ≤ n ↔ ∃ h : x.Dom, x.get h ≤ n := by
   rw [← some_eq_coe]
@@ -294,9 +293,7 @@ theorem top_eq_none : (⊤ : PartEnat) = none :=
 
 @[simp]
 theorem coe_lt_top (x : ℕ) : (x : PartEnat) < ⊤ :=
-  Ne.lt_top fun h =>
-    absurd (congr_arg Dom h) <| by
-      simpa only [dom_coe] using true_ne_false
+  Ne.lt_top fun h => absurd (congr_arg Dom h) <| by simpa only [dom_coe] using true_ne_false
 
 @[simp]
 theorem coe_ne_top (x : ℕ) : (x : PartEnat) ≠ ⊤ :=
@@ -305,11 +302,9 @@ theorem coe_ne_top (x : ℕ) : (x : PartEnat) ≠ ⊤ :=
 theorem not_is_max_coe (x : ℕ) : ¬IsMax (x : PartEnat) :=
   not_is_max_of_lt (coe_lt_top x)
 
-theorem ne_top_iff {x : PartEnat} : x ≠ ⊤ ↔ ∃ n : ℕ, x = n := by
-  simpa only [← some_eq_coe] using Part.ne_none_iff
+theorem ne_top_iff {x : PartEnat} : x ≠ ⊤ ↔ ∃ n : ℕ, x = n := by simpa only [← some_eq_coe] using Part.ne_none_iff
 
-theorem ne_top_iff_dom {x : PartEnat} : x ≠ ⊤ ↔ x.Dom := by
-  classical <;> exact not_iff_comm.1 part.eq_none_iff'.symm
+theorem ne_top_iff_dom {x : PartEnat} : x ≠ ⊤ ↔ x.Dom := by classical <;> exact not_iff_comm.1 part.eq_none_iff'.symm
 
 theorem not_dom_iff_eq_top {x : PartEnat} : ¬x.Dom ↔ x = ⊤ :=
   Iff.not_left ne_top_iff_dom.symm
@@ -333,10 +328,7 @@ theorem eq_top_iff_forall_le (x : PartEnat) : x = ⊤ ↔ ∀ n : ℕ, (n : Part
     ⟨fun h n => (h n).le, fun h n => lt_of_lt_of_leₓ (coe_lt_coe.mpr n.lt_succ_self) (h (n + 1))⟩
 
 theorem pos_iff_one_le {x : PartEnat} : 0 < x ↔ 1 ≤ x :=
-  (PartEnat.cases_on x
-      (by
-        simp only [iff_trueₓ, le_top, coe_lt_top, ← @Nat.cast_zeroₓ PartEnat]))
-    fun n => by
+  (PartEnat.cases_on x (by simp only [iff_trueₓ, le_top, coe_lt_top, ← @Nat.cast_zeroₓ PartEnat])) fun n => by
     rw [← Nat.cast_zeroₓ, ← Nat.cast_oneₓ, PartEnat.coe_lt_coe, PartEnat.coe_le_coe]
     rfl
 
@@ -362,12 +354,8 @@ noncomputable instance : Lattice PartEnat :=
 instance : OrderedAddCommMonoid PartEnat :=
   { PartEnat.linearOrder, PartEnat.addCommMonoid with
     add_le_add_left := fun a b ⟨h₁, h₂⟩ c =>
-      PartEnat.cases_on c
-        (by
-          simp )
-        fun c =>
-        ⟨fun h => And.intro (dom_coe _) (h₁ h.2), fun h => by
-          simpa only [coe_add_get] using add_le_add_left (h₂ _) c⟩ }
+      PartEnat.cases_on c (by simp) fun c =>
+        ⟨fun h => And.intro (dom_coe _) (h₁ h.2), fun h => by simpa only [coe_add_get] using add_le_add_left (h₂ _) c⟩ }
 
 instance : CanonicallyOrderedAddMonoid PartEnat :=
   { PartEnat.semilatticeSup, PartEnat.orderBot, PartEnat.orderedAddCommMonoid with
@@ -377,8 +365,7 @@ instance : CanonicallyOrderedAddMonoid PartEnat :=
     exists_add_of_le := fun a b =>
       (PartEnat.cases_on b fun _ => ⟨⊤, (add_top _).symm⟩) fun b =>
         (PartEnat.cases_on a fun h => ((coe_lt_top _).not_le h).elim) fun a h =>
-          ⟨(b - a : ℕ), by
-            rw [← Nat.cast_addₓ, coe_inj, add_commₓ, tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩ }
+          ⟨(b - a : ℕ), by rw [← Nat.cast_addₓ, coe_inj, add_commₓ, tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩ }
 
 protected theorem add_lt_add_right {x y z : PartEnat} (h : x < y) (hz : z ≠ ⊤) : x + z < y + z := by
   rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
@@ -466,15 +453,13 @@ theorem to_with_top_top : toWithTop ⊤ = ⊤ :=
   rfl
 
 @[simp]
-theorem to_with_top_top' {h : Decidable (⊤ : PartEnat).Dom} : toWithTop ⊤ = ⊤ := by
-  convert to_with_top_top
+theorem to_with_top_top' {h : Decidable (⊤ : PartEnat).Dom} : toWithTop ⊤ = ⊤ := by convert to_with_top_top
 
 theorem to_with_top_zero : toWithTop 0 = 0 :=
   rfl
 
 @[simp]
-theorem to_with_top_zero' {h : Decidable (0 : PartEnat).Dom} : toWithTop 0 = 0 := by
-  convert to_with_top_zero
+theorem to_with_top_zero' {h : Decidable (0 : PartEnat).Dom} : toWithTop 0 = 0 := by convert to_with_top_zero
 
 theorem to_with_top_some (n : ℕ) : toWithTop (some n) = n :=
   rfl
@@ -489,14 +474,7 @@ theorem to_with_top_coe' (n : ℕ) {h : Decidable (n : PartEnat).Dom} : toWithTo
 @[simp]
 theorem to_with_top_le {x y : PartEnat} :
     ∀ [Decidable x.Dom] [Decidable y.Dom], to_with_top x ≤ to_with_top y ↔ x ≤ y :=
-  PartEnat.cases_on y
-    (by
-      simp )
-    (PartEnat.cases_on x
-      (by
-        simp )
-      (by
-        intros <;> simp ))
+  PartEnat.cases_on y (by simp) (PartEnat.cases_on x (by simp) (by intros <;> simp))
 
 @[simp]
 theorem to_with_top_lt {x y : PartEnat} [Decidable x.Dom] [Decidable y.Dom] : toWithTop x < toWithTop y ↔ x < y :=
@@ -520,10 +498,8 @@ noncomputable def withTopEquiv : PartEnat ≃ ℕ∞ where
     match x with
     | Option.some n => coe n
     | none => ⊤
-  left_inv := fun x => by
-    apply PartEnat.cases_on x <;> intros <;> simp <;> rfl
-  right_inv := fun x => by
-    cases x <;> simp [with_top_equiv._match_1] <;> rfl
+  left_inv := fun x => by apply PartEnat.cases_on x <;> intros <;> simp <;> rfl
+  right_inv := fun x => by cases x <;> simp [with_top_equiv._match_1] <;> rfl
 
 @[simp]
 theorem with_top_equiv_top : withTopEquiv ⊤ = ⊤ :=
@@ -534,8 +510,7 @@ theorem with_top_equiv_coe (n : Nat) : withTopEquiv n = n :=
   to_with_top_coe' _
 
 @[simp]
-theorem with_top_equiv_zero : withTopEquiv 0 = 0 := by
-  simpa only [Nat.cast_zeroₓ] using with_top_equiv_coe 0
+theorem with_top_equiv_zero : withTopEquiv 0 = 0 := by simpa only [Nat.cast_zeroₓ] using with_top_equiv_coe 0
 
 @[simp]
 theorem with_top_equiv_le {x y : PartEnat} : withTopEquiv x ≤ withTopEquiv y ↔ x ≤ y :=
@@ -571,9 +546,7 @@ theorem with_top_equiv_symm_lt {x y : ℕ∞} : withTopEquiv.symm x < withTopEqu
 
 /-- `to_with_top` induces an additive monoid isomorphism between `part_enat` and `ℕ∞`. -/
 noncomputable def withTopAddEquiv : PartEnat ≃+ ℕ∞ :=
-  { withTopEquiv with
-    map_add' := fun x y => by
-      simp only [with_top_equiv] <;> convert to_with_top_add }
+  { withTopEquiv with map_add' := fun x y => by simp only [with_top_equiv] <;> convert to_with_top_add }
 
 end WithTopEquiv
 
@@ -617,7 +590,7 @@ theorem lt_find (n : ℕ) (h : ∀ m ≤ n, ¬P m) : (n : PartEnat) < find P := 
 theorem lt_find_iff (n : ℕ) : (n : PartEnat) < find P ↔ ∀ m ≤ n, ¬P m := by
   refine' ⟨_, lt_find P n⟩
   intro h m hm
-  by_cases' H : (find P).Dom
+  by_cases H:(find P).Dom
   · apply Nat.find_minₓ H
     rw [coe_lt_iff] at h
     specialize h H

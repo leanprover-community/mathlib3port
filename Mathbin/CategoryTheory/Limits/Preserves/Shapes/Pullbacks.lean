@@ -47,14 +47,10 @@ limit. This essentially lets us commute `pullback_cone.mk` with `functor.map_con
 def isLimitMapConePullbackConeEquiv :
     IsLimit (G.mapCone (PullbackCone.mk h k comm)) ≃
       IsLimit
-        (PullbackCone.mk (G.map h) (G.map k)
-          (by
-            simp only [← G.map_comp, comm]) :
-          PullbackCone (G.map f) (G.map g)) :=
+        (PullbackCone.mk (G.map h) (G.map k) (by simp only [← G.map_comp, comm]) : PullbackCone (G.map f) (G.map g)) :=
   (IsLimit.postcomposeHomEquiv (diagramIsoCospan.{v₂} _) _).symm.trans <|
     is_limit.equiv_iso_limit <|
-      Cones.ext (Iso.refl _) <| by
-        rintro (_ | _ | _) <;> dsimp' <;> simp only [comp_id, id_comp, G.map_comp]
+      Cones.ext (Iso.refl _) <| by rintro (_ | _ | _) <;> dsimp <;> simp only [comp_id, id_comp, G.map_comp]
 
 /-- The property of preserving pullbacks expressed in terms of binary fans. -/
 def isLimitPullbackConeMapOfIsLimit [PreservesLimit (cospan f g) G] (l : IsLimit (PullbackCone.mk h k comm)) :
@@ -82,7 +78,7 @@ def preservesPullbackSymmetry :
     apply pullback_cone.flip_is_limit
     apply (is_limit_map_cone_pullback_cone_equiv _ _).toFun
     · apply (config := { instances := false }) preserves_limit.preserves
-      · dsimp'
+      · dsimp
         infer_instance
         
       apply pullback_cone.flip_is_limit
@@ -135,14 +131,12 @@ colimit. This essentially lets us commute `pushout_cocone.mk` with `functor.map_
 def isColimitMapCoconePushoutCoconeEquiv :
     IsColimit (G.mapCocone (PushoutCocone.mk h k comm)) ≃
       IsColimit
-        (PushoutCocone.mk (G.map h) (G.map k)
-          (by
-            simp only [← G.map_comp, comm]) :
+        (PushoutCocone.mk (G.map h) (G.map k) (by simp only [← G.map_comp, comm]) :
           PushoutCocone (G.map f) (G.map g)) :=
   (IsColimit.precomposeHomEquiv (diagramIsoSpan.{v₂} _).symm _).symm.trans <|
     is_colimit.equiv_iso_colimit <|
       Cocones.ext (Iso.refl _) <| by
-        rintro (_ | _ | _) <;> dsimp' <;> simp only [category.comp_id, category.id_comp, ← G.map_comp]
+        rintro (_ | _ | _) <;> dsimp <;> simp only [category.comp_id, category.id_comp, ← G.map_comp]
 
 /-- The property of preserving pushouts expressed in terms of binary cofans. -/
 def isColimitPushoutCoconeMapOfIsColimit [PreservesColimit (span f g) G] (l : IsColimit (PushoutCocone.mk h k comm)) :
@@ -170,7 +164,7 @@ def preservesPushoutSymmetry :
     apply pushout_cocone.flip_is_colimit
     apply (is_colimit_map_cocone_pushout_cocone_equiv _ _).toFun
     · apply (config := { instances := false }) preserves_colimit.preserves
-      · dsimp'
+      · dsimp
         infer_instance
         
       apply pushout_cocone.flip_is_colimit
@@ -192,12 +186,12 @@ def PreservesPushout.iso : pushout (G.map f) (G.map g) ≅ G.obj (pushout f g) :
 
 @[reassoc]
 theorem PreservesPushout.inl_iso_hom : pushout.inl ≫ (PreservesPushout.iso G f g).Hom = G.map pushout.inl := by
-  delta' preserves_pushout.iso
+  delta preserves_pushout.iso
   simp
 
 @[reassoc]
 theorem PreservesPushout.inr_iso_hom : pushout.inr ≫ (PreservesPushout.iso G f g).Hom = G.map pushout.inr := by
-  delta' preserves_pushout.iso
+  delta preserves_pushout.iso
   simp
 
 @[simp, reassoc]

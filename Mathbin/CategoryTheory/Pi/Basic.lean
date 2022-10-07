@@ -90,9 +90,7 @@ def comapComp (f : K → J) (g : J → I) : comap C g ⋙ comap (C ∘ g) f ≅ 
 /-- The natural isomorphism between pulling back then evaluating, and just evaluating. -/
 @[simps]
 def comapEvalIsoEval (h : J → I) (j : J) : comap C h ⋙ eval (C ∘ h) j ≅ eval C (h j) :=
-  NatIso.ofComponents (fun f => Iso.refl _)
-    (by
-      tidy)
+  NatIso.ofComponents (fun f => Iso.refl _) (by tidy)
 
 end
 
@@ -102,10 +100,10 @@ variable {J : Type w₀} {D : J → Type u₁} [∀ j, Category.{v₁} (D j)]
 
 instance sumElimCategoryₓ : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
   | Sum.inl i => by
-    dsimp'
+    dsimp
     infer_instance
   | Sum.inr j => by
-    dsimp'
+    dsimp
     infer_instance
 
 /-- The bifunctor combining an `I`-indexed family of objects with a `J`-indexed family of objects
@@ -125,9 +123,9 @@ pair of corresponding components. -/
 @[simps]
 def isoApp {X Y : ∀ i, C i} (f : X ≅ Y) (i : I) : X i ≅ Y i :=
   ⟨f.Hom i, f.inv i, by
-    dsimp'
+    dsimp
     rw [← comp_apply, iso.hom_inv_id, id_apply], by
-    dsimp'
+    dsimp
     rw [← comp_apply, iso.inv_hom_id, id_apply]⟩
 
 @[simp]

@@ -73,7 +73,7 @@ def HomotopyRel.pi (homotopies : ∀ i : I, HomotopyRel (f i) (g i) S) : Homotop
   { Homotopy.pi fun i => (homotopies i).toHomotopy with
     prop' := by
       intro t x hx
-      dsimp' only [coe_mk, pi_eval, to_fun_eq_coe, homotopy_with.coe_to_continuous_map]
+      dsimp only [coe_mk, pi_eval, to_fun_eq_coe, homotopy_with.coe_to_continuous_map]
       simp only [Function.funext_iff, ← forall_and_distrib]
       intro i
       exact (homotopies i).prop' t x hx }
@@ -90,10 +90,8 @@ variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {A : Type 
 @[simps]
 def Homotopy.prod (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) : Homotopy (prodMk f₀ g₀) (prodMk f₁ g₁) where
   toFun := fun t => (F t, G t)
-  map_zero_left' := fun x => by
-    simp only [prod_eval, homotopy.apply_zero]
-  map_one_left' := fun x => by
-    simp only [prod_eval, homotopy.apply_one]
+  map_zero_left' := fun x => by simp only [prod_eval, homotopy.apply_zero]
+  map_one_left' := fun x => by simp only [prod_eval, homotopy.apply_one]
 
 /-- The relative product of homotopies `F` and `G`,
   where `F` takes `f₀` to `f₁`  and `G` takes `g₀` to `g₁` -/

@@ -22,41 +22,25 @@ namespace Nat
 variable {m n : ℕ}
 
 @[simp]
-theorem mod_two_ne_one : ¬n % 2 = 1 ↔ n % 2 = 0 := by
-  cases' mod_two_eq_zero_or_one n with h h <;> simp [h]
+theorem mod_two_ne_one : ¬n % 2 = 1 ↔ n % 2 = 0 := by cases' mod_two_eq_zero_or_one n with h h <;> simp [h]
 
 @[simp]
-theorem mod_two_ne_zero : ¬n % 2 = 0 ↔ n % 2 = 1 := by
-  cases' mod_two_eq_zero_or_one n with h h <;> simp [h]
+theorem mod_two_ne_zero : ¬n % 2 = 0 ↔ n % 2 = 1 := by cases' mod_two_eq_zero_or_one n with h h <;> simp [h]
 
 theorem even_iff : Even n ↔ n % 2 = 0 :=
-  ⟨fun ⟨m, hm⟩ => by
-    simp [← two_mul, hm], fun h =>
-    ⟨n / 2,
-      (mod_add_divₓ n 2).symm.trans
-        (by
-          simp [← two_mul, h])⟩⟩
+  ⟨fun ⟨m, hm⟩ => by simp [← two_mul, hm], fun h => ⟨n / 2, (mod_add_divₓ n 2).symm.trans (by simp [← two_mul, h])⟩⟩
 
 theorem odd_iff : Odd n ↔ n % 2 = 1 :=
-  ⟨fun ⟨m, hm⟩ => by
-    norm_num[hm, add_mod], fun h =>
-    ⟨n / 2,
-      (mod_add_divₓ n 2).symm.trans
-        (by
-          rw [h, add_commₓ])⟩⟩
+  ⟨fun ⟨m, hm⟩ => by norm_num [hm, add_mod] , fun h => ⟨n / 2, (mod_add_divₓ n 2).symm.trans (by rw [h, add_commₓ])⟩⟩
 
-theorem not_even_iff : ¬Even n ↔ n % 2 = 1 := by
-  rw [even_iff, mod_two_ne_zero]
+theorem not_even_iff : ¬Even n ↔ n % 2 = 1 := by rw [even_iff, mod_two_ne_zero]
 
-theorem not_odd_iff : ¬Odd n ↔ n % 2 = 0 := by
-  rw [odd_iff, mod_two_ne_one]
+theorem not_odd_iff : ¬Odd n ↔ n % 2 = 0 := by rw [odd_iff, mod_two_ne_one]
 
-theorem even_iff_not_odd : Even n ↔ ¬Odd n := by
-  rw [not_odd_iff, even_iff]
+theorem even_iff_not_odd : Even n ↔ ¬Odd n := by rw [not_odd_iff, even_iff]
 
 @[simp]
-theorem odd_iff_not_even : Odd n ↔ ¬Even n := by
-  rw [not_even_iff, odd_iff]
+theorem odd_iff_not_even : Odd n ↔ ¬Even n := by rw [not_even_iff, odd_iff]
 
 theorem is_compl_even_odd : IsCompl { n : ℕ | Even n } { n | Odd n } := by
   simp only [← Set.compl_set_of, is_compl_compl, odd_iff_not_even]
@@ -93,44 +77,38 @@ instance : DecidablePred (Odd : ℕ → Prop) := fun n => decidableOfIff _ odd_i
 mk_simp_attribute parity_simps := "Simp attribute for lemmas about `even`"
 
 @[simp]
-theorem not_even_one : ¬Even 1 := by
-  rw [even_iff] <;> norm_num
+theorem not_even_one : ¬Even 1 := by rw [even_iff] <;> norm_num
 
 @[parity_simps]
 theorem even_add : Even (m + n) ↔ (Even m ↔ Even n) := by
   cases' mod_two_eq_zero_or_one m with h₁ h₁ <;>
     cases' mod_two_eq_zero_or_one n with h₂ h₂ <;> simp [even_iff, h₁, h₂, Nat.add_modₓ] <;> norm_num
 
-theorem even_add' : Even (m + n) ↔ (Odd m ↔ Odd n) := by
-  rw [even_add, even_iff_not_odd, even_iff_not_odd, not_iff_not]
+theorem even_add' : Even (m + n) ↔ (Odd m ↔ Odd n) := by rw [even_add, even_iff_not_odd, even_iff_not_odd, not_iff_not]
 
 @[parity_simps]
-theorem even_add_one : Even (n + 1) ↔ ¬Even n := by
-  simp [even_add]
+theorem even_add_one : Even (n + 1) ↔ ¬Even n := by simp [even_add]
 
 @[simp]
-theorem not_even_bit1 (n : ℕ) : ¬Even (bit1 n) := by
-  simp' [bit1] with parity_simps
+theorem not_even_bit1 (n : ℕ) : ¬Even (bit1 n) := by simp [bit1, parity_simps]
 
-theorem two_not_dvd_two_mul_add_one (n : ℕ) : ¬2 ∣ 2 * n + 1 := by
-  simp [add_mod]
+theorem two_not_dvd_two_mul_add_one (n : ℕ) : ¬2 ∣ 2 * n + 1 := by simp [add_mod]
 
 theorem two_not_dvd_two_mul_sub_one : ∀ {n} (w : 0 < n), ¬2 ∣ 2 * n - 1
   | n + 1, _ => two_not_dvd_two_mul_add_one n
 
 @[parity_simps]
 theorem even_sub (h : n ≤ m) : Even (m - n) ↔ (Even m ↔ Even n) := by
-  conv => rhs rw [← tsub_add_cancel_of_le h, even_add]
-  by_cases' h : Even n <;> simp [h]
+  conv =>
+  rhs
+  rw [← tsub_add_cancel_of_le h, even_add]
+  by_cases h:Even n <;> simp [h]
 
 theorem even_sub' (h : n ≤ m) : Even (m - n) ↔ (Odd m ↔ Odd n) := by
   rw [even_sub h, even_iff_not_odd, even_iff_not_odd, not_iff_not]
 
 theorem Odd.sub_odd (hm : Odd m) (hn : Odd n) : Even (m - n) :=
-  (le_totalₓ n m).elim
-    (fun h => by
-      simp only [even_sub' h, *])
-    fun h => by
+  (le_totalₓ n m).elim (fun h => by simp only [even_sub' h, *]) fun h => by
     simp only [tsub_eq_zero_iff_le.mpr h, even_zero]
 
 @[parity_simps]
@@ -138,8 +116,7 @@ theorem even_mul : Even (m * n) ↔ Even m ∨ Even n := by
   cases' mod_two_eq_zero_or_one m with h₁ h₁ <;>
     cases' mod_two_eq_zero_or_one n with h₂ h₂ <;> simp [even_iff, h₁, h₂, Nat.mul_modₓ] <;> norm_num
 
-theorem odd_mul : Odd (m * n) ↔ Odd m ∧ Odd n := by
-  simp' [not_or_distrib] with parity_simps
+theorem odd_mul : Odd (m * n) ↔ Odd m ∧ Odd n := by simp [not_or_distrib, parity_simps]
 
 theorem Odd.of_mul_left (h : Odd (m * n)) : Odd m :=
   (odd_mul.mp h).1
@@ -161,14 +138,11 @@ theorem even_div : Even (m / n) ↔ m % (2 * n) / n = 0 := by
   rw [even_iff_two_dvd, dvd_iff_mod_eq_zero, Nat.div_mod_eq_mod_mul_div, mul_comm]
 
 @[parity_simps]
-theorem odd_add : Odd (m + n) ↔ (Odd m ↔ Even n) := by
-  rw [odd_iff_not_even, even_add, not_iff, odd_iff_not_even]
+theorem odd_add : Odd (m + n) ↔ (Odd m ↔ Even n) := by rw [odd_iff_not_even, even_add, not_iff, odd_iff_not_even]
 
-theorem odd_add' : Odd (m + n) ↔ (Odd n ↔ Even m) := by
-  rw [add_commₓ, odd_add]
+theorem odd_add' : Odd (m + n) ↔ (Odd n ↔ Even m) := by rw [add_commₓ, odd_add]
 
-theorem ne_of_odd_add (h : Odd (m + n)) : m ≠ n := fun hnot => by
-  simpa [hnot] with parity_simps using h
+theorem ne_of_odd_add (h : Odd (m + n)) : m ≠ n := fun hnot => by simpa [hnot, parity_simps] using h
 
 @[parity_simps]
 theorem odd_sub (h : n ≤ m) : Odd (m - n) ↔ (Odd m ↔ Even n) := by
@@ -186,7 +160,7 @@ theorem Even.sub_odd (h : n ≤ m) (hm : Even m) (hn : Odd n) : Odd (m - n) :=
 theorem even_mul_succ_self (n : ℕ) : Even (n * (n + 1)) := by
   rw [even_mul]
   convert n.even_or_odd
-  simp' with parity_simps
+  simp [parity_simps]
 
 theorem even_mul_self_pred (n : ℕ) : Even (n * (n - 1)) := by
   cases n
@@ -228,12 +202,10 @@ theorem bit1_div_two : bit1 n / 2 = n := by
   rw [← Nat.bit1_eq_bit1, bit1, bit0_eq_two_mul, Nat.two_mul_div_two_add_one_of_odd (odd_bit1 n)]
 
 @[simp]
-theorem bit0_div_bit0 : bit0 n / bit0 m = n / m := by
-  rw [bit0_eq_two_mul m, ← Nat.div_div_eq_div_mulₓ, bit0_div_two]
+theorem bit0_div_bit0 : bit0 n / bit0 m = n / m := by rw [bit0_eq_two_mul m, ← Nat.div_div_eq_div_mulₓ, bit0_div_two]
 
 @[simp]
-theorem bit1_div_bit0 : bit1 n / bit0 m = n / m := by
-  rw [bit0_eq_two_mul, ← Nat.div_div_eq_div_mulₓ, bit1_div_two]
+theorem bit1_div_bit0 : bit1 n / bit0 m = n / m := by rw [bit0_eq_two_mul, ← Nat.div_div_eq_div_mulₓ, bit1_div_two]
 
 @[simp]
 theorem bit0_mod_bit0 : bit0 n % bit0 m = bit0 (n % m) := by
@@ -249,18 +221,43 @@ theorem bit1_mod_bit0 : bit1 n % bit0 m = bit1 (n % m) := by
   exact add_left_cancelₓ (h₂.trans h₁.symm)
 
 -- Here are examples of how `parity_simps` can be used with `nat`.
-example (m n : ℕ) (h : Even m) : ¬Even (n + 3) ↔ Even (m ^ 2 + m + n) := by
-  simp' [*,
-    (by
-      decide : ¬2 = 0)] with
-    parity_simps
+example (m n : ℕ) (h : Even m) : ¬Even (n + 3) ↔ Even (m ^ 2 + m + n) := by simp [*, (by decide : ¬2 = 0), parity_simps]
 
-example : ¬Even 25394535 := by
-  simp
+example : ¬Even 25394535 := by simp
 
 end Nat
 
 open Nat
+
+namespace Function
+
+namespace Involutive
+
+variable {α : Type _} {f : α → α} {n : ℕ}
+
+theorem iterate_bit0 (hf : Involutive f) (n : ℕ) : f^[bit0 n] = id := by
+  rw [bit0, ← two_mul, iterate_mul, involutive_iff_iter_2_eq_id.1 hf, iterate_id]
+
+theorem iterate_bit1 (hf : Involutive f) (n : ℕ) : f^[bit1 n] = f := by
+  rw [bit1, iterate_succ, hf.iterate_bit0, comp.left_id]
+
+theorem iterate_even (hf : Involutive f) (hn : Even n) : f^[n] = id :=
+  let ⟨m, hm⟩ := hn
+  hm.symm ▸ hf.iterate_bit0 m
+
+theorem iterate_odd (hf : Involutive f) (hn : Odd n) : f^[n] = f :=
+  let ⟨m, hm⟩ := odd_iff_exists_bit1.mp hn
+  hm.symm ▸ hf.iterate_bit1 m
+
+theorem iterate_eq_self (hf : Involutive f) (hne : f ≠ id) : f^[n] = f ↔ Odd n :=
+  ⟨fun H => odd_iff_not_even.2 fun hn => hne <| by rwa [hf.iterate_even hn, eq_comm] at H, hf.iterate_odd⟩
+
+theorem iterate_eq_id (hf : Involutive f) (hne : f ≠ id) : f^[n] = id ↔ Even n :=
+  ⟨fun H => even_iff_not_odd.2 fun hn => hne <| by rwa [hf.iterate_odd hn] at H, hf.iterate_even⟩
+
+end Involutive
+
+end Function
 
 variable {R : Type _} [Monoidₓ R] [HasDistribNeg R] {n : ℕ}
 

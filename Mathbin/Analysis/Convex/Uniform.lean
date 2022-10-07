@@ -72,29 +72,26 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
     rw [norm_smul_of_nonneg (inv_nonneg.2 <| norm_nonneg _), inv_mul_cancel (hδ'.trans hz).ne']
   have h₂ : ∀ z : E, ∥z∥ ≤ 1 → 1 - δ' ≤ ∥z∥ → ∥∥z∥⁻¹ • z - z∥ ≤ δ' := by
     rintro z hz hδz
-    nth_rw 2[← one_smul ℝ z]
+    nth_rw 2 [← one_smul ℝ z]
     rwa [← sub_smul, norm_smul_of_nonneg (sub_nonneg_of_le <| one_le_inv (hδ'.trans_le hδz) hz), sub_mul,
       inv_mul_cancel (hδ'.trans_le hδz).ne', one_mulₓ, sub_le]
   set x' := ∥x∥⁻¹ • x
   set y' := ∥y∥⁻¹ • y
   have hxy' : ε / 3 ≤ ∥x' - y'∥ :=
     calc
-      ε / 3 = ε - (ε / 3 + ε / 3) := by
-        ring
+      ε / 3 = ε - (ε / 3 + ε / 3) := by ring
       _ ≤ ∥x - y∥ - (∥x' - x∥ + ∥y' - y∥) :=
         sub_le_sub hxy
           (add_le_add ((h₂ _ hx hx'.le).trans <| min_le_of_right_le <| min_le_leftₓ _ _) <|
             (h₂ _ hy hy'.le).trans <| min_le_of_right_le <| min_le_leftₓ _ _)
       _ ≤ _ := by
-        have : ∀ x' y', x - y = x' - y' + (x - x') + (y' - y) := fun _ _ => by
-          abel
+        have : ∀ x' y', x - y = x' - y' + (x - x') + (y' - y) := fun _ _ => by abel
         rw [sub_le_iff_le_add, norm_sub_rev _ x, ← add_assocₓ, this]
         exact norm_add₃_le _ _ _
       
   calc
     ∥x + y∥ ≤ ∥x' + y'∥ + ∥x' - x∥ + ∥y' - y∥ := by
-      have : ∀ x' y', x + y = x' + y' + (x - x') + (y - y') := fun _ _ => by
-        abel
+      have : ∀ x' y', x + y = x' + y' + (x - x') + (y - y') := fun _ _ => by abel
       rw [norm_sub_rev, norm_sub_rev y', this]
       exact norm_add₃_le _ _ _
     _ ≤ 2 - δ + δ' + δ' := add_le_add_three (h (h₁ _ hx') (h₁ _ hy') hxy') (h₂ _ hx hx'.le) (h₂ _ hy hy'.le)
@@ -115,9 +112,7 @@ theorem exists_forall_closed_ball_dist_add_le_two_mul_sub (hε : 0 < ε) (r : �
     
   obtain ⟨δ, hδ, h⟩ := exists_forall_closed_ball_dist_add_le_two_sub E (div_pos hε hr)
   refine' ⟨δ * r, mul_pos hδ hr, fun x hx y hy hxy => _⟩
-  rw [← div_le_one hr, div_eq_inv_mul, ← norm_smul_of_nonneg (inv_nonneg.2 hr.le)] at hx hy <;>
-    try
-      infer_instance
+  rw [← div_le_one hr, div_eq_inv_mul, ← norm_smul_of_nonneg (inv_nonneg.2 hr.le)] at hx hy <;> try infer_instance
   have := h hx hy
   simp_rw [← smul_add, ← smul_sub, norm_smul_of_nonneg (inv_nonneg.2 hr.le), ← div_eq_inv_mul, div_le_div_right hr,
     div_le_iff hr, sub_mul] at this

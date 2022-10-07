@@ -5,6 +5,7 @@ Authors: Mario Carneiro
 -/
 import Mathbin.Algebra.Hom.Group
 import Mathbin.Logic.Equiv.Basic
+import Mathbin.Data.Finite.Defs
 
 /-!
 # Type tags that turn additive structures into multiplicative, and vice versa
@@ -99,6 +100,16 @@ instance [Inhabited α] : Inhabited (Additive α) :=
 
 instance [Inhabited α] : Inhabited (Multiplicative α) :=
   ⟨Multiplicative.ofAdd default⟩
+
+instance [Finite α] : Finite (Additive α) :=
+  Finite.of_equiv α (by rfl)
+
+instance [Finite α] : Finite (Multiplicative α) :=
+  Finite.of_equiv α (by rfl)
+
+instance [Infinite α] : Infinite (Additive α) := by tauto
+
+instance [Infinite α] : Infinite (Multiplicative α) := by tauto
 
 instance [Nontrivial α] : Nontrivial (Additive α) :=
   Additive.ofMul.Injective.Nontrivial

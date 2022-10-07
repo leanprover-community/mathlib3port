@@ -81,8 +81,7 @@ variable {R S A}
 
 theorem of_algebra_map_eq [Algebra R A] (h : ∀ x, algebraMap R A x = algebraMap S A (algebraMap R S x)) :
     IsScalarTower R S A :=
-  ⟨fun x y z => by
-    simp_rw [Algebra.smul_def, RingHom.map_mul, mul_assoc, h]⟩
+  ⟨fun x y z => by simp_rw [Algebra.smul_def, RingHom.map_mul, mul_assoc, h]⟩
 
 /-- See note [partially-applied ext lemmas]. -/
 theorem of_algebra_map_eq' [Algebra R A] (h : algebraMap R A = (algebraMap S A).comp (algebraMap R S)) :
@@ -99,8 +98,7 @@ variable [Algebra R A] [Algebra R B]
 variable [IsScalarTower R S A] [IsScalarTower R S B]
 
 theorem algebra_map_eq : algebraMap R A = (algebraMap S A).comp (algebraMap R S) :=
-  RingHom.ext fun x => by
-    simp_rw [RingHom.comp_apply, Algebra.algebra_map_eq_smul_one, smul_assoc, one_smul]
+  RingHom.ext fun x => by simp_rw [RingHom.comp_apply, Algebra.algebra_map_eq_smul_one, smul_assoc, one_smul]
 
 theorem algebra_map_apply (x : R) : algebraMap R A x = algebraMap S A (algebraMap R S x) := by
   rw [algebra_map_eq R S A, RingHom.comp_apply]
@@ -156,9 +154,9 @@ instance (priority := 999) subsemiring (U : Subsemiring S) : IsScalarTower U S A
 
 @[nolint instance_priority]
 instance of_ring_hom {R A B : Type _} [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B] [Algebra R A] [Algebra R B]
-    (f : A →ₐ[R] B) : @IsScalarTower R A B _ f.toRingHom.toAlgebra.toHasSmul _ := by
+    (f : A →ₐ[R] B) : @IsScalarTower R A B _ f.toRingHom.toAlgebra.toHasSmul _ :=
   letI := (f : A →+* B).toAlgebra
-  exact of_algebra_map_eq fun x => (f.commutes x).symm
+  of_algebra_map_eq fun x => (f.commutes x).symm
 
 end Semiringₓ
 
@@ -268,9 +266,7 @@ theorem mem_restrict_scalars {U : Subalgebra S A} {x : A} : x ∈ restrictScalar
   Iff.rfl
 
 theorem restrict_scalars_injective : Function.Injective (restrictScalars R : Subalgebra S A → Subalgebra R A) :=
-  fun U V H =>
-  ext fun x => by
-    rw [← mem_restrict_scalars R, H, mem_restrict_scalars]
+  fun U V H => ext fun x => by rw [← mem_restrict_scalars R, H, mem_restrict_scalars]
 
 /-- Produces an `R`-algebra map from `U.restrict_scalars R` given an `S`-algebra map from `U`.
 
@@ -326,8 +322,7 @@ theorem adjoin_range_to_alg_hom (t : Set A) :
       z ∈ Subsemiring.closure (Set.Range (algebraMap (toAlgHom R S A).range A) ∪ t : Set A) ↔
         z ∈ Subsemiring.closure (Set.Range (algebraMap S A) ∪ t : Set A)
       by
-      suffices Set.Range (algebraMap (toAlgHom R S A).range A) = Set.Range (algebraMap S A) by
-        rw [this]
+      suffices Set.Range (algebraMap (toAlgHom R S A).range A) = Set.Range (algebraMap S A) by rw [this]
       ext z
       exact ⟨fun ⟨⟨x, y, h1⟩, h2⟩ => ⟨y, h2 ▸ h1⟩, fun ⟨y, hy⟩ => ⟨⟨z, y, hy⟩, rfl⟩⟩
 

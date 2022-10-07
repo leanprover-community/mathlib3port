@@ -37,9 +37,9 @@ open BigOperators Polynomial
 
 variable {R : Type u} [CommRingₓ R]
 
-variable {n : Type w} [DecidableEq n] [Fintype n]
+variable {n : Type w} [DecidableEq n] [Fintypeₓ n]
 
-open Finset
+open Finsetₓ
 
 /-- The "characteristic matrix" of `M : matrix n n R` is the matrix of polynomials $t I - M$.
 The determinant of this matrix is the characteristic polynomial.
@@ -63,7 +63,7 @@ theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) : charmat
 theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M := by
   ext k i j
   simp only [mat_poly_equiv_coeff_apply, coeff_sub, Pi.sub_apply]
-  by_cases' h : i = j
+  by_cases h:i = j
   · subst h
     rw [charmatrix_apply_eq, coeff_sub]
     simp only [coeff_X, coeff_C]
@@ -73,19 +73,18 @@ theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix 
     split_ifs <;> simp [h]
     
 
-theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
+theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintypeₓ m] (e : n ≃ m) (M : Matrix n n R) :
     charmatrix (reindex e e M) = reindex e e (charmatrix M) := by
   ext i j x
-  by_cases' h : i = j
-  all_goals
-    simp [h]
+  by_cases h:i = j
+  all_goals simp [h]
 
 /-- The characteristic polynomial of a matrix `M` is given by $\det (t I - M)$.
 -/
 def Matrix.charpoly (M : Matrix n n R) : R[X] :=
   (charmatrix M).det
 
-theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
+theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintypeₓ m] (e : n ≃ m) (M : Matrix n n R) :
     (reindex e e M).charpoly = M.charpoly := by
   unfold Matrix.charpoly
   rw [charmatrix_reindex, Matrix.det_reindex_self]

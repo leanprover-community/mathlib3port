@@ -89,12 +89,7 @@ theorem DivInvMonoidₓ.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoidₓ M⦄ (h_
     m₁ = m₂ := by
   have h₁ : (@DivInvMonoidₓ.toMonoid _ m₁).one = (@DivInvMonoidₓ.toMonoid _ m₂).one :=
     congr_arg (@Monoidₓ.one M) (Monoidₓ.ext h_mul)
-  set f :
-    @MonoidHom M M
-      (by
-        letI := m₁ <;> infer_instance)
-      (by
-        letI := m₂ <;> infer_instance) :=
+  set f : @MonoidHom M M (by letI := m₁ <;> infer_instance) (by letI := m₂ <;> infer_instance) :=
     { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_fun (congr_fun h_mul x) y }
   have hpow : (@DivInvMonoidₓ.toMonoid _ m₁).npow = (@DivInvMonoidₓ.toMonoid _ m₂).npow :=
     congr_arg (@Monoidₓ.npow M) (Monoidₓ.ext h_mul)
@@ -111,11 +106,7 @@ theorem DivInvMonoidₓ.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoidₓ M⦄ (h_
 
 @[ext, to_additive]
 theorem Groupₓ.ext {G : Type _} ⦃g₁ g₂ : Groupₓ G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ := by
-  set f :=
-    @MonoidHom.mk' G G
-      (by
-        letI := g₁ <;> infer_instance)
-      g₂ id fun a b => congr_fun (congr_fun h_mul a) b
+  set f := @MonoidHom.mk' G G (by letI := g₁ <;> infer_instance) g₂ id fun a b => congr_fun (congr_fun h_mul a) b
   exact
     Groupₓ.to_div_inv_monoid_injective
       (DivInvMonoidₓ.ext h_mul (funext <| @MonoidHom.map_inv G G g₁ (@Groupₓ.toDivisionMonoid _ g₂) f))

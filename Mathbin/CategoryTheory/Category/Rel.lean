@@ -19,8 +19,7 @@ universe u
 def Rel :=
   Type u
 
-instance Rel.inhabited : Inhabited Rel := by
-  unfold Rel <;> infer_instance
+instance Rel.inhabited : Inhabited Rel := by unfold Rel <;> infer_instance
 
 /-- The category of types with binary relations as morphisms. -/
 instance rel : LargeCategory Rel where

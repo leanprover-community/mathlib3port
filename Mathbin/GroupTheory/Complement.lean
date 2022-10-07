@@ -222,16 +222,14 @@ theorem mem_right_transversals_iff_bijective :
 theorem range_mem_left_transversals {f : G ⧸ H → G} (hf : ∀ q, ↑(f q) = q) :
     Set.Range f ∈ LeftTransversals (H : Set G) :=
   mem_left_transversals_iff_bijective.mpr
-    ⟨by
-      rintro ⟨-, q₁, rfl⟩ ⟨-, q₂, rfl⟩ h <;> exact congr_arg _ (((hf q₁).symm.trans h).trans (hf q₂)), fun q =>
+    ⟨by rintro ⟨-, q₁, rfl⟩ ⟨-, q₂, rfl⟩ h <;> exact congr_arg _ (((hf q₁).symm.trans h).trans (hf q₂)), fun q =>
       ⟨⟨f q, q, rfl⟩, hf q⟩⟩
 
 @[to_additive]
 theorem range_mem_right_transversals {f : Quotientₓ (QuotientGroup.rightRel H) → G}
     (hf : ∀ q, Quotientₓ.mk' (f q) = q) : Set.Range f ∈ RightTransversals (H : Set G) :=
   mem_right_transversals_iff_bijective.mpr
-    ⟨by
-      rintro ⟨-, q₁, rfl⟩ ⟨-, q₂, rfl⟩ h <;> exact congr_arg _ (((hf q₁).symm.trans h).trans (hf q₂)), fun q =>
+    ⟨by rintro ⟨-, q₁, rfl⟩ ⟨-, q₂, rfl⟩ h <;> exact congr_arg _ (((hf q₁).symm.trans h).trans (hf q₂)), fun q =>
       ⟨⟨f q, q, rfl⟩, hf q⟩⟩
 
 @[to_additive]
@@ -240,7 +238,7 @@ theorem exists_left_transversal (g : G) : ∃ S ∈ LeftTransversals (H : Set G)
   refine'
     ⟨Set.Range (Function.update Quotientₓ.out' (↑g) g), range_mem_left_transversals fun q => _, g,
       Function.update_same g g Quotientₓ.out'⟩
-  by_cases' hq : q = g
+  by_cases hq:q = g
   · exact hq.symm ▸ congr_arg _ (Function.update_same g g Quotientₓ.out')
     
   · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotientₓ.out')) q.out_eq'
@@ -252,7 +250,7 @@ theorem exists_right_transversal (g : G) : ∃ S ∈ RightTransversals (H : Set 
   refine'
     ⟨Set.Range (Function.update Quotientₓ.out' _ g), range_mem_right_transversals fun q => _, Quotientₓ.mk' g,
       Function.update_same (Quotientₓ.mk' g) g Quotientₓ.out'⟩
-  by_cases' hq : q = Quotientₓ.mk' g
+  by_cases hq:q = Quotientₓ.mk' g
   · exact hq.symm ▸ congr_arg _ (Function.update_same (Quotientₓ.mk' g) g Quotientₓ.out')
     
   · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotientₓ.out')) q.out_eq'
@@ -289,10 +287,7 @@ theorem inv_to_fun_mul_mem (hS : S ∈ Subgroup.LeftTransversals (H : Set G)) (g
 
 @[to_additive]
 theorem inv_mul_to_fun_mem (hS : S ∈ Subgroup.LeftTransversals (H : Set G)) (g : G) : g⁻¹ * toFun hS g ∈ H :=
-  (congr_arg (· ∈ H)
-        (by
-          rw [mul_inv_rev, inv_invₓ])).mp
-    (H.inv_mem (inv_to_fun_mul_mem hS g))
+  (congr_arg (· ∈ H) (by rw [mul_inv_rev, inv_invₓ])).mp (H.inv_mem (inv_to_fun_mul_mem hS g))
 
 end MemLeftTransversals
 
@@ -328,10 +323,7 @@ theorem mul_inv_to_fun_mem (hS : S ∈ Subgroup.RightTransversals (H : Set G)) (
 
 @[to_additive]
 theorem to_fun_mul_inv_mem (hS : S ∈ Subgroup.RightTransversals (H : Set G)) (g : G) : (toFun hS g : G) * g⁻¹ ∈ H :=
-  (congr_arg (· ∈ H)
-        (by
-          rw [mul_inv_rev, inv_invₓ])).mp
-    (H.inv_mem (mul_inv_to_fun_mem hS g))
+  (congr_arg (· ∈ H) (by rw [mul_inv_rev, inv_invₓ])).mp (H.inv_mem (mul_inv_to_fun_mem hS g))
 
 end MemRightTransversals
 
@@ -376,8 +368,7 @@ theorem smul_to_equiv (f : F) (T : LeftTransversals (H : Set G)) (q : G ⧸ H) :
 
 @[to_additive]
 theorem smul_apply_eq_smul_apply_inv_smul (f : F) (T : LeftTransversals (H : Set G)) (q : G ⧸ H) :
-    (toEquiv (f • T).2 q : G) = f • (toEquiv T.2 (f⁻¹ • q) : G) := by
-  rw [smul_to_equiv, smul_inv_smul]
+    (toEquiv (f • T).2 q : G) = f • (toEquiv T.2 (f⁻¹ • q) : G) := by rw [smul_to_equiv, smul_inv_smul]
 
 end Action
 
@@ -405,29 +396,29 @@ theorem IsComplement'.sup_eq_top (h : Subgroup.IsComplement' H K) : H ⊔ K = �
 theorem IsComplement'.disjoint (h : IsComplement' H K) : Disjoint H K :=
   h.IsCompl.Disjoint
 
-theorem IsComplement.card_mul [Fintype G] [Fintype S] [Fintype T] (h : IsComplement S T) :
-    Fintype.card S * Fintype.card T = Fintype.card G :=
-  (Fintype.card_prod _ _).symm.trans (Fintype.card_of_bijective h)
+theorem IsComplement.card_mul [Fintypeₓ G] [Fintypeₓ S] [Fintypeₓ T] (h : IsComplement S T) :
+    Fintypeₓ.card S * Fintypeₓ.card T = Fintypeₓ.card G :=
+  (Fintypeₓ.card_prod _ _).symm.trans (Fintypeₓ.card_of_bijective h)
 
-theorem IsComplement'.card_mul [Fintype G] [Fintype H] [Fintype K] (h : IsComplement' H K) :
-    Fintype.card H * Fintype.card K = Fintype.card G :=
+theorem IsComplement'.card_mul [Fintypeₓ G] [Fintypeₓ H] [Fintypeₓ K] (h : IsComplement' H K) :
+    Fintypeₓ.card H * Fintypeₓ.card K = Fintypeₓ.card G :=
   h.card_mul
 
-theorem is_complement'_of_card_mul_and_disjoint [Fintype G] [Fintype H] [Fintype K]
-    (h1 : Fintype.card H * Fintype.card K = Fintype.card G) (h2 : Disjoint H K) : IsComplement' H K := by
-  refine' (Fintype.bijective_iff_injective_and_card _).mpr ⟨fun x y h => _, (Fintype.card_prod H K).trans h1⟩
+theorem is_complement'_of_card_mul_and_disjoint [Fintypeₓ G] [Fintypeₓ H] [Fintypeₓ K]
+    (h1 : Fintypeₓ.card H * Fintypeₓ.card K = Fintypeₓ.card G) (h2 : Disjoint H K) : IsComplement' H K := by
+  refine' (Fintypeₓ.bijective_iff_injective_and_card _).mpr ⟨fun x y h => _, (Fintypeₓ.card_prod H K).trans h1⟩
   rw [← eq_inv_mul_iff_mul_eq, ← mul_assoc, ← mul_inv_eq_iff_eq_mul] at h
   change ↑(x.2 * y.2⁻¹) = ↑(x.1⁻¹ * y.1) at h
   rw [Prod.ext_iffₓ, ← @inv_mul_eq_one H _ x.1 y.1, ← @mul_inv_eq_one K _ x.2 y.2, Subtype.ext_iff, Subtype.ext_iff,
     coe_one, coe_one, h, and_selfₓ, ← mem_bot, ← h2.eq_bot, mem_inf]
   exact ⟨Subtype.mem (x.1⁻¹ * y.1), (congr_arg (· ∈ K) h).mp (Subtype.mem (x.2 * y.2⁻¹))⟩
 
-theorem is_complement'_iff_card_mul_and_disjoint [Fintype G] [Fintype H] [Fintype K] :
-    IsComplement' H K ↔ Fintype.card H * Fintype.card K = Fintype.card G ∧ Disjoint H K :=
+theorem is_complement'_iff_card_mul_and_disjoint [Fintypeₓ G] [Fintypeₓ H] [Fintypeₓ K] :
+    IsComplement' H K ↔ Fintypeₓ.card H * Fintypeₓ.card K = Fintypeₓ.card G ∧ Disjoint H K :=
   ⟨fun h => ⟨h.card_mul, h.Disjoint⟩, fun h => is_complement'_of_card_mul_and_disjoint h.1 h.2⟩
 
-theorem is_complement'_of_coprime [Fintype G] [Fintype H] [Fintype K]
-    (h1 : Fintype.card H * Fintype.card K = Fintype.card G) (h2 : Nat.Coprime (Fintype.card H) (Fintype.card K)) :
+theorem is_complement'_of_coprime [Fintypeₓ G] [Fintypeₓ H] [Fintypeₓ K]
+    (h1 : Fintypeₓ.card H * Fintypeₓ.card K = Fintypeₓ.card G) (h2 : Nat.Coprime (Fintypeₓ.card H) (Fintypeₓ.card K)) :
     IsComplement' H K :=
   is_complement'_of_card_mul_and_disjoint h1 (disjoint_iff.mpr (inf_eq_bot_of_coprime h2))
 
@@ -435,14 +426,10 @@ theorem is_complement'_stabilizer {α : Type _} [MulAction G α] (a : α) (h1 : 
     (h2 : ∀ g : G, ∃ h : H, h • g • a = a) : IsComplement' H (MulAction.stabilizer G a) := by
   refine' is_complement_iff_exists_unique.mpr fun g => _
   obtain ⟨h, hh⟩ := h2 g
-  have hh' : (↑h * g) • a = a := by
-    rwa [mul_smul]
+  have hh' : (↑h * g) • a = a := by rwa [mul_smul]
   refine' ⟨⟨h⁻¹, h * g, hh'⟩, inv_mul_cancel_leftₓ h g, _⟩
   rintro ⟨h', g, hg : g • a = a⟩ rfl
-  specialize
-    h1 (h * h')
-      (by
-        rwa [mul_smul, smul_def h', ← hg, ← mul_smul, hg])
+  specialize h1 (h * h') (by rwa [mul_smul, smul_def h', ← hg, ← mul_smul, hg])
   refine' Prod.extₓ (eq_inv_of_mul_eq_one_right h1) (Subtype.ext _)
   rwa [Subtype.ext_iff, coe_one, coe_mul, ← self_eq_mul_left, mul_assoc (↑h) (↑h') g] at h1
 
@@ -512,7 +499,7 @@ theorem transfer_transversal_apply'' (q : orbitRel.Quotient (zpowers g) (G ⧸ H
   rw [smul_apply_eq_smul_apply_inv_smul, transfer_transversal_apply, transfer_function_apply, ← mul_smul, ←
     zpow_neg_one, ← zpow_add, quotient_equiv_sigma_zmod_apply, smul_eq_mul, ← mul_assoc, ← zpow_one_add, Int.cast_add,
     Int.cast_neg, Int.cast_oneₓ, int_cast_cast, cast_id', id.def, ← sub_eq_neg_add, cast_sub_one, add_sub_cancel'_right]
-  by_cases' hk : k = 0
+  by_cases hk:k = 0
   · rw [if_pos hk, if_pos hk, zpow_coe_nat]
     
   · rw [if_neg hk, if_neg hk]

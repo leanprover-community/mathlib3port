@@ -44,8 +44,7 @@ theorem smul_inr : a • (inr c : Sum α β) = inr (a • c) :=
   rfl
 
 @[simp, to_additive]
-theorem smul_swap : (a • x).swap = a • x.swap := by
-  cases x <;> rfl
+theorem smul_swap : (a • x).swap = a • x.swap := by cases x <;> rfl
 
 instance [HasSmul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (Sum α β) :=
   ⟨fun a b x => by
@@ -65,15 +64,11 @@ instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] 
 
 @[to_additive]
 instance has_faithful_smul_left [HasFaithfulSmul M α] : HasFaithfulSmul M (Sum α β) :=
-  ⟨fun x y h =>
-    eq_of_smul_eq_smul fun a : α => by
-      injection h (inl a)⟩
+  ⟨fun x y h => eq_of_smul_eq_smul fun a : α => by injection h (inl a)⟩
 
 @[to_additive]
 instance has_faithful_smul_right [HasFaithfulSmul M β] : HasFaithfulSmul M (Sum α β) :=
-  ⟨fun x y h =>
-    eq_of_smul_eq_smul fun b : β => by
-      injection h (inr b)⟩
+  ⟨fun x y h => eq_of_smul_eq_smul fun b : β => by injection h (inr b)⟩
 
 end HasSmul
 

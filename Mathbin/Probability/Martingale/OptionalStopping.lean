@@ -39,7 +39,7 @@ theorem Submartingale.expected_stopped_value_mono [SigmaFiniteFiltration μ 𝒢
     (hτ : IsStoppingTime 𝒢 τ) (hπ : IsStoppingTime 𝒢 π) (hle : τ ≤ π) {N : ℕ} (hbdd : ∀ ω, π ω ≤ N) :
     μ[stoppedValue f τ] ≤ μ[stoppedValue f π] := by
   rw [← sub_nonneg, ← integral_sub', stopped_value_sub_eq_sum' hle hbdd]
-  · simp only [Finset.sum_apply]
+  · simp only [Finsetₓ.sum_apply]
     have : ∀ i, measurable_set[𝒢 i] { ω : Ω | τ ω ≤ i ∧ i < π ω } := by
       intro i
       refine' (hτ i).inter _
@@ -47,7 +47,7 @@ theorem Submartingale.expected_stopped_value_mono [SigmaFiniteFiltration μ 𝒢
       ext x
       simpa
     rw [integral_finset_sum]
-    · refine' Finset.sum_nonneg fun i hi => _
+    · refine' Finsetₓ.sum_nonneg fun i hi => _
       rw [integral_indicator (𝒢.le _ _ (this _)), integral_sub', sub_nonneg]
       · exact hf.set_integral_le (Nat.le_succₓ i) (this _)
         
@@ -114,7 +114,7 @@ theorem Submartingale.stopped_process [IsFiniteMeasure μ] (h : Submartingale f 
 
 section Maximal
 
-open Finset
+open Finsetₓ
 
 theorem smul_le_stopped_value_hitting [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) {ε : ℝ≥0} (n : ℕ) :
     ε • μ { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω } ≤
@@ -131,7 +131,7 @@ theorem smul_le_stopped_value_hitting [IsFiniteMeasure μ] (hsub : Submartingale
         (ε : ℝ) ≤ stopped_value f (hitting f { y : ℝ | ↑ε ≤ y } 0 n) ω :=
     by
     intro x hx
-    simp_rw [le_sup'_iff, mem_range, Nat.lt_succ_iffₓ] at hx
+    simp_rw [le_sup'_iff, mem_range, Nat.lt_succ_iff] at hx
     refine' stopped_value_hitting_mem _
     simp only [Set.mem_set_of_eq, exists_propₓ, hn]
     exact
@@ -140,18 +140,14 @@ theorem smul_le_stopped_value_hitting [IsFiniteMeasure μ] (hsub : Submartingale
   have h :=
     set_integral_ge_of_const_le
       (measurable_set_le measurable_const
-        (Finset.measurable_range_sup'' fun n _ => (hsub.strongly_measurable n).Measurable.le (𝒢.le n)))
+        (Finsetₓ.measurable_range_sup'' fun n _ => (hsub.strongly_measurable n).Measurable.le (𝒢.le n)))
       (measure_ne_top _ _) this
       (integrable.integrable_on
         (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurable_set_Ici) hitting_le))
   rw [Ennreal.le_of_real_iff_to_real_le, Ennreal.to_real_smul]
   · exact h
     
-  · exact
-      Ennreal.mul_ne_top
-        (by
-          simp )
-        (measure_ne_top _ _)
+  · exact Ennreal.mul_ne_top (by simp) (measure_ne_top _ _)
     
   · exact le_transₓ (mul_nonneg ε.coe_nonneg Ennreal.to_real_nonneg) h
     
@@ -187,7 +183,7 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
         
       · exact
           measurable_set_lt
-            (Finset.measurable_range_sup'' fun n _ => (hsub.strongly_measurable n).Measurable.le (𝒢.le n))
+            (Finsetₓ.measurable_range_sup'' fun n _ => (hsub.strongly_measurable n).Measurable.le (𝒢.le n))
             measurable_const
         
       exacts[(hsub.integrable _).IntegrableOn, (hsub.integrable _).IntegrableOn, integral_nonneg (hnonneg _),
@@ -210,7 +206,7 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
               (integrable.integrable_on
                 (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurable_set_Ici) hitting_le))
               (measurable_set_lt
-                (Finset.measurable_range_sup'' fun n _ => (hsub.strongly_measurable n).Measurable.le (𝒢.le n))
+                (Finsetₓ.measurable_range_sup'' fun n _ => (hsub.strongly_measurable n).Measurable.le (𝒢.le n))
                 measurable_const)
               _))
       intro ω hω
@@ -234,7 +230,7 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
         
       · exact
           measurable_set_lt
-            (Finset.measurable_range_sup'' fun n _ => (hsub.strongly_measurable n).Measurable.le (𝒢.le n))
+            (Finsetₓ.measurable_range_sup'' fun n _ => (hsub.strongly_measurable n).Measurable.le (𝒢.le n))
             measurable_const
         
       · exact

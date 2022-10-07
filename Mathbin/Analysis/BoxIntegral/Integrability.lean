@@ -23,14 +23,14 @@ open Classical Nnreal Ennreal TopologicalSpace BigOperators
 
 universe u v
 
-variable {ι : Type u} {E : Type v} [Fintype ι] [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {ι : Type u} {E : Type v} [Fintypeₓ ι] [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-open MeasureTheory Metric Set Finset Filter BoxIntegral
+open MeasureTheory Metric Set Finsetₓ Filter BoxIntegral
 
 namespace BoxIntegral
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (F «expr ⊆ » «expr ∩ »(s, I.Icc))
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (U «expr ⊇ » «expr ∩ »(s, I.Icc))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (F «expr ⊆ » «expr ∩ »(s, I.Icc))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (U «expr ⊇ » «expr ∩ »(s, I.Icc))
 /-- The indicator function of a measurable set is McShane integrable with respect to any
 locally-finite measure. -/
 theorem has_integral_indicator_const (l : IntegrationParams) (hl : l.bRiemann = ff) {s : Set (ι → ℝ)}
@@ -60,7 +60,7 @@ theorem has_integral_indicator_const (l : IntegrationParams) (hl : l.bRiemann = 
   rw [mul_comm]
   /- Then the union of boxes `J ∈ π` such that `π.tag ∈ s` includes `F` and is included by `U`,
     hence its measure is `ε`-close to the measure of `s`. -/
-  dsimp' [integral_sum]
+  dsimp [integral_sum]
   simp only [mem_closed_ball, dist_eq_norm, ← indicator_const_smul_apply, sum_indicator_eq_sum_filter, ← sum_smul, ←
     sub_smul, norm_smul, Real.norm_eq_abs, ← prepartition.filter_boxes, ← prepartition.measure_Union_to_real]
   refine' mul_le_mul_of_nonneg_right _ (norm_nonneg y)
@@ -89,7 +89,7 @@ theorem has_integral_indicator_const (l : IntegrationParams) (hl : l.bRiemann = 
     simpa only [r, s.piecewise_eq_of_not_mem _ _ hxF] using hπ.1 J hJπ (box.coe_subset_Icc hxJ)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (U «expr ⊇ » «expr ⁻¹' »(N, {n}))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (U «expr ⊇ » «expr ⁻¹' »(N, {n}))
 /-- If `f` is a.e. equal to zero on a rectangular box, then it has McShane integral zero on this
 box. -/
 theorem has_integral_zero_of_ae_eq_zero {l : IntegrationParams} {I : Box ι} {f : (ι → ℝ) → E} {μ : Measureₓ (ι → ℝ)}
@@ -127,7 +127,7 @@ theorem has_integral_zero_of_ae_eq_zero {l : IntegrationParams} {I : Box ι} {f 
   refine' le_transₓ _ (Nnreal.coe_lt_coe.2 hcε).le
   refine' (norm_sum_le_of_le _ _).trans (sum_le_has_sum _ (fun n _ => (δ n).2) (Nnreal.has_sum_coe.2 hδc))
   rintro n -
-  dsimp' [integral_sum]
+  dsimp [integral_sum]
   have : ∀ J ∈ π.filter fun J => N (π.tag J) = n, ∥(μ ↑J).toReal • f (π.tag J)∥ ≤ (μ J).toReal * n := by
     intro J hJ
     rw [tagged_prepartition.mem_filter] at hJ
@@ -162,7 +162,7 @@ namespace MeasureTheory
 
 namespace SimpleFunc
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]
 /-- A simple function is McShane integrable w.r.t. any locally finite measure. -/
 theorem has_box_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] (I : Box ι)
     (l : IntegrationParams) (hl : l.bRiemann = ff) :
@@ -170,7 +170,7 @@ theorem has_box_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → �
   induction' f using MeasureTheory.SimpleFunc.induction with y s hs f g hd hfi hgi
   · simpa [Function.const, measure.restrict_apply hs] using BoxIntegral.has_integral_indicator_const l hl hs I y μ
     
-  · trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr E]]"
+  · trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]"
     haveI := Fact.mk (I.measure_coe_lt_top μ)
     rw [integral_add]
     exacts[hfi.add hgi, integrable_iff.2 fun _ _ => measure_lt_top _ _, integrable_iff.2 fun _ _ => measure_lt_top _ _]
@@ -187,13 +187,13 @@ end SimpleFunc
 
 open TopologicalSpace
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]
 /-- If `f : ℝⁿ → E` is Bochner integrable w.r.t. a locally finite measure `μ` on a rectangular box
 `I`, then it is McShane integrable on `I` with the same integral.  -/
 theorem IntegrableOn.has_box_integral [CompleteSpace E] {f : (ι → ℝ) → E} {μ : Measure (ι → ℝ)}
     [IsLocallyFiniteMeasure μ] {I : Box ι} (hf : IntegrableOn f I μ) (l : IntegrationParams) (hl : l.bRiemann = ff) :
     HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul (∫ x in I, f x ∂μ) := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr E]]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]"
   -- First we replace an `ae_strongly_measurable` function by a measurable one.
   rcases hf.ae_strongly_measurable with ⟨g, hg, hfg⟩
   haveI : separable_space (range g ∪ {0} : Set E) := hg.separable_space_range_union_singleton
@@ -204,10 +204,7 @@ theorem IntegrableOn.has_box_integral [CompleteSpace E] {f : (ι → ℝ) → E}
   /- Now consider the sequence of simple functions
     `simple_func.approx_on g hg.measurable (range g ∪ {0}) 0 (by simp)`
     approximating `g`. Recall some properties of this sequence. -/
-  set f : ℕ → simple_func (ι → ℝ) E :=
-    simple_func.approx_on g hg.measurable (range g ∪ {0}) 0
-      (by
-        simp )
+  set f : ℕ → simple_func (ι → ℝ) E := simple_func.approx_on g hg.measurable (range g ∪ {0}) 0 (by simp)
   have hfi : ∀ n, integrable_on (f n) I μ := simple_func.integrable_approx_on_range hg.measurable hgi
   have hfi' := fun n => ((f n).has_box_integral μ I l hl).Integrable
   have hfgi : tendsto (fun n => (f n).integral (μ.restrict I)) at_top (𝓝 <| ∫ x in I, g x ∂μ) :=
@@ -233,10 +230,7 @@ theorem IntegrableOn.has_box_integral [CompleteSpace E] {f : (ι → ℝ) → E}
   have : ∀ x, ∃ N₁, N₀ ≤ N₁ ∧ dist (f N₁ x) (g x) ≤ ε := by
     intro x
     have : tendsto (fun n => f n x) at_top (𝓝 <| g x) :=
-      simple_func.tendsto_approx_on hg.measurable _
-        (subset_closure
-          (by
-            simp ))
+      simple_func.tendsto_approx_on hg.measurable _ (subset_closure (by simp))
     exact ((eventually_ge_at_top N₀).And <| this <| closed_ball_mem_nhds _ ε0).exists
   choose Nx hNx hNxε
   -- We also choose a convergent series with `∑' i : ℕ, δ i < ε`.
@@ -261,7 +255,7 @@ theorem IntegrableOn.has_box_integral [CompleteSpace E] {f : (ι → ℝ) → E}
         the former in the formula for the integral sum changes the sum at most by `μ I * ε`. -/
     rw [← hπp.Union_eq, π.to_prepartition.measure_Union_to_real, sum_mul, integral_sum]
     refine' dist_sum_sum_le_of_le _ fun J hJ => _
-    dsimp'
+    dsimp
     rw [dist_eq_norm, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg Ennreal.to_real_nonneg]
     refine' mul_le_mul_of_nonneg_left _ Ennreal.to_real_nonneg
     rw [← dist_eq_norm']

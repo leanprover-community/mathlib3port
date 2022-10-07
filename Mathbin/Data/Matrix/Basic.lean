@@ -65,8 +65,7 @@ section Ext
 variable {M N : Matrix m n α}
 
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
-  ⟨fun h => funext fun i => funext <| h i, fun h => by
-    simp [h]⟩
+  ⟨fun h => funext fun i => funext <| h i, fun h => by simp [h]⟩
 
 @[ext]
 theorem ext : (∀ i j, M i j = N i j) → M = N :=
@@ -308,25 +307,20 @@ def diagonalₓ [Zero α] (d : n → α) : Matrix n n α
   | i, j => if i = j then d i else 0
 
 @[simp]
-theorem diagonal_apply_eq [Zero α] (d : n → α) (i : n) : (diagonalₓ d) i i = d i := by
-  simp [diagonal]
+theorem diagonal_apply_eq [Zero α] (d : n → α) (i : n) : (diagonalₓ d) i i = d i := by simp [diagonal]
 
 @[simp]
-theorem diagonal_apply_ne [Zero α] (d : n → α) {i j : n} (h : i ≠ j) : (diagonalₓ d) i j = 0 := by
-  simp [diagonal, h]
+theorem diagonal_apply_ne [Zero α] (d : n → α) {i j : n} (h : i ≠ j) : (diagonalₓ d) i j = 0 := by simp [diagonal, h]
 
 theorem diagonal_apply_ne' [Zero α] (d : n → α) {i j : n} (h : j ≠ i) : (diagonalₓ d) i j = 0 :=
   diagonal_apply_ne d h.symm
 
 @[simp]
 theorem diagonal_eq_diagonal_iff [Zero α] {d₁ d₂ : n → α} : diagonalₓ d₁ = diagonalₓ d₂ ↔ ∀ i, d₁ i = d₂ i :=
-  ⟨fun h i => by
-    simpa using congr_arg (fun m : Matrix n n α => m i i) h, fun h => by
-    rw [show d₁ = d₂ from funext h]⟩
+  ⟨fun h i => by simpa using congr_arg (fun m : Matrix n n α => m i i) h, fun h => by rw [show d₁ = d₂ from funext h]⟩
 
 theorem diagonal_injective [Zero α] : Function.Injective (diagonalₓ : (n → α) → Matrix n n α) := fun d₁ d₂ h =>
-  funext fun i => by
-    simpa using matrix.ext_iff.mpr h i i
+  funext fun i => by simpa using matrix.ext_iff.mpr h i i
 
 @[simp]
 theorem diagonal_zero [Zero α] : (diagonalₓ fun _ => 0 : Matrix n n α) = 0 := by
@@ -336,7 +330,7 @@ theorem diagonal_zero [Zero α] : (diagonalₓ fun _ => 0 : Matrix n n α) = 0 :
 @[simp]
 theorem diagonal_transpose [Zero α] (v : n → α) : (diagonalₓ v)ᵀ = diagonalₓ v := by
   ext i j
-  by_cases' h : i = j
+  by_cases h:i = j
   · simp [h, transpose]
     
   · simp [h, transpose, diagonal_apply_ne' _ h]
@@ -344,13 +338,11 @@ theorem diagonal_transpose [Zero α] (v : n → α) : (diagonalₓ v)ᵀ = diago
 
 @[simp]
 theorem diagonal_add [AddZeroClassₓ α] (d₁ d₂ : n → α) : diagonalₓ d₁ + diagonalₓ d₂ = diagonalₓ fun i => d₁ i + d₂ i :=
-  by
-  ext i j <;> by_cases' h : i = j <;> simp [h]
+  by ext i j <;> by_cases h:i = j <;> simp [h]
 
 @[simp]
 theorem diagonal_smul [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] (r : R) (d : n → α) :
-    diagonalₓ (r • d) = r • diagonalₓ d := by
-  ext i j <;> by_cases' h : i = j <;> simp [h]
+    diagonalₓ (r • d) = r • diagonalₓ d := by ext i j <;> by_cases h:i = j <;> simp [h]
 
 variable (n α)
 
@@ -429,16 +421,13 @@ theorem bit0_apply [Add α] (M : Matrix m m α) (i : m) (j : m) : (bit0 M) i j =
 variable [AddZeroClassₓ α] [One α]
 
 theorem bit1_apply (M : Matrix n n α) (i : n) (j : n) : (bit1 M) i j = if i = j then bit1 (M i j) else bit0 (M i j) :=
-  by
-  dsimp' [bit1] <;> by_cases' h : i = j <;> simp [h]
+  by dsimp [bit1] <;> by_cases h:i = j <;> simp [h]
 
 @[simp]
-theorem bit1_apply_eq (M : Matrix n n α) (i : n) : (bit1 M) i i = bit1 (M i i) := by
-  simp [bit1_apply]
+theorem bit1_apply_eq (M : Matrix n n α) (i : n) : (bit1 M) i i = bit1 (M i i) := by simp [bit1_apply]
 
 @[simp]
-theorem bit1_apply_ne (M : Matrix n n α) {i j : n} (h : i ≠ j) : (bit1 M) i j = bit0 (M i j) := by
-  simp [bit1_apply, h]
+theorem bit1_apply_ne (M : Matrix n n α) {i j : n} (h : i ≠ j) : (bit1 M) i j = bit0 (M i j) := by simp [bit1_apply, h]
 
 end Numeral
 
@@ -517,7 +506,7 @@ theorem diag_multiset_sum [AddCommMonoidₓ α] (s : Multiset (Matrix n n α)) :
   map_multiset_sum (diagAddMonoidHom n α) s
 
 @[simp]
-theorem diag_sum {ι} [AddCommMonoidₓ α] (s : Finset ι) (f : ι → Matrix n n α) :
+theorem diag_sum {ι} [AddCommMonoidₓ α] (s : Finsetₓ ι) (f : ι → Matrix n n α) :
     diag (∑ i in s, f i) = ∑ i in s, diag (f i) :=
   map_sum (diagAddMonoidHom n α) f s
 
@@ -525,7 +514,7 @@ end Diag
 
 section DotProduct
 
-variable [Fintype m] [Fintype n]
+variable [Fintypeₓ m] [Fintypeₓ n]
 
 /-- `dot_product v w` is the sum of the entrywise products `v i * w i` -/
 def dotProduct [Mul α] [AddCommMonoidₓ α] (v w : m → α) : α :=
@@ -538,46 +527,40 @@ localized [Matrix] infixl:72 " ⬝ᵥ " => Matrix.dotProduct
 
 theorem dot_product_assoc [NonUnitalSemiringₓ α] (u : m → α) (w : n → α) (v : Matrix m n α) :
     (fun j => u ⬝ᵥ fun i => v i j) ⬝ᵥ w = u ⬝ᵥ fun i => v i ⬝ᵥ w := by
-  simpa [dot_product, Finset.mul_sum, Finset.sum_mul, mul_assoc] using Finset.sum_comm
+  simpa [dot_product, Finsetₓ.mul_sum, Finsetₓ.sum_mul, mul_assoc] using Finsetₓ.sum_comm
 
 theorem dot_product_comm [AddCommMonoidₓ α] [CommSemigroupₓ α] (v w : m → α) : v ⬝ᵥ w = w ⬝ᵥ v := by
   simp_rw [dot_product, mul_comm]
 
 @[simp]
-theorem dot_product_punit [AddCommMonoidₓ α] [Mul α] (v w : PUnit → α) : v ⬝ᵥ w = v ⟨⟩ * w ⟨⟩ := by
-  simp [dot_product]
+theorem dot_product_punit [AddCommMonoidₓ α] [Mul α] (v w : PUnit → α) : v ⬝ᵥ w = v ⟨⟩ * w ⟨⟩ := by simp [dot_product]
 
 section NonUnitalNonAssocSemiringₓ
 
 variable [NonUnitalNonAssocSemiringₓ α] (u v w : m → α) (x y : n → α)
 
 @[simp]
-theorem dot_product_zero : v ⬝ᵥ 0 = 0 := by
-  simp [dot_product]
+theorem dot_product_zero : v ⬝ᵥ 0 = 0 := by simp [dot_product]
 
 @[simp]
 theorem dot_product_zero' : (v ⬝ᵥ fun _ => 0) = 0 :=
   dot_product_zero v
 
 @[simp]
-theorem zero_dot_product : 0 ⬝ᵥ v = 0 := by
-  simp [dot_product]
+theorem zero_dot_product : 0 ⬝ᵥ v = 0 := by simp [dot_product]
 
 @[simp]
 theorem zero_dot_product' : (fun _ => (0 : α)) ⬝ᵥ v = 0 :=
   zero_dot_product v
 
 @[simp]
-theorem add_dot_product : (u + v) ⬝ᵥ w = u ⬝ᵥ w + v ⬝ᵥ w := by
-  simp [dot_product, add_mulₓ, Finset.sum_add_distrib]
+theorem add_dot_product : (u + v) ⬝ᵥ w = u ⬝ᵥ w + v ⬝ᵥ w := by simp [dot_product, add_mulₓ, Finsetₓ.sum_add_distrib]
 
 @[simp]
-theorem dot_product_add : u ⬝ᵥ (v + w) = u ⬝ᵥ v + u ⬝ᵥ w := by
-  simp [dot_product, mul_addₓ, Finset.sum_add_distrib]
+theorem dot_product_add : u ⬝ᵥ (v + w) = u ⬝ᵥ v + u ⬝ᵥ w := by simp [dot_product, mul_addₓ, Finsetₓ.sum_add_distrib]
 
 @[simp]
-theorem sum_elim_dot_product_sum_elim : Sum.elim u x ⬝ᵥ Sum.elim v y = u ⬝ᵥ v + x ⬝ᵥ y := by
-  simp [dot_product]
+theorem sum_elim_dot_product_sum_elim : Sum.elim u x ⬝ᵥ Sum.elim v y = u ⬝ᵥ v + x ⬝ᵥ y := by simp [dot_product]
 
 end NonUnitalNonAssocSemiringₓ
 
@@ -585,40 +568,35 @@ section NonUnitalNonAssocSemiringDecidable
 
 variable [DecidableEq m] [NonUnitalNonAssocSemiringₓ α] (u v w : m → α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem diagonal_dot_product (i : m) : diagonalₓ v i ⬝ᵥ w = v i * w i := by
-  have : ∀ (j) (_ : j ≠ i), diagonalₓ v i j * w j = 0 := fun j hij => by
-    simp [diagonal_apply_ne' _ hij]
-  convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
+  have : ∀ (j) (_ : j ≠ i), diagonalₓ v i j * w j = 0 := fun j hij => by simp [diagonal_apply_ne' _ hij]
+  convert Finsetₓ.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_diagonal (i : m) : v ⬝ᵥ diagonalₓ w i = v i * w i := by
-  have : ∀ (j) (_ : j ≠ i), v j * diagonalₓ w i j = 0 := fun j hij => by
-    simp [diagonal_apply_ne' _ hij]
-  convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
+  have : ∀ (j) (_ : j ≠ i), v j * diagonalₓ w i j = 0 := fun j hij => by simp [diagonal_apply_ne' _ hij]
+  convert Finsetₓ.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonalₓ w j i) = v i * w i := by
-  have : ∀ (j) (_ : j ≠ i), v j * diagonalₓ w j i = 0 := fun j hij => by
-    simp [diagonal_apply_ne _ hij]
-  convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
+  have : ∀ (j) (_ : j ≠ i), v j * diagonalₓ w j i = 0 := fun j hij => by simp [diagonal_apply_ne _ hij]
+  convert Finsetₓ.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem single_dot_product (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i := by
-  have : ∀ (j) (_ : j ≠ i), Pi.single i x j * v j = 0 := fun j hij => by
-    simp [Pi.single_eq_of_ne hij]
-  convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
+  have : ∀ (j) (_ : j ≠ i), Pi.single i x j * v j = 0 := fun j hij => by simp [Pi.single_eq_of_ne hij]
+  convert Finsetₓ.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_single (x : α) (i : m) : v ⬝ᵥ Pi.single i x = v i * x := by
-  have : ∀ (j) (_ : j ≠ i), v j * Pi.single i x j = 0 := fun j hij => by
-    simp [Pi.single_eq_of_ne hij]
-  convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
+  have : ∀ (j) (_ : j ≠ i), v j * Pi.single i x j = 0 := fun j hij => by simp [Pi.single_eq_of_ne hij]
+  convert Finsetₓ.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
 end NonUnitalNonAssocSemiringDecidable
 
@@ -627,20 +605,16 @@ section NonUnitalNonAssocRing
 variable [NonUnitalNonAssocRing α] (u v w : m → α)
 
 @[simp]
-theorem neg_dot_product : -v ⬝ᵥ w = -(v ⬝ᵥ w) := by
-  simp [dot_product]
+theorem neg_dot_product : -v ⬝ᵥ w = -(v ⬝ᵥ w) := by simp [dot_product]
 
 @[simp]
-theorem dot_product_neg : v ⬝ᵥ -w = -(v ⬝ᵥ w) := by
-  simp [dot_product]
+theorem dot_product_neg : v ⬝ᵥ -w = -(v ⬝ᵥ w) := by simp [dot_product]
 
 @[simp]
-theorem sub_dot_product : (u - v) ⬝ᵥ w = u ⬝ᵥ w - v ⬝ᵥ w := by
-  simp [sub_eq_add_neg]
+theorem sub_dot_product : (u - v) ⬝ᵥ w = u ⬝ᵥ w - v ⬝ᵥ w := by simp [sub_eq_add_neg]
 
 @[simp]
-theorem dot_product_sub : u ⬝ᵥ (v - w) = u ⬝ᵥ v - u ⬝ᵥ w := by
-  simp [sub_eq_add_neg]
+theorem dot_product_sub : u ⬝ᵥ (v - w) = u ⬝ᵥ v - u ⬝ᵥ w := by simp [sub_eq_add_neg]
 
 end NonUnitalNonAssocRing
 
@@ -650,11 +624,11 @@ variable [Monoidₓ R] [Mul α] [AddCommMonoidₓ α] [DistribMulAction R α]
 
 @[simp]
 theorem smul_dot_product [IsScalarTower R α α] (x : R) (v w : m → α) : x • v ⬝ᵥ w = x • (v ⬝ᵥ w) := by
-  simp [dot_product, Finset.smul_sum, smul_mul_assoc]
+  simp [dot_product, Finsetₓ.smul_sum, smul_mul_assoc]
 
 @[simp]
 theorem dot_product_smul [SmulCommClass R α α] (x : R) (v w : m → α) : v ⬝ᵥ x • w = x • (v ⬝ᵥ w) := by
-  simp [dot_product, Finset.smul_sum, mul_smul_comm]
+  simp [dot_product, Finsetₓ.smul_sum, mul_smul_comm]
 
 end DistribMulAction
 
@@ -662,14 +636,11 @@ section StarRing
 
 variable [NonUnitalSemiringₓ α] [StarRing α] (v w : m → α)
 
-theorem star_dot_product_star : star v ⬝ᵥ star w = star (w ⬝ᵥ v) := by
-  simp [dot_product]
+theorem star_dot_product_star : star v ⬝ᵥ star w = star (w ⬝ᵥ v) := by simp [dot_product]
 
-theorem star_dot_product : star v ⬝ᵥ w = star (star w ⬝ᵥ v) := by
-  simp [dot_product]
+theorem star_dot_product : star v ⬝ᵥ w = star (star w ⬝ᵥ v) := by simp [dot_product]
 
-theorem dot_product_star : v ⬝ᵥ star w = star (w ⬝ᵥ star v) := by
-  simp [dot_product]
+theorem dot_product_star : v ⬝ᵥ star w = star (w ⬝ᵥ star v) := by simp [dot_product]
 
 end StarRing
 
@@ -680,24 +651,24 @@ open Matrix
 /-- `M ⬝ N` is the usual product of matrices `M` and `N`, i.e. we have that
 `(M ⬝ N) i k` is the dot product of the `i`-th row of `M` by the `k`-th column of `N`.
 This is currently only defined when `m` is finite. -/
-protected def mul [Fintype m] [Mul α] [AddCommMonoidₓ α] (M : Matrix l m α) (N : Matrix m n α) : Matrix l n α :=
+protected def mul [Fintypeₓ m] [Mul α] [AddCommMonoidₓ α] (M : Matrix l m α) (N : Matrix m n α) : Matrix l n α :=
   fun i k => (fun j => M i j) ⬝ᵥ fun j => N j k
 
 -- mathport name: matrix.mul
 localized [Matrix] infixl:75 " ⬝ " => Matrix.mul
 
-theorem mul_apply [Fintype m] [Mul α] [AddCommMonoidₓ α] {M : Matrix l m α} {N : Matrix m n α} {i k} :
+theorem mul_apply [Fintypeₓ m] [Mul α] [AddCommMonoidₓ α] {M : Matrix l m α} {N : Matrix m n α} {i k} :
     (M ⬝ N) i k = ∑ j, M i j * N j k :=
   rfl
 
-instance [Fintype n] [Mul α] [AddCommMonoidₓ α] : Mul (Matrix n n α) :=
+instance [Fintypeₓ n] [Mul α] [AddCommMonoidₓ α] : Mul (Matrix n n α) :=
   ⟨Matrix.mul⟩
 
 @[simp]
-theorem mul_eq_mul [Fintype n] [Mul α] [AddCommMonoidₓ α] (M N : Matrix n n α) : M * N = M ⬝ N :=
+theorem mul_eq_mul [Fintypeₓ n] [Mul α] [AddCommMonoidₓ α] (M N : Matrix n n α) : M * N = M ⬝ N :=
   rfl
 
-theorem mul_apply' [Fintype m] [Mul α] [AddCommMonoidₓ α] {M : Matrix l m α} {N : Matrix m n α} {i k} :
+theorem mul_apply' [Fintypeₓ m] [Mul α] [AddCommMonoidₓ α] {M : Matrix l m α} {N : Matrix m n α} {i k} :
     (M ⬝ N) i k = (fun j => M i j) ⬝ᵥ fun j => N j k :=
   rfl
 
@@ -705,7 +676,7 @@ theorem mul_apply' [Fintype m] [Mul α] [AddCommMonoidₓ α] {M : Matrix l m α
 theorem diagonal_neg [DecidableEq n] [AddGroupₓ α] (d : n → α) : -diagonalₓ d = diagonalₓ fun i => -d i :=
   ((diagonalAddMonoidHom n α).map_neg d).symm
 
-theorem sum_apply [AddCommMonoidₓ α] (i : m) (j : n) (s : Finset β) (g : β → Matrix m n α) :
+theorem sum_apply [AddCommMonoidₓ α] (i : m) (j : n) (s : Finsetₓ β) (g : β → Matrix m n α) :
     (∑ c in s, g c) i j = ∑ c in s, g c i j :=
   (congr_fun (s.sum_apply i g) j).trans (s.sum_apply j _)
 
@@ -715,27 +686,25 @@ theorem two_mul_expl {R : Type _} [CommRingₓ R] (A B : Matrix (Finₓ 2) (Fin�
         (A * B) 1 0 = A 1 0 * B 0 0 + A 1 1 * B 1 0 ∧ (A * B) 1 1 = A 1 0 * B 0 1 + A 1 1 * B 1 1 :=
   by
   constructor
-  on_goal 2 =>
-    constructor
-  on_goal 3 =>
-    constructor
+  on_goal 2 => constructor
+  on_goal 3 => constructor
   all_goals
-    simp only [Matrix.mul_eq_mul]
-    rw [Matrix.mul_apply, Finset.sum_fin_eq_sum_range, Finset.sum_range_succ, Finset.sum_range_succ]
-    simp
+  simp only [Matrix.mul_eq_mul]
+  rw [Matrix.mul_apply, Finsetₓ.sum_fin_eq_sum_range, Finsetₓ.sum_range_succ, Finsetₓ.sum_range_succ]
+  simp
 
 section AddCommMonoidₓ
 
 variable [AddCommMonoidₓ α] [Mul α]
 
 @[simp]
-theorem smul_mul [Fintype n] [Monoidₓ R] [DistribMulAction R α] [IsScalarTower R α α] (a : R) (M : Matrix m n α)
+theorem smul_mul [Fintypeₓ n] [Monoidₓ R] [DistribMulAction R α] [IsScalarTower R α α] (a : R) (M : Matrix m n α)
     (N : Matrix n l α) : (a • M) ⬝ N = a • M ⬝ N := by
   ext
   apply smul_dot_product
 
 @[simp]
-theorem mul_smul [Fintype n] [Monoidₓ R] [DistribMulAction R α] [SmulCommClass R α α] (M : Matrix m n α) (a : R)
+theorem mul_smul [Fintypeₓ n] [Monoidₓ R] [DistribMulAction R α] [SmulCommClass R α α] (M : Matrix m n α) (a : R)
     (N : Matrix n l α) : M ⬝ (a • N) = a • M ⬝ N := by
   ext
   apply dot_product_smul
@@ -747,48 +716,47 @@ section NonUnitalNonAssocSemiringₓ
 variable [NonUnitalNonAssocSemiringₓ α]
 
 @[simp]
-protected theorem mul_zero [Fintype n] (M : Matrix m n α) : M ⬝ (0 : Matrix n o α) = 0 := by
+protected theorem mul_zero [Fintypeₓ n] (M : Matrix m n α) : M ⬝ (0 : Matrix n o α) = 0 := by
   ext i j
   apply dot_product_zero
 
 @[simp]
-protected theorem zero_mul [Fintype m] (M : Matrix m n α) : (0 : Matrix l m α) ⬝ M = 0 := by
+protected theorem zero_mul [Fintypeₓ m] (M : Matrix m n α) : (0 : Matrix l m α) ⬝ M = 0 := by
   ext i j
   apply zero_dot_product
 
-protected theorem mul_add [Fintype n] (L : Matrix m n α) (M N : Matrix n o α) : L ⬝ (M + N) = L ⬝ M + L ⬝ N := by
+protected theorem mul_add [Fintypeₓ n] (L : Matrix m n α) (M N : Matrix n o α) : L ⬝ (M + N) = L ⬝ M + L ⬝ N := by
   ext i j
   apply dot_product_add
 
-protected theorem add_mul [Fintype m] (L M : Matrix l m α) (N : Matrix m n α) : (L + M) ⬝ N = L ⬝ N + M ⬝ N := by
+protected theorem add_mul [Fintypeₓ m] (L M : Matrix l m α) (N : Matrix m n α) : (L + M) ⬝ N = L ⬝ N + M ⬝ N := by
   ext i j
   apply add_dot_product
 
-instance [Fintype n] : NonUnitalNonAssocSemiringₓ (Matrix n n α) :=
+instance [Fintypeₓ n] : NonUnitalNonAssocSemiringₓ (Matrix n n α) :=
   { Matrix.addCommMonoid with mul := (· * ·), add := (· + ·), zero := 0, mul_zero := Matrix.mul_zero,
     zero_mul := Matrix.zero_mul, left_distrib := Matrix.mul_add, right_distrib := Matrix.add_mul }
 
 @[simp]
-theorem diagonal_mul [Fintype m] [DecidableEq m] (d : m → α) (M : Matrix m n α) (i j) :
+theorem diagonal_mul [Fintypeₓ m] [DecidableEq m] (d : m → α) (M : Matrix m n α) (i j) :
     (diagonalₓ d).mul M i j = d i * M i j :=
   diagonal_dot_product _ _ _
 
 @[simp]
-theorem mul_diagonal [Fintype n] [DecidableEq n] (d : n → α) (M : Matrix m n α) (i j) :
+theorem mul_diagonal [Fintypeₓ n] [DecidableEq n] (d : n → α) (M : Matrix m n α) (i j) :
     (M ⬝ diagonalₓ d) i j = M i j * d j := by
   rw [← diagonal_transpose]
   apply dot_product_diagonal
 
 @[simp]
-theorem diagonal_mul_diagonal [Fintype n] [DecidableEq n] (d₁ d₂ : n → α) :
-    diagonalₓ d₁ ⬝ diagonalₓ d₂ = diagonalₓ fun i => d₁ i * d₂ i := by
-  ext i j <;> by_cases' i = j <;> simp [h]
+theorem diagonal_mul_diagonal [Fintypeₓ n] [DecidableEq n] (d₁ d₂ : n → α) :
+    diagonalₓ d₁ ⬝ diagonalₓ d₂ = diagonalₓ fun i => d₁ i * d₂ i := by ext i j <;> by_cases i = j <;> simp [h]
 
-theorem diagonal_mul_diagonal' [Fintype n] [DecidableEq n] (d₁ d₂ : n → α) :
+theorem diagonal_mul_diagonal' [Fintypeₓ n] [DecidableEq n] (d₁ d₂ : n → α) :
     diagonalₓ d₁ * diagonalₓ d₂ = diagonalₓ fun i => d₁ i * d₂ i :=
   diagonal_mul_diagonal _ _
 
-theorem smul_eq_diagonal_mul [Fintype m] [DecidableEq m] (M : Matrix m n α) (a : α) :
+theorem smul_eq_diagonal_mul [Fintypeₓ m] [DecidableEq m] (M : Matrix m n α) (a : α) :
     a • M = (diagonalₓ fun _ => a) ⬝ M := by
   ext
   simp
@@ -800,33 +768,33 @@ theorem diag_col_mul_row (a b : n → α) : diag (colₓ a ⬝ rowₓ b) = a * b
 
 /-- Left multiplication by a matrix, as an `add_monoid_hom` from matrices to matrices. -/
 @[simps]
-def addMonoidHomMulLeft [Fintype m] (M : Matrix l m α) : Matrix m n α →+ Matrix l n α where
+def addMonoidHomMulLeft [Fintypeₓ m] (M : Matrix l m α) : Matrix m n α →+ Matrix l n α where
   toFun := fun x => M ⬝ x
   map_zero' := Matrix.mul_zero _
   map_add' := Matrix.mul_add _
 
 /-- Right multiplication by a matrix, as an `add_monoid_hom` from matrices to matrices. -/
 @[simps]
-def addMonoidHomMulRight [Fintype m] (M : Matrix m n α) : Matrix l m α →+ Matrix l n α where
+def addMonoidHomMulRight [Fintypeₓ m] (M : Matrix m n α) : Matrix l m α →+ Matrix l n α where
   toFun := fun x => x ⬝ M
   map_zero' := Matrix.zero_mul _
   map_add' := fun _ _ => Matrix.add_mul _ _ _
 
-protected theorem sum_mul [Fintype m] (s : Finset β) (f : β → Matrix l m α) (M : Matrix m n α) :
+protected theorem sum_mul [Fintypeₓ m] (s : Finsetₓ β) (f : β → Matrix l m α) (M : Matrix m n α) :
     (∑ a in s, f a) ⬝ M = ∑ a in s, f a ⬝ M :=
   (addMonoidHomMulRight M : Matrix l m α →+ _).map_sum f s
 
-protected theorem mul_sum [Fintype m] (s : Finset β) (f : β → Matrix m n α) (M : Matrix l m α) :
+protected theorem mul_sum [Fintypeₓ m] (s : Finsetₓ β) (f : β → Matrix m n α) (M : Matrix l m α) :
     (M ⬝ ∑ a in s, f a) = ∑ a in s, M ⬝ f a :=
   (addMonoidHomMulLeft M : Matrix m n α →+ _).map_sum f s
 
 /-- This instance enables use with `smul_mul_assoc`. -/
-instance Semiring.is_scalar_tower [Fintype n] [Monoidₓ R] [DistribMulAction R α] [IsScalarTower R α α] :
+instance Semiring.is_scalar_tower [Fintypeₓ n] [Monoidₓ R] [DistribMulAction R α] [IsScalarTower R α α] :
     IsScalarTower R (Matrix n n α) (Matrix n n α) :=
   ⟨fun r m n => Matrix.smul_mul r m n⟩
 
 /-- This instance enables use with `mul_smul_comm`. -/
-instance Semiring.smul_comm_class [Fintype n] [Monoidₓ R] [DistribMulAction R α] [SmulCommClass R α α] :
+instance Semiring.smul_comm_class [Fintypeₓ n] [Monoidₓ R] [DistribMulAction R α] [SmulCommClass R α α] :
     SmulCommClass R (Matrix n n α) (Matrix n n α) :=
   ⟨fun r m n => (Matrix.mul_smul m r n).symm⟩
 
@@ -837,23 +805,20 @@ section NonAssocSemiringₓ
 variable [NonAssocSemiringₓ α]
 
 @[simp]
-protected theorem one_mul [Fintype m] [DecidableEq m] (M : Matrix m n α) : (1 : Matrix m m α) ⬝ M = M := by
+protected theorem one_mul [Fintypeₓ m] [DecidableEq m] (M : Matrix m n α) : (1 : Matrix m m α) ⬝ M = M := by
   ext i j <;> rw [← diagonal_one, diagonal_mul, one_mulₓ]
 
 @[simp]
-protected theorem mul_one [Fintype n] [DecidableEq n] (M : Matrix m n α) : M ⬝ (1 : Matrix n n α) = M := by
+protected theorem mul_one [Fintypeₓ n] [DecidableEq n] (M : Matrix m n α) : M ⬝ (1 : Matrix n n α) = M := by
   ext i j <;> rw [← diagonal_one, mul_diagonal, mul_oneₓ]
 
-instance [Fintype n] [DecidableEq n] : NonAssocSemiringₓ (Matrix n n α) :=
+instance [Fintypeₓ n] [DecidableEq n] : NonAssocSemiringₓ (Matrix n n α) :=
   { Matrix.nonUnitalNonAssocSemiring with one := 1, one_mul := Matrix.one_mul, mul_one := Matrix.mul_one,
-    natCast := fun n => diagonalₓ fun _ => n,
-    nat_cast_zero := by
-      ext <;> simp [Nat.castₓ],
-    nat_cast_succ := fun n => by
-      ext <;> by_cases' i = j <;> simp [Nat.castₓ, *] }
+    natCast := fun n => diagonalₓ fun _ => n, nat_cast_zero := by ext <;> simp [Nat.castₓ],
+    nat_cast_succ := fun n => by ext <;> by_cases i = j <;> simp [Nat.castₓ, *] }
 
 @[simp]
-theorem map_mul [Fintype n] {L : Matrix m n α} {M : Matrix n o α} [NonAssocSemiringₓ β] {f : α →+* β} :
+theorem map_mul [Fintypeₓ n] {L : Matrix m n α} {M : Matrix n o α} [NonAssocSemiringₓ β] {f : α →+* β} :
     (L ⬝ M).map f = L.map f ⬝ M.map f := by
   ext
   simp [mul_apply, RingHom.map_sum]
@@ -862,7 +827,7 @@ variable (α n)
 
 /-- `matrix.diagonal` as a `ring_hom`. -/
 @[simps]
-def diagonalRingHom [Fintype n] [DecidableEq n] : (n → α) →+* Matrix n n α :=
+def diagonalRingHom [Fintypeₓ n] [DecidableEq n] : (n → α) →+* Matrix n n α :=
   { diagonalAddMonoidHom n α with toFun := diagonalₓ, map_one' := diagonal_one,
     map_mul' := fun _ _ => (diagonal_mul_diagonal' _ _).symm }
 
@@ -870,7 +835,7 @@ end NonAssocSemiringₓ
 
 section NonUnitalSemiringₓ
 
-variable [NonUnitalSemiringₓ α] [Fintype m] [Fintype n]
+variable [NonUnitalSemiringₓ α] [Fintypeₓ m] [Fintypeₓ n]
 
 protected theorem mul_assoc (L : Matrix l m α) (M : Matrix m n α) (N : Matrix n o α) : L ⬝ M ⬝ N = L ⬝ (M ⬝ N) := by
   ext
@@ -885,14 +850,14 @@ section Semiringₓ
 
 variable [Semiringₓ α]
 
-instance [Fintype n] [DecidableEq n] : Semiringₓ (Matrix n n α) :=
+instance [Fintypeₓ n] [DecidableEq n] : Semiringₓ (Matrix n n α) :=
   { Matrix.nonUnitalSemiring, Matrix.nonAssocSemiring with }
 
 end Semiringₓ
 
 section NonUnitalNonAssocRing
 
-variable [NonUnitalNonAssocRing α] [Fintype n]
+variable [NonUnitalNonAssocRing α] [Fintypeₓ n]
 
 @[simp]
 protected theorem neg_mul (M : Matrix m n α) (N : Matrix n o α) : -M ⬝ N = -(M ⬝ N) := by
@@ -915,34 +880,32 @@ instance : NonUnitalNonAssocRing (Matrix n n α) :=
 
 end NonUnitalNonAssocRing
 
-instance [Fintype n] [NonUnitalRing α] : NonUnitalRing (Matrix n n α) :=
+instance [Fintypeₓ n] [NonUnitalRing α] : NonUnitalRing (Matrix n n α) :=
   { Matrix.nonUnitalSemiring, Matrix.addCommGroup with }
 
-instance [Fintype n] [DecidableEq n] [NonAssocRing α] : NonAssocRing (Matrix n n α) :=
+instance [Fintypeₓ n] [DecidableEq n] [NonAssocRing α] : NonAssocRing (Matrix n n α) :=
   { Matrix.nonAssocSemiring, Matrix.addCommGroup with }
 
-instance [Fintype n] [DecidableEq n] [Ringₓ α] : Ringₓ (Matrix n n α) :=
+instance [Fintypeₓ n] [DecidableEq n] [Ringₓ α] : Ringₓ (Matrix n n α) :=
   { Matrix.semiring, Matrix.addCommGroup with }
 
 section Semiringₓ
 
 variable [Semiringₓ α]
 
-theorem diagonal_pow [Fintype n] [DecidableEq n] (v : n → α) (k : ℕ) : diagonalₓ v ^ k = diagonalₓ (v ^ k) :=
+theorem diagonal_pow [Fintypeₓ n] [DecidableEq n] (v : n → α) (k : ℕ) : diagonalₓ v ^ k = diagonalₓ (v ^ k) :=
   (map_pow (diagonalRingHom n α) v k).symm
 
 @[simp]
-theorem mul_mul_left [Fintype n] (M : Matrix m n α) (N : Matrix n o α) (a : α) :
+theorem mul_mul_left [Fintypeₓ n] (M : Matrix m n α) (N : Matrix n o α) (a : α) :
     (of fun i j => a * M i j) ⬝ N = a • M ⬝ N :=
   smul_mul a M N
 
 /-- The ring homomorphism `α →+* matrix n n α`
 sending `a` to the diagonal matrix with `a` on the diagonal.
 -/
-def scalar (n : Type u) [DecidableEq n] [Fintype n] : α →+* Matrix n n α :=
-  { (smulAddHom α _).flip (1 : Matrix n n α) with toFun := fun a => a • 1,
-    map_one' := by
-      simp ,
+def scalar (n : Type u) [DecidableEq n] [Fintypeₓ n] : α →+* Matrix n n α :=
+  { (smulAddHom α _).flip (1 : Matrix n n α) with toFun := fun a => a • 1, map_one' := by simp,
     map_mul' := by
       intros
       ext
@@ -950,7 +913,7 @@ def scalar (n : Type u) [DecidableEq n] [Fintype n] : α →+* Matrix n n α :=
 
 section Scalar
 
-variable [DecidableEq n] [Fintype n]
+variable [DecidableEq n] [Fintypeₓ n]
 
 @[simp]
 theorem coe_scalar : (scalar n : α → Matrix n n α) = fun a => a • 1 :=
@@ -978,7 +941,7 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable [CommSemiringₓ α] [Fintype n]
+variable [CommSemiringₓ α] [Fintypeₓ n]
 
 theorem smul_eq_mul_diagonal [DecidableEq n] (M : Matrix m n α) (a : α) : a • M = M ⬝ diagonalₓ fun _ => a := by
   ext
@@ -995,7 +958,7 @@ end CommSemiringₓ
 
 section Algebra
 
-variable [Fintype n] [DecidableEq n]
+variable [Fintypeₓ n] [DecidableEq n]
 
 variable [CommSemiringₓ R] [Semiringₓ α] [Semiringₓ β] [Algebra R α] [Algebra R β]
 
@@ -1010,7 +973,7 @@ instance : Algebra R (Matrix n n α) :=
 
 theorem algebra_map_matrix_apply {r : R} {i j : n} :
     algebraMap R (Matrix n n α) r i j = if i = j then algebraMap R α r else 0 := by
-  dsimp' [algebraMap, Algebra.toRingHom, Matrix.scalar]
+  dsimp [algebraMap, Algebra.toRingHom, Matrix.scalar]
   split_ifs with h <;> simp [h, Matrix.one_apply_ne]
 
 theorem algebra_map_eq_diagonal (r : R) : algebraMap R (Matrix n n α) r = diagonalₓ (algebraMap R (n → α) r) :=
@@ -1175,7 +1138,7 @@ end LinearEquiv
 
 namespace RingHom
 
-variable [Fintype m] [DecidableEq m]
+variable [Fintypeₓ m] [DecidableEq m]
 
 variable [NonAssocSemiringₓ α] [NonAssocSemiringₓ β] [NonAssocSemiringₓ γ]
 
@@ -1183,9 +1146,7 @@ variable [NonAssocSemiringₓ α] [NonAssocSemiringₓ β] [NonAssocSemiringₓ 
 coefficients. This is `matrix.map` as a `ring_hom`. -/
 @[simps]
 def mapMatrix (f : α →+* β) : Matrix m m α →+* Matrix m m β :=
-  { f.toAddMonoidHom.mapMatrix with toFun := fun M => M.map f,
-    map_one' := by
-      simp ,
+  { f.toAddMonoidHom.mapMatrix with toFun := fun M => M.map f, map_one' := by simp,
     map_mul' := fun L M => Matrix.map_mul }
 
 @[simp]
@@ -1201,7 +1162,7 @@ end RingHom
 
 namespace RingEquiv
 
-variable [Fintype m] [DecidableEq m]
+variable [Fintypeₓ m] [DecidableEq m]
 
 variable [NonAssocSemiringₓ α] [NonAssocSemiringₓ β] [NonAssocSemiringₓ γ]
 
@@ -1228,7 +1189,7 @@ end RingEquiv
 
 namespace AlgHom
 
-variable [Fintype m] [DecidableEq m]
+variable [Fintypeₓ m] [DecidableEq m]
 
 variable [CommSemiringₓ R] [Semiringₓ α] [Semiringₓ β] [Semiringₓ γ]
 
@@ -1254,7 +1215,7 @@ end AlgHom
 
 namespace AlgEquiv
 
-variable [Fintype m] [DecidableEq m]
+variable [Fintypeₓ m] [DecidableEq m]
 
 variable [CommSemiringₓ R] [Semiringₓ α] [Semiringₓ β] [Semiringₓ γ]
 
@@ -1292,7 +1253,7 @@ def vecMulVecₓ [Mul α] (w : m → α) (v : n → α) : Matrix m n α
 
 theorem vec_mul_vec_eq [Mul α] [AddCommMonoidₓ α] (w : m → α) (v : n → α) : vecMulVecₓ w v = colₓ w ⬝ rowₓ v := by
   ext i j
-  simp only [vec_mul_vec, mul_apply, Fintype.univ_punit, Finset.sum_singleton]
+  simp only [vec_mul_vec, mul_apply, Fintypeₓ.univ_punit, Finsetₓ.sum_singleton]
   rfl
 
 section NonUnitalNonAssocSemiringₓ
@@ -1302,107 +1263,106 @@ variable [NonUnitalNonAssocSemiringₓ α]
 /-- `mul_vec M v` is the matrix-vector product of `M` and `v`, where `v` is seen as a column matrix.
     Put another way, `mul_vec M v` is the vector whose entries
     are those of `M ⬝ col v` (see `col_mul_vec`). -/
-def mulVecₓ [Fintype n] (M : Matrix m n α) (v : n → α) : m → α
+def mulVecₓ [Fintypeₓ n] (M : Matrix m n α) (v : n → α) : m → α
   | i => (fun j => M i j) ⬝ᵥ v
 
 /-- `vec_mul v M` is the vector-matrix product of `v` and `M`, where `v` is seen as a row matrix.
     Put another way, `vec_mul v M` is the vector whose entries
     are those of `row v ⬝ M` (see `row_vec_mul`). -/
-def vecMulₓ [Fintype m] (v : m → α) (M : Matrix m n α) : n → α
+def vecMulₓ [Fintypeₓ m] (v : m → α) (M : Matrix m n α) : n → α
   | j => v ⬝ᵥ fun i => M i j
 
 /-- Left multiplication by a matrix, as an `add_monoid_hom` from vectors to vectors. -/
 @[simps]
-def mulVecₓ.addMonoidHomLeft [Fintype n] (v : n → α) : Matrix m n α →+ m → α where
+def mulVecₓ.addMonoidHomLeft [Fintypeₓ n] (v : n → α) : Matrix m n α →+ m → α where
   toFun := fun M => mulVecₓ M v
-  map_zero' := by
-    ext <;> simp [mul_vec] <;> rfl
+  map_zero' := by ext <;> simp [mul_vec] <;> rfl
   map_add' := fun x y => by
     ext m
     apply add_dot_product
 
-theorem mul_vec_diagonal [Fintype m] [DecidableEq m] (v w : m → α) (x : m) : mulVecₓ (diagonalₓ v) w x = v x * w x :=
+theorem mul_vec_diagonal [Fintypeₓ m] [DecidableEq m] (v w : m → α) (x : m) : mulVecₓ (diagonalₓ v) w x = v x * w x :=
   diagonal_dot_product v w x
 
-theorem vec_mul_diagonal [Fintype m] [DecidableEq m] (v w : m → α) (x : m) : vecMulₓ v (diagonalₓ w) x = v x * w x :=
+theorem vec_mul_diagonal [Fintypeₓ m] [DecidableEq m] (v w : m → α) (x : m) : vecMulₓ v (diagonalₓ w) x = v x * w x :=
   dot_product_diagonal' v w x
 
 /-- Associate the dot product of `mul_vec` to the left. -/
-theorem dot_product_mul_vec [Fintype n] [Fintype m] [NonUnitalSemiringₓ R] (v : m → R) (A : Matrix m n R) (w : n → R) :
-    v ⬝ᵥ mulVecₓ A w = vecMulₓ v A ⬝ᵥ w := by
-  simp only [dot_product, vec_mul, mul_vec, Finset.mul_sum, Finset.sum_mul, mul_assoc] <;> exact Finset.sum_comm
+theorem dot_product_mul_vec [Fintypeₓ n] [Fintypeₓ m] [NonUnitalSemiringₓ R] (v : m → R) (A : Matrix m n R)
+    (w : n → R) : v ⬝ᵥ mulVecₓ A w = vecMulₓ v A ⬝ᵥ w := by
+  simp only [dot_product, vec_mul, mul_vec, Finsetₓ.mul_sum, Finsetₓ.sum_mul, mul_assoc] <;> exact Finsetₓ.sum_comm
 
 @[simp]
-theorem mul_vec_zero [Fintype n] (A : Matrix m n α) : mulVecₓ A 0 = 0 := by
+theorem mul_vec_zero [Fintypeₓ n] (A : Matrix m n α) : mulVecₓ A 0 = 0 := by
   ext
   simp [mul_vec]
 
 @[simp]
-theorem zero_vec_mul [Fintype m] (A : Matrix m n α) : vecMulₓ 0 A = 0 := by
+theorem zero_vec_mul [Fintypeₓ m] (A : Matrix m n α) : vecMulₓ 0 A = 0 := by
   ext
   simp [vec_mul]
 
 @[simp]
-theorem zero_mul_vec [Fintype n] (v : n → α) : mulVecₓ (0 : Matrix m n α) v = 0 := by
+theorem zero_mul_vec [Fintypeₓ n] (v : n → α) : mulVecₓ (0 : Matrix m n α) v = 0 := by
   ext
   simp [mul_vec]
 
 @[simp]
-theorem vec_mul_zero [Fintype m] (v : m → α) : vecMulₓ v (0 : Matrix m n α) = 0 := by
+theorem vec_mul_zero [Fintypeₓ m] (v : m → α) : vecMulₓ v (0 : Matrix m n α) = 0 := by
   ext
   simp [vec_mul]
 
-theorem smul_mul_vec_assoc [Fintype n] [Monoidₓ R] [DistribMulAction R α] [IsScalarTower R α α] (a : R)
+theorem smul_mul_vec_assoc [Fintypeₓ n] [Monoidₓ R] [DistribMulAction R α] [IsScalarTower R α α] (a : R)
     (A : Matrix m n α) (b : n → α) : (a • A).mulVec b = a • A.mulVec b := by
   ext
   apply smul_dot_product
 
-theorem mul_vec_add [Fintype n] (A : Matrix m n α) (x y : n → α) : A.mulVec (x + y) = A.mulVec x + A.mulVec y := by
+theorem mul_vec_add [Fintypeₓ n] (A : Matrix m n α) (x y : n → α) : A.mulVec (x + y) = A.mulVec x + A.mulVec y := by
   ext
   apply dot_product_add
 
-theorem add_mul_vec [Fintype n] (A B : Matrix m n α) (x : n → α) : (A + B).mulVec x = A.mulVec x + B.mulVec x := by
+theorem add_mul_vec [Fintypeₓ n] (A B : Matrix m n α) (x : n → α) : (A + B).mulVec x = A.mulVec x + B.mulVec x := by
   ext
   apply add_dot_product
 
-theorem vec_mul_add [Fintype m] (A B : Matrix m n α) (x : m → α) : vecMulₓ x (A + B) = vecMulₓ x A + vecMulₓ x B := by
+theorem vec_mul_add [Fintypeₓ m] (A B : Matrix m n α) (x : m → α) : vecMulₓ x (A + B) = vecMulₓ x A + vecMulₓ x B := by
   ext
   apply dot_product_add
 
-theorem add_vec_mul [Fintype m] (A : Matrix m n α) (x y : m → α) : vecMulₓ (x + y) A = vecMulₓ x A + vecMulₓ y A := by
+theorem add_vec_mul [Fintypeₓ m] (A : Matrix m n α) (x y : m → α) : vecMulₓ (x + y) A = vecMulₓ x A + vecMulₓ y A := by
   ext
   apply add_dot_product
 
-theorem vec_mul_smul [Fintype n] [Monoidₓ R] [NonUnitalNonAssocSemiringₓ S] [DistribMulAction R S] [IsScalarTower R S S]
-    (M : Matrix n m S) (b : R) (v : n → S) : M.vecMul (b • v) = b • M.vecMul v := by
+theorem vec_mul_smul [Fintypeₓ n] [Monoidₓ R] [NonUnitalNonAssocSemiringₓ S] [DistribMulAction R S]
+    [IsScalarTower R S S] (M : Matrix n m S) (b : R) (v : n → S) : M.vecMul (b • v) = b • M.vecMul v := by
   ext i
-  simp only [vec_mul, dot_product, Finset.smul_sum, Pi.smul_apply, smul_mul_assoc]
+  simp only [vec_mul, dot_product, Finsetₓ.smul_sum, Pi.smul_apply, smul_mul_assoc]
 
-theorem mul_vec_smul [Fintype n] [Monoidₓ R] [NonUnitalNonAssocSemiringₓ S] [DistribMulAction R S] [SmulCommClass R S S]
-    (M : Matrix m n S) (b : R) (v : n → S) : M.mulVec (b • v) = b • M.mulVec v := by
+theorem mul_vec_smul [Fintypeₓ n] [Monoidₓ R] [NonUnitalNonAssocSemiringₓ S] [DistribMulAction R S]
+    [SmulCommClass R S S] (M : Matrix m n S) (b : R) (v : n → S) : M.mulVec (b • v) = b • M.mulVec v := by
   ext i
-  simp only [mul_vec, dot_product, Finset.smul_sum, Pi.smul_apply, mul_smul_comm]
+  simp only [mul_vec, dot_product, Finsetₓ.smul_sum, Pi.smul_apply, mul_smul_comm]
 
 @[simp]
-theorem mul_vec_single [Fintype n] [DecidableEq n] [NonUnitalNonAssocSemiringₓ R] (M : Matrix m n R) (j : n) (x : R) :
+theorem mul_vec_single [Fintypeₓ n] [DecidableEq n] [NonUnitalNonAssocSemiringₓ R] (M : Matrix m n R) (j : n) (x : R) :
     M.mulVec (Pi.single j x) = fun i => M i j * x :=
   funext fun i => dot_product_single _ _ _
 
 @[simp]
-theorem single_vec_mul [Fintype m] [DecidableEq m] [NonUnitalNonAssocSemiringₓ R] (M : Matrix m n R) (i : m) (x : R) :
+theorem single_vec_mul [Fintypeₓ m] [DecidableEq m] [NonUnitalNonAssocSemiringₓ R] (M : Matrix m n R) (i : m) (x : R) :
     vecMulₓ (Pi.single i x) M = fun j => x * M i j :=
   funext fun i => single_dot_product _ _ _
 
 @[simp]
-theorem diagonal_mul_vec_single [Fintype n] [DecidableEq n] [NonUnitalNonAssocSemiringₓ R] (v : n → R) (j : n) (x : R) :
-    (diagonalₓ v).mulVec (Pi.single j x) = Pi.single j (v j * x) := by
+theorem diagonal_mul_vec_single [Fintypeₓ n] [DecidableEq n] [NonUnitalNonAssocSemiringₓ R] (v : n → R) (j : n)
+    (x : R) : (diagonalₓ v).mulVec (Pi.single j x) = Pi.single j (v j * x) := by
   ext i
   rw [mul_vec_diagonal]
   exact Pi.apply_single (fun i x => v i * x) (fun i => mul_zero _) j x i
 
 @[simp]
-theorem single_vec_mul_diagonal [Fintype n] [DecidableEq n] [NonUnitalNonAssocSemiringₓ R] (v : n → R) (j : n) (x : R) :
-    vecMulₓ (Pi.single j x) (diagonalₓ v) = Pi.single j (x * v j) := by
+theorem single_vec_mul_diagonal [Fintypeₓ n] [DecidableEq n] [NonUnitalNonAssocSemiringₓ R] (v : n → R) (j : n)
+    (x : R) : vecMulₓ (Pi.single j x) (diagonalₓ v) = Pi.single j (x * v j) := by
   ext i
   rw [vec_mul_diagonal]
   exact Pi.apply_single (fun i x => x * v i) (fun i => zero_mul _) j x i
@@ -1414,34 +1374,35 @@ section NonUnitalSemiringₓ
 variable [NonUnitalSemiringₓ α]
 
 @[simp]
-theorem vec_mul_vec_mul [Fintype n] [Fintype m] (v : m → α) (M : Matrix m n α) (N : Matrix n o α) :
+theorem vec_mul_vec_mul [Fintypeₓ n] [Fintypeₓ m] (v : m → α) (M : Matrix m n α) (N : Matrix n o α) :
     vecMulₓ (vecMulₓ v M) N = vecMulₓ v (M ⬝ N) := by
   ext
   apply dot_product_assoc
 
 @[simp]
-theorem mul_vec_mul_vec [Fintype n] [Fintype o] (v : o → α) (M : Matrix m n α) (N : Matrix n o α) :
+theorem mul_vec_mul_vec [Fintypeₓ n] [Fintypeₓ o] (v : o → α) (M : Matrix m n α) (N : Matrix n o α) :
     mulVecₓ M (mulVecₓ N v) = mulVecₓ (M ⬝ N) v := by
   ext
   symm
   apply dot_product_assoc
 
-theorem star_mul_vec [Fintype n] [StarRing α] (M : Matrix m n α) (v : n → α) :
+theorem star_mul_vec [Fintypeₓ n] [StarRing α] (M : Matrix m n α) (v : n → α) :
     star (M.mulVec v) = vecMulₓ (star v) Mᴴ :=
   funext fun i => (star_dot_product_star _ _).symm
 
-theorem star_vec_mul [Fintype m] [StarRing α] (M : Matrix m n α) (v : m → α) : star (M.vecMul v) = Mᴴ.mulVec (star v) :=
+theorem star_vec_mul [Fintypeₓ m] [StarRing α] (M : Matrix m n α) (v : m → α) :
+    star (M.vecMul v) = Mᴴ.mulVec (star v) :=
   funext fun i => (star_dot_product_star _ _).symm
 
-theorem mul_vec_conj_transpose [Fintype m] [StarRing α] (A : Matrix m n α) (x : m → α) :
+theorem mul_vec_conj_transpose [Fintypeₓ m] [StarRing α] (A : Matrix m n α) (x : m → α) :
     mulVecₓ Aᴴ x = star (vecMulₓ (star x) A) :=
   funext fun i => star_dot_product _ _
 
-theorem vec_mul_conj_transpose [Fintype n] [StarRing α] (A : Matrix m n α) (x : n → α) :
+theorem vec_mul_conj_transpose [Fintypeₓ n] [StarRing α] (A : Matrix m n α) (x : n → α) :
     vecMulₓ x Aᴴ = star (mulVecₓ A (star x)) :=
   funext fun i => dot_product_star _ _
 
-theorem mul_mul_apply [Fintype n] (A B C : Matrix n n α) (i j : n) : (A ⬝ B ⬝ C) i j = A i ⬝ᵥ B.mulVec (Cᵀ j) := by
+theorem mul_mul_apply [Fintypeₓ n] (A B C : Matrix n n α) (i j : n) : (A ⬝ B ⬝ C) i j = A i ⬝ᵥ B.mulVec (Cᵀ j) := by
   rw [Matrix.mul_assoc]
   simpa only [mul_apply, dot_product, mul_vec]
 
@@ -1449,7 +1410,7 @@ end NonUnitalSemiringₓ
 
 section NonAssocSemiringₓ
 
-variable [Fintype m] [DecidableEq m] [NonAssocSemiringₓ α]
+variable [Fintypeₓ m] [DecidableEq m] [NonAssocSemiringₓ α]
 
 @[simp]
 theorem one_mul_vec (v : m → α) : mulVecₓ 1 v = v := by
@@ -1467,26 +1428,26 @@ section NonUnitalNonAssocRing
 
 variable [NonUnitalNonAssocRing α]
 
-theorem neg_vec_mul [Fintype m] (v : m → α) (A : Matrix m n α) : vecMulₓ (-v) A = -vecMulₓ v A := by
+theorem neg_vec_mul [Fintypeₓ m] (v : m → α) (A : Matrix m n α) : vecMulₓ (-v) A = -vecMulₓ v A := by
   ext
   apply neg_dot_product
 
-theorem vec_mul_neg [Fintype m] (v : m → α) (A : Matrix m n α) : vecMulₓ v (-A) = -vecMulₓ v A := by
+theorem vec_mul_neg [Fintypeₓ m] (v : m → α) (A : Matrix m n α) : vecMulₓ v (-A) = -vecMulₓ v A := by
   ext
   apply dot_product_neg
 
-theorem neg_mul_vec [Fintype n] (v : n → α) (A : Matrix m n α) : mulVecₓ (-A) v = -mulVecₓ A v := by
+theorem neg_mul_vec [Fintypeₓ n] (v : n → α) (A : Matrix m n α) : mulVecₓ (-A) v = -mulVecₓ A v := by
   ext
   apply neg_dot_product
 
-theorem mul_vec_neg [Fintype n] (v : n → α) (A : Matrix m n α) : mulVecₓ A (-v) = -mulVecₓ A v := by
+theorem mul_vec_neg [Fintypeₓ n] (v : n → α) (A : Matrix m n α) : mulVecₓ A (-v) = -mulVecₓ A v := by
   ext
   apply dot_product_neg
 
-theorem sub_mul_vec [Fintype n] (A B : Matrix m n α) (x : n → α) : mulVecₓ (A - B) x = mulVecₓ A x - mulVecₓ B x := by
+theorem sub_mul_vec [Fintypeₓ n] (A B : Matrix m n α) (x : n → α) : mulVecₓ (A - B) x = mulVecₓ A x - mulVecₓ B x := by
   simp [sub_eq_add_neg, add_mul_vec, neg_mul_vec]
 
-theorem vec_mul_sub [Fintype m] (A B : Matrix m n α) (x : m → α) : vecMulₓ x (A - B) = vecMulₓ x A - vecMulₓ x B := by
+theorem vec_mul_sub [Fintypeₓ m] (A B : Matrix m n α) (x : m → α) : vecMulₓ x (A - B) = vecMulₓ x A - vecMulₓ x B := by
   simp [sub_eq_add_neg, vec_mul_add, vec_mul_neg]
 
 end NonUnitalNonAssocRing
@@ -1495,21 +1456,19 @@ section NonUnitalCommSemiring
 
 variable [NonUnitalCommSemiring α]
 
-theorem mul_vec_transpose [Fintype m] (A : Matrix m n α) (x : m → α) : mulVecₓ Aᵀ x = vecMulₓ x A := by
+theorem mul_vec_transpose [Fintypeₓ m] (A : Matrix m n α) (x : m → α) : mulVecₓ Aᵀ x = vecMulₓ x A := by
   ext
   apply dot_product_comm
 
-theorem vec_mul_transpose [Fintype n] (A : Matrix m n α) (x : n → α) : vecMulₓ x Aᵀ = mulVecₓ A x := by
+theorem vec_mul_transpose [Fintypeₓ n] (A : Matrix m n α) (x : n → α) : vecMulₓ x Aᵀ = mulVecₓ A x := by
   ext
   apply dot_product_comm
 
-theorem mul_vec_vec_mul [Fintype n] [Fintype o] (A : Matrix m n α) (B : Matrix o n α) (x : o → α) :
-    mulVecₓ A (vecMulₓ x B) = mulVecₓ (A ⬝ Bᵀ) x := by
-  rw [← mul_vec_mul_vec, mul_vec_transpose]
+theorem mul_vec_vec_mul [Fintypeₓ n] [Fintypeₓ o] (A : Matrix m n α) (B : Matrix o n α) (x : o → α) :
+    mulVecₓ A (vecMulₓ x B) = mulVecₓ (A ⬝ Bᵀ) x := by rw [← mul_vec_mul_vec, mul_vec_transpose]
 
-theorem vec_mul_mul_vec [Fintype m] [Fintype n] (A : Matrix m n α) (B : Matrix m o α) (x : n → α) :
-    vecMulₓ (mulVecₓ A x) B = vecMulₓ x (Aᵀ ⬝ B) := by
-  rw [← vec_mul_vec_mul, vec_mul_transpose]
+theorem vec_mul_mul_vec [Fintypeₓ m] [Fintypeₓ n] (A : Matrix m n α) (B : Matrix m o α) (x : n → α) :
+    vecMulₓ (mulVecₓ A x) B = vecMulₓ x (Aᵀ ⬝ B) := by rw [← vec_mul_vec_mul, vec_mul_transpose]
 
 end NonUnitalCommSemiring
 
@@ -1517,7 +1476,7 @@ section CommSemiringₓ
 
 variable [CommSemiringₓ α]
 
-theorem mul_vec_smul_assoc [Fintype n] (A : Matrix m n α) (b : n → α) (a : α) : A.mulVec (a • b) = a • A.mulVec b := by
+theorem mul_vec_smul_assoc [Fintypeₓ n] (A : Matrix m n α) (b : n → α) (a : α) : A.mulVec (a • b) = a • A.mulVec b := by
   ext
   apply dot_product_smul
 
@@ -1536,18 +1495,16 @@ theorem transpose_apply (M : Matrix m n α) (i j) : M.transpose j i = M i j :=
   rfl
 
 @[simp]
-theorem transpose_transpose (M : Matrix m n α) : Mᵀᵀ = M := by
-  ext <;> rfl
+theorem transpose_transpose (M : Matrix m n α) : Mᵀᵀ = M := by ext <;> rfl
 
 @[simp]
-theorem transpose_zero [Zero α] : (0 : Matrix m n α)ᵀ = 0 := by
-  ext i j <;> rfl
+theorem transpose_zero [Zero α] : (0 : Matrix m n α)ᵀ = 0 := by ext i j <;> rfl
 
 @[simp]
 theorem transpose_one [DecidableEq n] [Zero α] [One α] : (1 : Matrix n n α)ᵀ = 1 := by
   ext i j
   unfold One.one transpose
-  by_cases' i = j
+  by_cases i = j
   · simp only [h, diagonal_apply_eq]
     
   · simp only [diagonal_apply_ne _ h, diagonal_apply_ne' _ h]
@@ -1564,7 +1521,7 @@ theorem transpose_sub [Sub α] (M : Matrix m n α) (N : Matrix m n α) : (M - N)
   simp
 
 @[simp]
-theorem transpose_mul [AddCommMonoidₓ α] [CommSemigroupₓ α] [Fintype n] (M : Matrix m n α) (N : Matrix n l α) :
+theorem transpose_mul [AddCommMonoidₓ α] [CommSemigroupₓ α] [Fintypeₓ n] (M : Matrix m n α) (N : Matrix n l α) :
     (M ⬝ N)ᵀ = Nᵀ ⬝ Mᵀ := by
   ext i j
   apply dot_product_comm
@@ -1575,8 +1532,7 @@ theorem transpose_smul {R : Type _} [HasSmul R α] (c : R) (M : Matrix m n α) :
   rfl
 
 @[simp]
-theorem transpose_neg [Neg α] (M : Matrix m n α) : (-M)ᵀ = -Mᵀ := by
-  ext i j <;> rfl
+theorem transpose_neg [Neg α] (M : Matrix m n α) : (-M)ᵀ = -Mᵀ := by ext i j <;> rfl
 
 theorem transpose_map {f : α → β} {M : Matrix m n α} : Mᵀ.map f = (M.map f)ᵀ := by
   ext
@@ -1605,7 +1561,7 @@ theorem transpose_list_sum [AddMonoidₓ α] (l : List (Matrix m n α)) : l.Sum�
 theorem transpose_multiset_sum [AddCommMonoidₓ α] (s : Multiset (Matrix m n α)) : s.Sumᵀ = (s.map transposeₓ).Sum :=
   (transposeAddEquiv m n α).toAddMonoidHom.map_multiset_sum s
 
-theorem transpose_sum [AddCommMonoidₓ α] {ι : Type _} (s : Finset ι) (M : ι → Matrix m n α) :
+theorem transpose_sum [AddCommMonoidₓ α] {ι : Type _} (s : Finsetₓ ι) (M : ι → Matrix m n α) :
     (∑ i in s, M i)ᵀ = ∑ i in s, (M i)ᵀ :=
   (transposeAddEquiv m n α).toAddMonoidHom.map_sum _ s
 
@@ -1627,7 +1583,7 @@ variable (m α)
 
 /-- `matrix.transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
-def transposeRingEquiv [AddCommMonoidₓ α] [CommSemigroupₓ α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
+def transposeRingEquiv [AddCommMonoidₓ α] [CommSemigroupₓ α] [Fintypeₓ m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
   { (transposeAddEquiv m m α).trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᵀ,
     invFun := fun M => M.unopᵀ,
     map_mul' := fun M N => (congr_arg MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
@@ -1635,10 +1591,10 @@ def transposeRingEquiv [AddCommMonoidₓ α] [CommSemigroupₓ α] [Fintype m] :
 variable {m α}
 
 @[simp]
-theorem transpose_pow [CommSemiringₓ α] [Fintype m] [DecidableEq m] (M : Matrix m m α) (k : ℕ) : (M ^ k)ᵀ = Mᵀ ^ k :=
+theorem transpose_pow [CommSemiringₓ α] [Fintypeₓ m] [DecidableEq m] (M : Matrix m m α) (k : ℕ) : (M ^ k)ᵀ = Mᵀ ^ k :=
   MulOpposite.op_injective <| map_pow (transposeRingEquiv m α) M k
 
-theorem transpose_list_prod [CommSemiringₓ α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
+theorem transpose_list_prod [CommSemiringₓ α] [Fintypeₓ m] [DecidableEq m] (l : List (Matrix m m α)) :
     l.Prodᵀ = (l.map transposeₓ).reverse.Prod :=
   (transposeRingEquiv m α).unop_map_list_prod l
 
@@ -1646,12 +1602,11 @@ variable (R m α)
 
 /-- `matrix.transpose` as an `alg_equiv` to the opposite ring -/
 @[simps]
-def transposeAlgEquiv [CommSemiringₓ R] [CommSemiringₓ α] [Fintype m] [DecidableEq m] [Algebra R α] :
+def transposeAlgEquiv [CommSemiringₓ R] [CommSemiringₓ α] [Fintypeₓ m] [DecidableEq m] [Algebra R α] :
     Matrix m m α ≃ₐ[R] (Matrix m m α)ᵐᵒᵖ :=
   { (transposeAddEquiv m m α).trans MulOpposite.opAddEquiv, transposeRingEquiv m α with
     toFun := fun M => MulOpposite.op Mᵀ,
-    commutes' := fun r => by
-      simp only [algebra_map_eq_diagonal, diagonal_transpose, MulOpposite.algebra_map_apply] }
+    commutes' := fun r => by simp only [algebra_map_eq_diagonal, diagonal_transpose, MulOpposite.algebra_map_apply] }
 
 variable {R m α}
 
@@ -1671,13 +1626,11 @@ theorem conj_transpose_apply [HasStar α] (M : Matrix m n α) (i j) : M.conjTran
 
 @[simp]
 theorem conj_transpose_conj_transpose [HasInvolutiveStar α] (M : Matrix m n α) : Mᴴᴴ = M :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 @[simp]
 theorem conj_transpose_zero [AddMonoidₓ α] [StarAddMonoid α] : (0 : Matrix m n α)ᴴ = 0 :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 @[simp]
 theorem conj_transpose_one [DecidableEq n] [Semiringₓ α] [StarRing α] : (1 : Matrix n n α)ᴴ = 1 := by
@@ -1685,13 +1638,11 @@ theorem conj_transpose_one [DecidableEq n] [Semiringₓ α] [StarRing α] : (1 :
 
 @[simp]
 theorem conj_transpose_add [AddMonoidₓ α] [StarAddMonoid α] (M N : Matrix m n α) : (M + N)ᴴ = Mᴴ + Nᴴ :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 @[simp]
 theorem conj_transpose_sub [AddGroupₓ α] [StarAddMonoid α] (M N : Matrix m n α) : (M - N)ᴴ = Mᴴ - Nᴴ :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 /-- Note that `star_module` is quite a strong requirement; as such we also provide the following
 variants which this lemma would not apply to:
@@ -1714,8 +1665,7 @@ theorem conj_transpose_smul [HasStar R] [HasStar α] [HasSmul R α] [StarModule 
 theorem conj_transpose_smul_non_comm [HasStar R] [HasStar α] [HasSmul R α] [HasSmul Rᵐᵒᵖ α] (c : R) (M : Matrix m n α)
     (h : ∀ (r : R) (a : α), star (r • a) = MulOpposite.op (star r) • star a) :
     (c • M)ᴴ = MulOpposite.op (star c) • Mᴴ :=
-  Matrix.ext <| by
-    simp [h]
+  Matrix.ext <| by simp [h]
 
 @[simp]
 theorem conj_transpose_smul_self [Semigroupₓ α] [StarSemigroup α] (c : α) (M : Matrix m n α) :
@@ -1724,60 +1674,50 @@ theorem conj_transpose_smul_self [Semigroupₓ α] [StarSemigroup α] (c : α) (
 
 @[simp]
 theorem conj_transpose_nsmul [AddMonoidₓ α] [StarAddMonoid α] (c : ℕ) (M : Matrix m n α) : (c • M)ᴴ = c • Mᴴ :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 @[simp]
 theorem conj_transpose_zsmul [AddGroupₓ α] [StarAddMonoid α] (c : ℤ) (M : Matrix m n α) : (c • M)ᴴ = c • Mᴴ :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 @[simp]
 theorem conj_transpose_nat_cast_smul [Semiringₓ R] [AddCommMonoidₓ α] [StarAddMonoid α] [Module R α] (c : ℕ)
     (M : Matrix m n α) : ((c : R) • M)ᴴ = (c : R) • Mᴴ :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 @[simp]
 theorem conj_transpose_int_cast_smul [Ringₓ R] [AddCommGroupₓ α] [StarAddMonoid α] [Module R α] (c : ℤ)
     (M : Matrix m n α) : ((c : R) • M)ᴴ = (c : R) • Mᴴ :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 @[simp]
 theorem conj_transpose_inv_nat_cast_smul [DivisionRing R] [AddCommGroupₓ α] [StarAddMonoid α] [Module R α] (c : ℕ)
     (M : Matrix m n α) : ((c : R)⁻¹ • M)ᴴ = (c : R)⁻¹ • Mᴴ :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 @[simp]
 theorem conj_transpose_inv_int_cast_smul [DivisionRing R] [AddCommGroupₓ α] [StarAddMonoid α] [Module R α] (c : ℤ)
     (M : Matrix m n α) : ((c : R)⁻¹ • M)ᴴ = (c : R)⁻¹ • Mᴴ :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 @[simp]
 theorem conj_transpose_rat_cast_smul [DivisionRing R] [AddCommGroupₓ α] [StarAddMonoid α] [Module R α] (c : ℚ)
     (M : Matrix m n α) : ((c : R) • M)ᴴ = (c : R) • Mᴴ :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 @[simp]
 theorem conj_transpose_rat_smul [AddCommGroupₓ α] [StarAddMonoid α] [Module ℚ α] (c : ℚ) (M : Matrix m n α) :
     (c • M)ᴴ = c • Mᴴ :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 @[simp]
-theorem conj_transpose_mul [Fintype n] [NonUnitalSemiringₓ α] [StarRing α] (M : Matrix m n α) (N : Matrix n l α) :
+theorem conj_transpose_mul [Fintypeₓ n] [NonUnitalSemiringₓ α] [StarRing α] (M : Matrix m n α) (N : Matrix n l α) :
     (M ⬝ N)ᴴ = Nᴴ ⬝ Mᴴ :=
-  Matrix.ext <| by
-    simp [mul_apply]
+  Matrix.ext <| by simp [mul_apply]
 
 @[simp]
 theorem conj_transpose_neg [AddGroupₓ α] [StarAddMonoid α] (M : Matrix m n α) : (-M)ᴴ = -Mᴴ :=
-  Matrix.ext <| by
-    simp
+  Matrix.ext <| by simp
 
 theorem conj_transpose_map [HasStar α] [HasStar β] {A : Matrix m n α} (f : α → β) (hf : Function.Semiconj f star star) :
     Aᴴ.map f = (A.map f)ᴴ :=
@@ -1809,7 +1749,7 @@ theorem conj_transpose_multiset_sum [AddCommMonoidₓ α] [StarAddMonoid α] (s 
     s.Sumᴴ = (s.map conjTranspose).Sum :=
   (conjTransposeAddEquiv m n α).toAddMonoidHom.map_multiset_sum s
 
-theorem conj_transpose_sum [AddCommMonoidₓ α] [StarAddMonoid α] {ι : Type _} (s : Finset ι) (M : ι → Matrix m n α) :
+theorem conj_transpose_sum [AddCommMonoidₓ α] [StarAddMonoid α] {ι : Type _} (s : Finsetₓ ι) (M : ι → Matrix m n α) :
     (∑ i in s, M i)ᴴ = ∑ i in s, (M i)ᴴ :=
   (conjTransposeAddEquiv m n α).toAddMonoidHom.map_sum _ s
 
@@ -1832,7 +1772,7 @@ variable (m α)
 
 /-- `matrix.conj_transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
-def conjTransposeRingEquiv [Semiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
+def conjTransposeRingEquiv [Semiringₓ α] [StarRing α] [Fintypeₓ m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
   { (conjTransposeAddEquiv m m α).trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᴴ,
     invFun := fun M => M.unopᴴ,
     map_mul' := fun M N => (congr_arg MulOpposite.op (conj_transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
@@ -1840,11 +1780,11 @@ def conjTransposeRingEquiv [Semiringₓ α] [StarRing α] [Fintype m] : Matrix m
 variable {m α}
 
 @[simp]
-theorem conj_transpose_pow [Semiringₓ α] [StarRing α] [Fintype m] [DecidableEq m] (M : Matrix m m α) (k : ℕ) :
+theorem conj_transpose_pow [Semiringₓ α] [StarRing α] [Fintypeₓ m] [DecidableEq m] (M : Matrix m m α) (k : ℕ) :
     (M ^ k)ᴴ = Mᴴ ^ k :=
   MulOpposite.op_injective <| map_pow (conjTransposeRingEquiv m α) M k
 
-theorem conj_transpose_list_prod [Semiringₓ α] [StarRing α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
+theorem conj_transpose_list_prod [Semiringₓ α] [StarRing α] [Fintypeₓ m] [DecidableEq m] (l : List (Matrix m m α)) :
     l.Prodᴴ = (l.map conjTranspose).reverse.Prod :=
   (conjTransposeRingEquiv m α).unop_map_list_prod l
 
@@ -1869,12 +1809,12 @@ instance [HasInvolutiveStar α] : HasInvolutiveStar (Matrix n n α) where star_i
 instance [AddMonoidₓ α] [StarAddMonoid α] : StarAddMonoid (Matrix n n α) where star_add := conj_transpose_add
 
 /-- When `α` is a `*`-(semi)ring, `matrix.has_star` is also a `*`-(semi)ring. -/
-instance [Fintype n] [Semiringₓ α] [StarRing α] : StarRing (Matrix n n α) where
+instance [Fintypeₓ n] [Semiringₓ α] [StarRing α] : StarRing (Matrix n n α) where
   star_add := conj_transpose_add
   star_mul := conj_transpose_mul
 
 /-- A version of `star_mul` for `⬝` instead of `*`. -/
-theorem star_mul [Fintype n] [NonUnitalSemiringₓ α] [StarRing α] (M N : Matrix n n α) :
+theorem star_mul [Fintypeₓ n] [NonUnitalSemiringₓ α] [StarRing α] (M N : Matrix n n α) :
     star (M ⬝ N) = star N ⬝ star M :=
   conj_transpose_mul _ _
 
@@ -1940,7 +1880,7 @@ theorem submatrix_diagonal [Zero α] [DecidableEq m] [DecidableEq l] (d : m → 
     (he : Function.Injective e) : (diagonalₓ d).submatrix e e = diagonalₓ (d ∘ e) :=
   ext fun i j => by
     rw [submatrix_apply]
-    by_cases' h : i = j
+    by_cases h:i = j
     · rw [h, diagonal_apply_eq, diagonal_apply_eq]
       
     · rw [diagonal_apply_ne _ h, diagonal_apply_ne _ (he.ne h)]
@@ -1950,7 +1890,7 @@ theorem submatrix_one [Zero α] [One α] [DecidableEq m] [DecidableEq l] (e : l 
     (1 : Matrix m m α).submatrix e e = 1 :=
   submatrix_diagonal _ e he
 
-theorem submatrix_mul [Fintype n] [Fintype o] [Mul α] [AddCommMonoidₓ α] {p q : Type _} (M : Matrix m n α)
+theorem submatrix_mul [Fintypeₓ n] [Fintypeₓ o] [Mul α] [AddCommMonoidₓ α] {p q : Type _} (M : Matrix m n α)
     (N : Matrix n p α) (e₁ : l → m) (e₂ : o → n) (e₃ : q → p) (he₂ : Function.Bijective e₂) :
     (M ⬝ N).submatrix e₁ e₃ = M.submatrix e₁ e₂ ⬝ N.submatrix e₂ e₃ :=
   ext fun _ _ => (he₂.sum_comp _).symm
@@ -1983,12 +1923,12 @@ theorem submatrix_one_equiv [Zero α] [One α] [DecidableEq m] [DecidableEq l] (
   submatrix_one e e.Injective
 
 @[simp]
-theorem submatrix_mul_equiv [Fintype n] [Fintype o] [AddCommMonoidₓ α] [Mul α] {p q : Type _} (M : Matrix m n α)
+theorem submatrix_mul_equiv [Fintypeₓ n] [Fintypeₓ o] [AddCommMonoidₓ α] [Mul α] {p q : Type _} (M : Matrix m n α)
     (N : Matrix n p α) (e₁ : l → m) (e₂ : o ≃ n) (e₃ : q → p) :
     M.submatrix e₁ e₂ ⬝ N.submatrix e₂ e₃ = (M ⬝ N).submatrix e₁ e₃ :=
   (submatrix_mul M N e₁ e₂ e₃ e₂.Bijective).symm
 
-theorem mul_submatrix_one [Fintype n] [Fintype o] [NonAssocSemiringₓ α] [DecidableEq o] (e₁ : n ≃ o) (e₂ : l → o)
+theorem mul_submatrix_one [Fintypeₓ n] [Fintypeₓ o] [NonAssocSemiringₓ α] [DecidableEq o] (e₁ : n ≃ o) (e₂ : l → o)
     (M : Matrix m n α) : M ⬝ (1 : Matrix o o α).submatrix e₁ e₂ = submatrix M id (e₁.symm ∘ e₂) := by
   let A := M.submatrix id e₁.symm
   have : M = A.submatrix id e₁ := by
@@ -1996,7 +1936,7 @@ theorem mul_submatrix_one [Fintype n] [Fintype o] [NonAssocSemiringₓ α] [Deci
   rw [this, submatrix_mul_equiv]
   simp only [Matrix.mul_one, submatrix_submatrix, Function.comp.right_id, submatrix_id_id, Equivₓ.symm_comp_self]
 
-theorem one_submatrix_mul [Fintype m] [Fintype o] [NonAssocSemiringₓ α] [DecidableEq o] (e₁ : l → o) (e₂ : m ≃ o)
+theorem one_submatrix_mul [Fintypeₓ m] [Fintypeₓ o] [NonAssocSemiringₓ α] [DecidableEq o] (e₁ : l → o) (e₂ : m ≃ o)
     (M : Matrix m n α) : ((1 : Matrix o o α).submatrix e₁ e₂).mul M = submatrix M (e₂.symm ∘ e₁) id := by
   let A := M.submatrix e₂.symm id
   have : M = A.submatrix e₂ id := by
@@ -2009,10 +1949,8 @@ equivalence. -/
 def reindex (eₘ : m ≃ l) (eₙ : n ≃ o) : Matrix m n α ≃ Matrix l o α where
   toFun := fun M => M.submatrix eₘ.symm eₙ.symm
   invFun := fun M => M.submatrix eₘ eₙ
-  left_inv := fun M => by
-    simp
-  right_inv := fun M => by
-    simp
+  left_inv := fun M => by simp
+  right_inv := fun M => by simp
 
 @[simp]
 theorem reindex_apply (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) : reindex eₘ eₙ M = M.submatrix eₘ.symm eₙ.symm :=
@@ -2039,9 +1977,8 @@ theorem conj_transpose_reindex [HasStar α] (eₘ : m ≃ l) (eₙ : n ≃ o) (M
   rfl
 
 @[simp]
-theorem submatrix_mul_transpose_submatrix [Fintype m] [Fintype n] [AddCommMonoidₓ α] [Mul α] (e : m ≃ n)
-    (M : Matrix m n α) : M.submatrix id e ⬝ Mᵀ.submatrix e id = M ⬝ Mᵀ := by
-  rw [submatrix_mul_equiv, submatrix_id_id]
+theorem submatrix_mul_transpose_submatrix [Fintypeₓ m] [Fintypeₓ n] [AddCommMonoidₓ α] [Mul α] (e : m ≃ n)
+    (M : Matrix m n α) : M.submatrix id e ⬝ Mᵀ.submatrix e id = M ⬝ Mᵀ := by rw [submatrix_mul_equiv, submatrix_id_id]
 
 /-- The left `n × l` part of a `n × (l+r)` matrix. -/
 @[reducible]
@@ -2142,28 +2079,29 @@ theorem conj_transpose_row [HasStar α] (v : m → α) : (rowₓ v)ᴴ = colₓ 
   ext
   rfl
 
-theorem row_vec_mul [Fintype m] [NonUnitalNonAssocSemiringₓ α] (M : Matrix m n α) (v : m → α) :
+theorem row_vec_mul [Fintypeₓ m] [NonUnitalNonAssocSemiringₓ α] (M : Matrix m n α) (v : m → α) :
     Matrix.rowₓ (Matrix.vecMulₓ v M) = Matrix.rowₓ v ⬝ M := by
   ext
   rfl
 
-theorem col_vec_mul [Fintype m] [NonUnitalNonAssocSemiringₓ α] (M : Matrix m n α) (v : m → α) :
+theorem col_vec_mul [Fintypeₓ m] [NonUnitalNonAssocSemiringₓ α] (M : Matrix m n α) (v : m → α) :
     Matrix.colₓ (Matrix.vecMulₓ v M) = (Matrix.rowₓ v ⬝ M)ᵀ := by
   ext
   rfl
 
-theorem col_mul_vec [Fintype n] [NonUnitalNonAssocSemiringₓ α] (M : Matrix m n α) (v : n → α) :
+theorem col_mul_vec [Fintypeₓ n] [NonUnitalNonAssocSemiringₓ α] (M : Matrix m n α) (v : n → α) :
     Matrix.colₓ (Matrix.mulVecₓ M v) = M ⬝ Matrix.colₓ v := by
   ext
   rfl
 
-theorem row_mul_vec [Fintype n] [NonUnitalNonAssocSemiringₓ α] (M : Matrix m n α) (v : n → α) :
+theorem row_mul_vec [Fintypeₓ n] [NonUnitalNonAssocSemiringₓ α] (M : Matrix m n α) (v : n → α) :
     Matrix.rowₓ (Matrix.mulVecₓ M v) = (M ⬝ Matrix.colₓ v)ᵀ := by
   ext
   rfl
 
 @[simp]
-theorem row_mul_col_apply [Fintype m] [Mul α] [AddCommMonoidₓ α] (v w : m → α) (i j) : (rowₓ v ⬝ colₓ w) i j = v ⬝ᵥ w :=
+theorem row_mul_col_apply [Fintypeₓ m] [Mul α] [AddCommMonoidₓ α] (v w : m → α) (i j) :
+    (rowₓ v ⬝ colₓ w) i j = v ⬝ᵥ w :=
   rfl
 
 end RowCol
@@ -2197,14 +2135,14 @@ theorem update_column_ne [DecidableEq n] {j' : n} (j_ne : j' ≠ j) : updateColu
   Function.update_noteq j_ne (c i) (M i)
 
 theorem update_row_apply [DecidableEq m] {i' : m} : updateRow M i b i' j = if i' = i then b j else M i' j := by
-  by_cases' i' = i
+  by_cases i' = i
   · rw [h, update_row_self, if_pos rfl]
     
   · rwa [update_row_ne h, if_neg h]
     
 
 theorem update_column_apply [DecidableEq n] {j' : n} : updateColumn M j c i j' = if j' = j then c i else M i j' := by
-  by_cases' j' = j
+  by_cases j' = j
   · rw [h, update_column_self, if_pos rfl]
     
   · rwa [update_column_ne h, if_neg h]
@@ -2288,15 +2226,13 @@ end Matrix
 
 namespace RingHom
 
-variable [Fintype n] [NonAssocSemiringₓ α] [NonAssocSemiringₓ β]
+variable [Fintypeₓ n] [NonAssocSemiringₓ α] [NonAssocSemiringₓ β]
 
 theorem map_matrix_mul (M : Matrix m n α) (N : Matrix n o α) (i : m) (j : o) (f : α →+* β) :
-    f (Matrix.mul M N i j) = Matrix.mul (M.map f) (N.map f) i j := by
-  simp [Matrix.mul_apply, RingHom.map_sum]
+    f (Matrix.mul M N i j) = Matrix.mul (M.map f) (N.map f) i j := by simp [Matrix.mul_apply, RingHom.map_sum]
 
 theorem map_dot_product [NonAssocSemiringₓ R] [NonAssocSemiringₓ S] (f : R →+* S) (v w : n → R) :
-    f (v ⬝ᵥ w) = f ∘ v ⬝ᵥ f ∘ w := by
-  simp only [Matrix.dotProduct, f.map_sum, f.map_mul]
+    f (v ⬝ᵥ w) = f ∘ v ⬝ᵥ f ∘ w := by simp only [Matrix.dotProduct, f.map_sum, f.map_mul]
 
 theorem map_vec_mul [NonAssocSemiringₓ R] [NonAssocSemiringₓ S] (f : R →+* S) (M : Matrix n m R) (v : n → R) (i : m) :
     f (M.vecMul v i) = (M.map f).vecMul (f ∘ v) i := by

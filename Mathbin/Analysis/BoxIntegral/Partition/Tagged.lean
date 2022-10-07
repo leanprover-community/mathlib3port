@@ -94,7 +94,7 @@ def filter (p : Box ι → Prop) : TaggedPrepartition I :=
 
 @[simp]
 theorem mem_filter {p : Box ι → Prop} : J ∈ π.filter p ↔ J ∈ π ∧ p J :=
-  Finset.mem_filter
+  Finsetₓ.mem_filter
 
 @[simp]
 theorem Union_filter_not (π : TaggedPrepartition I) (p : Box ι → Prop) :
@@ -200,46 +200,46 @@ theorem is_Henstock_bUnion_tagged {π : Prepartition I} {πi : ∀ J, TaggedPrep
   π.forall_bUnion_tagged (fun x J => x ∈ J.Icc) πi
 
 /-- In a Henstock prepartition, there are at most `2 ^ fintype.card ι` boxes with a given tag. -/
-theorem IsHenstock.card_filter_tag_eq_le [Fintype ι] (h : π.IsHenstock) (x : ι → ℝ) :
-    (π.boxes.filter fun J => π.Tag J = x).card ≤ 2 ^ Fintype.card ι :=
+theorem IsHenstock.card_filter_tag_eq_le [Fintypeₓ ι] (h : π.IsHenstock) (x : ι → ℝ) :
+    (π.boxes.filter fun J => π.Tag J = x).card ≤ 2 ^ Fintypeₓ.card ι :=
   calc
     (π.boxes.filter fun J => π.Tag J = x).card ≤ (π.boxes.filter fun J : Box ι => x ∈ J.Icc).card := by
-      refine' Finset.card_le_of_subset fun J hJ => _
-      rw [Finset.mem_filter] at hJ⊢
+      refine' Finsetₓ.card_le_of_subset fun J hJ => _
+      rw [Finsetₓ.mem_filter] at hJ⊢
       rcases hJ with ⟨hJ, rfl⟩
       exact ⟨hJ, h J hJ⟩
-    _ ≤ 2 ^ Fintype.card ι := π.toPrepartition.card_filter_mem_Icc_le x
+    _ ≤ 2 ^ Fintypeₓ.card ι := π.toPrepartition.card_filter_mem_Icc_le x
     
 
 /-- A tagged partition `π` is subordinate to `r : (ι → ℝ) → ℝ` if each box `J ∈ π` is included in
 the closed ball with center `π.tag J` and radius `r (π.tag J)`. -/
-def IsSubordinate [Fintype ι] (π : TaggedPrepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) : Prop :=
+def IsSubordinate [Fintypeₓ ι] (π : TaggedPrepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) : Prop :=
   ∀ J ∈ π, (J : _).Icc ⊆ ClosedBall (π.Tag J) (r <| π.Tag J)
 
 variable {r r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)}
 
 @[simp]
-theorem is_subordinate_bUnion_tagged [Fintype ι] {π : Prepartition I} {πi : ∀ J, TaggedPrepartition J} :
+theorem is_subordinate_bUnion_tagged [Fintypeₓ ι] {π : Prepartition I} {πi : ∀ J, TaggedPrepartition J} :
     IsSubordinate (π.bUnionTagged πi) r ↔ ∀ J ∈ π, (πi J).IsSubordinate r :=
   π.forall_bUnion_tagged (fun x J => J.Icc ⊆ ClosedBall x (r x)) πi
 
-theorem IsSubordinate.bUnion_prepartition [Fintype ι] (h : IsSubordinate π r) (πi : ∀ J, Prepartition J) :
+theorem IsSubordinate.bUnion_prepartition [Fintypeₓ ι] (h : IsSubordinate π r) (πi : ∀ J, Prepartition J) :
     IsSubordinate (π.bUnionPrepartition πi) r := fun J hJ =>
   Subset.trans (Box.le_iff_Icc.1 <| π.toPrepartition.le_bUnion_index hJ) <| h _ <| π.toPrepartition.bUnion_index_mem hJ
 
-theorem IsSubordinate.inf_prepartition [Fintype ι] (h : IsSubordinate π r) (π' : Prepartition I) :
+theorem IsSubordinate.inf_prepartition [Fintypeₓ ι] (h : IsSubordinate π r) (π' : Prepartition I) :
     IsSubordinate (π.infPrepartition π') r :=
   h.bUnionPrepartition _
 
-theorem IsSubordinate.mono' [Fintype ι] {π : TaggedPrepartition I} (hr₁ : π.IsSubordinate r₁)
+theorem IsSubordinate.mono' [Fintypeₓ ι] {π : TaggedPrepartition I} (hr₁ : π.IsSubordinate r₁)
     (h : ∀ J ∈ π, r₁ (π.Tag J) ≤ r₂ (π.Tag J)) : π.IsSubordinate r₂ := fun J hJ x hx =>
   closed_ball_subset_closed_ball (h _ hJ) (hr₁ _ hJ hx)
 
-theorem IsSubordinate.mono [Fintype ι] {π : TaggedPrepartition I} (hr₁ : π.IsSubordinate r₁)
+theorem IsSubordinate.mono [Fintypeₓ ι] {π : TaggedPrepartition I} (hr₁ : π.IsSubordinate r₁)
     (h : ∀ x ∈ I.Icc, r₁ x ≤ r₂ x) : π.IsSubordinate r₂ :=
   hr₁.mono' fun J _ => h _ <| π.tag_mem_Icc J
 
-theorem IsSubordinate.diam_le [Fintype ι] {π : TaggedPrepartition I} (h : π.IsSubordinate r) (hJ : J ∈ π.boxes) :
+theorem IsSubordinate.diam_le [Fintypeₓ ι] {π : TaggedPrepartition I} (h : π.IsSubordinate r) (hJ : J ∈ π.boxes) :
     diam J.Icc ≤ 2 * r (π.Tag J) :=
   calc
     diam J.Icc ≤ diam (ClosedBall (π.Tag J) (r <| π.Tag J)) := diam_mono (h J hJ) bounded_closed_ball
@@ -253,7 +253,7 @@ def single (I J : Box ι) (hJ : J ≤ I) (x : ι → ℝ) (h : x ∈ I.Icc) : Ta
 
 @[simp]
 theorem mem_single {J'} (hJ : J ≤ I) (h : x ∈ I.Icc) : J' ∈ single I J hJ x h ↔ J' = J :=
-  Finset.mem_singleton
+  Finsetₓ.mem_singleton
 
 instance (I : Box ι) : Inhabited (TaggedPrepartition I) :=
   ⟨single I I le_rflₓ I.upper I.upper_mem_Icc⟩
@@ -265,8 +265,7 @@ theorem is_partition_single (h : x ∈ I.Icc) : (single I I le_rflₓ x h).IsPar
   Prepartition.is_partition_top I
 
 theorem forall_mem_single (p : (ι → ℝ) → Box ι → Prop) (hJ : J ≤ I) (h : x ∈ I.Icc) :
-    (∀ J' ∈ single I J hJ x h, p ((single I J hJ x h).Tag J') J') ↔ p x J := by
-  simp
+    (∀ J' ∈ single I J hJ x h, p ((single I J hJ x h).Tag J') J') ↔ p x J := by simp
 
 @[simp]
 theorem is_Henstock_single_iff (hJ : J ≤ I) (h : x ∈ I.Icc) : IsHenstock (single I J hJ x h) ↔ x ∈ J.Icc :=
@@ -277,7 +276,7 @@ theorem is_Henstock_single (h : x ∈ I.Icc) : IsHenstock (single I I le_rflₓ 
   (is_Henstock_single_iff (le_reflₓ I) h).2 h
 
 @[simp]
-theorem is_subordinate_single [Fintype ι] (hJ : J ≤ I) (h : x ∈ I.Icc) :
+theorem is_subordinate_single [Fintypeₓ ι] (hJ : J ≤ I) (h : x ∈ I.Icc) :
     IsSubordinate (single I J hJ x h) r ↔ J.Icc ⊆ ClosedBall x (r x) :=
   forall_mem_single (fun x J => J.Icc ⊆ ClosedBall x (r x)) hJ h
 
@@ -290,7 +289,7 @@ def disjUnion (π₁ π₂ : TaggedPrepartition I) (h : Disjoint π₁.Union π�
   toPrepartition := π₁.toPrepartition.disjUnion π₂.toPrepartition h
   Tag := π₁.boxes.piecewise π₁.Tag π₂.Tag
   tag_mem_Icc := fun J => by
-    dunfold Finset.piecewise
+    dsimp only [Finsetₓ.piecewise]
     split_ifs
     exacts[π₁.tag_mem_Icc J, π₂.tag_mem_Icc J]
 
@@ -300,7 +299,7 @@ theorem disj_union_boxes (h : Disjoint π₁.Union π₂.Union) : (π₁.disjUni
 
 @[simp]
 theorem mem_disj_union (h : Disjoint π₁.Union π₂.Union) : J ∈ π₁.disjUnion π₂ h ↔ J ∈ π₁ ∨ J ∈ π₂ :=
-  Finset.mem_union
+  Finsetₓ.mem_union
 
 @[simp]
 theorem Union_disj_union (h : Disjoint π₁.Union π₂.Union) : (π₁.disjUnion π₂ h).Union = π₁.Union ∪ π₂.Union :=
@@ -314,9 +313,9 @@ theorem disj_union_tag_of_mem_right (h : Disjoint π₁.Union π₂.Union) (hJ :
     (π₁.disjUnion π₂ h).Tag J = π₂.Tag J :=
   dif_neg fun h₁ => h ⟨π₁.subset_Union h₁ J.upper_mem, π₂.subset_Union hJ J.upper_mem⟩
 
-theorem IsSubordinate.disj_union [Fintype ι] (h₁ : IsSubordinate π₁ r) (h₂ : IsSubordinate π₂ r)
+theorem IsSubordinate.disj_union [Fintypeₓ ι] (h₁ : IsSubordinate π₁ r) (h₂ : IsSubordinate π₂ r)
     (h : Disjoint π₁.Union π₂.Union) : IsSubordinate (π₁.disjUnion π₂ h) r := by
-  refine' fun J hJ => (Finset.mem_union.1 hJ).elim (fun hJ => _) fun hJ => _
+  refine' fun J hJ => (Finsetₓ.mem_union.1 hJ).elim (fun hJ => _) fun hJ => _
   · rw [disj_union_tag_of_mem_left _ hJ]
     exact h₁ _ hJ
     
@@ -326,7 +325,7 @@ theorem IsSubordinate.disj_union [Fintype ι] (h₁ : IsSubordinate π₁ r) (h�
 
 theorem IsHenstock.disj_union (h₁ : IsHenstock π₁) (h₂ : IsHenstock π₂) (h : Disjoint π₁.Union π₂.Union) :
     IsHenstock (π₁.disjUnion π₂ h) := by
-  refine' fun J hJ => (Finset.mem_union.1 hJ).elim (fun hJ => _) fun hJ => _
+  refine' fun J hJ => (Finsetₓ.mem_union.1 hJ).elim (fun hJ => _) fun hJ => _
   · rw [disj_union_tag_of_mem_left _ hJ]
     exact h₁ _ hJ
     
@@ -345,9 +344,9 @@ def embedBox (I J : Box ι) (h : I ≤ J) : TaggedPrepartition I ↪ TaggedPrepa
 
 section Distortion
 
-variable [Fintype ι] (π)
+variable [Fintypeₓ ι] (π)
 
-open Finset
+open Finsetₓ
 
 /-- The distortion of a tagged prepartition is the maximum of distortions of its boxes. -/
 def distortion : ℝ≥0 :=
@@ -357,7 +356,7 @@ theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 
 theorem distortion_le_iff {c : ℝ≥0} : π.distortion ≤ c ↔ ∀ J ∈ π, Box.distortion J ≤ c :=
-  Finset.sup_le_iff
+  Finsetₓ.sup_le_iff
 
 @[simp]
 theorem _root_.box_integral.prepartition.distortion_bUnion_tagged (π : Prepartition I)

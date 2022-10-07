@@ -37,23 +37,21 @@ noncomputable def integralNormalization (f : R[X]) : R[X] :=
   ∑ i in f.support, monomial i (if f.degree = i then 1 else coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i))
 
 @[simp]
-theorem integral_normalization_zero : integralNormalization (0 : R[X]) = 0 := by
-  simp [integral_normalization]
+theorem integral_normalization_zero : integralNormalization (0 : R[X]) = 0 := by simp [integral_normalization]
 
 theorem integral_normalization_coeff {f : R[X]} {i : ℕ} :
     (integralNormalization f).coeff i =
       if f.degree = i then 1 else coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i) :=
   by
   have : f.coeff i = 0 → f.degree ≠ i := fun hc hd => coeff_ne_zero_of_eq_degree hd hc
-  simp (config := { contextual := true })[integral_normalization, coeff_monomial, this, mem_support_iff]
+  simp (config := { contextual := true }) [integral_normalization, coeff_monomial, this, mem_support_iff]
 
 theorem integral_normalization_support {f : R[X]} : (integralNormalization f).support ⊆ f.support := by
   intro
-  simp (config := { contextual := true })[integral_normalization, coeff_monomial, mem_support_iff]
+  simp (config := { contextual := true }) [integral_normalization, coeff_monomial, mem_support_iff]
 
 theorem integral_normalization_coeff_degree {f : R[X]} {i : ℕ} (hi : f.degree = i) :
-    (integralNormalization f).coeff i = 1 := by
-  rw [integral_normalization_coeff, if_pos hi]
+    (integralNormalization f).coeff i = 1 := by rw [integral_normalization_coeff, if_pos hi]
 
 theorem integral_normalization_coeff_nat_degree {f : R[X]} (hf : f ≠ 0) :
     (integralNormalization f).coeff (natDegree f) = 1 :=
@@ -69,7 +67,7 @@ theorem integral_normalization_coeff_ne_nat_degree {f : R[X]} {i : ℕ} (hi : i 
 
 theorem monic_integral_normalization {f : R[X]} (hf : f ≠ 0) : Monic (integralNormalization f) :=
   monic_of_degree_le f.natDegree
-    (Finset.sup_le fun i h => WithBot.coe_le_coe.2 <| le_nat_degree_of_mem_supp i <| integral_normalization_support h)
+    (Finsetₓ.sup_le fun i h => WithBot.coe_le_coe.2 <| le_nat_degree_of_mem_supp i <| integral_normalization_support h)
     (integral_normalization_coeff_nat_degree hf)
 
 end Semiringₓ
@@ -80,7 +78,7 @@ variable [Ringₓ R] [IsDomain R]
 
 @[simp]
 theorem support_integral_normalization {f : R[X]} : (integralNormalization f).support = f.support := by
-  by_cases' hf : f = 0
+  by_cases hf:f = 0
   · simp [hf]
     
   ext i
@@ -107,13 +105,13 @@ theorem integral_normalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S
       simp only [mul_comm z, mul_powₓ, mul_assoc, RingHom.map_pow, RingHom.map_mul]
       exact finset.sum_attach.symm
     _ = p.support.attach.Sum fun i => f (coeff p i.1 * p.leadingCoeff ^ (natDegree p - 1)) * z ^ i.1 := by
-      by_cases' hp : p = 0
+      by_cases hp:p = 0
       · simp [hp]
         
       have one_le_deg : 1 ≤ nat_degree p := Nat.succ_le_of_ltₓ (nat_degree_pos_of_eval₂_root hp f hz inj)
       congr with i
       congr 2
-      by_cases' hi : i.1 = nat_degree p
+      by_cases hi:i.1 = nat_degree p
       · rw [hi, integral_normalization_coeff_degree, one_mulₓ, leading_coeff, ← pow_succₓ,
           tsub_add_cancel_of_le one_le_deg]
         exact degree_eq_nat_degree hp
@@ -124,11 +122,10 @@ theorem integral_normalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S
         
     _ = f p.leadingCoeff ^ (natDegree p - 1) * eval₂ f z p := by
       simp_rw [eval₂, sum_def, fun i => mul_comm (coeff p i), RingHom.map_mul, RingHom.map_pow, mul_assoc, ←
-        Finset.mul_sum]
+        Finsetₓ.mul_sum]
       congr 1
-      exact @Finset.sum_attach _ _ p.support _ fun i => f (p.coeff i) * z ^ i
-    _ = 0 := by
-      rw [hz, _root_.mul_zero]
+      exact @Finsetₓ.sum_attach _ _ p.support _ fun i => f (p.coeff i) * z ^ i
+    _ = 0 := by rw [hz, _root_.mul_zero]
     
 
 theorem integral_normalization_aeval_eq_zero [Algebra R S] {f : R[X]} {z : S} (hz : aeval z f = 0)

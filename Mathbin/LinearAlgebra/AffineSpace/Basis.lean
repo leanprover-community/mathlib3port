@@ -65,9 +65,7 @@ variable [Ringₓ k] [Module k V] (b : AffineBasis ι k P)
 
 /-- The unique point in a single-point space is the simplest example of an affine basis. -/
 instance : Inhabited (AffineBasis PUnit k PUnit) :=
-  ⟨{ points := id, ind := affine_independent_of_subsingleton k id,
-      tot := by
-        simp }⟩
+  ⟨{ points := id, ind := affine_independent_of_subsingleton k id, tot := by simp }⟩
 
 /-- Given an affine basis for an affine space `P`, if we single out one member of the family, we
 obtain a linear basis for the model space `V`.
@@ -85,7 +83,7 @@ noncomputable def basisOf (i : ι) : Basis { j : ι // j ≠ i } k V :=
       rw [vector_span_image_eq_span_vsub_set_right_ne k b.points (mem_univ i)]
       congr
       ext v
-      simp )
+      simp)
 
 @[simp]
 theorem basis_of_apply (i : ι) (j : { j : ι // j ≠ i }) : b.basisOf i j = b.points ↑j -ᵥ b.points i := by
@@ -117,49 +115,49 @@ theorem coord_apply [DecidableEq ι] (i j : ι) : b.Coord i (b.points j) = if i 
   simp [h]
 
 @[simp]
-theorem coord_apply_combination_of_mem {s : Finset ι} {i : ι} (hi : i ∈ s) {w : ι → k} (hw : s.Sum w = 1) :
+theorem coord_apply_combination_of_mem {s : Finsetₓ ι} {i : ι} (hi : i ∈ s) {w : ι → k} (hw : s.Sum w = 1) :
     b.Coord i (s.affineCombination b.points w) = w i := by
   classical
-  simp only [coord_apply, hi, Finset.affine_combination_eq_linear_combination, if_true, mul_boole, hw,
+  simp only [coord_apply, hi, Finsetₓ.affine_combination_eq_linear_combination, if_true, mul_boole, hw,
     Function.comp_app, smul_eq_mul, s.sum_ite_eq, s.map_affine_combination b.points w hw]
 
 @[simp]
-theorem coord_apply_combination_of_not_mem {s : Finset ι} {i : ι} (hi : i ∉ s) {w : ι → k} (hw : s.Sum w = 1) :
+theorem coord_apply_combination_of_not_mem {s : Finsetₓ ι} {i : ι} (hi : i ∉ s) {w : ι → k} (hw : s.Sum w = 1) :
     b.Coord i (s.affineCombination b.points w) = 0 := by
   classical
-  simp only [coord_apply, hi, Finset.affine_combination_eq_linear_combination, if_false, mul_boole, hw,
+  simp only [coord_apply, hi, Finsetₓ.affine_combination_eq_linear_combination, if_false, mul_boole, hw,
     Function.comp_app, smul_eq_mul, s.sum_ite_eq, s.map_affine_combination b.points w hw]
 
 @[simp]
-theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 := by
+theorem sum_coord_apply_eq_one [Fintypeₓ ι] (q : P) : (∑ i, b.Coord i q) = 1 := by
   have hq : q ∈ affineSpan k (range b.points) := by
     rw [b.tot]
     exact AffineSubspace.mem_top k V q
   obtain ⟨w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span_of_fintype hq
   convert hw
   ext i
-  exact b.coord_apply_combination_of_mem (Finset.mem_univ i) hw
+  exact b.coord_apply_combination_of_mem (Finsetₓ.mem_univ i) hw
 
 @[simp]
-theorem affine_combination_coord_eq_self [Fintype ι] (q : P) :
-    (Finset.univ.affineCombination b.points fun i => b.Coord i q) = q := by
+theorem affine_combination_coord_eq_self [Fintypeₓ ι] (q : P) :
+    (Finsetₓ.univ.affineCombination b.points fun i => b.Coord i q) = q := by
   have hq : q ∈ affineSpan k (range b.points) := by
     rw [b.tot]
     exact AffineSubspace.mem_top k V q
   obtain ⟨w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span_of_fintype hq
   congr
   ext i
-  exact b.coord_apply_combination_of_mem (Finset.mem_univ i) hw
+  exact b.coord_apply_combination_of_mem (Finsetₓ.mem_univ i) hw
 
 /-- A variant of `affine_basis.affine_combination_coord_eq_self` for the special case when the
 affine space is a module so we can talk about linear combinations. -/
 @[simp]
-theorem linear_combination_coord_eq_self [Fintype ι] (b : AffineBasis ι k V) (v : V) :
+theorem linear_combination_coord_eq_self [Fintypeₓ ι] (b : AffineBasis ι k V) (v : V) :
     (∑ i, b.Coord i v • b.points i) = v := by
   have hb := b.affine_combination_coord_eq_self v
   rwa [finset.univ.affine_combination_eq_linear_combination _ _ (b.sum_coord_apply_eq_one v)] at hb
 
-theorem ext_elem [Fintype ι] {q₁ q₂ : P} (h : ∀ i, b.Coord i q₁ = b.Coord i q₂) : q₁ = q₂ := by
+theorem ext_elem [Fintypeₓ ι] {q₁ q₂ : P} (h : ∀ i, b.Coord i q₁ = b.Coord i q₂) : q₁ = q₂ := by
   rw [← b.affine_combination_coord_eq_self q₁, ← b.affine_combination_coord_eq_self q₂]
   simp only [h]
 
@@ -171,27 +169,21 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i
     apply subsingleton.image
     apply subsingleton_of_subsingleton
   haveI := AffineSubspace.subsingleton_of_subsingleton_span_eq_top hp b.tot
-  let s : Finset ι := {i}
-  have hi : i ∈ s := by
-    simp
-  have hw : s.sum (Function.const ι (1 : k)) = 1 := by
-    simp
-  have hq : q = s.affine_combination b.points (Function.const ι (1 : k)) := by
-    simp
+  let s : Finsetₓ ι := {i}
+  have hi : i ∈ s := by simp
+  have hw : s.sum (Function.const ι (1 : k)) = 1 := by simp
+  have hq : q = s.affine_combination b.points (Function.const ι (1 : k)) := by simp
   rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw]
 
 theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coord i := by
   classical
   intro x
   obtain ⟨j, hij⟩ := exists_ne i
-  let s : Finset ι := {i, j}
-  have hi : i ∈ s := by
-    simp
-  have hj : j ∈ s := by
-    simp
+  let s : Finsetₓ ι := {i, j}
+  have hi : i ∈ s := by simp
+  have hj : j ∈ s := by simp
   let w : ι → k := fun j' => if j' = i then x else 1 - x
-  have hw : s.sum w = 1 := by
-    simp [hij, Finset.sum_ite, Finset.filter_insert, Finset.filter_eq']
+  have hw : s.sum w = 1 := by simp [hij, Finsetₓ.sum_ite, Finsetₓ.filter_insert, Finsetₓ.filter_eq']
   use s.affine_combination b.points w
   simp [b.coord_apply_combination_of_mem hi hw]
 
@@ -229,10 +221,9 @@ theorem to_matrix_self [DecidableEq ι] : b.toMatrix b.points = (1 : Matrix ι �
   ext i j
   rw [to_matrix_apply, coord_apply, Matrix.one_eq_pi_single, Pi.single_apply]
 
-variable {ι' : Type _} [Fintype ι'] [Fintype ι] (b₂ : AffineBasis ι k P)
+variable {ι' : Type _} [Fintypeₓ ι'] [Fintypeₓ ι] (b₂ : AffineBasis ι k P)
 
-theorem to_matrix_row_sum_one {ι' : Type _} (q : ι' → P) (i : ι') : (∑ j, b.toMatrix q i j) = 1 := by
-  simp
+theorem to_matrix_row_sum_one {ι' : Type _} (q : ι' → P) (i : ι') : (∑ j, b.toMatrix q i j) = 1 := by simp
 
 /-- Given a family of points `p : ι' → P` and an affine basis `b`, if the matrix whose rows are the
 coordinates of `p` with respect `b` has a right inverse, then `p` is affine independent. -/
@@ -260,15 +251,11 @@ theorem affine_span_eq_top_of_to_matrix_left_inv [DecidableEq ι] [Nontrivial k]
   intro i
   have hAi : (∑ j, A i j) = 1 := by
     calc
-      (∑ j, A i j) = ∑ j, A i j * ∑ l, b.to_matrix p j l := by
-        simp
-      _ = ∑ j, ∑ l, A i j * b.to_matrix p j l := by
-        simp_rw [Finset.mul_sum]
-      _ = ∑ l, ∑ j, A i j * b.to_matrix p j l := by
-        rw [Finset.sum_comm]
+      (∑ j, A i j) = ∑ j, A i j * ∑ l, b.to_matrix p j l := by simp
+      _ = ∑ j, ∑ l, A i j * b.to_matrix p j l := by simp_rw [Finsetₓ.mul_sum]
+      _ = ∑ l, ∑ j, A i j * b.to_matrix p j l := by rw [Finsetₓ.sum_comm]
       _ = ∑ l, (A ⬝ b.to_matrix p) i l := rfl
-      _ = 1 := by
-        simp [hA, Matrix.one_apply, Finset.filter_eq]
+      _ = 1 := by simp [hA, Matrix.one_apply, Finsetₓ.filter_eq]
       
   have hbi : b.points i = finset.univ.affine_combination p (A i) := by
     apply b.ext_elem
@@ -288,7 +275,7 @@ theorem to_matrix_vec_mul_coords (x : P) : (b.toMatrix b₂.points).vecMul (b₂
   ext j
   change _ = b.coord j x
   conv_rhs => rw [← b₂.affine_combination_coord_eq_self x]
-  rw [Finset.map_affine_combination _ _ _ (b₂.sum_coord_apply_eq_one x)]
+  rw [Finsetₓ.map_affine_combination _ _ _ (b₂.sum_coord_apply_eq_one x)]
   simp [Matrix.vecMulₓ, Matrix.dotProduct, to_matrix_apply, coords]
 
 variable [DecidableEq ι]
@@ -320,7 +307,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable [CommRingₓ k] [Module k V] [DecidableEq ι] [Fintype ι]
+variable [CommRingₓ k] [Module k V] [DecidableEq ι] [Fintypeₓ ι]
 
 variable (b b₂ : AffineBasis ι k P)
 
@@ -358,14 +345,14 @@ theorem exists_affine_basis : ∃ s : Set P, Nonempty (AffineBasis (↥s) k P) :
 
 variable {k V P}
 
-theorem exists_affine_basis_of_finite_dimensional {ι : Type _} [Fintype ι] [FiniteDimensional k V]
-    (h : Fintype.card ι = FiniteDimensional.finrank k V + 1) : Nonempty (AffineBasis ι k P) := by
+theorem exists_affine_basis_of_finite_dimensional {ι : Type _} [Fintypeₓ ι] [FiniteDimensional k V]
+    (h : Fintypeₓ.card ι = FiniteDimensional.finrank k V + 1) : Nonempty (AffineBasis ι k P) := by
   obtain ⟨s, ⟨⟨incl, h_ind, h_tot⟩⟩⟩ := AffineBasis.exists_affine_basis k V P
-  haveI : Fintype s := fintypeOfFinDimAffineIndependent k h_ind
-  have hs : Fintype.card ι = Fintype.card s := by
+  haveI : Fintypeₓ s := fintypeOfFinDimAffineIndependent k h_ind
+  have hs : Fintypeₓ.card ι = Fintypeₓ.card s := by
     rw [h]
     exact (h_ind.affine_span_eq_top_iff_card_eq_finrank_add_one.mp h_tot).symm
-  rw [← affine_independent_equiv (Fintype.equivOfCardEq hs)] at h_ind
+  rw [← affine_independent_equiv (Fintypeₓ.equivOfCardEq hs)] at h_ind
   refine' ⟨⟨_, h_ind, _⟩⟩
   rw [range_comp]
   simp [h_tot]

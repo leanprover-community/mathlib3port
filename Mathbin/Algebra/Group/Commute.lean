@@ -78,12 +78,10 @@ theorem mul_left (hac : Commute a c) (hbc : Commute b c) : Commute (a * b) c :=
   hac.mul_left hbc
 
 @[to_additive]
-protected theorem right_comm (h : Commute b c) (a : S) : a * b * c = a * c * b := by
-  simp only [mul_assoc, h.eq]
+protected theorem right_comm (h : Commute b c) (a : S) : a * b * c = a * c * b := by simp only [mul_assoc, h.eq]
 
 @[to_additive]
-protected theorem left_comm (h : Commute a b) (c) : a * (b * c) = b * (a * c) := by
-  simp only [← mul_assoc, h.eq]
+protected theorem left_comm (h : Commute a b) (c) : a * (b * c) = b * (a * c) := by simp only [← mul_assoc, h.eq]
 
 end Semigroupₓ
 
@@ -222,20 +220,16 @@ theorem inv_left_iff : Commute a⁻¹ b ↔ Commute a b :=
   SemiconjBy.inv_symm_left_iff
 
 @[to_additive]
-protected theorem inv_mul_cancel (h : Commute a b) : a⁻¹ * b * a = b := by
-  rw [h.inv_left.eq, inv_mul_cancel_right]
+protected theorem inv_mul_cancel (h : Commute a b) : a⁻¹ * b * a = b := by rw [h.inv_left.eq, inv_mul_cancel_right]
 
 @[to_additive]
-theorem inv_mul_cancel_assoc (h : Commute a b) : a⁻¹ * (b * a) = b := by
-  rw [← mul_assoc, h.inv_mul_cancel]
+theorem inv_mul_cancel_assoc (h : Commute a b) : a⁻¹ * (b * a) = b := by rw [← mul_assoc, h.inv_mul_cancel]
 
 @[to_additive]
-protected theorem mul_inv_cancel (h : Commute a b) : a * b * a⁻¹ = b := by
-  rw [h.eq, mul_inv_cancel_rightₓ]
+protected theorem mul_inv_cancel (h : Commute a b) : a * b * a⁻¹ = b := by rw [h.eq, mul_inv_cancel_rightₓ]
 
 @[to_additive]
-theorem mul_inv_cancel_assoc (h : Commute a b) : a * (b * a⁻¹) = b := by
-  rw [← mul_assoc, h.mul_inv_cancel]
+theorem mul_inv_cancel_assoc (h : Commute a b) : a * (b * a⁻¹) = b := by rw [← mul_assoc, h.mul_inv_cancel]
 
 end Groupₓ
 

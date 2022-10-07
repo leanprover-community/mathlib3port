@@ -31,15 +31,13 @@ def projIcc (a b : α) (h : a ≤ b) (x : α) : Icc a b :=
 
 variable {a b : α} (h : a ≤ b) {x : α}
 
-theorem proj_Icc_of_le_left (hx : x ≤ a) : projIcc a b h x = ⟨a, left_mem_Icc.2 h⟩ := by
-  simp [proj_Icc, hx, hx.trans h]
+theorem proj_Icc_of_le_left (hx : x ≤ a) : projIcc a b h x = ⟨a, left_mem_Icc.2 h⟩ := by simp [proj_Icc, hx, hx.trans h]
 
 @[simp]
 theorem proj_Icc_left : projIcc a b h a = ⟨a, left_mem_Icc.2 h⟩ :=
   proj_Icc_of_le_left h le_rflₓ
 
-theorem proj_Icc_of_right_le (hx : b ≤ x) : projIcc a b h x = ⟨b, right_mem_Icc.2 h⟩ := by
-  simp [proj_Icc, hx, h]
+theorem proj_Icc_of_right_le (hx : b ≤ x) : projIcc a b h x = ⟨b, right_mem_Icc.2 h⟩ := by simp [proj_Icc, hx, h]
 
 @[simp]
 theorem proj_Icc_right : projIcc a b h b = ⟨b, right_mem_Icc.2 h⟩ :=
@@ -53,15 +51,10 @@ theorem proj_Icc_eq_left (h : a < b) : projIcc a b h.le x = ⟨a, left_mem_Icc.m
 theorem proj_Icc_eq_right (h : a < b) : projIcc a b h.le x = ⟨b, right_mem_Icc.mpr h.le⟩ ↔ b ≤ x := by
   refine' ⟨fun h' => _, proj_Icc_of_right_le _⟩
   simp_rw [Subtype.ext_iff_val, proj_Icc] at h'
-  have :=
-    ((max_choice _ _).resolve_left
-            (by
-              simp [h.ne', h'])).symm.trans
-      h'
+  have := ((max_choice _ _).resolve_left (by simp [h.ne', h'])).symm.trans h'
   exact min_eq_left_iff.mp this
 
-theorem proj_Icc_of_mem (hx : x ∈ Icc a b) : projIcc a b h x = ⟨x, hx⟩ := by
-  simp [proj_Icc, hx.1, hx.2]
+theorem proj_Icc_of_mem (hx : x ∈ Icc a b) : projIcc a b h x = ⟨x, hx⟩ := by simp [proj_Icc, hx.1, hx.2]
 
 @[simp]
 theorem proj_Icc_coe (x : Icc a b) : projIcc a b h x = x := by
@@ -76,9 +69,9 @@ theorem proj_Icc_surjective : Surjective (projIcc a b h) := fun x => ⟨x, proj_
 theorem range_proj_Icc : Range (projIcc a b h) = univ :=
   (proj_Icc_surjective h).range_eq
 
-theorem monotone_proj_Icc : Monotone (projIcc a b h) := fun x y hxy => max_le_max le_rflₓ <| min_le_min le_rflₓ hxy
+theorem monotone_proj_Icc : Monotoneₓ (projIcc a b h) := fun x y hxy => max_le_max le_rflₓ <| min_le_min le_rflₓ hxy
 
-theorem strict_mono_on_proj_Icc : StrictMonoOn (projIcc a b h) (Icc a b) := fun x hx y hy hxy => by
+theorem strict_mono_on_proj_Icc : StrictMonoOnₓ (projIcc a b h) (Icc a b) := fun x hx y hy hxy => by
   simpa only [proj_Icc_of_mem, hx, hy]
 
 /-- Extend a function `[a, b] → β` to a map `α → β`. -/
@@ -116,9 +109,9 @@ open Set
 
 variable [Preorderₓ β] {a b : α} (h : a ≤ b) {f : Icc a b → β}
 
-theorem Monotone.Icc_extend (hf : Monotone f) : Monotone (iccExtend h f) :=
+theorem Monotoneₓ.Icc_extend (hf : Monotoneₓ f) : Monotoneₓ (iccExtend h f) :=
   hf.comp <| monotone_proj_Icc h
 
-theorem StrictMono.strict_mono_on_Icc_extend (hf : StrictMono f) : StrictMonoOn (iccExtend h f) (Icc a b) :=
+theorem StrictMonoₓ.strict_mono_on_Icc_extend (hf : StrictMonoₓ f) : StrictMonoOnₓ (iccExtend h f) (Icc a b) :=
   hf.comp_strict_mono_on (strict_mono_on_proj_Icc h)
 

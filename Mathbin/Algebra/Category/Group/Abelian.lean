@@ -41,9 +41,7 @@ end
 
 /-- The category of abelian groups is abelian. -/
 instance : Abelian AddCommGroupₓₓ.{u} where
-  HasFiniteProducts :=
-    ⟨by
-      infer_instance⟩
+  HasFiniteProducts := ⟨by infer_instance⟩
   normalMonoOfMono := fun X Y => normalMono
   normalEpiOfEpi := fun X Y => normalEpi
   add_comp' := by

@@ -62,13 +62,11 @@ section Monoidₓ
 variable [Monoidₓ M] [Monoidₓ N] [AddMonoidₓ A] [AddMonoidₓ B]
 
 @[simp, to_additive one_nsmul]
-theorem pow_oneₓ (a : M) : a ^ 1 = a := by
-  rw [pow_succₓ, pow_zeroₓ, mul_oneₓ]
+theorem pow_oneₓ (a : M) : a ^ 1 = a := by rw [pow_succₓ, pow_zeroₓ, mul_oneₓ]
 
 /-- Note that most of the lemmas about powers of two refer to it as `sq`. -/
 @[to_additive two_nsmul, nolint to_additive_doc]
-theorem pow_two (a : M) : a ^ 2 = a * a := by
-  rw [pow_succₓ, pow_oneₓ]
+theorem pow_two (a : M) : a ^ 2 = a * a := by rw [pow_succₓ, pow_oneₓ]
 
 alias pow_two ← sq
 
@@ -82,8 +80,7 @@ theorem pow_addₓ (a : M) (m n : ℕ) : a ^ (m + n) = a ^ m * a ^ n := by
     rw [pow_succ'ₓ, ← mul_assoc, ← ih, ← pow_succ'ₓ, Nat.add_assoc]]
 
 @[simp]
-theorem pow_boole (P : Prop) [Decidable P] (a : M) : (a ^ if P then 1 else 0) = if P then a else 1 := by
-  simp
+theorem pow_boole (P : Prop) [Decidable P] (a : M) : (a ^ if P then 1 else 0) = if P then a else 1 := by simp
 
 -- the attributes are intentionally out of order. `smul_zero` proves `nsmul_zero`.
 @[to_additive nsmul_zero, simp]
@@ -99,12 +96,10 @@ theorem pow_mulₓ (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ m) ^ n := by
     
 
 @[to_additive nsmul_left_comm]
-theorem pow_right_comm (a : M) (m n : ℕ) : (a ^ m) ^ n = (a ^ n) ^ m := by
-  rw [← pow_mulₓ, Nat.mul_comm, pow_mulₓ]
+theorem pow_right_comm (a : M) (m n : ℕ) : (a ^ m) ^ n = (a ^ n) ^ m := by rw [← pow_mulₓ, Nat.mul_comm, pow_mulₓ]
 
 @[to_additive mul_nsmul]
-theorem pow_mul' (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ n) ^ m := by
-  rw [Nat.mul_comm, pow_mulₓ]
+theorem pow_mul' (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ n) ^ m := by rw [Nat.mul_comm, pow_mulₓ]
 
 @[to_additive nsmul_add_sub_nsmul]
 theorem pow_mul_pow_sub (a : M) {m n : ℕ} (h : m ≤ n) : a ^ m * a ^ (n - m) = a ^ n := by
@@ -118,7 +113,7 @@ theorem pow_sub_mul_pow (a : M) {m n : ℕ} (h : m ≤ n) : a ^ (n - m) * a ^ m 
 @[to_additive nsmul_eq_mod_nsmul "If `n • x = 0`, then `m • x` is the same as `(m % n) • x`"]
 theorem pow_eq_pow_mod {M : Type _} [Monoidₓ M] {x : M} (m : ℕ) {n : ℕ} (h : x ^ n = 1) : x ^ m = x ^ (m % n) := by
   have t := congr_arg (fun a => x ^ a) (Nat.div_add_modₓ m n).symm
-  dsimp'  at t
+  dsimp at t
   rw [t, pow_addₓ, pow_mulₓ, h, one_pow, one_mulₓ]
 
 @[to_additive bit0_nsmul]
@@ -126,8 +121,7 @@ theorem pow_bit0 (a : M) (n : ℕ) : a ^ bit0 n = a ^ n * a ^ n :=
   pow_addₓ _ _ _
 
 @[to_additive bit1_nsmul]
-theorem pow_bit1 (a : M) (n : ℕ) : a ^ bit1 n = a ^ n * a ^ n * a := by
-  rw [bit1, pow_succ'ₓ, pow_bit0]
+theorem pow_bit1 (a : M) (n : ℕ) : a ^ bit1 n = a ^ n * a ^ n * a := by rw [bit1, pow_succ'ₓ, pow_bit0]
 
 @[to_additive]
 theorem pow_mul_commₓ (a : M) (m n : ℕ) : a ^ m * a ^ n = a ^ n * a ^ m :=
@@ -135,19 +129,14 @@ theorem pow_mul_commₓ (a : M) (m n : ℕ) : a ^ m * a ^ n = a ^ n * a ^ m :=
 
 @[to_additive]
 theorem Commute.mul_pow {a b : M} (h : Commute a b) (n : ℕ) : (a * b) ^ n = a ^ n * b ^ n :=
-  (Nat.recOn n
-      (by
-        simp only [pow_zeroₓ, one_mulₓ]))
-    fun n ihn => by
+  (Nat.recOn n (by simp only [pow_zeroₓ, one_mulₓ])) fun n ihn => by
     simp only [pow_succₓ, ihn, ← mul_assoc, (h.pow_left n).right_comm]
 
 @[to_additive bit0_nsmul']
-theorem pow_bit0' (a : M) (n : ℕ) : a ^ bit0 n = (a * a) ^ n := by
-  rw [pow_bit0, (Commute.refl a).mul_pow]
+theorem pow_bit0' (a : M) (n : ℕ) : a ^ bit0 n = (a * a) ^ n := by rw [pow_bit0, (Commute.refl a).mul_pow]
 
 @[to_additive bit1_nsmul']
-theorem pow_bit1' (a : M) (n : ℕ) : a ^ bit1 n = (a * a) ^ n * a := by
-  rw [bit1, pow_succ'ₓ, pow_bit0']
+theorem pow_bit1' (a : M) (n : ℕ) : a ^ bit1 n = (a * a) ^ n * a := by rw [bit1, pow_succ'ₓ, pow_bit0']
 
 @[to_additive]
 theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n = 1 := by
@@ -155,12 +144,9 @@ theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n =
   · simp
     
   · calc
-      a ^ n.succ * b ^ n.succ = a ^ n * a * (b * b ^ n) := by
-        rw [pow_succ'ₓ, pow_succₓ]
-      _ = a ^ n * (a * b) * b ^ n := by
-        simp only [mul_assoc]
-      _ = 1 := by
-        simp [h, hn]
+      a ^ n.succ * b ^ n.succ = a ^ n * a * (b * b ^ n) := by rw [pow_succ'ₓ, pow_succₓ]
+      _ = a ^ n * (a * b) * b ^ n := by simp only [mul_assoc]
+      _ = 1 := by simp [h, hn]
       
     
 
@@ -236,18 +222,14 @@ variable [DivisionMonoid α] {a b : α}
 
 @[simp, to_additive]
 theorem inv_pow (a : α) : ∀ n : ℕ, a⁻¹ ^ n = (a ^ n)⁻¹
-  | 0 => by
-    rw [pow_zeroₓ, pow_zeroₓ, inv_one]
-  | n + 1 => by
-    rw [pow_succ'ₓ, pow_succₓ, inv_pow, mul_inv_rev]
+  | 0 => by rw [pow_zeroₓ, pow_zeroₓ, inv_one]
+  | n + 1 => by rw [pow_succ'ₓ, pow_succₓ, inv_pow, mul_inv_rev]
 
 -- the attributes are intentionally out of order. `smul_zero` proves `zsmul_zero`.
 @[to_additive zsmul_zero, simp]
 theorem one_zpow : ∀ n : ℤ, (1 : α) ^ n = 1
-  | (n : ℕ) => by
-    rw [zpow_coe_nat, one_pow]
-  | -[1 + n] => by
-    rw [zpow_neg_succ_of_nat, one_pow, inv_one]
+  | (n : ℕ) => by rw [zpow_coe_nat, one_pow]
+  | -[1 + n] => by rw [zpow_neg_succ_of_nat, one_pow, inv_one]
 
 @[simp, to_additive neg_zsmul]
 theorem zpow_neg (a : α) : ∀ n : ℤ, a ^ -n = (a ^ n)⁻¹
@@ -265,29 +247,22 @@ theorem mul_zpow_neg_one (a b : α) : (a * b) ^ (-1 : ℤ) = b ^ (-1 : ℤ) * a 
 
 @[to_additive zsmul_neg]
 theorem inv_zpow (a : α) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
-  | (n : ℕ) => by
-    rw [zpow_coe_nat, zpow_coe_nat, inv_pow]
-  | -[1 + n] => by
-    rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, inv_pow]
+  | (n : ℕ) => by rw [zpow_coe_nat, zpow_coe_nat, inv_pow]
+  | -[1 + n] => by rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, inv_pow]
 
 @[simp, to_additive zsmul_neg']
-theorem inv_zpow' (a : α) (n : ℤ) : a⁻¹ ^ n = a ^ -n := by
-  rw [inv_zpow, zpow_neg]
+theorem inv_zpow' (a : α) (n : ℤ) : a⁻¹ ^ n = a ^ -n := by rw [inv_zpow, zpow_neg]
 
 @[to_additive nsmul_zero_sub]
-theorem one_div_pow (a : α) (n : ℕ) : (1 / a) ^ n = 1 / a ^ n := by
-  simp_rw [one_div, inv_pow]
+theorem one_div_pow (a : α) (n : ℕ) : (1 / a) ^ n = 1 / a ^ n := by simp_rw [one_div, inv_pow]
 
 @[to_additive zsmul_zero_sub]
-theorem one_div_zpow (a : α) (n : ℤ) : (1 / a) ^ n = 1 / a ^ n := by
-  simp_rw [one_div, inv_zpow]
+theorem one_div_zpow (a : α) (n : ℤ) : (1 / a) ^ n = 1 / a ^ n := by simp_rw [one_div, inv_zpow]
 
 @[to_additive AddCommute.zsmul_add]
 protected theorem Commute.mul_zpow (h : Commute a b) : ∀ i : ℤ, (a * b) ^ i = a ^ i * b ^ i
-  | (n : ℕ) => by
-    simp [h.mul_pow n]
-  | -[1 + n] => by
-    simp [h.mul_pow, (h.pow_pow _ _).Eq, mul_inv_rev]
+  | (n : ℕ) => by simp [h.mul_pow n]
+  | -[1 + n] => by simp [h.mul_pow, (h.pow_pow _ _).Eq, mul_inv_rev]
 
 end DivisionMonoid
 
@@ -300,12 +275,10 @@ theorem mul_zpow (a b : α) : ∀ n : ℤ, (a * b) ^ n = a ^ n * b ^ n :=
   (Commute.all a b).mul_zpow
 
 @[simp, to_additive nsmul_sub]
-theorem div_pow (a b : α) (n : ℕ) : (a / b) ^ n = a ^ n / b ^ n := by
-  simp only [div_eq_mul_inv, mul_powₓ, inv_pow]
+theorem div_pow (a b : α) (n : ℕ) : (a / b) ^ n = a ^ n / b ^ n := by simp only [div_eq_mul_inv, mul_powₓ, inv_pow]
 
 @[simp, to_additive zsmul_sub]
-theorem div_zpow (a b : α) (n : ℤ) : (a / b) ^ n = a ^ n / b ^ n := by
-  simp only [div_eq_mul_inv, mul_zpow, inv_zpow]
+theorem div_zpow (a b : α) (n : ℤ) : (a / b) ^ n = a ^ n / b ^ n := by simp only [div_eq_mul_inv, mul_zpow, inv_zpow]
 
 /-- The `n`-th power map (for an integer `n`) on a commutative group, considered as a group
 homomorphism. -/
@@ -325,8 +298,7 @@ variable [Groupₓ G] [Groupₓ H] [AddGroupₓ A] [AddGroupₓ B]
 
 @[to_additive sub_nsmul]
 theorem pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ :=
-  eq_mul_inv_of_mul_eq <| by
-    rw [← pow_addₓ, tsub_add_cancel_of_le h]
+  eq_mul_inv_of_mul_eq <| by rw [← pow_addₓ, tsub_add_cancel_of_le h]
 
 @[to_additive]
 theorem pow_inv_comm (a : G) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^ m :=
@@ -339,12 +311,10 @@ theorem inv_pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ 
 end Groupₓ
 
 theorem pow_dvd_pow [Monoidₓ R] (a : R) {m n : ℕ} (h : m ≤ n) : a ^ m ∣ a ^ n :=
-  ⟨a ^ (n - m), by
-    rw [← pow_addₓ, Nat.add_comm, tsub_add_cancel_of_le h]⟩
+  ⟨a ^ (n - m), by rw [← pow_addₓ, Nat.add_comm, tsub_add_cancel_of_le h]⟩
 
 theorem pow_dvd_pow_of_dvd [CommMonoidₓ R] {a b : R} (h : a ∣ b) : ∀ n : ℕ, a ^ n ∣ b ^ n
-  | 0 => by
-    rw [pow_zeroₓ, pow_zeroₓ]
+  | 0 => by rw [pow_zeroₓ, pow_zeroₓ]
   | n + 1 => by
     rw [pow_succₓ, pow_succₓ]
     exact mul_dvd_mul h (pow_dvd_pow_of_dvd n)
@@ -363,10 +333,8 @@ theorem of_mul_zpow [DivInvMonoidₓ G] (x : G) (n : ℤ) : Additive.ofMul (x ^ 
 
 @[simp, to_additive]
 theorem SemiconjBy.zpow_right [Groupₓ G] {a x y : G} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
-  | (n : ℕ) => by
-    simp [zpow_coe_nat, h.pow_right n]
-  | -[1 + n] => by
-    simp [(h.pow_right n.succ).inv_right]
+  | (n : ℕ) => by simp [zpow_coe_nat, h.pow_right n]
+  | -[1 + n] => by simp [(h.pow_right n.succ).inv_right]
 
 namespace Commute
 

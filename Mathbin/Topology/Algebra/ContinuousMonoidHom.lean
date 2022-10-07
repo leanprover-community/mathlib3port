@@ -63,9 +63,9 @@ class ContinuousMonoidHomClass extends MonoidHomClass F A B where
   map_continuous (f : F) : Continuous f
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident continuous_monoid_hom.to_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident continuous_monoid_hom.to_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident continuous_add_monoid_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident continuous_add_monoid_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- See note [lower instance priority]
 @[to_additive]
 instance (priority := 100) ContinuousMonoidHomClass.toContinuousMapClass [ContinuousMonoidHomClass F A B] :
@@ -104,8 +104,7 @@ def toContinuousMap (f : ContinuousMonoidHom A B) : C(A, B) :=
 
 @[to_additive]
 theorem to_continuous_map_injective : Injective (toContinuousMap : _ → C(A, B)) := fun f g h =>
-  ext <| by
-    convert FunLike.ext_iff.1 h
+  ext <| by convert FunLike.ext_iff.1 h
 
 /-- Construct a `continuous_monoid_hom` from a `continuous` `monoid_hom`. -/
 @[to_additive "Construct a `continuous_add_monoid_hom` from a `continuous` `add_monoid_hom`.", simps]
@@ -227,13 +226,12 @@ theorem is_closed_embedding [HasContinuousMul B] [T2Space B] :
         rw [this, compl_compl]
         refine' (ContinuousMap.is_open_gen is_compact_singleton is_open_compl_singleton).union _
         repeat'
-          apply is_open_Union
-          intro
-        repeat'
-          apply IsOpen.inter
+        apply is_open_Union
+        intro
+        repeat' apply IsOpen.inter
         all_goals
-          apply ContinuousMap.is_open_gen is_compact_singleton
-          assumption
+        apply ContinuousMap.is_open_gen is_compact_singleton
+        assumption
       simp_rw [Set.compl_union, Set.compl_Union, Set.image_singleton, Set.singleton_subset_iff, Set.ext_iff,
         Set.mem_inter_iff, Set.mem_Inter, Set.mem_compl_iff]
       refine' fun f => ⟨_, _⟩

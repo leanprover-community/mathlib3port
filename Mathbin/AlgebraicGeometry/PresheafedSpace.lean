@@ -76,18 +76,10 @@ structure Hom (X Y : PresheafedSpace.{w, v, u} C) where
 
 @[ext]
 theorem ext {X Y : PresheafedSpace C} (α β : Hom X Y) (w : α.base = β.base)
-    (h :
-      α.c ≫
-          whiskerRight
-            (eqToHom
-              (by
-                rw [w]))
-            _ =
-        β.c) :
-    α = β := by
+    (h : α.c ≫ whiskerRight (eqToHom (by rw [w])) _ = β.c) : α = β := by
   cases α
   cases β
-  dsimp' [presheaf.pushforward_obj]  at *
+  dsimp [presheaf.pushforward_obj] at *
   tidy
 
 -- TODO including `injections` would make tidy work earlier.
@@ -148,8 +140,7 @@ instance categoryOfPresheafedSpaces : Category (PresheafedSpace.{v, v, u} C) whe
     apply comp_id
   assoc' := fun W X Y Z f g h => by
     ext1
-    repeat'
-      rw [comp_c]
+    repeat' rw [comp_c]
     simp only [eq_to_hom_refl, assoc, functor.map_comp, whisker_right_id']
     erw [comp_id]
     congr
@@ -182,7 +173,7 @@ theorem id_c_app (X : PresheafedSpace.{v, v, u} C) (U) :
   induction U using Opposite.rec
   cases U
   simp only [id_c]
-  dsimp'
+  dsimp
   simp
 
 @[simp]
@@ -206,15 +197,9 @@ theorem comp_c_app {X Y Z : PresheafedSpace.{v, v, u} C} (α : X ⟶ Y) (β : Y 
   rfl
 
 theorem congr_app {X Y : PresheafedSpace.{v, v, u} C} {α β : X ⟶ Y} (h : α = β) (U) :
-    α.c.app U =
-      β.c.app U ≫
-        X.Presheaf.map
-          (eqToHom
-            (by
-              subst h)) :=
-  by
+    α.c.app U = β.c.app U ≫ X.Presheaf.map (eqToHom (by subst h)) := by
   subst h
-  dsimp'
+  dsimp
   simp
 
 section
@@ -257,7 +242,7 @@ def isoOfComponents (H : X.1 ≅ Y.1) (α : H.Hom _* X.2 ≅ Y.2) : X ≅ Y wher
     cases x
     rw [nat_trans.comp_app] at this
     convert this
-    · dsimp'
+    · dsimp
       simp
       
     · simp
@@ -352,7 +337,7 @@ instance of_restrict_mono {U : Top} (X : PresheafedSpace C) (f : U ⟶ X.1) (hf 
 
 theorem restrict_top_presheaf (X : PresheafedSpace C) :
     (X.restrict (Opens.open_embedding ⊤)).Presheaf = (Opens.inclusionTopIso X.Carrier).inv _* X.Presheaf := by
-  dsimp'
+  dsimp
   rw [opens.inclusion_top_functor X.carrier]
   rfl
 
@@ -373,7 +358,7 @@ theorem of_restrict_top_c (X : PresheafedSpace C) :
   congr
   simpa
   · induction U using Opposite.rec
-    dsimp'
+    dsimp
     congr
     ext
     exact ⟨fun h => ⟨⟨x, trivialₓ⟩, h, rfl⟩, fun ⟨⟨_, _⟩, h, rfl⟩ => h⟩

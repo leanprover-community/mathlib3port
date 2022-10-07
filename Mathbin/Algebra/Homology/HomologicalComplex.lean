@@ -55,12 +55,8 @@ The composite of any two differentials `d i j ≫ d j k` must be zero.
 structure HomologicalComplex (c : ComplexShape ι) where
   x : ι → V
   d : ∀ i j, X i ⟶ X j
-  shape' : ∀ i j, ¬c.Rel i j → d i j = 0 := by
-    run_tac
-      obviously
-  d_comp_d' : ∀ i j k, c.Rel i j → c.Rel j k → d i j ≫ d j k = 0 := by
-    run_tac
-      obviously
+  shape' : ∀ i j, ¬c.Rel i j → d i j = 0 := by obviously
+  d_comp_d' : ∀ i j k, c.Rel i j → c.Rel j k → d i j ≫ d j k = 0 := by obviously
 
 namespace HomologicalComplex
 
@@ -72,8 +68,8 @@ variable {V} {c : ComplexShape ι}
 
 @[simp, reassoc]
 theorem d_comp_d (C : HomologicalComplex V c) (i j k : ι) : C.d i j ≫ C.d j k = 0 := by
-  by_cases' hij : c.rel i j
-  · by_cases' hjk : c.rel j k
+  by_cases hij:c.rel i j
+  · by_cases hjk:c.rel j k
     · exact C.d_comp_d' i j k hij hjk
       
     · rw [C.shape j k hjk, comp_zero]
@@ -87,11 +83,11 @@ theorem ext {C₁ C₂ : HomologicalComplex V c} (h_X : C₁.x = C₂.x)
     C₁ = C₂ := by
   cases C₁
   cases C₂
-  dsimp'  at h_X
+  dsimp at h_X
   subst h_X
   simp only [true_andₓ, eq_self_iff_true, heq_iff_eq]
   ext i j
-  by_cases' hij : c.rel i j
+  by_cases hij:c.rel i j
   · simpa only [id_comp, eq_to_hom_refl, comp_id] using h_d i j hij
     
   · rw [C₁_shape' i j hij, C₂_shape' i j hij]
@@ -169,13 +165,11 @@ commuting with the differentials.
 @[ext]
 structure Hom (A B : HomologicalComplex V c) where
   f : ∀ i, A.x i ⟶ B.x i
-  comm' : ∀ i j, c.Rel i j → f i ≫ B.d i j = A.d i j ≫ f j := by
-    run_tac
-      obviously
+  comm' : ∀ i j, c.Rel i j → f i ≫ B.d i j = A.d i j ≫ f j := by obviously
 
 @[simp, reassoc]
 theorem Hom.comm {A B : HomologicalComplex V c} (f : A.Hom B) (i j : ι) : f.f i ≫ B.d i j = A.d i j ≫ f.f j := by
-  by_cases' hij : c.rel i j
+  by_cases hij:c.rel i j
   · exact f.comm' i j hij
     
   rw [A.shape i j hij, B.shape i j hij, comp_zero, zero_comp]
@@ -215,8 +209,7 @@ theorem eq_to_hom_f {C₁ C₂ : HomologicalComplex V c} (h : C₁ = C₂) (n : 
   rfl
 
 -- We'll use this later to show that `homological_complex V c` is preadditive when `V` is.
-theorem hom_f_injective {C₁ C₂ : HomologicalComplex V c} : Function.Injective fun f : Hom C₁ C₂ => f.f := by
-  tidy
+theorem hom_f_injective {C₁ C₂ : HomologicalComplex V c} : Function.Injective fun f : Hom C₁ C₂ => f.f := by tidy
 
 instance : HasZeroMorphisms (HomologicalComplex V c) where HasZero := fun C D => ⟨{ f := fun i => 0 }⟩
 
@@ -263,9 +256,7 @@ def forget : HomologicalComplex V c ⥤ GradedObject ι V where
 just picking out the `i`-th object. -/
 @[simps]
 def forgetEval (i : ι) : forget V c ⋙ GradedObject.eval i ≅ eval V c i :=
-  NatIso.ofComponents (fun X => Iso.refl _)
-    (by
-      tidy)
+  NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
 
 end
 
@@ -313,15 +304,14 @@ abbrev xPrev (j : ι) : V :=
 
 /-- If `c.rel i j`, then `C.X_prev j` is isomorphic to `C.X i`. -/
 def xPrevIso {i j : ι} (r : c.Rel i j) : C.xPrev j ≅ C.x i :=
-  eq_to_iso <| by
-    rw [← c.prev_eq' r]
+  eq_to_iso <| by rw [← c.prev_eq' r]
 
 /-- If there is no `i` so `c.rel i j`, then `C.X_prev j` is isomorphic to `C.X j`. -/
 def xPrevIsoSelf {j : ι} (h : ¬c.Rel (c.prev j) j) : C.xPrev j ≅ C.x j :=
   eq_to_iso <|
     congr_arg C.x
       (by
-        dsimp' [ComplexShape.prev]
+        dsimp [ComplexShape.prev]
         rw [dif_neg]
         push_neg
         intro i hi
@@ -335,15 +325,14 @@ abbrev xNext (i : ι) : V :=
 
 /-- If `c.rel i j`, then `C.X_next i` is isomorphic to `C.X j`. -/
 def xNextIso {i j : ι} (r : c.Rel i j) : C.xNext i ≅ C.x j :=
-  eq_to_iso <| by
-    rw [← c.next_eq' r]
+  eq_to_iso <| by rw [← c.next_eq' r]
 
 /-- If there is no `j` so `c.rel i j`, then `C.X_next i` is isomorphic to `C.X i`. -/
 def xNextIsoSelf {i : ι} (h : ¬c.Rel i (c.next i)) : C.xNext i ≅ C.x i :=
   eq_to_iso <|
     congr_arg C.x
       (by
-        dsimp' [ComplexShape.next]
+        dsimp [ComplexShape.next]
         rw [dif_neg]
         rintro ⟨j, hj⟩
         have : c.next i = j := c.next_eq' hj
@@ -377,8 +366,7 @@ theorem d_from_eq_zero {i : ι} (h : ¬c.Rel i (c.next i)) : C.dFrom i = 0 :=
   C.shape _ _ h
 
 @[simp, reassoc]
-theorem X_prev_iso_comp_d_to {i j : ι} (r : c.Rel i j) : (C.xPrevIso r).inv ≫ C.dTo j = C.d i j := by
-  simp [C.d_to_eq r]
+theorem X_prev_iso_comp_d_to {i j : ι} (r : c.Rel i j) : (C.xPrevIso r).inv ≫ C.dTo j = C.d i j := by simp [C.d_to_eq r]
 
 @[simp, reassoc]
 theorem X_prev_iso_self_comp_d_to {j : ι} (h : ¬c.Rel (c.prev j) j) : (C.xPrevIsoSelf h).inv ≫ C.dTo j = 0 := by
@@ -427,12 +415,9 @@ def isoOfComponents (f : ∀ i, C₁.x i ≅ C₂.x i) (hf : ∀ i j, c.Rel i j 
     { f := fun i => (f i).inv,
       comm' := fun i j hij =>
         calc
-          (f i).inv ≫ C₁.d i j = (f i).inv ≫ (C₁.d i j ≫ (f j).Hom) ≫ (f j).inv := by
-            simp
-          _ = (f i).inv ≫ ((f i).Hom ≫ C₂.d i j) ≫ (f j).inv := by
-            rw [hf i j hij]
-          _ = C₂.d i j ≫ (f j).inv := by
-            simp
+          (f i).inv ≫ C₁.d i j = (f i).inv ≫ (C₁.d i j ≫ (f j).Hom) ≫ (f j).inv := by simp
+          _ = (f i).inv ≫ ((f i).Hom ≫ C₂.d i j) ≫ (f j).inv := by rw [hf i j hij]
+          _ = C₂.d i j ≫ (f j).inv := by simp
            }
   hom_inv_id' := by
     ext i
@@ -526,18 +511,10 @@ variable {V} {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α
 /-- Construct an `α`-indexed chain complex from a dependently-typed differential.
 -/
 def of (X : α → V) (d : ∀ n, X (n + 1) ⟶ X n) (sq : ∀ n, d (n + 1) ≫ d n = 0) : ChainComplex V α :=
-  { x,
-    d := fun i j =>
-      if h : i = j + 1 then
-        eqToHom
-            (by
-              subst h) ≫
-          d j
-      else 0,
-    shape' := fun i j w => by
-      rw [dif_neg (Ne.symm w)],
+  { x, d := fun i j => if h : i = j + 1 then eqToHom (by subst h) ≫ d j else 0,
+    shape' := fun i j w => by rw [dif_neg (Ne.symm w)],
     d_comp_d' := fun i j k hij hjk => by
-      dsimp'  at hij hjk
+      dsimp at hij hjk
       substs hij hjk
       simp only [category.id_comp, dif_pos rfl, eq_to_hom_refl]
       exact sq k }
@@ -550,11 +527,11 @@ theorem of_X (n : α) : (of X d sq).x n = X n :=
 
 @[simp]
 theorem of_d (j : α) : (of X d sq).d (j + 1) j = d j := by
-  dsimp' [of]
+  dsimp [of]
   rw [if_pos rfl, category.id_comp]
 
 theorem of_d_ne {i j : α} (h : i ≠ j + 1) : (of X d sq).d i j = 0 := by
-  dsimp' [of]
+  dsimp [of]
   rw [dif_neg h]
 
 end Of
@@ -573,7 +550,7 @@ from a dependently typed collection of morphisms.
 def ofHom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f (i + 1) ≫ d_Y i = d_X i ≫ f i) : of X d_X sq_X ⟶ of Y d_Y sq_Y :=
   { f,
     comm' := fun n m => by
-      by_cases' h : n = m + 1
+      by_cases h:n = m + 1
       · subst h
         simpa using comm m
         
@@ -727,7 +704,7 @@ theorem mk_hom_f_succ_succ (n : ℕ) :
           ⟨(mkHom P Q zero one one_zero_comm succ).f n, (mkHom P Q zero one one_zero_comm succ).f (n + 1),
             (mkHom P Q zero one one_zero_comm succ).comm (n + 1) n⟩).1 :=
   by
-  dsimp' [mk_hom, mk_hom_aux]
+  dsimp [mk_hom, mk_hom_aux]
   induction n <;> congr
 
 end MkHom
@@ -743,14 +720,7 @@ variable {V} {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α
 /-- Construct an `α`-indexed cochain complex from a dependently-typed differential.
 -/
 def of (X : α → V) (d : ∀ n, X n ⟶ X (n + 1)) (sq : ∀ n, d n ≫ d (n + 1) = 0) : CochainComplex V α :=
-  { x,
-    d := fun i j =>
-      if h : i + 1 = j then
-        d _ ≫
-          eqToHom
-            (by
-              subst h)
-      else 0,
+  { x, d := fun i j => if h : i + 1 = j then d _ ≫ eqToHom (by subst h) else 0,
     shape' := fun i j w => by
       rw [dif_neg]
       exact w,
@@ -759,8 +729,7 @@ def of (X : α → V) (d : ∀ n, X n ⟶ X (n + 1)) (sq : ∀ n, d n ≫ d (n +
       · substs h h'
         simp [sq]
         
-      all_goals
-        simp }
+      all_goals simp }
 
 variable (X : α → V) (d : ∀ n, X n ⟶ X (n + 1)) (sq : ∀ n, d n ≫ d (n + 1) = 0)
 
@@ -770,11 +739,11 @@ theorem of_X (n : α) : (of X d sq).x n = X n :=
 
 @[simp]
 theorem of_d (j : α) : (of X d sq).d j (j + 1) = d j := by
-  dsimp' [of]
+  dsimp [of]
   rw [if_pos rfl, category.comp_id]
 
 theorem of_d_ne {i j : α} (h : i + 1 ≠ j) : (of X d sq).d i j = 0 := by
-  dsimp' [of]
+  dsimp [of]
   rw [dif_neg h]
 
 end Of
@@ -793,7 +762,7 @@ from a dependently typed collection of morphisms.
 def ofHom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f i ≫ d_Y i = d_X i ≫ f (i + 1)) : of X d_X sq_X ⟶ of Y d_Y sq_Y :=
   { f,
     comm' := fun n m => by
-      by_cases' h : n + 1 = m
+      by_cases h:n + 1 = m
       · subst h
         simpa using comm n
         
@@ -947,7 +916,7 @@ theorem mk_hom_f_succ_succ (n : ℕ) :
           ⟨(mkHom P Q zero one one_zero_comm succ).f n, (mkHom P Q zero one one_zero_comm succ).f (n + 1),
             (mkHom P Q zero one one_zero_comm succ).comm n (n + 1)⟩).1 :=
   by
-  dsimp' [mk_hom, mk_hom_aux]
+  dsimp [mk_hom, mk_hom_aux]
   induction n <;> congr
 
 end MkHom

@@ -37,12 +37,8 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 /-- Homeomorphism between `α` and `β`, also called topological isomorphism -/
 @[nolint has_nonempty_instance]
 structure Homeomorph (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] extends α ≃ β where
-  continuous_to_fun : Continuous to_fun := by
-    run_tac
-      tactic.interactive.continuity'
-  continuous_inv_fun : Continuous inv_fun := by
-    run_tac
-      tactic.interactive.continuity'
+  continuous_to_fun : Continuous to_fun := by continuity
+  continuous_inv_fun : Continuous inv_fun := by continuity
 
 -- mathport name: «expr ≃ₜ »
 infixl:25 " ≃ₜ " => Homeomorph
@@ -157,17 +153,10 @@ def changeInv (f : α ≃ₜ β) (g : β → α) (hg : Function.RightInverse g f
     funext fun x =>
       calc
         g x = f.symm (f (g x)) := (f.left_inv (g x)).symm
-        _ = f.symm x := by
-          rw [hg x]
+        _ = f.symm x := by rw [hg x]
         
-  { toFun := f, invFun := g,
-    left_inv := by
-      convert f.left_inv,
-    right_inv := by
-      convert f.right_inv,
-    continuous_to_fun := f.Continuous,
-    continuous_inv_fun := by
-      convert f.symm.continuous }
+  { toFun := f, invFun := g, left_inv := by convert f.left_inv, right_inv := by convert f.right_inv,
+    continuous_to_fun := f.Continuous, continuous_inv_fun := by convert f.symm.continuous }
 
 @[simp]
 theorem symm_comp_self (h : α ≃ₜ β) : ⇑h.symm ∘ ⇑h = id :=
@@ -196,15 +185,13 @@ theorem preimage_image (h : α ≃ₜ β) (s : Set α) : h ⁻¹' (h '' s) = s :
   h.toEquiv.preimage_image s
 
 protected theorem inducing (h : α ≃ₜ β) : Inducing h :=
-  inducing_of_inducing_compose h.Continuous h.symm.Continuous <| by
-    simp only [symm_comp_self, inducing_id]
+  inducing_of_inducing_compose h.Continuous h.symm.Continuous <| by simp only [symm_comp_self, inducing_id]
 
 theorem induced_eq (h : α ≃ₜ β) : TopologicalSpace.induced h ‹_› = ‹_› :=
   h.Inducing.1.symm
 
 protected theorem quotient_map (h : α ≃ₜ β) : QuotientMap h :=
-  QuotientMap.of_quotient_map_compose h.symm.Continuous h.Continuous <| by
-    simp only [self_comp_symm, QuotientMap.id]
+  QuotientMap.of_quotient_map_compose h.symm.Continuous h.Continuous <| by simp only [self_comp_symm, QuotientMap.id]
 
 theorem coinduced_eq (h : α ≃ₜ β) : TopologicalSpace.coinduced h ‹_› = ‹_› :=
   h.QuotientMap.2.symm
@@ -215,8 +202,7 @@ protected theorem embedding (h : α ≃ₜ β) : Embedding h :=
 /-- Homeomorphism given an embedding. -/
 noncomputable def ofEmbedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set.Range f where
   continuous_to_fun := hf.Continuous.subtype_mk _
-  continuous_inv_fun := by
-    simp [hf.continuous_iff, continuous_subtype_coe]
+  continuous_inv_fun := by simp [hf.continuous_iff, continuous_subtype_coe]
   toEquiv := Equivₓ.ofInjective f hf.inj
 
 protected theorem second_countable_topology [TopologicalSpace.SecondCountableTopology β] (h : α ≃ₜ β) :
@@ -264,8 +250,7 @@ theorem is_open_preimage (h : α ≃ₜ β) {s : Set β} : IsOpen (h ⁻¹' s) �
   h.QuotientMap.is_open_preimage
 
 @[simp]
-theorem is_open_image (h : α ≃ₜ β) {s : Set α} : IsOpen (h '' s) ↔ IsOpen s := by
-  rw [← preimage_symm, is_open_preimage]
+theorem is_open_image (h : α ≃ₜ β) {s : Set α} : IsOpen (h '' s) ↔ IsOpen s := by rw [← preimage_symm, is_open_preimage]
 
 protected theorem is_open_map (h : α ≃ₜ β) : IsOpenMap h := fun s => h.is_open_image.2
 
@@ -310,9 +295,7 @@ theorem _root_.has_compact_mul_support.comp_homeomorph {M} [One M] {f : β → M
 
 @[simp]
 theorem map_nhds_eq (h : α ≃ₜ β) (x : α) : map h (𝓝 x) = 𝓝 (h x) :=
-  h.Embedding.map_nhds_of_mem _
-    (by
-      simp )
+  h.Embedding.map_nhds_of_mem _ (by simp)
 
 theorem symm_map_nhds_eq (h : α ≃ₜ β) (x : α) : map h.symm (𝓝 (h x)) = 𝓝 x := by
   rw [h.symm.map_nhds_eq, h.symm_apply_apply]
@@ -321,8 +304,7 @@ theorem nhds_eq_comap (h : α ≃ₜ β) (x : α) : 𝓝 x = comap h (𝓝 (h x)
   h.Embedding.to_inducing.nhds_eq_comap x
 
 @[simp]
-theorem comap_nhds_eq (h : α ≃ₜ β) (y : β) : comap h (𝓝 y) = 𝓝 (h.symm y) := by
-  rw [h.nhds_eq_comap, h.apply_symm_apply]
+theorem comap_nhds_eq (h : α ≃ₜ β) (y : β) : comap h (𝓝 y) = 𝓝 (h.symm y) := by rw [h.nhds_eq_comap, h.apply_symm_apply]
 
 /-- If an bijective map `e : α ≃ β` is continuous and open, then it is a homeomorphism. -/
 def homeomorphOfContinuousOpen (e : α ≃ β) (h₁ : Continuous e) (h₂ : IsOpenMap e) : α ≃ₜ β where
@@ -350,9 +332,7 @@ theorem comp_continuous_at_iff (h : α ≃ₜ β) (f : γ → α) (x : γ) : Con
   h.Inducing.continuous_at_iff.symm
 
 theorem comp_continuous_at_iff' (h : α ≃ₜ β) (f : β → γ) (x : α) : ContinuousAt (f ∘ h) x ↔ ContinuousAt f (h x) :=
-  h.Inducing.continuous_at_iff'
-    (by
-      simp )
+  h.Inducing.continuous_at_iff' (by simp)
 
 theorem comp_continuous_within_at_iff (h : α ≃ₜ β) (f : γ → α) (s : Set γ) (x : γ) :
     ContinuousWithinAt f s x ↔ ContinuousWithinAt (h ∘ f) s x :=
@@ -447,6 +427,19 @@ def _root_.homeomorph.homeomorph_of_unique [Unique α] [Unique β] : α ≃ₜ �
 
 end
 
+/-- If each `β₁ i` is homeomorphic to `β₂ i`, then `Π i, β₁ i` is homeomorphic to `Π i, β₂ i`. -/
+@[simps apply toEquiv]
+def piCongrRight {ι : Type _} {β₁ β₂ : ι → Type _} [∀ i, TopologicalSpace (β₁ i)] [∀ i, TopologicalSpace (β₂ i)]
+    (F : ∀ i, β₁ i ≃ₜ β₂ i) : (∀ i, β₁ i) ≃ₜ ∀ i, β₂ i where
+  continuous_to_fun := continuous_pi fun i => (F i).Continuous.comp <| continuous_apply i
+  continuous_inv_fun := continuous_pi fun i => (F i).symm.Continuous.comp <| continuous_apply i
+  toEquiv := Equivₓ.piCongrRight fun i => (F i).toEquiv
+
+@[simp]
+theorem Pi_congr_right_symm {ι : Type _} {β₁ β₂ : ι → Type _} [∀ i, TopologicalSpace (β₁ i)]
+    [∀ i, TopologicalSpace (β₂ i)] (F : ∀ i, β₁ i ≃ₜ β₂ i) : (piCongrRight F).symm = piCongrRight fun i => (F i).symm :=
+  rfl
+
 /-- `ulift α` is homeomorphic to `α`. -/
 def ulift.{u, v} {α : Type u} [TopologicalSpace α] : ULift.{v, u} α ≃ₜ α where
   continuous_to_fun := continuous_ulift_down
@@ -460,7 +453,7 @@ def sumProdDistrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) :=
   Homeomorph.symm <|
     homeomorphOfContinuousOpen (Equivₓ.sumProdDistrib α β γ).symm
         ((continuous_inl.prod_map continuous_id).sum_elim (continuous_inr.prod_map continuous_id)) <|
-      is_open_map_sum (open_embedding_inl.IsOpenMap.Prod IsOpenMap.id) (open_embedding_inr.IsOpenMap.Prod IsOpenMap.id)
+      (is_open_map_inl.Prod IsOpenMap.id).sum_elim (is_open_map_inr.Prod IsOpenMap.id)
 
 /-- `α × (β ⊕ γ)` is homeomorphic to `α × β ⊕ α × γ`. -/
 def prodSumDistrib : α × Sum β γ ≃ₜ Sum (α × β) (α × γ) :=
@@ -472,8 +465,8 @@ variable {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)]
 def sigmaProdDistrib : (Σi, σ i) × β ≃ₜ Σi, σ i × β :=
   Homeomorph.symm <|
     homeomorphOfContinuousOpen (Equivₓ.sigmaProdDistrib σ β).symm
-      (continuous_sigma fun i => (continuous_sigma_mk.comp continuous_fst).prod_mk continuous_snd)
-      (is_open_map_sigma fun i => (open_embedding_sigma_mk.Prod open_embedding_id).IsOpenMap)
+      (continuous_sigma fun i => continuous_sigma_mk.fst'.prod_mk continuous_snd)
+      (is_open_map_sigma.2 fun i => is_open_map_sigma_mk.Prod IsOpenMap.id)
 
 end Distribₓ
 
@@ -500,10 +493,8 @@ def finTwoArrow : (Finₓ 2 → α) ≃ₜ α × α :=
 -/
 @[simps]
 def image (e : α ≃ₜ β) (s : Set α) : s ≃ₜ e '' s where
-  continuous_to_fun := by
-    continuity!
-  continuous_inv_fun := by
-    continuity!
+  continuous_to_fun := by continuity!
+  continuous_inv_fun := by continuity!
   toEquiv := e.toEquiv.Image s
 
 /-- `set.univ α` is homeomorphic to `α`. -/
@@ -527,9 +518,7 @@ end Homeomorph
 @[simps]
 def Equivₓ.toHomeomorphOfInducing [TopologicalSpace α] [TopologicalSpace β] (f : α ≃ β) (hf : Inducing f) : α ≃ₜ β :=
   { f with continuous_to_fun := hf.Continuous,
-    continuous_inv_fun :=
-      hf.continuous_iff.2 <| by
-        simpa using continuous_id }
+    continuous_inv_fun := hf.continuous_iff.2 <| by simpa using continuous_id }
 
 namespace Continuous
 

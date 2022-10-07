@@ -170,8 +170,7 @@ theorem map_t₀ : f v.t₀ = v.x₀ :=
 
 protected theorem mem_closed_ball (t : Icc v.tMin v.tMax) : f t ∈ ClosedBall v.x₀ v.r :=
   calc
-    dist (f t) v.x₀ = dist (f t) (f.toFun v.t₀) := by
-      rw [f.map_t₀']
+    dist (f t) v.x₀ = dist (f t) (f.toFun v.t₀) := by rw [f.map_t₀']
     _ ≤ v.c * dist t v.t₀ := f.lipschitz.dist_le_mul _ _
     _ ≤ v.c * v.tDist := mul_le_mul_of_nonneg_left (v.dist_t₀_le _) v.c.2
     _ ≤ v.r := v.C_mul_le_R
@@ -183,8 +182,7 @@ function is the image of `γ` under the contracting map we are going to define b
 def vComp (t : ℝ) : E :=
   v (v.proj t) (f (v.proj t))
 
-theorem v_comp_apply_coe (t : Icc v.tMin v.tMax) : f.vComp t = v t (f t) := by
-  simp only [v_comp, proj_coe]
+theorem v_comp_apply_coe (t : Icc v.tMin v.tMax) : f.vComp t = v t (f t) := by simp only [v_comp, proj_coe]
 
 theorem continuous_v_comp : Continuous f.vComp := by
   have := (continuous_subtype_coe.prod_mk f.continuous).comp v.continuous_proj
@@ -219,8 +217,7 @@ that the fixed point of this map is the solution of the corresponding ODE.
 More precisely, some iteration of this map is a contracting map. -/
 def next (f : FunSpace v) : FunSpace v where
   toFun := fun t => v.x₀ + ∫ τ : ℝ in v.t₀..t, f.vComp τ
-  map_t₀' := by
-    rw [integral_same, add_zeroₓ]
+  map_t₀' := by rw [integral_same, add_zeroₓ]
   lipschitz' :=
     LipschitzWith.of_dist_le_mul fun t₁ t₂ => by
       rw [dist_add_left, dist_eq_norm,

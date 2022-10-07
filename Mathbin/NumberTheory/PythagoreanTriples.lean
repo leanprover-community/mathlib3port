@@ -29,11 +29,10 @@ the bulk of the proof below.
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem sq_ne_two_fin_zmod_four (z : Zmod 4) : z * z ≠ 2 := by
   change Finₓ 4 at z
-  fin_cases z <;> norm_num[Finₓ.ext_iff, Finₓ.coe_bit0, Finₓ.coe_bit1]
+  fin_cases z <;> norm_num [Finₓ.ext_iff, Finₓ.coe_bit0, Finₓ.coe_bit1]
 
 theorem Int.sq_ne_two_mod_four (z : ℤ) : z * z % 4 ≠ 2 := by
-  suffices ¬z * z % (4 : ℕ) = 2 % (4 : ℕ) by
-    norm_num at this
+  suffices ¬z * z % (4 : ℕ) = 2 % (4 : ℕ) by norm_num at this
   rw [← Zmod.int_coe_eq_int_coe_iff']
   simpa using sq_ne_two_fin_zmod_four _
 
@@ -48,12 +47,11 @@ def PythagoreanTriple (x y z : ℤ) : Prop :=
 /-- Pythagorean triples are interchangable, i.e `x * x + y * y = y * y + x * x = z * z`.
 This comes from additive commutativity. -/
 theorem pythagorean_triple_comm {x y z : ℤ} : PythagoreanTriple x y z ↔ PythagoreanTriple y x z := by
-  delta' PythagoreanTriple
+  delta PythagoreanTriple
   rw [add_commₓ]
 
 /-- The zeroth Pythagorean triple is all zeros. -/
-theorem PythagoreanTriple.zero : PythagoreanTriple 0 0 0 := by
-  simp only [PythagoreanTriple, zero_mul, zero_addₓ]
+theorem PythagoreanTriple.zero : PythagoreanTriple 0 0 0 := by simp only [PythagoreanTriple, zero_mul, zero_addₓ]
 
 namespace PythagoreanTriple
 
@@ -65,19 +63,15 @@ theorem eq : x * x + y * y = z * z :=
   h
 
 @[symm]
-theorem symm : PythagoreanTriple y x z := by
-  rwa [pythagorean_triple_comm]
+theorem symm : PythagoreanTriple y x z := by rwa [pythagorean_triple_comm]
 
 /-- A triple is still a triple if you multiply `x`, `y` and `z`
 by a constant `k`. -/
 theorem mul (k : ℤ) : PythagoreanTriple (k * x) (k * y) (k * z) :=
   calc
-    k * x * (k * x) + k * y * (k * y) = k ^ 2 * (x * x + y * y) := by
-      ring
-    _ = k ^ 2 * (z * z) := by
-      rw [h.eq]
-    _ = k * z * (k * z) := by
-      ring
+    k * x * (k * x) + k * y * (k * y) = k ^ 2 * (x * x + y * y) := by ring
+    _ = k ^ 2 * (z * z) := by rw [h.eq]
+    _ = k * z * (k * z) := by ring
     
 
 omit h
@@ -130,11 +124,7 @@ theorem even_odd_of_coprime (hc : Int.gcdₓ x y = 1) : x % 2 = 0 ∧ y % 2 = 1 
   cases' Int.mod_two_eq_zero_or_one x with hx hx <;> cases' Int.mod_two_eq_zero_or_one y with hy hy
   · -- x even, y even
     exfalso
-    apply
-      Nat.not_coprime_of_dvd_of_dvdₓ
-        (by
-          decide : 1 < 2)
-        _ _ hc
+    apply Nat.not_coprime_of_dvd_of_dvdₓ (by decide : 1 < 2) _ _ hc
     · apply Int.dvd_nat_abs_of_of_nat_dvd
       apply Int.dvd_of_mod_eq_zeroₓ hx
       
@@ -158,44 +148,39 @@ theorem even_odd_of_coprime (hc : Int.gcdₓ x y = 1) : x % 2 = 0 ∧ y % 2 = 1 
       rw [sub_eq_iff_eq_add] at hx2 hy2
       exact ⟨x0, y0, hx2, hy2⟩
     apply Int.sq_ne_two_mod_four z
-    rw
-      [show z * z = 4 * (x0 * x0 + x0 + y0 * y0 + y0) + 2 by
+    rw [show z * z = 4 * (x0 * x0 + x0 + y0 * y0 + y0) + 2 by
         rw [← h.eq]
         ring]
-    norm_num[Int.add_mod]
+    norm_num [Int.add_mod]
     
 
 theorem gcd_dvd : (Int.gcdₓ x y : ℤ) ∣ z := by
-  by_cases' h0 : Int.gcdₓ x y = 0
+  by_cases h0:Int.gcdₓ x y = 0
   · have hx : x = 0 := by
       apply int.nat_abs_eq_zero.mp
       apply Nat.eq_zero_of_gcd_eq_zero_leftₓ h0
     have hy : y = 0 := by
       apply int.nat_abs_eq_zero.mp
       apply Nat.eq_zero_of_gcd_eq_zero_rightₓ h0
-    have hz : z = 0 := by
-      simpa only [PythagoreanTriple, hx, hy, add_zeroₓ, zero_eq_mul, mul_zero, or_selfₓ] using h
+    have hz : z = 0 := by simpa only [PythagoreanTriple, hx, hy, add_zeroₓ, zero_eq_mul, mul_zero, or_selfₓ] using h
     simp only [hz, dvd_zero]
     
   obtain ⟨k, x0, y0, k0, h2, rfl, rfl⟩ : ∃ (k : ℕ)(x0 y0 : _), 0 < k ∧ Int.gcdₓ x0 y0 = 1 ∧ x = x0 * k ∧ y = y0 * k :=
     Int.exists_gcd_one' (Nat.pos_of_ne_zeroₓ h0)
   rw [Int.gcd_mul_right, h2, Int.nat_abs_of_nat, one_mulₓ]
   rw [← Int.pow_dvd_pow_iff zero_lt_two, sq z, ← h.eq]
-  rw
-    [(by
-      ring : x0 * k * (x0 * k) + y0 * k * (y0 * k) = k ^ 2 * (x0 * x0 + y0 * y0))]
+  rw [(by ring : x0 * k * (x0 * k) + y0 * k * (y0 * k) = k ^ 2 * (x0 * x0 + y0 * y0))]
   exact dvd_mul_right _ _
 
 theorem normalize : PythagoreanTriple (x / Int.gcdₓ x y) (y / Int.gcdₓ x y) (z / Int.gcdₓ x y) := by
-  by_cases' h0 : Int.gcdₓ x y = 0
+  by_cases h0:Int.gcdₓ x y = 0
   · have hx : x = 0 := by
       apply int.nat_abs_eq_zero.mp
       apply Nat.eq_zero_of_gcd_eq_zero_leftₓ h0
     have hy : y = 0 := by
       apply int.nat_abs_eq_zero.mp
       apply Nat.eq_zero_of_gcd_eq_zero_rightₓ h0
-    have hz : z = 0 := by
-      simpa only [PythagoreanTriple, hx, hy, add_zeroₓ, zero_eq_mul, mul_zero, or_selfₓ] using h
+    have hz : z = 0 := by simpa only [PythagoreanTriple, hx, hy, add_zeroₓ, zero_eq_mul, mul_zero, or_selfₓ] using h
     simp only [hx, hy, hz, Int.zero_divₓ]
     exact zero
     
@@ -340,9 +325,8 @@ private theorem coprime_sq_sub_sq_add_of_even_odd {m n : ℤ} (h : Int.gcdₓ m 
     ring
   have hmc : p = 2 ∨ p ∣ Int.natAbs m := prime_two_or_dvd_of_dvd_two_mul_pow_self_two hp h2m
   have hnc : p = 2 ∨ p ∣ Int.natAbs n := prime_two_or_dvd_of_dvd_two_mul_pow_self_two hp h2n
-  by_cases' h2 : p = 2
-  · have h3 : (m ^ 2 + n ^ 2) % 2 = 1 := by
-      norm_num[sq, Int.add_mod, Int.mul_mod, hm, hn]
+  by_cases h2:p = 2
+  · have h3 : (m ^ 2 + n ^ 2) % 2 = 1 := by norm_num [sq, Int.add_mod, Int.mul_mod, hm, hn]
     have h4 : (m ^ 2 + n ^ 2) % 2 = 0 := by
       apply Int.mod_eq_zero_of_dvdₓ
       rwa [h2] at hp2
@@ -357,10 +341,7 @@ private theorem coprime_sq_sub_sq_add_of_even_odd {m n : ℤ} (h : Int.gcdₓ m 
 private theorem coprime_sq_sub_sq_add_of_odd_even {m n : ℤ} (h : Int.gcdₓ m n = 1) (hm : m % 2 = 1) (hn : n % 2 = 0) :
     Int.gcdₓ (m ^ 2 - n ^ 2) (m ^ 2 + n ^ 2) = 1 := by
   rw [Int.gcdₓ, ← Int.nat_abs_neg (m ^ 2 - n ^ 2)]
-  rw
-    [(by
-      ring : -(m ^ 2 - n ^ 2) = n ^ 2 - m ^ 2),
-    add_commₓ]
+  rw [(by ring : -(m ^ 2 - n ^ 2) = n ^ 2 - m ^ 2), add_commₓ]
   apply coprime_sq_sub_sq_add_of_even_odd _ hn hm
   rwa [Int.gcd_comm]
 
@@ -380,14 +361,12 @@ private theorem coprime_sq_sub_mul_of_even_odd {m n : ℤ} (h : Int.gcdₓ m n =
       revert hp1
       rw [hp2']
       apply mt Int.mod_eq_zero_of_dvdₓ
-      norm_num[sq, Int.sub_mod, Int.mul_mod, hm, hn]
+      norm_num [sq, Int.sub_mod, Int.mul_mod, hm, hn]
       
     apply mt (Int.dvd_gcd (int.coe_nat_dvd_left.mpr hpm)) hnp
     apply (or_selfₓ _).mp
     apply Int.Prime.dvd_mul' hp
-    rw
-      [(by
-        ring : n * n = -(m ^ 2 - n ^ 2) + m * m)]
+    rw [(by ring : n * n = -(m ^ 2 - n ^ 2) + m * m)]
     apply dvd_add (dvd_neg_of_dvd hp1)
     exact dvd_mul_of_dvd_left (int.coe_nat_dvd_left.mpr hpm) m
     
@@ -395,20 +374,14 @@ private theorem coprime_sq_sub_mul_of_even_odd {m n : ℤ} (h : Int.gcdₓ m n =
   apply mt (Int.dvd_gcd (int.coe_nat_dvd_left.mpr hpn)) hnp
   apply (or_selfₓ _).mp
   apply Int.Prime.dvd_mul' hp
-  rw
-    [(by
-      ring : m * m = m ^ 2 - n ^ 2 + n * n)]
+  rw [(by ring : m * m = m ^ 2 - n ^ 2 + n * n)]
   apply dvd_add hp1
   exact (int.coe_nat_dvd_left.mpr hpn).mul_right n
 
 private theorem coprime_sq_sub_mul_of_odd_even {m n : ℤ} (h : Int.gcdₓ m n = 1) (hm : m % 2 = 1) (hn : n % 2 = 0) :
     Int.gcdₓ (m ^ 2 - n ^ 2) (2 * m * n) = 1 := by
   rw [Int.gcdₓ, ← Int.nat_abs_neg (m ^ 2 - n ^ 2)]
-  rw
-    [(by
-      ring : 2 * m * n = 2 * n * m),
-    (by
-      ring : -(m ^ 2 - n ^ 2) = n ^ 2 - m ^ 2)]
+  rw [(by ring : 2 * m * n = 2 * n * m), (by ring : -(m ^ 2 - n ^ 2) = n ^ 2 - m ^ 2)]
   apply coprime_sq_sub_mul_of_even_odd _ hn hm
   rwa [Int.gcd_comm]
 
@@ -429,17 +402,13 @@ private theorem coprime_sq_sub_sq_sum_of_odd_odd {m n : ℤ} (h : Int.gcdₓ m n
   rw [sub_eq_iff_eq_add] at hm2 hn2
   subst m
   subst n
-  have h1 : (m0 * 2 + 1) ^ 2 + (n0 * 2 + 1) ^ 2 = 2 * (2 * (m0 ^ 2 + n0 ^ 2 + m0 + n0) + 1) := by
-    ring_exp
-  have h2 : (m0 * 2 + 1) ^ 2 - (n0 * 2 + 1) ^ 2 = 2 * (2 * (m0 ^ 2 - n0 ^ 2 + m0 - n0)) := by
-    ring_exp
+  have h1 : (m0 * 2 + 1) ^ 2 + (n0 * 2 + 1) ^ 2 = 2 * (2 * (m0 ^ 2 + n0 ^ 2 + m0 + n0) + 1) := by ring_exp
+  have h2 : (m0 * 2 + 1) ^ 2 - (n0 * 2 + 1) ^ 2 = 2 * (2 * (m0 ^ 2 - n0 ^ 2 + m0 - n0)) := by ring_exp
   have h3 : ((m0 * 2 + 1) ^ 2 - (n0 * 2 + 1) ^ 2) / 2 % 2 = 0 := by
     rw [h2, Int.mul_div_cancel_leftₓ, Int.mul_mod_rightₓ]
-    exact by
-      decide
+    exact by decide
   refine' ⟨⟨_, h1⟩, ⟨_, h2⟩, h3, _⟩
-  have h20 : (2 : ℤ) ≠ 0 := by
-    decide
+  have h20 : (2 : ℤ) ≠ 0 := by decide
   rw [h1, h2, Int.mul_div_cancel_leftₓ _ h20, Int.mul_div_cancel_leftₓ _ h20]
   by_contra h4
   obtain ⟨p, hp, hp1, hp2⟩ := nat.prime.not_coprime_iff_dvd.mp h4
@@ -482,7 +451,7 @@ theorem is_primitive_classified_aux (hc : x.gcd y = 1) (hzpos : 0 < z) {m n : �
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) }
 theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 1) (hyo : y % 2 = 1) (hzpos : 0 < z) :
     h.IsPrimitiveClassified := by
-  by_cases' h0 : x = 0
+  by_cases h0:x = 0
   · exact h.is_primitive_classified_of_coprime_of_zero_left hc h0
     
   let v := (x : ℚ) / z
@@ -569,17 +538,11 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 
     have h2 : y = (m ^ 2 - n ^ 2) / 2 ∧ z = (m ^ 2 + n ^ 2) / 2 := by
       apply Ratₓ.div_int_inj hzpos _ (h.coprime_of_coprime hc) h1.2.2.2
       · show w = _
-        rw [← Ratₓ.mk_eq_div, ←
-          Ratₓ.div_mk_div_cancel_left
-            (by
-              norm_num : (2 : ℤ) ≠ 0)]
+        rw [← Ratₓ.mk_eq_div, ← Ratₓ.div_mk_div_cancel_left (by norm_num : (2 : ℤ) ≠ 0)]
         rw [Int.div_mul_cancelₓ h1.1, Int.div_mul_cancelₓ h1.2.1, hw2]
         norm_cast
         
-      · apply
-          (mul_lt_mul_right
-              (by
-                norm_num : 0 < (2 : ℤ))).mp
+      · apply (mul_lt_mul_right (by norm_num : 0 < (2 : ℤ))).mp
         rw [Int.div_mul_cancelₓ h1.1, zero_mul]
         exact hm2n2
         
@@ -599,17 +562,16 @@ theorem is_primitive_classified_of_coprime_of_pos (hc : Int.gcdₓ x y = 1) (hzp
   tauto
 
 theorem is_primitive_classified_of_coprime (hc : Int.gcdₓ x y = 1) : h.IsPrimitiveClassified := by
-  by_cases' hz : 0 < z
+  by_cases hz:0 < z
   · exact h.is_primitive_classified_of_coprime_of_pos hc hz
     
-  have h' : PythagoreanTriple x y (-z) := by
-    simpa [PythagoreanTriple, neg_mul_neg] using h.eq
+  have h' : PythagoreanTriple x y (-z) := by simpa [PythagoreanTriple, neg_mul_neg] using h.eq
   apply h'.is_primitive_classified_of_coprime_of_pos hc
   apply lt_of_le_of_neₓ _ (h'.ne_zero_of_coprime hc).symm
   exact le_neg.mp (not_lt.mp hz)
 
 theorem classified : h.IsClassified := by
-  by_cases' h0 : Int.gcdₓ x y = 0
+  by_cases h0:Int.gcdₓ x y = 0
   · have hx : x = 0 := by
       apply int.nat_abs_eq_zero.mp
       apply Nat.eq_zero_of_gcd_eq_zero_leftₓ h0
@@ -617,7 +579,7 @@ theorem classified : h.IsClassified := by
       apply int.nat_abs_eq_zero.mp
       apply Nat.eq_zero_of_gcd_eq_zero_rightₓ h0
     use 0, 1, 0
-    norm_num[hx, hy]
+    norm_num [hx, hy]
     
   apply h.is_classified_of_normalize_is_primitive_classified
   apply h.normalize.is_primitive_classified_of_coprime
@@ -650,15 +612,14 @@ theorem coprime_classification :
       simpa using eq_or_eq_neg_of_sq_eq_sq _ _ this
       
     
-  · delta' PythagoreanTriple
+  · delta PythagoreanTriple
     rintro ⟨m, n, ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, rfl | rfl, co, pp⟩ <;>
-      first |
-        · constructor
+      first
+        |· constructor
           · ring
             
           exact coprime_sq_sub_mul co pp
-          |
-        · constructor
+          |· constructor
           · ring
             
           rw [Int.gcd_comm]
@@ -707,7 +668,7 @@ theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z) (h_c
       cases' ht2 with h_pos h_neg
       · apply And.intro h_pos
         constructor
-        · delta' Int.gcdₓ
+        · delta Int.gcdₓ
           rw [Int.nat_abs_neg, Int.nat_abs_neg]
           exact ht3
           
@@ -753,7 +714,7 @@ theorem classification :
       simpa using eq_or_eq_neg_of_sq_eq_sq _ _ this
       
     
-  · rintro ⟨k, m, n, ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, rfl | rfl⟩ <;> delta' PythagoreanTriple <;> ring
+  · rintro ⟨k, m, n, ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, rfl | rfl⟩ <;> delta PythagoreanTriple <;> ring
     
 
 end PythagoreanTriple

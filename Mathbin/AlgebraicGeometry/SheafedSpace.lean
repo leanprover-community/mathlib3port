@@ -71,8 +71,7 @@ instance : Inhabited (SheafedSpace (discrete Unit)) :=
   ⟨unit (Top.of Pempty)⟩
 
 instance : Category (SheafedSpace C) :=
-  show Category (InducedCategory (PresheafedSpace.{v} C) SheafedSpace.toPresheafedSpace) by
-    infer_instance
+  show Category (InducedCategory (PresheafedSpace.{v} C) SheafedSpace.toPresheafedSpace) by infer_instance
 
 /-- Forgetting the sheaf condition is a functor from `SheafedSpace C` to `PresheafedSpace C`. -/
 def forgetToPresheafedSpace : SheafedSpace.{v} C ⥤ PresheafedSpace.{v} C :=
@@ -106,7 +105,7 @@ theorem id_c_app (X : SheafedSpace C) (U) :
   induction U using Opposite.rec
   cases U
   simp only [id_c]
-  dsimp'
+  dsimp
   simp
 
 @[simp]
@@ -123,12 +122,7 @@ theorem comp_c_app' {X Y Z : SheafedSpace C} (α : X ⟶ Y) (β : Y ⟶ Z) (U) :
   rfl
 
 theorem congr_app {X Y : SheafedSpace C} {α β : X ⟶ Y} (h : α = β) (U) :
-    α.c.app U =
-      β.c.app U ≫
-        X.Presheaf.map
-          (eqToHom
-            (by
-              subst h)) :=
+    α.c.app U = β.c.app U ≫ X.Presheaf.map (eqToHom (by subst h)) :=
   PresheafedSpace.congr_app h U
 
 variable (C)

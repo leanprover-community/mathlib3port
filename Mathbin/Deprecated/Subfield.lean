@@ -48,9 +48,7 @@ theorem IsSubfield.pow_mem {a : F} {n : ℤ} {s : Set F} (hs : IsSubfield s) (h 
     
 
 theorem Univ.is_subfield : IsSubfield (@Set.Univ F) :=
-  { Univ.is_submonoid, IsAddSubgroup.univ_add_subgroup with
-    inv_mem := by
-      intros <;> trivial }
+  { Univ.is_submonoid, IsAddSubgroup.univ_add_subgroup with inv_mem := by intros <;> trivial }
 
 theorem Preimage.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} (hs : IsSubfield s) :
     IsSubfield (f ⁻¹' s) :=
@@ -96,10 +94,10 @@ theorem Closure.is_subfield : IsSubfield (Closure S) :=
       rcases id ha with ⟨p, hp, q, hq, rfl⟩
       rcases id hb with ⟨r, hr, s, hs, rfl⟩
       classical
-      by_cases' hq0 : q = 0
+      by_cases hq0:q = 0
       · simp [hb, hq0]
         
-      by_cases' hs0 : s = 0
+      by_cases hs0:s = 0
       · simp [ha, hs0]
         
       exact

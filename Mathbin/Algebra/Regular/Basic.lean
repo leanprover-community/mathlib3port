@@ -90,9 +90,7 @@ element, then `b` is left-regular. -/
 @[to_additive
       "If an element `b` becomes add-left-regular after adding to it on the left a\nadd-left-regular element, then `b` is add-left-regular."]
 theorem IsLeftRegular.of_mul (ab : IsLeftRegular (a * b)) : IsLeftRegular b :=
-  Function.Injective.of_comp
-    (by
-      rwa [comp_mul_left a b])
+  Function.Injective.of_comp (by rwa [comp_mul_left a b])
 
 /-- An element is left-regular if and only if multiplying it on the left by a left-regular element
 is left-regular. -/
@@ -234,11 +232,7 @@ variable [CommSemigroupₓ R] {a b : R}
 @[to_additive "A sum is add-regular if and only if the summands are."]
 theorem is_regular_mul_iff : IsRegular (a * b) ↔ IsRegular a ∧ IsRegular b := by
   refine' Iff.trans _ is_regular_mul_and_mul_iff
-  refine'
-    ⟨fun ab =>
-      ⟨ab, by
-        rwa [mul_comm]⟩,
-      fun rab => rab.1⟩
+  refine' ⟨fun ab => ⟨ab, by rwa [mul_comm]⟩, fun rab => rab.1⟩
 
 end CommSemigroupₓ
 

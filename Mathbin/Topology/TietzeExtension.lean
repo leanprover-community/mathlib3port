@@ -48,10 +48,8 @@ function, then there exists a bounded continuous function `g : Y →ᵇ ℝ` of 
 such that the distance between `g ∘ e` and `f` is at most `(2 / 3) * ∥f∥`. -/
 theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbedding e) :
     ∃ g : Y →ᵇ ℝ, ∥g∥ ≤ ∥f∥ / 3 ∧ dist (g.comp_continuous e) f ≤ 2 / 3 * ∥f∥ := by
-  have h3 : (0 : ℝ) < 3 := by
-    norm_num1
-  have h23 : 0 < (2 / 3 : ℝ) := by
-    norm_num1
+  have h3 : (0 : ℝ) < 3 := by norm_num1
+  have h23 : 0 < (2 / 3 : ℝ) := by norm_num1
   -- In the trivial case `f = 0`, we take `g = 0`
   rcases eq_or_ne f 0 with (rfl | hf)
   · use 0
@@ -74,14 +72,11 @@ theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbed
     simpa [abs_le, neg_div] using hgf y
     
   · refine' (dist_le <| mul_nonneg h23.le hf.le).mpr fun x => _
-    have hfx : -∥f∥ ≤ f x ∧ f x ≤ ∥f∥ := by
-      simpa only [Real.norm_eq_abs, abs_le] using f.norm_coe_le_norm x
+    have hfx : -∥f∥ ≤ f x ∧ f x ≤ ∥f∥ := by simpa only [Real.norm_eq_abs, abs_le] using f.norm_coe_le_norm x
     cases' le_totalₓ (f x) (-∥f∥ / 3) with hle₁ hle₁
     · calc
-        abs (g (e x) - f x) = -∥f∥ / 3 - f x := by
-          rw [hg₁ (mem_image_of_mem _ hle₁), abs_of_nonneg (sub_nonneg.2 hle₁)]
-        _ ≤ 2 / 3 * ∥f∥ := by
-          linarith
+        abs (g (e x) - f x) = -∥f∥ / 3 - f x := by rw [hg₁ (mem_image_of_mem _ hle₁), abs_of_nonneg (sub_nonneg.2 hle₁)]
+        _ ≤ 2 / 3 * ∥f∥ := by linarith
         
       
     · cases' le_totalₓ (f x) (∥f∥ / 3) with hle₂ hle₂
@@ -89,15 +84,13 @@ theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbed
         calc
           dist (g (e x)) (f x) ≤ abs (g (e x)) + abs (f x) := dist_le_norm_add_norm _ _
           _ ≤ ∥f∥ / 3 + ∥f∥ / 3 := add_le_add (abs_le.2 <| hgf _) (abs_le.2 ⟨hle₁, hle₂⟩)
-          _ = 2 / 3 * ∥f∥ := by
-            linarith
+          _ = 2 / 3 * ∥f∥ := by linarith
           
         
       · calc
           abs (g (e x) - f x) = f x - ∥f∥ / 3 := by
             rw [hg₂ (mem_image_of_mem _ hle₂), abs_sub_comm, abs_of_nonneg (sub_nonneg.2 hle₂)]
-          _ ≤ 2 / 3 * ∥f∥ := by
-            linarith
+          _ ≤ 2 / 3 * ∥f∥ := by linarith
           
         
       
@@ -121,33 +114,19 @@ theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(
     · simp [g0]
       
     · rw [g_succ n, add_comp_continuous, ← dist_sub_right, add_sub_cancel', pow_succₓ, mul_assoc]
-      refine'
-        (hF_dist _).trans
-          (mul_le_mul_of_nonneg_left _
-            (by
-              norm_num1))
+      refine' (hF_dist _).trans (mul_le_mul_of_nonneg_left _ (by norm_num1))
       rwa [← dist_eq_norm']
       
   have hg_dist : ∀ n, dist (g n) (g (n + 1)) ≤ 1 / 3 * ∥f∥ * (2 / 3) ^ n := by
     intro n
     calc
-      dist (g n) (g (n + 1)) = ∥F (f - (g n).comp_continuous e)∥ := by
-        rw [g_succ, dist_eq_norm', add_sub_cancel']
+      dist (g n) (g (n + 1)) = ∥F (f - (g n).comp_continuous e)∥ := by rw [g_succ, dist_eq_norm', add_sub_cancel']
       _ ≤ ∥f - (g n).comp_continuous e∥ / 3 := hF_norm _
-      _ = 1 / 3 * dist ((g n).comp_continuous e) f := by
-        rw [dist_eq_norm', one_div, div_eq_inv_mul]
-      _ ≤ 1 / 3 * ((2 / 3) ^ n * ∥f∥) :=
-        mul_le_mul_of_nonneg_left (hgf n)
-          (by
-            norm_num1)
-      _ = 1 / 3 * ∥f∥ * (2 / 3) ^ n := by
-        ac_rfl
+      _ = 1 / 3 * dist ((g n).comp_continuous e) f := by rw [dist_eq_norm', one_div, div_eq_inv_mul]
+      _ ≤ 1 / 3 * ((2 / 3) ^ n * ∥f∥) := mul_le_mul_of_nonneg_left (hgf n) (by norm_num1)
+      _ = 1 / 3 * ∥f∥ * (2 / 3) ^ n := by ac_rfl
       
-  have hg_cau : CauchySeq g :=
-    cauchy_seq_of_le_geometric _ _
-      (by
-        norm_num1)
-      hg_dist
+  have hg_cau : CauchySeq g := cauchy_seq_of_le_geometric _ _ (by norm_num1) hg_dist
   have : tendsto (fun n => (g n).comp_continuous e) at_top (𝓝 <| (limₓ at_top g).comp_continuous e) :=
     ((continuous_comp_continuous e).Tendsto _).comp hg_cau.tendsto_lim
   have hge : (limₓ at_top g).comp_continuous e = f := by
@@ -157,14 +136,8 @@ theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(
     refine' (tendsto_pow_at_top_nhds_0_of_lt_1 _ _).mul tendsto_const_nhds <;> norm_num1
   refine' ⟨limₓ at_top g, le_antisymmₓ _ _, hge⟩
   · rw [← dist_zero_left, ← g0]
-    refine'
-      (dist_le_of_le_geometric_of_tendsto₀ _ _
-            (by
-              norm_num1)
-            hg_dist hg_cau.tendsto_lim).trans_eq
-        _
-    field_simp [show (3 - 2 : ℝ) = 1 by
-        norm_num1]
+    refine' (dist_le_of_le_geometric_of_tendsto₀ _ _ (by norm_num1) hg_dist hg_cau.tendsto_lim).trans_eq _
+    field_simp [show (3 - 2 : ℝ) = 1 by norm_num1]
     
   · rw [← hge]
     exact norm_comp_continuous_le _ _
@@ -228,8 +201,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
   -- Rule out the trivial case `a = b`
   have hle : a ≤ b := (hmem default).1.trans (hmem default).2
   rcases hle.eq_or_lt with (rfl | hlt)
-  · have : ∀ x, f x = a := by
-      simpa using hmem
+  · have : ∀ x, f x = a := by simpa using hmem
     use const Y a
     simp [this, Function.funext_iff]
     
@@ -286,8 +258,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
         
       · calc
           g y + dg y ≤ c + (c - a) := add_le_add hc (dgmem _).2
-          _ = b := by
-            rw [hsub, add_sub_cancel'_right]
+          _ = b := by rw [hsub, add_sub_cancel'_right]
           
         
       
@@ -327,15 +298,13 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
     · rcases em (a ∈ range f) with (⟨x, rfl⟩ | ha')
       · refine' ⟨x, xu, _, hyxu.le⟩
         calc
-          f x = c - (b - c) := by
-            rw [← hsub, sub_sub_cancel]
+          f x = c - (b - c) := by rw [← hsub, sub_sub_cancel]
           _ ≤ g y - dg y := sub_le_sub hc.le (dgmem _).2
           
         
       · have hay : a < (g - dg) y := by
           calc
-            a = c - (b - c) := by
-              rw [← hsub, sub_sub_cancel]
+            a = c - (b - c) := by rw [← hsub, sub_sub_cancel]
             _ < g y - (b - c) := sub_lt_sub_right hc _
             _ ≤ g y - dg y := sub_le_sub_left (dgmem _).2 _
             

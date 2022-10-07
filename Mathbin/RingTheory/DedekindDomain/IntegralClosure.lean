@@ -59,9 +59,9 @@ variable [Algebra K L] [FiniteDimensional K L] [Algebra A L] [IsScalarTower A K 
 
 variable [Algebra C L] [IsIntegralClosure C A L] [Algebra A C] [IsScalarTower A C L]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident c, ",", ident x_eq, "⟩", ":", expr «expr∃ , »((c : ι → A),
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident c, ",", ident x_eq, "⟩", ":", expr «expr∃ , »((c : ι → A),
     «expr = »(algebra_map C L x, finset.sum_univ((i), «expr • »(c i, db i))))]]
-theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι]
+theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintypeₓ ι] [DecidableEq ι]
     (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     ((Algebra.linearMap C L).restrictScalars A).range ≤
       Submodule.span A (Set.Range <| (traceForm K L).dualBasis (trace_form_nondegenerate K L) b) :=
@@ -71,7 +71,7 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
   simp only [LinearMap.coe_restrict_scalars_eq_coe, Algebra.linear_map_apply]
   have hx : IsIntegral A (algebraMap C L x) := (IsIntegralClosure.is_integral A L x).algebraMap
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident c, \",\", ident x_eq, \"⟩\", \":\", expr «expr∃ , »((c : ι → A),\n    «expr = »(algebra_map C L x, finset.sum_univ((i), «expr • »(c i, db i))))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident c, \",\", ident x_eq, \"⟩\", \":\", expr «expr∃ , »((c : ι → A),\n    «expr = »(algebra_map C L x, finset.sum_univ((i), «expr • »(c i, db i))))]]"
   · rw [x_eq]
     refine' Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span _)
     rw [Set.mem_range]
@@ -81,15 +81,15 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
     obtain ⟨c, hc, hx⟩ := this
     have hc' : ∀ i, IsLocalization.IsInteger A (c i) := fun i => is_integrally_closed.is_integral_iff.mp (hc i)
     use fun i => Classical.choose (hc' i)
-    refine' hx.trans (Finset.sum_congr rfl fun i _ => _)
+    refine' hx.trans (Finsetₓ.sum_congr rfl fun i _ => _)
     conv_lhs => rw [← Classical.choose_spec (hc' i)]
     rw [← IsScalarTower.algebra_map_smul K (Classical.choose (hc' i)) (db i)]
   refine' ⟨fun i => db.repr (algebraMap C L x) i, fun i => _, (db.sum_repr _).symm⟩
   rw [BilinForm.dual_basis_repr_apply]
   exact is_integral_trace (is_integral_mul hx (hb_int i))
 
-theorem integral_closure_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι] (b : Basis ι K L)
-    (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
+theorem integral_closure_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintypeₓ ι] [DecidableEq ι]
+    (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     (integralClosure A L).toSubmodule ≤
       Submodule.span A (Set.Range <| (traceForm K L).dualBasis (trace_form_nondegenerate K L) b) :=
   by
@@ -101,10 +101,10 @@ variable (A) (K)
 
 include K
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
-theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀ x ∈ s, IsIntegral A (y • x) := by
+theorem exists_integral_multiples (s : Finsetₓ L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀ x ∈ s, IsIntegral A (y • x) := by
   haveI := Classical.decEq L
   refine' s.induction _ _
   · use 1, one_ne_zero
@@ -132,7 +132,7 @@ variable (L)
 
 /-- If `L` is a finite extension of `K = Frac(A)`,
 then `L` has a basis over `A` consisting of integral elements. -/
-theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finset L)(b : Basis s K L), ∀ x, IsIntegral A (b x) := by
+theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finsetₓ L)(b : Basis s K L), ∀ x, IsIntegral A (b x) := by
   letI := Classical.decEq L
   letI : IsNoetherian K L := IsNoetherian.iff_fg.2 inferInstance
   let s' := IsNoetherian.finsetBasisIndex K L
@@ -155,7 +155,7 @@ theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finset L)(b : Basi
     simp only [mul_inv_cancel_left₀ hy']
     
   · rintro ⟨x', hx'⟩
-    simp only [Algebra.smul_def, Finset.mem_image, exists_propₓ, Finset.mem_univ, true_andₓ] at his'
+    simp only [Algebra.smul_def, Finsetₓ.mem_image, exists_propₓ, Finsetₓ.mem_univ, true_andₓ] at his'
     simp only [Basis.map_apply, LinearEquiv.coe_mk]
     exact his' _ ⟨_, rfl⟩
     
@@ -203,13 +203,12 @@ Can't be an instance since `A`, `K` or `L` can't be inferred. See also the insta
 `integral_closure.is_dedekind_domain_fraction_ring` where `K := fraction_ring A`
 and `C := integral_closure A L`.
 -/
-theorem IsIntegralClosure.is_dedekind_domain [h : IsDedekindDomain A] : IsDedekindDomain C := by
+theorem IsIntegralClosure.is_dedekind_domain [h : IsDedekindDomain A] : IsDedekindDomain C :=
   haveI : IsFractionRing C L := IsIntegralClosure.is_fraction_ring_of_finite_extension A K L C
-  exact
-    ⟨IsIntegralClosure.is_noetherian_ring A K L C, h.dimension_le_one.is_integral_closure _ L _,
-      (is_integrally_closed_iff L).mpr fun x hx =>
-        ⟨IsIntegralClosure.mk' C x (is_integral_trans (IsIntegralClosure.is_integral_algebra A L) _ hx),
-          IsIntegralClosure.algebra_map_mk' _ _ _⟩⟩
+  ⟨IsIntegralClosure.is_noetherian_ring A K L C, h.dimension_le_one.is_integral_closure _ L _,
+    (is_integrally_closed_iff L).mpr fun x hx =>
+      ⟨IsIntegralClosure.mk' C x (is_integral_trans (IsIntegralClosure.is_integral_algebra A L) _ hx),
+        IsIntegralClosure.algebra_map_mk' _ _ _⟩⟩
 
 /- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is a Dedekind domain,
 the integral closure of `A` in `L` is a Dedekind domain.

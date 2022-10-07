@@ -125,7 +125,6 @@ you should parametrize over `(F : Type*) [add_monoid_hom_class F M N] (f : F)`.
 
 When you extend this structure, make sure to extend `add_monoid_hom_class`.
 -/
-@[ancestor ZeroHom AddHom]
 structure AddMonoidHom (M : Type _) (N : Type _) [AddZeroClassₓ M] [AddZeroClassₓ N] extends ZeroHom M N, AddHom M N
 
 attribute [nolint doc_blame] AddMonoidHom.toAddHom
@@ -140,7 +139,6 @@ homomorphisms.
 
 You should also extend this typeclass when you extend `add_monoid_hom`.
 -/
-@[ancestor AddHomClass ZeroHomClass]
 class AddMonoidHomClass (F : Type _) (M N : outParam <| Type _) [AddZeroClassₓ M] [AddZeroClassₓ N] extends
   AddHomClass F M N, ZeroHomClass F M N
 
@@ -173,8 +171,7 @@ class OneHomClass (F : Type _) (M N : outParam <| Type _) [One M] [One N] extend
 @[to_additive]
 instance OneHom.oneHomClass : OneHomClass (OneHom M N) M N where
   coe := OneHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_one := OneHom.map_one'
 
 @[simp, to_additive]
@@ -197,6 +194,10 @@ theorem ne_one_of_map {R S F : Type _} [One R] [One S] [OneHomClass F R S] {f : 
 @[to_additive]
 instance [OneHomClass F M N] : CoeTₓ F (OneHom M N) :=
   ⟨fun f => { toFun := f, map_one' := map_one f }⟩
+
+@[simp, to_additive]
+theorem OneHom.coe_coe [OneHomClass F M N] (f : F) : ((f : OneHom M N) : M → N) = f :=
+  rfl
 
 end One
 
@@ -231,8 +232,7 @@ class MulHomClass (F : Type _) (M N : outParam <| Type _) [Mul M] [Mul N] extend
 @[to_additive]
 instance MulHom.mulHomClass : MulHomClass (M →ₙ* N) M N where
   coe := MulHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_mul := MulHom.map_mul'
 
 @[simp, to_additive]
@@ -242,6 +242,10 @@ theorem map_mul [MulHomClass F M N] (f : F) (x y : M) : f (x * y) = f x * f y :=
 @[to_additive]
 instance [MulHomClass F M N] : CoeTₓ F (M →ₙ* N) :=
   ⟨fun f => { toFun := f, map_mul' := map_mul f }⟩
+
+@[simp, to_additive]
+theorem MulHom.coe_coe [MulHomClass F M N] (f : F) : ((f : MulHom M N) : M → N) = f :=
+  rfl
 
 end Mul
 
@@ -257,7 +261,7 @@ you should parametrize over `(F : Type*) [monoid_hom_class F M N] (f : F)`.
 
 When you extend this structure, make sure to extend `monoid_hom_class`.
 -/
-@[ancestor OneHom MulHom, to_additive]
+@[to_additive]
 structure MonoidHom (M : Type _) (N : Type _) [MulOneClassₓ M] [MulOneClassₓ N] extends OneHom M N, M →ₙ* N
 
 attribute [nolint doc_blame] MonoidHom.toMulHom
@@ -269,8 +273,7 @@ infixr:25 " →* " => MonoidHom
 
 /-- `monoid_hom_class F M N` states that `F` is a type of `monoid`-preserving homomorphisms.
 You should also extend this typeclass when you extend `monoid_hom`. -/
-@[ancestor MulHomClass OneHomClass,
-  to_additive
+@[to_additive
       "`add_monoid_hom_class F M N` states that `F` is a type of `add_monoid`-preserving homomorphisms.\nYou should also extend this typeclass when you extend `add_monoid_hom`."]
 class MonoidHomClass (F : Type _) (M N : outParam <| Type _) [MulOneClassₓ M] [MulOneClassₓ N] extends
   MulHomClass F M N, OneHomClass F M N
@@ -278,8 +281,7 @@ class MonoidHomClass (F : Type _) (M N : outParam <| Type _) [MulOneClassₓ M] 
 @[to_additive]
 instance MonoidHom.monoidHomClass : MonoidHomClass (M →* N) M N where
   coe := MonoidHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_mul := MonoidHom.map_mul'
   map_one := MonoidHom.map_one'
 
@@ -287,14 +289,17 @@ instance MonoidHom.monoidHomClass : MonoidHomClass (M →* N) M N where
 instance [MonoidHomClass F M N] : CoeTₓ F (M →* N) :=
   ⟨fun f => { toFun := f, map_one' := map_one f, map_mul' := map_mul f }⟩
 
+@[simp, to_additive]
+theorem MonoidHom.coe_coe [MonoidHomClass F M N] (f : F) : ((f : M →* N) : M → N) = f :=
+  rfl
+
 @[to_additive]
 theorem map_mul_eq_one [MonoidHomClass F M N] (f : F) {a b : M} (h : a * b = 1) : f a * f b = 1 := by
   rw [← map_mul, h, map_one]
 
 @[to_additive]
 theorem map_div' [DivInvMonoidₓ G] [DivInvMonoidₓ H] [MonoidHomClass F G H] (f : F) (hf : ∀ a, f a⁻¹ = (f a)⁻¹)
-    (a b : G) : f (a / b) = f a / f b := by
-  rw [div_eq_mul_inv, div_eq_mul_inv, map_mul, hf]
+    (a b : G) : f (a / b) = f a / f b := by rw [div_eq_mul_inv, div_eq_mul_inv, map_mul, hf]
 
 /-- Group homomorphisms preserve inverse. -/
 @[simp, to_additive "Additive group homomorphisms preserve negation."]
@@ -304,8 +309,7 @@ theorem map_inv [Groupₓ G] [DivisionMonoid H] [MonoidHomClass F G H] (f : F) (
 /-- Group homomorphisms preserve division. -/
 @[simp, to_additive "Additive group homomorphisms preserve subtraction."]
 theorem map_mul_inv [Groupₓ G] [DivisionMonoid H] [MonoidHomClass F G H] (f : F) (a b : G) :
-    f (a * b⁻¹) = f a * (f b)⁻¹ := by
-  rw [map_mul, map_inv]
+    f (a * b⁻¹) = f a * (f b)⁻¹ := by rw [map_mul, map_inv]
 
 /-- Group homomorphisms preserve division. -/
 @[simp, to_additive "Additive group homomorphisms preserve subtraction."]
@@ -316,10 +320,8 @@ theorem map_div [Groupₓ G] [DivisionMonoid H] [MonoidHomClass F G H] (f : F) :
 -- swap its arguments.
 @[to_additive MapNsmul.aux, simp]
 theorem map_pow [Monoidₓ G] [Monoidₓ H] [MonoidHomClass F G H] (f : F) (a : G) : ∀ n : ℕ, f (a ^ n) = f a ^ n
-  | 0 => by
-    rw [pow_zeroₓ, pow_zeroₓ, map_one]
-  | n + 1 => by
-    rw [pow_succₓ, pow_succₓ, map_mul, map_pow]
+  | 0 => by rw [pow_zeroₓ, pow_zeroₓ, map_one]
+  | n + 1 => by rw [pow_succₓ, pow_succₓ, map_mul, map_pow]
 
 @[simp]
 theorem map_nsmul [AddMonoidₓ G] [AddMonoidₓ H] [AddMonoidHomClass F G H] (f : F) (n : ℕ) (a : G) :
@@ -331,10 +333,8 @@ attribute [to_additive_reorder 8, to_additive] map_pow
 @[to_additive]
 theorem map_zpow' [DivInvMonoidₓ G] [DivInvMonoidₓ H] [MonoidHomClass F G H] (f : F) (hf : ∀ x : G, f x⁻¹ = (f x)⁻¹)
     (a : G) : ∀ n : ℤ, f (a ^ n) = f a ^ n
-  | (n : ℕ) => by
-    rw [zpow_coe_nat, map_pow, zpow_coe_nat]
-  | -[1 + n] => by
-    rw [zpow_neg_succ_of_nat, hf, map_pow, ← zpow_neg_succ_of_nat]
+  | (n : ℕ) => by rw [zpow_coe_nat, map_pow, zpow_coe_nat]
+  | -[1 + n] => by rw [zpow_neg_succ_of_nat, hf, map_pow, ← zpow_neg_succ_of_nat]
 
 -- to_additive puts the arguments in the wrong order, so generate an auxiliary lemma, then
 -- swap its arguments.
@@ -370,7 +370,6 @@ you should parametrize over `(F : Type*) [monoid_with_zero_hom_class F M N] (f :
 
 When you extend this structure, make sure to extend `monoid_with_zero_hom_class`.
 -/
-@[ancestor ZeroHom MonoidHom]
 structure MonoidWithZeroHom (M : Type _) (N : Type _) [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] extends ZeroHom M N,
   MonoidHom M N
 
@@ -391,14 +390,17 @@ class MonoidWithZeroHomClass (F : Type _) (M N : outParam <| Type _) [MulZeroOne
 
 instance MonoidWithZeroHom.monoidWithZeroHomClass : MonoidWithZeroHomClass (M →*₀ N) M N where
   coe := MonoidWithZeroHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_mul := MonoidWithZeroHom.map_mul'
   map_one := MonoidWithZeroHom.map_one'
   map_zero := MonoidWithZeroHom.map_zero'
 
 instance [MonoidWithZeroHomClass F M N] : CoeTₓ F (M →*₀ N) :=
   ⟨fun f => { toFun := f, map_one' := map_one f, map_zero' := map_zero f, map_mul' := map_mul f }⟩
+
+@[simp]
+theorem MonoidWithZeroHom.coe_coe [MonoidWithZeroHomClass F M N] (f : F) : ((f : M →*₀ N) : M → N) = f :=
+  rfl
 
 end MulZeroOne
 
@@ -691,7 +693,7 @@ protected theorem MonoidWithZeroHom.map_one [MulZeroOneClassₓ M] [MulZeroOneCl
   f.map_one'
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_monoid_hom.map_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_monoid_hom.map_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 protected theorem MonoidWithZeroHom.map_zero [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) : f 0 = 0 :=
   f.map_zero'
 
@@ -709,7 +711,7 @@ protected theorem MonoidWithZeroHom.map_mul [MulZeroOneClassₓ M] [MulZeroOneCl
   f.map_mul' a b
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_monoid_hom.map_add]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_monoid_hom.map_add]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace MonoidHom
 
 variable {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} [MonoidHomClass F M N]
@@ -783,51 +785,44 @@ def MonoidWithZeroHom.id (M : Type _) [MulZeroOneClassₓ M] : M →*₀ M where
   map_mul' := fun _ _ => rfl
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident zero_hom.id]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident zero_hom.id]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_hom.id]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_hom.id]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_monoid_hom.id]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_monoid_hom.id]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Composition of `one_hom`s as a `one_hom`. -/
 @[to_additive]
 def OneHom.comp [One M] [One N] [One P] (hnp : OneHom N P) (hmn : OneHom M N) : OneHom M P where
   toFun := hnp ∘ hmn
-  map_one' := by
-    simp
+  map_one' := by simp
 
 /-- Composition of `mul_hom`s as a `mul_hom`. -/
 @[to_additive]
 def MulHom.comp [Mul M] [Mul N] [Mul P] (hnp : N →ₙ* P) (hmn : M →ₙ* N) : M →ₙ* P where
   toFun := hnp ∘ hmn
-  map_mul' := by
-    simp
+  map_mul' := by simp
 
 /-- Composition of monoid morphisms as a monoid morphism. -/
 @[to_additive]
 def MonoidHom.comp [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (hnp : N →* P) (hmn : M →* N) : M →* P where
   toFun := hnp ∘ hmn
-  map_one' := by
-    simp
-  map_mul' := by
-    simp
+  map_one' := by simp
+  map_mul' := by simp
 
 /-- Composition of `monoid_with_zero_hom`s as a `monoid_with_zero_hom`. -/
 def MonoidWithZeroHom.comp [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] [MulZeroOneClassₓ P] (hnp : N →*₀ P)
     (hmn : M →*₀ N) : M →*₀ P where
   toFun := hnp ∘ hmn
-  map_zero' := by
-    simp
-  map_one' := by
-    simp
-  map_mul' := by
-    simp
+  map_zero' := by simp
+  map_one' := by simp
+  map_mul' := by simp
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident zero_hom.comp]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident zero_hom.comp]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_hom.comp]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_hom.comp]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_monoid_hom.comp]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_monoid_hom.comp]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem OneHom.coe_comp [One M] [One N] [One P] (g : OneHom N P) (f : OneHom M N) : ⇑(g.comp f) = g ∘ f :=
   rfl
@@ -905,36 +900,22 @@ theorem MonoidWithZeroHom.cancel_right [MulZeroOneClassₓ M] [MulZeroOneClass�
 @[to_additive]
 theorem OneHom.cancel_left [One M] [One N] [One P] {g : OneHom N P} {f₁ f₂ : OneHom M N} (hg : Function.Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    OneHom.ext fun x =>
-      hg <| by
-        rw [← OneHom.comp_apply, h, OneHom.comp_apply],
-    fun h => h ▸ rfl⟩
+  ⟨fun h => OneHom.ext fun x => hg <| by rw [← OneHom.comp_apply, h, OneHom.comp_apply], fun h => h ▸ rfl⟩
 
 @[to_additive]
 theorem MulHom.cancel_left [Mul M] [Mul N] [Mul P] {g : N →ₙ* P} {f₁ f₂ : M →ₙ* N} (hg : Function.Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    MulHom.ext fun x =>
-      hg <| by
-        rw [← MulHom.comp_apply, h, MulHom.comp_apply],
-    fun h => h ▸ rfl⟩
+  ⟨fun h => MulHom.ext fun x => hg <| by rw [← MulHom.comp_apply, h, MulHom.comp_apply], fun h => h ▸ rfl⟩
 
 @[to_additive]
 theorem MonoidHom.cancel_left [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] {g : N →* P} {f₁ f₂ : M →* N}
     (hg : Function.Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    MonoidHom.ext fun x =>
-      hg <| by
-        rw [← MonoidHom.comp_apply, h, MonoidHom.comp_apply],
-    fun h => h ▸ rfl⟩
+  ⟨fun h => MonoidHom.ext fun x => hg <| by rw [← MonoidHom.comp_apply, h, MonoidHom.comp_apply], fun h => h ▸ rfl⟩
 
 theorem MonoidWithZeroHom.cancel_left [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] [MulZeroOneClassₓ P] {g : N →*₀ P}
     {f₁ f₂ : M →*₀ N} (hg : Function.Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h =>
-    MonoidWithZeroHom.ext fun x =>
-      hg <| by
-        rw [← MonoidWithZeroHom.comp_apply, h, MonoidWithZeroHom.comp_apply],
+    MonoidWithZeroHom.ext fun x => hg <| by rw [← MonoidWithZeroHom.comp_apply, h, MonoidWithZeroHom.comp_apply],
     fun h => h ▸ rfl⟩
 
 @[to_additive]
@@ -1086,11 +1067,11 @@ instance [MulOneClassₓ M] [MulOneClassₓ N] : One (M →* N) :=
   ⟨⟨fun _ => 1, rfl, fun _ _ => (one_mulₓ 1).symm⟩⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident zero_hom.has_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident zero_hom.has_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_hom.has_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_hom.has_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_monoid_hom.has_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_monoid_hom.has_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem OneHom.one_apply [One M] [One N] (x : M) : (1 : OneHom M N) x = 1 :=
   rfl
@@ -1138,7 +1119,7 @@ instance [Mul M] [CommSemigroupₓ N] : Mul (M →ₙ* N) :=
         rw [f.map_mul, g.map_mul, ← mul_assoc, ← mul_assoc, mul_right_commₓ (f x)] }⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_hom.has_add]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_hom.has_add]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem mul_apply {M N} {mM : Mul M} {mN : CommSemigroupₓ N} (f g : M →ₙ* N) (x : M) : (f * g) x = f x * g x :=
   rfl
@@ -1167,17 +1148,14 @@ sending `x` to `f x * g x`. -/
 @[to_additive]
 instance {M N} {mM : MulOneClassₓ M} [CommMonoidₓ N] : Mul (M →* N) :=
   ⟨fun f g =>
-    { toFun := fun m => f m * g m,
-      map_one' :=
-        show f 1 * g 1 = 1 by
-          simp ,
+    { toFun := fun m => f m * g m, map_one' := show f 1 * g 1 = 1 by simp,
       map_mul' := by
         intros
         show f (x * y) * g (x * y) = f x * g x * (f y * g y)
         rw [f.map_mul, g.map_mul, ← mul_assoc, ← mul_assoc, mul_right_commₓ (f x)] }⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_monoid_hom.has_add]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_monoid_hom.has_add]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem mul_apply {M N} {mM : MulOneClassₓ M} {mN : CommMonoidₓ N} (f g : M →* N) (x : M) : (f * g) x = f x * g x :=
   rfl
@@ -1244,9 +1222,7 @@ For the iff statement on the triviality of the kernel, see `injective_iff_map_eq
 theorem _root_.injective_iff_map_eq_one {G H} [Groupₓ G] [MulOneClassₓ H] [MonoidHomClass F G H] (f : F) :
     Function.Injective f ↔ ∀ a, f a = 1 → a = 1 :=
   ⟨fun h x => (map_eq_one_iff f h).mp, fun h x y hxy =>
-    mul_inv_eq_one.1 <|
-      h _ <| by
-        rw [map_mul, hxy, ← map_mul, mul_inv_selfₓ, map_one]⟩
+    mul_inv_eq_one.1 <| h _ <| by rw [map_mul, hxy, ← map_mul, mul_inv_selfₓ, map_one]⟩
 
 /-- A homomorphism from a group to a monoid is injective iff its kernel is trivial,
 stated as an iff on the triviality of the kernel.
@@ -1265,9 +1241,7 @@ include mM
 def mk' (f : M → G) (map_mul : ∀ a b : M, f (a * b) = f a * f b) : M →* G where
   toFun := f
   map_mul' := map_mul
-  map_one' :=
-    mul_left_eq_self.1 <| by
-      rw [← map_mul, mul_oneₓ]
+  map_one' := mul_left_eq_self.1 <| by rw [← map_mul, mul_oneₓ]
 
 omit mM
 
@@ -1279,8 +1253,7 @@ See also `monoid_hom.of_map_div` for a version using `λ x y, x / y`.
 def ofMapMulInv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, f (a * b⁻¹) = f a * (f b)⁻¹) : G →* H :=
   (mk' f) fun x y =>
     calc
-      f (x * y) = f x * (f <| 1 * 1⁻¹ * y⁻¹)⁻¹ := by
-        simp only [one_mulₓ, inv_one, ← map_div, inv_invₓ]
+      f (x * y) = f x * (f <| 1 * 1⁻¹ * y⁻¹)⁻¹ := by simp only [one_mulₓ, inv_one, ← map_div, inv_invₓ]
       _ = f x * f y := by
         simp only [map_div]
         simp only [mul_right_invₓ, one_mulₓ, inv_invₓ]
@@ -1294,9 +1267,7 @@ theorem coe_of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : �
 /-- Define a morphism of additive groups given a map which respects ratios. -/
 @[to_additive "Define a morphism of additive groups given a map which respects difference."]
 def ofMapDiv {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : G →* H :=
-  ofMapMulInv f
-    (by
-      simpa only [div_eq_mul_inv] using hf)
+  ofMapMulInv f (by simpa only [div_eq_mul_inv] using hf)
 
 @[simp, to_additive]
 theorem coe_of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : ⇑(ofMapDiv f hf) = f :=
@@ -1306,12 +1277,10 @@ theorem coe_of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f 
 `x` to `(f x)⁻¹`. -/
 @[to_additive]
 instance {M G} [MulOneClassₓ M] [CommGroupₓ G] : Inv (M →* G) :=
-  ⟨fun f =>
-    (mk' fun g => (f g)⁻¹) fun a b => by
-      rw [← mul_inv, f.map_mul]⟩
+  ⟨fun f => (mk' fun g => (f g)⁻¹) fun a b => by rw [← mul_inv, f.map_mul]⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_monoid_hom.has_neg]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_monoid_hom.has_neg]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem inv_apply {M G} {mM : MulOneClassₓ M} {gG : CommGroupₓ G} (f : M →* G) (x : M) : f⁻¹ x = (f x)⁻¹ :=
   rfl
@@ -1332,12 +1301,10 @@ theorem comp_inv {M A B} {mM : MulOneClassₓ M} {mA : CommGroupₓ A} {mB : Com
 sending `x` to `(f x) / (g x)`. -/
 @[to_additive]
 instance {M G} [MulOneClassₓ M] [CommGroupₓ G] : Div (M →* G) :=
-  ⟨fun f g =>
-    (mk' fun x => f x / g x) fun a b => by
-      simp [div_eq_mul_inv, mul_assoc, mul_left_commₓ, mul_comm]⟩
+  ⟨fun f g => (mk' fun x => f x / g x) fun a b => by simp [div_eq_mul_inv, mul_assoc, mul_left_commₓ, mul_comm]⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_monoid_hom.has_sub]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_monoid_hom.has_sub]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem div_apply {M G} {mM : MulOneClassₓ M} {gG : CommGroupₓ G} (f g : M →* G) (x : M) : (f / g) x = f x / g x :=
   rfl
@@ -1347,10 +1314,7 @@ end MonoidHom
 /-- Given two monoid with zero morphisms `f`, `g` to a commutative monoid, `f * g` is the monoid
 with zero morphism sending `x` to `f x * g x`. -/
 instance {M N} {hM : MulZeroOneClassₓ M} [CommMonoidWithZero N] : Mul (M →*₀ N) :=
-  ⟨fun f g =>
-    { (f * g : M →* N) with toFun := fun a => f a * g a,
-      map_zero' := by
-        rw [map_zero, zero_mul] }⟩
+  ⟨fun f g => { (f * g : M →* N) with toFun := fun a => f a * g a, map_zero' := by rw [map_zero, zero_mul] }⟩
 
 section Commute
 

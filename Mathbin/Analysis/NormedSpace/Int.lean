@@ -24,8 +24,7 @@ namespace Int
 theorem nnnorm_coe_units (e : ℤˣ) : ∥(e : ℤ)∥₊ = 1 := by
   obtain rfl | rfl := Int.units_eq_one_or e <;> simp only [Units.coe_neg_one, Units.coe_one, nnnorm_neg, nnnorm_one]
 
-theorem norm_coe_units (e : ℤˣ) : ∥(e : ℤ)∥ = 1 := by
-  rw [← coe_nnnorm, Int.nnnorm_coe_units, Nnreal.coe_one]
+theorem norm_coe_units (e : ℤˣ) : ∥(e : ℤ)∥ = 1 := by rw [← coe_nnnorm, Int.nnnorm_coe_units, Nnreal.coe_one]
 
 @[simp]
 theorem nnnorm_coe_nat (n : ℕ) : ∥(n : ℤ)∥₊ = n :=

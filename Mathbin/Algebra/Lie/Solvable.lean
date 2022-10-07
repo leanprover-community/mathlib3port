@@ -89,8 +89,7 @@ theorem derived_series_of_ideal_le {I J : LieIdeal R L} {k l : ℕ} (h₁ : I �
     rw [h₂, derived_series_of_ideal_zero]
     exact h₁
     
-  · have h : l = k.succ ∨ l ≤ k := by
-      rwa [le_iff_eq_or_ltₓ, Nat.lt_succ_iffₓ] at h₂
+  · have h : l = k.succ ∨ l ≤ k := by rwa [le_iff_eq_or_ltₓ, Nat.lt_succ_iff] at h₂
     cases h
     · rw [h, derived_series_of_ideal_succ, derived_series_of_ideal_succ]
       exact LieSubmodule.mono_lie _ _ _ _ (ih (le_reflₓ k)) (ih (le_reflₓ k))
@@ -270,8 +269,7 @@ theorem LieIdeal.solvable_iff_le_radical [IsNoetherian R L] (I : LieIdeal R L) :
   ⟨fun h => le_Sup h, fun h => le_solvable_ideal_solvable h inferInstance⟩
 
 theorem center_le_radical : center R L ≤ radical R L :=
-  have h : IsSolvable R (center R L) := by
-    infer_instance
+  have h : IsSolvable R (center R L) := by infer_instance
   le_Sup h
 
 /-- Given a solvable Lie ideal `I` with derived series `I = D₀ ≥ D₁ ≥ ⋯ ≥ Dₖ = ⊥`, this is the
@@ -296,8 +294,7 @@ theorem derived_series_of_derived_length_succ (I : LieIdeal R L) (k : ℕ) :
   change Inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s
   have hs : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s := by
     intro k₁ k₂ h₁₂ h₁
-    suffices derived_series_of_ideal R L k₂ I ≤ ⊥ by
-      exact eq_bot_iff.mpr this
+    suffices derived_series_of_ideal R L k₂ I ≤ ⊥ by exact eq_bot_iff.mpr this
     change derived_series_of_ideal R L k₁ I = ⊥ at h₁
     rw [← h₁]
     exact derived_series_of_ideal_antitone I h₁₂
@@ -324,7 +321,7 @@ noncomputable def derivedAbelianOfIdeal (I : LieIdeal R L) : LieIdeal R L :=
   | k + 1 => derivedSeriesOfIdeal R L k I
 
 theorem abelian_derived_abelian_of_ideal (I : LieIdeal R L) : IsLieAbelian (derivedAbelianOfIdeal I) := by
-  dunfold derived_abelian_of_ideal
+  dsimp only [derived_abelian_of_ideal]
   cases' h : derived_length_of_ideal R L I with k
   · exact is_lie_abelian_bot R L
     
@@ -345,7 +342,7 @@ theorem derived_length_zero (I : LieIdeal R L) [hI : IsSolvable R I] : derivedLe
 
 theorem abelian_of_solvable_ideal_eq_bot_iff (I : LieIdeal R L) [h : IsSolvable R I] :
     derivedAbelianOfIdeal I = ⊥ ↔ I = ⊥ := by
-  dunfold derived_abelian_of_ideal
+  dsimp only [derived_abelian_of_ideal]
   cases' h : derived_length_of_ideal R L I with k
   · rw [derived_length_zero] at h
     rw [h]

@@ -83,7 +83,7 @@ end HasLimits
 
 open HasLimits
 
--- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:273:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v} SemiRing.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -168,16 +168,12 @@ instance (F : J ⥤ CommSemiRing.{max v u}) : CreatesLimit F (forget₂ CommSemi
     { liftedCone :=
         { x := CommSemiRing.of (Types.limitCone (F ⋙ forget _)).x,
           π :=
-            { app := by
-                apply SemiRing.limitπRingHom (F ⋙ forget₂ CommSemiRing SemiRing.{max v u}),
+            { app := by apply SemiRing.limitπRingHom (F ⋙ forget₂ CommSemiRing SemiRing.{max v u}),
               naturality' :=
                 (SemiRing.HasLimits.limitCone (F ⋙ forget₂ CommSemiRing SemiRing.{max v u})).π.naturality } },
-      validLift := by
-        apply is_limit.unique_up_to_iso (SemiRing.HasLimits.limitConeIsLimit _) t,
+      validLift := by apply is_limit.unique_up_to_iso (SemiRing.HasLimits.limitConeIsLimit _) t,
       makesLimit :=
-        IsLimit.ofFaithful (forget₂ CommSemiRing SemiRing.{max v u})
-          (by
-            apply SemiRing.HasLimits.limitConeIsLimit _)
+        IsLimit.ofFaithful (forget₂ CommSemiRing SemiRing.{max v u}) (by apply SemiRing.HasLimits.limitConeIsLimit _)
           (fun s => (SemiRing.HasLimits.limitConeIsLimit _).lift ((forget₂ _ SemiRing).mapCone s)) fun s => rfl }
 
 /-- A choice of limit cone for a functor into `CommSemiRing`.
@@ -192,7 +188,7 @@ def limitCone (F : J ⥤ CommSemiRing.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommSemiRing.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:273:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommSemiRing.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -206,9 +202,7 @@ instance has_limits : HasLimits CommSemiRing.{u} :=
 instance forget₂SemiRingPreservesLimitsOfSize :
     PreservesLimitsOfSize.{v, v}
       (forget₂ CommSemiRing
-        SemiRing.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
-    { PreservesLimit := fun F => by
-        infer_instance }
+        SemiRing.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 => { PreservesLimit := fun F => by infer_instance }
 
 instance forget₂SemiRingPreservesLimits : PreservesLimits (forget₂ CommSemiRing SemiRing.{u}) :=
   CommSemiRing.forget₂SemiRingPreservesLimitsOfSize.{u, u}
@@ -256,15 +250,11 @@ instance (F : J ⥤ Ringₓₓ.{max v u}) : CreatesLimit F (forget₂ Ringₓₓ
     { liftedCone :=
         { x := Ringₓₓ.of (Types.limitCone (F ⋙ forget _)).x,
           π :=
-            { app := by
-                apply SemiRing.limitπRingHom (F ⋙ forget₂ Ringₓₓ SemiRing.{max v u}),
+            { app := by apply SemiRing.limitπRingHom (F ⋙ forget₂ Ringₓₓ SemiRing.{max v u}),
               naturality' := (SemiRing.HasLimits.limitCone (F ⋙ forget₂ Ringₓₓ SemiRing.{max v u})).π.naturality } },
-      validLift := by
-        apply is_limit.unique_up_to_iso (SemiRing.HasLimits.limitConeIsLimit _) t,
+      validLift := by apply is_limit.unique_up_to_iso (SemiRing.HasLimits.limitConeIsLimit _) t,
       makesLimit :=
-        IsLimit.ofFaithful (forget₂ Ringₓₓ SemiRing.{max v u})
-          (by
-            apply SemiRing.HasLimits.limitConeIsLimit _)
+        IsLimit.ofFaithful (forget₂ Ringₓₓ SemiRing.{max v u}) (by apply SemiRing.HasLimits.limitConeIsLimit _)
           (fun s => _) fun s => rfl }
 
 /-- A choice of limit cone for a functor into `Ring`.
@@ -279,7 +269,7 @@ def limitCone (F : J ⥤ Ringₓₓ.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ Ringₓₓ.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:273:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} Ringₓₓ.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_created F (forget₂ Ringₓₓ SemiRing.{max v u}) } }
@@ -291,9 +281,8 @@ instance has_limits : HasLimits Ringₓₓ.{u} :=
 -/
 instance forget₂SemiRingPreservesLimitsOfSize :
     PreservesLimitsOfSize.{v, v}
-      (forget₂ Ringₓₓ SemiRing.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
-    { PreservesLimit := fun F => by
-        infer_instance }
+      (forget₂ Ringₓₓ
+        SemiRing.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 => { PreservesLimit := fun F => by infer_instance }
 
 instance forget₂SemiRingPreservesLimits : PreservesLimits (forget₂ Ringₓₓ SemiRing.{u}) :=
   Ringₓₓ.forget₂SemiRingPreservesLimitsOfSize.{u, u}
@@ -368,12 +357,10 @@ instance (F : J ⥤ CommRingₓₓ.{max v u}) : CreatesLimit F (forget₂ CommRi
               naturality' :=
                 (SemiRing.HasLimits.limitCone
                       (F ⋙ forget₂ _ Ringₓₓ.{max v u} ⋙ forget₂ _ SemiRing.{max v u})).π.naturality } },
-      validLift := by
-        apply is_limit.unique_up_to_iso (Ringₓₓ.limitConeIsLimit _) t,
+      validLift := by apply is_limit.unique_up_to_iso (Ringₓₓ.limitConeIsLimit _) t,
       makesLimit :=
         IsLimit.ofFaithful (forget₂ _ Ringₓₓ.{max v u})
-          (by
-            apply Ringₓₓ.limitConeIsLimit (F ⋙ forget₂ CommRingₓₓ Ringₓₓ.{max v u}))
+          (by apply Ringₓₓ.limitConeIsLimit (F ⋙ forget₂ CommRingₓₓ Ringₓₓ.{max v u}))
           (fun s => (Ringₓₓ.limitConeIsLimit _).lift ((forget₂ _ Ringₓₓ.{max v u}).mapCone s)) fun s => rfl }
 
 /-- A choice of limit cone for a functor into `CommRing`.
@@ -388,7 +375,7 @@ def limitCone (F : J ⥤ CommRingₓₓ.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommRingₓₓ.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:273:38: unsupported irreducible non-definition
 /-- The category of commutative rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommRingₓₓ.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -402,9 +389,8 @@ instance has_limits : HasLimits CommRingₓₓ.{u} :=
 -/
 instance forget₂RingPreservesLimitsOfSize :
     PreservesLimitsOfSize.{v, v}
-      (forget₂ CommRingₓₓ Ringₓₓ.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
-    { PreservesLimit := fun F => by
-        infer_instance }
+      (forget₂ CommRingₓₓ
+        Ringₓₓ.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 => { PreservesLimit := fun F => by infer_instance }
 
 instance forget₂RingPreservesLimits : PreservesLimits (forget₂ CommRingₓₓ Ringₓₓ.{u}) :=
   CommRingₓₓ.forget₂RingPreservesLimitsOfSize.{u, u}

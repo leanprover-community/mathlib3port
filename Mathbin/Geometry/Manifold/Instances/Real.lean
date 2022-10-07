@@ -64,11 +64,9 @@ attribute [local reducible] EuclideanHalfSpace EuclideanQuadrant
 
 variable {n : ℕ}
 
-instance [Zero (Finₓ n)] : TopologicalSpace (EuclideanHalfSpace n) := by
-  infer_instance
+instance [Zero (Finₓ n)] : TopologicalSpace (EuclideanHalfSpace n) := by infer_instance
 
-instance : TopologicalSpace (EuclideanQuadrant n) := by
-  infer_instance
+instance : TopologicalSpace (EuclideanQuadrant n) := by infer_instance
 
 instance [Zero (Finₓ n)] : Inhabited (EuclideanHalfSpace n) :=
   ⟨⟨0, le_rflₓ⟩⟩
@@ -79,21 +77,18 @@ instance : Inhabited (EuclideanQuadrant n) :=
 theorem range_half_space (n : ℕ) [Zero (Finₓ n)] : (Range fun x : EuclideanHalfSpace n => x.val) = { y | 0 ≤ y 0 } := by
   simp
 
-theorem range_quadrant (n : ℕ) : (Range fun x : EuclideanQuadrant n => x.val) = { y | ∀ i : Finₓ n, 0 ≤ y i } := by
-  simp
+theorem range_quadrant (n : ℕ) : (Range fun x : EuclideanQuadrant n => x.val) = { y | ∀ i : Finₓ n, 0 ≤ y i } := by simp
 
 end
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n)))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n)))
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
 -/
 def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Finₓ n)] :
     ModelWithCorners ℝ (EuclideanSpace ℝ (Finₓ n)) (EuclideanHalfSpace n) where
   toFun := Subtype.val
-  invFun := fun x =>
-    ⟨update x 0 (max (x 0) 0), by
-      simp [le_reflₓ]⟩
+  invFun := fun x => ⟨update x 0 (max (x 0) 0), by simp [le_reflₓ]⟩
   Source := Univ
   Target := { x | 0 ≤ x 0 }
   map_source' := fun x hx => x.property
@@ -115,13 +110,10 @@ model for manifolds with corners -/
 def modelWithCornersEuclideanQuadrant (n : ℕ) :
     ModelWithCorners ℝ (EuclideanSpace ℝ (Finₓ n)) (EuclideanQuadrant n) where
   toFun := Subtype.val
-  invFun := fun x =>
-    ⟨fun i => max (x i) 0, fun i => by
-      simp only [le_reflₓ, or_trueₓ, le_max_iff]⟩
+  invFun := fun x => ⟨fun i => max (x i) 0, fun i => by simp only [le_reflₓ, or_trueₓ, le_max_iff]⟩
   Source := Univ
   Target := { x | ∀ i, 0 ≤ x i }
-  map_source' := fun x hx => by
-    simpa only [Subtype.range_val] using x.property
+  map_source' := fun x hx => by simpa only [Subtype.range_val] using x.property
   map_target' := fun x hx => mem_univ _
   left_inv' := fun ⟨xval, xprop⟩ hx => by
     ext i
@@ -155,16 +147,13 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
   Source := { z : Icc x y | z.val < y }
   Target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
   toFun := fun z : Icc x y => ⟨fun i => z.val - x, sub_nonneg.mpr z.property.1⟩
-  invFun := fun z =>
-    ⟨min (z.val 0 + x) y, by
-      simp [le_reflₓ, z.prop, le_of_ltₓ (Fact.out (x < y))]⟩
-  map_source' := by
-    simp only [imp_self, sub_lt_sub_iff_right, mem_set_of_eq, forall_true_iff]
+  invFun := fun z => ⟨min (z.val 0 + x) y, by simp [le_reflₓ, z.prop, le_of_ltₓ (Fact.out (x < y))]⟩
+  map_source' := by simp only [imp_self, sub_lt_sub_iff_right, mem_set_of_eq, forall_true_iff]
   map_target' := by
     simp only [min_lt_iff, mem_set_of_eq]
     intro z hz
     left
-    dsimp' [-Subtype.val_eq_coe]  at hz
+    dsimp [-Subtype.val_eq_coe] at hz
     linarith
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
@@ -174,14 +163,13 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
     rintro ⟨z, hz⟩ h'z
     rw [Subtype.mk_eq_mk]
     funext
-    dsimp'  at hz h'z
-    have A : x + z 0 ≤ y := by
-      linarith
+    dsimp at hz h'z
+    have A : x + z 0 ≤ y := by linarith
     rw [Subsingleton.elim i 0]
     simp only [A, add_commₓ, add_sub_cancel', min_eq_leftₓ]
-  open_source := by
-    have : IsOpen { z : ℝ | z < y } := is_open_Iio
-    exact this.preimage continuous_subtype_val
+  open_source :=
+    haveI : IsOpen { z : ℝ | z < y } := is_open_Iio
+    this.preimage continuous_subtype_val
   open_target := by
     have : IsOpen { z : ℝ | z < y - x } := is_open_Iio
     have : IsOpen { z : EuclideanSpace ℝ (Finₓ 1) | z 0 < y - x } :=
@@ -207,16 +195,13 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
   Source := { z : Icc x y | x < z.val }
   Target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
   toFun := fun z : Icc x y => ⟨fun i => y - z.val, sub_nonneg.mpr z.property.2⟩
-  invFun := fun z =>
-    ⟨max (y - z.val 0) x, by
-      simp [le_reflₓ, z.prop, le_of_ltₓ (Fact.out (x < y)), sub_eq_add_neg]⟩
-  map_source' := by
-    simp only [imp_self, mem_set_of_eq, sub_lt_sub_iff_left, forall_true_iff]
+  invFun := fun z => ⟨max (y - z.val 0) x, by simp [le_reflₓ, z.prop, le_of_ltₓ (Fact.out (x < y)), sub_eq_add_neg]⟩
+  map_source' := by simp only [imp_self, mem_set_of_eq, sub_lt_sub_iff_left, forall_true_iff]
   map_target' := by
     simp only [lt_max_iff, mem_set_of_eq]
     intro z hz
     left
-    dsimp' [-Subtype.val_eq_coe]  at hz
+    dsimp [-Subtype.val_eq_coe] at hz
     linarith
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
@@ -226,14 +211,13 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
     rintro ⟨z, hz⟩ h'z
     rw [Subtype.mk_eq_mk]
     funext
-    dsimp'  at hz h'z
-    have A : x ≤ y - z 0 := by
-      linarith
+    dsimp at hz h'z
+    have A : x ≤ y - z 0 := by linarith
     rw [Subsingleton.elim i 0]
     simp only [A, sub_sub_cancel, max_eq_leftₓ]
-  open_source := by
-    have : IsOpen { z : ℝ | x < z } := is_open_Ioi
-    exact this.preimage continuous_subtype_val
+  open_source :=
+    haveI : IsOpen { z : ℝ | x < z } := is_open_Ioi
+    this.preimage continuous_subtype_val
   open_target := by
     have : IsOpen { z : ℝ | z < y - x } := is_open_Iio
     have : IsOpen { z : EuclideanSpace ℝ (Finₓ 1) | z 0 < y - x } :=
@@ -258,7 +242,7 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
   Atlas := {iccLeftChart x y, iccRightChart x y}
   chartAt := fun z => if z.val < y then iccLeftChart x y else iccRightChart x y
   mem_chart_source := fun z => by
-    by_cases' h' : z.val < y
+    by_cases h':z.val < y
     · simp only [h', if_true]
       exact h'
       
@@ -266,8 +250,7 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
       apply lt_of_lt_of_leₓ (Fact.out (x < y))
       simpa only [not_ltₓ] using h'
       
-  chart_mem_atlas := fun z => by
-    by_cases' h' : (z : ℝ) < y <;> simp [h']
+  chart_mem_atlas := fun z => by by_cases h':(z : ℝ) < y <;> simp [h']
 
 /-- The manifold structure on `[x, y]` is smooth.
 -/
@@ -289,25 +272,25 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorn
   · -- `e = left chart`, `e' = right chart`
     apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨⟨z, hz₀⟩, rfl⟩⟩
-    simp' only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, update_same, max_eq_leftₓ, hz₀,
-      lt_sub_iff_add_lt] with mfld_simps  at hz₁ hz₂
+    simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, update_same, max_eq_leftₓ, hz₀,
+      lt_sub_iff_add_lt, mfld_simps] at hz₁ hz₂
     rw [min_eq_leftₓ hz₁.le, lt_add_iff_pos_left] at hz₂
     ext i
     rw [Subsingleton.elim i 0]
-    simp' only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, *, PiLp.add_apply, PiLp.neg_apply,
-      max_eq_leftₓ, min_eq_leftₓ hz₁.le, update_same] with mfld_simps
+    simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, *, PiLp.add_apply, PiLp.neg_apply,
+      max_eq_leftₓ, min_eq_leftₓ hz₁.le, update_same, mfld_simps]
     abel
     
   · -- `e = right chart`, `e' = left chart`
     apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨z, hz₀⟩, rfl⟩
-    simp' only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, max_lt_iff, update_same,
-      max_eq_leftₓ hz₀] with mfld_simps  at hz₁ hz₂
+    simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, max_lt_iff, update_same,
+      max_eq_leftₓ hz₀, mfld_simps] at hz₁ hz₂
     rw [lt_sub] at hz₁
     ext i
     rw [Subsingleton.elim i 0]
-    simp' only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, PiLp.add_apply, PiLp.neg_apply,
-      update_same, max_eq_leftₓ, hz₀, hz₁.le] with mfld_simps
+    simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, PiLp.add_apply, PiLp.neg_apply,
+      update_same, max_eq_leftₓ, hz₀, hz₁.le, mfld_simps]
     abel
     
   · -- `e = right chart`, `e' = right chart`
@@ -324,11 +307,9 @@ theorem fact_zero_lt_one : Fact ((0 : ℝ) < 1) :=
 
 attribute [local instance] fact_zero_lt_one
 
-instance : ChartedSpace (EuclideanHalfSpace 1) (Icc (0 : ℝ) 1) := by
-  infer_instance
+instance : ChartedSpace (EuclideanHalfSpace 1) (Icc (0 : ℝ) 1) := by infer_instance
 
-instance : SmoothManifoldWithCorners (𝓡∂ 1) (Icc (0 : ℝ) 1) := by
-  infer_instance
+instance : SmoothManifoldWithCorners (𝓡∂ 1) (Icc (0 : ℝ) 1) := by infer_instance
 
 end
 

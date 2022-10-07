@@ -71,7 +71,7 @@ def qsmulRec (coe : ℚ → K) [Mul K] (a : ℚ) (x : K) : K :=
   coe a * x
 
 /-- A `division_semiring` is a `semiring` with multiplicative inverses for nonzero elements. -/
-@[protect_proj, ancestor Semiringₓ GroupWithZeroₓ]
+@[protect_proj]
 class DivisionSemiring (α : Type _) extends Semiringₓ α, GroupWithZeroₓ α
 
 /-- A `division_ring` is a `ring` with multiplicative inverses for nonzero elements.
@@ -84,21 +84,35 @@ The fields `of_rat` and `qsmul` are needed to implement the
 definitions for some special cases of `K` (in particular `K = ℚ` itself).
 See also Note [forgetful inheritance].
 -/
-@[protect_proj, ancestor Ringₓ DivInvMonoidₓ Nontrivial]
+@[protect_proj]
 class DivisionRing (K : Type u) extends Ringₓ K, DivInvMonoidₓ K, Nontrivial K, HasRatCast K where
   mul_inv_cancel : ∀ {a : K}, a ≠ 0 → a * a⁻¹ = 1
   inv_zero : (0 : K)⁻¹ = 0
   ratCast := Ratₓ.castRec
   rat_cast_mk : ∀ (a : ℤ) (b : ℕ) (h1 h2), rat_cast ⟨a, b, h1, h2⟩ = a * b⁻¹ := by
-    run_tac
-      try_refl_tac
+    intros
+    rfl
   qsmul : ℚ → K → K := qsmulRec rat_cast
   qsmul_eq_mul' : ∀ (a : ℚ) (x : K), qsmul a x = rat_cast a * x := by
-    run_tac
-      try_refl_tac
+    intros
+    rfl
+
+-- see Note [lower instance priority]
+instance (priority := 100) DivisionRing.toDivisionSemiring [DivisionRing α] : DivisionSemiring α :=
+  { ‹DivisionRing α›, (inferInstance : Semiringₓ α) with }
+
+section DivisionRing
+
+variable [DivisionRing α]
+
+@[simp]
+theorem zpow_bit1_neg (x : α) (n : ℤ) : -x ^ bit1 n = -(x ^ bit1 n) := by
+  rw [zpow_bit1', zpow_bit1', neg_mul_neg, neg_mul_eq_mul_neg]
+
+end DivisionRing
 
 /-- A `semifield` is a `comm_semiring` with multiplicative inverses for nonzero elements. -/
-@[protect_proj, ancestor CommSemiringₓ DivisionSemiring CommGroupWithZero]
+@[protect_proj]
 class Semifield (α : Type _) extends CommSemiringₓ α, DivisionSemiring α, CommGroupWithZero α
 
 /-- A `field` is a `comm_ring` with multiplicative inverses for nonzero elements.
@@ -111,29 +125,22 @@ The fields `of_rat` and `qsmul are needed to implement the
 definitions for some special cases of `K` (in particular `K = ℚ` itself).
 See also Note [forgetful inheritance].
 -/
-@[protect_proj, ancestor CommRingₓ DivInvMonoidₓ Nontrivial]
+@[protect_proj]
 class Field (K : Type u) extends CommRingₓ K, DivisionRing K
-
--- see Note [lower instance priority]
-instance (priority := 100) DivisionRing.toDivisionSemiring [DivisionRing α] : DivisionSemiring α :=
-  { ‹DivisionRing α›, (inferInstance : Semiringₓ α) with }
 
 section DivisionSemiring
 
 variable [DivisionSemiring α] {a b c : α}
 
-theorem add_div (a b c : α) : (a + b) / c = a / c + b / c := by
-  simp_rw [div_eq_mul_inv, add_mulₓ]
+theorem add_div (a b c : α) : (a + b) / c = a / c + b / c := by simp_rw [div_eq_mul_inv, add_mulₓ]
 
 @[field_simps]
 theorem div_add_div_same (a b c : α) : a / c + b / c = (a + b) / c :=
   (add_div _ _ _).symm
 
-theorem same_add_div (h : b ≠ 0) : (b + a) / b = 1 + a / b := by
-  rw [← div_self h, add_div]
+theorem same_add_div (h : b ≠ 0) : (b + a) / b = 1 + a / b := by rw [← div_self h, add_div]
 
-theorem div_add_same (h : b ≠ 0) : (a + b) / b = a / b + 1 := by
-  rw [← div_self h, add_div]
+theorem div_add_same (h : b ≠ 0) : (a + b) / b = a / b + 1 := by rw [← div_self h, add_div]
 
 theorem one_add_div (h : b ≠ 0) : 1 + a / b = (b + a) / b :=
   (same_add_div h).symm
@@ -146,16 +153,13 @@ theorem one_div_mul_add_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : 
   rw [mul_addₓ, one_div_mul_cancel ha, add_mulₓ, one_mulₓ, mul_assoc, mul_one_div_cancel hb, mul_oneₓ, add_commₓ]
 
 theorem add_div_eq_mul_add_div (a b : α) (hc : c ≠ 0) : a + b / c = (a * c + b) / c :=
-  (eq_div_iff_mul_eq hc).2 <| by
-    rw [right_distrib, div_mul_cancel _ hc]
+  (eq_div_iff_mul_eq hc).2 <| by rw [right_distrib, div_mul_cancel _ hc]
 
 @[field_simps]
-theorem add_div' (a b c : α) (hc : c ≠ 0) : b + a / c = (b * c + a) / c := by
-  rw [add_div, mul_div_cancel _ hc]
+theorem add_div' (a b c : α) (hc : c ≠ 0) : b + a / c = (b * c + a) / c := by rw [add_div, mul_div_cancel _ hc]
 
 @[field_simps]
-theorem div_add' (a b c : α) (hc : c ≠ 0) : a / c + b = (a + b * c) / c := by
-  rwa [add_commₓ, add_div', add_commₓ]
+theorem div_add' (a b c : α) (hc : c ≠ 0) : a / c + b = (a + b * c) / c := by rwa [add_commₓ, add_div', add_commₓ]
 
 end DivisionSemiring
 
@@ -164,52 +168,37 @@ section DivisionMonoid
 variable [DivisionMonoid K] [HasDistribNeg K] {a b : K}
 
 theorem one_div_neg_one_eq_neg_one : (1 : K) / -1 = -1 :=
-  have : -1 * -1 = (1 : K) := by
-    rw [neg_mul_neg, one_mulₓ]
+  have : -1 * -1 = (1 : K) := by rw [neg_mul_neg, one_mulₓ]
   Eq.symm (eq_one_div_of_mul_eq_one_right this)
 
 theorem one_div_neg_eq_neg_one_div (a : K) : 1 / -a = -(1 / a) :=
   calc
-    1 / -a = 1 / (-1 * a) := by
-      rw [neg_eq_neg_one_mul]
-    _ = 1 / a * (1 / -1) := by
-      rw [one_div_mul_one_div_rev]
-    _ = 1 / a * -1 := by
-      rw [one_div_neg_one_eq_neg_one]
-    _ = -(1 / a) := by
-      rw [mul_neg, mul_oneₓ]
+    1 / -a = 1 / (-1 * a) := by rw [neg_eq_neg_one_mul]
+    _ = 1 / a * (1 / -1) := by rw [one_div_mul_one_div_rev]
+    _ = 1 / a * -1 := by rw [one_div_neg_one_eq_neg_one]
+    _ = -(1 / a) := by rw [mul_neg, mul_oneₓ]
     
 
 theorem div_neg_eq_neg_div (a b : K) : b / -a = -(b / a) :=
   calc
-    b / -a = b * (1 / -a) := by
-      rw [← inv_eq_one_div, division_def]
-    _ = b * -(1 / a) := by
-      rw [one_div_neg_eq_neg_one_div]
-    _ = -(b * (1 / a)) := by
-      rw [neg_mul_eq_mul_neg]
-    _ = -(b / a) := by
-      rw [mul_one_div]
+    b / -a = b * (1 / -a) := by rw [← inv_eq_one_div, division_def]
+    _ = b * -(1 / a) := by rw [one_div_neg_eq_neg_one_div]
+    _ = -(b * (1 / a)) := by rw [neg_mul_eq_mul_neg]
+    _ = -(b / a) := by rw [mul_one_div]
     
 
-theorem neg_div (a b : K) : -b / a = -(b / a) := by
-  rw [neg_eq_neg_one_mul, mul_div_assoc, ← neg_eq_neg_one_mul]
+theorem neg_div (a b : K) : -b / a = -(b / a) := by rw [neg_eq_neg_one_mul, mul_div_assoc, ← neg_eq_neg_one_mul]
 
 @[field_simps]
-theorem neg_div' (a b : K) : -(b / a) = -b / a := by
-  simp [neg_div]
+theorem neg_div' (a b : K) : -(b / a) = -b / a := by simp [neg_div]
 
-theorem neg_div_neg_eq (a b : K) : -a / -b = a / b := by
-  rw [div_neg_eq_neg_div, neg_div, neg_negₓ]
+theorem neg_div_neg_eq (a b : K) : -a / -b = a / b := by rw [div_neg_eq_neg_div, neg_div, neg_negₓ]
 
-theorem neg_inv : -a⁻¹ = (-a)⁻¹ := by
-  rw [inv_eq_one_div, inv_eq_one_div, div_neg_eq_neg_div]
+theorem neg_inv : -a⁻¹ = (-a)⁻¹ := by rw [inv_eq_one_div, inv_eq_one_div, div_neg_eq_neg_div]
 
-theorem div_neg (a : K) : a / -b = -(a / b) := by
-  rw [← div_neg_eq_neg_div]
+theorem div_neg (a : K) : a / -b = -(a / b) := by rw [← div_neg_eq_neg_div]
 
-theorem inv_neg : (-a)⁻¹ = -a⁻¹ := by
-  rw [neg_inv]
+theorem inv_neg : (-a)⁻¹ = -a⁻¹ := by rw [neg_inv]
 
 end DivisionMonoid
 
@@ -242,12 +231,10 @@ theorem smul_def (a : ℚ) (x : K) : a • x = ↑a * x :=
 end Ratₓ
 
 @[simp]
-theorem div_neg_self {a : K} (h : a ≠ 0) : a / -a = -1 := by
-  rw [div_neg_eq_neg_div, div_self h]
+theorem div_neg_self {a : K} (h : a ≠ 0) : a / -a = -1 := by rw [div_neg_eq_neg_div, div_self h]
 
 @[simp]
-theorem neg_div_self {a : K} (h : a ≠ 0) : -a / a = -1 := by
-  rw [neg_div, div_self h]
+theorem neg_div_self {a : K} (h : a ≠ 0) : -a / a = -1 := by rw [neg_div, div_self h]
 
 theorem div_sub_div_same (a b c : K) : a / c - b / c = (a - b) / c := by
   rw [sub_eq_add_neg, ← neg_div, div_add_div_same, sub_eq_add_neg]
@@ -274,9 +261,7 @@ theorem one_div_mul_sub_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : 
 
 -- see Note [lower instance priority]
 instance (priority := 100) DivisionRing.is_domain : IsDomain K :=
-  { ‹DivisionRing K›,
-    (by
-      infer_instance : NoZeroDivisors K) with }
+  { ‹DivisionRing K›, (by infer_instance : NoZeroDivisors K) with }
 
 end DivisionRing
 
@@ -316,12 +301,10 @@ theorem inv_sub_inv {a b : K} (ha : a ≠ 0) (hb : b ≠ 0) : a⁻¹ - b⁻¹ = 
   rw [inv_eq_one_div, inv_eq_one_div, div_sub_div _ _ ha hb, one_mulₓ, mul_oneₓ]
 
 @[field_simps]
-theorem sub_div' (a b c : K) (hc : c ≠ 0) : b - a / c = (b * c - a) / c := by
-  simpa using div_sub_div b a one_ne_zero hc
+theorem sub_div' (a b c : K) (hc : c ≠ 0) : b - a / c = (b * c - a) / c := by simpa using div_sub_div b a one_ne_zero hc
 
 @[field_simps]
-theorem div_sub' (a b c : K) (hc : c ≠ 0) : a / c - b = (a - c * b) / c := by
-  simpa using div_sub_div a b hc one_ne_zero
+theorem div_sub' (a b c : K) (hc : c ≠ 0) : a / c - b = (a - c * b) / c := by simpa using div_sub_div a b hc one_ne_zero
 
 -- see Note [lower instance priority]
 instance (priority := 100) Field.is_domain : IsDomain K :=
@@ -384,12 +367,9 @@ theorem uniq_inv_of_is_field (R : Type u) [Ringₓ R] (hf : IsField R) : ∀ x :
     
   · intro y z hxy hxz
     calc
-      y = y * (x * z) := by
-        rw [hxz, mul_oneₓ]
-      _ = x * y * z := by
-        rw [← mul_assoc, hf.mul_comm y x]
-      _ = z := by
-        rw [hxy, one_mulₓ]
+      y = y * (x * z) := by rw [hxz, mul_oneₓ]
+      _ = x * y * z := by rw [← mul_assoc, hf.mul_comm y x]
+      _ = z := by rw [hxy, one_mulₓ]
       
     
 
@@ -444,14 +424,8 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [O
   { hf.GroupWithZero f zero one mul inv div npow zpow,
     hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with ratCast := coe,
     rat_cast_mk := fun a b h1 h2 =>
-      hf
-        (by
-          erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.rat_cast_mk a b h1 h2),
-    qsmul := (· • ·),
-    qsmul_eq_mul' := fun a x =>
-      hf
-        (by
-          erw [qsmul, mul, Ratₓ.smul_def, rat_cast]) }
+      hf (by erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.rat_cast_mk a b h1 h2),
+    qsmul := (· • ·), qsmul_eq_mul' := fun a x => hf (by erw [qsmul, mul, Ratₓ.smul_def, rat_cast]) }
 
 -- See note [reducible non-instances]
 /-- Pullback a `field` along an injective function. -/
@@ -479,14 +453,8 @@ protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'
   { hf.CommGroupWithZero f zero one mul inv div npow zpow,
     hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with ratCast := coe,
     rat_cast_mk := fun a b h1 h2 =>
-      hf
-        (by
-          erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.rat_cast_mk a b h1 h2),
-    qsmul := (· • ·),
-    qsmul_eq_mul' := fun a x =>
-      hf
-        (by
-          erw [qsmul, mul, Ratₓ.smul_def, rat_cast]) }
+      hf (by erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.rat_cast_mk a b h1 h2),
+    qsmul := (· • ·), qsmul_eq_mul' := fun a x => hf (by erw [qsmul, mul, Ratₓ.smul_def, rat_cast]) }
 
 /-! ### Order dual -/
 

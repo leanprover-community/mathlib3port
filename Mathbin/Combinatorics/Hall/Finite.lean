@@ -33,34 +33,31 @@ Hall's Marriage Theorem, indexed families
 -/
 
 
-open Finset
+open Finsetₓ
 
 universe u v
 
 namespace HallMarriageTheorem
 
-variable {ι : Type u} {α : Type v} [DecidableEq α] {t : ι → Finset α}
+variable {ι : Type u} {α : Type v} [DecidableEq α] {t : ι → Finsetₓ α}
 
-section Fintype
+section Fintypeₓ
 
-variable [Fintype ι]
+variable [Fintypeₓ ι]
 
-theorem hall_cond_of_erase {x : ι} (a : α) (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card)
-    (s' : Finset { x' : ι | x' ≠ x }) : s'.card ≤ (s'.bUnion fun x' => (t x').erase a).card := by
+theorem hall_cond_of_erase {x : ι} (a : α) (ha : ∀ s : Finsetₓ ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card)
+    (s' : Finsetₓ { x' : ι | x' ≠ x }) : s'.card ≤ (s'.bUnion fun x' => (t x').erase a).card := by
   haveI := Classical.decEq ι
   specialize ha (s'.image coe)
-  rw [nonempty.image_iff, Finset.card_image_of_injective s' Subtype.coe_injective] at ha
-  by_cases' he : s'.nonempty
+  rw [nonempty.image_iff, Finsetₓ.card_image_of_injective s' Subtype.coe_injective] at ha
+  by_cases he:s'.nonempty
   · have ha' : s'.card < (s'.bUnion fun x => t x).card := by
-      convert
-        ha he fun h => by
-          simpa [← h] using mem_univ x using
-        2
+      convert ha he fun h => by simpa [← h] using mem_univ x using 2
       ext x
       simp only [mem_image, mem_bUnion, exists_propₓ, SetCoe.exists, exists_and_distrib_rightₓ, exists_eq_right,
         Subtype.coe_mk]
     rw [← erase_bUnion]
-    by_cases' hb : a ∈ s'.bUnion fun x => t x
+    by_cases hb:a ∈ s'.bUnion fun x => t x
     · rw [card_erase_of_mem hb]
       exact Nat.le_pred_of_ltₓ ha'
       
@@ -78,35 +75,33 @@ theorem hall_cond_of_erase {x : ι} (a : α) (ha : ∀ s : Finset ι, s.Nonempty
 and that the statement of **Hall's Marriage Theorem** is true for all
 `ι'` of cardinality ≤ `n`, then it is true for `ι` of cardinality `n + 1`.
 -/
-theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
-    (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card)
+theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintypeₓ.card ι = n + 1)
+    (ht : ∀ s : Finsetₓ ι, s.card ≤ (s.bUnion t).card)
     (ih :
-      ∀ {ι' : Type u} [Fintype ι'] (t' : ι' → Finset α),
-        Fintype.card ι' ≤ n →
-          (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
-    (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card) :
+      ∀ {ι' : Type u} [Fintypeₓ ι'] (t' : ι' → Finsetₓ α),
+        Fintypeₓ.card ι' ≤ n →
+          (∀ s' : Finsetₓ ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
+    (ha : ∀ s : Finsetₓ ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
   haveI : Nonempty ι := fintype.card_pos_iff.mp (hn.symm ▸ Nat.succ_posₓ _)
   haveI := Classical.decEq ι
   -- Choose an arbitrary element `x : ι` and `y : t x`.
   let x := Classical.arbitrary ι
   have tx_ne : (t x).Nonempty := by
-    rw [← Finset.card_pos]
+    rw [← Finsetₓ.card_pos]
     calc
       0 < 1 := Nat.one_posₓ
-      _ ≤ (Finset.bUnion {x} t).card := ht {x}
-      _ = (t x).card := by
-        rw [Finset.singleton_bUnion]
+      _ ≤ (Finsetₓ.bUnion {x} t).card := ht {x}
+      _ = (t x).card := by rw [Finsetₓ.singleton_bUnion]
       
   choose y hy using tx_ne
   -- Restrict to everything except `x` and `y`.
   let ι' := { x' : ι | x' ≠ x }
-  let t' : ι' → Finset α := fun x' => (t x').erase y
-  have card_ι' : Fintype.card ι' = n :=
+  let t' : ι' → Finsetₓ α := fun x' => (t x').erase y
+  have card_ι' : Fintypeₓ.card ι' = n :=
     calc
-      Fintype.card ι' = Fintype.card ι - 1 := Set.card_ne_eq _
-      _ = n := by
-        rw [hn, Nat.add_succ_sub_one, add_zeroₓ]
+      Fintypeₓ.card ι' = Fintypeₓ.card ι - 1 := Set.card_ne_eq _
+      _ = n := by rw [hn, Nat.add_succ_sub_one, add_zeroₓ]
       
   rcases ih t' card_ι'.le (hall_cond_of_erase y ha) with ⟨f', hfinj, hfr⟩
   -- Extend the resulting function.
@@ -115,7 +110,7 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
     have key : ∀ {x}, y ≠ f' x := by
       intro x h
       simpa [← h] using hfr x
-    by_cases' h₁ : z₁ = x <;> by_cases' h₂ : z₂ = x <;> simp [h₁, h₂, hfinj.eq_iff, key, key.symm]
+    by_cases h₁:z₁ = x <;> by_cases h₂:z₂ = x <;> simp [h₁, h₂, hfinj.eq_iff, key, key.symm]
     
   · intro z
     split_ifs with hz
@@ -127,8 +122,8 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
       
     
 
-theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset ι}
-    (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (s' : Finset (s : Set ι)) :
+theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finsetₓ α} {s : Finsetₓ ι}
+    (ht : ∀ s : Finsetₓ ι, s.card ≤ (s.bUnion t).card) (s' : Finsetₓ (s : Set ι)) :
     s'.card ≤ (s'.bUnion fun a' => t a').card := by
   classical
   rw [← card_image_of_injective s' Subtype.coe_injective]
@@ -137,8 +132,8 @@ theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset �
   ext y
   simp
 
-theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι} (hus : s.card = (s.bUnion t).card)
-    (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (s' : Finset (sᶜ : Set ι)) :
+theorem hall_cond_of_compl {ι : Type u} {t : ι → Finsetₓ α} {s : Finsetₓ ι} (hus : s.card = (s.bUnion t).card)
+    (ht : ∀ s : Finsetₓ ι, s.card ≤ (s.bUnion t).card) (s' : Finsetₓ (sᶜ : Set ι)) :
     s'.card ≤ (s'.bUnion fun x' => t x' \ s.bUnion t).card := by
   haveI := Classical.decEq ι
   have disj : Disjoint s (s'.image coe) := by
@@ -146,8 +141,7 @@ theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι} 
       exists_eq_right, Subtype.coe_mk]
     intro x hx hc h
     exact absurd hx hc
-  have : s'.card = (s ∪ s'.image coe).card - s.card := by
-    simp [disj, card_image_of_injective _ Subtype.coe_injective]
+  have : s'.card = (s ∪ s'.image coe).card - s.card := by simp [disj, card_image_of_injective _ Subtype.coe_injective]
   rw [this, hus]
   refine' (tsub_le_tsub_right (ht _) _).trans _
   rw [← card_sdiff]
@@ -170,32 +164,32 @@ theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι} 
 and that the statement of **Hall's Marriage Theorem** is true for all
 `ι'` of cardinality ≤ `n`, then it is true for `ι` of cardinality `n + 1`.
 -/
-theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
-    (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card)
+theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintypeₓ.card ι = n + 1)
+    (ht : ∀ s : Finsetₓ ι, s.card ≤ (s.bUnion t).card)
     (ih :
-      ∀ {ι' : Type u} [Fintype ι'] (t' : ι' → Finset α),
-        Fintype.card ι' ≤ n →
-          (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
-    (s : Finset ι) (hs : s.Nonempty) (hns : s ≠ univ) (hus : s.card = (s.bUnion t).card) :
+      ∀ {ι' : Type u} [Fintypeₓ ι'] (t' : ι' → Finsetₓ α),
+        Fintypeₓ.card ι' ≤ n →
+          (∀ s' : Finsetₓ ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
+    (s : Finsetₓ ι) (hs : s.Nonempty) (hns : s ≠ univ) (hus : s.card = (s.bUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
   haveI := Classical.decEq ι
   -- Restrict to `s`
-  let t' : s → Finset α := fun x' => t x'
+  let t' : s → Finsetₓ α := fun x' => t x'
   rw [Nat.add_one] at hn
-  have card_ι'_le : Fintype.card s ≤ n := by
+  have card_ι'_le : Fintypeₓ.card s ≤ n := by
     apply Nat.le_of_lt_succₓ
     calc
-      Fintype.card s = s.card := Fintype.card_coe _
-      _ < Fintype.card ι := (card_lt_iff_ne_univ _).mpr hns
+      Fintypeₓ.card s = s.card := Fintypeₓ.card_coe _
+      _ < Fintypeₓ.card ι := (card_lt_iff_ne_univ _).mpr hns
       _ = n.succ := hn
       
   rcases ih t' card_ι'_le (hall_cond_of_restrict ht) with ⟨f', hf', hsf'⟩
   -- Restrict to `sᶜ` in the domain and `(s.bUnion t)ᶜ` in the codomain.
   set ι'' := (s : Set ι)ᶜ with ι''_def
-  let t'' : ι'' → Finset α := fun a'' => t a'' \ s.bUnion t
-  have card_ι''_le : Fintype.card ι'' ≤ n := by
-    simp_rw [← Nat.lt_succ_iffₓ, ← hn, ι'', ← Finset.coe_compl, coe_sort_coe]
-    rwa [Fintype.card_coe, card_compl_lt_iff_nonempty]
+  let t'' : ι'' → Finsetₓ α := fun a'' => t a'' \ s.bUnion t
+  have card_ι''_le : Fintypeₓ.card ι'' ≤ n := by
+    simp_rw [← Nat.lt_succ_iff, ← hn, ι'', ← Finsetₓ.coe_compl, coe_sort_coe]
+    rwa [Fintypeₓ.card_coe, card_compl_lt_iff_nonempty]
   rcases ih t'' card_ι''_le (hall_cond_of_compl hus ht) with ⟨f'', hf'', hsf''⟩
   -- Put them together
   have f'_mem_bUnion : ∀ {x'} (hx' : x' ∈ s), f' ⟨x', hx'⟩ ∈ s.bUnion t := by
@@ -223,29 +217,29 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
       
     
 
-end Fintype
+end Fintypeₓ
 
 variable [Finite ι]
 
 /-- Here we combine the two inductive steps into a full strong induction proof,
 completing the proof the harder direction of **Hall's Marriage Theorem**.
 -/
-theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) :
+theorem hall_hard_inductive (ht : ∀ s : Finsetₓ ι, s.card ≤ (s.bUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
   cases nonempty_fintype ι
-  induction' hn : Fintype.card ι using Nat.strong_induction_onₓ with n ih generalizing ι
+  induction' hn : Fintypeₓ.card ι using Nat.strong_induction_onₓ with n ih generalizing ι
   rcases n with (_ | _)
-  · rw [Fintype.card_eq_zero_iff] at hn
+  · rw [Fintypeₓ.card_eq_zero_iff] at hn
     exact ⟨isEmptyElim, isEmptyElim, isEmptyElim⟩
     
   · have ih' :
-      ∀ (ι' : Type u) [Fintype ι'] (t' : ι' → Finset α),
-        Fintype.card ι' ≤ n →
-          (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x :=
+      ∀ (ι' : Type u) [Fintypeₓ ι'] (t' : ι' → Finsetₓ α),
+        Fintypeₓ.card ι' ≤ n →
+          (∀ s' : Finsetₓ ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x :=
       by
       intro ι' _ _ hι' ht'
       exact ih _ (Nat.lt_succ_of_leₓ hι') ht' _ rfl
-    by_cases' h : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card
+    by_cases h:∀ s : Finsetₓ ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card
     · exact hall_hard_inductive_step_A hn ht ih' h
       
     · push_neg  at h
@@ -264,9 +258,9 @@ if every union of `k` of the sets has at least `k` elements.
 See `finset.all_card_le_bUnion_card_iff_exists_injective` for a version
 where the `finite ι` constraint is removed.
 -/
-theorem Finset.all_card_le_bUnion_card_iff_exists_injective' {ι α : Type _} [Finite ι] [DecidableEq α]
-    (t : ι → Finset α) :
-    (∀ s : Finset ι, s.card ≤ (s.bUnion t).card) ↔ ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
+theorem Finsetₓ.all_card_le_bUnion_card_iff_exists_injective' {ι α : Type _} [Finite ι] [DecidableEq α]
+    (t : ι → Finsetₓ α) :
+    (∀ s : Finsetₓ ι, s.card ≤ (s.bUnion t).card) ↔ ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
   constructor
   · exact HallMarriageTheorem.hall_hard_inductive
     

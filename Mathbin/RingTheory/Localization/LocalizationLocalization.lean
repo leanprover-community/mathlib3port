@@ -78,7 +78,7 @@ theorem localization_localization_surj [IsLocalization N T] (x : T) :
   -- y = z / t
   rcases IsLocalization.surj M (s : S) with ⟨⟨z', t'⟩, eq₃⟩
   -- s = z' / t'
-  dsimp' only  at eq₁ eq₂ eq₃
+  dsimp only at eq₁ eq₂ eq₃
   use z * t'
   use z' * t
   -- x = y / s = (z * t') / (z' * t)
@@ -96,7 +96,7 @@ theorem localization_localization_eq_iff_exists [IsLocalization N T] (x y : R) :
   constructor
   · rintro ⟨z, eq₁⟩
     rcases IsLocalization.surj M (z : S) with ⟨⟨z', s⟩, eq₂⟩
-    dsimp' only  at eq₂
+    dsimp only at eq₂
     obtain ⟨c, eq₃ : x * z' * ↑c = y * z' * ↑c⟩ := (IsLocalization.eq_iff_exists M S).mp _
     swap
     · rw [RingHom.map_mul, RingHom.map_mul, ← eq₂, ← mul_assoc, ← mul_assoc, ← eq₁]
@@ -178,9 +178,9 @@ noncomputable def localizationAlgebraOfSubmonoidLe (M N : Submonoid R) (h : M �
 /-- If `M ≤ N` are submonoids of `R`, then the natural map `M⁻¹S →+* N⁻¹S` commutes with the
 localization maps -/
 theorem localization_is_scalar_tower_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLocalization M S]
-    [IsLocalization N T] : @IsScalarTower R S T _ (localizationAlgebraOfSubmonoidLe S T M N h).toHasSmul _ := by
+    [IsLocalization N T] : @IsScalarTower R S T _ (localizationAlgebraOfSubmonoidLe S T M N h).toHasSmul _ :=
   letI := localization_algebra_of_submonoid_le S T M N h
-  exact IsScalarTower.of_algebra_map_eq' (IsLocalization.lift_comp _).symm
+  IsScalarTower.of_algebra_map_eq' (IsLocalization.lift_comp _).symm
 
 noncomputable instance (x : Ideal R) [H : x.IsPrime] [IsDomain R] :
     Algebra (Localization.AtPrime x) (Localization (nonZeroDivisors R)) :=
@@ -205,7 +205,7 @@ theorem is_localization_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLoc
       obtain ⟨⟨y₁, s₁⟩, e₁⟩ := IsLocalization.surj M x₁
       obtain ⟨⟨y₂, s₂⟩, e₂⟩ := IsLocalization.surj M x₂
       refine' Iff.trans _ (Set.exists_image_iff (algebraMap R S) N fun c => x₁ * c = x₂ * c).symm
-      dsimp' only  at e₁ e₂⊢
+      dsimp only at e₁ e₂⊢
       suffices
         algebraMap R T (y₁ * s₂) = algebraMap R T (y₂ * s₁) ↔
           ∃ a : N, algebraMap R S (a * (y₁ * s₂)) = algebraMap R S (a * (y₂ * s₁))
@@ -221,14 +221,10 @@ theorem is_localization_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLoc
       simp_rw [IsLocalization.eq_iff_exists N T, IsLocalization.eq_iff_exists M S]
       constructor
       · rintro ⟨a, e⟩
-        exact
-          ⟨a, 1, by
-            convert e using 1 <;> simp <;> ring⟩
+        exact ⟨a, 1, by convert e using 1 <;> simp <;> ring⟩
         
       · rintro ⟨a, b, e⟩
-        exact
-          ⟨a * (⟨_, h b.prop⟩ : N), by
-            convert e using 1 <;> simp <;> ring⟩
+        exact ⟨a * (⟨_, h b.prop⟩ : N), by convert e using 1 <;> simp <;> ring⟩
          }
 
 /-- If `M ≤ N` are submonoids of `R` such that `∀ x : N, ∃ m : R, m * x ∈ M`, then the

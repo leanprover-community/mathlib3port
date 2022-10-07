@@ -99,13 +99,13 @@ theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : Is
   rw [← sub_self x]
   exact hu.sub_const _
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident r, ",", ident hr, "⟩", ":", expr «expr∃ , »((r : exprℝ()), «expr = »(«expr⟪ , ⟫»(T x, x), r))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident r, ",", ident hr, "⟩", ":", expr «expr∃ , »((r : exprℝ()), «expr = »(«expr⟪ , ⟫»(T x, x), r))]]
 /-- For a symmetric operator `T`, the function `λ x, ⟪T x, x⟫` is real-valued. -/
 @[simp]
 theorem IsSymmetric.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E)) (x : E) :
     (T.reApplyInnerSelf x : 𝕜) = ⟪T x, x⟫ := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident r, \",\", ident hr, \"⟩\", \":\", expr «expr∃ , »((r : exprℝ()), «expr = »(«expr⟪ , ⟫»(T x, x), r))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident r, \",\", ident hr, \"⟩\", \":\", expr «expr∃ , »((r : exprℝ()), «expr = »(«expr⟪ , ⟫»(T x, x), r))]]"
   · simp [hr, T.re_apply_inner_self_apply]
     
   rw [← eq_conj_iff_real]
@@ -120,8 +120,7 @@ theorem IsSymmetric.restrict_scalars {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric)
     @LinearMap.IsSymmetric ℝ E _ (InnerProductSpace.isROrCToReal 𝕜 E)
       (@LinearMap.restrictScalars ℝ 𝕜 _ _ _ _ _ _ (InnerProductSpace.isROrCToReal 𝕜 E).toModule
         (InnerProductSpace.isROrCToReal 𝕜 E).toModule _ _ _ T) :=
-  fun x y => by
-  simp [hT x y, real_inner_eq_re_inner, LinearMap.coe_restrict_scalars_eq_coe]
+  fun x y => by simp [hT x y, real_inner_eq_re_inner, LinearMap.coe_restrict_scalars_eq_coe]
 
 section Complex
 
@@ -136,8 +135,8 @@ theorem is_symmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) : IsSymmetric
     apply is_symmetric.conj_inner_sym hT
     
   · intro h x y
-    nth_rw 1[← inner_conj_sym]
-    nth_rw 1[inner_map_polarization]
+    nth_rw 1 [← inner_conj_sym]
+    nth_rw 1 [inner_map_polarization]
     simp only [star_ring_end_apply, star_div', star_sub, star_add, star_mul]
     simp only [← star_ring_end_apply]
     rw [h (x + y), h (x - y), h (x + Complex.i • y), h (x - Complex.i • y)]

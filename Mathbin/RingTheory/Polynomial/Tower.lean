@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Kenny Lau
+Authors: Kenny Lau, Yuyang Zhao
 -/
 import Mathbin.Algebra.Algebra.Tower
 import Mathbin.Data.Polynomial.AlgebraMap
@@ -15,27 +15,25 @@ This structure itself is provided elsewhere as `polynomial.is_scalar_tower`
 -/
 
 
-universe u v w u₁
-
 open Polynomial
 
-variable (R : Type u) (S : Type v) (A : Type w) (B : Type u₁)
+variable (R A B : Type _)
 
-namespace IsScalarTower
+namespace Polynomial
 
 section Semiringₓ
 
-variable [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A] [Semiringₓ B]
+variable [CommSemiringₓ R] [CommSemiringₓ A] [Semiringₓ B]
 
-variable [Algebra R S] [Algebra S A] [Algebra S B] [Algebra R A] [Algebra R B]
+variable [Algebra R A] [Algebra A B] [Algebra R B]
 
-variable [IsScalarTower R S A] [IsScalarTower R S B]
+variable [IsScalarTower R A B]
 
-variable (R S A) {B}
+variable {R B}
 
-theorem aeval_apply (x : A) (p : R[X]) :
-    Polynomial.aeval x p = Polynomial.aeval x (Polynomial.map (algebraMap R S) p) := by
-  rw [Polynomial.aeval_def, Polynomial.aeval_def, Polynomial.eval₂_map, algebra_map_eq R S A]
+@[simp]
+theorem aeval_map_algebra_map (x : B) (p : R[X]) : aeval x (map (algebraMap R A) p) = aeval x p := by
+  rw [aeval_def, aeval_def, eval₂_map, IsScalarTower.algebra_map_eq R A B]
 
 end Semiringₓ
 
@@ -45,37 +43,38 @@ variable [CommSemiringₓ R] [CommSemiringₓ A] [Semiringₓ B]
 
 variable [Algebra R A] [Algebra A B] [Algebra R B] [IsScalarTower R A B]
 
-theorem algebra_map_aeval (x : A) (p : R[X]) :
-    algebraMap A B (Polynomial.aeval x p) = Polynomial.aeval (algebraMap A B x) p := by
-  rw [Polynomial.aeval_def, Polynomial.aeval_def, Polynomial.hom_eval₂, ← IsScalarTower.algebra_map_eq]
+variable {R A}
 
-theorem aeval_eq_zero_of_aeval_algebra_map_eq_zero {x : A} {p : R[X]} (h : Function.Injective (algebraMap A B))
-    (hp : Polynomial.aeval (algebraMap A B x) p = 0) : Polynomial.aeval x p = 0 := by
-  rw [← algebra_map_aeval, ← (algebraMap A B).map_zero] at hp
-  exact h hp
+theorem aeval_algebra_map_apply (x : A) (p : R[X]) : aeval (algebraMap A B x) p = algebraMap A B (aeval x p) := by
+  rw [aeval_def, aeval_def, hom_eval₂, ← IsScalarTower.algebra_map_eq]
 
-theorem aeval_eq_zero_of_aeval_algebra_map_eq_zero_field {R A B : Type _} [CommSemiringₓ R] [Field A] [CommSemiringₓ B]
-    [Nontrivial B] [Algebra R A] [Algebra R B] [Algebra A B] [IsScalarTower R A B] {x : A} {p : R[X]}
-    (h : Polynomial.aeval (algebraMap A B x) p = 0) : Polynomial.aeval x p = 0 :=
-  aeval_eq_zero_of_aeval_algebra_map_eq_zero R A B (algebraMap A B).Injective h
+@[simp]
+theorem aeval_algebra_map_eq_zero_iff [NoZeroSmulDivisors A B] [Nontrivial B] (x : A) (p : R[X]) :
+    aeval (algebraMap A B x) p = 0 ↔ aeval x p = 0 := by
+  rw [aeval_algebra_map_apply, Algebra.algebra_map_eq_smul_one, smul_eq_zero, iff_false_intro (@one_ne_zero B _ _),
+    or_falseₓ]
+
+variable {B}
+
+theorem aeval_algebra_map_eq_zero_iff_of_injective {x : A} {p : R[X]} (h : Function.Injective (algebraMap A B)) :
+    aeval (algebraMap A B x) p = 0 ↔ aeval x p = 0 := by
+  rw [aeval_algebra_map_apply, ← (algebraMap A B).map_zero, h.eq_iff]
 
 end CommSemiringₓ
 
-end IsScalarTower
+end Polynomial
 
 namespace Subalgebra
 
-open IsScalarTower
+open Polynomial
 
 section CommSemiringₓ
 
-variable (R) {S A} [CommSemiringₓ R] [CommSemiringₓ S] [CommSemiringₓ A]
-
-variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
+variable {R A} [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A]
 
 @[simp]
-theorem aeval_coe {S : Subalgebra R A} {x : S} {p : R[X]} : Polynomial.aeval (x : A) p = Polynomial.aeval x p :=
-  (algebra_map_aeval R S A x p).symm
+theorem aeval_coe (S : Subalgebra R A) (x : S) (p : R[X]) : aeval (x : A) p = aeval x p :=
+  aeval_algebra_map_apply A x p
 
 end CommSemiringₓ
 

@@ -74,7 +74,7 @@ open Streamₓ
 class BoundedRandomₓ (α : Type u) [Preorderₓ α] where
   randomR : ∀ (g) [RandomGen g] (x y : α), x ≤ y → RandGₓ g (x .. y)
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`Random] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`Random] []
 /-- `random α` gives us machinery to generate values of type `α` -/
 class Randomₓ (α : Type u) where
   Random : ∀ (g : Type) [RandomGen g], RandGₓ g α
@@ -82,8 +82,7 @@ class Randomₓ (α : Type u) where
 /-- shift_31_left = 2^31; multiplying by it shifts the binary
 representation of a number left by 31 bits, dividing by it shifts it
 right by 31 bits -/
-def shift31Left : ℕ := by
-  apply_normed 2 ^ 31
+def shift31Left : ℕ := by apply_normed 2 ^ 31
 
 namespace Randₓ
 
@@ -245,19 +244,14 @@ open Nat
 instance natBoundedRandom :
     BoundedRandomₓ ℕ where randomR := fun g inst x y hxy => do
     let z ← @Finₓ.random g inst (succ <| y - x) _
-    pure
-        ⟨z + x, Nat.le_add_leftₓ _ _, by
-          rw [← le_tsub_iff_right hxy] <;> apply le_of_succ_le_succ z.is_lt⟩
+    pure ⟨z + x, Nat.le_add_leftₓ _ _, by rw [← le_tsub_iff_right hxy] <;> apply le_of_succ_le_succ z.is_lt⟩
 
 /-- This `bounded_random` interval generates integers between `x` and
 `y` by first generating a natural number between `0` and `y - x` and
 shifting the result appropriately. -/
 instance intBoundedRandom :
     BoundedRandomₓ ℤ where randomR := fun g inst x y hxy => do
-    let ⟨z, h₀, h₁⟩ ←
-      @BoundedRandomₓ.randomR ℕ _ _ g inst 0 (Int.natAbs <| y - x)
-          (by
-            decide)
+    let ⟨z, h₀, h₁⟩ ← @BoundedRandomₓ.randomR ℕ _ _ g inst 0 (Int.natAbs <| y - x) (by decide)
     pure
         ⟨z + x, Int.le_add_of_nonneg_leftₓ (Int.coe_nat_nonneg _),
           Int.add_le_of_le_sub_rightₓ <|

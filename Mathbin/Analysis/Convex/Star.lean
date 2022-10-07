@@ -180,9 +180,7 @@ theorem star_convex_singleton (x : E) : StarConvex 𝕜 x {x} := by
 theorem StarConvex.linear_image (hs : StarConvex 𝕜 x s) (f : E →ₗ[𝕜] F) : StarConvex 𝕜 (f x) (s.Image f) := by
   intro y hy a b ha hb hab
   obtain ⟨y', hy', rfl⟩ := hy
-  exact
-    ⟨a • x + b • y', hs hy' ha hb hab, by
-      rw [f.map_add, f.map_smul, f.map_smul]⟩
+  exact ⟨a • x + b • y', hs hy' ha hb hab, by rw [f.map_add, f.map_smul, f.map_smul]⟩
 
 theorem StarConvex.is_linear_image (hs : StarConvex 𝕜 x s) {f : E → F} (hf : IsLinearMap 𝕜 f) :
     StarConvex 𝕜 (f x) (f '' s) :=
@@ -274,10 +272,10 @@ variable [AddCommMonoidₓ E] [SmulWithZero 𝕜 E] {s : Set E}
 
 theorem star_convex_zero_iff : StarConvex 𝕜 0 s ↔ ∀ ⦃x : E⦄, x ∈ s → ∀ ⦃a : 𝕜⦄, 0 ≤ a → a ≤ 1 → a • x ∈ s := by
   refine' forall_congrₓ fun x => forall_congrₓ fun hx => ⟨fun h a ha₀ ha₁ => _, fun h a b ha hb hab => _⟩
-  · simpa only [sub_add_cancel, eq_self_iff_true, forall_true_left, zero_addₓ, smul_zero'] using
+  · simpa only [sub_add_cancel, eq_self_iff_true, forall_true_left, zero_addₓ, smul_zero] using
       h (sub_nonneg_of_le ha₁) ha₀
     
-  · rw [smul_zero', zero_addₓ]
+  · rw [smul_zero, zero_addₓ]
     exact
       h hb
         (by
@@ -293,17 +291,12 @@ variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F]
 
 theorem StarConvex.add_smul_mem (hs : StarConvex 𝕜 x s) (hy : x + y ∈ s) {t : 𝕜} (ht₀ : 0 ≤ t) (ht₁ : t ≤ 1) :
     x + t • y ∈ s := by
-  have h : x + t • y = (1 - t) • x + t • (x + y) := by
-    rw [smul_add, ← add_assocₓ, ← add_smul, sub_add_cancel, one_smul]
+  have h : x + t • y = (1 - t) • x + t • (x + y) := by rw [smul_add, ← add_assocₓ, ← add_smul, sub_add_cancel, one_smul]
   rw [h]
   exact hs hy (sub_nonneg_of_le ht₁) ht₀ (sub_add_cancel _ _)
 
 theorem StarConvex.smul_mem (hs : StarConvex 𝕜 0 s) (hx : x ∈ s) {t : 𝕜} (ht₀ : 0 ≤ t) (ht₁ : t ≤ 1) : t • x ∈ s := by
-  simpa using
-    hs.add_smul_mem
-      (by
-        simpa using hx)
-      ht₀ ht₁
+  simpa using hs.add_smul_mem (by simpa using hx) ht₀ ht₁
 
 theorem StarConvex.add_smul_sub_mem (hs : StarConvex 𝕜 x s) (hy : y ∈ s) {t : 𝕜} (ht₀ : 0 ≤ t) (ht₁ : t ≤ 1) :
     x + t • (y - x) ∈ s := by

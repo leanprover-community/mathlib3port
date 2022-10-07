@@ -37,8 +37,7 @@ protected theorem Smodeq.def : x ≡ y [SMOD U] ↔ (Submodule.Quotient.mk x : M
 
 namespace Smodeq
 
-theorem sub_mem : x ≡ y [SMOD U] ↔ x - y ∈ U := by
-  rw [Smodeq.def, Submodule.Quotient.eq]
+theorem sub_mem : x ≡ y [SMOD U] ↔ x - y ∈ U := by rw [Smodeq.def, Submodule.Quotient.eq]
 
 @[simp]
 theorem top : x ≡ y [SMOD (⊤ : Submodule R M)] :=
@@ -78,8 +77,7 @@ theorem smul (hxy : x ≡ y [SMOD U]) (c : R) : c • x ≡ c • y [SMOD U] := 
   rw [Smodeq.def] at hxy⊢
   simp_rw [quotient.mk_smul, hxy]
 
-theorem zero : x ≡ 0 [SMOD U] ↔ x ∈ U := by
-  rw [Smodeq.def, Submodule.Quotient.eq, sub_zero]
+theorem zero : x ≡ 0 [SMOD U] ↔ x ∈ U := by rw [Smodeq.def, Submodule.Quotient.eq, sub_zero]
 
 theorem map (hxy : x ≡ y [SMOD U]) (f : M →ₗ[R] N) : f x ≡ f y [SMOD U.map f] :=
   (Submodule.Quotient.eq _).2 <| f.map_sub x y ▸ mem_map_of_mem <| (Submodule.Quotient.eq _).1 hxy

@@ -417,8 +417,7 @@ theorem circle_integral_eq_zero_of_differentiable_on_off_countable {R : ℝ} (h0
       circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable h0 hs
         ((continuous_on_id.sub continuous_on_const).smul hc) fun z hz =>
         (differentiable_at_id.sub_const _).smul (hd z hz)
-    _ = 0 := by
-      rw [sub_self, zero_smul, smul_zero]
+    _ = 0 := by rw [sub_self, zero_smul, smul_zero]
     
 
 /-- An auxiliary lemma for

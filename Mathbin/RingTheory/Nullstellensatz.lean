@@ -56,10 +56,8 @@ theorem zero_locus_top : ZeroLocus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
 def vanishingIdeal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) where
   Carrier := { p | ∀ x ∈ V, eval x p = 0 }
   zero_mem' := fun x hx => RingHom.map_zero _
-  add_mem' := fun p q hp hq x hx => by
-    simp only [hq x hx, hp x hx, add_zeroₓ, RingHom.map_add]
-  smul_mem' := fun p q hq x hx => by
-    simp only [hq x hx, Algebra.id.smul_eq_mul, mul_zero, RingHom.map_mul]
+  add_mem' := fun p q hp hq x hx => by simp only [hq x hx, hp x hx, add_zeroₓ, RingHom.map_add]
+  smul_mem' := fun p q hq x hx => by simp only [hq x hx, Algebra.id.smul_eq_mul, mul_zero, RingHom.map_mul]
 
 @[simp]
 theorem mem_vanishing_ideal_iff {V : Set (σ → k)} {p : MvPolynomial σ k} :
@@ -93,8 +91,7 @@ instance vanishing_ideal_singleton_is_maximal {x : σ → k} : (vanishingIdeal {
       (by
         refine'
           ⟨(injective_iff_map_eq_zero _).mpr fun p hp => _, fun z =>
-            ⟨(Ideal.Quotient.mk (vanishing_ideal {x} : Ideal (MvPolynomial σ k))) (C z), by
-              simp ⟩⟩
+            ⟨(Ideal.Quotient.mk (vanishing_ideal {x} : Ideal (MvPolynomial σ k))) (C z), by simp⟩⟩
         obtain ⟨q, rfl⟩ := quotient.mk_surjective p
         rwa [Ideal.Quotient.lift_mk, ← mem_vanishing_ideal_singleton_iff, ← quotient.eq_zero_iff_mem] at hp)
   rw [← bot_quotient_is_maximal_iff, ring_equiv.bot_maximal_iff this]
@@ -112,19 +109,14 @@ theorem radical_le_vanishing_ideal_zero_locus (I : Ideal (MvPolynomial σ k)) :
 
 /-- The point in the prime spectrum assosiated to a given point -/
 def pointToPoint (x : σ → k) : PrimeSpectrum (MvPolynomial σ k) :=
-  ⟨(vanishingIdeal {x} : Ideal (MvPolynomial σ k)), by
-    infer_instance⟩
+  ⟨(vanishingIdeal {x} : Ideal (MvPolynomial σ k)), by infer_instance⟩
 
 @[simp]
 theorem vanishing_ideal_point_to_point (V : Set (σ → k)) :
     PrimeSpectrum.vanishingIdeal (point_to_point '' V) = MvPolynomial.vanishingIdeal V :=
   le_antisymmₓ
     (fun p hp x hx =>
-      (((PrimeSpectrum.mem_vanishing_ideal _ _).1 hp)
-          ⟨vanishingIdeal {x}, by
-            infer_instance⟩
-          ⟨x, ⟨hx, rfl⟩⟩)
-        x rfl)
+      (((PrimeSpectrum.mem_vanishing_ideal _ _).1 hp) ⟨vanishingIdeal {x}, by infer_instance⟩ ⟨x, ⟨hx, rfl⟩⟩) x rfl)
     fun p hp =>
     (PrimeSpectrum.mem_vanishing_ideal _ _).2 fun I hI =>
       let ⟨x, hx⟩ := hI
@@ -155,12 +147,7 @@ theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ 
   obtain ⟨φ, hφ⟩ := Function.Surjective.has_right_inverse hϕ.2
   let x : σ → k := fun s => φ ((Ideal.Quotient.mk I) (X s))
   have hx : ∀ s : σ, ϕ (x s) = (Ideal.Quotient.mk I) (X s) := fun s => hφ ((Ideal.Quotient.mk I) (X s))
-  refine'
-    ⟨x,
-      (is_maximal.eq_of_le
-          (by
-            infer_instance)
-          hI.ne_top _).symm⟩
+  refine' ⟨x, (is_maximal.eq_of_le (by infer_instance) hI.ne_top _).symm⟩
   intro p hp
   rw [← quotient.eq_zero_iff_mem, map_mv_polynomial_eq_eval₂ (Ideal.Quotient.mk I) p, eval₂_eq']
   rw [mem_vanishing_ideal_singleton_iff, eval_eq'] at hp

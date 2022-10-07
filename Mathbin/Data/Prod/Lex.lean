@@ -59,9 +59,9 @@ theorem lt_iff [LT α] [LT β] (a b : α × β) : toLex a < toLex b ↔ a.1 < b.
 /-- Dictionary / lexicographic preorder for pairs. -/
 instance preorder (α β : Type _) [Preorderₓ α] [Preorderₓ β] : Preorderₓ (α ×ₗ β) :=
   { Prod.Lex.hasLe α β, Prod.Lex.hasLt α β with
-    le_refl := by
+    le_refl :=
       haveI : IsRefl β (· ≤ ·) := ⟨le_reflₓ⟩
-      exact refl_of (Prod.Lex _ _),
+      refl_of (Prod.Lex _ _),
     le_trans := fun _ _ _ => by
       haveI : IsTrans α (· < ·) := ⟨fun _ _ _ => lt_transₓ⟩
       haveI : IsTrans β (· ≤ ·) := ⟨fun _ _ _ => le_transₓ⟩

@@ -26,7 +26,7 @@ namespace Matrix
 
 variable {ι m n p : Type _} {α R S : Type _}
 
-variable [Fintype m] [Fintype n] [Fintype p]
+variable [Fintypeₓ m] [Fintypeₓ n] [Fintypeₓ p]
 
 section AddCommMonoidₓ
 
@@ -43,17 +43,17 @@ variable (n R)
 
 @[simp]
 theorem trace_zero : trace (0 : Matrix n n R) = 0 :=
-  (Finset.sum_const (0 : R)).trans <| smul_zero _
+  (Finsetₓ.sum_const (0 : R)).trans <| smul_zero _
 
 variable {n R}
 
 @[simp]
 theorem trace_add (A B : Matrix n n R) : trace (A + B) = trace A + trace B :=
-  Finset.sum_add_distrib
+  Finsetₓ.sum_add_distrib
 
 @[simp]
 theorem trace_smul [Monoidₓ α] [DistribMulAction α R] (r : α) (A : Matrix n n R) : trace (r • A) = r • trace A :=
-  Finset.smul_sum.symm
+  Finsetₓ.smul_sum.symm
 
 @[simp]
 theorem trace_transpose (A : Matrix n n R) : trace Aᵀ = trace A :=
@@ -90,7 +90,7 @@ theorem trace_multiset_sum (s : Multiset (Matrix n n R)) : trace s.Sum = (s.map 
   map_multiset_sum (traceAddMonoidHom n R) s
 
 @[simp]
-theorem trace_sum (s : Finset ι) (f : ι → Matrix n n R) : trace (∑ i in s, f i) = ∑ i in s, trace (f i) :=
+theorem trace_sum (s : Finsetₓ ι) (f : ι → Matrix n n R) : trace (∑ i in s, f i) = ∑ i in s, trace (f i) :=
   map_sum (traceAddMonoidHom n R) f s
 
 end AddCommMonoidₓ
@@ -101,11 +101,11 @@ variable [AddCommGroupₓ R]
 
 @[simp]
 theorem trace_sub (A B : Matrix n n R) : trace (A - B) = trace A - trace B :=
-  Finset.sum_sub_distrib
+  Finsetₓ.sum_sub_distrib
 
 @[simp]
 theorem trace_neg (A : Matrix n n R) : trace (-A) = -trace A :=
-  Finset.sum_neg_distrib
+  Finsetₓ.sum_neg_distrib
 
 end AddCommGroupₓ
 
@@ -114,8 +114,8 @@ section One
 variable [DecidableEq n] [AddCommMonoidWithOne R]
 
 @[simp]
-theorem trace_one : trace (1 : Matrix n n R) = Fintype.card n := by
-  simp_rw [trace, diag_one, Pi.one_def, Finset.sum_const, nsmul_one, Finset.card_univ]
+theorem trace_one : trace (1 : Matrix n n R) = Fintypeₓ.card n := by
+  simp_rw [trace, diag_one, Pi.one_def, Finsetₓ.sum_const, nsmul_one, Finsetₓ.card_univ]
 
 end One
 
@@ -124,19 +124,16 @@ section Mul
 @[simp]
 theorem trace_transpose_mul [AddCommMonoidₓ R] [Mul R] (A : Matrix m n R) (B : Matrix n m R) :
     trace (Aᵀ ⬝ Bᵀ) = trace (A ⬝ B) :=
-  Finset.sum_comm
+  Finsetₓ.sum_comm
 
 theorem trace_mul_comm [AddCommMonoidₓ R] [CommSemigroupₓ R] (A : Matrix m n R) (B : Matrix n m R) :
-    trace (A ⬝ B) = trace (B ⬝ A) := by
-  rw [← trace_transpose, ← trace_transpose_mul, transpose_mul]
+    trace (A ⬝ B) = trace (B ⬝ A) := by rw [← trace_transpose, ← trace_transpose_mul, transpose_mul]
 
 theorem trace_mul_cycle [NonUnitalCommSemiring R] (A : Matrix m n R) (B : Matrix n p R) (C : Matrix p m R) :
-    trace (A ⬝ B ⬝ C) = trace (C ⬝ A ⬝ B) := by
-  rw [trace_mul_comm, Matrix.mul_assoc]
+    trace (A ⬝ B ⬝ C) = trace (C ⬝ A ⬝ B) := by rw [trace_mul_comm, Matrix.mul_assoc]
 
 theorem trace_mul_cycle' [NonUnitalCommSemiring R] (A : Matrix m n R) (B : Matrix n p R) (C : Matrix p m R) :
-    trace (A ⬝ (B ⬝ C)) = trace (C ⬝ (A ⬝ B)) := by
-  rw [← Matrix.mul_assoc, trace_mul_comm]
+    trace (A ⬝ (B ⬝ C)) = trace (C ⬝ (A ⬝ B)) := by rw [← Matrix.mul_assoc, trace_mul_comm]
 
 @[simp]
 theorem trace_col_mul_row [NonUnitalNonAssocSemiringₓ R] (a b : n → R) : trace (colₓ a ⬝ rowₓ b) = dotProduct a b := by

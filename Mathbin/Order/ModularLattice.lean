@@ -202,11 +202,7 @@ theorem eq_of_le_of_inf_le_of_sup_le (hxy : x ≤ y) (hinf : y ⊓ z ≤ x ⊓ z
     calc
       y ≤ (x ⊔ z) ⊓ y := le_inf h le_rflₓ
       _ = x ⊔ z ⊓ y := sup_inf_assoc_of_le _ hxy
-      _ ≤ x ⊔ z ⊓ x :=
-        sup_le_sup_left
-          (by
-            rw [inf_comm, @inf_comm _ _ z] <;> exact hinf)
-          _
+      _ ≤ x ⊔ z ⊓ x := sup_le_sup_left (by rw [inf_comm, @inf_comm _ _ z] <;> exact hinf) _
       _ ≤ x := sup_le le_rflₓ inf_le_right
       
 
@@ -281,15 +277,12 @@ end IsCompl
 
 theorem is_modular_lattice_iff_inf_sup_inf_assoc [Lattice α] :
     IsModularLattice α ↔ ∀ x y z : α, x ⊓ z ⊔ y ⊓ z = (x ⊓ z ⊔ y) ⊓ z :=
-  ⟨fun h => @IsModularLattice.inf_sup_inf_assoc _ _ h, fun h =>
-    ⟨fun x y z xz => by
-      rw [← inf_eq_left.2 xz, h]⟩⟩
+  ⟨fun h => @IsModularLattice.inf_sup_inf_assoc _ _ h, fun h => ⟨fun x y z xz => by rw [← inf_eq_left.2 xz, h]⟩⟩
 
 namespace DistribLattice
 
 instance (priority := 100) [DistribLattice α] : IsModularLattice α :=
-  ⟨fun x y z xz => by
-    rw [inf_sup_right, inf_eq_left.2 xz]⟩
+  ⟨fun x y z xz => by rw [inf_sup_right, inf_eq_left.2 xz]⟩
 
 end DistribLattice
 

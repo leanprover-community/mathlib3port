@@ -120,16 +120,13 @@ variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [SemiNorme
 
 theorem IsCompactOperator.image_subset_compact_of_bounded [HasContinuousConstSmul 𝕜₂ M₂] {f : M₁ →ₛₗ[σ₁₂] M₂}
     (hf : IsCompactOperator f) {S : Set M₁} (hS : Metric.Bounded S) : ∃ K : Set M₂, IsCompact K ∧ f '' S ⊆ K :=
-  hf.image_subset_compact_of_vonN_bounded
-    (by
-      rwa [NormedSpace.is_vonN_bounded_iff, ← Metric.bounded_iff_is_bounded])
+  hf.image_subset_compact_of_vonN_bounded (by rwa [NormedSpace.is_vonN_bounded_iff, ← Metric.bounded_iff_is_bounded])
 
 theorem IsCompactOperator.is_compact_closure_image_of_bounded [HasContinuousConstSmul 𝕜₂ M₂] [T2Space M₂]
     {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) {S : Set M₁} (hS : Metric.Bounded S) :
     IsCompact (Closure <| f '' S) :=
   hf.is_compact_closure_image_of_vonN_bounded
-    (by
-      rwa [NormedSpace.is_vonN_bounded_iff, ← Metric.bounded_iff_is_bounded])
+    (by rwa [NormedSpace.is_vonN_bounded_iff, ← Metric.bounded_iff_is_bounded])
 
 theorem IsCompactOperator.image_ball_subset_compact [HasContinuousConstSmul 𝕜₂ M₂] {f : M₁ →ₛₗ[σ₁₂] M₂}
     (hf : IsCompactOperator f) (r : ℝ) : ∃ K : Set M₂, IsCompact K ∧ f '' Metric.Ball 0 r ⊆ K :=
@@ -198,8 +195,7 @@ theorem IsCompactOperator.neg [HasContinuousNeg M₄] {f : M₁ → M₄} (hf : 
   ⟨-K, hK.neg, (mem_of_superset hKf) fun x (hx : f x ∈ K) => Set.neg_mem_neg.mpr hx⟩
 
 theorem IsCompactOperator.sub [TopologicalAddGroup M₄] {f g : M₁ → M₄} (hf : IsCompactOperator f)
-    (hg : IsCompactOperator g) : IsCompactOperator (f - g) := by
-  rw [sub_eq_add_neg] <;> exact hf.add hg.neg
+    (hg : IsCompactOperator g) : IsCompactOperator (f - g) := by rw [sub_eq_add_neg] <;> exact hf.add hg.neg
 
 variable (σ₁₄ M₁ M₄)
 
@@ -230,7 +226,7 @@ theorem IsCompactOperator.continuous_comp {f : M₁ → M₂} (hf : IsCompactOpe
     IsCompactOperator (g ∘ f) := by
   rcases hf with ⟨K, hK, hKf⟩
   refine' ⟨g '' K, hK.image hg, mem_of_superset hKf _⟩
-  nth_rw 1[preimage_comp]
+  nth_rw 1 [preimage_comp]
   exact preimage_mono (subset_preimage_image _ _)
 
 theorem IsCompactOperator.clm_comp [AddCommMonoidₓ M₂] [Module R₂ M₂] [AddCommMonoidₓ M₃] [Module R₃ M₃] {f : M₁ → M₂}
@@ -355,14 +351,8 @@ theorem is_closed_set_of_is_compact_operator {𝕜₁ 𝕜₂ : Type _} [Nontriv
     exact compact_of_totally_bounded_is_closed this.closure is_closed_closure
   rw [Metric.totally_bounded_iff]
   intro ε hε
-  rcases hu (ε / 2)
-      (by
-        linarith) with
-    ⟨v, hv, huv⟩
-  rcases(hv.is_compact_closure_image_closed_ball 1).finite_cover_balls
-      (show 0 < ε / 2 by
-        linarith) with
-    ⟨T, -, hT, hTv⟩
+  rcases hu (ε / 2) (by linarith) with ⟨v, hv, huv⟩
+  rcases(hv.is_compact_closure_image_closed_ball 1).finite_cover_balls (show 0 < ε / 2 by linarith) with ⟨T, -, hT, hTv⟩
   have hTv : v '' closed_ball 0 1 ⊆ _ := subset_closure.trans hTv
   refine' ⟨T, hT, _⟩
   rw [image_subset_iff] at hTv⊢
@@ -377,8 +367,7 @@ theorem is_closed_set_of_is_compact_operator {𝕜₁ 𝕜₂ : Type _} [Nontriv
   rw [mem_closed_ball_zero_iff] at hx
   calc
     dist (u x) (v x) = ∥u x - v x∥ := dist_eq_norm _ _
-    _ = ∥(u - v) x∥ := by
-      rw [ContinuousLinearMap.sub_apply] <;> rfl
+    _ = ∥(u - v) x∥ := by rw [ContinuousLinearMap.sub_apply] <;> rfl
     _ ≤ ∥u - v∥ := (u - v).unit_le_op_norm x hx
     _ = dist u v := (dist_eq_norm _ _).symm
     _ < ε / 2 := huv

@@ -23,27 +23,26 @@ and `set.image2` already fulfills this task.
 
 open Function Set
 
-namespace Finset
+namespace Finsetₓ
 
 variable {α α' β β' γ γ' δ δ' ε ε' : Type _} [DecidableEq α'] [DecidableEq β'] [DecidableEq γ] [DecidableEq γ']
   [DecidableEq δ] [DecidableEq δ'] [DecidableEq ε] [DecidableEq ε'] {f f' : α → β → γ} {g g' : α → β → γ → δ}
-  {s s' : Finset α} {t t' : Finset β} {u u' : Finset γ} {a a' : α} {b b' : β} {c : γ}
+  {s s' : Finsetₓ α} {t t' : Finsetₓ β} {u u' : Finsetₓ γ} {a a' : α} {b b' : β} {c : γ}
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The image of a binary function `f : α → β → γ` as a function `finset α → finset β → finset γ`.
 Mathematically this should be thought of as the image of the corresponding function `α × β → γ`. -/
-def image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : Finset γ :=
+def image₂ (f : α → β → γ) (s : Finsetₓ α) (t : Finsetₓ β) : Finsetₓ γ :=
   (s ×ˢ t).Image <| uncurry f
 
 @[simp]
-theorem mem_image₂ : c ∈ image₂ f s t ↔ ∃ a b, a ∈ s ∧ b ∈ t ∧ f a b = c := by
-  simp [image₂, and_assocₓ]
+theorem mem_image₂ : c ∈ image₂ f s t ↔ ∃ a b, a ∈ s ∧ b ∈ t ∧ f a b = c := by simp [image₂, and_assocₓ]
 
 @[simp, norm_cast]
-theorem coe_image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : (image₂ f s t : Set γ) = Set.Image2 f s t :=
+theorem coe_image₂ (f : α → β → γ) (s : Finsetₓ α) (t : Finsetₓ β) : (image₂ f s t : Set γ) = Set.Image2 f s t :=
   Set.ext fun _ => mem_image₂
 
-theorem card_image₂_le (f : α → β → γ) (s : Finset α) (t : Finset β) : (image₂ f s t).card ≤ s.card * t.card :=
+theorem card_image₂_le (f : α → β → γ) (s : Finsetₓ α) (t : Finsetₓ β) : (image₂ f s t).card ≤ s.card * t.card :=
   card_image_le.trans_eq <| card_product _ _
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -51,7 +50,7 @@ theorem card_image₂_iff : (image₂ f s t).card = s.card * t.card ↔ (s ×ˢ 
   rw [← card_product, ← coe_product]
   exact card_image_iff
 
-theorem card_image₂ (hf : Injective2 f) (s : Finset α) (t : Finset β) : (image₂ f s t).card = s.card * t.card :=
+theorem card_image₂ (hf : Injective2 f) (s : Finsetₓ α) (t : Finsetₓ β) : (image₂ f s t).card = s.card * t.card :=
   (card_image_of_injective _ hf.uncurry).trans <| card_product _ _
 
 theorem mem_image₂_of_mem (ha : a ∈ s) (hb : b ∈ t) : f a b ∈ image₂ f s t :=
@@ -99,13 +98,11 @@ theorem Nonempty.of_image₂_right (h : (image₂ f s t).Nonempty) : t.Nonempty 
 
 @[simp]
 theorem image₂_empty_left : image₂ f ∅ t = ∅ :=
-  coe_injective <| by
-    simp
+  coe_injective <| by simp
 
 @[simp]
 theorem image₂_empty_right : image₂ f s ∅ = ∅ :=
-  coe_injective <| by
-    simp
+  coe_injective <| by simp
 
 @[simp]
 theorem image₂_eq_empty_iff : image₂ f s t = ∅ ↔ s = ∅ ∨ t = ∅ := by
@@ -113,19 +110,16 @@ theorem image₂_eq_empty_iff : image₂ f s t = ∅ ↔ s = ∅ ∨ t = ∅ := 
 
 @[simp]
 theorem image₂_singleton_left : image₂ f {a} t = t.Image fun b => f a b :=
-  ext fun x => by
-    simp
+  ext fun x => by simp
 
 @[simp]
 theorem image₂_singleton_right : image₂ f s {b} = s.Image fun a => f a b :=
-  ext fun x => by
-    simp
+  ext fun x => by simp
 
 theorem image₂_singleton_left' : image₂ f {a} t = t.Image (f a) :=
   image₂_singleton_left
 
-theorem image₂_singleton : image₂ f {a} {b} = {f a b} := by
-  simp
+theorem image₂_singleton : image₂ f {a} {b} = {f a b} := by simp
 
 theorem image₂_union_left [DecidableEq α] : image₂ f (s ∪ s') t = image₂ f s t ∪ image₂ f s' t :=
   coe_injective <| by
@@ -157,8 +151,8 @@ theorem image₂_congr' (h : ∀ a b, f a b = f' a b) : image₂ f s t = image�
   image₂_congr fun a _ b _ => h a b
 
 theorem subset_image₂ {s : Set α} {t : Set β} (hu : ↑u ⊆ Image2 f s t) :
-    ∃ (s' : Finset α)(t' : Finset β), ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ image₂ f s' t' := by
-  apply Finset.induction_on' u
+    ∃ (s' : Finsetₓ α)(t' : Finsetₓ β), ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ image₂ f s' t' := by
+  apply Finsetₓ.induction_on' u
   · exact ⟨∅, ∅, Set.empty_subset _, Set.empty_subset _, empty_subset _⟩
     
   rintro a u ha _ _ ⟨s', t', hs, hs', h⟩
@@ -181,21 +175,20 @@ theorem card_image₂_singleton_left (hf : Injective (f a)) : (image₂ f {a} t)
 theorem card_image₂_singleton_right (hf : Injective fun a => f a b) : (image₂ f s {b}).card = s.card := by
   rw [image₂_singleton_right, card_image_of_injective _ hf]
 
-theorem image₂_singleton_inter [DecidableEq β] (t₁ t₂ : Finset β) (hf : Injective (f a)) :
-    image₂ f {a} (t₁ ∩ t₂) = image₂ f {a} t₁ ∩ image₂ f {a} t₂ := by
-  simp_rw [image₂_singleton_left, image_inter _ _ hf]
+theorem image₂_singleton_inter [DecidableEq β] (t₁ t₂ : Finsetₓ β) (hf : Injective (f a)) :
+    image₂ f {a} (t₁ ∩ t₂) = image₂ f {a} t₁ ∩ image₂ f {a} t₂ := by simp_rw [image₂_singleton_left, image_inter _ _ hf]
 
-theorem image₂_inter_singleton [DecidableEq α] (s₁ s₂ : Finset α) (hf : Injective fun a => f a b) :
+theorem image₂_inter_singleton [DecidableEq α] (s₁ s₂ : Finsetₓ α) (hf : Injective fun a => f a b) :
     image₂ f (s₁ ∩ s₂) {b} = image₂ f s₁ {b} ∩ image₂ f s₂ {b} := by
   simp_rw [image₂_singleton_right, image_inter _ _ hf]
 
-theorem card_le_card_image₂_left {s : Finset α} (hs : s.Nonempty) (hf : ∀ a, Injective (f a)) :
+theorem card_le_card_image₂_left {s : Finsetₓ α} (hs : s.Nonempty) (hf : ∀ a, Injective (f a)) :
     t.card ≤ (image₂ f s t).card := by
   obtain ⟨a, ha⟩ := hs
   rw [← card_image₂_singleton_left _ (hf a)]
   exact card_le_of_subset (image₂_subset_right <| singleton_subset_iff.2 ha)
 
-theorem card_le_card_image₂_right {t : Finset β} (ht : t.Nonempty) (hf : ∀ b, Injective fun a => f a b) :
+theorem card_le_card_image₂_right {t : Finsetₓ β} (ht : t.Nonempty) (hf : ∀ b, Injective fun a => f a b) :
     s.card ≤ (image₂ f s t).card := by
   obtain ⟨b, hb⟩ := ht
   rw [← card_image₂_singleton_right _ (hf b)]
@@ -239,7 +232,7 @@ theorem image₂_image_right (f : α → γ → δ) (g : β → γ) : image₂ f
     push_cast
     exact image2_image_right _ _
 
-theorem image₂_swap (f : α → β → γ) (s : Finset α) (t : Finset β) : image₂ f s t = image₂ (fun a b => f b a) t s :=
+theorem image₂_swap (f : α → β → γ) (s : Finsetₓ α) (t : Finsetₓ β) : image₂ f s t = image₂ (fun a b => f b a) t s :=
   coe_injective <| by
     push_cast
     exact image2_swap _ _ _
@@ -256,23 +249,23 @@ theorem image₂_right [DecidableEq β] (h : s.Nonempty) : image₂ (fun x y => 
     push_cast
     exact image2_right h
 
-theorem image₂_assoc {γ : Type _} {u : Finset γ} {f : δ → γ → ε} {g : α → β → δ} {f' : α → ε' → ε} {g' : β → γ → ε'}
+theorem image₂_assoc {γ : Type _} {u : Finsetₓ γ} {f : δ → γ → ε} {g : α → β → δ} {f' : α → ε' → ε} {g' : β → γ → ε'}
     (h_assoc : ∀ a b c, f (g a b) c = f' a (g' b c)) : image₂ f (image₂ g s t) u = image₂ f' s (image₂ g' t u) :=
   coe_injective <| by
     push_cast
     exact image2_assoc h_assoc
 
 theorem image₂_comm {g : β → α → γ} (h_comm : ∀ a b, f a b = g b a) : image₂ f s t = image₂ g t s :=
-  (image₂_swap _ _ _).trans <| by
-    simp_rw [h_comm]
+  (image₂_swap _ _ _).trans <| by simp_rw [h_comm]
 
-theorem image₂_left_comm {γ : Type _} {u : Finset γ} {f : α → δ → ε} {g : β → γ → δ} {f' : α → γ → δ'} {g' : β → δ' → ε}
-    (h_left_comm : ∀ a b c, f a (g b c) = g' b (f' a c)) : image₂ f s (image₂ g t u) = image₂ g' t (image₂ f' s u) :=
+theorem image₂_left_comm {γ : Type _} {u : Finsetₓ γ} {f : α → δ → ε} {g : β → γ → δ} {f' : α → γ → δ'}
+    {g' : β → δ' → ε} (h_left_comm : ∀ a b c, f a (g b c) = g' b (f' a c)) :
+    image₂ f s (image₂ g t u) = image₂ g' t (image₂ f' s u) :=
   coe_injective <| by
     push_cast
     exact image2_left_comm h_left_comm
 
-theorem image₂_right_comm {γ : Type _} {u : Finset γ} {f : δ → γ → ε} {g : α → β → δ} {f' : α → γ → δ'}
+theorem image₂_right_comm {γ : Type _} {u : Finsetₓ γ} {f : δ → γ → ε} {g : α → β → δ} {f' : α → γ → δ'}
     {g' : δ' → β → ε} (h_right_comm : ∀ a b c, f (g a b) c = g' (f' a c) b) :
     image₂ f (image₂ g s t) u = image₂ g' (image₂ f' s u) t :=
   coe_injective <| by
@@ -310,7 +303,7 @@ theorem image_image₂_right_comm {f : α → β' → γ} {g : β → β'} {f' :
   (image_image₂_distrib_right fun a b => (h_right_comm a b).symm).symm
 
 /-- The other direction does not hold because of the `s`-`s` cross terms on the RHS. -/
-theorem image₂_distrib_subset_left {γ : Type _} {u : Finset γ} {f : α → δ → ε} {g : β → γ → δ} {f₁ : α → β → β'}
+theorem image₂_distrib_subset_left {γ : Type _} {u : Finsetₓ γ} {f : α → δ → ε} {g : β → γ → δ} {f₁ : α → β → β'}
     {f₂ : α → γ → γ'} {g' : β' → γ' → ε} (h_distrib : ∀ a b c, f a (g b c) = g' (f₁ a b) (f₂ a c)) :
     image₂ f s (image₂ g t u) ⊆ image₂ g' (image₂ f₁ s t) (image₂ f₂ s u) :=
   coe_subset.1 <| by
@@ -318,7 +311,7 @@ theorem image₂_distrib_subset_left {γ : Type _} {u : Finset γ} {f : α → �
     exact Set.image2_distrib_subset_left h_distrib
 
 /-- The other direction does not hold because of the `u`-`u` cross terms on the RHS. -/
-theorem image₂_distrib_subset_right {γ : Type _} {u : Finset γ} {f : δ → γ → ε} {g : α → β → δ} {f₁ : α → γ → α'}
+theorem image₂_distrib_subset_right {γ : Type _} {u : Finsetₓ γ} {f : δ → γ → ε} {g : α → β → δ} {f₁ : α → γ → α'}
     {f₂ : β → γ → β'} {g' : α' → β' → ε} (h_distrib : ∀ a b c, f (g a b) c = g' (f₁ a c) (f₂ b c)) :
     image₂ f (image₂ g s t) u ⊆ image₂ g' (image₂ f₁ s u) (image₂ f₂ t u) :=
   coe_subset.1 <| by
@@ -355,5 +348,5 @@ theorem image_image₂_right_anticomm {f : α → β' → γ} {g : β → β'} {
     (h_right_anticomm : ∀ a b, f a (g b) = g' (f' b a)) : image₂ f s (t.Image g) = (image₂ f' t s).Image g' :=
   (image_image₂_antidistrib_right fun a b => (h_right_anticomm b a).symm).symm
 
-end Finset
+end Finsetₓ
 

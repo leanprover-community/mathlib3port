@@ -52,8 +52,14 @@ theorem bot_eq [Preorderₓ α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a,
 instance no_max_order [PartialOrderₓ α] [NoMaxOrder α] {a : α} : NoMaxOrder { x : α // a ≤ x } :=
   Set.Ici.no_max_order
 
+instance semilatticeSup [SemilatticeSup α] {a : α} : SemilatticeSup { x : α // a ≤ x } :=
+  Set.Ici.semilatticeSup
+
 instance semilatticeInf [SemilatticeInf α] {a : α} : SemilatticeInf { x : α // a ≤ x } :=
   Set.Ici.semilatticeInf
+
+instance distribLattice [DistribLattice α] {a : α} : DistribLattice { x : α // a ≤ x } :=
+  Set.Ici.distribLattice
 
 instance densely_ordered [Preorderₓ α] [DenselyOrdered α] {a : α} : DenselyOrdered { x : α // a ≤ x } :=
   show DenselyOrdered (Ici a) from Set.densely_ordered
@@ -148,9 +154,7 @@ theorem nsmul_coe [OrderedAddCommMonoid α] (n : ℕ) (r : { x : α // 0 ≤ x }
 instance archimedean [OrderedAddCommMonoid α] [Archimedean α] : Archimedean { x : α // 0 ≤ x } :=
   ⟨fun x y pos_y =>
     let ⟨n, hr⟩ := Archimedean.arch (x : α) (pos_y : (0 : α) < y)
-    ⟨n,
-      show (x : α) ≤ (n • y : { x : α // 0 ≤ x }) by
-        simp [*, -nsmul_eq_mul, nsmul_coe]⟩⟩
+    ⟨n, show (x : α) ≤ (n • y : { x : α // 0 ≤ x }) by simp [*, -nsmul_eq_mul, nsmul_coe]⟩⟩
 
 instance hasOne [OrderedSemiring α] : One { x : α // 0 ≤ x } where one := ⟨1, zero_le_one⟩
 
@@ -175,10 +179,7 @@ theorem mk_mul_mk [OrderedSemiring α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) 
 
 instance addMonoidWithOne [OrderedSemiring α] : AddMonoidWithOneₓ { x : α // 0 ≤ x } :=
   { Nonneg.hasOne, Nonneg.orderedCancelAddCommMonoid with natCast := fun n => ⟨n, Nat.cast_nonneg n⟩,
-    nat_cast_zero := by
-      simp [Nat.castₓ],
-    nat_cast_succ := fun _ => by
-      simp [Nat.castₓ] <;> rfl }
+    nat_cast_zero := by simp [Nat.castₓ], nat_cast_succ := fun _ => by simp [Nat.castₓ] <;> rfl }
 
 instance hasPow [OrderedSemiring α] : Pow { x : α // 0 ≤ x } ℕ where pow := fun x n => ⟨x ^ n, pow_nonneg x.2 n⟩
 
@@ -202,11 +203,9 @@ instance orderedCommSemiring [OrderedCommSemiring α] : OrderedCommSemiring { x 
 
 -- These prevent noncomputable instances being found, as it does not require `linear_order` which
 -- is frequently non-computable.
-instance monoidWithZero [OrderedSemiring α] : MonoidWithZeroₓ { x : α // 0 ≤ x } := by
-  infer_instance
+instance monoidWithZero [OrderedSemiring α] : MonoidWithZeroₓ { x : α // 0 ≤ x } := by infer_instance
 
-instance commMonoidWithZero [OrderedCommSemiring α] : CommMonoidWithZero { x : α // 0 ≤ x } := by
-  infer_instance
+instance commMonoidWithZero [OrderedCommSemiring α] : CommMonoidWithZero { x : α // 0 ≤ x } := by infer_instance
 
 instance semiring [OrderedSemiring α] : Semiringₓ { x : α // 0 ≤ x } :=
   inferInstance
@@ -341,8 +340,7 @@ theorem coe_to_nonneg {a : α} : (toNonneg a : α) = max a 0 :=
   rfl
 
 @[simp]
-theorem to_nonneg_of_nonneg {a : α} (h : 0 ≤ a) : toNonneg a = ⟨a, h⟩ := by
-  simp [to_nonneg, h]
+theorem to_nonneg_of_nonneg {a : α} (h : 0 ≤ a) : toNonneg a = ⟨a, h⟩ := by simp [to_nonneg, h]
 
 @[simp]
 theorem to_nonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a := by

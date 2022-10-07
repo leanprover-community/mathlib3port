@@ -38,7 +38,7 @@ properties of eigenvalues and eigenvectors.
 
 noncomputable section
 
-open Finset
+open Finsetₓ
 
 open BigOperators Polynomial
 
@@ -79,8 +79,7 @@ def mkSol (init : Finₓ E.order → α) : ℕ → α
         E.coeffs k * mk_sol (n - E.order + k)
 
 /-- `E.mk_sol` indeed gives solutions to `E`. -/
-theorem is_sol_mk_sol (init : Finₓ E.order → α) : E.IsSolution (E.mkSol init) := fun n => by
-  rw [mk_sol] <;> simp
+theorem is_sol_mk_sol (init : Finₓ E.order → α) : E.IsSolution (E.mkSol init) := fun n => by rw [mk_sol] <;> simp
 
 /-- `E.mk_sol init`'s first `E.order` terms are `init`. -/
 theorem mk_sol_eq_init (init : Finₓ E.order → α) : ∀ n : Finₓ E.order, E.mkSol init n = init n := fun n => by
@@ -92,8 +91,7 @@ theorem mk_sol_eq_init (init : Finₓ E.order → α) : ∀ n : Finₓ E.order, 
 theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Finₓ E.order → α} (h : E.IsSolution u)
     (heq : ∀ n : Finₓ E.order, u n = init n) : ∀ n, u n = E.mkSol init n
   | n =>
-    if h' : n < E.order then by
-      rw [mk_sol] <;> simp only [h', dif_pos] <;> exact_mod_cast HEq ⟨n, h'⟩
+    if h' : n < E.order then by rw [mk_sol] <;> simp only [h', dif_pos] <;> exact_mod_cast HEq ⟨n, h'⟩
     else by
       rw [mk_sol, ← tsub_add_cancel_of_le (le_of_not_ltₓ h'), h (n - E.order)]
       simp [h']
@@ -118,12 +116,9 @@ theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Finₓ E.order → 
 /-- The space of solutions of `E`, as a `submodule` over `α` of the module `ℕ → α`. -/
 def solSpace : Submodule α (ℕ → α) where
   Carrier := { u | E.IsSolution u }
-  zero_mem' := fun n => by
-    simp
-  add_mem' := fun u v hu hv n => by
-    simp [mul_addₓ, sum_add_distrib, hu n, hv n]
-  smul_mem' := fun a u hu n => by
-    simp [hu n, mul_sum] <;> congr <;> ext <;> ac_rfl
+  zero_mem' := fun n => by simp
+  add_mem' := fun u v hu hv n => by simp [mul_addₓ, sum_add_distrib, hu n, hv n]
+  smul_mem' := fun a u hu n => by simp [hu n, mul_sum] <;> congr <;> ext <;> ac_rfl
 
 /-- Defining property of the solution space : `u` is a solution
   iff it belongs to the solution space. -/
@@ -141,8 +136,7 @@ def toInit : E.solSpace ≃ₗ[α] Finₓ E.order → α where
     ext
     simp
   invFun := fun u => ⟨E.mkSol u, E.is_sol_mk_sol u⟩
-  left_inv := fun u => by
-    ext n <;> symm <;> apply E.eq_mk_of_is_sol_of_eq_init u.2 <;> intro k <;> rfl
+  left_inv := fun u => by ext n <;> symm <;> apply E.eq_mk_of_is_sol_of_eq_init u.2 <;> intro k <;> rfl
   right_inv := fun u => Function.funext_iff.mpr fun n => E.mk_sol_eq_init u n
 
 /-- Two solutions are equal iff they are equal on `range E.order`. -/
@@ -174,9 +168,7 @@ def tupleSucc : (Finₓ E.order → α) →ₗ[α] Finₓ E.order → α where
   map_smul' := fun x y => by
     ext i
     split_ifs <;> simp [h, mul_sum]
-    exact
-      sum_congr rfl fun x _ => by
-        ac_rfl
+    exact sum_congr rfl fun x _ => by ac_rfl
 
 end CommSemiringₓ
 
@@ -210,9 +202,7 @@ theorem geom_sol_iff_root_char_poly (q : α) : (E.IsSolution fun n => q ^ n) ↔
     
   · intro h n
     simp only [pow_addₓ, sub_eq_zero.mp h, mul_sum]
-    exact
-      sum_congr rfl fun _ _ => by
-        ring
+    exact sum_congr rfl fun _ _ => by ring
     
 
 end CommRingₓ

@@ -36,23 +36,20 @@ def Center [Mul M] : Set M :=
 theorem mem_center_iff [Mul M] {z : M} : z ∈ Center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 
-instance decidableMemCenter [Mul M] [DecidableEq M] [Fintype M] : DecidablePred (· ∈ Center M) := fun _ =>
+instance decidableMemCenter [Mul M] [DecidableEq M] [Fintypeₓ M] : DecidablePred (· ∈ Center M) := fun _ =>
   decidableOfIff' _ (mem_center_iff M)
 
 @[simp, to_additive zero_mem_add_center]
-theorem one_mem_center [MulOneClassₓ M] : (1 : M) ∈ Set.Center M := by
-  simp [mem_center_iff]
+theorem one_mem_center [MulOneClassₓ M] : (1 : M) ∈ Set.Center M := by simp [mem_center_iff]
 
 @[simp]
-theorem zero_mem_center [MulZeroClassₓ M] : (0 : M) ∈ Set.Center M := by
-  simp [mem_center_iff]
+theorem zero_mem_center [MulZeroClassₓ M] : (0 : M) ∈ Set.Center M := by simp [mem_center_iff]
 
 variable {M}
 
 @[simp, to_additive add_mem_add_center]
 theorem mul_mem_center [Semigroupₓ M] {a b : M} (ha : a ∈ Set.Center M) (hb : b ∈ Set.Center M) :
-    a * b ∈ Set.Center M := fun g => by
-  rw [mul_assoc, ← hb g, ← mul_assoc, ha g, mul_assoc]
+    a * b ∈ Set.Center M := fun g => by rw [mul_assoc, ← hb g, ← mul_assoc, ha g, mul_assoc]
 
 @[simp, to_additive neg_mem_add_center]
 theorem inv_mem_center [Groupₓ M] {a : M} (ha : a ∈ Set.Center M) : a⁻¹ ∈ Set.Center M := fun g => by
@@ -60,8 +57,7 @@ theorem inv_mem_center [Groupₓ M] {a : M} (ha : a ∈ Set.Center M) : a⁻¹ �
 
 @[simp]
 theorem add_mem_center [Distribₓ M] {a b : M} (ha : a ∈ Set.Center M) (hb : b ∈ Set.Center M) : a + b ∈ Set.Center M :=
-  fun c => by
-  rw [add_mulₓ, mul_addₓ, ha c, hb c]
+  fun c => by rw [add_mulₓ, mul_addₓ, ha c, hb c]
 
 @[simp]
 theorem neg_mem_center [Ringₓ M] {a : M} (ha : a ∈ Set.Center M) : -a ∈ Set.Center M := fun c => by
@@ -133,7 +129,7 @@ theorem mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 
 @[to_additive]
-instance decidableMemCenter [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) := fun _ =>
+instance decidableMemCenter [DecidableEq M] [Fintypeₓ M] : DecidablePred (· ∈ center M) := fun _ =>
   decidableOfIff' _ mem_center_iff
 
 /-- The center of a semigroup is commutative. -/

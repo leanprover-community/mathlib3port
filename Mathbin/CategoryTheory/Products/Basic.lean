@@ -63,7 +63,7 @@ theorem is_iso_prod_iff {P Q : C} {S T : D} {f : (P, S) ⟶ (Q, T)} : IsIso f �
     exact ⟨⟨⟨g.1, hfg₁, hgf₁⟩⟩, ⟨⟨g.2, hfg₂, hgf₂⟩⟩⟩
     
   · rintro ⟨⟨g₁, hfg₁, hgf₁⟩, ⟨g₂, hfg₂, hgf₂⟩⟩
-    dsimp'  at hfg₁ hgf₁ hfg₂ hgf₂
+    dsimp at hfg₁ hgf₁ hfg₂ hgf₂
     refine' ⟨⟨(g₁, g₂), _, _⟩⟩ <;>
       · simp <;> constructor <;> assumption
         
@@ -149,25 +149,11 @@ def symmetry : swap C D ⋙ swap D C ≅ 𝟭 (C × D) where
 -/
 @[simps]
 def braiding : C × D ≌ D × C :=
-  Equivalence.mk (swap C D) (swap D C)
-    (NatIso.ofComponents
-      (fun X =>
-        eqToIso
-          (by
-            simp ))
-      (by
-        tidy))
-    (NatIso.ofComponents
-      (fun X =>
-        eqToIso
-          (by
-            simp ))
-      (by
-        tidy))
+  Equivalence.mk (swap C D) (swap D C) (NatIso.ofComponents (fun X => eqToIso (by simp)) (by tidy))
+    (NatIso.ofComponents (fun X => eqToIso (by simp)) (by tidy))
 
 instance swapIsEquivalence : IsEquivalence (swap C D) :=
-  (by
-    infer_instance : IsEquivalence (braiding C D).Functor)
+  (by infer_instance : IsEquivalence (braiding C D).Functor)
 
 end Prod
 
@@ -205,8 +191,7 @@ variable {C}
 /-- The constant functor followed by the evalutation functor is just the identity. -/
 @[simps]
 def Functor.constCompEvaluationObj (X : C) : Functor.const C ⋙ (evaluation C D).obj X ≅ 𝟭 D :=
-  NatIso.ofComponents (fun Y => Iso.refl _) fun Y Z f => by
-    simp
+  NatIso.ofComponents (fun Y => Iso.refl _) fun Y Z f => by simp
 
 end
 
@@ -232,14 +217,12 @@ def prod' (F : A ⥤ B) (G : A ⥤ C) : A ⥤ B × C where
 /-- The product `F.prod' G` followed by projection on the first component is isomorphic to `F` -/
 @[simps]
 def prod'CompFst (F : A ⥤ B) (G : A ⥤ C) : F.prod' G ⋙ CategoryTheory.prod.fst B C ≅ F :=
-  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
-    simp
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by simp
 
 /-- The product `F.prod' G` followed by projection on the second component is isomorphic to `G` -/
 @[simps]
 def prod'CompSnd (F : A ⥤ B) (G : A ⥤ C) : F.prod' G ⋙ CategoryTheory.prod.snd B C ≅ G :=
-  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
-    simp
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by simp
 
 section
 
@@ -280,8 +263,7 @@ end NatTrans
 /-- `F.flip` composed with evaluation is the same as evaluating `F`. -/
 @[simps]
 def flipCompEvaluation (F : A ⥤ B ⥤ C) (a) : F.flip ⋙ (evaluation _ _).obj a ≅ F.obj a :=
-  (NatIso.ofComponents fun b => eqToIso rfl) <| by
-    tidy
+  (NatIso.ofComponents fun b => eqToIso rfl) <| by tidy
 
 variable (A B C)
 
@@ -297,11 +279,9 @@ def functorProdToProdFunctor : (A ⥤ B × C) ⥤ (A ⥤ B) × (A ⥤ C) where
   obj := fun F => ⟨F ⋙ CategoryTheory.prod.fst B C, F ⋙ CategoryTheory.prod.snd B C⟩
   map := fun F G α =>
     ⟨{ app := fun X => (α.app X).1,
-        naturality' := fun X Y f => by
-          simp only [functor.comp_map, prod.fst_map, ← prod_comp_fst, α.naturality] },
+        naturality' := fun X Y f => by simp only [functor.comp_map, prod.fst_map, ← prod_comp_fst, α.naturality] },
       { app := fun X => (α.app X).2,
-        naturality' := fun X Y f => by
-          simp only [functor.comp_map, prod.snd_map, ← prod_comp_snd, α.naturality] }⟩
+        naturality' := fun X Y f => by simp only [functor.comp_map, prod.snd_map, ← prod_comp_snd, α.naturality] }⟩
 
 /-- The unit isomorphism for `functor_prod_functor_equiv` -/
 @[simps]
@@ -313,13 +293,7 @@ def functorProdFunctorEquivUnitIso : 𝟭 _ ≅ prodFunctorToFunctorProd A B C �
 /-- The counit isomorphism for `functor_prod_functor_equiv` -/
 @[simps]
 def functorProdFunctorEquivCounitIso : functorProdToProdFunctor A B C ⋙ prodFunctorToFunctorProd A B C ≅ 𝟭 _ :=
-  NatIso.ofComponents
-    (fun F =>
-      NatIso.ofComponents (fun X => prod.etaIso (F.obj X))
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun F => NatIso.ofComponents (fun X => prod.etaIso (F.obj X)) (by tidy)) (by tidy)
 
 /-- The equivalence of categories between `(A ⥤ B) × (A ⥤ C)` and `A ⥤ (B × C)` -/
 @[simps]

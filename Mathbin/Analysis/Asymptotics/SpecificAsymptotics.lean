@@ -86,14 +86,13 @@ section Real
 
 open BigOperators
 
-open Finset
+open Finsetₓ
 
 theorem Asymptotics.IsOₓ.sum_range {α : Type _} [NormedAddCommGroup α] {f : ℕ → α} {g : ℕ → ℝ} (h : f =o[at_top] g)
     (hg : 0 ≤ g) (h'g : Tendsto (fun n => ∑ i in range n, g i) atTop atTop) :
     (fun n => ∑ i in range n, f i) =o[at_top] fun n => ∑ i in range n, g i := by
   have A : ∀ i, ∥g i∥ = g i := fun i => Real.norm_of_nonneg (hg i)
-  have B : ∀ n, ∥∑ i in range n, g i∥ = ∑ i in range n, g i := fun n => by
-    rwa [Real.norm_eq_abs, abs_sum_of_nonneg']
+  have B : ∀ n, ∥∑ i in range n, g i∥ = ∑ i in range n, g i := fun n => by rwa [Real.norm_eq_abs, abs_sum_of_nonneg']
   apply is_o_iff.2 fun ε εpos => _
   obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ b : ℕ, N ≤ b → ∥f b∥ ≤ ε / 2 * g b := by
     simpa only [A, eventually_at_top] using is_o_iff.mp h (half_pos εpos)
@@ -102,8 +101,7 @@ theorem Asymptotics.IsOₓ.sum_range {α : Type _} [NormedAddCommGroup α] {f : 
     exact Or.inr (h'g.congr fun n => (B n).symm)
   filter_upwards [is_o_iff.1 this (half_pos εpos), Ici_mem_at_top N] with n hn Nn
   calc
-    ∥∑ i in range n, f i∥ = ∥(∑ i in range N, f i) + ∑ i in Ico N n, f i∥ := by
-      rw [sum_range_add_sum_Ico _ Nn]
+    ∥∑ i in range n, f i∥ = ∥(∑ i in range N, f i) + ∑ i in Ico N n, f i∥ := by rw [sum_range_add_sum_Ico _ Nn]
     _ ≤ ∥∑ i in range N, f i∥ + ∥∑ i in Ico N n, f i∥ := norm_add_le _ _
     _ ≤ ∥∑ i in range N, f i∥ + ∑ i in Ico N n, ε / 2 * g i :=
       add_le_add le_rflₓ (norm_sum_le_of_le _ fun i hi => hN _ (mem_Ico.1 hi).1)

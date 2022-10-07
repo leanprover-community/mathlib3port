@@ -95,7 +95,7 @@ theorem π_surjective : Function.Surjective 𝖣.π :=
   (Top.epi_iff_surjective 𝖣.π).mp inferInstance
 
 theorem is_open_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i ⁻¹' U) := by
-  delta' CategoryTheory.GlueData.ι
+  delta CategoryTheory.GlueData.ι
   simp_rw [← multicoequalizer.ι_sigma_π 𝖣.diagram]
   rw [← (homeo_of_iso (multicoequalizer.iso_coequalizer 𝖣.diagram).symm).is_open_preimage]
   rw [coequalizer_is_open_iff, colimit_is_open_iff.{u}]
@@ -120,23 +120,18 @@ def Rel (a b : Σi, ((D.U i : Top) : Type _)) : Prop :=
 theorem rel_equiv : Equivalenceₓ D.Rel :=
   ⟨fun x => Or.inl (refl x), by
     rintro a b (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩)
-    exacts[Or.inl rfl,
-      Or.inr
-        ⟨D.t _ _ x, by
-          simp [e₁, e₂]⟩],
-    by
+    exacts[Or.inl rfl, Or.inr ⟨D.t _ _ x, by simp [e₁, e₂]⟩], by
     rintro ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩)
     exact id
     rintro (⟨⟨⟩⟩ | ⟨y, e₃, e₄⟩)
     exact Or.inr ⟨x, e₁, e₂⟩
     let z := (pullback_iso_prod_subtype (D.f j i) (D.f j k)).inv ⟨⟨_, _⟩, e₂.trans e₃.symm⟩
-    have eq₁ : (D.t j i) ((pullback.fst : _ ⟶ D.V _) z) = x := by
-      simp
+    have eq₁ : (D.t j i) ((pullback.fst : _ ⟶ D.V _) z) = x := by simp
     have eq₂ : (pullback.snd : _ ⟶ D.V _) z = y := pullback_iso_prod_subtype_inv_snd_apply _ _ _
     clear_value z
     right
     use (pullback.fst : _ ⟶ D.V (i, k)) (D.t' _ _ _ z)
-    dsimp' only  at *
+    dsimp only at *
     substs e₁ e₃ e₄ eq₁ eq₂
     have h₁ : D.t' j i k ≫ pullback.fst ≫ D.f i k = pullback.fst ≫ D.t j i ≫ D.f i j := by
       rw [← 𝖣.t_fac_assoc]
@@ -153,7 +148,7 @@ open CategoryTheory.Limits.WalkingParallelPair
 
 theorem eqv_gen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
     EqvGen (Types.CoequalizerRel 𝖣.diagram.fstSigmaMap 𝖣.diagram.sndSigmaMap) x y := by
-  delta' glue_data.π multicoequalizer.sigma_π  at h
+  delta glue_data.π multicoequalizer.sigma_π at h
   simp_rw [comp_app] at h
   replace h := (Top.mono_iff_injective (multicoequalizer.iso_coequalizer 𝖣.diagram).inv).mp _ h
   let diagram := parallel_pair 𝖣.diagram.fstSigmaMap 𝖣.diagram.sndSigmaMap ⋙ forget _
@@ -175,7 +170,7 @@ theorem eqv_gen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
 
 theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) : 𝖣.ι i x = 𝖣.ι j y ↔ D.Rel ⟨i, x⟩ ⟨j, y⟩ := by
   constructor
-  · delta' glue_data.ι
+  · delta glue_data.ι
     simp_rw [← multicoequalizer.ι_sigma_π]
     intro h
     rw [← show _ = Sigma.mk i x from concrete_category.congr_hom (sigmaIsoSigma.{u} D.U).inv_hom_id _]
@@ -196,12 +191,12 @@ theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) : 𝖣.ι i x = 𝖣.�
     exact
       Or.inr
         ⟨y, by
-          dsimp' [glue_data.diagram]
-          simp ⟩
+          dsimp [glue_data.diagram]
+          simp⟩
     
   · rintro (⟨⟨⟩⟩ | ⟨z, e₁, e₂⟩)
     rfl
-    dsimp' only  at *
+    dsimp only at *
     subst e₁
     subst e₂
     simp
@@ -212,7 +207,7 @@ theorem ι_injective (i : D.J) : Function.Injective (𝖣.ι i) := by
   rcases(D.ι_eq_iff_rel _ _ _ _).mp h with (⟨⟨⟩⟩ | ⟨_, e₁, e₂⟩)
   · rfl
     
-  · dsimp' only  at *
+  · dsimp only at *
     cases e₁
     cases e₂
     simp
@@ -226,22 +221,15 @@ theorem image_inter (i j : D.J) : Set.Range (𝖣.ι i) ∩ Set.Range (𝖣.ι j
   constructor
   · rintro ⟨⟨x₁, eq₁⟩, ⟨x₂, eq₂⟩⟩
     obtain ⟨⟨⟩⟩ | ⟨y, e₁, e₂⟩ := (D.ι_eq_iff_rel _ _ _ _).mp (eq₁.trans eq₂.symm)
-    · exact
-        ⟨inv (D.f i i) x₁, by
-          simp [eq₁]⟩
+    · exact ⟨inv (D.f i i) x₁, by simp [eq₁]⟩
       
-    · dsimp' only  at *
+    · dsimp only at *
       substs e₁ eq₁
-      exact
-        ⟨y, by
-          simp ⟩
+      exact ⟨y, by simp⟩
       
     
   · rintro ⟨x, hx⟩
-    exact
-      ⟨⟨D.f i j x, hx⟩,
-        ⟨D.f j i (D.t _ _ x), by
-          simp [← hx]⟩⟩
+    exact ⟨⟨D.f i j x, hx⟩, ⟨D.f j i (D.t _ _ x), by simp [← hx]⟩⟩
     
 
 theorem preimage_range (i j : D.J) : 𝖣.ι j ⁻¹' Set.Range (𝖣.ι i) = Set.Range (D.f j i) := by
@@ -318,8 +306,8 @@ theorem MkCore.t_inv (h : MkCore) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i)
     rfl
     
   all_goals
-    rw [h.V_id]
-    trivial
+  rw [h.V_id]
+  trivial
 
 instance (h : MkCore.{u}) (i j : h.J) : IsIso (h.t i j) := by
   use h.t j i
@@ -354,13 +342,13 @@ def mk' (h : MkCore.{u}) : Top.GlueData where
     rfl
   t' := h.t'
   t_fac := fun i j k => by
-    delta' mk_core.t'
+    delta mk_core.t'
     rw [category.assoc, category.assoc, pullback_iso_prod_subtype_inv_snd, ← iso.eq_inv_comp,
       pullback_iso_prod_subtype_inv_fst_assoc]
     ext ⟨⟨⟨x, hx⟩, ⟨x', hx'⟩⟩, rfl : x = x'⟩
     rfl
   cocycle := fun i j k => by
-    delta' mk_core.t'
+    delta mk_core.t'
     simp_rw [← category.assoc]
     rw [iso.comp_inv_eq]
     simp only [iso.inv_hom_id_assoc, category.assoc, category.id_comp]
@@ -381,13 +369,11 @@ include U
 def ofOpenSubsets : Top.GlueData.{u} :=
   mk'.{u}
     { J, U := fun i => (opens.to_Top <| Top.of α).obj (U i), V := fun i j => (opens.map <| Opens.inclusion _).obj (U j),
-      t := fun i j =>
-        ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, by
-          continuity⟩,
+      t := fun i j => ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, by continuity⟩,
       V_id := fun i => by
         ext
         cases U i
-        simp ,
+        simp,
       t_id := fun i => by
         ext
         rfl,

@@ -50,7 +50,7 @@ noncomputable def coeffIntegerNormalization (p : S[X]) (i : ℕ) : R :=
   if hi : i ∈ p.support then
     Classical.choose
       (Classical.choose_spec (exist_integer_multiples_of_finset M (p.support.Image p.coeff)) (p.coeff i)
-        (Finset.mem_image.mpr ⟨i, hi, rfl⟩))
+        (Finsetₓ.mem_image.mpr ⟨i, hi, rfl⟩))
   else 0
 
 theorem coeff_integer_normalization_of_not_mem_support (p : S[X]) (i : ℕ) (h : coeff p i = 0) :
@@ -71,7 +71,7 @@ noncomputable def integerNormalization (p : S[X]) : R[X] :=
 @[simp]
 theorem integer_normalization_coeff (p : S[X]) (i : ℕ) :
     (integerNormalization M p).coeff i = coeffIntegerNormalization M p i := by
-  simp (config := { contextual := true })[integer_normalization, coeff_monomial,
+  simp (config := { contextual := true }) [integer_normalization, coeff_monomial,
     coeff_integer_normalization_of_not_mem_support]
 
 theorem integer_normalization_spec (p : S[X]) :
@@ -106,8 +106,7 @@ theorem integer_normalization_eval₂_eq_zero (g : S →+* R') (p : S[X]) {x : R
     eval₂ (g.comp (algebraMap R S)) x (integerNormalization M p) = 0 :=
   let ⟨b, hb⟩ := integer_normalization_map_to_map M p
   trans (eval₂_map (algebraMap R S) g x).symm
-    (by
-      rw [hb, ← IsScalarTower.algebra_map_smul S (b : R) p, eval₂_smul, hx, mul_zero])
+    (by rw [hb, ← IsScalarTower.algebra_map_smul S (b : R) p, eval₂_smul, hx, mul_zero])
 
 theorem integer_normalization_aeval_eq_zero [Algebra R R'] [Algebra S R'] [IsScalarTower R S R'] (p : S[X]) {x : R'}
     (hx : aeval x p = 0) : aeval x (integerNormalization M p) = 0 := by
@@ -151,13 +150,10 @@ theorem is_algebraic_iff [Algebra A C] [Algebra K C] [IsScalarTower A K C] {x : 
     IsAlgebraic A x ↔ IsAlgebraic K x := by
   constructor <;> rintro ⟨p, hp, px⟩
   · refine' ⟨p.map (algebraMap A K), fun h => hp (Polynomial.ext fun i => _), _⟩
-    · have : algebraMap A K (p.coeff i) = 0 :=
-        trans (Polynomial.coeff_map _ _).symm
-          (by
-            simp [h])
+    · have : algebraMap A K (p.coeff i) = 0 := trans (Polynomial.coeff_map _ _).symm (by simp [h])
       exact to_map_eq_zero_iff.mp this
       
-    · rwa [IsScalarTower.aeval_apply _ K] at px
+    · exact (Polynomial.aeval_map_algebra_map K _ _).trans px
       
     
   · exact
@@ -194,7 +190,7 @@ theorem RingHom.is_integral_elem_localization_at_leading_coeff {R S : Type _} [C
     [CommRingₓ Rₘ] [CommRingₓ Sₘ] [Algebra R Rₘ] [IsLocalization M Rₘ] [Algebra S Sₘ]
     [IsLocalization (M.map f : Submonoid S) Sₘ] :
     (map Sₘ f M.le_comap_map : Rₘ →+* _).IsIntegralElem (algebraMap S Sₘ x) := by
-  by_cases' triv : (1 : Rₘ) = 0
+  by_cases triv:(1 : Rₘ) = 0
   · exact ⟨0, ⟨trans leading_coeff_zero triv.symm, eval₂_zero _ _⟩⟩
     
   haveI : Nontrivial Rₘ := nontrivial_of_ne 1 0 triv
@@ -255,8 +251,8 @@ theorem IsLocalization.scale_roots_common_denom_mem_lifts (p : Rₘ[X]) (hp : p.
   rw [Polynomial.lifts_iff_coeff_lifts]
   intro n
   rw [Polynomial.coeff_scale_roots]
-  by_cases' h₁ : n ∈ p.support
-  by_cases' h₂ : n = p.nat_degree
+  by_cases h₁:n ∈ p.support
+  by_cases h₂:n = p.nat_degree
   · rwa [h₂, Polynomial.coeff_nat_degree, tsub_self, pow_zeroₓ, _root_.mul_one]
     
   · have : n + 1 ≤ p.nat_degree := lt_of_le_of_neₓ (Polynomial.le_nat_degree_of_mem_supp _ h₁) h₂
@@ -322,17 +318,11 @@ theorem is_fraction_ring_of_algebraic (alg : IsAlgebraic A L) (inj : ∀ x, alge
       let ⟨x, y, hy, hxy⟩ := exists_integral_multiple (alg z) inj
       ⟨⟨mk' C (x : L) x.2, algebraMap _ _ y,
           mem_non_zero_divisors_iff_ne_zero.mpr fun h =>
-            hy
-              (inj _
-                (by
-                  rw [IsScalarTower.algebra_map_apply A C L, h, RingHom.map_zero]))⟩,
-        by
-        rw [SetLike.coe_mk, algebra_map_mk', ← IsScalarTower.algebra_map_apply A C L, hxy]⟩,
+            hy (inj _ (by rw [IsScalarTower.algebra_map_apply A C L, h, RingHom.map_zero]))⟩,
+        by rw [SetLike.coe_mk, algebra_map_mk', ← IsScalarTower.algebra_map_apply A C L, hxy]⟩,
     eq_iff_exists := fun x y =>
-      ⟨fun h =>
-        ⟨1, by
-          simpa using algebra_map_injective C A L h⟩,
-        fun ⟨c, hc⟩ => congr_arg (algebraMap _ L) (mul_right_cancel₀ (mem_non_zero_divisors_iff_ne_zero.mp c.2) hc)⟩ }
+      ⟨fun h => ⟨1, by simpa using algebra_map_injective C A L h⟩, fun ⟨c, hc⟩ =>
+        congr_arg (algebraMap _ L) (mul_right_cancel₀ (mem_non_zero_divisors_iff_ne_zero.mp c.2) hc)⟩ }
 
 variable (K L)
 
@@ -402,7 +392,7 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
                 nonZeroDivisors.ne_zero ha
                   ((injective_iff_map_eq_zero (algebraMap S K)).1 (NoZeroSmulDivisors.algebra_map_injective _ _) b h)))
         rw [Polynomial.aeval_def, ← inv_of_eq_inv, Polynomial.eval₂_reverse_eq_zero_iff, Polynomial.eval₂_map, ←
-          IsScalarTower.algebra_map_eq, ← Polynomial.aeval_def, ← IsScalarTower.algebra_map_aeval, hf₂,
+          IsScalarTower.algebra_map_eq, ← Polynomial.aeval_def, Polynomial.aeval_algebra_map_apply, hf₂,
           RingHom.map_zero]
         
       
@@ -410,7 +400,7 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
   · intro h x
     obtain ⟨f, hf₁, hf₂⟩ := h (algebraMap S K x)
     use f, hf₁
-    rw [← IsScalarTower.algebra_map_aeval] at hf₂
+    rw [Polynomial.aeval_algebra_map_apply] at hf₂
     exact (injective_iff_map_eq_zero (algebraMap S K)).1 (NoZeroSmulDivisors.algebra_map_injective _ _) _ hf₂
     
 

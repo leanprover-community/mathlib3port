@@ -74,32 +74,15 @@ variable {α : Type u} [Lattice α] [CommGroupₓ α]
 -- c + (a ⊔ b) = (c + a) ⊔ (c + b)
 @[to_additive]
 theorem mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * (a ⊔ b) = c * a ⊔ c * b := by
-  refine'
-    le_antisymmₓ _
-      (by
-        simp )
+  refine' le_antisymmₓ _ (by simp)
   rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_selfₓ, one_mulₓ]
-  exact
-    sup_le
-      (by
-        simp )
-      (by
-        simp )
+  exact sup_le (by simp) (by simp)
 
 @[to_additive]
 theorem mul_inf [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * (a ⊓ b) = c * a ⊓ c * b := by
-  refine'
-    le_antisymmₓ
-      (by
-        simp )
-      _
+  refine' le_antisymmₓ (by simp) _
   rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_selfₓ, one_mulₓ]
-  exact
-    le_inf
-      (by
-        simp )
-      (by
-        simp )
+  exact le_inf (by simp) (by simp)
 
 -- Special case of Bourbaki A.VI.9 (2)
 -- -(a ⊔ b)=(-a) ⊓ (-b)
@@ -137,10 +120,8 @@ theorem inf_mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a
     (a ⊓ b) * (a ⊔ b) = (a ⊓ b) * (a * b * (b⁻¹ ⊔ a⁻¹)) := by
       rw [mul_sup b⁻¹ a⁻¹ (a * b)]
       simp
-    _ = (a ⊓ b) * (a * b * (a ⊓ b)⁻¹) := by
-      rw [inv_inf_eq_sup_inv, sup_comm]
-    _ = a * b := by
-      rw [mul_comm, inv_mul_cancel_right]
+    _ = (a ⊓ b) * (a * b * (a ⊓ b)⁻¹) := by rw [inv_inf_eq_sup_inv, sup_comm]
+    _ = a * b := by rw [mul_comm, inv_mul_cancel_right]
     
 
 namespace LatticeOrderedCommGroup
@@ -176,8 +157,7 @@ theorem pos_one : (1 : α)⁺ = 1 :=
   sup_idem
 
 @[simp, to_additive]
-theorem neg_one : (1 : α)⁻ = 1 := by
-  rw [m_neg_part_def, inv_one, sup_idem]
+theorem neg_one : (1 : α)⁻ = 1 := by rw [m_neg_part_def, inv_one, sup_idem]
 
 -- a⁻ = -(a ⊓ 0)
 @[to_additive]
@@ -250,18 +230,13 @@ theorem neg_eq_pos_inv (a : α) : a⁻ = a⁻¹⁺ :=
 
 -- a⁺ = (-a)⁻
 @[to_additive]
-theorem pos_eq_neg_inv (a : α) : a⁺ = a⁻¹⁻ := by
-  simp [neg_eq_pos_inv]
+theorem pos_eq_neg_inv (a : α) : a⁺ = a⁻¹⁻ := by simp [neg_eq_pos_inv]
 
 -- We use this in Bourbaki A.VI.12  Prop 9 a)
 -- c + (a ⊓ b) = (c + a) ⊓ (c + b)
 @[to_additive]
 theorem mul_inf_eq_mul_inf_mul [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * (a ⊓ b) = c * a ⊓ c * b := by
-  refine'
-    le_antisymmₓ
-      (by
-        simp )
-      _
+  refine' le_antisymmₓ (by simp) _
   rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_selfₓ, one_mulₓ, le_inf_iff]
   simp
 
@@ -286,10 +261,8 @@ theorem pos_inf_neg_eq_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α)
 @[to_additive]
 theorem sup_eq_mul_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : a ⊔ b = b * (a / b)⁺ :=
   calc
-    a ⊔ b = b * (a / b) ⊔ b * 1 := by
-      rw [mul_oneₓ b, div_eq_mul_inv, mul_comm a, mul_inv_cancel_left]
-    _ = b * (a / b ⊔ 1) := by
-      rw [← mul_sup (a / b) 1 b]
+    a ⊔ b = b * (a / b) ⊔ b * 1 := by rw [mul_oneₓ b, div_eq_mul_inv, mul_comm a, mul_inv_cancel_left]
+    _ = b * (a / b ⊔ 1) := by rw [← mul_sup (a / b) 1 b]
     
 
 -- Bourbaki A.VI.12 (with a and b swapped)
@@ -297,20 +270,15 @@ theorem sup_eq_mul_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
 @[to_additive]
 theorem inf_eq_div_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : a ⊓ b = a / (a / b)⁺ :=
   calc
-    a ⊓ b = a * 1 ⊓ a * (b / a) := by
-      rw [mul_oneₓ a, div_eq_mul_inv, mul_comm b, mul_inv_cancel_left]
-    _ = a * (1 ⊓ b / a) := by
-      rw [← mul_inf_eq_mul_inf_mul 1 (b / a) a]
-    _ = a * (b / a ⊓ 1) := by
-      rw [inf_comm]
+    a ⊓ b = a * 1 ⊓ a * (b / a) := by rw [mul_oneₓ a, div_eq_mul_inv, mul_comm b, mul_inv_cancel_left]
+    _ = a * (1 ⊓ b / a) := by rw [← mul_inf_eq_mul_inf_mul 1 (b / a) a]
+    _ = a * (b / a ⊓ 1) := by rw [inf_comm]
     _ = a * ((a / b)⁻¹ ⊓ 1) := by
       rw [div_eq_mul_inv]
-      nth_rw 0[← inv_invₓ b]
+      nth_rw 0 [← inv_invₓ b]
       rw [← mul_inv, mul_comm b⁻¹, ← div_eq_mul_inv]
-    _ = a * ((a / b)⁻¹ ⊓ 1⁻¹) := by
-      rw [inv_one]
-    _ = a / (a / b ⊔ 1) := by
-      rw [← inv_sup_eq_inv_inf_inv, ← div_eq_mul_inv]
+    _ = a * ((a / b)⁻¹ ⊓ 1⁻¹) := by rw [inv_one]
+    _ = a / (a / b ⊔ 1) := by rw [← inv_sup_eq_inv_inf_inv, ← div_eq_mul_inv]
     
 
 -- Bourbaki A.VI.12 Prop 9 c)
@@ -344,7 +312,7 @@ theorem m_neg_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : abs a�
 
 @[to_additive pos_abs]
 theorem m_pos_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : abs a⁺ = abs a := by
-  nth_rw 1[← pos_div_neg (abs a)]
+  nth_rw 1 [← pos_div_neg (abs a)]
   rw [div_eq_mul_inv]
   symm
   rw [mul_right_eq_self, inv_eq_one]
@@ -361,10 +329,10 @@ theorem one_le_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : 1 ≤
 theorem pos_mul_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : abs a = a⁺ * a⁻ := by
   refine' le_antisymmₓ _ _
   · refine' sup_le _ _
-    · nth_rw 0[← mul_oneₓ a]
+    · nth_rw 0 [← mul_oneₓ a]
       exact mul_le_mul' (m_le_pos a) (one_le_neg a)
       
-    · nth_rw 0[← one_mulₓ a⁻¹]
+    · nth_rw 0 [← one_mulₓ a⁻¹]
       exact mul_le_mul' (one_le_pos a) (inv_le_neg a)
       
     
@@ -381,9 +349,9 @@ theorem pos_mul_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : abs 
 @[to_additive]
 theorem sup_div_inf_eq_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a ⊔ b) / (a ⊓ b) = abs (b / a) := by
   rw [sup_eq_mul_pos_div, inf_comm, inf_eq_div_pos_div, div_eq_mul_inv]
-  nth_rw 1[div_eq_mul_inv]
+  nth_rw 1 [div_eq_mul_inv]
   rw [mul_inv_rev, inv_invₓ, mul_comm, ← mul_assoc, inv_mul_cancel_right, pos_eq_neg_inv (a / b)]
-  nth_rw 1[div_eq_mul_inv]
+  nth_rw 1 [div_eq_mul_inv]
   rw [mul_inv_rev, ← div_eq_mul_inv, inv_invₓ, ← pos_mul_neg]
 
 -- 2•(a ⊔ b) = a + b + |b - a|
@@ -437,24 +405,19 @@ theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (· * ·) (· ≤ ·)]
   calc
     abs ((a ⊔ c) / (b ⊔ c)) * abs ((a ⊓ c) / (b ⊓ c)) =
         (b ⊔ c ⊔ (a ⊔ c)) / ((b ⊔ c) ⊓ (a ⊔ c)) * abs ((a ⊓ c) / (b ⊓ c)) :=
-      by
-      rw [sup_div_inf_eq_abs_div]
+      by rw [sup_div_inf_eq_abs_div]
     _ = (b ⊔ c ⊔ (a ⊔ c)) / ((b ⊔ c) ⊓ (a ⊔ c)) * ((b ⊓ c ⊔ a ⊓ c) / (b ⊓ c ⊓ (a ⊓ c))) := by
       rw [sup_div_inf_eq_abs_div (b ⊓ c) (a ⊓ c)]
     _ = (b ⊔ a ⊔ c) / (b ⊓ a ⊔ c) * (((b ⊔ a) ⊓ c) / (b ⊓ a ⊓ c)) := by
       rw [← sup_inf_right, ← inf_sup_right, sup_assoc]
-      nth_rw 1[sup_comm]
+      nth_rw 1 [sup_comm]
       rw [sup_right_idem, sup_assoc, inf_assoc]
-      nth_rw 3[inf_comm]
+      nth_rw 3 [inf_comm]
       rw [inf_right_idem, inf_assoc]
-    _ = (b ⊔ a ⊔ c) * ((b ⊔ a) ⊓ c) / ((b ⊓ a ⊔ c) * (b ⊓ a ⊓ c)) := by
-      rw [div_mul_div_comm]
-    _ = (b ⊔ a) * c / ((b ⊓ a) * c) := by
-      rw [mul_comm, inf_mul_sup, mul_comm (b ⊓ a ⊔ c), inf_mul_sup]
-    _ = (b ⊔ a) / (b ⊓ a) := by
-      rw [div_eq_mul_inv, mul_inv_rev, mul_assoc, mul_inv_cancel_left, ← div_eq_mul_inv]
-    _ = abs (a / b) := by
-      rw [sup_div_inf_eq_abs_div]
+    _ = (b ⊔ a ⊔ c) * ((b ⊔ a) ⊓ c) / ((b ⊓ a ⊔ c) * (b ⊓ a ⊓ c)) := by rw [div_mul_div_comm]
+    _ = (b ⊔ a) * c / ((b ⊓ a) * c) := by rw [mul_comm, inf_mul_sup, mul_comm (b ⊓ a ⊔ c), inf_mul_sup]
+    _ = (b ⊔ a) / (b ⊓ a) := by rw [div_eq_mul_inv, mul_inv_rev, mul_assoc, mul_inv_cancel_left, ← div_eq_mul_inv]
+    _ = abs (a / b) := by rw [sup_div_inf_eq_abs_div]
     
 
 -- pos_of_nonneg

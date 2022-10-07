@@ -37,8 +37,7 @@ variable [Semiringₓ R] [TopologicalSpace R] [TopologicalSemiring R]
 -/
 @[simps]
 def toContinuousMap (p : R[X]) : C(R, R) :=
-  ⟨fun x : R => p.eval x, by
-    continuity⟩
+  ⟨fun x : R => p.eval x, by continuity⟩
 
 /-- A polynomial as a continuous function,
 with domain restricted to some subset of the semiring of coefficients.
@@ -47,8 +46,7 @@ with domain restricted to some subset of the semiring of coefficients.
 -/
 @[simps]
 def toContinuousMapOn (p : R[X]) (X : Set R) : C(X, R) :=
-  ⟨fun x : X => p.toContinuousMap x, by
-    continuity⟩
+  ⟨fun x : X => p.toContinuousMap x, by continuity⟩
 
 -- TODO some lemmas about when `to_continuous_map_on` is injective?
 end
@@ -150,7 +148,7 @@ theorem polynomial_functions_coe (X : Set R) :
 theorem polynomial_functions_separates_points (X : Set R) : (polynomialFunctions X).SeparatesPoints := fun x y h => by
   -- We use `polynomial.X`, then clean up.
   refine' ⟨_, ⟨⟨_, ⟨⟨Polynomial.x, ⟨Algebra.mem_top, rfl⟩⟩, rfl⟩⟩, _⟩⟩
-  dsimp'
+  dsimp
   simp only [Polynomial.eval_X]
   exact fun h' => h (Subtype.ext h')
 
@@ -168,7 +166,7 @@ theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h 
   fconstructor
   · rintro ⟨p, ⟨-, w⟩⟩
     rw [FunLike.ext_iff] at w
-    dsimp'  at w
+    dsimp at w
     let q := p.comp ((b - a)⁻¹ • Polynomial.x + Polynomial.c (-a * (b - a)⁻¹))
     refine' ⟨q, ⟨_, _⟩⟩
     · simp

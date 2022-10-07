@@ -48,7 +48,7 @@ theorem mem_not_convergent_seq_iff [Preorderₓ ι] {x : α} :
   simp_rw [not_convergent_seq, mem_Union]
   rfl
 
-theorem not_convergent_seq_antitone [Preorderₓ ι] : Antitone (NotConvergentSeq f g n) := fun j k hjk =>
+theorem not_convergent_seq_antitone [Preorderₓ ι] : Antitoneₓ (NotConvergentSeq f g n) := fun j k hjk =>
   Union₂_mono' fun l hl => ⟨l, le_transₓ hjk hl, Subset.rfl⟩
 
 theorem measure_inter_not_convergent_seq_eq_zero [SemilatticeSup ι] [Nonempty ι]
@@ -57,7 +57,7 @@ theorem measure_inter_not_convergent_seq_eq_zero [SemilatticeSup ι] [Nonempty �
   simp_rw [Metric.tendsto_at_top, ae_iff] at hfg
   rw [← nonpos_iff_eq_zero, ← hfg]
   refine' measure_mono fun x => _
-  simp only [mem_inter_eq, mem_Inter, ge_iff_leₓ, mem_not_convergent_seq_iff]
+  simp only [mem_inter_iff, mem_Inter, ge_iff_leₓ, mem_not_convergent_seq_iff]
   push_neg
   rintro ⟨hmem, hx⟩
   refine' ⟨hmem, 1 / (n + 1 : ℝ), Nat.one_div_pos_of_nat, fun N => _⟩
@@ -74,8 +74,7 @@ theorem measure_not_convergent_seq_tendsto_zero [SemilatticeSup ι] [Countable �
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) (n : ℕ) :
     Tendsto (fun j => μ (s ∩ NotConvergentSeq f g n j)) atTop (𝓝 0) := by
   cases is_empty_or_nonempty ι
-  · have : (fun j => μ (s ∩ not_convergent_seq f g n j)) = fun j => 0 := by
-      simp only [eq_iff_true_of_subsingleton]
+  · have : (fun j => μ (s ∩ not_convergent_seq f g n j)) = fun j => 0 := by simp only [eq_iff_true_of_subsingleton]
     rw [this]
     exact tendsto_const_nhds
     
@@ -97,12 +96,7 @@ theorem exists_not_convergent_seq_lt (hε : 0 < ε) (hf : ∀ n, StronglyMeasura
     exact ⟨N, (hN N le_rflₓ).2⟩
     
   · rw [gt_iff_ltₓ, Ennreal.of_real_pos]
-    exact
-      mul_pos hε
-        (pow_pos
-          (by
-            norm_num)
-          n)
+    exact mul_pos hε (pow_pos (by norm_num) n)
     
 
 /-- Given some `ε > 0`, `not_convergent_seq_lt_index` provides the index such that
@@ -145,11 +139,7 @@ theorem measure_Union_not_convergent_seq (hε : 0 < ε) (hf : ∀ n, StronglyMea
     Ennreal.of_real_mul (half_pos hε).le, div_mul_cancel ε two_ne_zero]
   · exact le_rflₓ
     
-  · exact fun n =>
-      pow_nonneg
-        (by
-          norm_num)
-        _
+  · exact fun n => pow_nonneg (by norm_num) _
     
   · rw [inv_eq_one_div]
     exact summable_geometric_two
@@ -170,7 +160,7 @@ theorem tendsto_uniformly_on_diff_Union_not_convergent_seq (hε : 0 < ε) (hf : 
   obtain ⟨N, hN⟩ := exists_nat_one_div_lt hδ
   rw [eventually_at_top]
   refine' ⟨egorov.not_convergent_seq_lt_index (half_pos hε) hf hg hsm hs hfg N, fun n hn x hx => _⟩
-  simp only [mem_diff, egorov.Union_not_convergent_seq, not_exists, mem_Union, mem_inter_eq, not_and,
+  simp only [mem_diff, egorov.Union_not_convergent_seq, not_exists, mem_Union, mem_inter_iff, not_and,
     exists_and_distrib_leftₓ] at hx
   obtain ⟨hxs, hx⟩ := hx
   specialize hx hxs N
@@ -184,7 +174,7 @@ end Egorov
 variable [SemilatticeSup ι] [Nonempty ι] [Countable ι] {γ : Type _} [TopologicalSpace γ] {f : ι → α → β} {g : α → β}
   {s : Set α}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- **Egorov's theorem**: If `f : ι → α → β` is a sequence of strongly measurable functions that
 converges to `g : α → β` almost everywhere on a measurable set `s` of finite measure,
 then for all `ε > 0`, there exists a subset `t ⊆ s` such that `μ t ≤ ε` and `f` converges to `g`

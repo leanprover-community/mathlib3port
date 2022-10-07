@@ -78,10 +78,7 @@ theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximalIdeal R
     rw [h, mem_span_singleton'] at ha hb
     rcases ha with ⟨a, rfl⟩
     rcases hb with ⟨b, rfl⟩
-    rw
-      [show a * ϖ * (b * ϖ) = ϖ * (ϖ * (a * b)) by
-        ring] at
-      hab
+    rw [show a * ϖ * (b * ϖ) = ϖ * (ϖ * (a * b)) by ring] at hab
     have h3 := eq_zero_of_mul_eq_self_right _ hab.symm
     · apply not_a_field R
       simp [h, h3]
@@ -163,8 +160,7 @@ include hR
 
 theorem unique_irreducible ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible q) : Associated p q := by
   rcases hR with ⟨ϖ, hϖ, hR⟩
-  suffices ∀ {p : R} (hp : Irreducible p), Associated p ϖ by
-    apply Associated.trans (this hp) (this hq).symm
+  suffices ∀ {p : R} (hp : Irreducible p), Associated p ϖ by apply Associated.trans (this hp) (this hq).symm
   clear hp hq p q
   intro p hp
   obtain ⟨n, hn⟩ := hR hp.ne_zero
@@ -173,8 +169,7 @@ theorem unique_irreducible ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible 
   · obtain rfl : n = 0 := by
       clear hn this
       revert H n
-      exact by
-        decide
+      exact by decide
     simpa only [not_irreducible_one, pow_zeroₓ] using this
     
   · simpa only [pow_oneₓ] using hn.symm
@@ -205,14 +200,14 @@ theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
       rw [hpq]
       refine' ⟨spec.1.ne_zero, spec.1.not_unit, _⟩
       intro a b h
-      by_cases' ha : a = 0
+      by_cases ha:a = 0
       · rw [ha]
         simp only [true_orₓ, dvd_zero]
         
       obtain ⟨m, u, rfl⟩ := spec.2 ha
       rw [mul_assoc, mul_left_commₓ, IsUnit.dvd_mul_left _ _ _ (Units.is_unit _)] at h
       rw [IsUnit.dvd_mul_right (Units.is_unit _)]
-      by_cases' hm : m = 0
+      by_cases hm:m = 0
       · simp only [hm, one_mulₓ, pow_zeroₓ] at h⊢
         right
         exact h
@@ -253,7 +248,7 @@ theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRingₓ R] [IsDom
     IsPrincipalIdealRing R := by
   constructor
   intro I
-  by_cases' I0 : I = ⊥
+  by_cases I0:I = ⊥
   · rw [I0]
     use 0
     simp only [Set.singleton_zero, Submodule.span_zero]
@@ -269,7 +264,7 @@ theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRingₓ R] [IsDom
   show I = Ideal.span _
   apply le_antisymmₓ
   · intro r hr
-    by_cases' hr0 : r = 0
+    by_cases hr0:r = 0
     · simp only [hr0, Submodule.zero_mem]
       
     obtain ⟨n, u, rfl⟩ := H hr0
@@ -373,9 +368,9 @@ theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible 
   · simpa only [Multiset.card_repeat]
     
   all_goals
-    intro x hx
-    obtain rfl := Multiset.eq_of_mem_repeat hx
-    assumption
+  intro x hx
+  obtain rfl := Multiset.eq_of_mem_repeat hx
+  assumption
 
 theorem unit_mul_pow_congr_unit {ϖ : R} (hirr : Irreducible ϖ) (u v : Rˣ) (m n : ℕ) (h : ↑u * ϖ ^ m = v * ϖ ^ n) :
     u = v := by
@@ -449,7 +444,7 @@ theorem add_val_eq_top_iff {a : R} : addVal R a = ⊤ ↔ a = 0 := by
 theorem add_val_le_iff_dvd {a b : R} : addVal R a ≤ addVal R b ↔ a ∣ b := by
   have hp := Classical.choose_spec (exists_prime R)
   constructor <;> intro h
-  · by_cases' ha0 : a = 0
+  · by_cases ha0:a = 0
     · rw [ha0, add_val_zero, top_le_iff, add_val_eq_top_iff] at h
       rw [h]
       apply dvd_zero

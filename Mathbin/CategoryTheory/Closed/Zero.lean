@@ -59,9 +59,7 @@ one morphism.
 -/
 def equivPunit [HasZeroObject C] : C ≌ Discrete PUnit :=
   Equivalence.mk (Functor.star C) (Functor.fromPunit 0)
-    (NatIso.ofComponents (fun X => { Hom := default, inv := default }) fun X Y f => by
-      decide)
-    (Functor.punitExt _ _)
+    (NatIso.ofComponents (fun X => { Hom := default, inv := default }) fun X Y f => by decide) (Functor.punitExt _ _)
 
 end CategoryTheory
 

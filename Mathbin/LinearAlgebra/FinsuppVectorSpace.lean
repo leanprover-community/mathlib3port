@@ -79,7 +79,7 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
         { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2,
           support := g.support.Sigma fun i => ((b i).repr (g i)).support,
           mem_support_to_fun := fun ix => by
-            simp only [Finset.mem_sigma, mem_support_iff, and_iff_right_iff_imp, Ne.def]
+            simp only [Finsetₓ.mem_sigma, mem_support_iff, and_iff_right_iff_imp, Ne.def]
             intro b hg
             simpa [hg] using b },
       invFun := fun g =>
@@ -88,7 +88,7 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
           mem_support_to_fun := fun i => by
             rw [Ne.def, ← (b i).repr.Injective.eq_iff, (b i).repr.apply_symm_apply, ext_iff]
             simp only [exists_propₓ, LinearEquiv.map_zero, comap_domain_apply, zero_apply, exists_and_distrib_rightₓ,
-              mem_support_iff, exists_eq_right, Sigma.exists, Finset.mem_image, not_forall] },
+              mem_support_iff, exists_eq_right, Sigma.exists, Finsetₓ.mem_image, not_forall] },
       left_inv := fun g => by
         ext i
         rw [← (b i).repr.Injective.eq_iff]
@@ -115,7 +115,7 @@ theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
   funext fun ⟨i, x⟩ =>
     Basis.apply_eq_iff.mpr <| by
       ext ⟨j, y⟩
-      by_cases' h : i = j
+      by_cases h:i = j
       · cases h
         simp only [basis_repr, single_eq_same, Basis.repr_self, Basis.Finsupp.single_apply_left sigma_mk_injective]
         
@@ -180,8 +180,7 @@ def equivOfDimEqDim (h : Module.rank K V₁ = Module.rank K V₂) : V₁ ≃ₗ[
 
 /-- An `n`-dimensional `K`-vector space is equivalent to `fin n → K`. -/
 def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Finₓ n → K := by
-  have : Cardinal.lift.{u} (n : Cardinal.{v}) = Cardinal.lift.{v} (n : Cardinal.{u}) := by
-    simp
+  have : Cardinal.lift.{u} (n : Cardinal.{v}) = Cardinal.lift.{v} (n : Cardinal.{u}) := by simp
   have hn := Cardinal.lift_inj.{v, u}.2 hn
   rw [this] at hn
   rw [← @dim_fin_fun K _ n] at hn
@@ -201,8 +200,7 @@ theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : (#V) 
   calc
     (#V) = (#s →₀ K) := Quotientₓ.sound ⟨hs.repr.to_equiv⟩
     _ = (#s → K) := Quotientₓ.sound ⟨Finsupp.equivFunOnFintype⟩
-    _ = _ := by
-      rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
+    _ = _ := by rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
     
 
 theorem cardinal_lt_aleph_0_of_finite_dimensional [Finite K] [FiniteDimensional K V] : (#V) < ℵ₀ := by

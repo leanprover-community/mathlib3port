@@ -44,19 +44,18 @@ open MvPolynomial
 
 open Function hiding eval
 
-open Finset FiniteField
+open Finsetₓ FiniteField
 
-variable {K : Type _} {σ : Type _} [Fintype K] [Field K] [Fintype σ]
+variable {K : Type _} {σ : Type _} [Fintypeₓ K] [Field K] [Fintypeₓ σ]
 
 -- mathport name: exprq
-local notation "q" => Fintype.card K
+local notation "q" => Fintypeₓ.card K
 
 theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomial σ K)
-    (h : f.totalDegree < (q - 1) * Fintype.card σ) : (∑ x, eval x f) = 0 := by
+    (h : f.totalDegree < (q - 1) * Fintypeₓ.card σ) : (∑ x, eval x f) = 0 := by
   haveI : DecidableEq K := Classical.decEq K
   calc
-    (∑ x, eval x f) = ∑ x : σ → K, ∑ d in f.support, f.coeff d * ∏ i, x i ^ d i := by
-      simp only [eval_eq']
+    (∑ x, eval x f) = ∑ x : σ → K, ∑ d in f.support, f.coeff d * ∏ i, x i ^ d i := by simp only [eval_eq']
     _ = ∑ d in f.support, ∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i := sum_comm
     _ = 0 := sum_eq_zero _
     
@@ -70,30 +69,27 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
   calc
     (∑ x : σ → K, ∏ i, x i ^ d i) =
         ∑ (x₀ : { j // j ≠ i } → K) (x : { x : σ → K // x ∘ coe = x₀ }), ∏ j, (x : σ → K) j ^ d j :=
-      (Fintype.sum_fiberwise _ _).symm
-    _ = 0 := Fintype.sum_eq_zero _ _
+      (Fintypeₓ.sum_fiberwise _ _).symm
+    _ = 0 := Fintypeₓ.sum_eq_zero _ _
     
   intro x₀
   let e : K ≃ { x // x ∘ coe = x₀ } := (Equivₓ.subtypeEquivCodomain _).symm
   calc
     (∑ x : { x : σ → K // x ∘ coe = x₀ }, ∏ j, (x : σ → K) j ^ d j) = ∑ a : K, ∏ j : σ, (e a : σ → K) j ^ d j :=
       (e.sum_comp _).symm
-    _ = ∑ a : K, (∏ j, x₀ j ^ d j) * a ^ d i := Fintype.sum_congr _ _ _
-    _ = (∏ j, x₀ j ^ d j) * ∑ a : K, a ^ d i := by
-      rw [mul_sum]
-    _ = 0 := by
-      rw [sum_pow_lt_card_sub_one _ hi, mul_zero]
+    _ = ∑ a : K, (∏ j, x₀ j ^ d j) * a ^ d i := Fintypeₓ.sum_congr _ _ _
+    _ = (∏ j, x₀ j ^ d j) * ∑ a : K, a ^ d i := by rw [mul_sum]
+    _ = 0 := by rw [sum_pow_lt_card_sub_one _ hi, mul_zero]
     
   intro a
   let e' : Sum { j // j = i } { j // j ≠ i } ≃ σ := Equivₓ.sumCompl _
   letI : Unique { j // j = i } := { default := ⟨i, rfl⟩, uniq := fun ⟨j, h⟩ => Subtype.val_injective h }
   calc
     (∏ j : σ, (e a : σ → K) j ^ d j) = (e a : σ → K) i ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
-      rw [← e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]
+      rw [← e'.prod_comp, Fintypeₓ.prod_sum_type, univ_unique, prod_singleton]
       rfl
-    _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
-      rw [Equivₓ.subtype_equiv_codomain_symm_apply_eq]
-    _ = a ^ d i * ∏ j, x₀ j ^ d j := congr_arg _ (Fintype.prod_congr _ _ _)
+    _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by rw [Equivₓ.subtype_equiv_codomain_symm_apply_eq]
+    _ = a ^ d i * ∏ j, x₀ j ^ d j := congr_arg _ (Fintypeₓ.prod_congr _ _ _)
     -- see below
         _ =
         (∏ j, x₀ j ^ d j) * a ^ d i :=
@@ -112,13 +108,13 @@ Let `(f i)` be a finite family of multivariate polynomials
 in finitely many variables (`X s`, `s : σ`) over a finite field of characteristic `p`.
 Assume that the sum of the total degrees of the `f i` is less than the cardinality of `σ`.
 Then the number of common solutions of the `f i` is divisible by `p`. -/
-theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : Finset ι} {f : ι → MvPolynomial σ K}
-    (h : (∑ i in s, (f i).totalDegree) < Fintype.card σ) :
-    p ∣ Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 } := by
+theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : Finsetₓ ι} {f : ι → MvPolynomial σ K}
+    (h : (∑ i in s, (f i).totalDegree) < Fintypeₓ.card σ) :
+    p ∣ Fintypeₓ.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 } := by
   have hq : 0 < q - 1 := by
-    rw [← Fintype.card_units, Fintype.card_pos_iff]
+    rw [← Fintypeₓ.card_units, Fintypeₓ.card_pos_iff]
     exact ⟨1⟩
-  let S : Finset (σ → K) := { x ∈ univ | ∀ i ∈ s, eval x (f i) = 0 }
+  let S : Finsetₓ (σ → K) := { x ∈ univ | ∀ i ∈ s, eval x (f i) = 0 }
   have hS : ∀ x : σ → K, x ∈ S ↔ ∀ i : ι, i ∈ s → eval x (f i) = 0 := by
     intro x
     simp only [S, true_andₓ, sep_def, mem_filter, mem_univ]
@@ -136,28 +132,27 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
       
     simp only [(eval x).map_sub, (eval x).map_pow, (eval x).map_one]
     split_ifs with hx hx
-    · apply Finset.prod_eq_one
+    · apply Finsetₓ.prod_eq_one
       intro i hi
       rw [hS] at hx
       rw [hx i hi, zero_pow hq, sub_zero]
       
-    · obtain ⟨i, hi, hx⟩ : ∃ i : ι, i ∈ s ∧ eval x (f i) ≠ 0 := by
-        simpa only [hS, not_forall, not_imp] using hx
-      apply Finset.prod_eq_zero hi
+    · obtain ⟨i, hi, hx⟩ : ∃ i : ι, i ∈ s ∧ eval x (f i) ≠ 0 := by simpa only [hS, not_forall, not_imp] using hx
+      apply Finsetₓ.prod_eq_zero hi
       rw [pow_card_sub_one_eq_one (eval x (f i)) hx, sub_self]
       
   -- In particular, we can now show:
-  have key : (∑ x, eval x F) = Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 }
-  rw [Fintype.card_of_subtype S hS, card_eq_sum_ones, Nat.cast_sum, Nat.cast_oneₓ, ← Fintype.sum_extend_by_zero S,
+  have key : (∑ x, eval x F) = Fintypeₓ.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 }
+  rw [Fintypeₓ.card_of_subtype S hS, card_eq_sum_ones, Nat.cast_sum, Nat.cast_oneₓ, ← Fintypeₓ.sum_extend_by_zero S,
     sum_congr rfl fun x hx => hF x]
   -- With these preparations under our belt, we will approach the main goal.
-  show p ∣ Fintype.card { x // ∀ i : ι, i ∈ s → eval x (f i) = 0 }
+  show p ∣ Fintypeₓ.card { x // ∀ i : ι, i ∈ s → eval x (f i) = 0 }
   rw [← CharP.cast_eq_zero_iff K, ← key]
   show (∑ x, eval x F) = 0
   -- We are now ready to apply the main machine, proven before.
   apply F.sum_mv_polynomial_eq_zero
   -- It remains to verify the crucial assumption of this machine
-  show F.total_degree < (q - 1) * Fintype.card σ
+  show F.total_degree < (q - 1) * Fintypeₓ.card σ
   calc
     F.total_degree ≤ ∑ i in s, (1 - f i ^ (q - 1)).totalDegree := total_degree_finset_prod s _
     _ ≤ ∑ i in s, (q - 1) * (f i).totalDegree := sum_le_sum fun i hi => _
@@ -165,16 +160,14 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
         _ =
         (q - 1) * ∑ i in s, (f i).totalDegree :=
       mul_sum.symm
-    _ < (q - 1) * Fintype.card σ := by
-      rwa [mul_lt_mul_left hq]
+    _ < (q - 1) * Fintypeₓ.card σ := by rwa [mul_lt_mul_left hq]
     
   -- Now we prove the remaining step from the preceding calculation
   show (1 - f i ^ (q - 1)).totalDegree ≤ (q - 1) * (f i).totalDegree
   calc
     (1 - f i ^ (q - 1)).totalDegree ≤ max (1 : MvPolynomial σ K).totalDegree (f i ^ (q - 1)).totalDegree :=
       total_degree_sub _ _
-    _ ≤ (f i ^ (q - 1)).totalDegree := by
-      simp only [max_eq_rightₓ, Nat.zero_leₓ, total_degree_one]
+    _ ≤ (f i ^ (q - 1)).totalDegree := by simp only [max_eq_rightₓ, Nat.zero_leₓ, total_degree_one]
     _ ≤ (q - 1) * (f i).totalDegree := total_degree_pow _ _
     
 
@@ -184,13 +177,12 @@ over a finite field of characteristic `p`.
 Assume that the total degree of `f` is less than the cardinality of `σ`.
 Then the number of solutions of `f` is divisible by `p`.
 See `char_dvd_card_solutions_family` for a version that takes a family of polynomials `f i`. -/
-theorem char_dvd_card_solutions (p : ℕ) [CharP K p] {f : MvPolynomial σ K} (h : f.totalDegree < Fintype.card σ) :
-    p ∣ Fintype.card { x : σ → K // eval x f = 0 } := by
+theorem char_dvd_card_solutions (p : ℕ) [CharP K p] {f : MvPolynomial σ K} (h : f.totalDegree < Fintypeₓ.card σ) :
+    p ∣ Fintypeₓ.card { x : σ → K // eval x f = 0 } := by
   let F : Unit → MvPolynomial σ K := fun _ => f
-  have : (∑ i : Unit, (F i).totalDegree) < Fintype.card σ := by
-    simpa only [Fintype.univ_punit, sum_singleton] using h
+  have : (∑ i : Unit, (F i).totalDegree) < Fintypeₓ.card σ := by simpa only [Fintypeₓ.univ_punit, sum_singleton] using h
   have key := char_dvd_card_solutions_family p this
-  simp only [F, Fintype.univ_punit, forall_eq, mem_singleton] at key
+  simp only [F, Fintypeₓ.univ_punit, forall_eq, mem_singleton] at key
   convert key
 
 end FiniteField

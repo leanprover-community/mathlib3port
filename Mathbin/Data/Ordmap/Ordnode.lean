@@ -62,7 +62,7 @@ ordered map, ordered set, data structure
 
 universe u
 
--- ./././Mathport/Syntax/Translate/Command.lean:306:30: infer kinds are unsupported in Lean 4: nil {}
+-- ./././Mathport/Syntax/Translate/Command.lean:308:30: infer kinds are unsupported in Lean 4: nil {}
 /-- An `ordnode α` is a finite set of values, represented as a tree.
   The operations on this type maintain that the tree is balanced
   and correctly stores subtree sizes at each level. -/
@@ -332,7 +332,7 @@ def All (P : α → Prop) : Ordnode α → Prop
   | node _ l x r => all l ∧ P x ∧ all r
 
 instance All.decidable {P : α → Prop} [DecidablePred P] (t) : Decidable (All P t) := by
-  induction t <;> dunfold all <;> skip <;> infer_instance
+  induction t <;> dsimp only [all] <;> skip <;> infer_instance
 
 /-- O(n). Does any element of the map satisfy property `P`?
 
@@ -343,7 +343,7 @@ def Any (P : α → Prop) : Ordnode α → Prop
   | node _ l x r => any l ∨ P x ∨ any r
 
 instance Any.decidable {P : α → Prop} [DecidablePred P] (t) : Decidable (Any P t) := by
-  induction t <;> dunfold any <;> skip <;> infer_instance
+  induction t <;> dsimp only [any] <;> skip <;> infer_instance
 
 /-- O(n). Exact membership in the set. This is useful primarily for stating
 correctness properties; use `∈` for a version that actually uses the BST property

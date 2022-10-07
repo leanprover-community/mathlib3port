@@ -49,11 +49,11 @@ structure RingEquiv (R S : Type _) [Mul R] [Add R] [Mul S] [Add S] extends R ≃
 infixl:25 " ≃+* " => RingEquiv
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ring_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident ring_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ring_equiv.to_add_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident ring_equiv.to_add_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ring_equiv.to_mul_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident ring_equiv.to_mul_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `ring_equiv_class F R S` states that `F` is a type of ring structure preserving equivalences.
 You should extend this class when you extend `ring_equiv`. -/
 class RingEquivClass (F : Type _) (R S : outParam (Type _)) [Mul R] [Add R] [Mul S] [Add S] extends
@@ -599,12 +599,12 @@ protected theorem map_multiset_sum [NonAssocSemiringₓ R] [NonAssocSemiringₓ 
     f s.Sum = (s.map f).Sum :=
   map_multiset_sum f s
 
-protected theorem map_prod {α : Type _} [CommSemiringₓ R] [CommSemiringₓ S] (g : R ≃+* S) (f : α → R) (s : Finset α) :
+protected theorem map_prod {α : Type _} [CommSemiringₓ R] [CommSemiringₓ S] (g : R ≃+* S) (f : α → R) (s : Finsetₓ α) :
     g (∏ x in s, f x) = ∏ x in s, g (f x) :=
   map_prod g f s
 
 protected theorem map_sum {α : Type _} [NonAssocSemiringₓ R] [NonAssocSemiringₓ S] (g : R ≃+* S) (f : α → R)
-    (s : Finset α) : g (∑ x in s, f x) = ∑ x in s, g (f x) :=
+    (s : Finsetₓ α) : g (∑ x in s, f x) = ∑ x in s, g (f x) :=
   map_sum g f s
 
 end BigOperators
@@ -653,8 +653,7 @@ theorem symm_trans_self (e : R ≃+* S) : e.symm.trans e = RingEquiv.refl S :=
 /-- If two rings are isomorphic, and the second is a domain, then so is the first. -/
 protected theorem is_domain {A : Type _} (B : Type _) [Ringₓ A] [Ringₓ B] [IsDomain B] (e : A ≃+* B) : IsDomain A :=
   { eq_zero_or_eq_zero_of_mul_eq_zero := fun x y hxy => by
-      have : e x * e y = 0 := by
-        rw [← e.map_mul, hxy, e.map_zero]
+      have : e x * e y = 0 := by rw [← e.map_mul, hxy, e.map_zero]
       simpa using eq_zero_or_eq_zero_of_mul_eq_zero this,
     exists_pair_ne := ⟨e.symm 0, e.symm 1, e.symm.Injective.Ne zero_ne_one⟩ }
 

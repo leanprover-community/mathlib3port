@@ -66,8 +66,7 @@ variable {α}
 is just multiplication with `-1`. -/
 theorem TopologicalSemiring.has_continuous_neg_of_mul [TopologicalSpace α] [NonAssocRing α] [HasContinuousMul α] :
     HasContinuousNeg α :=
-  { continuous_neg := by
-      simpa using (continuous_const.mul continuous_id : Continuous fun x : α => -1 * x) }
+  { continuous_neg := by simpa using (continuous_const.mul continuous_id : Continuous fun x : α => -1 * x) }
 
 /-- If `R` is a ring which is a topological semiring, then it is automatically a topological
 ring. This exists so that one can place a topological ring structure on `R` without explicitly
@@ -75,9 +74,9 @@ proving `continuous_neg`. -/
 theorem TopologicalSemiring.to_topological_ring [TopologicalSpace α] [NonAssocRing α] (h : TopologicalSemiring α) :
     TopologicalRing α :=
   { h,
-    (by
-      haveI := h.to_has_continuous_mul
-      exact TopologicalSemiring.has_continuous_neg_of_mul : HasContinuousNeg α) with }
+    (haveI := h.to_has_continuous_mul
+    TopologicalSemiring.has_continuous_neg_of_mul :
+      HasContinuousNeg α) with }
 
 -- See note [lower instance priority]
 instance (priority := 100) TopologicalRing.to_topological_add_group [NonUnitalNonAssocRing α] [TopologicalSpace α]
@@ -177,7 +176,8 @@ section AddOpposite
 open AddOpposite
 
 instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [HasContinuousMul α] :
-    HasContinuousMul αᵃᵒᵖ where continuous_mul := by
+    HasContinuousMul
+      αᵃᵒᵖ where continuous_mul := by
     convert continuous_op.comp <| (@continuous_mul α _ _ _).comp <| continuous_unop.prod_map continuous_unop
 
 instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [TopologicalSemiring α] : TopologicalSemiring αᵃᵒᵖ where
@@ -195,8 +195,7 @@ theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
     (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
     (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0) : TopologicalRing R := by
   refine' { ‹TopologicalAddGroup R› with .. }
-  have hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0) := by
-    simp
+  have hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0) := by simp
   have hadd : tendsto (uncurry ((· + ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0) := by
     rw [← nhds_prod_eq]
     convert continuous_add.tendsto ((0 : R), (0 : R))
@@ -224,9 +223,9 @@ theorem TopologicalRing.of_nhds_zero (hadd : Tendsto (uncurry ((· + ·) : R →
     (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
     (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
     (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0)
-    (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0)) : TopologicalRing R := by
+    (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0)) : TopologicalRing R :=
   haveI := TopologicalAddGroup.of_comm_of_nhds_zero hadd hneg hleft
-  exact TopologicalRing.of_add_group_of_nhds_zero hmul hmul_left hmul_right
+  TopologicalRing.of_add_group_of_nhds_zero hmul hmul_left hmul_right
 
 end
 
@@ -277,9 +276,9 @@ def Subring.commRingTopologicalClosure [T2Space α] (s : Subring α) (hs : ∀ x
 
 end TopologicalSemiring
 
-section TopologicalCommRing
+section TopologicalRing
 
-variable {α : Type _} [TopologicalSpace α] [CommRingₓ α] [TopologicalRing α]
+variable {α : Type _} [TopologicalSpace α] [Ringₓ α] [TopologicalRing α]
 
 /-- The closure of an ideal in a topological ring as an ideal. -/
 def Ideal.closure (S : Ideal α) : Ideal α :=
@@ -290,7 +289,7 @@ def Ideal.closure (S : Ideal α) : Ideal α :=
 theorem Ideal.coe_closure (S : Ideal α) : (S.closure : Set α) = Closure S :=
   rfl
 
-end TopologicalCommRing
+end TopologicalRing
 
 section TopologicalRing
 
@@ -299,8 +298,7 @@ variable {α : Type _} [TopologicalSpace α] [CommRingₓ α] (N : Ideal α)
 open Ideal.Quotient
 
 instance topologicalRingQuotientTopology : TopologicalSpace (α ⧸ N) :=
-  show TopologicalSpace (Quotientₓ _) by
-    infer_instance
+  show TopologicalSpace (Quotientₓ _) by infer_instance
 
 -- note for the reader: in the following, `mk` is `ideal.quotient.mk`, the canonical map `R → R/I`.
 variable [TopologicalRing α]
@@ -314,8 +312,7 @@ theorem QuotientRing.is_open_map_coe : IsOpenMap (mk N) := by
 theorem QuotientRing.quotient_map_coe_coe : QuotientMap fun p : α × α => (mk N p.1, mk N p.2) :=
   IsOpenMap.to_quotient_map ((QuotientRing.is_open_map_coe N).Prod (QuotientRing.is_open_map_coe N))
     ((continuous_quot_mk.comp continuous_fst).prod_mk (continuous_quot_mk.comp continuous_snd))
-    (by
-      rintro ⟨⟨x⟩, ⟨y⟩⟩ <;> exact ⟨(x, y), rfl⟩)
+    (by rintro ⟨⟨x⟩, ⟨y⟩⟩ <;> exact ⟨(x, y), rfl⟩)
 
 instance topological_ring_quotient : TopologicalRing (α ⧸ N) :=
   TopologicalSemiring.to_topological_ring
@@ -435,7 +432,7 @@ def toAddGroupTopology.orderEmbedding : OrderEmbedding (RingTopology α) (AddGro
   toFun := fun t => t.toAddGroupTopology
   inj' := by
     intro t₁ t₂ h_eq
-    dsimp' only  at h_eq
+    dsimp only at h_eq
     ext
     have h_t₁ : t₁.to_topological_space = t₁.to_add_group_topology.to_topological_space := rfl
     rw [h_t₁, h_eq]
@@ -443,8 +440,7 @@ def toAddGroupTopology.orderEmbedding : OrderEmbedding (RingTopology α) (AddGro
   map_rel_iff' := by
     intro t₁ t₂
     rw [embedding.coe_fn_mk]
-    have h_le : t₁ ≤ t₂ ↔ t₁.to_topological_space ≤ t₂.to_topological_space := by
-      rfl
+    have h_le : t₁ ≤ t₂ ↔ t₁.to_topological_space ≤ t₂.to_topological_space := by rfl
     rw [h_le]
     rfl
 

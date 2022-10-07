@@ -48,21 +48,15 @@ instance Closeds.emetricSpace : EmetricSpace (Closeds α) where
 
 /-- The edistance to a closed set depends continuously on the point and the set -/
 theorem continuous_inf_edist_Hausdorff_edist : Continuous fun p : α × Closeds α => infEdist p.1 p.2 := by
-  refine'
-    continuous_of_le_add_edist 2
-      (by
-        simp )
-      _
+  refine' continuous_of_le_add_edist 2 (by simp) _
   rintro ⟨x, s⟩ ⟨y, t⟩
   calc
     inf_edist x s ≤ inf_edist x t + Hausdorff_edist (t : Set α) s := inf_edist_le_inf_edist_add_Hausdorff_edist
     _ ≤ inf_edist y t + edist x y + Hausdorff_edist (t : Set α) s := add_le_add_right inf_edist_le_inf_edist_add_edist _
-    _ = inf_edist y t + (edist x y + Hausdorff_edist (s : Set α) t) := by
-      rw [add_assocₓ, Hausdorff_edist_comm]
+    _ = inf_edist y t + (edist x y + Hausdorff_edist (s : Set α) t) := by rw [add_assocₓ, Hausdorff_edist_comm]
     _ ≤ inf_edist y t + (edist (x, s) (y, t) + edist (x, s) (y, t)) :=
       add_le_add_left (add_le_add (le_max_leftₓ _ _) (le_max_rightₓ _ _)) _
-    _ = inf_edist y t + 2 * edist (x, s) (y, t) := by
-      rw [← mul_two, mul_comm]
+    _ = inf_edist y t + 2 * edist (x, s) (y, t) := by rw [← mul_two, mul_comm]
     
 
 /-- Subsets of a given closed subset form a closed set -/
@@ -92,10 +86,8 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
     completeness, by a standard completeness criterion.
     We use the shorthand `B n = 2^{-n}` in ennreal. -/
   let B : ℕ → ℝ≥0∞ := fun n => 2⁻¹ ^ n
-  have B_pos : ∀ n, (0 : ℝ≥0∞) < B n := by
-    simp [B, Ennreal.pow_pos]
-  have B_ne_top : ∀ n, B n ≠ ⊤ := by
-    simp [B, Ennreal.pow_ne_top]
+  have B_pos : ∀ n, (0 : ℝ≥0∞) < B n := by simp [B, Ennreal.pow_pos]
+  have B_ne_top : ∀ n, B n ≠ ⊤ := by simp [B, Ennreal.pow_ne_top]
   /- Consider a sequence of closed sets `s n` with `edist (s n) (s (n+1)) < B n`.
     We will show that it converges. The limit set is t0 = ⋂n, closure (⋃m≥n, s m).
     We will have to show that a point in `s n` is close to a point in `t0`, and a point
@@ -156,8 +148,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
             `s n` are close, this point is itself well approximated by a point `y` in `s n`,
             as required. -/
     intro n x xt0
-    have : x ∈ Closure (⋃ m ≥ n, s m : Set α) := by
-      apply mem_Inter.1 xt0 n
+    have : x ∈ Closure (⋃ m ≥ n, s m : Set α) := by apply mem_Inter.1 xt0 n
     rcases mem_closure_iff.1 this (B n) (B_pos n) with ⟨z, hz, Dxz⟩
     -- z : α,  Dxz : edist x z < B n,
     simp only [exists_propₓ, Set.mem_Union] at hz
@@ -178,17 +169,14 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
   -- from this, the convergence of `s n` to `t0` follows.
   refine' tendsto_at_top.2 fun ε εpos => _
   have : tendsto (fun n => 2 * B n) at_top (𝓝 (2 * 0)) :=
-    Ennreal.Tendsto.const_mul
-      (Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 <| by
-        simp [Ennreal.one_lt_two])
-      (Or.inr <| by
-        simp )
+    Ennreal.Tendsto.const_mul (Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 <| by simp [Ennreal.one_lt_two])
+      (Or.inr <| by simp)
   rw [mul_zero] at this
   obtain ⟨N, hN⟩ : ∃ N, ∀ b ≥ N, ε > 2 * B b
   exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_at_top
   exact ⟨N, fun n hn => lt_of_le_of_ltₓ (main n) (hN n hn)⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (v «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (v «expr ⊆ » s)
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
   ⟨by
@@ -208,13 +196,9 @@ instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
       exists v, (fun x hx => hx.1 : v ⊆ s)
       refine' Hausdorff_edist_le_of_mem_edist _ _
       · intro x hx
-        have : x ∈ ⋃ y ∈ s, ball y δ :=
-          hs
-            (by
-              simp )
+        have : x ∈ ⋃ y ∈ s, ball y δ := hs (by simp)
         rcases mem_Union₂.1 this with ⟨y, ys, dy⟩
-        have : edist y x < δ := by
-          simp at dy <;> rwa [edist_comm] at dy
+        have : edist y x < δ := by simp at dy <;> rwa [edist_comm] at dy
         exact ⟨y, ⟨ys, ⟨x, hx, this⟩⟩, le_of_ltₓ dy⟩
         
       · rintro x ⟨hx1, ⟨y, yu, hy⟩⟩
@@ -314,7 +298,7 @@ instance NonemptyCompacts.compact_space [CompactSpace α] : CompactSpace (Nonemp
 
 /-- In a second countable space, the type of nonempty compact subsets is second countable -/
 instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α] :
-    SecondCountableTopology (NonemptyCompacts α) := by
+    SecondCountableTopology (NonemptyCompacts α) :=
   haveI : separable_space (nonempty_compacts α) := by
     /- To obtain a countable dense subset of `nonempty_compacts α`, start from
         a countable dense subset `s` of α, and then consider all its finite nonempty subsets.
@@ -363,8 +347,7 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       have tc : ∀ x ∈ t, ∃ y ∈ c, edist x y ≤ δ := by
         intro x hx
         rcases tb x hx with ⟨y, yv, Dxy⟩
-        have : y ∈ c := by
-          simp [c, -mem_image] <;> exact ⟨yv, ⟨x, hx, Dxy⟩⟩
+        have : y ∈ c := by simp [c, -mem_image] <;> exact ⟨yv, ⟨x, hx, Dxy⟩⟩
         exact ⟨y, this, le_of_ltₓ Dxy⟩
       -- points in `c` are well approximated by points in `t`
       have ct : ∀ y ∈ c, ∃ x ∈ t, edist y x ≤ δ := by
@@ -391,7 +374,7 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       -- we have proved that `d` is a good approximation of `t` as requested
       exact ⟨d, ‹d ∈ v›, Dtc⟩
       
-  exact UniformSpace.second_countable_of_separable (nonempty_compacts α)
+  UniformSpace.second_countable_of_separable (nonempty_compacts α)
 
 end
 

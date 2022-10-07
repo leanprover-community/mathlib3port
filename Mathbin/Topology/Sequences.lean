@@ -146,7 +146,7 @@ theorem FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
     FrechetUrysohnSpace X := by
   refine' ⟨fun s x hcx => _⟩
   specialize h (· ∉ s) x
-  by_cases' hx : x ∈ s
+  by_cases hx:x ∈ s
   · exact subset_seq_closure hx
     
   simp_rw [(· ∘ ·), ContinuousAt, hx, not_false_iff, nhds_true, tendsto_pure, eq_trueₓ, ← mem_compl_iff,
@@ -171,8 +171,7 @@ class SequentialSpace (X : Type _) [TopologicalSpace X] : Prop where
 -- see Note [lower instance priority]
 /-- Every Fréchet-Urysohn space is a sequential space. -/
 instance (priority := 100) FrechetUrysohnSpace.to_sequential_space [FrechetUrysohnSpace X] : SequentialSpace X :=
-  ⟨fun s hs => by
-    rw [← closure_eq_iff_is_closed, ← seq_closure_eq_closure, hs.seq_closure_eq]⟩
+  ⟨fun s hs => by rw [← closure_eq_iff_is_closed, ← seq_closure_eq_closure, hs.seq_closure_eq]⟩
 
 /-- In a sequential space, a sequentially closed set is closed. -/
 protected theorem IsSeqClosed.is_closed [SequentialSpace X] {s : Set X} (hs : IsSeqClosed s) : IsClosed s :=
@@ -223,7 +222,7 @@ variable [TopologicalSpace X]
 /-- A set `s` is sequentially compact if every sequence taking values in `s` has a
 converging subsequence. -/
 def IsSeqCompact (s : Set X) :=
-  ∀ ⦃x : ℕ → X⦄, (∀ n, x n ∈ s) → ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a)
+  ∀ ⦃x : ℕ → X⦄, (∀ n, x n ∈ s) → ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMonoₓ φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a)
 
 /-- A space `X` is sequentially compact if every sequence in `X` has a
 converging subsequence. -/
@@ -231,13 +230,13 @@ class SeqCompactSpace (X : Type _) [TopologicalSpace X] : Prop where
   seq_compact_univ : IsSeqCompact (Univ : Set X)
 
 theorem IsSeqCompact.subseq_of_frequently_in {s : Set X} (hs : IsSeqCompact s) {x : ℕ → X}
-    (hx : ∃ᶠ n in at_top, x n ∈ s) : ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
+    (hx : ∃ᶠ n in at_top, x n ∈ s) : ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMonoₓ φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   let ⟨ψ, hψ, huψ⟩ := extraction_of_frequently_at_top hx
   let ⟨a, a_in, φ, hφ, h⟩ := hs huψ
   ⟨a, a_in, ψ ∘ φ, hψ.comp hφ, h⟩
 
 theorem SeqCompactSpace.tendsto_subseq [SeqCompactSpace X] (x : ℕ → X) :
-    ∃ (a : _)(φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
+    ∃ (a : _)(φ : ℕ → ℕ), StrictMonoₓ φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   let ⟨a, _, φ, mono, h⟩ := SeqCompactSpace.seq_compact_univ fun n => mem_univ (x n)
   ⟨a, φ, mono, h⟩
 
@@ -252,11 +251,11 @@ theorem IsCompact.is_seq_compact {s : Set X} (hs : IsCompact s) : IsSeqCompact s
   ⟨a, a_in, tendsto_subseq ha⟩
 
 theorem IsCompact.tendsto_subseq' {s : Set X} {x : ℕ → X} (hs : IsCompact s) (hx : ∃ᶠ n in at_top, x n ∈ s) :
-    ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
+    ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMonoₓ φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   hs.IsSeqCompact.subseq_of_frequently_in hx
 
 theorem IsCompact.tendsto_subseq {s : Set X} {x : ℕ → X} (hs : IsCompact s) (hx : ∀ n, x n ∈ s) :
-    ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
+    ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMonoₓ φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   hs.IsSeqCompact hx
 
 -- see Note [lower instance priority]
@@ -264,7 +263,7 @@ instance (priority := 100) FirstCountableTopology.seq_compact_of_compact [Compac
   ⟨compact_univ.IsSeqCompact⟩
 
 theorem CompactSpace.tendsto_subseq [CompactSpace X] (x : ℕ → X) :
-    ∃ (a : _)(φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
+    ∃ (a : _)(φ : ℕ → ℕ), StrictMonoₓ φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   SeqCompactSpace.tendsto_subseq x
 
 end FirstCountableTopology
@@ -279,7 +278,7 @@ open UniformSpace Prod
 
 variable [UniformSpace X] {s : Set X}
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n),
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n),
     ∀ x «expr ∈ » s,
     «expr∃ , »((i), «expr ⊆ »(ball x (V n), c i)))]]
 theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 X)] {c : ι → Set X} (hs : IsSeqCompact s)
@@ -288,7 +287,7 @@ theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 X)] 
   obtain ⟨V, hV, Vsymm⟩ : ∃ V : ℕ → Set (X × X), (𝓤 X).HasAntitoneBasis V ∧ ∀ n, swap ⁻¹' V n = V n
   exact UniformSpace.has_seq_basis X
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident n, \",\", ident hn, \"⟩\", \":\", expr «expr∃ , »((n),\n    ∀ x «expr ∈ » s,\n    «expr∃ , »((i), «expr ⊆ »(ball x (V n), c i)))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident n, \",\", ident hn, \"⟩\", \":\", expr «expr∃ , »((n),\n    ∀ x «expr ∈ » s,\n    «expr∃ , »((i), «expr ⊆ »(ball x (V n), c i)))]]"
   · exact ⟨V n, hV.to_has_basis.mem_of_mem trivialₓ, Vsymm n, hn⟩
     
   by_contra H
@@ -297,7 +296,7 @@ theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 X)] 
     choose x hx using H
     exact ⟨x, forall_and_distrib.mp hx⟩
   clear H
-  obtain ⟨x₀, x₀_in, φ, φ_mono, hlim⟩ : ∃ x₀ ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (x ∘ φ) at_top (𝓝 x₀)
+  obtain ⟨x₀, x₀_in, φ, φ_mono, hlim⟩ : ∃ x₀ ∈ s, ∃ φ : ℕ → ℕ, StrictMonoₓ φ ∧ tendsto (x ∘ φ) at_top (𝓝 x₀)
   exact hs x_in
   clear hs
   obtain ⟨i₀, x₀_in⟩ : ∃ i₀, x₀ ∈ c i₀ := by
@@ -331,14 +330,13 @@ theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 X)] 
 theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := by
   classical
   apply totally_bounded_of_forall_symm
-  unfold IsSeqCompact  at h
+  unfold IsSeqCompact at h
   contrapose! h
   rcases h with ⟨V, V_in, V_symm, h⟩
   simp_rw [not_subset] at h
   have : ∀ t : Set X, t.Finite → ∃ a, a ∈ s ∧ a ∉ ⋃ y ∈ t, ball y V := by
     intro t ht
-    obtain ⟨a, a_in, H⟩ : ∃ a ∈ s, ∀ x ∈ t, (x, a) ∉ V := by
-      simpa [ht] using h t
+    obtain ⟨a, a_in, H⟩ : ∃ a ∈ s, ∀ x ∈ t, (x, a) ∉ V := by simpa [ht] using h t
     use a, a_in
     intro H'
     obtain ⟨x, x_in, hx⟩ := mem_Union₂.mp H'
@@ -367,8 +365,8 @@ protected theorem IsSeqCompact.is_compact [is_countably_generated <| 𝓤 X] (hs
     rintro ⟨x, x_in⟩
     exact H x (t_sub x_in)
   choose i hi using this
-  haveI : Fintype t := tfin.fintype
-  use Finset.image i Finset.univ
+  haveI : Fintypeₓ t := tfin.fintype
+  use Finsetₓ.image i Finsetₓ.univ
   trans ⋃ y ∈ t, ball y V
   · intro x x_in
     specialize ht x_in
@@ -377,7 +375,7 @@ protected theorem IsSeqCompact.is_compact [is_countably_generated <| 𝓤 X] (hs
     exact ht
     
   · refine' Union₂_mono' fun x x_in => _
-    exact ⟨i ⟨x, x_in⟩, Finset.mem_image_of_mem _ (Finset.mem_univ _), hi ⟨x, x_in⟩⟩
+    exact ⟨i ⟨x, x_in⟩, Finsetₓ.mem_image_of_mem _ (Finsetₓ.mem_univ _), hi ⟨x, x_in⟩⟩
     
 
 /-- A version of Bolzano-Weistrass: in a uniform space with countably generated uniformity filter
@@ -408,7 +406,7 @@ variable [ProperSpace X] {s : Set X}
 every bounded sequence has a converging subsequence. This version assumes only
 that the sequence is frequently in some bounded set. -/
 theorem tendsto_subseq_of_frequently_bounded (hs : Bounded s) {x : ℕ → X} (hx : ∃ᶠ n in at_top, x n ∈ s) :
-    ∃ a ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
+    ∃ a ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMonoₓ φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   have hcs : IsSeqCompact (Closure s) := hs.is_compact_closure.IsSeqCompact
   have hu' : ∃ᶠ n in at_top, x n ∈ Closure s := hx.mono fun n hn => subset_closure hn
   hcs.subseq_of_frequently_in hu'
@@ -416,7 +414,7 @@ theorem tendsto_subseq_of_frequently_bounded (hs : Bounded s) {x : ℕ → X} (h
 /-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. -/
 theorem tendsto_subseq_of_bounded (hs : Bounded s) {x : ℕ → X} (hx : ∀ n, x n ∈ s) :
-    ∃ a ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
+    ∃ a ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMonoₓ φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   tendsto_subseq_of_frequently_bounded hs <| frequently_of_forall hx
 
 end MetricSeqCompact

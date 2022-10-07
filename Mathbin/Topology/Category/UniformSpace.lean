@@ -85,14 +85,14 @@ structure CpltSepUniformSpace where
   α : Type u
   [isUniformSpace : UniformSpace α]
   [is_complete_space : CompleteSpace α]
-  [IsSeparated : SeparatedSpace α]
+  [is_separated : SeparatedSpace α]
 
 namespace CpltSepUniformSpace
 
 instance : CoeSort CpltSepUniformSpace (Type u) :=
   ⟨CpltSepUniformSpace.α⟩
 
-attribute [instance] is_uniform_space is_complete_space IsSeparated
+attribute [instance] is_uniform_space is_complete_space is_separated
 
 /-- The function forgetting that a complete separated uniform spaces is complete and separated. -/
 def toUniformSpace (X : CpltSepUniformSpace) : UniformSpaceₓ :=
@@ -112,12 +112,9 @@ def of (X : Type u) [UniformSpace X] [CompleteSpace X] [SeparatedSpace X] : Cplt
 theorem coe_of (X : Type u) [UniformSpace X] [CompleteSpace X] [SeparatedSpace X] : (of X : Type u) = X :=
   rfl
 
-instance : Inhabited CpltSepUniformSpace := by
-  haveI : SeparatedSpace Empty :=
-    separated_iff_t2.mpr
-      (by
-        infer_instance)
-  exact ⟨CpltSepUniformSpace.of Empty⟩
+instance : Inhabited CpltSepUniformSpace :=
+  haveI : SeparatedSpace Empty := separated_iff_t2.mpr (by infer_instance)
+  ⟨CpltSepUniformSpace.of Empty⟩
 
 /-- The category instance on `CpltSepUniformSpace`. -/
 instance category : LargeCategory CpltSepUniformSpace :=
@@ -180,7 +177,7 @@ noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace Uni
     { homEquiv := fun X Y =>
         { toFun := fun f => completionHom X ≫ f, invFun := fun f => extensionHom f,
           left_inv := fun f => by
-            dsimp'
+            dsimp
             erw [extension_comp_coe],
           right_inv := fun f => by
             apply Subtype.eq
@@ -190,7 +187,7 @@ noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace Uni
       hom_equiv_naturality_left_symm' := fun X X' Y f g => by
         apply hom_ext
         funext x
-        dsimp'
+        dsimp
         erw [coe_comp, ← completion.extension_map]
         rfl
         exact g.property

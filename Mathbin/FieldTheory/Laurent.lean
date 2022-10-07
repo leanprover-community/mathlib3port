@@ -38,8 +38,7 @@ variable {R : Type u} [CommRingₓ R] [hdomain : IsDomain R] (r s : R) (p q : R[
 theorem taylor_mem_non_zero_divisors (hp : p ∈ R[X]⁰) : taylor r p ∈ R[X]⁰ := by
   rw [mem_non_zero_divisors_iff]
   intro x hx
-  have : x = taylor (r - r) x := by
-    simp
+  have : x = taylor (r - r) x := by simp
   rwa [this, sub_eq_add_neg, ← taylor_taylor, ← taylor_mul, LinearMap.map_eq_zero_iff _ (taylor_injective _),
     mul_right_mem_non_zero_divisors_eq_zero_iff hp, LinearMap.map_eq_zero_iff _ (taylor_injective _)] at hx
 
@@ -68,8 +67,7 @@ theorem laurent_aux_algebra_map : laurentAux r (algebraMap _ _ p) = algebraMap _
 def laurent : Ratfunc R →ₐ[R] Ratfunc R :=
   Ratfunc.mapAlgHom
     (AlgHom.mk (taylor r) (taylor_one _) (taylor_mul _) (LinearMap.map_zero _) (LinearMap.map_add _)
-      (by
-        simp [Polynomial.algebra_map_apply]))
+      (by simp [Polynomial.algebra_map_apply]))
     (taylor_mem_non_zero_divisors _)
 
 theorem laurent_div :
@@ -85,8 +83,7 @@ theorem laurent_X : laurent r x = X + c r := by
   rw [← algebra_map_X, laurent_algebra_map, taylor_X, _root_.map_add, algebra_map_C]
 
 @[simp]
-theorem laurent_C (x : R) : laurent r (c x) = c x := by
-  rw [← algebra_map_C, laurent_algebra_map, taylor_C]
+theorem laurent_C (x : R) : laurent r (c x) = c x := by rw [← algebra_map_C, laurent_algebra_map, taylor_C]
 
 @[simp]
 theorem laurent_at_zero : laurent 0 f = f := by

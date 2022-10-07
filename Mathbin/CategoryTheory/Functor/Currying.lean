@@ -56,11 +56,11 @@ def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
     { app := fun X =>
         { app := fun Y => T.app (X, Y),
           naturality' := fun Y Y' g => by
-            dsimp' [curry_obj]
+            dsimp [curry_obj]
             rw [nat_trans.naturality] },
       naturality' := fun X X' f => by
         ext
-        dsimp' [curry_obj]
+        dsimp [curry_obj]
         rw [nat_trans.naturality] }
 
 -- create projection simp lemmas even though this isn't a `{ .. }`.
@@ -70,46 +70,19 @@ def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
 def currying : C ⥤ D ⥤ E ≌ C × D ⥤ E :=
   Equivalence.mk uncurry curry
     (NatIso.ofComponents
-      (fun F =>
-        NatIso.ofComponents
-          (fun X =>
-            NatIso.ofComponents (fun Y => Iso.refl _)
-              (by
-                tidy))
-          (by
-            tidy))
-      (by
-        tidy))
-    (NatIso.ofComponents
-      (fun F =>
-        NatIso.ofComponents
-          (fun X =>
-            eqToIso
-              (by
-                simp ))
-          (by
-            tidy))
-      (by
-        tidy))
+      (fun F => NatIso.ofComponents (fun X => NatIso.ofComponents (fun Y => Iso.refl _) (by tidy)) (by tidy)) (by tidy))
+    (NatIso.ofComponents (fun F => NatIso.ofComponents (fun X => eqToIso (by simp)) (by tidy)) (by tidy))
 
 /-- `F.flip` is isomorphic to uncurrying `F`, swapping the variables, and currying. -/
 @[simps]
 def flipIsoCurrySwapUncurry (F : C ⥤ D ⥤ E) : F.flip ≅ curry.obj (prod.swap _ _ ⋙ uncurry.obj F) :=
-  NatIso.ofComponents
-    (fun d =>
-      NatIso.ofComponents (fun c => Iso.refl _)
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun d => NatIso.ofComponents (fun c => Iso.refl _) (by tidy)) (by tidy)
 
 /-- The uncurrying of `F.flip` is isomorphic to
 swapping the factors followed by the uncurrying of `F`. -/
 @[simps]
 def uncurryObjFlip (F : C ⥤ D ⥤ E) : uncurry.obj F.flip ≅ prod.swap _ _ ⋙ uncurry.obj F :=
-  NatIso.ofComponents (fun p => Iso.refl _)
-    (by
-      tidy)
+  NatIso.ofComponents (fun p => Iso.refl _) (by tidy)
 
 variable (B C D E)
 

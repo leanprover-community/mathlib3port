@@ -44,12 +44,9 @@ instance category : LargeCategory.{max v u} Quiv.{v, u} where
   Hom := fun C D => Prefunctor C D
   id := fun C => Prefunctor.id C
   comp := fun C D E F G => Prefunctor.comp F G
-  id_comp' := fun C D F => by
-    cases F <;> rfl
-  comp_id' := fun C D F => by
-    cases F <;> rfl
-  assoc' := by
-    intros <;> rfl
+  id_comp' := fun C D F => by cases F <;> rfl
+  comp_id' := fun C D F => by cases F <;> rfl
+  assoc' := by intros <;> rfl
 
 /-- The forgetful functor from categories to quivers. -/
 @[simps]
@@ -105,7 +102,7 @@ def adj : Cat.free ⊣ Quiv.forget :=
             rfl,
           right_inv := by
             rintro ⟨obj, map⟩
-            dsimp' only [Prefunctor.comp]
+            dsimp only [Prefunctor.comp]
             congr
             ext X Y f
             exact category.id_comp _ },

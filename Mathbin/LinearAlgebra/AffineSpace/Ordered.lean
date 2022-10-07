@@ -80,19 +80,13 @@ theorem line_map_lt_line_map_iff_of_lt (h : r < r') : lineMap a b r < lineMap a 
   infer_instance
 
 theorem left_lt_line_map_iff_lt (h : 0 < r) : a < lineMap a b r ↔ a < b :=
-  Iff.trans
-    (by
-      rw [line_map_apply_zero])
-    (line_map_lt_line_map_iff_of_lt h)
+  Iff.trans (by rw [line_map_apply_zero]) (line_map_lt_line_map_iff_of_lt h)
 
 theorem line_map_lt_left_iff_lt (h : 0 < r) : lineMap a b r < a ↔ b < a :=
   @left_lt_line_map_iff_lt k Eᵒᵈ _ _ _ _ _ _ _ h
 
 theorem line_map_lt_right_iff_lt (h : r < 1) : lineMap a b r < b ↔ a < b :=
-  Iff.trans
-    (by
-      rw [line_map_apply_one])
-    (line_map_lt_line_map_iff_of_lt h)
+  Iff.trans (by rw [line_map_apply_one]) (line_map_lt_line_map_iff_of_lt h)
 
 theorem right_lt_line_map_iff_lt (h : r < 1) : b < lineMap a b r ↔ b < a :=
   @line_map_lt_right_iff_lt k Eᵒᵈ _ _ _ _ _ _ _ h
@@ -126,10 +120,7 @@ theorem line_map_le_line_map_iff_of_lt (h : r < r') : lineMap a b r ≤ lineMap 
   infer_instance
 
 theorem left_le_line_map_iff_le (h : 0 < r) : a ≤ lineMap a b r ↔ a ≤ b :=
-  Iff.trans
-    (by
-      rw [line_map_apply_zero])
-    (line_map_le_line_map_iff_of_lt h)
+  Iff.trans (by rw [line_map_apply_zero]) (line_map_le_line_map_iff_of_lt h)
 
 @[simp]
 theorem left_le_midpoint : a ≤ midpoint k a b ↔ a ≤ b :=
@@ -143,10 +134,7 @@ theorem midpoint_le_left : midpoint k a b ≤ a ↔ b ≤ a :=
   line_map_le_left_iff_le <| inv_pos.2 zero_lt_two
 
 theorem line_map_le_right_iff_le (h : r < 1) : lineMap a b r ≤ b ↔ a ≤ b :=
-  Iff.trans
-    (by
-      rw [line_map_apply_one])
-    (line_map_le_line_map_iff_of_lt h)
+  Iff.trans (by rw [line_map_apply_one]) (line_map_le_line_map_iff_of_lt h)
 
 @[simp]
 theorem midpoint_le_right : midpoint k a b ≤ b ↔ a ≤ b :=
@@ -201,7 +189,7 @@ theorem map_le_line_map_iff_slope_le_slope_left (h : 0 < r * (b - a)) :
     f c ≤ lineMap (f a) (f b) r ↔ slope f a c ≤ slope f a b := by
   rw [line_map_apply, line_map_apply, slope, slope, vsub_eq_sub, vsub_eq_sub, vsub_eq_sub, vadd_eq_add, vadd_eq_add,
     smul_eq_mul, add_sub_cancel, smul_sub, smul_sub, smul_sub, sub_le_iff_le_add, mul_inv_rev, mul_smul, mul_smul, ←
-    smul_sub, ← smul_sub, ← smul_add, smul_smul, ← mul_inv_rev, smul_le_iff_of_pos (inv_pos.2 h), inv_invₓ, smul_smul,
+    smul_sub, ← smul_sub, ← smul_add, smul_smul, ← mul_inv_rev, inv_smul_le_iff h, smul_smul,
     mul_inv_cancel_right₀ (right_ne_zero_of_mul h.ne'), smul_add, smul_inv_smul₀ (left_ne_zero_of_mul h.ne')]
   infer_instance
 
@@ -233,11 +221,11 @@ theorem map_le_line_map_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
   clear r
   intro h
   simp_rw [line_map_apply, slope, vsub_eq_sub, vadd_eq_add, smul_eq_mul]
-  rw [sub_add_eq_sub_sub_swap, sub_self, zero_sub, le_smul_iff_of_pos, inv_invₓ, smul_smul, neg_mul_eq_mul_neg, neg_sub,
+  rw [sub_add_eq_sub_sub_swap, sub_self, zero_sub, neg_mul_eq_mul_neg, neg_sub, le_inv_smul_iff h, smul_smul,
     mul_inv_cancel_right₀, le_sub, ← neg_sub (f b), smul_neg, neg_add_eq_sub]
   · exact right_ne_zero_of_mul h.ne'
     
-  · simpa [mul_sub] using h
+  · infer_instance
     
 
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is non-strictly above the

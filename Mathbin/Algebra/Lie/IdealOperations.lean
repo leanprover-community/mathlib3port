@@ -121,8 +121,7 @@ theorem lie_mem_lie {x : L} {m : M} (hx : x ∈ I) (hm : m ∈ N) : ⁅x, m⁆ �
   N.lie_coe_mem_lie I ⟨x, hx⟩ ⟨m, hm⟩
 
 theorem lie_comm : ⁅I, J⁆ = ⁅J, I⁆ := by
-  suffices ∀ I J : LieIdeal R L, ⁅I, J⁆ ≤ ⁅J, I⁆ by
-    exact le_antisymmₓ (this I J) (this J I)
+  suffices ∀ I J : LieIdeal R L, ⁅I, J⁆ ≤ ⁅J, I⁆ by exact le_antisymmₓ (this I J) (this J I)
   clear I J
   intro I J
   rw [lie_ideal_oper_eq_span, lie_span_le]
@@ -152,8 +151,7 @@ theorem lie_bot : ⁅I, (⊥ : LieSubmodule R L M)⁆ = ⊥ := by
 
 @[simp]
 theorem bot_lie : ⁅(⊥ : LieIdeal R L), N⁆ = ⊥ := by
-  suffices ⁅(⊥ : LieIdeal R L), N⁆ ≤ ⊥ by
-    exact le_bot_iff.mp this
+  suffices ⁅(⊥ : LieIdeal R L), N⁆ ≤ ⊥ by exact le_bot_iff.mp this
   rw [lie_ideal_oper_eq_span, lie_span_le]
   rintro m ⟨⟨x, hx⟩, n, hn⟩
   rw [← hn]
@@ -190,8 +188,7 @@ theorem lie_sup : ⁅I, N ⊔ N'⁆ = ⁅I, N⁆ ⊔ ⁅I, N'⁆ := by
   have h : ⁅I, N⁆ ⊔ ⁅I, N'⁆ ≤ ⁅I, N ⊔ N'⁆ := by
     rw [sup_le_iff]
     constructor <;> apply mono_lie_right <;> [exact le_sup_left, exact le_sup_right]
-  suffices ⁅I, N ⊔ N'⁆ ≤ ⁅I, N⁆ ⊔ ⁅I, N'⁆ by
-    exact le_antisymmₓ this h
+  suffices ⁅I, N ⊔ N'⁆ ≤ ⁅I, N⁆ ⊔ ⁅I, N'⁆ by exact le_antisymmₓ this h
   clear h
   rw [lie_ideal_oper_eq_span, lie_span_le]
   rintro m ⟨x, ⟨n, hn⟩, h⟩
@@ -213,8 +210,7 @@ theorem sup_lie : ⁅I ⊔ J, N⁆ = ⁅I, N⁆ ⊔ ⁅J, N⁆ := by
   have h : ⁅I, N⁆ ⊔ ⁅J, N⁆ ≤ ⁅I ⊔ J, N⁆ := by
     rw [sup_le_iff]
     constructor <;> apply mono_lie_left <;> [exact le_sup_left, exact le_sup_right]
-  suffices ⁅I ⊔ J, N⁆ ≤ ⁅I, N⁆ ⊔ ⁅J, N⁆ by
-    exact le_antisymmₓ this h
+  suffices ⁅I ⊔ J, N⁆ ≤ ⁅I, N⁆ ⊔ ⁅J, N⁆ by exact le_antisymmₓ this h
   clear h
   rw [lie_ideal_oper_eq_span, lie_span_le]
   rintro m ⟨⟨x, hx⟩, n, h⟩
@@ -255,9 +251,7 @@ theorem map_bracket_eq : map f ⁅I, N⁆ = ⁅I, map f N⁆ := by
     
   · rintro ⟨x, ⟨m₂, hm₂ : m₂ ∈ map f N⟩, rfl⟩
     obtain ⟨n, hn, rfl⟩ := (mem_map m₂).mp hm₂
-    exact
-      ⟨⁅x, n⁆, ⟨x, ⟨n, hn⟩, rfl⟩, by
-        simp ⟩
+    exact ⟨⁅x, n⁆, ⟨x, ⟨n, hn⟩, rfl⟩, by simp⟩
     
 
 theorem map_comap_le : map f (comap f N₂) ≤ N₂ :=
@@ -312,8 +306,7 @@ theorem map_bracket_le {I₁ I₂ : LieIdeal R L} : map f ⁅I₁, I₂⁆ ≤ �
   exact LieSubmodule.lie_coe_mem_lie _ _ fy₁ fy₂
 
 theorem map_bracket_eq {I₁ I₂ : LieIdeal R L} (h : Function.Surjective f) : map f ⁅I₁, I₂⁆ = ⁅map f I₁, map f I₂⁆ := by
-  suffices ⁅map f I₁, map f I₂⁆ ≤ map f ⁅I₁, I₂⁆ by
-    exact le_antisymmₓ (map_bracket_le f) this
+  suffices ⁅map f I₁, map f I₂⁆ ≤ map f ⁅I₁, I₂⁆ by exact le_antisymmₓ (map_bracket_le f) this
   rw [← LieSubmodule.coe_submodule_le_coe_submodule, coe_map_of_surjective h,
     LieSubmodule.lie_ideal_oper_eq_linear_span, LieSubmodule.lie_ideal_oper_eq_linear_span, LinearMap.map_span]
   apply Submodule.span_mono
@@ -372,7 +365,10 @@ theorem map_comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism)
 
 theorem comap_bracket_incl {I₁ I₂ : LieIdeal R L} :
     ⁅comap I.incl I₁, comap I.incl I₂⁆ = comap I.incl ⁅I ⊓ I₁, I ⊓ I₂⁆ := by
-  conv_rhs => congr skip rw [← I.incl_ideal_range]
+  conv_rhs =>
+  congr
+  skip
+  rw [← I.incl_ideal_range]
   rw [comap_bracket_eq]
   simp only [ker_incl, sup_bot_eq]
   exact I.incl_is_ideal_morphism

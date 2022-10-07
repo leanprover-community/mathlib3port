@@ -89,14 +89,14 @@ section
 include h
 
 theorem conjugate_i (g : G) (v : V) : (conjugate π g) (i v) = v := by
-  dsimp' [conjugate]
+  dsimp [conjugate]
   simp only [← i.map_smul, h, ← mul_smul, single_mul_single, mul_oneₓ, mul_left_invₓ]
   change (1 : MonoidAlgebra k G) • v = v
   simp
 
 end
 
-variable (G) [Fintype G]
+variable (G) [Fintypeₓ G]
 
 /-- The sum of the conjugates of `π` by each element `g : G`, as a `k`-linear map.
 
@@ -109,16 +109,21 @@ def sumOfConjugates : W →ₗ[k] V :=
 -/
 def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
   MonoidAlgebra.equivariantOfLinearOfComm (π.sumOfConjugates G) fun g v => by
-    dsimp' [sum_of_conjugates]
-    simp only [LinearMap.sum_apply, Finset.smul_sum]
-    dsimp' [conjugate]
-    conv_lhs => rw [← Finset.univ_map_embedding (mulRightEmbedding g⁻¹)]simp only [mulRightEmbedding]
-    simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_oneₓ, Function.Embedding.coe_fn_mk, Finset.sum_map,
+    simp only [sum_of_conjugates,
+      LinearMap.sum_apply,-- We have a `module (monoid_algebra k G)` instance but are working with `finsupp`s,
+        -- so help the elaborator unfold everything correctly.
+        @Finsetₓ.smul_sum
+        (MonoidAlgebra k G)]
+    dsimp [conjugate]
+    conv_lhs =>
+    rw [← Finsetₓ.univ_map_embedding (mulRightEmbedding g⁻¹)]
+    simp only [mulRightEmbedding]
+    simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_oneₓ, Function.Embedding.coe_fn_mk, Finsetₓ.sum_map,
       inv_invₓ, inv_mul_cancel_right]
 
 section
 
-variable [inv : Invertible (Fintype.card G : k)]
+variable [inv : Invertible (Fintypeₓ.card G : k)]
 
 include inv
 
@@ -126,7 +131,7 @@ include inv
 $$ \frac{1}{|G|} \sum_{g \in G} g⁻¹ • π(g • -). $$
 -/
 def equivariantProjection : W →ₗ[MonoidAlgebra k G] V :=
-  ⅟ (Fintype.card G : k) • π.sumOfConjugatesEquivariant G
+  ⅟ (Fintypeₓ.card G : k) • π.sumOfConjugatesEquivariant G
 
 include h
 
@@ -135,7 +140,7 @@ theorem equivariant_projection_condition (v : V) : (π.equivariantProjection G) 
     sum_of_conjugates]
   rw [LinearMap.sum_apply]
   simp only [conjugate_i π i h]
-  rw [Finset.sum_const, Finset.card_univ, nsmul_eq_smul_cast k, ← mul_smul, Invertible.inv_of_mul_self, one_smul]
+  rw [Finsetₓ.sum_const, Finsetₓ.card_univ, nsmul_eq_smul_cast k, ← mul_smul, Invertible.inv_of_mul_self, one_smul]
 
 end
 
@@ -145,19 +150,17 @@ end
 
 namespace CharZero
 
-variable {k : Type u} [Field k] {G : Type u} [Fintype G] [Groupₓ G] [CharZero k]
+variable {k : Type u} [Field k] {G : Type u} [Fintypeₓ G] [Groupₓ G] [CharZero k]
 
-instance : Invertible (Fintype.card G : k) :=
-  invertibleOfRingCharNotDvd
-    (by
-      simp [Fintype.card_eq_zero_iff])
+instance : Invertible (Fintypeₓ.card G : k) :=
+  invertibleOfRingCharNotDvd (by simp [Fintypeₓ.card_eq_zero_iff])
 
 end CharZero
 
 namespace MonoidAlgebra
 
 -- Now we work over a `[field k]`.
-variable {k : Type u} [Field k] {G : Type u} [Fintype G] [Invertible (Fintype.card G : k)]
+variable {k : Type u} [Field k] {G : Type u} [Fintypeₓ G] [Invertible (Fintypeₓ.card G : k)]
 
 variable [Groupₓ G]
 
@@ -173,8 +176,7 @@ theorem exists_left_inverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf
     ∃ g : W →ₗ[MonoidAlgebra k G] V, g.comp f = LinearMap.id := by
   obtain ⟨φ, hφ⟩ :=
     (f.restrict_scalars k).exists_left_inverse_of_injective
-      (by
-        simp only [hf, Submodule.restrict_scalars_bot, LinearMap.ker_restrict_scalars])
+      (by simp only [hf, Submodule.restrict_scalars_bot, LinearMap.ker_restrict_scalars])
   refine' ⟨φ.equivariant_projection G, _⟩
   apply LinearMap.ext
   intro v

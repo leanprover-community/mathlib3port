@@ -148,17 +148,17 @@ theorem CompHaus.to_Profinite_obj' (X : CompHaus) : ↥(CompHaus.toProfinite.obj
   rfl
 
 /-- Finite types are given the discrete topology. -/
-def Fintypeₓ.discreteTopology (A : Fintypeₓ) : TopologicalSpace A :=
+def Fintypeₓₓ.discreteTopology (A : Fintypeₓₓ) : TopologicalSpace A :=
   ⊥
 
 section DiscreteTopology
 
-attribute [local instance] Fintypeₓ.discreteTopology
+attribute [local instance] Fintypeₓₓ.discreteTopology
 
 /-- The natural functor from `Fintype` to `Profinite`, endowing a finite type with the
 discrete topology. -/
 @[simps]
-def Fintypeₓ.toProfinite : Fintypeₓ ⥤ Profinite where
+def Fintypeₓₓ.toProfinite : Fintypeₓₓ ⥤ Profinite where
   obj := fun A => Profinite.of A
   map := fun _ _ f => ⟨f⟩
 
@@ -218,9 +218,9 @@ theorem is_closed_map : IsClosedMap f :=
   CompHaus.is_closed_map _
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
-theorem is_iso_of_bijective (bij : Function.Bijective f) : IsIso f := by
+theorem is_iso_of_bijective (bij : Function.Bijective f) : IsIso f :=
   haveI := CompHaus.is_iso_of_bijective (Profinite_to_CompHaus.map f) bij
-  exact is_iso_of_fully_faithful profiniteToCompHaus _
+  is_iso_of_fully_faithful profiniteToCompHaus _
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y :=
@@ -228,8 +228,7 @@ noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y :=
   as_iso f
 
 instance forget_reflects_isomorphisms : ReflectsIsomorphisms (forget Profinite) :=
-  ⟨by
-    intro A B f hf <;> exact Profinite.is_iso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
+  ⟨by intro A B f hf <;> exact Profinite.is_iso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
 
 /-- Construct an isomorphism from a homeomorphism. -/
 @[simps Hom inv]
@@ -292,14 +291,14 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
     have H : h = g := by
       rw [← cancel_epi f]
       ext x
-      dsimp' [LocallyConstant.ofClopen]
+      dsimp [LocallyConstant.ofClopen]
       rw [if_neg]
       · rfl
         
       refine' mt (fun α => hVU α) _
-      simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_eq]
+      simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
     apply_fun fun e => (e y).down  at H
-    dsimp' [LocallyConstant.ofClopen]  at H
+    dsimp [LocallyConstant.ofClopen] at H
     rw [if_pos hyV] at H
     exact top_ne_bot H
     

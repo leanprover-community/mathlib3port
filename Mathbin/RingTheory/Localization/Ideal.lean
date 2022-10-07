@@ -35,9 +35,7 @@ This definition is only meant to be used in proving `mem_map_algebra_map_iff`,
 and any proof that needs to refer to the explicit carrier set should use that theorem. -/
 private def map_ideal (I : Ideal R) : Ideal S where
   Carrier := { z : S | ∃ x : I × M, z * algebraMap R S x.2 = algebraMap R S x.1 }
-  zero_mem' :=
-    ⟨⟨0, 1⟩, by
-      simp ⟩
+  zero_mem' := ⟨⟨0, 1⟩, by simp⟩
   add_mem' := by
     rintro a b ⟨a', ha⟩ ⟨b', hb⟩
     use ⟨a'.2 * b'.1 + b'.2 * a'.1, I.add_mem (I.mul_mem_left _ b'.1.2) (I.mul_mem_left _ a'.1.2)⟩
@@ -59,9 +57,7 @@ theorem mem_map_algebra_map_iff {I : Ideal R} {z} :
   · change _ → z ∈ map_ideal M S I
     refine' fun h => Ideal.mem_Inf.1 h fun z hz => _
     obtain ⟨y, hy⟩ := hz
-    use
-      ⟨⟨⟨y, hy.left⟩, 1⟩, by
-        simp [hy.right]⟩
+    use ⟨⟨⟨y, hy.left⟩, 1⟩, by simp [hy.right]⟩
     
   · rintro ⟨⟨a, s⟩, h⟩
     rw [← Ideal.unit_mul_mem_iff_mem _ (map_units S s), mul_comm]
@@ -81,8 +77,7 @@ theorem comap_map_of_is_prime_disjoint (I : Ideal R) (hI : I.IsPrime) (hM : Disj
     Ideal.comap (algebraMap R S) (Ideal.map (algebraMap R S) I) = I := by
   refine' le_antisymmₓ (fun a ha => _) Ideal.le_comap_map
   obtain ⟨⟨b, s⟩, h⟩ := (mem_map_algebra_map_iff M S).1 (Ideal.mem_comap.1 ha)
-  replace h : algebraMap R S (a * s) = algebraMap R S b := by
-    simpa only [← map_mul] using h
+  replace h : algebraMap R S (a * s) = algebraMap R S b := by simpa only [← map_mul] using h
   obtain ⟨c, hc⟩ := (eq_iff_exists M S).1 h
   have : a * (s * c) ∈ I := by
     rw [← mul_assoc, hc]
@@ -119,8 +114,7 @@ theorem is_prime_iff_is_prime_disjoint (J : Ideal S) :
     · intro x y hxy
       obtain ⟨a, s, ha⟩ := mk'_surjective M x
       obtain ⟨b, t, hb⟩ := mk'_surjective M y
-      have : mk' S (a * b) (s * t) ∈ J := by
-        rwa [mk'_mul, ha, hb]
+      have : mk' S (a * b) (s * t) ∈ J := by rwa [mk'_mul, ha, hb]
       rw [mk'_mem_iff, ← Ideal.mem_comap] at this
       replace this := h.left.mem_or_mem this
       rw [Ideal.mem_comap, Ideal.mem_comap] at this
@@ -167,17 +161,13 @@ theorem surjective_quotient_map_of_maximal_of_localization {I : Ideal S} [I.IsPr
   intro s
   obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective s
   obtain ⟨r, ⟨m, hm⟩, rfl⟩ := mk'_surjective M s
-  by_cases' hM : (Ideal.Quotient.mk (I.comap (algebraMap R S))) m = 0
+  by_cases hM:(Ideal.Quotient.mk (I.comap (algebraMap R S))) m = 0
   · have : I = ⊤ := by
       rw [Ideal.eq_top_iff_one]
       rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_comap] at hM
       convert I.mul_mem_right (mk' S (1 : R) ⟨m, hm⟩) hM
       rw [← mk'_eq_mul_mk'_one, mk'_self]
-    exact
-      ⟨0,
-        eq_comm.1
-          (by
-            simp [Ideal.Quotient.eq_zero_iff_mem, this])⟩
+    exact ⟨0, eq_comm.1 (by simp [Ideal.Quotient.eq_zero_iff_mem, this])⟩
     
   · rw [Ideal.Quotient.maximal_ideal_iff_is_field_quotient] at hI
     obtain ⟨n, hn⟩ := hI.3 hM
@@ -194,9 +184,7 @@ theorem surjective_quotient_map_of_maximal_of_localization {I : Ideal S} [I.IsPr
       Or.inl
         (mul_left_cancel₀
           (fun hn => hM (Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_comap.2 (Ideal.Quotient.eq_zero_iff_mem.1 hn))))
-          (trans hn
-            (by
-              rw [← RingHom.map_mul, ← mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one])))
+          (trans hn (by rw [← RingHom.map_mul, ← mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one])))
     
 
 end CommRingₓ

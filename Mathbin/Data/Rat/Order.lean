@@ -61,9 +61,7 @@ protected theorem nonneg_add {a b} : Ratₓ.Nonneg a → Ratₓ.Nonneg b → Rat
       intro n₁0 n₂0
       apply add_nonneg <;>
         apply mul_nonneg <;>
-          · first |
-              assumption|
-              apply Int.coe_zero_le
+          · first |assumption|apply Int.coe_zero_le
             
 
 protected theorem nonneg_mul {a b} : Ratₓ.Nonneg a → Ratₓ.Nonneg b → Ratₓ.Nonneg (a * b) :=
@@ -71,7 +69,7 @@ protected theorem nonneg_mul {a b} : Ratₓ.Nonneg a → Ratₓ.Nonneg b → Rat
     (numDenomCasesOn' b) fun n₂ d₂ h₂ => by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₂)
-      simp (config := { contextual := true })[d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0, mul_nonneg]
+      simp (config := { contextual := true }) [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0, mul_nonneg]
 
 protected theorem nonneg_antisymm {a} : Ratₓ.Nonneg a → Ratₓ.Nonneg (-a) → a = 0 :=
   (numDenomCasesOn' a) fun n d h => by
@@ -82,8 +80,7 @@ protected theorem nonneg_antisymm {a} : Ratₓ.Nonneg a → Ratₓ.Nonneg (-a) �
 protected theorem nonneg_total : Ratₓ.Nonneg a ∨ Ratₓ.Nonneg (-a) := by
   cases' a with n <;> exact Or.imp_right neg_nonneg_of_nonpos (le_totalₓ 0 n)
 
-instance decidableNonneg : Decidable (Ratₓ.Nonneg a) := by
-  cases a <;> unfold Ratₓ.Nonneg <;> infer_instance
+instance decidableNonneg : Decidable (Ratₓ.Nonneg a) := by cases a <;> unfold Ratₓ.Nonneg <;> infer_instance
 
 /-- Relation `a ≤ b` on `ℚ` defined as `a ≤ b ↔ rat.nonneg (b - a)`. Use `a ≤ b` instead of
 `rat.le a b`. -/
@@ -94,9 +91,7 @@ instance : LE ℚ :=
   ⟨Ratₓ.Le⟩
 
 instance decidableLe : DecidableRel ((· ≤ ·) : ℚ → ℚ → Prop)
-  | a, b =>
-    show Decidable (Ratₓ.Nonneg (b - a)) by
-      infer_instance
+  | a, b => show Decidable (Ratₓ.Nonneg (b - a)) by infer_instance
 
 protected theorem le_def {a b c d : ℤ} (b0 : 0 < b) (d0 : 0 < d) : a /. b ≤ c /. d ↔ a * d ≤ c * b := by
   show Ratₓ.Nonneg _ ↔ _
@@ -104,17 +99,12 @@ protected theorem le_def {a b c d : ℤ} (b0 : 0 < b) (d0 : 0 < d) : a /. b ≤ 
   simp [sub_eq_add_neg, ne_of_gtₓ b0, ne_of_gtₓ d0, mul_pos d0 b0]
 
 protected theorem le_refl : a ≤ a :=
-  show Ratₓ.Nonneg (a - a) by
-    rw [sub_self] <;> exact le_reflₓ (0 : ℤ)
+  show Ratₓ.Nonneg (a - a) by rw [sub_self] <;> exact le_reflₓ (0 : ℤ)
 
-protected theorem le_total : a ≤ b ∨ b ≤ a := by
-  have := Ratₓ.nonneg_total (b - a) <;> rwa [neg_sub] at this
+protected theorem le_total : a ≤ b ∨ b ≤ a := by have := Ratₓ.nonneg_total (b - a) <;> rwa [neg_sub] at this
 
 protected theorem le_antisymm {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b := by
-  have :=
-    eq_neg_of_add_eq_zero_left
-      (Ratₓ.nonneg_antisymm hba <| by
-        rwa [← sub_eq_add_neg, neg_sub])
+  have := eq_neg_of_add_eq_zero_left (Ratₓ.nonneg_antisymm hba <| by rwa [← sub_eq_add_neg, neg_sub])
   rwa [neg_negₓ] at this
 
 protected theorem le_trans {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c := by
@@ -127,47 +117,32 @@ instance : LinearOrderₓ ℚ where
   le_trans := @Ratₓ.le_trans
   le_antisymm := @Ratₓ.le_antisymm
   le_total := Ratₓ.le_total
-  DecidableEq := by
-    infer_instance
+  DecidableEq := by infer_instance
   decidableLe := fun a b => Ratₓ.decidableNonneg (b - a)
 
 -- Extra instances to short-circuit type class resolution
-instance : LT ℚ := by
-  infer_instance
+instance : LT ℚ := by infer_instance
 
-instance : DistribLattice ℚ := by
-  infer_instance
+instance : DistribLattice ℚ := by infer_instance
 
-instance : Lattice ℚ := by
-  infer_instance
+instance : Lattice ℚ := by infer_instance
 
-instance : SemilatticeInf ℚ := by
-  infer_instance
+instance : SemilatticeInf ℚ := by infer_instance
 
-instance : SemilatticeSup ℚ := by
-  infer_instance
+instance : SemilatticeSup ℚ := by infer_instance
 
-instance : HasInf ℚ := by
-  infer_instance
+instance : HasInf ℚ := by infer_instance
 
-instance : HasSup ℚ := by
-  infer_instance
+instance : HasSup ℚ := by infer_instance
 
-instance : PartialOrderₓ ℚ := by
-  infer_instance
+instance : PartialOrderₓ ℚ := by infer_instance
 
-instance : Preorderₓ ℚ := by
-  infer_instance
+instance : Preorderₓ ℚ := by infer_instance
 
 protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.denom ≤ q.num * p.denom := by
   rw [← @num_denom q, ← @num_denom p]
   conv_rhs => simp only [num_denom]
-  exact
-    Ratₓ.le_def
-      (by
-        exact_mod_cast p.pos)
-      (by
-        exact_mod_cast q.pos)
+  exact Ratₓ.le_def (by exact_mod_cast p.pos) (by exact_mod_cast q.pos)
 
 protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.denom < q.num * p.denom := by
   rw [lt_iff_le_and_neₓ, Ratₓ.le_def']
@@ -181,8 +156,7 @@ protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.denom < q.num * p.den
   exact not_iff_not.elim_right eq_iff_mul_eq_mul
 
 theorem nonneg_iff_zero_le {a} : Ratₓ.Nonneg a ↔ 0 ≤ a :=
-  show Ratₓ.Nonneg a ↔ Ratₓ.Nonneg (a - 0) by
-    simp
+  show Ratₓ.Nonneg a ↔ Ratₓ.Nonneg (a - 0) by simp
 
 theorem num_nonneg_iff_zero_le : ∀ {a : ℚ}, 0 ≤ a.num ↔ 0 ≤ a
   | ⟨n, d, h, c⟩ => @nonneg_iff_zero_le ⟨n, d, h, c⟩
@@ -194,47 +168,33 @@ protected theorem mul_nonneg {a b : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a
   rw [← nonneg_iff_zero_le] at ha hb⊢ <;> exact Ratₓ.nonneg_mul ha hb
 
 instance : LinearOrderedField ℚ :=
-  { Ratₓ.field, Ratₓ.linearOrder, Ratₓ.semiring with
-    zero_le_one := by
-      decide,
+  { Ratₓ.field, Ratₓ.linearOrder, Ratₓ.semiring with zero_le_one := by decide,
     add_le_add_left := fun a b ab c => Ratₓ.add_le_add_left.2 ab,
     mul_pos := fun a b ha hb =>
       lt_of_le_of_neₓ (Ratₓ.mul_nonneg (le_of_ltₓ ha) (le_of_ltₓ hb))
         (mul_ne_zero (ne_of_ltₓ ha).symm (ne_of_ltₓ hb).symm).symm }
 
 -- Extra instances to short-circuit type class resolution
-instance : LinearOrderedCommRing ℚ := by
-  infer_instance
+instance : LinearOrderedCommRing ℚ := by infer_instance
 
-instance : LinearOrderedRing ℚ := by
-  infer_instance
+instance : LinearOrderedRing ℚ := by infer_instance
 
-instance : OrderedRing ℚ := by
-  infer_instance
+instance : OrderedRing ℚ := by infer_instance
 
-instance : LinearOrderedSemiring ℚ := by
-  infer_instance
+instance : LinearOrderedSemiring ℚ := by infer_instance
 
-instance : OrderedSemiring ℚ := by
-  infer_instance
+instance : OrderedSemiring ℚ := by infer_instance
 
-instance : LinearOrderedAddCommGroup ℚ := by
-  infer_instance
+instance : LinearOrderedAddCommGroup ℚ := by infer_instance
 
-instance : OrderedAddCommGroup ℚ := by
-  infer_instance
+instance : OrderedAddCommGroup ℚ := by infer_instance
 
-instance : OrderedCancelAddCommMonoid ℚ := by
-  infer_instance
+instance : OrderedCancelAddCommMonoid ℚ := by infer_instance
 
-instance : OrderedAddCommMonoid ℚ := by
-  infer_instance
+instance : OrderedAddCommMonoid ℚ := by infer_instance
 
 theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
-  lt_iff_lt_of_le_iff_leₓ <| by
-    simpa [(by
-        cases a <;> rfl : (-a).num = -a.num)] using
-      @num_nonneg_iff_zero_le (-a)
+  lt_iff_lt_of_le_iff_leₓ <| by simpa [(by cases a <;> rfl : (-a).num = -a.num)] using @num_nonneg_iff_zero_le (-a)
 
 theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d) : (a : ℚ) / b < c / d ↔ a * d < c * b :=
   by
@@ -246,8 +206,7 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
     simp [div_num_denom, Ratₓ.le_def d_pos b_pos]
     
 
-theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.denom := by
-  simp [Ratₓ.lt_def]
+theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.denom := by simp [Ratₓ.lt_def]
 
 theorem abs_def (q : ℚ) : abs q = q.num.natAbs /. q.denom := by
   cases' le_totalₓ q 0 with hq hq

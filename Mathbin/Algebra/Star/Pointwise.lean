@@ -55,8 +55,7 @@ theorem Nonempty.star [HasInvolutiveStar α] {s : Set α} (h : s.Nonempty) : s�
 theorem mem_star [HasStar α] : a ∈ s⋆ ↔ a⋆ ∈ s :=
   Iff.rfl
 
-theorem star_mem_star [HasInvolutiveStar α] : a⋆ ∈ s⋆ ↔ a ∈ s := by
-  simp only [mem_star, star_star]
+theorem star_mem_star [HasInvolutiveStar α] : a⋆ ∈ s⋆ ↔ a ∈ s := by simp only [mem_star, star_star]
 
 @[simp]
 theorem star_preimage [HasStar α] : HasStar.star ⁻¹' s = s⋆ :=
@@ -90,15 +89,13 @@ theorem compl_star [HasStar α] : (sᶜ)⋆ = s⋆ᶜ :=
 @[simp]
 instance [HasInvolutiveStar α] : HasInvolutiveStar (Set α) where
   star := HasStar.star
-  star_involutive := fun s => by
-    simp only [← star_preimage, preimage_preimage, star_star, preimage_id']
+  star_involutive := fun s => by simp only [← star_preimage, preimage_preimage, star_star, preimage_id']
 
 @[simp]
 theorem star_subset_star [HasInvolutiveStar α] {s t : Set α} : s⋆ ⊆ t⋆ ↔ s ⊆ t :=
   Equivₓ.star.Surjective.preimage_subset_preimage_iff
 
-theorem star_subset [HasInvolutiveStar α] {s t : Set α} : s⋆ ⊆ t ↔ s ⊆ t⋆ := by
-  rw [← star_subset_star, star_star]
+theorem star_subset [HasInvolutiveStar α] {s t : Set α} : s⋆ ⊆ t ↔ s ⊆ t⋆ := by rw [← star_subset_star, star_star]
 
 theorem Finite.star [HasInvolutiveStar α] {s : Set α} (hs : s.Finite) : s⋆.Finite :=
   hs.Preimage <| star_injective.InjOn _

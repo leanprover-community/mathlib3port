@@ -31,14 +31,13 @@ universe u v w
 
 section TopologicalAlgebra
 
-variable (R : Type _) [TopologicalSpace R] [CommSemiringₓ R]
+variable (R : Type _) (A : Type u)
 
-variable (A : Type u) [TopologicalSpace A]
+variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-variable [Semiringₓ A]
+variable [TopologicalSpace R] [TopologicalSpace A] [TopologicalSemiring A]
 
-theorem continuous_algebra_map_iff_smul [Algebra R A] [TopologicalSemiring A] :
-    Continuous (algebraMap R A) ↔ Continuous fun p : R × A => p.1 • p.2 := by
+theorem continuous_algebra_map_iff_smul : Continuous (algebraMap R A) ↔ Continuous fun p : R × A => p.1 • p.2 := by
   refine' ⟨fun h => _, fun h => _⟩
   · simp only [Algebra.smul_def]
     exact (h.comp continuous_fst).mul continuous_snd
@@ -48,13 +47,24 @@ theorem continuous_algebra_map_iff_smul [Algebra R A] [TopologicalSemiring A] :
     
 
 @[continuity]
-theorem continuous_algebra_map [Algebra R A] [TopologicalSemiring A] [HasContinuousSmul R A] :
-    Continuous (algebraMap R A) :=
+theorem continuous_algebra_map [HasContinuousSmul R A] : Continuous (algebraMap R A) :=
   (continuous_algebra_map_iff_smul R A).2 continuous_smul
 
-theorem has_continuous_smul_of_algebra_map [Algebra R A] [TopologicalSemiring A] (h : Continuous (algebraMap R A)) :
-    HasContinuousSmul R A :=
+theorem has_continuous_smul_of_algebra_map (h : Continuous (algebraMap R A)) : HasContinuousSmul R A :=
   ⟨(continuous_algebra_map_iff_smul R A).1 h⟩
+
+variable [HasContinuousSmul R A]
+
+/-- The inclusion of the base ring in a topological algebra as a continuous linear map. -/
+@[simps]
+def algebraMapClm : R →L[R] A :=
+  { Algebra.linearMap R A with toFun := algebraMap R A, cont := continuous_algebra_map R A }
+
+theorem algebra_map_clm_coe : ⇑(algebraMapClm R A) = algebraMap R A :=
+  rfl
+
+theorem algebra_map_clm_to_linear_map : (algebraMapClm R A).toLinearMap = Algebra.linearMap R A :=
+  rfl
 
 end TopologicalAlgebra
 
@@ -147,12 +157,11 @@ variable {R}
 
 instance [T2Space A] {x : A} : CommRingₓ (Algebra.elementalAlgebra R x) :=
   Subalgebra.commRingTopologicalClosure _
-    (by
-      letI : CommRingₓ (Algebra.adjoin R ({x} : Set A)) :=
-        Algebra.adjoinCommRingOfComm R fun y hy z hz => by
-          rw [mem_singleton_iff] at hy hz
-          rw [hy, hz]
-      exact fun _ _ => mul_comm _ _)
+    letI : CommRingₓ (Algebra.adjoin R ({x} : Set A)) :=
+      Algebra.adjoinCommRingOfComm R fun y hy z hz => by
+        rw [mem_singleton_iff] at hy hz
+        rw [hy, hz]
+    fun _ _ => mul_comm _ _
 
 end Ringₓ
 
@@ -161,8 +170,7 @@ section DivisionRing
 /-- The action induced by `algebra_rat` is continuous. -/
 instance DivisionRing.has_continuous_const_smul_rat {A} [DivisionRing A] [TopologicalSpace A] [HasContinuousMul A]
     [CharZero A] : HasContinuousConstSmul ℚ A :=
-  ⟨fun r => by
-    simpa only [Algebra.smul_def] using continuous_const.mul continuous_id⟩
+  ⟨fun r => by simpa only [Algebra.smul_def] using continuous_const.mul continuous_id⟩
 
 end DivisionRing
 

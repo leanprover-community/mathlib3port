@@ -41,10 +41,7 @@ instance {α : Sort u} {β : Sort v} : EmbeddingLike (α ↪ β) α β where
     cases g
     congr
 
-instance {α β : Sort _} : CanLift (α → β) (α ↪ β) where
-  coe := coeFn
-  cond := Injective
-  prf := fun f hf => ⟨⟨f, hf⟩, rfl⟩
+instance {α β : Sort _} : CanLift (α → β) (α ↪ β) coeFn Injective where prf := fun f hf => ⟨⟨f, hf⟩, rfl⟩
 
 end Function
 
@@ -89,10 +86,7 @@ def Equivₓ.asEmbedding {p : β → Prop} (e : α ≃ Subtype p) : α ↪ β :=
 @[simp]
 theorem Equivₓ.as_embedding_range {α β : Sort _} {p : β → Prop} (e : α ≃ Subtype p) :
     Set.Range e.asEmbedding = SetOf p :=
-  Set.ext fun x =>
-    ⟨fun ⟨y, h⟩ => h ▸ Subtype.coe_prop (e y), fun hs =>
-      ⟨e.symm ⟨x, hs⟩, by
-        simp ⟩⟩
+  Set.ext fun x => ⟨fun ⟨y, h⟩ => h ▸ Subtype.coe_prop (e y), fun hs => ⟨e.symm ⟨x, hs⟩, by simp⟩⟩
 
 end Equivₓ
 
@@ -173,17 +167,11 @@ is already occupied by some `f a'`, then swap the values at these two points. -/
 def setValue {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' = a)] [∀ a', Decidable (f a' = b)] : α ↪ β :=
   ⟨fun a' => if a' = a then b else if f a' = b then f a else f a', by
     intro x y h
-    dsimp'  at h
-    split_ifs  at h <;>
-      try
-          subst b <;>
-        try
-            simp only [f.injective.eq_iff] at * <;>
-          cc⟩
+    dsimp at h
+    split_ifs  at h <;> try subst b <;> try simp only [f.injective.eq_iff] at * <;> cc⟩
 
 theorem set_value_eq {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' = a)] [∀ a', Decidable (f a' = b)] :
-    setValue f a b a = b := by
-  simp [set_value]
+    setValue f a b a = b := by simp [set_value]
 
 /-- Embedding into `option α` using `some`. -/
 @[simps (config := { fullyApplied := false })]
@@ -211,11 +199,8 @@ def optionElim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.Range f) : Option
 def optionEmbeddingEquiv (α β) : (Option α ↪ β) ≃ Σf : α ↪ β, ↥(Set.Range fᶜ) where
   toFun := fun f => ⟨coeOption.trans f, f none, fun ⟨x, hx⟩ => Option.some_ne_none x <| f.Injective hx⟩
   invFun := fun f => f.1.optionElim f.2 f.2.2
-  left_inv := fun f =>
-    ext <| by
-      rintro (_ | _) <;> simp [Option.coe_def]
-  right_inv := fun ⟨f, y, hy⟩ => by
-    ext <;> simp [Option.coe_def]
+  left_inv := fun f => ext <| by rintro (_ | _) <;> simp [Option.coe_def]
+  right_inv := fun ⟨f, y, hy⟩ => by ext <;> simp [Option.coe_def]
 
 /-- A version of `option.map` for `function.embedding`s. -/
 @[simps (config := { fullyApplied := false })]
@@ -339,8 +324,7 @@ This embedding sends each `f : α → γ` to a function `g : β → γ` such tha
 `g y = default` whenever `y ∉ range e`. -/
 noncomputable def arrowCongrLeft {α : Sort u} {β : Sort v} {γ : Sort w} [Inhabited γ] (e : α ↪ β) : (α → γ) ↪ β → γ :=
   ⟨fun f => extendₓ e f default, fun f₁ f₂ h =>
-    funext fun x => by
-      simpa only [extend_apply e.injective] using congr_fun h (e x)⟩
+    funext fun x => by simpa only [extend_apply e.injective] using congr_fun h (e x)⟩
 
 /-- Restrict both domain and codomain of an embedding. -/
 protected def subtypeMap {α β} {p : α → Prop} {q : β → Prop} (f : α ↪ β) (h : ∀ ⦃x⦄, p x → q (f x)) :
@@ -375,8 +359,7 @@ open Function.Embedding
 def subtypeInjectiveEquivEmbedding (α β : Sort _) : { f : α → β // Function.Injective f } ≃ (α ↪ β) where
   toFun := fun f => ⟨f.val, f.property⟩
   invFun := fun f => ⟨f, f.Injective⟩
-  left_inv := fun f => by
-    simp
+  left_inv := fun f => by simp
   right_inv := fun f => by
     ext
     rfl
@@ -448,7 +431,7 @@ into a sum of subtypes `{x // p x} ⊕ {x // q x}` such that `¬ p x` is sent to
 def subtypeOrLeftEmbedding (p q : α → Prop) [DecidablePred p] : { x // p x ∨ q x } ↪ Sum { x // p x } { x // q x } :=
   ⟨fun x => if h : p x then Sum.inl ⟨x, h⟩ else Sum.inr ⟨x, x.Prop.resolve_left h⟩, by
     intro x y
-    dsimp' only
+    dsimp only
     split_ifs <;> simp [Subtype.ext_iff]⟩
 
 theorem subtype_or_left_embedding_apply_left {p q : α → Prop} [DecidablePred p] (x : { x // p x ∨ q x }) (hx : p x) :
@@ -463,8 +446,7 @@ theorem subtype_or_left_embedding_apply_right {p q : α → Prop} [DecidablePred
 if `p x → q x` for all `x : α`. -/
 @[simps]
 def Subtype.impEmbedding (p q : α → Prop) (h : p ≤ q) : { x // p x } ↪ { x // q x } :=
-  ⟨fun x => ⟨x, h x x.Prop⟩, fun x y => by
-    simp [Subtype.ext_iff]⟩
+  ⟨fun x => ⟨x, h x x.Prop⟩, fun x y => by simp [Subtype.ext_iff]⟩
 
 /-- A subtype `{x // p x ∨ q x}` over a disjunction of `p q : α → Prop` is equivalent to a sum of
 subtypes `{x // p x} ⊕ {x // q x}` such that `¬ p x` is sent to the right, when
@@ -479,7 +461,7 @@ def subtypeOrEquiv (p q : α → Prop) [DecidablePred p] (h : Disjoint p q) :
     Sum.elim (Subtype.impEmbedding _ _ fun x hx => (Or.inl hx : p x ∨ q x))
       (Subtype.impEmbedding _ _ fun x hx => (Or.inr hx : p x ∨ q x))
   left_inv := fun x => by
-    by_cases' hx : p x
+    by_cases hx:p x
     · rw [subtype_or_left_embedding_apply_left _ hx]
       simp [Subtype.ext_iff]
       
@@ -499,8 +481,7 @@ def subtypeOrEquiv (p q : α → Prop) [DecidablePred p] (h : Disjoint p q) :
       rw [subtype_or_left_embedding_apply_right]
       · simp
         
-      · suffices ¬p x by
-          simpa
+      · suffices ¬p x by simpa
         intro hp
         simpa using h x ⟨hp, x.prop⟩
         

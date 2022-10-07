@@ -35,9 +35,7 @@ namespace CategoryTheory
 
 /-- A functor `F` is additive provided `F.map` is an additive homomorphism. -/
 class Functor.Additive {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] (F : C ⥤ D) : Prop where
-  map_add' : ∀ {X Y : C} {f g : X ⟶ Y}, F.map (f + g) = F.map f + F.map g := by
-    run_tac
-      obviously
+  map_add' : ∀ {X Y : C} {f g : X ⟶ Y}, F.map (f + g) = F.map f + F.map g := by obviously
 
 section Preadditive
 
@@ -84,7 +82,7 @@ theorem map_zsmul {X Y : C} {f : X ⟶ Y} {r : ℤ} : F.map (r • f) = r • F.
 open BigOperators
 
 @[simp]
-theorem map_sum {X Y : C} {α : Type _} (f : α → (X ⟶ Y)) (s : Finset α) :
+theorem map_sum {X Y : C} {α : Type _} (f : α → (X ⟶ Y)) (s : Finsetₓ α) :
     F.map (∑ a in s, f a) = ∑ a in s, F.map (f a) :=
   (F.mapAddHom : (X ⟶ Y) →+ _).map_sum f s
 
@@ -117,12 +115,12 @@ instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] :
             is_bilimit_of_total _
               (by
                 simp_rw [F.map_bicone_π, F.map_bicone_ι, ← F.map_comp, ← F.map_sum]
-                dsimp' only [map_bicone_X]
+                dsimp only [map_bicone_X]
                 simp_rw [← F.map_id]
                 refine' congr_arg _ (hb.is_limit.hom_ext fun j => hb.is_colimit.hom_ext fun j' => _)
                 cases j
                 cases j'
-                dsimp' only [limits.bicone.to_cone_π_app]
+                dsimp only [limits.bicone.to_cone_π_app]
                 simp [sum_comp, comp_sum, bicone.ι_π, comp_dite, dite_comp]) } }
 
 theorem additive_of_preserves_binary_biproducts [HasBinaryBiproducts C] [PreservesZeroMorphisms F]

@@ -69,12 +69,11 @@ theorem coe_inj {e₁ e₂ : Enorm 𝕜 V} : (e₁ : V → ℝ≥0∞) = e₂ �
 @[simp]
 theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ∥c∥₊ * e x :=
   le_antisymmₓ (e.map_smul_le' c x) <| by
-    by_cases' hc : c = 0
+    by_cases hc:c = 0
     · simp [hc]
       
     calc
-      (∥c∥₊ : ℝ≥0∞) * e x = ∥c∥₊ * e (c⁻¹ • c • x) := by
-        rw [inv_smul_smul₀ hc]
+      (∥c∥₊ : ℝ≥0∞) * e x = ∥c∥₊ * e (c⁻¹ • c • x) := by rw [inv_smul_smul₀ hc]
       _ ≤ ∥c∥₊ * (∥c⁻¹∥₊ * e (c • x)) := _
       _ = e (c • x) := _
       
@@ -95,25 +94,20 @@ theorem eq_zero_iff {x : V} : e x = 0 ↔ x = 0 :=
 @[simp]
 theorem map_neg (x : V) : e (-x) = e x :=
   calc
-    e (-x) = ∥(-1 : 𝕜)∥₊ * e x := by
-      rw [← map_smul, neg_one_smul]
-    _ = e x := by
-      simp
+    e (-x) = ∥(-1 : 𝕜)∥₊ * e x := by rw [← map_smul, neg_one_smul]
+    _ = e x := by simp
     
 
-theorem map_sub_rev (x y : V) : e (x - y) = e (y - x) := by
-  rw [← neg_sub, e.map_neg]
+theorem map_sub_rev (x y : V) : e (x - y) = e (y - x) := by rw [← neg_sub, e.map_neg]
 
 theorem map_add_le (x y : V) : e (x + y) ≤ e x + e y :=
   e.map_add_le' x y
 
 theorem map_sub_le (x y : V) : e (x - y) ≤ e x + e y :=
   calc
-    e (x - y) = e (x + -y) := by
-      rw [sub_eq_add_neg]
+    e (x - y) = e (x + -y) := by rw [sub_eq_add_neg]
     _ ≤ e x + e (-y) := e.map_add_le x (-y)
-    _ = e x + e y := by
-      rw [e.map_neg]
+    _ = e x + e y := by rw [e.map_neg]
     
 
 instance : PartialOrderₓ (Enorm 𝕜 V) where
@@ -124,20 +118,15 @@ instance : PartialOrderₓ (Enorm 𝕜 V) where
 
 /-- The `enorm` sending each non-zero vector to infinity. -/
 noncomputable instance : HasTop (Enorm 𝕜 V) :=
-  ⟨{ toFun := fun x => if x = 0 then 0 else ⊤,
-      eq_zero' := fun x => by
-        split_ifs <;> simp [*],
+  ⟨{ toFun := fun x => if x = 0 then 0 else ⊤, eq_zero' := fun x => by split_ifs <;> simp [*],
       map_add_le' := fun x y => by
-        split_ifs with hxy hx hy hy hx hy hy <;>
-          try
-            simp [*]
+        split_ifs with hxy hx hy hy hx hy hy <;> try simp [*]
         simpa [hx, hy] using hxy,
       map_smul_le' := fun c x => by
         split_ifs with hcx hx hx <;> simp only [smul_eq_zero, not_or_distrib] at hcx
         · simp only [mul_zero, le_reflₓ]
           
-        · have : c = 0 := by
-            tauto
+        · have : c = 0 := by tauto
           simp [this]
           
         · tauto
@@ -153,11 +142,7 @@ theorem top_map {x : V} (hx : x ≠ 0) : (⊤ : Enorm 𝕜 V) x = ⊤ :=
 
 noncomputable instance : OrderTop (Enorm 𝕜 V) where
   top := ⊤
-  le_top := fun e x =>
-    if h : x = 0 then by
-      simp [h]
-    else by
-      simp [top_map h]
+  le_top := fun e x => if h : x = 0 then by simp [h] else by simp [top_map h]
 
 noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
   { Enorm.partialOrder with le := (· ≤ ·), lt := (· < ·),
@@ -166,9 +151,7 @@ noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
         map_add_le' := fun x y =>
           max_leₓ (le_transₓ (e₁.map_add_le _ _) <| add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _))
             (le_transₓ (e₂.map_add_le _ _) <| add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _)),
-        map_smul_le' := fun c x =>
-          le_of_eqₓ <| by
-            simp only [map_smul, Ennreal.mul_max] },
+        map_smul_le' := fun c x => le_of_eqₓ <| by simp only [map_smul, Ennreal.mul_max] },
     le_sup_left := fun e₁ e₂ x => le_max_leftₓ _ _, le_sup_right := fun e₁ e₂ x => le_max_rightₓ _ _,
     sup_le := fun e₁ e₂ e₃ h₁ h₂ x => max_leₓ (h₁ x) (h₂ x) }
 
@@ -184,23 +167,19 @@ theorem max_map (e₁ e₂ : Enorm 𝕜 V) (x : V) : (e₁ ⊔ e₂) x = max (e�
 @[reducible]
 def emetricSpace : EmetricSpace V where
   edist := fun x y => e (x - y)
-  edist_self := fun x => by
-    simp
-  eq_of_edist_eq_zero := fun x y => by
-    simp [sub_eq_zero]
+  edist_self := fun x => by simp
+  eq_of_edist_eq_zero := fun x y => by simp [sub_eq_zero]
   edist_comm := e.map_sub_rev
   edist_triangle := fun x y z =>
     calc
-      e (x - z) = e (x - y + (y - z)) := by
-        rw [sub_add_sub_cancel]
+      e (x - z) = e (x - y + (y - z)) := by rw [sub_add_sub_cancel]
       _ ≤ e (x - y) + e (y - z) := e.map_add_le (x - y) (y - z)
       
 
 /-- The subspace of vectors with finite enorm. -/
 def finiteSubspace : Subspace 𝕜 V where
   Carrier := { x | e x < ⊤ }
-  zero_mem' := by
-    simp
+  zero_mem' := by simp
   add_mem' := fun x y hx hy => lt_of_le_of_ltₓ (e.map_add_le x y) (Ennreal.add_lt_top.2 ⟨hx, hy⟩)
   smul_mem' := fun c x (hx : _ < _) =>
     calc
@@ -232,9 +211,8 @@ theorem finite_norm_eq (x : e.finiteSubspace) : ∥x∥ = (e x).toReal :=
 
 /-- Normed space instance on `e.finite_subspace`. -/
 instance :
-    NormedSpace 𝕜 e.finiteSubspace where norm_smul_le := fun c x =>
-    le_of_eqₓ <| by
-      simp [finite_norm_eq, Ennreal.to_real_mul]
+    NormedSpace 𝕜
+      e.finiteSubspace where norm_smul_le := fun c x => le_of_eqₓ <| by simp [finite_norm_eq, Ennreal.to_real_mul]
 
 end Enorm
 

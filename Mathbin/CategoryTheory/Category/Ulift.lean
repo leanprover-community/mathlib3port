@@ -76,7 +76,7 @@ def Ulift.equivalence : C ≌ ULift.{u₂} C where
       hom_inv_id' := by
         ext
         change 𝟙 _ ≫ 𝟙 _ = 𝟙 _
-        simp ,
+        simp,
       inv_hom_id' := by
         ext
         change 𝟙 _ ≫ 𝟙 _ = 𝟙 _
@@ -133,14 +133,8 @@ def UliftHom.down : UliftHom C ⥤ C where
 def UliftHom.equiv : C ≌ UliftHom C where
   Functor := UliftHom.up
   inverse := UliftHom.down
-  unitIso :=
-    NatIso.ofComponents (fun A => eqToIso rfl)
-      (by
-        tidy)
-  counitIso :=
-    NatIso.ofComponents (fun A => eqToIso rfl)
-      (by
-        tidy)
+  unitIso := NatIso.ofComponents (fun A => eqToIso rfl) (by tidy)
+  counitIso := NatIso.ofComponents (fun A => eqToIso rfl) (by tidy)
 
 end UliftHom
 
@@ -180,18 +174,14 @@ def AsSmall.down : AsSmall C ⥤ C where
 def AsSmall.equiv : C ≌ AsSmall C where
   Functor := AsSmall.up
   inverse := AsSmall.down
-  unitIso :=
-    NatIso.ofComponents (fun X => eqToIso rfl)
-      (by
-        tidy)
+  unitIso := NatIso.ofComponents (fun X => eqToIso rfl) (by tidy)
   counitIso :=
     NatIso.ofComponents
       (fun X =>
         eq_to_iso <| by
           ext
           rfl)
-      (by
-        tidy)
+      (by tidy)
 
 instance [Inhabited C] : Inhabited (AsSmall C) :=
   ⟨⟨arbitrary _⟩⟩

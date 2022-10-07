@@ -35,7 +35,7 @@ rectangular box, partition
 -/
 
 
-open Set Finset Function
+open Set Finsetₓ Function
 
 open Classical Nnreal BigOperators
 
@@ -48,7 +48,7 @@ variable {ι : Type _}
 /-- A prepartition of `I : box_integral.box ι` is a finite set of pairwise disjoint subboxes of
 `I`. -/
 structure Prepartition (I : Box ι) where
-  boxes : Finset (Box ι)
+  boxes : Finsetₓ (Box ι)
   le_of_mem' : ∀ J ∈ boxes, J ≤ I
   PairwiseDisjoint : Set.Pairwise (↑boxes) (Disjoint on (coe : Box ι → Set (ι → ℝ)))
 
@@ -88,20 +88,18 @@ theorem lower_le_lower (hJ : J ∈ π) : I.lower ≤ J.lower :=
 theorem upper_le_upper (hJ : J ∈ π) : J.upper ≤ I.upper :=
   Box.monotone_upper (π.le_of_mem hJ)
 
-theorem injective_boxes : Function.Injective (boxes : Prepartition I → Finset (Box ι)) := by
+theorem injective_boxes : Function.Injective (boxes : Prepartition I → Finsetₓ (Box ι)) := by
   rintro ⟨s₁, h₁, h₁'⟩ ⟨s₂, h₂, h₂'⟩ (rfl : s₁ = s₂)
   rfl
 
 @[ext]
 theorem ext (h : ∀ J, J ∈ π₁ ↔ J ∈ π₂) : π₁ = π₂ :=
-  injective_boxes <| Finset.ext h
+  injective_boxes <| Finsetₓ.ext h
 
 /-- The singleton prepartition `{J}`, `J ≤ I`. -/
 @[simps]
 def single (I J : Box ι) (h : J ≤ I) : Prepartition I :=
-  ⟨{J}, by
-    simpa, by
-    simp ⟩
+  ⟨{J}, by simpa, by simp⟩
 
 @[simp]
 theorem mem_single {J'} (h : J ≤ I) : J' ∈ single I J h ↔ J' = J :=
@@ -132,9 +130,7 @@ instance : PartialOrderₓ (Prepartition I) where
 
 instance : OrderTop (Prepartition I) where
   top := single I I le_rflₓ
-  le_top := fun π J hJ =>
-    ⟨I, by
-      simp , π.le_of_mem hJ⟩
+  le_top := fun π J hJ => ⟨I, by simp, π.le_of_mem hJ⟩
 
 instance : OrderBot (Prepartition I) where
   bot := ⟨∅, fun J hJ => False.elim hJ, fun J hJ => False.elim hJ⟩
@@ -174,10 +170,8 @@ theorem inj_on_set_of_mem_Icc_set_of_lower_eq (x : ι → ℝ) :
   simp only [Set.ext_iff, mem_set_of_eq] at H
   cases' (hx₁.1 i).eq_or_lt with hi₁ hi₁
   · have hi₂ : J₂.lower i = x i := (H _).1 hi₁
-    have H₁ : x i < J₁.upper i := by
-      simpa only [hi₁] using J₁.lower_lt_upper i
-    have H₂ : x i < J₂.upper i := by
-      simpa only [hi₂] using J₂.lower_lt_upper i
+    have H₁ : x i < J₁.upper i := by simpa only [hi₁] using J₁.lower_lt_upper i
+    have H₂ : x i < J₂.upper i := by simpa only [hi₂] using J₂.lower_lt_upper i
     rw [Ioc_inter_Ioc, hi₁, hi₂, sup_idem, Set.nonempty_Ioc]
     exact lt_minₓ H₁ H₂
     
@@ -187,11 +181,11 @@ theorem inj_on_set_of_mem_Icc_set_of_lower_eq (x : ι → ℝ) :
 
 /-- The set of boxes of a prepartition that contain `x` in their closures has cardinality
 at most `2 ^ fintype.card ι`. -/
-theorem card_filter_mem_Icc_le [Fintype ι] (x : ι → ℝ) :
-    (π.boxes.filter fun J : Box ι => x ∈ J.Icc).card ≤ 2 ^ Fintype.card ι := by
-  rw [← Fintype.card_set]
-  refine' Finset.card_le_card_of_inj_on (fun J : box ι => { i | J.lower i = x i }) (fun _ _ => Finset.mem_univ _) _
-  simpa only [Finset.mem_filter] using π.inj_on_set_of_mem_Icc_set_of_lower_eq x
+theorem card_filter_mem_Icc_le [Fintypeₓ ι] (x : ι → ℝ) :
+    (π.boxes.filter fun J : Box ι => x ∈ J.Icc).card ≤ 2 ^ Fintypeₓ.card ι := by
+  rw [← Fintypeₓ.card_set]
+  refine' Finsetₓ.card_le_card_of_inj_on (fun J : box ι => { i | J.lower i = x i }) (fun _ _ => Finsetₓ.mem_univ _) _
+  simpa only [Finsetₓ.mem_filter] using π.inj_on_set_of_mem_Icc_set_of_lower_eq x
 
 /-- Given a prepartition `π : box_integral.prepartition I`, `π.Union` is the part of `I` covered by
 the boxes of `π`. -/
@@ -209,16 +203,14 @@ theorem mem_Union : x ∈ π.Union ↔ ∃ J ∈ π, x ∈ J :=
   Set.mem_Union₂
 
 @[simp]
-theorem Union_single (h : J ≤ I) : (single I J h).Union = J := by
-  simp [Union_def]
+theorem Union_single (h : J ≤ I) : (single I J h).Union = J := by simp [Union_def]
 
 @[simp]
-theorem Union_top : (⊤ : Prepartition I).Union = I := by
-  simp [prepartition.Union]
+theorem Union_top : (⊤ : Prepartition I).Union = I := by simp [prepartition.Union]
 
 @[simp]
 theorem Union_eq_empty : π₁.Union = ∅ ↔ π₁ = ⊥ := by
-  simp [← injective_boxes.eq_iff, Finset.ext_iff, prepartition.Union, imp_false]
+  simp [← injective_boxes.eq_iff, Finsetₓ.ext_iff, prepartition.Union, imp_false]
 
 @[simp]
 theorem Union_bot : (⊥ : Prepartition I).Union = ∅ :=
@@ -237,7 +229,7 @@ theorem Union_mono (h : π₁ ≤ π₂) : π₁.Union ⊆ π₂.Union := fun x 
   π₂.mem_Union.2 ⟨J₂, hJ₂, hle hx⟩
 
 theorem disjoint_boxes_of_disjoint_Union (h : Disjoint π₁.Union π₂.Union) : Disjoint π₁.boxes π₂.boxes :=
-  Finset.disjoint_left.2 fun J h₁ h₂ => h.mono (π₁.subset_Union h₁) (π₂.subset_Union h₂) ⟨J.upper_mem, J.upper_mem⟩
+  Finsetₓ.disjoint_left.2 fun J h₁ h₂ => h.mono (π₁.subset_Union h₁) (π₂.subset_Union h₂) ⟨J.upper_mem, J.upper_mem⟩
 
 theorem le_iff_nonempty_imp_le_and_Union_subset :
     π₁ ≤ π₂ ↔ (∀ J ∈ π₁, ∀ J' ∈ π₂, (J ∩ J' : Set (ι → ℝ)).Nonempty → J ≤ J') ∧ π₁.Union ⊆ π₂.Union := by
@@ -267,11 +259,11 @@ function. -/
 def bUnion (πi : ∀ J : Box ι, Prepartition J) : Prepartition I where
   boxes := π.boxes.bUnion fun J => (πi J).boxes
   le_of_mem' := fun J hJ => by
-    simp only [Finset.mem_bUnion, exists_propₓ, mem_boxes] at hJ
+    simp only [Finsetₓ.mem_bUnion, exists_propₓ, mem_boxes] at hJ
     rcases hJ with ⟨J', hJ', hJ⟩
     exact ((πi J').le_of_mem hJ).trans (π.le_of_mem hJ')
   PairwiseDisjoint := by
-    simp only [Set.Pairwise, Finset.mem_coe, Finset.mem_bUnion]
+    simp only [Set.Pairwise, Finsetₓ.mem_coe, Finsetₓ.mem_bUnion]
     rintro J₁' ⟨J₁, hJ₁, hJ₁'⟩ J₂' ⟨J₂, hJ₂, hJ₂'⟩ Hne x ⟨hx₁, hx₂⟩
     apply Hne
     obtain rfl : J₁ = J₂
@@ -281,8 +273,7 @@ def bUnion (πi : ∀ J : Box ι, Prepartition J) : Prepartition I where
 variable {πi πi₁ πi₂ : ∀ J : Box ι, Prepartition J}
 
 @[simp]
-theorem mem_bUnion : J ∈ π.bUnion πi ↔ ∃ J' ∈ π, J ∈ πi J' := by
-  simp [bUnion]
+theorem mem_bUnion : J ∈ π.bUnion πi ↔ ∃ J' ∈ π, J ∈ πi J' := by simp [bUnion]
 
 theorem bUnion_le (πi : ∀ J, Prepartition J) : π.bUnion πi ≤ π := fun J hJ =>
   let ⟨J', hJ', hJ⟩ := π.mem_bUnion.1 hJ
@@ -297,7 +288,7 @@ theorem bUnion_top : (π.bUnion fun _ => ⊤) = π := by
 theorem bUnion_congr (h : π₁ = π₂) (hi : ∀ J ∈ π₁, πi₁ J = πi₂ J) : π₁.bUnion πi₁ = π₂.bUnion πi₂ := by
   subst π₂
   ext J
-  simp (config := { contextual := true })[hi]
+  simp (config := { contextual := true }) [hi]
 
 theorem bUnion_congr_of_le (h : π₁ = π₂) (hi : ∀ J ≤ I, πi₁ J = πi₂ J) : π₁.bUnion πi₁ = π₂.bUnion πi₂ :=
   (bUnion_congr h) fun J hJ => hi J (π₁.le_of_mem hJ)
@@ -310,7 +301,7 @@ theorem Union_bUnion (πi : ∀ J : Box ι, Prepartition J) : (π.bUnion πi).Un
 theorem sum_bUnion_boxes {M : Type _} [AddCommMonoidₓ M] (π : Prepartition I) (πi : ∀ J, Prepartition J)
     (f : Box ι → M) : (∑ J in π.boxes.bUnion fun J => (πi J).boxes, f J) = ∑ J in π.boxes, ∑ J' in (πi J).boxes, f J' :=
   by
-  refine' Finset.sum_bUnion fun J₁ h₁ J₂ h₂ hne => Finset.disjoint_left.2 fun J' h₁' h₂' => _
+  refine' Finsetₓ.sum_bUnion fun J₁ h₁ J₂ h₂ hne => Finsetₓ.disjoint_left.2 fun J' h₁' h₂' => _
   exact hne (π.eq_of_le_of_le h₁ h₂ ((πi J₁).le_of_mem h₁') ((πi J₂).le_of_mem h₂'))
 
 /-- Given a box `J ∈ π.bUnion πi`, returns the box `J' ∈ π` such that `J ∈ πi J'`.
@@ -323,7 +314,7 @@ theorem bUnion_index_mem (hJ : J ∈ π.bUnion πi) : π.bUnionIndex πi J ∈ �
   exact (π.mem_bUnion.1 hJ).some_spec.fst
 
 theorem bUnion_index_le (πi : ∀ J, Prepartition J) (J : Box ι) : π.bUnionIndex πi J ≤ I := by
-  by_cases' hJ : J ∈ π.bUnion πi
+  by_cases hJ:J ∈ π.bUnion πi
   · exact π.le_of_mem (π.bUnion_index_mem hJ)
     
   · rw [bUnion_index, dif_neg hJ]
@@ -357,7 +348,7 @@ theorem bUnion_assoc (πi : ∀ J, Prepartition J) (πi' : Box ι → ∀ J : Bo
 
 /-- Create a `box_integral.prepartition` from a collection of possibly empty boxes by filtering out
 the empty one if it exists. -/
-def ofWithBot (boxes : Finset (WithBot (Box ι))) (le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I)
+def ofWithBot (boxes : Finsetₓ (WithBot (Box ι))) (le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I)
     (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint) : Prepartition I where
   boxes := boxes.eraseNone
   le_of_mem' := fun J hJ => by
@@ -368,26 +359,25 @@ def ofWithBot (boxes : Finset (WithBot (Box ι))) (le_of_mem : ∀ J ∈ boxes, 
     exact box.disjoint_coe.1 (pairwise_disjoint h₁ h₂ (mt Option.some_inj.1 hne))
 
 @[simp]
-theorem mem_of_with_bot {boxes : Finset (WithBot (Box ι))} {h₁ h₂} :
+theorem mem_of_with_bot {boxes : Finsetₓ (WithBot (Box ι))} {h₁ h₂} :
     J ∈ (ofWithBot boxes h₁ h₂ : Prepartition I) ↔ (J : WithBot (Box ι)) ∈ boxes :=
   mem_erase_none
 
 @[simp]
-theorem Union_of_with_bot (boxes : Finset (WithBot (Box ι))) (le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I)
+theorem Union_of_with_bot (boxes : Finsetₓ (WithBot (Box ι))) (le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I)
     (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint) :
     (ofWithBot boxes le_of_mem pairwise_disjoint).Union = ⋃ J ∈ boxes, ↑J := by
-  suffices (⋃ (J : box ι) (hJ : ↑J ∈ boxes), ↑J) = ⋃ J ∈ boxes, ↑J by
-    simpa [of_with_bot, prepartition.Union]
+  suffices (⋃ (J : box ι) (hJ : ↑J ∈ boxes), ↑J) = ⋃ J ∈ boxes, ↑J by simpa [of_with_bot, prepartition.Union]
   simp only [← box.bUnion_coe_eq_coe, @Union_comm _ _ (box ι), @Union_comm _ _ (@Eq _ _ _), Union_Union_eq_right]
 
-theorem of_with_bot_le {boxes : Finset (WithBot (Box ι))} {le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I}
+theorem of_with_bot_le {boxes : Finsetₓ (WithBot (Box ι))} {le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I}
     {pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint}
     (H : ∀ J ∈ boxes, J ≠ ⊥ → ∃ J' ∈ π, J ≤ ↑J') : ofWithBot boxes le_of_mem pairwise_disjoint ≤ π := by
   have : ∀ J : Box ι, ↑J ∈ boxes → ∃ J' ∈ π, J ≤ J' := fun J hJ => by
     simpa only [WithBot.coe_le_coe] using H J hJ WithBot.coe_ne_bot
   simpa [of_with_bot, le_def]
 
-theorem le_of_with_bot {boxes : Finset (WithBot (Box ι))} {le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I}
+theorem le_of_with_bot {boxes : Finsetₓ (WithBot (Box ι))} {le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I}
     {pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint} (H : ∀ J ∈ π, ∃ J' ∈ boxes, ↑J ≤ J') :
     π ≤ ofWithBot boxes le_of_mem pairwise_disjoint := by
   intro J hJ
@@ -395,28 +385,28 @@ theorem le_of_with_bot {boxes : Finset (WithBot (Box ι))} {le_of_mem : ∀ J �
   lift J' to box ι using ne_bot_of_le_ne_bot WithBot.coe_ne_bot hle
   exact ⟨J', mem_of_with_bot.2 J'mem, WithBot.coe_le_coe.1 hle⟩
 
-theorem of_with_bot_mono {boxes₁ : Finset (WithBot (Box ι))} {le_of_mem₁ : ∀ J ∈ boxes₁, (J : WithBot (Box ι)) ≤ I}
-    {pairwise_disjoint₁ : Set.Pairwise (boxes₁ : Set (WithBot (Box ι))) Disjoint} {boxes₂ : Finset (WithBot (Box ι))}
+theorem of_with_bot_mono {boxes₁ : Finsetₓ (WithBot (Box ι))} {le_of_mem₁ : ∀ J ∈ boxes₁, (J : WithBot (Box ι)) ≤ I}
+    {pairwise_disjoint₁ : Set.Pairwise (boxes₁ : Set (WithBot (Box ι))) Disjoint} {boxes₂ : Finsetₓ (WithBot (Box ι))}
     {le_of_mem₂ : ∀ J ∈ boxes₂, (J : WithBot (Box ι)) ≤ I}
     {pairwise_disjoint₂ : Set.Pairwise (boxes₂ : Set (WithBot (Box ι))) Disjoint}
     (H : ∀ J ∈ boxes₁, J ≠ ⊥ → ∃ J' ∈ boxes₂, J ≤ J') :
     ofWithBot boxes₁ le_of_mem₁ pairwise_disjoint₁ ≤ ofWithBot boxes₂ le_of_mem₂ pairwise_disjoint₂ :=
   (le_of_with_bot _) fun J hJ => H J (mem_of_with_bot.1 hJ) WithBot.coe_ne_bot
 
-theorem sum_of_with_bot {M : Type _} [AddCommMonoidₓ M] (boxes : Finset (WithBot (Box ι)))
+theorem sum_of_with_bot {M : Type _} [AddCommMonoidₓ M] (boxes : Finsetₓ (WithBot (Box ι)))
     (le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I)
     (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint) (f : Box ι → M) :
     (∑ J in (ofWithBot boxes le_of_mem pairwise_disjoint).boxes, f J) = ∑ J in boxes, Option.elimₓ 0 f J :=
-  Finset.sum_erase_none _ _
+  Finsetₓ.sum_erase_none _ _
 
 /-- Restrict a prepartition to a box. -/
 def restrict (π : Prepartition I) (J : Box ι) : Prepartition J :=
   ofWithBot (π.boxes.Image fun J' => J ⊓ J')
     (fun J' hJ' => by
-      rcases Finset.mem_image.1 hJ' with ⟨J', -, rfl⟩
+      rcases Finsetₓ.mem_image.1 hJ' with ⟨J', -, rfl⟩
       exact inf_le_left)
     (by
-      simp only [Set.Pairwise, on_fun, Finset.mem_coe, Finset.mem_image]
+      simp only [Set.Pairwise, on_fun, Finsetₓ.mem_coe, Finsetₓ.mem_image]
       rintro _ ⟨J₁, h₁, rfl⟩ _ ⟨J₂, h₂, rfl⟩ Hne
       have : J₁ ≠ J₂ := by
         rintro rfl
@@ -424,8 +414,7 @@ def restrict (π : Prepartition I) (J : Box ι) : Prepartition J :=
       exact ((box.disjoint_coe.2 <| π.disjoint_coe_of_mem h₁ h₂ this).inf_left' _).inf_right' _)
 
 @[simp]
-theorem mem_restrict : J₁ ∈ π.restrict J ↔ ∃ J' ∈ π, (J₁ : WithBot (Box ι)) = J ⊓ J' := by
-  simp [restrict, eq_comm]
+theorem mem_restrict : J₁ ∈ π.restrict J ↔ ∃ J' ∈ π, (J₁ : WithBot (Box ι)) = J ⊓ J' := by simp [restrict, eq_comm]
 
 theorem mem_restrict' : J₁ ∈ π.restrict J ↔ ∃ J' ∈ π, (J₁ : Set (ι → ℝ)) = J ∩ J' := by
   simp only [mem_restrict, ← box.with_bot_coe_inj, box.coe_inf, box.coe_coe]
@@ -433,19 +422,19 @@ theorem mem_restrict' : J₁ ∈ π.restrict J ↔ ∃ J' ∈ π, (J₁ : Set (�
 @[mono]
 theorem restrict_mono {π₁ π₂ : Prepartition I} (Hle : π₁ ≤ π₂) : π₁.restrict J ≤ π₂.restrict J := by
   refine' of_with_bot_mono fun J₁ hJ₁ hne => _
-  rw [Finset.mem_image] at hJ₁
+  rw [Finsetₓ.mem_image] at hJ₁
   rcases hJ₁ with ⟨J₁, hJ₁, rfl⟩
   rcases Hle hJ₁ with ⟨J₂, hJ₂, hle⟩
-  exact ⟨_, Finset.mem_image_of_mem _ hJ₂, inf_le_inf_left _ <| WithBot.coe_le_coe.2 hle⟩
+  exact ⟨_, Finsetₓ.mem_image_of_mem _ hJ₂, inf_le_inf_left _ <| WithBot.coe_le_coe.2 hle⟩
 
-theorem monotone_restrict : Monotone fun π : Prepartition I => restrict π J := fun π₁ π₂ => restrict_mono
+theorem monotone_restrict : Monotoneₓ fun π : Prepartition I => restrict π J := fun π₁ π₂ => restrict_mono
 
 /-- Restricting to a larger box does not change the set of boxes. We cannot claim equality
 of prepartitions because they have different types. -/
 theorem restrict_boxes_of_le (π : Prepartition I) (h : I ≤ J) : (π.restrict J).boxes = π.boxes := by
   simp only [restrict, of_with_bot, erase_none_eq_bUnion]
   refine' finset.image_bUnion.trans _
-  refine' (Finset.bUnion_congr rfl _).trans Finset.bUnion_singleton_eq_self
+  refine' (Finsetₓ.bUnion_congr rfl _).trans Finsetₓ.bUnion_singleton_eq_self
   intro J' hJ'
   rw [inf_of_le_right, ← WithBot.some_eq_coe, Option.to_finset_some]
   exact WithBot.coe_le_coe.2 ((π.le_of_mem hJ').trans h)
@@ -455,8 +444,7 @@ theorem restrict_self : π.restrict I = π :=
   injective_boxes <| restrict_boxes_of_le π le_rflₓ
 
 @[simp]
-theorem Union_restrict : (π.restrict J).Union = J ∩ π.Union := by
-  simp [restrict, ← inter_Union, ← Union_def]
+theorem Union_restrict : (π.restrict J).Union = J ∩ π.Union := by simp [restrict, ← inter_Union, ← Union_def]
 
 @[simp]
 theorem restrict_bUnion (πi : ∀ J, Prepartition J) (hJ : J ∈ π) : (π.bUnion πi).restrict J = πi J := by
@@ -464,7 +452,7 @@ theorem restrict_bUnion (πi : ∀ J, Prepartition J) (hJ : J ∈ π) : (π.bUni
   · refine' (mem_restrict _).2 ⟨J₁, π.mem_bUnion.2 ⟨J, hJ, h₁⟩, (inf_of_le_right _).symm⟩
     exact WithBot.coe_le_coe.2 (le_of_mem _ h₁)
     
-  · simp only [Union_restrict, Union_bUnion, Set.subset_def, Set.mem_inter_eq, Set.mem_Union]
+  · simp only [Union_restrict, Union_bUnion, Set.subset_def, Set.mem_inter_iff, Set.mem_Union]
     rintro x ⟨hxJ, J₁, h₁, hx⟩
     obtain rfl : J = J₁
     exact π.eq_of_mem_of_mem hJ h₁ hxJ (Union_subset _ hx)
@@ -525,7 +513,7 @@ def filter (π : Prepartition I) (p : Box ι → Prop) : Prepartition I where
 
 @[simp]
 theorem mem_filter {p : Box ι → Prop} : J ∈ π.filter p ↔ J ∈ π ∧ p J :=
-  Finset.mem_filter
+  Finsetₓ.mem_filter
 
 theorem filter_le (π : Prepartition I) (p : Box ι → Prop) : π.filter p ≤ π := fun J hJ =>
   let ⟨hπ, hp⟩ := π.mem_filter.1 hJ
@@ -553,13 +541,13 @@ theorem Union_filter_not (π : Prepartition I) (p : Box ι → Prop) :
 
 theorem sum_fiberwise {α M} [AddCommMonoidₓ M] (π : Prepartition I) (f : Box ι → α) (g : Box ι → M) :
     (∑ y in π.boxes.Image f, ∑ J in (π.filter fun J => f J = y).boxes, g J) = ∑ J in π.boxes, g J := by
-  convert sum_fiberwise_of_maps_to (fun _ => Finset.mem_image_of_mem f) g
+  convert sum_fiberwise_of_maps_to (fun _ => Finsetₓ.mem_image_of_mem f) g
 
 /-- Union of two disjoint prepartitions. -/
 @[simps]
 def disjUnion (π₁ π₂ : Prepartition I) (h : Disjoint π₁.Union π₂.Union) : Prepartition I where
   boxes := π₁.boxes ∪ π₂.boxes
-  le_of_mem' := fun J hJ => (Finset.mem_union.1 hJ).elim π₁.le_of_mem π₂.le_of_mem
+  le_of_mem' := fun J hJ => (Finsetₓ.mem_union.1 hJ).elim π₁.le_of_mem π₂.le_of_mem
   PairwiseDisjoint :=
     suffices ∀ J₁ ∈ π₁, ∀ J₂ ∈ π₂, J₁ ≠ J₂ → Disjoint (J₁ : Set (ι → ℝ)) J₂ by
       simpa [pairwise_union_of_symmetric (symmetric_disjoint.comap _), pairwise_disjoint]
@@ -567,7 +555,7 @@ def disjUnion (π₁ π₂ : Prepartition I) (h : Disjoint π₁.Union π₂.Uni
 
 @[simp]
 theorem mem_disj_union (H : Disjoint π₁.Union π₂.Union) : J ∈ π₁.disjUnion π₂ H ↔ J ∈ π₁ ∨ J ∈ π₂ :=
-  Finset.mem_union
+  Finsetₓ.mem_union
 
 @[simp]
 theorem Union_disj_union (h : Disjoint π₁.Union π₂.Union) : (π₁.disjUnion π₂ h).Union = π₁.Union ∪ π₂.Union := by
@@ -580,7 +568,7 @@ theorem sum_disj_union_boxes {M : Type _} [AddCommMonoidₓ M] (h : Disjoint π�
 
 section Distortion
 
-variable [Fintype ι]
+variable [Fintypeₓ ι]
 
 /-- The distortion of a prepartition is the maximum of the distortions of the boxes of this
 prepartition. -/
@@ -591,7 +579,7 @@ theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 
 theorem distortion_le_iff {c : ℝ≥0} : π.distortion ≤ c ↔ ∀ J ∈ π, Box.distortion J ≤ c :=
-  Finset.sup_le_iff
+  Finsetₓ.sup_le_iff
 
 theorem distortion_bUnion (π : Prepartition I) (πi : ∀ J, Prepartition J) :
     (π.bUnion πi).distortion = π.boxes.sup fun J => (πi J).distortion :=
@@ -623,8 +611,7 @@ theorem is_partition_iff_Union_eq {π : Prepartition I} : π.IsPartition ↔ π.
   simp_rw [is_partition, Set.Subset.antisymm_iff, π.Union_subset, true_andₓ, Set.subset_def, mem_Union, box.mem_coe]
 
 @[simp]
-theorem is_partition_single_iff (h : J ≤ I) : IsPartition (single I J h) ↔ J = I := by
-  simp [is_partition_iff_Union_eq]
+theorem is_partition_single_iff (h : J ≤ I) : IsPartition (single I J h) ↔ J = I := by simp [is_partition_iff_Union_eq]
 
 theorem is_partition_top (I : Box ι) : IsPartition (⊤ : Prepartition I) := fun x hx => ⟨I, mem_top.2 rfl, hx⟩
 
@@ -638,7 +625,7 @@ theorem Union_eq (h : π.IsPartition) : π.Union = I :=
 theorem Union_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.Union ⊆ π.Union :=
   h.Union_eq.symm ▸ π₁.Union_subset
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (J «expr ∈ » π)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (J «expr ∈ » π)
 protected theorem exists_unique (h : π.IsPartition) (hx : x ∈ I) : ∃! (J : _)(_ : J ∈ π), x ∈ J := by
   rcases h x hx with ⟨J, h, hx⟩
   exact ExistsUnique.intro2 J h hx fun J' h' hx' => π.eq_of_mem_of_mem h' h hx' hx
@@ -660,12 +647,10 @@ protected theorem bUnion (h : IsPartition π) (hi : ∀ J ∈ π, IsPartition (�
   ⟨Ji, π.mem_bUnion.2 ⟨J, hJ, hJi⟩, hx⟩
 
 protected theorem restrict (h : IsPartition π) (hJ : J ≤ I) : IsPartition (π.restrict J) :=
-  is_partition_iff_Union_eq.2 <| by
-    simp [h.Union_eq, hJ]
+  is_partition_iff_Union_eq.2 <| by simp [h.Union_eq, hJ]
 
 protected theorem inf (h₁ : IsPartition π₁) (h₂ : IsPartition π₂) : IsPartition (π₁ ⊓ π₂) :=
-  is_partition_iff_Union_eq.2 <| by
-    simp [h₁.Union_eq, h₂.Union_eq]
+  is_partition_iff_Union_eq.2 <| by simp [h₁.Union_eq, h₂.Union_eq]
 
 end IsPartition
 
@@ -676,9 +661,7 @@ theorem Union_bUnion_partition (h : ∀ J ∈ π, (πi J).IsPartition) : (π.bUn
 
 theorem is_partition_disj_union_of_eq_diff (h : π₂.Union = I \ π₁.Union) :
     IsPartition (π₁.disjUnion π₂ (h.symm ▸ disjoint_diff)) :=
-  is_partition_iff_Union_eq.2 <|
-    (Union_disj_union _).trans <| by
-      simp [h, π₁.Union_subset]
+  is_partition_iff_Union_eq.2 <| (Union_disj_union _).trans <| by simp [h, π₁.Union_subset]
 
 end Prepartition
 

@@ -62,8 +62,7 @@ theorem length_map_with_index {α β} (l : List α) (f : ℕ → α → β) : (l
 @[simp]
 theorem nth_le_map_with_index {α β} (l : List α) (f : ℕ → α → β) (i : ℕ) (h : i < l.length)
     (h' : i < (l.mapWithIndex f).length := h.trans_le (l.length_map_with_index f).Ge) :
-    (l.mapWithIndex f).nthLe i h' = f i (l.nthLe i h) := by
-  simp [map_with_index_eq_enum_map, enum_eq_zip_range]
+    (l.mapWithIndex f).nthLe i h' = f i (l.nthLe i h) := by simp [map_with_index_eq_enum_map, enum_eq_zip_range]
 
 theorem map_with_index_eq_of_fn {α β} (l : List α) (f : ℕ → α → β) :
     l.mapWithIndex f = ofFnₓ fun i : Finₓ l.length => f (i : ℕ) (l.nthLe i i.is_lt) := by
@@ -111,7 +110,7 @@ section FoldlWithIndex
 
 /-- Specification of `foldl_with_index_aux`. -/
 def foldlWithIndexAuxSpec (f : ℕ → α → β → α) (start : ℕ) (a : α) (bs : List β) : α :=
-  foldlₓ (fun a (p : ℕ × β) => f p.fst a p.snd) a <| enumFrom start bs
+  foldl (fun a (p : ℕ × β) => f p.fst a p.snd) a <| enumFrom start bs
 
 theorem foldl_with_index_aux_spec_cons (f : ℕ → α → β → α) (start a b bs) :
     foldlWithIndexAuxSpec f start a (b :: bs) = foldlWithIndexAuxSpec f (start + 1) (f start a b) bs :=
@@ -126,7 +125,7 @@ theorem foldl_with_index_aux_eq_foldl_with_index_aux_spec (f : ℕ → α → β
     
 
 theorem foldl_with_index_eq_foldl_enum (f : ℕ → α → β → α) (a : α) (bs : List β) :
-    foldlWithIndex f a bs = foldlₓ (fun a (p : ℕ × β) => f p.fst a p.snd) a (enum bs) := by
+    foldlWithIndex f a bs = foldl (fun a (p : ℕ × β) => f p.fst a p.snd) a (enum bs) := by
   simp only [foldl_with_index, foldl_with_index_aux_spec, foldl_with_index_aux_eq_foldl_with_index_aux_spec, enum]
 
 end FoldlWithIndex
@@ -180,11 +179,10 @@ variable {m : Type u → Type v} [Applicativeₓ m] [IsLawfulApplicative m]
 theorem mmap_with_index'_aux_eq_mmap_with_index_aux {α} (f : ℕ → α → m PUnit) (start : ℕ) (as : List α) :
     mmapWithIndex'Auxₓ f start as = mmapWithIndexAuxₓ f start as *> pure PUnit.unit := by
   induction as generalizing start <;>
-    simp' [mmap_with_index'_aux, mmap_with_index_aux, *, seq_right_eq, const, -comp_const] with functor_norm
+    simp [mmap_with_index'_aux, mmap_with_index_aux, *, seq_right_eq, const, -comp_const, functor_norm]
 
 theorem mmap_with_index'_eq_mmap_with_index {α} (f : ℕ → α → m PUnit) (as : List α) :
-    mmapWithIndex' f as = mmapWithIndex f as *> pure PUnit.unit := by
-  apply mmap_with_index'_aux_eq_mmap_with_index_aux
+    mmapWithIndex' f as = mmapWithIndex f as *> pure PUnit.unit := by apply mmap_with_index'_aux_eq_mmap_with_index_aux
 
 end MmapWithIndex'
 

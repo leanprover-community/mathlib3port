@@ -164,6 +164,8 @@ unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=
 
 end Gmonoid
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic gmonoid.apply_gnpow_rec_zero_tac
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic gmonoid.apply_gnpow_rec_succ_tac
 /-- A graded version of `monoid`.
 
 Like `monoid.npow`, this has an optional `gmonoid.gnpow` field to allow definitional control of
@@ -301,9 +303,9 @@ def mkZeroMonoidHom : A 0 →* GradedMonoid A where
   map_mul' := mk_zero_smul
 
 /-- Each grade `A i` derives a `A 0`-action structure from `gmonoid A`. -/
-instance GradeZero.mulAction {i} : MulAction (A 0) (A i) := by
+instance GradeZero.mulAction {i} : MulAction (A 0) (A i) :=
   letI := MulAction.compHom (GradedMonoid A) (mk_zero_monoid_hom A)
-  exact Function.Injective.mulAction (mk i) sigma_mk_injective mk_zero_smul
+  Function.Injective.mulAction (mk i) sigma_mk_injective mk_zero_smul
 
 end MulAction
 
@@ -332,7 +334,7 @@ theorem List.dprod_index_cons (a : α) (l : List α) (fι : α → ι) : (a :: l
   rfl
 
 theorem List.dprod_index_eq_map_sum (l : List α) (fι : α → ι) : l.dprodIndex fι = (l.map fι).Sum := by
-  dunfold List.dprodIndex
+  dsimp only [List.dprodIndex]
   induction l
   · simp
     

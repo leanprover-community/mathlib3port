@@ -44,9 +44,7 @@ instance [DivisionRing β] : DivisionRing β* :=
       (induction_on f) fun f hf =>
         coe_eq.2 <|
           (φ.em fun y => f y = 0).elim (fun H => (hf <| coe_eq.2 H).elim) fun H => H.mono fun x => mul_inv_cancel,
-    inv_zero :=
-      coe_eq.2 <| by
-        simp only [(· ∘ ·), inv_zero] }
+    inv_zero := coe_eq.2 <| by simp only [(· ∘ ·), inv_zero] }
 
 /-- If `φ` is an ultrafilter then the ultraproduct is a field. -/
 instance [Field β] : Field β* :=
@@ -57,8 +55,7 @@ noncomputable instance [LinearOrderₓ β] : LinearOrderₓ β* :=
   { Germ.partialOrder with
     le_total := fun f g =>
       (induction_on₂ f g) fun f g => eventually_or.1 <| eventually_of_forall fun x => le_totalₓ _ _,
-    decidableLe := by
-      infer_instance }
+    decidableLe := by infer_instance }
 
 @[simp, norm_cast]
 theorem const_div [DivisionRing β] (x y : β) : (↑(x / y) : β*) = ↑x / ↑y :=
@@ -124,16 +121,13 @@ theorem abs_def [LinearOrderedAddCommGroup β] (x : β*) : abs x = map abs x :=
   (induction_on x) fun a => rfl
 
 @[simp]
-theorem const_max [LinearOrderₓ β] (x y : β) : (↑(max x y : β) : β*) = max ↑x ↑y := by
-  rw [max_def, map₂_const]
+theorem const_max [LinearOrderₓ β] (x y : β) : (↑(max x y : β) : β*) = max ↑x ↑y := by rw [max_def, map₂_const]
 
 @[simp]
-theorem const_min [LinearOrderₓ β] (x y : β) : (↑(min x y : β) : β*) = min ↑x ↑y := by
-  rw [min_def, map₂_const]
+theorem const_min [LinearOrderₓ β] (x y : β) : (↑(min x y : β) : β*) = min ↑x ↑y := by rw [min_def, map₂_const]
 
 @[simp]
-theorem const_abs [LinearOrderedAddCommGroup β] (x : β) : (↑(abs x) : β*) = abs ↑x := by
-  rw [abs_def, map_const]
+theorem const_abs [LinearOrderedAddCommGroup β] (x : β) : (↑(abs x) : β*) = abs ↑x := by rw [abs_def, map_const]
 
 theorem linearOrder.to_lattice_eq_filter_germ_lattice [LinearOrderₓ β] :
     @LinearOrderₓ.toLattice (Filter.Germ (↑φ) β) Filter.Germ.linearOrder = Filter.Germ.lattice :=

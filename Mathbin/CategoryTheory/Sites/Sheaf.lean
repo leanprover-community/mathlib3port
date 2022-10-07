@@ -80,8 +80,8 @@ def conesEquivSieveCompatibleFamily :
     ⟨fun Y f h => π.app (op ⟨Over.mk f, h⟩), fun _ => by
       intros
       apply (id_comp _).symm.trans
-      dsimp'
-      convert π.naturality (Quiver.Hom.op (over.hom_mk _ _)) <;> dsimp' <;> rfl⟩
+      dsimp
+      convert π.naturality (Quiver.Hom.op (over.hom_mk _ _)) <;> dsimp <;> rfl⟩
   invFun := fun x =>
     { app := fun f => x.1 f.unop.1.Hom f.unop.2,
       naturality' := fun f f' g => by
@@ -91,7 +91,7 @@ def conesEquivSieveCompatibleFamily :
         rw [over.w g.unop] }
   left_inv := fun π => by
     ext
-    dsimp'
+    dsimp
     congr
     rw [op_eq_iff_eq_unop]
     ext
@@ -128,7 +128,7 @@ variable (P S)
     iff `Hom (E, P -)` is a sheaf of types for the sieve `S` and all `E : A`. -/
 theorem is_limit_iff_is_sheaf_for :
     Nonempty (IsLimit (P.mapCone S.Arrows.Cocone.op)) ↔ ∀ E : Aᵒᵖ, IsSheafFor (P ⋙ coyoneda.obj E) S := by
-  dsimp' [is_sheaf_for]
+  dsimp [is_sheaf_for]
   simp_rw [compatible_iff_sieve_compatible]
   rw [((cone.is_limit_equiv_is_terminal _).trans (is_terminal_equiv_unique _ _)).nonempty_congr]
   rw [Classical.nonempty_pi]
@@ -201,7 +201,7 @@ theorem is_sheaf_iff_is_limit_pretopology [HasPullbacks C] (K : Pretopology C) :
     IsSheaf (K.toGrothendieck C) P ↔
       ∀ ⦃X : C⦄ (R : Presieve X), R ∈ K X → Nonempty (IsLimit (P.mapCone (generate R).Arrows.Cocone.op)) :=
   by
-  dsimp' [is_sheaf]
+  dsimp [is_sheaf]
   simp_rw [is_sheaf_pretopology]
   exact
     ⟨fun h X R hR => (is_limit_iff_is_sheaf_for_presieve P R).2 fun E => h E.unop R hR, fun h E X R hR =>
@@ -337,22 +337,8 @@ theorem is_sheaf_iff_is_sheaf_of_type (P : Cᵒᵖ ⥤ Type w) : Presheaf.IsShea
 def sheafEquivSheafOfTypes : Sheaf J (Type w) ≌ SheafOfTypes J where
   Functor := { obj := fun S => ⟨S.val, (is_sheaf_iff_is_sheaf_of_type _ _).1 S.2⟩, map := fun S T f => ⟨f.val⟩ }
   inverse := { obj := fun S => ⟨S.val, (is_sheaf_iff_is_sheaf_of_type _ _).2 S.2⟩, map := fun S T f => ⟨f.val⟩ }
-  unitIso :=
-    NatIso.ofComponents
-      (fun X =>
-        ⟨⟨𝟙 _⟩, ⟨𝟙 _⟩, by
-          tidy, by
-          tidy⟩)
-      (by
-        tidy)
-  counitIso :=
-    NatIso.ofComponents
-      (fun X =>
-        ⟨⟨𝟙 _⟩, ⟨𝟙 _⟩, by
-          tidy, by
-          tidy⟩)
-      (by
-        tidy)
+  unitIso := NatIso.ofComponents (fun X => ⟨⟨𝟙 _⟩, ⟨𝟙 _⟩, by tidy, by tidy⟩) (by tidy)
+  counitIso := NatIso.ofComponents (fun X => ⟨⟨𝟙 _⟩, ⟨𝟙 _⟩, by tidy, by tidy⟩) (by tidy)
 
 instance : Inhabited (Sheaf (⊥ : GrothendieckTopology C) (Type w)) :=
   ⟨(sheafEquivSheafOfTypes _).inverse.obj default⟩
@@ -363,17 +349,8 @@ variable {J} {A}
 def Sheaf.isTerminalOfBotCover (F : Sheaf J A) (X : C) (H : ⊥ ∈ J X) : IsTerminal (F.1.obj (op X)) := by
   apply (config := { instances := false }) is_terminal.of_unique
   intro Y
-  choose t h using
-    F.2 Y _ H
-      (by
-        tidy)
-      (by
-        tidy)
-  exact
-    ⟨⟨t⟩, fun a =>
-      h.2 a
-        (by
-          tidy)⟩
+  choose t h using F.2 Y _ H (by tidy) (by tidy)
+  exact ⟨⟨t⟩, fun a => h.2 a (by tidy)⟩
 
 section Preadditive
 
@@ -423,11 +400,11 @@ instance : AddCommGroupₓ (P ⟶ Q) :=
   Function.Injective.addCommGroup (fun f : Sheaf.Hom P Q => f.1) (fun _ _ h => Sheaf.Hom.ext _ _ h) rfl (fun _ _ => rfl)
     (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => by
-      dsimp'  at *
+      dsimp at *
       ext
       simpa [*] )
     fun _ _ => by
-    dsimp'  at *
+    dsimp at *
     ext
     simpa [*]
 
@@ -491,7 +468,7 @@ theorem is_sheaf_iff_multifork : IsSheaf J P ↔ ∀ (X : C) (S : J.cover X), No
   obtain ⟨hh⟩ := h _ T
   let K : multifork (T.index P) := multifork.of_ι _ E (fun I => x I.f I.hf) fun I => hx _ _ _ _ I.w
   use hh.lift K
-  dsimp'
+  dsimp
   constructor
   · intro Y f hf
     apply hh.fac K (walking_multicospan.left ⟨Y, f, hf⟩)
@@ -590,22 +567,22 @@ def isSheafForIsSheafFor' (P : Cᵒᵖ ⥤ A) (s : A ⥤ Type max v₁ u₁)
       
     · rintro _ _ (_ | _)
       · ext : 1
-        dsimp' [equalizer.presieve.first_map, first_map]
+        dsimp [equalizer.presieve.first_map, first_map]
         simp only [limit.lift_π, map_lift_pi_comparison, assoc, fan.mk_π_app, functor.map_comp]
         erw [pi_comparison_comp_π_assoc]
         
       · ext : 1
-        dsimp' [equalizer.presieve.second_map, second_map]
+        dsimp [equalizer.presieve.second_map, second_map]
         simp only [limit.lift_π, map_lift_pi_comparison, assoc, fan.mk_π_app, functor.map_comp]
         erw [pi_comparison_comp_π_assoc]
         
-      · dsimp'
+      · dsimp
         simp
         
       
     
   · refine' fork.ext (iso.refl _) _
-    dsimp' [equalizer.fork_map, fork_map]
+    dsimp [equalizer.fork_map, fork_map]
     simp [fork.ι]
     
 

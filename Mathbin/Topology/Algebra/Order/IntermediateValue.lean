@@ -192,8 +192,7 @@ In this section we prove the following results:
 
 /-- If a preconnected set contains endpoints of an interval, then it includes the whole interval. -/
 theorem IsPreconnected.Icc_subset {s : Set α} (hs : IsPreconnected s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
-    Icc a b ⊆ s := by
-  simpa only [image_id] using hs.intermediate_value ha hb continuous_on_id
+    Icc a b ⊆ s := by simpa only [image_id] using hs.intermediate_value ha hb continuous_on_id
 
 theorem IsPreconnected.ord_connected {s : Set α} (h : IsPreconnected s) : OrdConnected s :=
   ⟨fun x hx y hy => h.Icc_subset hx hy⟩
@@ -256,7 +255,7 @@ theorem IsPreconnected.mem_intervals {s : Set α} (hs : IsPreconnected s) :
   · apply_rules [Or.inr, mem_singleton]
     
   have hs' : IsConnected s := ⟨hne, hs⟩
-  by_cases' hb : BddBelow s <;> by_cases' ha : BddAbove s
+  by_cases hb:BddBelow s <;> by_cases ha:BddAbove s
   · rcases mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset (hs'.Ioo_cInf_cSup_subset hb ha) (subset_Icc_cInf_cSup hb ha) with
       (hs | hs | hs | hs)
     · exact Or.inl hs
@@ -275,16 +274,14 @@ theorem IsPreconnected.mem_intervals {s : Set α} (hs : IsPreconnected s) :
     · exact Or.inr (Or.inl hs)
       
     
-  · iterate 6 
-      apply Or.inr
+  · iterate 6 apply Or.inr
     cases' mem_Iic_Iio_of_subset_of_subset (hs.Iio_cSup_subset hb ha) fun x hx => le_cSup ha hx with hs hs
     · exact Or.inl hs
       
     · exact Or.inr (Or.inl hs)
       
     
-  · iterate 8 
-      apply Or.inr
+  · iterate 8 apply Or.inr
     exact Or.inl (hs.eq_univ_of_unbounded hb ha)
     
 
@@ -434,6 +431,30 @@ theorem is_preconnected_Ioc : IsPreconnected (Ioc a b) :=
 
 theorem is_preconnected_Ico : IsPreconnected (Ico a b) :=
   ord_connected_Ico.IsPreconnected
+
+theorem is_connected_Ici : IsConnected (Ici a) :=
+  ⟨nonempty_Ici, is_preconnected_Ici⟩
+
+theorem is_connected_Iic : IsConnected (Iic a) :=
+  ⟨nonempty_Iic, is_preconnected_Iic⟩
+
+theorem is_connected_Ioi [NoMaxOrder α] : IsConnected (Ioi a) :=
+  ⟨nonempty_Ioi, is_preconnected_Ioi⟩
+
+theorem is_connected_Iio [NoMinOrder α] : IsConnected (Iio a) :=
+  ⟨nonempty_Iio, is_preconnected_Iio⟩
+
+theorem is_connected_Icc (h : a ≤ b) : IsConnected (Icc a b) :=
+  ⟨nonempty_Icc.2 h, is_preconnected_Icc⟩
+
+theorem is_connected_Ioo (h : a < b) : IsConnected (Ioo a b) :=
+  ⟨nonempty_Ioo.2 h, is_preconnected_Ioo⟩
+
+theorem is_connected_Ioc (h : a < b) : IsConnected (Ioc a b) :=
+  ⟨nonempty_Ioc.2 h, is_preconnected_Ioc⟩
+
+theorem is_connected_Ico (h : a < b) : IsConnected (Ico a b) :=
+  ⟨nonempty_Ico.2 h, is_preconnected_Ico⟩
 
 instance (priority := 100) ordered_connected_space : PreconnectedSpace α :=
   ⟨ord_connected_univ.IsPreconnected⟩

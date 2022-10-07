@@ -101,17 +101,11 @@ theorem analytic_set_iff_exists_polish_space_range {s : Set α} :
   · intro h
     rw [analytic_set] at h
     cases h
-    · refine'
-        ⟨Empty, by
-          infer_instance, by
-          infer_instance, Empty.elim, continuous_bot, _⟩
+    · refine' ⟨Empty, by infer_instance, by infer_instance, Empty.elim, continuous_bot, _⟩
       rw [h]
       exact range_eq_empty _
       
-    · exact
-        ⟨ℕ → ℕ, by
-          infer_instance, by
-          infer_instance, h⟩
+    · exact ⟨ℕ → ℕ, by infer_instance, by infer_instance, h⟩
       
     
   · rintro ⟨β, h, h', f, f_cont, f_range⟩
@@ -125,8 +119,7 @@ theorem AnalyticSet.image_of_continuous_on {β : Type _} [TopologicalSpace β] {
     {f : α → β} (hf : ContinuousOn f s) : AnalyticSet (f '' s) := by
   rcases analytic_set_iff_exists_polish_space_range.1 hs with ⟨γ, γtop, γpolish, g, g_cont, gs⟩
   skip
-  have : f '' s = range (f ∘ g) := by
-    rw [range_comp, gs]
+  have : f '' s = range (f ∘ g) := by rw [range_comp, gs]
   rw [this]
   apply analytic_set_range_of_polish_space
   apply hf.comp_continuous g_cont fun x => _
@@ -309,13 +302,10 @@ theorem measurably_separable_range_of_disjoint [T2Space α] [MeasurableSpace α]
     rcases I n x y hp with ⟨x', y', hx', hy', h'⟩
     exact ⟨⟨⟨n + 1, x', y'⟩, h'⟩, rfl, hx', hy'⟩
   choose F hFn hFx hFy using this
-  let p0 : A :=
-    ⟨⟨0, fun n => 0, fun n => 0⟩, by
-      simp [hfg]⟩
+  let p0 : A := ⟨⟨0, fun n => 0, fun n => 0⟩, by simp [hfg]⟩
   -- construct inductively decreasing sequences of cylinders whose images are not separated
   let p : ℕ → A := fun n => (F^[n]) p0
-  have prec : ∀ n, p (n + 1) = F (p n) := fun n => by
-    simp only [p, iterate_succ']
+  have prec : ∀ n, p (n + 1) = F (p n) := fun n => by simp only [p, iterate_succ']
   -- check that at the `n`-th step we deal with cylinders of length `n`
   have pn_fst : ∀ n, (p n).1.1 = n := by
     intro n
@@ -377,10 +367,7 @@ theorem measurably_separable_range_of_disjoint [T2Space α] [MeasurableSpace α]
   obtain ⟨εy, εypos, hεy⟩ : ∃ (εy : ℝ)(H : εy > 0), Metric.Ball y εy ⊆ g ⁻¹' v := by
     apply Metric.mem_nhds_iff.1
     exact hg.continuous_at.preimage_mem_nhds (v_open.mem_nhds yv)
-  obtain ⟨n, hn⟩ : ∃ n : ℕ, (1 / 2 : ℝ) ^ n < min εx εy :=
-    exists_pow_lt_of_lt_one (lt_minₓ εxpos εypos)
-      (by
-        norm_num)
+  obtain ⟨n, hn⟩ : ∃ n : ℕ, (1 / 2 : ℝ) ^ n < min εx εy := exists_pow_lt_of_lt_one (lt_minₓ εxpos εypos) (by norm_num)
   -- for large enough `n`, these open sets separate the images of long cylinders around `x` and `y`
   have B : measurably_separable (f '' cylinder x n) (g '' cylinder y n) := by
     refine' ⟨u, _, _, u_open.measurable_set⟩
@@ -407,14 +394,10 @@ theorem AnalyticSet.measurably_separable [T2Space α] [MeasurableSpace α] [Bore
     (hs : AnalyticSet s) (ht : AnalyticSet t) (h : Disjoint s t) : MeasurablySeparable s t := by
   rw [analytic_set] at hs ht
   rcases hs with (rfl | ⟨f, f_cont, rfl⟩)
-  · refine'
-      ⟨∅, subset.refl _, by
-        simp , MeasurableSet.empty⟩
+  · refine' ⟨∅, subset.refl _, by simp, MeasurableSet.empty⟩
     
   rcases ht with (rfl | ⟨g, g_cont, rfl⟩)
-  · exact
-      ⟨univ, subset_univ _, by
-        simp , MeasurableSet.univ⟩
+  · exact ⟨univ, subset_univ _, by simp, MeasurableSet.univ⟩
     
   exact measurably_separable_range_of_disjoint f_cont g_cont h
 
@@ -465,7 +448,7 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
   -- define sets `E i` and `F n` as in the proof sketch above
   let E : b → Set β := fun s =>
     Closure (f '' s) ∩ ⋂ (t : b) (ht : Disjoint s.1 t.1), q ⟨(s, t), ht⟩ \ q ⟨(t, s), ht.symm⟩
-  obtain ⟨u, u_anti, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ, StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
+  obtain ⟨u, u_anti, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ, StrictAntiₓ u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
     exists_seq_strict_anti_tendsto (0 : ℝ)
   let F : ℕ → Set β := fun n => ⋃ (s : b) (hs : bounded s.1 ∧ diam s.1 ≤ u n), E s
   -- it is enough to show that `range f = ⋂ F n`, as the latter set is obviously measurable.
@@ -523,17 +506,16 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
       intro m n
       rw [← not_disjoint_iff_nonempty_inter]
       by_contra' h
-      have A : x ∈ q ⟨(s m, s n), h⟩ \ q ⟨(s n, s m), h.symm⟩ := by
-        have := mem_Inter.1 (hxs m).2 (s n)
-        exact (mem_Inter.1 this h : _)
-      have B : x ∈ q ⟨(s n, s m), h.symm⟩ \ q ⟨(s m, s n), h⟩ := by
-        have := mem_Inter.1 (hxs n).2 (s m)
-        exact (mem_Inter.1 this h.symm : _)
+      have A : x ∈ q ⟨(s m, s n), h⟩ \ q ⟨(s n, s m), h.symm⟩ :=
+        haveI := mem_Inter.1 (hxs m).2 (s n)
+        (mem_Inter.1 this h : _)
+      have B : x ∈ q ⟨(s n, s m), h.symm⟩ \ q ⟨(s m, s n), h⟩ :=
+        haveI := mem_Inter.1 (hxs n).2 (s m)
+        (mem_Inter.1 this h.symm : _)
       exact A.2 B.1
     -- the points `y n` are nearby, and therefore they form a Cauchy sequence.
     have cauchy_y : CauchySeq y := by
-      have : tendsto (fun n => 2 * u n) at_top (𝓝 0) := by
-        simpa only [mul_zero] using u_lim.const_mul 2
+      have : tendsto (fun n => 2 * u n) at_top (𝓝 0) := by simpa only [mul_zero] using u_lim.const_mul 2
       apply cauchy_seq_of_le_tendsto_0' (fun n => 2 * u n) (fun m n hmn => _) this
       rcases I m n with ⟨z, zsm, zsn⟩
       calc
@@ -541,8 +523,7 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
         _ ≤ u m + u n :=
           add_le_add ((dist_le_diam_of_mem (hs m).1 (hy m) zsm).trans (hs m).2)
             ((dist_le_diam_of_mem (hs n).1 zsn (hy n)).trans (hs n).2)
-        _ ≤ 2 * u m := by
-          linarith [u_anti.antitone hmn]
+        _ ≤ 2 * u m := by linarith [u_anti.antitone hmn]
         
     haveI : Nonempty γ := ⟨y 0⟩
     -- let `z` be its limit.
@@ -558,10 +539,10 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
     obtain ⟨δ, δpos, hδ⟩ : ∃ δ > (0 : ℝ), ball z δ ⊆ f ⁻¹' v := by
       apply Metric.mem_nhds_iff.1
       exact f_cont.continuous_at.preimage_mem_nhds (v_open.mem_nhds fzv)
-    obtain ⟨n, hn⟩ : ∃ n, u n + dist (y n) z < δ := by
-      have : tendsto (fun n => u n + dist (y n) z) at_top (𝓝 0) := by
+    obtain ⟨n, hn⟩ : ∃ n, u n + dist (y n) z < δ :=
+      haveI : tendsto (fun n => u n + dist (y n) z) at_top (𝓝 0) := by
         simpa only [add_zeroₓ] using u_lim.add (tendsto_iff_dist_tendsto_zero.1 y_lim)
-      exact ((tendsto_order.1 this).2 _ δpos).exists
+      ((tendsto_order.1 this).2 _ δpos).exists
     -- for large enough `n`, the image of `s n` is contained in `v`, by continuity of `f`.
     have fsnv : f '' s n ⊆ v := by
       rw [image_subset_iff]
@@ -692,7 +673,7 @@ omit hγb
 theorem measurable_set_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable ι] {l : Filter ι}
     [l.IsCountablyGenerated] {f : ι → β → γ} (hf : ∀ i, Measurable (f i)) :
     MeasurableSet { x | ∃ c, Tendsto (fun n => f n x) l (𝓝 c) } := by
-  by_cases' hl : l.ne_bot
+  by_cases hl:l.ne_bot
   swap
   · rw [not_ne_bot] at hl
     simp [hl]

@@ -111,8 +111,7 @@ namespace FreimanHom
 @[to_additive]
 instance funLike : FunLike (A →*[n] β) α fun _ => β where
   coe := toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
 
 @[to_additive]
 instance freimanHomClass : FreimanHomClass (A →*[n] β) A β n where map_prod_eq_map_prod' := map_prod_eq_map_prod'
@@ -150,8 +149,7 @@ theorem mk_coe (f : A →*[n] β) (h) : mk f h = f :=
 @[to_additive "The identity map from an additive commutative monoid to itself.", simps]
 protected def id (A : Set α) (n : ℕ) : A →*[n] α where
   toFun := fun x => x
-  map_prod_eq_map_prod' := fun s t _ _ _ _ h => by
-    rw [map_id', map_id', h]
+  map_prod_eq_map_prod' := fun s t _ _ _ _ h => by rw [map_id', map_id', h]
 
 /-- Composition of Freiman homomorphisms as a Freiman homomorphism. -/
 @[to_additive "Composition of additive Freiman homomorphisms as an additive Freiman homomorphism."]
@@ -363,8 +361,8 @@ inferrable. -/
 @[to_additive
       " An additive monoid homomorphism is naturally an `add_freiman_hom` on its entire\ndomain.\n\nWe can't leave the domain `A : set α` of the `freiman_hom` a free variable, since it wouldn't be\ninferrable."]
 instance MonoidHom.freimanHomClass :
-    FreimanHomClass (α →* β) Set.Univ β n where map_prod_eq_map_prod' := fun f s t _ _ _ _ h => by
-    rw [← f.map_multiset_prod, h, f.map_multiset_prod]
+    FreimanHomClass (α →* β) Set.Univ β
+      n where map_prod_eq_map_prod' := fun f s t _ _ _ _ h => by rw [← f.map_multiset_prod, h, f.map_multiset_prod]
 
 /-- A `monoid_hom` is naturally a `freiman_hom`. -/
 @[to_additive AddMonoidHom.toAddFreimanHom "An `add_monoid_hom` is naturally an\n`add_freiman_hom`"]
@@ -440,8 +438,7 @@ theorem FreimanHom.to_freiman_hom_coe (h : m ≤ n) (f : A →*[n] β) : (f.toFr
 @[to_additive]
 theorem FreimanHom.to_freiman_hom_injective (h : m ≤ n) :
     Function.Injective (FreimanHom.toFreimanHom h : (A →*[n] β) → A →*[m] β) := fun f g hfg =>
-  FreimanHom.ext <| by
-    convert FunLike.ext_iff.1 hfg
+  FreimanHom.ext <| by convert FunLike.ext_iff.1 hfg
 
 end CancelCommMonoid
 

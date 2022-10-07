@@ -90,7 +90,8 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
   | symm : ∀ (x y) (h : relation x y), relation y x
   | trans : ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
 
-  | map :
+  |
+  map :
     ∀ (j j' : J) (f : j ⟶ j') (x : F.obj j),
       relation (of j' (F.map f x)) (of j x)-- Then one relation per operation, describing the interaction with `of`
 
@@ -98,7 +99,8 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
   | one : ∀ j, relation (of j 1) one
   | neg : ∀ (j) (x : F.obj j), relation (of j (-x)) (neg (of j x))
   | add : ∀ (j) (x y : F.obj j), relation (of j (x + y)) (add (of j x) (of j y))
-  | mul :
+  |
+  mul :
     ∀ (j) (x y : F.obj j),
       relation (of j (x * y)) (mul (of j x) (of j y))-- Then one relation per argument of each operation
 
@@ -159,7 +161,7 @@ instance : AddGroupₓ (ColimitType F) where
     · intro x x' r
       funext y
       induction y
-      dsimp'
+      dsimp
       apply Quot.sound
       · exact relation.add_1 _ _ _ r
         
@@ -168,19 +170,19 @@ instance : AddGroupₓ (ColimitType F) where
       
   zero_add := fun x => by
     induction x
-    dsimp'
+    dsimp
     apply Quot.sound
     apply relation.zero_add
     rfl
   add_zero := fun x => by
     induction x
-    dsimp'
+    dsimp
     apply Quot.sound
     apply relation.add_zero
     rfl
   add_left_neg := fun x => by
     induction x
-    dsimp'
+    dsimp
     apply Quot.sound
     apply relation.add_left_neg
     rfl
@@ -188,7 +190,7 @@ instance : AddGroupₓ (ColimitType F) where
     induction x
     induction y
     induction z
-    dsimp'
+    dsimp
     apply Quot.sound
     apply relation.add_assoc
     rfl
@@ -215,7 +217,7 @@ instance : CommRingₓ (ColimitType F) :=
       · intro x x' r
         funext y
         induction y
-        dsimp'
+        dsimp
         apply Quot.sound
         · exact relation.mul_1 _ _ _ r
           
@@ -224,20 +226,20 @@ instance : CommRingₓ (ColimitType F) :=
         ,
     one_mul := fun x => by
       induction x
-      dsimp'
+      dsimp
       apply Quot.sound
       apply relation.one_mul
       rfl,
     mul_one := fun x => by
       induction x
-      dsimp'
+      dsimp
       apply Quot.sound
       apply relation.mul_one
       rfl,
     add_comm := fun x y => by
       induction x
       induction y
-      dsimp'
+      dsimp
       apply Quot.sound
       apply relation.add_comm
       rfl
@@ -245,7 +247,7 @@ instance : CommRingₓ (ColimitType F) :=
     mul_comm := fun x y => by
       induction x
       induction y
-      dsimp'
+      dsimp
       apply Quot.sound
       apply relation.mul_comm
       rfl
@@ -254,7 +256,7 @@ instance : CommRingₓ (ColimitType F) :=
       induction x
       induction y
       induction z
-      dsimp'
+      dsimp
       apply Quot.sound
       apply relation.add_assoc
       rfl
@@ -264,7 +266,7 @@ instance : CommRingₓ (ColimitType F) :=
       induction x
       induction y
       induction z
-      dsimp'
+      dsimp
       apply Quot.sound
       apply relation.mul_assoc
       rfl
@@ -274,7 +276,7 @@ instance : CommRingₓ (ColimitType F) :=
       induction x
       induction y
       induction z
-      dsimp'
+      dsimp
       apply Quot.sound
       apply relation.left_distrib
       rfl
@@ -284,7 +286,7 @@ instance : CommRingₓ (ColimitType F) :=
       induction x
       induction y
       induction z
-      dsimp'
+      dsimp
       apply Quot.sound
       apply relation.right_distrib
       rfl
@@ -323,14 +325,10 @@ def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
 ring. -/
 def coconeMorphism (j : J) : F.obj j ⟶ colimit F where
   toFun := coconeFun F j
-  map_one' := by
-    apply Quot.sound <;> apply relation.one
-  map_mul' := by
-    intros <;> apply Quot.sound <;> apply relation.mul
-  map_zero' := by
-    apply Quot.sound <;> apply relation.zero
-  map_add' := by
-    intros <;> apply Quot.sound <;> apply relation.add
+  map_one' := by apply Quot.sound <;> apply relation.one
+  map_mul' := by intros <;> apply Quot.sound <;> apply relation.mul
+  map_zero' := by apply Quot.sound <;> apply relation.zero
+  map_add' := by intros <;> apply Quot.sound <;> apply relation.add
 
 @[simp]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
@@ -366,9 +364,7 @@ def descFun (s : Cocone F) : ColimitType F → s.x := by
   · exact desc_fun_lift F s
     
   · intro x y r
-    induction r <;>
-      try
-        dsimp'
+    induction r <;> try dsimp
     -- refl
     · rfl
       
@@ -452,10 +448,8 @@ def descMorphism (s : Cocone F) : colimit F ⟶ s.x where
   toFun := descFun F s
   map_one' := rfl
   map_zero' := rfl
-  map_add' := fun x y => by
-    induction x <;> induction y <;> rfl
-  map_mul' := fun x y => by
-    induction x <;> induction y <;> rfl
+  map_add' := fun x y => by induction x <;> induction y <;> rfl
+  map_mul' := fun x y => by induction x <;> induction y <;> rfl
 
 /-- Evidence that the proposed colimit is the colimit. -/
 def colimitIsColimit : IsColimit (colimitCocone F) where

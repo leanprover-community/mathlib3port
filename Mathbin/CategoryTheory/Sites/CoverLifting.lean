@@ -75,8 +75,7 @@ structure CoverLifting (G : C ⥤ D) : Prop where
 
 /-- The identity functor on a site is cover-lifting. -/
 theorem id_cover_lifting : CoverLifting J J (𝟭 _) :=
-  ⟨fun _ _ h => by
-    simpa using h⟩
+  ⟨fun _ _ h => by simpa using h⟩
 
 variable {J K}
 
@@ -121,9 +120,9 @@ variable {G : C ⥤ D} (hu : CoverLifting J K G) (ℱ : Sheaf J A)
 
 variable {X : A} {U : D} (S : Sieve U) (hS : S ∈ K U)
 
-instance (X : Dᵒᵖ) : HasLimitsOfShape (StructuredArrow X G.op) A := by
+instance (X : Dᵒᵖ) : HasLimitsOfShape (StructuredArrow X G.op) A :=
   haveI := Limits.has_limits_of_size_shrink.{v, max u v, max u v, max u v} A
-  exact has_limits_of_size.has_limits_of_shape _
+  has_limits_of_size.has_limits_of_shape _
 
 variable (x : S.Arrows.FamilyOfElements ((ran G.op).obj ℱ.val ⋙ coyoneda.obj (op X)))
 
@@ -185,11 +184,7 @@ theorem get_section_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
 
 /-- The limit cone in order to glue the sections obtained via `get_section`. -/
 def gluedLimitCone : Limits.Cone (Ran.diagram G.op ℱ.val (op U)) :=
-  { x,
-    π :=
-      { app := fun Y => getSection hu ℱ hS hx Y,
-        naturality' := fun Y Z f => by
-          tidy } }
+  { x, π := { app := fun Y => getSection hu ℱ hS hx Y, naturality' := fun Y Z f => by tidy } }
 
 @[simp]
 theorem glued_limit_cone_π_app (W) : (gluedLimitCone hu ℱ hS hx).π.app W = getSection hu ℱ hS hx W :=
@@ -209,22 +204,16 @@ theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V))
     y ≫ limit.π (Ran.diagram G.op ℱ.val (op V)) W =
       (gluedLimitCone hu ℱ hS hx).π.app ((StructuredArrow.map f.op).obj W) :=
   by
-  dsimp' only [glued_limit_cone_π_app]
+  dsimp only [glued_limit_cone_π_app]
   apply get_section_is_unique hu ℱ hS hx ((structured_arrow.map f.op).obj W)
   intro V' fV' hV'
-  dsimp' only [Ran.adjunction, Ran.equiv, pulledback_family_apply]
+  dsimp only [Ran.adjunction, Ran.equiv, pulledback_family_apply]
   erw [adjunction.adjunction_of_equiv_right_counit_app]
   have :
     y ≫ ((Ran G.op).obj ℱ.val).map (G.map fV' ≫ W.hom.unop).op =
-      x (G.map fV' ≫ W.hom.unop ≫ f)
-        (by
-          simpa only using hV') :=
+      x (G.map fV' ≫ W.hom.unop ≫ f) (by simpa only using hV') :=
     by
-    convert
-      H
-        (show S ((G.map fV' ≫ W.hom.unop) ≫ f) by
-          simpa only [category.assoc] using hV') using
-      2
+    convert H (show S ((G.map fV' ≫ W.hom.unop) ≫ f) by simpa only [category.assoc] using hV') using 2
     simp only [category.assoc]
   simp only [Quiver.Hom.unop_op, Equivₓ.symm_symm, structured_arrow.map_obj_hom, unop_comp, Equivₓ.coe_fn_mk,
     functor.comp_map, coyoneda_obj_map, category.assoc, ← this, op_comp, Ran_obj_map, nat_trans.id_app]
@@ -244,10 +233,7 @@ theorem glued_section_is_amalgamation : x.IsAmalgamation (gluedSection hu ℱ hS
   symm
   convert helper hu ℱ hS hx _ (x fV hV) _ _ using 1
   intro V' fV' hV'
-  convert
-    hx fV' (𝟙 _) hV hV'
-      (by
-        rw [category.id_comp])
+  convert hx fV' (𝟙 _) hV hV' (by rw [category.id_comp])
   simp only [op_id, functor_to_types.map_id_apply]
 
 /-- Verify that the amalgamation is indeed unique. -/
@@ -259,10 +245,7 @@ theorem glued_section_is_unique (y) (hy : x.IsAmalgamation y) : y = gluedSection
   · simp only [op_id, structured_arrow.map_id]
     
   · intro V' fV' hV'
-    convert
-      hy fV'
-        (by
-          simpa only [category.comp_id] using hV')
+    convert hy fV' (by simpa only [category.comp_id] using hV')
     erw [category.comp_id]
     
 
@@ -306,11 +289,11 @@ noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPr
       invFun := fun f => ⟨((ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩,
       left_inv := fun f => by
         ext1
-        dsimp'
+        dsimp
         rw [Equivₓ.symm_apply_apply],
       right_inv := fun f => by
         ext1
-        dsimp'
+        dsimp
         rw [Equivₓ.apply_symm_apply] }
   Unit :=
     { app := fun X => ⟨(ran.adjunction A G.op).Unit.app X.val⟩,

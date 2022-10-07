@@ -17,10 +17,6 @@ open Function.Embedding
 
 namespace Equivₓ
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 /-- Embeddings from a sum type are equivalent to two separate embeddings with disjoint ranges. -/
 def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
     (Sum α β ↪ γ) ≃ { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.Range f.1) (Set.Range f.2) } where
@@ -40,43 +36,31 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
       rintro (a₁ | b₁) (a₂ | b₂) f_eq <;> simp only [Equivₓ.coe_fn_symm_mk, Sum.elim_inl, Sum.elim_inr] at f_eq
       · rw [f.injective f_eq]
         
-      · simp only at f_eq
+      · simp! only at f_eq
         exfalso
-        exact
-          disj
-            ⟨⟨a₁, by
-                simp ⟩,
-              ⟨b₂, by
-                simp [f_eq]⟩⟩
+        exact disj ⟨⟨a₁, by simp⟩, ⟨b₂, by simp [f_eq]⟩⟩
         
-      · simp only at f_eq
+      · simp! only at f_eq
         exfalso
-        exact
-          disj
-            ⟨⟨a₂, by
-                simp ⟩,
-              ⟨b₁, by
-                simp [f_eq]⟩⟩
+        exact disj ⟨⟨a₂, by simp⟩, ⟨b₁, by simp [f_eq]⟩⟩
         
       · rw [g.injective f_eq]
         ⟩
   left_inv := fun f => by
-    dsimp' only
+    dsimp only
     ext
-    cases x <;> simp
+    cases x <;> simp!
   right_inv := fun ⟨⟨f, g⟩, _⟩ => by
     simp only [Prod.mk.inj_iffₓ]
-    constructor <;> ext <;> simp
+    constructor <;> ext <;> simp!
 
 /-- Embeddings whose range lies within a set are equivalent to embeddings to that set.
 This is `function.embedding.cod_restrict` as an equiv. -/
 def codRestrict (α : Type _) {β : Type _} (bs : Set β) : { f : α ↪ β // ∀ a, f a ∈ bs } ≃ (α ↪ bs) where
   toFun := fun f => (f : α ↪ β).codRestrict bs f.Prop
   invFun := fun f => ⟨f.trans (Function.Embedding.subtype _), fun a => (f a).Prop⟩
-  left_inv := fun x => by
-    ext <;> rfl
-  right_inv := fun x => by
-    ext <;> rfl
+  left_inv := fun x => by ext <;> rfl
+  right_inv := fun x => by ext <;> rfl
 
 /-- Pairs of embeddings with disjoint ranges are equivalent to a dependent sum of embeddings,
 in which the second embedding cannot take values in the range of the first. -/
@@ -103,8 +87,7 @@ def uniqueEmbeddingEquivResult {α β : Type _} [Unique α] : (α ↪ β) ≃ β
     ext
     simp_rw [Function.Embedding.coe_fn_mk]
     congr
-  right_inv := fun _ => by
-    simp
+  right_inv := fun _ => by simp
 
 end Equivₓ
 

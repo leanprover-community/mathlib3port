@@ -20,18 +20,18 @@ variable (R : Type u) [CommRingₓ R] [IsNoetherianRing R]
 
 variable {A : Type u} [CommRingₓ A] [IsDomain A] [IsNoetherianRing A]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (z «expr ∉ » M)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (z «expr ∉ » M)
 /-- In a noetherian ring, every ideal contains a product of prime ideals
 ([samuel, § 3.3, Lemma 3])-/
 theorem exists_prime_spectrum_prod_le (I : Ideal R) :
     ∃ Z : Multiset (PrimeSpectrum R), Multiset.prod (Z.map (coe : Subtype _ → Ideal R)) ≤ I := by
   refine' IsNoetherian.induction (fun (M : Ideal R) hgt => _) I
-  by_cases' h_prM : M.is_prime
+  by_cases h_prM:M.is_prime
   · use {⟨M, h_prM⟩}
     rw [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]
     exact le_rflₓ
     
-  by_cases' htop : M = ⊤
+  by_cases htop:M = ⊤
   · rw [htop]
     exact ⟨0, le_top⟩
     
@@ -52,7 +52,7 @@ theorem exists_prime_spectrum_prod_le (I : Ideal R) :
   apply sup_le (show span R {x} * M ≤ M from Ideal.mul_le_left)
   rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (z «expr ∉ » M)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (z «expr ∉ » M)
 /-- In a noetherian integral domain which is not a field, every non-zero ideal contains a non-zero
   product of prime ideals; in a field, the whole ring is a non-zero ideal containing only 0 as
   product or prime ideals ([samuel, § 3.3, Lemma 3]) -/
@@ -65,14 +65,13 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
   intro h_nzM
   have hA_nont : Nontrivial A
   apply IsDomain.to_nontrivial A
-  by_cases' h_topM : M = ⊤
+  by_cases h_topM:M = ⊤
   · rcases h_topM with rfl
-    obtain ⟨p_id, h_nzp, h_pp⟩ : ∃ p : Ideal A, p ≠ ⊥ ∧ p.IsPrime := by
-      apply ring.not_is_field_iff_exists_prime.mp h_fA
+    obtain ⟨p_id, h_nzp, h_pp⟩ : ∃ p : Ideal A, p ≠ ⊥ ∧ p.IsPrime := by apply ring.not_is_field_iff_exists_prime.mp h_fA
     use ({⟨p_id, h_pp⟩} : Multiset (PrimeSpectrum A)), le_top
     rwa [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]
     
-  by_cases' h_prM : M.is_prime
+  by_cases h_prM:M.is_prime
   · use ({⟨M, h_prM⟩} : Multiset (PrimeSpectrum A))
     rw [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]
     exact ⟨le_rflₓ, h_nzM⟩

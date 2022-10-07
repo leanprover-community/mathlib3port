@@ -136,8 +136,7 @@ theorem le_iff_forall_lt {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
 
 /-- Definition of `x < y` on numeric pre-games, in terms of `≤` -/
 theorem lt_iff_exists_le {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
-    x < y ↔ (∃ i, x ≤ y.moveLeft i) ∨ ∃ j, x.moveRight j ≤ y := by
-  rw [← lf_iff_lt ox oy, lf_iff_exists_le]
+    x < y ↔ (∃ i, x ≤ y.moveLeft i) ∨ ∃ j, x.moveRight j ≤ y := by rw [← lf_iff_lt ox oy, lf_iff_exists_le]
 
 theorem lt_of_exists_le {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     ((∃ i, x ≤ y.moveLeft i) ∨ ∃ j, x.moveRight j ≤ y) → x < y :=

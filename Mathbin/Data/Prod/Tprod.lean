@@ -80,13 +80,11 @@ protected def elimₓ : ∀ {l : List ι} (v : Tprod α l) {i : ι} (hi : i ∈ 
     else elim v.2 (hj.resolve_left hji)
 
 @[simp]
-theorem elim_self (v : Tprod α (i :: l)) : v.elim (l.mem_cons_self i) = v.1 := by
-  simp [tprod.elim]
+theorem elim_self (v : Tprod α (i :: l)) : v.elim (l.mem_cons_self i) = v.1 := by simp [tprod.elim]
 
 @[simp]
 theorem elim_of_ne (hj : j ∈ i :: l) (hji : j ≠ i) (v : Tprod α (i :: l)) :
-    v.elim hj = Tprod.elimₓ v.2 (hj.resolve_left hji) := by
-  simp [tprod.elim, hji]
+    v.elim hj = Tprod.elimₓ v.2 (hj.resolve_left hji) := by simp [tprod.elim, hji]
 
 @[simp]
 theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : Tprod α (i :: l)) :
@@ -97,7 +95,7 @@ theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : Tprod α (i :: l))
 
 theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (Tprod.mkₓ l f).elim hi = f i
   | i :: is, f, j, hj => by
-    by_cases' hji : j = i
+    by_cases hji:j = i
     · subst hji
       simp
       
@@ -120,8 +118,7 @@ protected def elim' (h : ∀ i, i ∈ l) (v : Tprod α l) (i : ι) : α i :=
   v.elim (h i)
 
 theorem mk_elim (hnd : l.Nodup) (h : ∀ i, i ∈ l) (v : Tprod α l) : Tprod.mkₓ l (v.elim' h) = v :=
-  Tprod.ext hnd fun i hi => by
-    simp [elim_mk]
+  Tprod.ext hnd fun i hi => by simp [elim_mk]
 
 /-- Pi-types are equivalent to iterated products. -/
 def piEquivTprod (hnd : l.Nodup) (h : ∀ i, i ∈ l) : (∀ i, α i) ≃ Tprod α l :=
@@ -143,12 +140,10 @@ protected def Tprodₓ : ∀ (l : List ι) (t : ∀ i, Set (α i)), Set (Tprod �
   | i :: is, t => t i ×ˢ tprod is t
 
 theorem mk_preimage_tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mkₓ l ⁻¹' Set.Tprodₓ l t = { i | i ∈ l }.pi t
-  | [], t => by
-    simp [Set.Tprodₓ]
+  | [], t => by simp [Set.Tprodₓ]
   | i :: l, t => by
     ext f
-    have : f ∈ tprod.mk l ⁻¹' Set.Tprodₓ l t ↔ f ∈ { x | x ∈ l }.pi t := by
-      rw [mk_preimage_tprod l t]
+    have : f ∈ tprod.mk l ⁻¹' Set.Tprodₓ l t ↔ f ∈ { x | x ∈ l }.pi t := by rw [mk_preimage_tprod l t]
     change tprod.mk l f ∈ Set.Tprodₓ l t ↔ ∀ i : ι, i ∈ l → f i ∈ t i at this
     -- `simp [set.tprod, tprod.mk, this]` can close this goal but is slow.
     rw [Set.Tprodₓ, tprod.mk, mem_preimage, mem_pi, prod_mk_mem_set_prod_eq]

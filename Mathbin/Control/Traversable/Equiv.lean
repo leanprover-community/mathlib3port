@@ -50,12 +50,10 @@ protected def functor : Functor t' where map := @Equivₓ.map _
 
 variable [IsLawfulFunctor t]
 
-protected theorem id_map {α : Type u} (x : t' α) : Equivₓ.map id x = x := by
-  simp [Equivₓ.map, id_map]
+protected theorem id_map {α : Type u} (x : t' α) : Equivₓ.map id x = x := by simp [Equivₓ.map, id_map]
 
 protected theorem comp_map {α β γ : Type u} (g : α → β) (h : β → γ) (x : t' α) :
-    Equivₓ.map (h ∘ g) x = Equivₓ.map h (Equivₓ.map g x) := by
-  simp [Equivₓ.map] <;> apply comp_map
+    Equivₓ.map (h ∘ g) x = Equivₓ.map h (Equivₓ.map g x) := by simp [Equivₓ.map] <;> apply comp_map
 
 protected theorem is_lawful_functor : @IsLawfulFunctor _ Equivₓ.functor :=
   { id_map := @Equivₓ.id_map _ _, comp_map := @Equivₓ.comp_map _ _ }
@@ -64,7 +62,7 @@ protected theorem is_lawful_functor' [F : Functor t'] (h₀ : ∀ {α β} (f : �
     (h₁ : ∀ {α β} (f : β), Functor.mapConst f = (Equivₓ.map ∘ Function.const α) f) : IsLawfulFunctor t' := by
   have : F = Equivₓ.functor := by
     cases F
-    dsimp' [Equivₓ.functor]
+    dsimp [Equivₓ.functor]
     congr <;> ext <;> [rw [← h₀], rw [← h₁]]
   subst this
   exact Equivₓ.is_lawful_functor
@@ -115,22 +113,19 @@ variable {α β γ : Type u}
 
 open IsLawfulTraversable Functor
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 protected theorem id_traverse (x : t' α) : Equivₓ.traverse eqv id.mk x = x := by
-  simp' [Equivₓ.traverse, idBind, id_traverse, Functor.map] with functor_norm
+  simp! [Equivₓ.traverse, idBind, id_traverse, Functor.map, functor_norm]
 
 protected theorem traverse_eq_map_id (f : α → β) (x : t' α) :
     Equivₓ.traverse eqv (id.mk ∘ f) x = id.mk (Equivₓ.map eqv f x) := by
-  simp' [Equivₓ.traverse, traverse_eq_map_id] with functor_norm <;> rfl
+  simp [Equivₓ.traverse, traverse_eq_map_id, functor_norm] <;> rfl
 
 protected theorem comp_traverse (f : β → F γ) (g : α → G β) (x : t' α) :
     Equivₓ.traverse eqv (comp.mk ∘ Functor.map f ∘ g) x = Comp.mk (Equivₓ.traverse eqv f <$> Equivₓ.traverse eqv g x) :=
-  by
-  simp' [Equivₓ.traverse, comp_traverse] with functor_norm <;> congr <;> ext <;> simp
+  by simp [Equivₓ.traverse, comp_traverse, functor_norm] <;> congr <;> ext <;> simp
 
 protected theorem naturality (f : α → F β) (x : t' α) :
-    η (Equivₓ.traverse eqv f x) = Equivₓ.traverse eqv (@η _ ∘ f) x := by
-  simp' only [Equivₓ.traverse] with functor_norm
+    η (Equivₓ.traverse eqv f x) = Equivₓ.traverse eqv (@η _ ∘ f) x := by simp only [Equivₓ.traverse, functor_norm]
 
 /-- The fact that `t` is a lawful traversable functor carries over the
 equivalences to `t'`, with the traversable functor structure given by
@@ -163,8 +158,7 @@ protected def isLawfulTraversable' [_i : Traversable t'] (h₀ : ∀ {α β} (f 
   · rw [h₂, Equivₓ.comp_traverse f g x, h₂]
     congr
     rw [h₂]
-    all_goals
-      infer_instance
+    all_goals infer_instance
     
   · rw [h₂, Equivₓ.traverse_eq_map_id, h₀] <;> infer_instance
     

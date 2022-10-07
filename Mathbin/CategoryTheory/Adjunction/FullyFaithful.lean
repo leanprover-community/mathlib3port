@@ -51,14 +51,14 @@ instance unit_is_iso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjuncti
       ⟨⟨{ app := fun Y f => L.preimage ((h.homEquiv (unop Y) (L.obj X)).symm f) },
           ⟨by
             ext x f
-            dsimp'
+            dsimp
             apply L.map_injective
-            simp , by
+            simp, by
             ext x f
-            dsimp'
+            dsimp
             simp only [adjunction.hom_equiv_counit, preimage_comp, preimage_map, category.assoc]
             rw [← h.unit_naturality]
-            simp ⟩⟩⟩
+            simp⟩⟩⟩
 
 /-- If the right adjoint is fully faithful, then the counit is an isomorphism.
 
@@ -71,14 +71,14 @@ instance counit_is_iso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunc
         ⟨⟨{ app := fun Y f => R.preimage ((h.homEquiv (R.obj X) Y) f) },
             ⟨by
               ext x f
-              dsimp'
+              dsimp
               apply R.map_injective
-              simp , by
+              simp, by
               ext x f
-              dsimp'
+              dsimp
               simp only [adjunction.hom_equiv_unit, preimage_comp, preimage_map]
               rw [← h.counit_naturality]
-              simp ⟩⟩⟩
+              simp⟩⟩⟩
 
 /-- If the unit of an adjunction is an isomorphism, then its inverse on the image of L is given
 by L whiskered with the counit. -/

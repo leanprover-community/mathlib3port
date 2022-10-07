@@ -36,11 +36,7 @@ variable [EnoughProjectives C] [Abelian C]
 /-- When `C` is abelian, `projective.d f` and `f` are exact.
 -/
 theorem exact_d_f {X Y : C} (f : X ⟶ Y) : Exact (d f) f :=
-  (Abelian.exact_iff _ _).2 <|
-    ⟨by
-      simp ,
-      zero_of_epi_comp (π _) <| by
-        rw [← category.assoc, cokernel.condition]⟩
+  (Abelian.exact_iff _ _).2 <| ⟨by simp, zero_of_epi_comp (π _) <| by rw [← category.assoc, cokernel.condition]⟩
 
 end
 
@@ -74,13 +70,9 @@ irreducible_def of (Z : C) : ProjectiveResolution Z :=
         (by
           simp
           exact (exact_d_f (projective.π Z)).w.symm)
-        fun n _ =>
-        ⟨0, by
-          ext⟩,
-    Projective := by
-      rintro (_ | _ | _ | n) <;> apply projective.projective_over,
-    exact₀ := by
-      simpa using exact_d_f (projective.π Z),
+        fun n _ => ⟨0, by ext⟩,
+    Projective := by rintro (_ | _ | _ | n) <;> apply projective.projective_over,
+    exact₀ := by simpa using exact_d_f (projective.π Z),
     exact := by
       rintro (_ | n) <;>
         · simp
@@ -90,9 +82,7 @@ irreducible_def of (Z : C) : ProjectiveResolution Z :=
 
 instance (priority := 100) (Z : C) : HasProjectiveResolution Z where out := ⟨of Z⟩
 
-instance (priority := 100) :
-    HasProjectiveResolutions C where out := fun Z => by
-    infer_instance
+instance (priority := 100) : HasProjectiveResolutions C where out := fun Z => by infer_instance
 
 end ProjectiveResolution
 

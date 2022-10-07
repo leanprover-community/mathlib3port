@@ -182,7 +182,7 @@ def IsSubordinate (U : ι → Set X) : Prop :=
 variable {f}
 
 theorem exists_finset_nhd_support_subset {U : ι → Set X} (hso : f.IsSubordinate U) (ho : ∀ i, IsOpen (U i)) (x : X) :
-    ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i), ∀ z ∈ n, (Support fun i => f i z) ⊆ is :=
+    ∃ (is : Finsetₓ ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i), ∀ z ∈ n, (Support fun i => f i z) ⊆ is :=
   f.LocallyFinite.exists_finset_nhd_support_subset hso ho x
 
 /-- If `f` is a partition of unity that is subordinate to a family of open sets `U i` and
@@ -229,9 +229,7 @@ protected def single (i : ι) (s : Set X) : BumpCovering ι X s where
     simp [hx]
   nonneg' := le_update_iffₓ.2 ⟨fun x => zero_le_one, fun _ _ => le_rflₓ⟩
   le_one' := update_le_iffₓ.2 ⟨le_rflₓ, fun _ _ _ => zero_le_one⟩
-  eventually_eq_one' := fun x _ =>
-    ⟨i, by
-      simp ⟩
+  eventually_eq_one' := fun x _ => ⟨i, by simp⟩
 
 @[simp]
 theorem coe_single (i : ι) (s : Set X) : ⇑(BumpCovering.single i s) = Pi.single i 1 :=
@@ -332,17 +330,16 @@ In order to avoid an assumption `linear_order ι`, we use `well_ordering_rel` in
 def toPouFun (i : ι) (x : X) : ℝ :=
   f i x * ∏ᶠ (j) (hj : WellOrderingRel j i), 1 - f j x
 
-theorem to_pou_fun_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.toPouFun i x = 0 := by
-  rw [to_pou_fun, h, zero_mul]
+theorem to_pou_fun_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.toPouFun i x = 0 := by rw [to_pou_fun, h, zero_mul]
 
 theorem support_to_pou_fun_subset (i : ι) : Support (f.toPouFun i) ⊆ Support (f i) := fun x =>
   mt <| f.to_pou_fun_zero_of_zero
 
-theorem to_pou_fun_eq_mul_prod (i : ι) (x : X) (t : Finset ι) (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
+theorem to_pou_fun_eq_mul_prod (i : ι) (x : X) (t : Finsetₓ ι) (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
     f.toPouFun i x = f i x * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j x := by
   refine' congr_arg _ (finprod_cond_eq_prod_of_cond_iff _ fun j hj => _)
   rw [Ne.def, sub_eq_self] at hj
-  rw [Finset.mem_filter, Iff.comm, and_iff_right_iff_imp]
+  rw [Finsetₓ.mem_filter, Iff.comm, and_iff_right_iff_imp]
   exact flip (ht j) hj
 
 theorem sum_to_pou_fun_eq (x : X) : (∑ᶠ i, f.toPouFun i x) = 1 - ∏ᶠ i, 1 - f i x := by
@@ -355,18 +352,18 @@ theorem sum_to_pou_fun_eq (x : X) : (∑ᶠ i, f.toPouFun i x) = 1 - ∏ᶠ i, 1
     rw [hs, mul_support_one_sub]
     exact fun i => id
   letI : LinearOrderₓ ι := linearOrderOfSTO WellOrderingRel
-  rw [finsum_eq_sum_of_support_subset _ A, finprod_eq_prod_of_mul_support_subset _ B, Finset.prod_one_sub_ordered,
+  rw [finsum_eq_sum_of_support_subset _ A, finprod_eq_prod_of_mul_support_subset _ B, Finsetₓ.prod_one_sub_ordered,
     sub_sub_cancel]
-  refine' Finset.sum_congr rfl fun i hi => _
+  refine' Finsetₓ.sum_congr rfl fun i hi => _
   convert f.to_pou_fun_eq_mul_prod _ _ _ fun j hji hj => _
   rwa [finite.mem_to_finset]
 
 theorem exists_finset_to_pou_fun_eventually_eq (i : ι) (x : X) :
-    ∃ t : Finset ι, f.toPouFun i =ᶠ[𝓝 x] f i * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j := by
+    ∃ t : Finsetₓ ι, f.toPouFun i =ᶠ[𝓝 x] f i * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j := by
   rcases f.locally_finite x with ⟨U, hU, hf⟩
   use hf.to_finset
   filter_upwards [hU] with y hyU
-  simp only [Pi.mul_apply, Finset.prod_apply]
+  simp only [Pi.mul_apply, Finsetₓ.prod_apply]
   apply to_pou_fun_eq_mul_prod
   intro j hji hj
   exact hf.mem_to_finset.2 ⟨y, ⟨hj, hyU⟩⟩
@@ -404,13 +401,13 @@ theorem to_partition_of_unity_apply (i : ι) (x : X) :
     f.toPartitionOfUnity i x = f i x * ∏ᶠ (j) (hj : WellOrderingRel j i), 1 - f j x :=
   rfl
 
-theorem to_partition_of_unity_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
+theorem to_partition_of_unity_eq_mul_prod (i : ι) (x : X) (t : Finsetₓ ι)
     (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
     f.toPartitionOfUnity i x = f i x * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j x :=
   f.to_pou_fun_eq_mul_prod i x t ht
 
 theorem exists_finset_to_partition_of_unity_eventually_eq (i : ι) (x : X) :
-    ∃ t : Finset ι, f.toPartitionOfUnity i =ᶠ[𝓝 x] f i * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j :=
+    ∃ t : Finsetₓ ι, f.toPartitionOfUnity i =ᶠ[𝓝 x] f i * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j :=
   f.exists_finset_to_pou_fun_eventually_eq i x
 
 theorem to_partition_of_unity_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.toPartitionOfUnity i x = 0 :=

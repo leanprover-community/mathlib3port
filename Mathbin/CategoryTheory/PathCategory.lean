@@ -140,16 +140,8 @@ def PathsHomRel : HomRel (Paths C) := fun X Y p q => (pathComposition C).map p =
 def toQuotientPaths : C ⥤ Quotient (PathsHomRel C) where
   obj := fun X => Quotient.mk X
   map := fun X Y f => Quot.mk _ f.toPath
-  map_id' := fun X =>
-    Quot.sound
-      (Quotient.CompClosure.of _ _ _
-        (by
-          simp ))
-  map_comp' := fun X Y Z f g =>
-    Quot.sound
-      (Quotient.CompClosure.of _ _ _
-        (by
-          simp ))
+  map_id' := fun X => Quot.sound (Quotient.CompClosure.of _ _ _ (by simp))
+  map_comp' := fun X Y Z f g => Quot.sound (Quotient.CompClosure.of _ _ _ (by simp))
 
 /-- The functor from the canonical quotient of a path category of a category
 to the original category. -/
@@ -172,19 +164,16 @@ def quotientPathsEquiv : Quotient (PathsHomRel C) ≌ C where
         cases X
         cases Y
         induction f
-        dsimp'
+        dsimp
         simp only [category.comp_id, category.id_comp]
         apply Quot.sound
         apply quotient.comp_closure.of
         simp [paths_hom_rel])
-  counitIso :=
-    NatIso.ofComponents (fun X => Iso.refl _)
-      (by
-        tidy)
+  counitIso := NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
   functor_unit_iso_comp' := by
     intros
     cases X
-    dsimp'
+    dsimp
     simp
     rfl
 

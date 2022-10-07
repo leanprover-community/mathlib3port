@@ -171,7 +171,7 @@ instance (priority := 100) baire_category_theorem_locally_compact [TopologicalSp
   -- Prove that ̀`⋂ n : ℕ, K n` is inside `U ∩ ⋂ n : ℕ, (f n)`.
   have hK_subset : (⋂ n, K n : Set α) ⊆ U ∩ ⋂ n, f n := by
     intro x hx
-    simp only [mem_inter_eq, mem_Inter] at hx⊢
+    simp only [mem_inter_iff, mem_Inter] at hx⊢
     exact ⟨hK₀ <| hx 0, fun n => (hK_decreasing n (hx (n + 1))).1⟩
   /- Prove that `⋂ n : ℕ, K n` is not empty, as an intersection of a decreasing sequence
     of nonempty compact subsets.-/
@@ -194,8 +194,7 @@ theorem dense_sInter_of_open {S : Set (Set α)} (ho : ∀ s ∈ S, IsOpen s) (hS
   · simp [h]
     
   · rcases hS.exists_eq_range h with ⟨f, hf⟩
-    have F : ∀ n, f n ∈ S := fun n => by
-      rw [hf] <;> exact mem_range_self _
+    have F : ∀ n, f n ∈ S := fun n => by rw [hf] <;> exact mem_range_self _
     rw [hf, sInter_range]
     exact dense_Inter_of_open_nat (fun n => ho _ (F n)) fun n => hd _ (F n)
     
@@ -232,8 +231,8 @@ theorem dense_sInter_of_Gδ {S : Set (Set α)} (ho : ∀ s ∈ S, IsGδ s) (hS :
   -- the result follows from the result for a countable intersection of dense open sets,
   -- by rewriting each set as a countable intersection of open sets, which are of course dense.
   choose T hTo hTc hsT using ho
-  have : ⋂₀ S = ⋂₀ ⋃ s ∈ S, T s ‹_› := by
-    -- := (sInter_bUnion (λs hs, (hT s hs).2.2)).symm,
+  have : ⋂₀ S = ⋂₀ ⋃ s ∈ S, T s ‹_› :=
+    by-- := (sInter_bUnion (λs hs, (hT s hs).2.2)).symm,
     simp only [sInter_Union, (hsT _ _).symm, ← sInter_eq_bInter]
   rw [this]
   refine' dense_sInter_of_open _ (hS.bUnion hTc) _ <;> simp only [mem_Union] <;> rintro t ⟨s, hs, tTs⟩
@@ -274,20 +273,16 @@ theorem eventually_residual {p : α → Prop} : (∀ᶠ x in residual α, p x) �
       simp only [residual, infi_and]
     _ ↔ ∃ (t : Set α)(ht : IsGδ t ∧ Dense t), ∀ᶠ x in 𝓟 t, p x :=
       mem_binfi_of_directed
-        (fun t₁ h₁ t₂ h₂ =>
-          ⟨t₁ ∩ t₂, ⟨h₁.1.inter h₂.1, Dense.inter_of_Gδ h₁.1 h₂.1 h₁.2 h₂.2⟩, by
-            simp ⟩)
+        (fun t₁ h₁ t₂ h₂ => ⟨t₁ ∩ t₂, ⟨h₁.1.inter h₂.1, Dense.inter_of_Gδ h₁.1 h₂.1 h₁.2 h₂.2⟩, by simp⟩)
         ⟨Univ, is_Gδ_univ, dense_univ⟩
-    _ ↔ _ := by
-      simp [and_assocₓ]
+    _ ↔ _ := by simp [and_assocₓ]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
 theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
   (@eventually_residual α _ _ fun x => x ∈ s).trans <|
-    exists_congr fun t => by
-      rw [exists_propₓ, and_comm (t ⊆ s), subset_def, and_assocₓ]
+    exists_congr fun t => by rw [exists_propₓ, and_comm (t ⊆ s), subset_def, and_assocₓ]
 
 theorem dense_of_mem_residual {s : Set α} (hs : s ∈ residual α) : Dense s :=
   let ⟨t, hts, _, hd⟩ := mem_residual.1 hs
@@ -335,8 +330,7 @@ theorem IsGδ.dense_bUnion_interior_of_closed {t : Set ι} {s : Set α} (hs : Is
 is dense. Formulated here with `⋃₀`. -/
 theorem IsGδ.dense_sUnion_interior_of_closed {T : Set (Set α)} {s : Set α} (hs : IsGδ s) (hd : Dense s)
     (hc : T.Countable) (hc' : ∀ t ∈ T, IsClosed t) (hU : s ⊆ ⋃₀T) : Dense (⋃ t ∈ T, Interior t) :=
-  hs.dense_bUnion_interior_of_closed hd hc hc' <| by
-    rwa [← sUnion_eq_bUnion]
+  hs.dense_bUnion_interior_of_closed hd hc hc' <| by rwa [← sUnion_eq_bUnion]
 
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with an index set which is a countable set in any type. -/

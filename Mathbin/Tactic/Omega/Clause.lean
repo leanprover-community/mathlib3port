@@ -61,7 +61,7 @@ theorem Clauses.unsat_nil : Clauses.Unsat [] := by
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Clauses.unsat_cons (c : Clause) (cs : List Clause) : Clause.Unsat c → Clauses.Unsat cs → Clauses.Unsat (c::cs)
   | h1, h2, h3 => by
-    unfold clauses.sat  at h3
+    unfold clauses.sat at h3
     rw [List.exists_mem_cons_iff] at h3
     cases h3 <;> contradiction
 

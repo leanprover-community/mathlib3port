@@ -126,17 +126,14 @@ theorem coeff_frobenius (f : Ringₓ.Perfection R p) (n : ℕ) : coeff R p (n + 
 -- `coeff_pow_p f n` also works but is slow!
 theorem coeff_iterate_frobenius (f : Ringₓ.Perfection R p) (n m : ℕ) :
     coeff R p (n + m) ((frobenius _ p^[m]) f) = coeff R p n f :=
-  (Nat.recOn m rfl) fun m ih => by
-    erw [Function.iterate_succ_apply', coeff_frobenius, ih]
+  (Nat.recOn m rfl) fun m ih => by erw [Function.iterate_succ_apply', coeff_frobenius, ih]
 
 theorem coeff_iterate_frobenius' (f : Ringₓ.Perfection R p) (n m : ℕ) (hmn : m ≤ n) :
     coeff R p n ((frobenius _ p^[m]) f) = coeff R p (n - m) f :=
   Eq.symm <| (coeff_iterate_frobenius _ _ m).symm.trans <| (tsub_add_cancel_of_le hmn).symm ▸ rfl
 
 theorem pth_root_frobenius : (pthRoot R p).comp (frobenius _ p) = RingHom.id _ :=
-  RingHom.ext fun x =>
-    ext fun n => by
-      rw [RingHom.comp_apply, RingHom.id_apply, coeff_pth_root, coeff_frobenius]
+  RingHom.ext fun x => ext fun n => by rw [RingHom.comp_apply, RingHom.id_apply, coeff_pth_root, coeff_frobenius]
 
 theorem frobenius_pth_root : (frobenius _ p).comp (pthRoot R p) = RingHom.id _ :=
   RingHom.ext fun x =>
@@ -146,9 +143,7 @@ theorem frobenius_pth_root : (frobenius _ p).comp (pthRoot R p) = RingHom.id _ :
 
 theorem coeff_add_ne_zero {f : Ringₓ.Perfection R p} {n : ℕ} (hfn : coeff R p n f ≠ 0) (k : ℕ) :
     coeff R p (n + k) f ≠ 0 :=
-  (Nat.recOn k hfn) fun k ih h =>
-    ih <| by
-      erw [← coeff_pow_p, RingHom.map_pow, h, zero_pow hp.1.Pos]
+  (Nat.recOn k hfn) fun k ih h => ih <| by erw [← coeff_pow_p, RingHom.map_pow, h, zero_pow hp.1.Pos]
 
 theorem coeff_ne_zero_of_le {f : Ringₓ.Perfection R p} {m n : ℕ} (hfm : coeff R p m f ≠ 0) (hmn : m ≤ n) :
     coeff R p n f ≠ 0 :=
@@ -169,8 +164,7 @@ def lift (R : Type u₁) [CommSemiringₓ R] [CharP R p] [PerfectRing R p] (S : 
     (R →+* S) ≃ (R →+* Ringₓ.Perfection S p) where
   toFun := fun f =>
     { toFun := fun r =>
-        ⟨fun n => f <| (pthRoot R p^[n]) r, fun n => by
-          rw [← f.map_pow, Function.iterate_succ_apply', pth_root_pow_p]⟩,
+        ⟨fun n => f <| (pthRoot R p^[n]) r, fun n => by rw [← f.map_pow, Function.iterate_succ_apply', pth_root_pow_p]⟩,
       map_one' := ext fun n => (congr_arg f <| RingHom.iterate_map_one _ _).trans f.map_one,
       map_mul' := fun x y => ext fun n => (congr_arg f <| RingHom.iterate_map_mul _ _ _ _).trans <| f.map_mul _ _,
       map_zero' := ext fun n => (congr_arg f <| RingHom.iterate_map_zero _ _).trans f.map_zero,
@@ -193,9 +187,7 @@ variable {R} {S : Type u₂} [CommSemiringₓ S] [CharP S p]
 /-- A ring homomorphism `R →+* S` induces `perfection R p →+* perfection S p` -/
 @[simps]
 def map (φ : R →+* S) : Ringₓ.Perfection R p →+* Ringₓ.Perfection S p where
-  toFun := fun f =>
-    ⟨fun n => φ (coeff R p n f), fun n => by
-      rw [← φ.map_pow, coeff_pow_p']⟩
+  toFun := fun f => ⟨fun n => φ (coeff R p n f), fun n => by rw [← φ.map_pow, coeff_pow_p']⟩
   map_one' := Subtype.eq <| funext fun n => φ.map_one
   map_mul' := fun f g => Subtype.eq <| funext fun n => φ.map_mul _ _
   map_zero' := Subtype.eq <| funext fun n => φ.map_zero
@@ -248,8 +240,7 @@ theorem id [PerfectRing R p] : PerfectionMap p (RingHom.id R) :=
       ⟨f 0, fun n =>
         show (pthRoot R p^[n]) (f 0) = f n from
           (Nat.recOn n rfl) fun n ih =>
-            injective_pow_p p <| by
-              rw [Function.iterate_succ_apply', pth_root_pow_p _, ih, hf]⟩ }
+            injective_pow_p p <| by rw [Function.iterate_succ_apply', pth_root_pow_p _, ih, hf]⟩ }
 
 variable {p R P}
 
@@ -323,8 +314,7 @@ theorem map_map {π : P →+* R} (m : PerfectionMap p π) {σ : Q →+* S} (n : 
 
 -- Why is this slow?
 theorem map_eq_map (φ : R →+* S) : @map p _ R _ _ _ _ _ _ S _ _ _ _ _ _ _ (of p R) _ (of p S) φ = Perfection.map p φ :=
-  (hom_ext _ (of p S)) fun f => by
-    rw [map_map, Perfection.coeff_map]
+  (hom_ext _ (of p S)) fun f => by rw [map_map, Perfection.coeff_map]
 
 end PerfectionMap
 
@@ -404,15 +394,15 @@ theorem pre_val_mul {x y : ModP K v O hv p} (hxy0 : x * y ≠ 0) :
 
 theorem pre_val_add (x y : ModP K v O hv p) :
     preVal K v O hv p (x + y) ≤ max (preVal K v O hv p x) (preVal K v O hv p y) := by
-  by_cases' hx0 : x = 0
+  by_cases hx0:x = 0
   · rw [hx0, zero_addₓ]
     exact le_max_rightₓ _ _
     
-  by_cases' hy0 : y = 0
+  by_cases hy0:y = 0
   · rw [hy0, add_zeroₓ]
     exact le_max_leftₓ _ _
     
-  by_cases' hxy0 : x + y = 0
+  by_cases hxy0:x + y = 0
   · rw [hxy0, pre_val_zero]
     exact zero_le _
     
@@ -462,7 +452,7 @@ theorem mul_ne_zero_of_pow_p_ne_zero {x y : ModP K v O hv p} (hx : x ^ p ≠ 0) 
     mul_one_div_cancel (Nat.cast_ne_zero.2 hp.1.ne_zero : (p : ℝ) ≠ 0), rpow_one] at hx hy
   rw [RingHom.map_mul, v.map_mul]
   refine' lt_of_le_of_ltₓ _ (mul_lt_mul₀ hx hy)
-  by_cases' hvp : v p = 0
+  by_cases hvp:v p = 0
   · rw [hvp]
     exact zero_le _
     
@@ -538,10 +528,10 @@ theorem val_aux_one : valAux K v O hv p 1 = 1 :=
 
 theorem val_aux_mul (f g : PreTilt K v O hv p) :
     valAux K v O hv p (f * g) = valAux K v O hv p f * valAux K v O hv p g := by
-  by_cases' hf : f = 0
+  by_cases hf:f = 0
   · rw [hf, zero_mul, val_aux_zero, zero_mul]
     
-  by_cases' hg : g = 0
+  by_cases hg:g = 0
   · rw [hg, mul_zero, val_aux_zero, mul_zero]
     
   obtain ⟨m, hm⟩ : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf <| Perfection.ext h
@@ -563,15 +553,15 @@ theorem val_aux_mul (f g : PreTilt K v O hv p) :
 
 theorem val_aux_add (f g : PreTilt K v O hv p) :
     valAux K v O hv p (f + g) ≤ max (valAux K v O hv p f) (valAux K v O hv p g) := by
-  by_cases' hf : f = 0
+  by_cases hf:f = 0
   · rw [hf, zero_addₓ, val_aux_zero, max_eq_rightₓ]
     exact zero_le _
     
-  by_cases' hg : g = 0
+  by_cases hg:g = 0
   · rw [hg, add_zeroₓ, val_aux_zero, max_eq_leftₓ]
     exact zero_le _
     
-  by_cases' hfg : f + g = 0
+  by_cases hfg:f + g = 0
   · rw [hfg, val_aux_zero]
     exact zero_le _
     
@@ -606,7 +596,7 @@ noncomputable def val : Valuation (PreTilt K v O hv p) ℝ≥0 where
 variable {K v O hv p}
 
 theorem map_eq_zero {f : PreTilt K v O hv p} : val K v O hv p f = 0 ↔ f = 0 := by
-  by_cases' hf0 : f = 0
+  by_cases hf0:f = 0
   · rw [hf0]
     exact iff_of_true (Valuation.map_zero _) rfl
     

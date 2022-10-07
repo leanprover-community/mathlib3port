@@ -91,7 +91,7 @@ noncomputable def map (f : R →+* P) (r : R) [IsLocalization.Away r S] [IsLocal
     (show Submonoid.powers r ≤ (Submonoid.powers (f r)).comap f by
       rintro x ⟨n, rfl⟩
       use n
-      simp )
+      simp)
 
 end Away
 
@@ -115,7 +115,7 @@ noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S := by
     obtain ⟨⟨x, s⟩, eq⟩ := IsLocalization.surj M y
     obtain ⟨u, hu⟩ := H s
     use x * u.inv
-    dsimp' only [Algebra.ofId, RingHom.to_fun_eq_coe, AlgHom.coe_mk]
+    dsimp only [Algebra.ofId, RingHom.to_fun_eq_coe, AlgHom.coe_mk]
     rw [RingHom.map_mul, ← Eq, ← hu, mul_assoc, ← RingHom.map_mul]
     simp
     
@@ -140,9 +140,7 @@ theorem away_of_is_unit_of_bijective {R : Type _} (S : Type _) [CommRingₓ R] [
       exact (algebraMap R S).is_unit_map (hr.pow _),
     surj := fun z => by
       obtain ⟨z', rfl⟩ := H.2 z
-      exact
-        ⟨⟨z', 1⟩, by
-          simp ⟩,
+      exact ⟨⟨z', 1⟩, by simp⟩,
     eq_iff_exists := fun x y => by
       erw [H.1.eq_iff]
       constructor

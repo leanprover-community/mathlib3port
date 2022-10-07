@@ -110,8 +110,7 @@ theorem kronecker_map_diagonal_diagonal [Zero α] [Zero β] [Zero γ] [Decidable
 theorem kronecker_map_one_one [Zero α] [Zero β] [Zero γ] [One α] [One β] [One γ] [DecidableEq m] [DecidableEq n]
     (f : α → β → γ) (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (hf₃ : f 1 1 = 1) :
     kroneckerMapₓ f (1 : Matrix m m α) (1 : Matrix n n β) = 1 :=
-  (kronecker_map_diagonal_diagonal _ hf₁ hf₂ _ _).trans <| by
-    simp only [hf₃, diagonal_one]
+  (kronecker_map_diagonal_diagonal _ hf₁ hf₂ _ _).trans <| by simp only [hf₃, diagonal_one]
 
 theorem kronecker_map_reindex (f : α → β → γ) (el : l ≃ l') (em : m ≃ m') (en : n ≃ n') (ep : p ≃ p') (M : Matrix l m α)
     (N : Matrix n p β) :
@@ -157,13 +156,13 @@ def kroneckerMapBilinear [CommSemiringₓ R] [AddCommMonoidₓ α] [AddCommMonoi
 /-- `matrix.kronecker_map_bilinear` commutes with `⬝` if `f` commutes with `*`.
 
 This is primarily used with `R = ℕ` to prove `matrix.mul_kronecker_mul`. -/
-theorem kronecker_map_bilinear_mul_mul [CommSemiringₓ R] [Fintype m] [Fintype m'] [NonUnitalNonAssocSemiringₓ α]
+theorem kronecker_map_bilinear_mul_mul [CommSemiringₓ R] [Fintypeₓ m] [Fintypeₓ m'] [NonUnitalNonAssocSemiringₓ α]
     [NonUnitalNonAssocSemiringₓ β] [NonUnitalNonAssocSemiringₓ γ] [Module R α] [Module R β] [Module R γ]
     (f : α →ₗ[R] β →ₗ[R] γ) (h_comm : ∀ a b a' b', f (a * b) (a' * b') = f a a' * f b b') (A : Matrix l m α)
     (B : Matrix m n α) (A' : Matrix l' m' β) (B' : Matrix m' n' β) :
     kroneckerMapBilinear f (A ⬝ B) (A' ⬝ B') = kroneckerMapBilinear f A A' ⬝ kroneckerMapBilinear f B B' := by
   ext ⟨i, i'⟩ ⟨j, j'⟩
-  simp only [kronecker_map_bilinear_apply_apply, mul_apply, ← Finset.univ_product_univ, Finset.sum_product,
+  simp only [kronecker_map_bilinear_apply_apply, mul_apply, ← Finsetₓ.univ_product_univ, Finsetₓ.sum_product,
     kronecker_map]
   simp_rw [f.map_sum, LinearMap.sum_apply, LinearMap.map_sum, h_comm]
 
@@ -232,7 +231,7 @@ theorem one_kronecker_one [MulZeroOneClassₓ α] [DecidableEq m] [DecidableEq n
     (1 : Matrix m m α) ⊗ₖ (1 : Matrix n n α) = 1 :=
   kronecker_map_one_one _ zero_mul mul_zero (one_mulₓ _)
 
-theorem mul_kronecker_mul [Fintype m] [Fintype m'] [CommSemiringₓ α] (A : Matrix l m α) (B : Matrix m n α)
+theorem mul_kronecker_mul [Fintypeₓ m] [Fintypeₓ m'] [CommSemiringₓ α] (A : Matrix l m α) (B : Matrix m n α)
     (A' : Matrix l' m' α) (B' : Matrix m' n' α) : (A ⬝ B) ⊗ₖ (A' ⬝ B') = A ⊗ₖ A' ⬝ B ⊗ₖ B' :=
   kronecker_map_bilinear_mul_mul (Algebra.lmul ℕ α).toLinearMap mul_mul_mul_commₓ A B A' B'
 
@@ -330,7 +329,7 @@ open Algebra.TensorProduct
 theorem one_kronecker_tmul_one [DecidableEq m] [DecidableEq n] : (1 : Matrix m m α) ⊗ₖₜ[R] (1 : Matrix n n α) = 1 :=
   kronecker_map_one_one _ (zero_tmul _) (tmul_zero _) rfl
 
-theorem mul_kronecker_tmul_mul [Fintype m] [Fintype m'] (A : Matrix l m α) (B : Matrix m n α) (A' : Matrix l' m' β)
+theorem mul_kronecker_tmul_mul [Fintypeₓ m] [Fintypeₓ m'] (A : Matrix l m α) (B : Matrix m n α) (A' : Matrix l' m' β)
     (B' : Matrix m' n' β) : (A ⬝ B) ⊗ₖₜ[R] (A' ⬝ B') = A ⊗ₖₜ A' ⬝ B ⊗ₖₜ B' :=
   kronecker_map_bilinear_mul_mul (TensorProduct.mk R α β) tmul_mul_tmul A B A' B'
 

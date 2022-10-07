@@ -38,7 +38,7 @@ theorem polynomial_functions_closure_eq_top' : (polynomialFunctions I).topologic
   apply Subalgebra.sum_mem
   rintro n -
   apply Subalgebra.smul_mem
-  dsimp' [bernstein, polynomialFunctions]
+  dsimp [bernstein, polynomialFunctions]
   simp
 
 /-- The **Weierstrass Approximation Theorem**:
@@ -49,7 +49,7 @@ our proof of that relies on the fact that `abs` is in the closure of polynomials
 so we may as well get this done first.)
 -/
 theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (Set.Icc a b)).topologicalClosure = ⊤ := by
-  by_cases' h : a < b
+  by_cases h:a < b
   -- (Otherwise it's easy; we'll deal with that later.)
   · -- We can pullback continuous functions on `[a,b]` to continuous functions on `[0,1]`,
     -- by precomposing with an affine map.

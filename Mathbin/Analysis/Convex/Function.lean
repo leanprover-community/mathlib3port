@@ -28,7 +28,7 @@ a convex set.
 -/
 
 
-open Finset LinearMap Set
+open Finsetₓ LinearMap Set
 
 open BigOperators Classical Convex Pointwise
 
@@ -121,8 +121,7 @@ theorem ConvexOn.add (hf : ConvexOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) : ConvexO
     calc
       f (a • x + b • y) + g (a • x + b • y) ≤ a • f x + b • f y + (a • g x + b • g y) :=
         add_le_add (hf.2 hx hy ha hb hab) (hg.2 hx hy ha hb hab)
-      _ = a • (f x + g x) + b • (f y + g y) := by
-        rw [smul_add, smul_add, add_add_add_commₓ]
+      _ = a • (f x + g x) + b • (f y + g y) := by rw [smul_add, smul_add, add_add_add_commₓ]
       ⟩
 
 theorem ConcaveOn.add (hf : ConcaveOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) : ConcaveOn 𝕜 s (f + g) :=
@@ -205,8 +204,7 @@ theorem ConcaveOn.translate_right (hf : ConcaveOn 𝕜 s f) (c : E) :
 
 /-- Left translation preserves convexity. -/
 theorem ConvexOn.translate_left (hf : ConvexOn 𝕜 s f) (c : E) :
-    ConvexOn 𝕜 ((fun z => c + z) ⁻¹' s) (f ∘ fun z => z + c) := by
-  simpa only [add_commₓ] using hf.translate_right _
+    ConvexOn 𝕜 ((fun z => c + z) ⁻¹' s) (f ∘ fun z => z + c) := by simpa only [add_commₓ] using hf.translate_right _
 
 /-- Left translation preserves concavity. -/
 theorem ConcaveOn.translate_left (hf : ConcaveOn 𝕜 s f) (c : E) :
@@ -264,13 +262,11 @@ theorem concave_on_iff_pairwise_pos {s : Set E} {f : E → β} :
 
 /-- A linear map is convex. -/
 theorem LinearMap.convex_on (f : E →ₗ[𝕜] β) {s : Set E} (hs : Convex 𝕜 s) : ConvexOn 𝕜 s f :=
-  ⟨hs, fun _ _ _ _ _ _ _ _ _ => by
-    rw [f.map_add, f.map_smul, f.map_smul]⟩
+  ⟨hs, fun _ _ _ _ _ _ _ _ _ => by rw [f.map_add, f.map_smul, f.map_smul]⟩
 
 /-- A linear map is concave. -/
 theorem LinearMap.concave_on (f : E →ₗ[𝕜] β) {s : Set E} (hs : Convex 𝕜 s) : ConcaveOn 𝕜 s f :=
-  ⟨hs, fun _ _ _ _ _ _ _ _ _ => by
-    rw [f.map_add, f.map_smul, f.map_smul]⟩
+  ⟨hs, fun _ _ _ _ _ _ _ _ _ => by rw [f.map_add, f.map_smul, f.map_smul]⟩
 
 theorem StrictConvexOn.convex_on {s : Set E} {f : E → β} (hf : StrictConvexOn 𝕜 s f) : ConvexOn 𝕜 s f :=
   convex_on_iff_pairwise_pos.mpr ⟨hf.1, fun x hx y hy hxy a b ha hb hab => (hf.2 hx hy hxy ha hb hab).le⟩
@@ -366,8 +362,7 @@ theorem ConvexOn.comp_linear_map {f : F → β} {s : Set F} (hf : ConvexOn 𝕜 
     ConvexOn 𝕜 (g ⁻¹' s) (f ∘ g) :=
   ⟨hf.1.linear_preimage _, fun x hx y hy a b ha hb hab =>
     calc
-      f (g (a • x + b • y)) = f (a • g x + b • g y) := by
-        rw [g.map_add, g.map_smul, g.map_smul]
+      f (g (a • x + b • y)) = f (a • g x + b • g y) := by rw [g.map_add, g.map_smul, g.map_smul]
       _ ≤ a • f (g x) + b • f (g y) := hf.2 hx hy ha hb hab
       ⟩
 
@@ -393,8 +388,7 @@ theorem StrictConvexOn.add_convex_on (hf : StrictConvexOn 𝕜 s f) (hg : Convex
     calc
       f (a • x + b • y) + g (a • x + b • y) < a • f x + b • f y + (a • g x + b • g y) :=
         add_lt_add_of_lt_of_le (hf.2 hx hy hxy ha hb hab) (hg.2 hx hy ha.le hb.le hab)
-      _ = a • (f x + g x) + b • (f y + g y) := by
-        rw [smul_add, smul_add, add_add_add_commₓ]
+      _ = a • (f x + g x) + b • (f y + g y) := by rw [smul_add, smul_add, add_add_add_commₓ]
       ⟩
 
 theorem ConvexOn.add_strict_convex_on (hf : ConvexOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) : StrictConvexOn 𝕜 s (f + g) :=
@@ -405,8 +399,7 @@ theorem StrictConvexOn.add (hf : StrictConvexOn 𝕜 s f) (hg : StrictConvexOn �
     calc
       f (a • x + b • y) + g (a • x + b • y) < a • f x + b • f y + (a • g x + b • g y) :=
         add_lt_add (hf.2 hx hy hxy ha hb hab) (hg.2 hx hy hxy ha hb hab)
-      _ = a • (f x + g x) + b • (f y + g y) := by
-        rw [smul_add, smul_add, add_add_add_commₓ]
+      _ = a • (f x + g x) + b • (f y + g y) := by rw [smul_add, smul_add, add_add_add_commₓ]
       ⟩
 
 theorem StrictConcaveOn.add_concave_on (hf : StrictConcaveOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) :
@@ -694,8 +687,7 @@ theorem neg_convex_on_iff : ConvexOn 𝕜 s (-f) ↔ ConcaveOn 𝕜 s f := by
 
 /-- A function `-f` is concave iff `f` is convex. -/
 @[simp]
-theorem neg_concave_on_iff : ConcaveOn 𝕜 s (-f) ↔ ConvexOn 𝕜 s f := by
-  rw [← neg_convex_on_iff, neg_negₓ f]
+theorem neg_concave_on_iff : ConcaveOn 𝕜 s (-f) ↔ ConvexOn 𝕜 s f := by rw [← neg_convex_on_iff, neg_negₓ f]
 
 /-- A function `-f` is strictly convex iff `f` is strictly concave. -/
 @[simp]
@@ -806,8 +798,7 @@ theorem ConvexOn.smul {c : 𝕜} (hc : 0 ≤ c) (hf : ConvexOn 𝕜 s f) : Conve
   ⟨hf.1, fun x hx y hy a b ha hb hab =>
     calc
       c • f (a • x + b • y) ≤ c • (a • f x + b • f y) := smul_le_smul_of_nonneg (hf.2 hx hy ha hb hab) hc
-      _ = a • c • f x + b • c • f y := by
-        rw [smul_add, smul_comm c, smul_comm c] <;> infer_instance
+      _ = a • c • f x + b • c • f y := by rw [smul_add, smul_comm c, smul_comm c] <;> infer_instance
       ⟩
 
 theorem ConcaveOn.smul {c : 𝕜} (hc : 0 ≤ c) (hf : ConcaveOn 𝕜 s f) : ConcaveOn 𝕜 s fun x => c • f x :=
@@ -837,8 +828,7 @@ theorem ConvexOn.comp_affine_map {f : F → β} (g : E →ᵃ[𝕜] F) {s : Set 
   ⟨hf.1.affine_preimage _, fun x hx y hy a b ha hb hab =>
     calc
       (f ∘ g) (a • x + b • y) = f (g (a • x + b • y)) := rfl
-      _ = f (a • g x + b • g y) := by
-        rw [Convex.combo_affine_apply hab]
+      _ = f (a • g x + b • g y) := by rw [Convex.combo_affine_apply hab]
       _ ≤ a • f (g x) + b • f (g y) := hf.2 hx hy ha hb hab
       ⟩
 

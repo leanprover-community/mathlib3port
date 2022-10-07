@@ -55,12 +55,9 @@ instance Completion_complete_space {V : SemiNormedGroup} : CompleteSpace (comple
 def completion.incl {V : SemiNormedGroup} : V ⟶ completion.obj V where
   toFun := fun v => (v : completion V)
   map_add' := Completion.coe_add
-  bound' :=
-    ⟨1, fun v => by
-      simp ⟩
+  bound' := ⟨1, fun v => by simp⟩
 
-theorem completion.norm_incl_eq {V : SemiNormedGroup} {v : V} : ∥completion.incl v∥ = ∥v∥ := by
-  simp
+theorem completion.norm_incl_eq {V : SemiNormedGroup} {v : V} : ∥completion.incl v∥ = ∥v∥ := by simp
 
 theorem completion.map_norm_noninc {V W : SemiNormedGroup} {f : V ⟶ W} (hf : f.NormNoninc) :
     (completion.map f).NormNoninc :=

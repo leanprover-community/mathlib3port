@@ -68,7 +68,7 @@ def extendFanIsLimit {n : ℕ} (f : Finₓ (n + 1) → C) {c₁ : Fan fun i : Fi
     · apply (binary_fan.is_limit.lift' t₂ _ _).2.1
       
     · rintro i -
-      dsimp' only [extend_fan_π_app]
+      dsimp only [extend_fan_π_app]
       rw [Finₓ.cases_succ, ← assoc, (binary_fan.is_limit.lift' t₂ _ _).2.2, t₁.fac]
       rfl
       
@@ -81,9 +81,9 @@ def extendFanIsLimit {n : ℕ} (f : Finₓ (n + 1) → C) {c₁ : Fan fun i : Fi
       apply t₁.uniq ⟨_, _⟩
       rintro ⟨j⟩
       rw [assoc]
-      dsimp' only [discrete.nat_trans_app, extend_fan_is_limit._match_1]
+      dsimp only [discrete.nat_trans_app, extend_fan_is_limit._match_1]
       rw [← w ⟨j.succ⟩]
-      dsimp' only [extend_fan_π_app]
+      dsimp only [extend_fan_π_app]
       rw [Finₓ.cases_succ]
       
 
@@ -120,8 +120,8 @@ private theorem has_limits_of_shape_fin (n : ℕ) : HasLimitsOfShape (Discrete (
 theorem has_finite_products_of_has_binary_and_terminal : HasFiniteProducts C :=
   ⟨fun J 𝒥 => by
     skip
-    apply has_limits_of_shape_of_equivalence (discrete.equivalence (Fintype.equivFin J)).symm
-    refine' has_limits_of_shape_fin (Fintype.card J)⟩
+    apply has_limits_of_shape_of_equivalence (discrete.equivalence (Fintypeₓ.equivFin J)).symm
+    refine' has_limits_of_shape_fin (Fintypeₓ.card J)⟩
 
 end
 
@@ -160,7 +160,7 @@ noncomputable def preservesFinOfPreservesBinaryAndTerminalₓ :
     · apply (category.id_comp _).symm
       
     · rintro i -
-      dsimp' only [extend_fan_π_app, iso.refl_hom, fan.mk_π_app]
+      dsimp only [extend_fan_π_app, iso.refl_hom, fan.mk_π_app]
       rw [Finₓ.cases_succ, Finₓ.cases_succ]
       change F.map _ ≫ _ = 𝟙 _ ≫ _
       rw [id_comp, ← F.map_comp]
@@ -177,11 +177,11 @@ def preservesShapeFinOfPreservesBinaryAndTerminal (n : ℕ) :
     apply preserves_limit_of_iso_diagram F this
 
 /-- If `F` preserves the terminal object and binary products then it preserves finite products. -/
-def preservesFiniteProductsOfPreservesBinaryAndTerminal (J : Type) [Fintype J] :
+def preservesFiniteProductsOfPreservesBinaryAndTerminal (J : Type) [Fintypeₓ J] :
     PreservesLimitsOfShape (Discrete J) F := by
   classical
-  let e := Fintype.equivFin J
-  haveI := preserves_shape_fin_of_preserves_binary_and_terminal F (Fintype.card J)
+  let e := Fintypeₓ.equivFin J
+  haveI := preserves_shape_fin_of_preserves_binary_and_terminal F (Fintypeₓ.card J)
   apply preservesLimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
 
 end Preserves
@@ -218,7 +218,7 @@ def extendCofanIsColimit {n : ℕ} (f : Finₓ (n + 1) → C) {c₁ : Cofan fun 
     · apply (binary_cofan.is_colimit.desc' t₂ _ _).2.1
       
     · rintro i -
-      dsimp' only [extend_cofan_ι_app]
+      dsimp only [extend_cofan_ι_app]
       rw [Finₓ.cases_succ, assoc, (binary_cofan.is_colimit.desc' t₂ _ _).2.2, t₁.fac]
       rfl
       
@@ -230,9 +230,9 @@ def extendCofanIsColimit {n : ℕ} (f : Finₓ (n + 1) → C) {c₁ : Cofan fun 
     · rw [(binary_cofan.is_colimit.desc' t₂ _ _).2.2]
       apply t₁.uniq ⟨_, _⟩
       rintro ⟨j⟩
-      dsimp' only [discrete.nat_trans_app]
+      dsimp only [discrete.nat_trans_app]
       rw [← w ⟨j.succ⟩]
-      dsimp' only [extend_cofan_ι_app]
+      dsimp only [extend_cofan_ι_app]
       rw [Finₓ.cases_succ, assoc]
       
 
@@ -269,8 +269,8 @@ private theorem has_colimits_of_shape_fin (n : ℕ) : HasColimitsOfShape (Discre
 theorem has_finite_coproducts_of_has_binary_and_initial : HasFiniteCoproducts C :=
   ⟨fun J 𝒥 => by
     skip
-    apply has_colimits_of_shape_of_equivalence (discrete.equivalence (Fintype.equivFin J)).symm
-    refine' has_colimits_of_shape_fin (Fintype.card J)⟩
+    apply has_colimits_of_shape_of_equivalence (discrete.equivalence (Fintypeₓ.equivFin J)).symm
+    refine' has_colimits_of_shape_fin (Fintypeₓ.card J)⟩
 
 end
 
@@ -311,7 +311,7 @@ noncomputable def preservesFinOfPreservesBinaryAndInitialₓ :
     · apply category.comp_id
       
     · rintro i -
-      dsimp' only [extend_cofan_ι_app, iso.refl_hom, cofan.mk_ι_app]
+      dsimp only [extend_cofan_ι_app, iso.refl_hom, cofan.mk_ι_app]
       rw [Finₓ.cases_succ, Finₓ.cases_succ]
       erw [comp_id, ← F.map_comp]
       rfl
@@ -327,11 +327,11 @@ def preservesShapeFinOfPreservesBinaryAndInitial (n : ℕ) :
     apply preserves_colimit_of_iso_diagram F this
 
 /-- If `F` preserves the initial object and binary coproducts then it preserves finite products. -/
-def preservesFiniteCoproductsOfPreservesBinaryAndInitial (J : Type) [Fintype J] :
+def preservesFiniteCoproductsOfPreservesBinaryAndInitial (J : Type) [Fintypeₓ J] :
     PreservesColimitsOfShape (Discrete J) F := by
   classical
-  let e := Fintype.equivFin J
-  haveI := preserves_shape_fin_of_preserves_binary_and_initial F (Fintype.card J)
+  let e := Fintypeₓ.equivFin J
+  haveI := preserves_shape_fin_of_preserves_binary_and_initial F (Fintypeₓ.card J)
   apply preservesColimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
 
 end Preserves

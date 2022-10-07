@@ -74,8 +74,7 @@ theorem map_mapₓ {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β →
 
 @[simp]
 theorem mk.inj_iffₓ {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ :=
-  ⟨Prod.mk.inj, by
-    cc⟩
+  ⟨Prod.mk.inj, by cc⟩
 
 theorem mk.inj_leftₓ {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) := by
   intro b₁ b₂ h
@@ -86,8 +85,7 @@ theorem mk.inj_rightₓ {α β : Type _} (b : β) : Function.Injective (fun a =>
   · simpa only [and_trueₓ, eq_self_iff_true, mk.inj_iff] using h
     
 
-theorem ext_iffₓ {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by
-  rw [← @mk.eta _ _ p, ← @mk.eta _ _ q, mk.inj_iff]
+theorem ext_iffₓ {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by rw [← @mk.eta _ _ p, ← @mk.eta _ _ q, mk.inj_iff]
 
 @[ext]
 theorem extₓ {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p = q :=
@@ -155,32 +153,23 @@ theorem swap_injₓ {p q : α × β} : swap p = swap q ↔ p = q :=
   swap_injectiveₓ.eq_iff
 
 theorem eq_iff_fst_eq_snd_eqₓ : ∀ {p q : α × β}, p = q ↔ p.1 = q.1 ∧ p.2 = q.2
-  | ⟨p₁, p₂⟩, ⟨q₁, q₂⟩ => by
-    simp
+  | ⟨p₁, p₂⟩, ⟨q₁, q₂⟩ => by simp
 
 theorem fst_eq_iffₓ : ∀ {p : α × β} {x : α}, p.1 = x ↔ p = (x, p.2)
-  | ⟨a, b⟩, x => by
-    simp
+  | ⟨a, b⟩, x => by simp
 
 theorem snd_eq_iffₓ : ∀ {p : α × β} {x : β}, p.2 = x ↔ p = (p.1, x)
-  | ⟨a, b⟩, x => by
-    simp
+  | ⟨a, b⟩, x => by simp
 
 theorem lex_defₓ (r : α → α → Prop) (s : β → β → Prop) {p q : α × β} :
     Prod.Lex r s p q ↔ r p.1 q.1 ∨ p.1 = q.1 ∧ s p.2 q.2 :=
-  ⟨fun h => by
-    cases h <;> simp [*], fun h =>
+  ⟨fun h => by cases h <;> simp [*], fun h =>
     match p, q, h with
     | (a, b), (c, d), Or.inl h => Lex.left _ _ h
-    | (a, b), (c, d), Or.inr ⟨e, h⟩ => by
-      change a = c at e <;> subst e <;> exact lex.right _ h⟩
+    | (a, b), (c, d), Or.inr ⟨e, h⟩ => by change a = c at e <;> subst e <;> exact lex.right _ h⟩
 
 instance Lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β → Prop) [DecidableRel r] [DecidableRel s] :
-    DecidableRel (Prod.Lex r s) := fun p q =>
-  decidableOfDecidableOfIff
-    (by
-      infer_instance)
-    (lex_defₓ r s).symm
+    DecidableRel (Prod.Lex r s) := fun p q => decidableOfDecidableOfIff (by infer_instance) (lex_defₓ r s).symm
 
 @[refl]
 theorem Lex.refl_left (r : α → α → Prop) (s : β → β → Prop) [IsRefl α r] : ∀ x, Prod.Lex r s x x
@@ -249,8 +238,7 @@ theorem Bijective.prod_map (hf : Bijective f) (hg : Bijective g) : Bijective (ma
   ⟨hf.1.prod_map hg.1, hf.2.prod_map hg.2⟩
 
 theorem LeftInverse.prod_map (hf : LeftInverse f₁ f₂) (hg : LeftInverse g₁ g₂) : LeftInverse (map f₁ g₁) (map f₂ g₂) :=
-  fun a => by
-  rw [Prod.map_mapₓ, hf.comp_eq_id, hg.comp_eq_id, map_id, id]
+  fun a => by rw [Prod.map_mapₓ, hf.comp_eq_id, hg.comp_eq_id, map_id, id]
 
 theorem RightInverse.prod_map : RightInverse f₁ f₂ → RightInverse g₁ g₂ → RightInverse (map f₁ g₁) (map f₂ g₂) :=
   left_inverse.prod_map

@@ -89,11 +89,11 @@ theorem right [hf : FiniteDimensional F A] : FiniteDimensional K A :=
 /-- Tower law: if `A` is a `K`-algebra and `K` is a field extension of `F` then
 `dim_F(A) = dim_F(K) * dim_K(A)`. -/
 theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A = finrank F A := by
-  by_cases' hA : FiniteDimensional K A
+  by_cases hA:FiniteDimensional K A
   · skip
     let b := Basis.ofVectorSpace F K
     let c := Basis.ofVectorSpace K A
-    rw [finrank_eq_card_basis b, finrank_eq_card_basis c, finrank_eq_card_basis (b.smul c), Fintype.card_prod]
+    rw [finrank_eq_card_basis b, finrank_eq_card_basis c, finrank_eq_card_basis (b.smul c), Fintypeₓ.card_prod]
     
   · rw [finrank_of_infinite_dimensional hA, mul_zero, finrank_of_infinite_dimensional]
     exact mt (@right F K A _ _ _ _ _ _ _) hA

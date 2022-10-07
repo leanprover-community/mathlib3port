@@ -29,14 +29,14 @@ a field structure, and so can all types with prime power cardinalities, and this
 
 
 -- mathport name: «expr‖ ‖»
-local notation "‖" x "‖" => Fintype.card x
+local notation "‖" x "‖" => Fintypeₓ.card x
 
 open Cardinal nonZeroDivisors
 
 universe u
 
 /-- A finite field has prime power cardinality. -/
-theorem Fintype.is_prime_pow_card_of_field {α} [Fintype α] [Field α] : IsPrimePow ‖α‖ := by
+theorem Fintypeₓ.is_prime_pow_card_of_field {α} [Fintypeₓ α] [Field α] : IsPrimePow ‖α‖ := by
   cases' CharP.exists α with p _
   haveI hp := Fact.mk (CharP.char_is_prime α p)
   let b := IsNoetherian.finsetBasis (Zmod p) α
@@ -47,14 +47,14 @@ theorem Fintype.is_prime_pow_card_of_field {α} [Fintype α] [Field α] : IsPrim
   exact finite_dimensional.finrank_pos.ne'
 
 /-- A `fintype` can be given a field structure iff its cardinality is a prime power. -/
-theorem Fintype.nonempty_field_iff {α} [Fintype α] : Nonempty (Field α) ↔ IsPrimePow ‖α‖ := by
-  refine' ⟨fun ⟨h⟩ => Fintype.is_prime_pow_card_of_field, _⟩
+theorem Fintypeₓ.nonempty_field_iff {α} [Fintypeₓ α] : Nonempty (Field α) ↔ IsPrimePow ‖α‖ := by
+  refine' ⟨fun ⟨h⟩ => Fintypeₓ.is_prime_pow_card_of_field, _⟩
   rintro ⟨p, n, hp, hn, hα⟩
   haveI := Fact.mk (nat.prime_iff.mpr hp)
-  exact ⟨(Fintype.equivOfCardEq ((GaloisField.card p n hn.ne').trans hα)).symm.Field⟩
+  exact ⟨(Fintypeₓ.equivOfCardEq ((GaloisField.card p n hn.ne').trans hα)).symm.Field⟩
 
-theorem Fintype.not_is_field_of_card_not_prime_pow {α} [Fintype α] [Ringₓ α] : ¬IsPrimePow ‖α‖ → ¬IsField α :=
-  mt fun h => Fintype.nonempty_field_iff.mp ⟨h.toField⟩
+theorem Fintypeₓ.not_is_field_of_card_not_prime_pow {α} [Fintypeₓ α] [Ringₓ α] : ¬IsPrimePow ‖α‖ → ¬IsField α :=
+  mt fun h => Fintypeₓ.nonempty_field_iff.mp ⟨h.toField⟩
 
 /-- Any infinite type can be endowed a field structure. -/
 theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α) := by
@@ -75,7 +75,7 @@ theorem Field.nonempty_iff {α : Type u} : Nonempty (Field α) ↔ IsPrimePow (#
   rw [Cardinal.is_prime_pow_iff]
   cases' fintypeOrInfinite α with h h
   · simpa only [Cardinal.mk_fintype, Nat.cast_inj, exists_eq_left', (Cardinal.nat_lt_aleph_0 _).not_le, false_orₓ] using
-      Fintype.nonempty_field_iff
+      Fintypeₓ.nonempty_field_iff
     
   · simpa only [← Cardinal.infinite_iff, h, true_orₓ, iff_trueₓ] using Infinite.nonempty_field
     

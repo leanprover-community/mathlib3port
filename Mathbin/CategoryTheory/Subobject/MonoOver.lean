@@ -116,18 +116,13 @@ abbrev homMk {f g : MonoOver X} (h : f.obj.left ⟶ g.obj.left) (w : h ≫ g.arr
 @[simps]
 def isoMk {f g : MonoOver X} (h : f.obj.left ≅ g.obj.left) (w : h.Hom ≫ g.arrow = f.arrow) : f ≅ g where
   Hom := homMk h.Hom w
-  inv :=
-    homMk h.inv
-      (by
-        rw [h.inv_comp_eq, w])
+  inv := homMk h.inv (by rw [h.inv_comp_eq, w])
 
 /-- If `f : mono_over X`, then `mk' f.arrow` is of course just `f`, but not definitionally, so we
     package it as an isomorphism. -/
 @[simp]
 def mk'ArrowIso {X : C} (f : MonoOver X) : mk' f.arrow ≅ f :=
-  isoMk (Iso.refl _)
-    (by
-      simp )
+  isoMk (Iso.refl _) (by simp)
 
 /-- Lift a functor between over categories to a functor between `mono_over` categories,
 given suitable evidence that morphisms are taken to monomorphisms.
@@ -213,8 +208,7 @@ attribute [instance] mono_comp
 by post-composition with a monomorphism `f : X ⟶ Y`.
 -/
 def map (f : X ⟶ Y) [Mono f] : MonoOver X ⥤ MonoOver Y :=
-  lift (Over.map f) fun g => by
-    apply mono_comp g.arrow f
+  lift (Over.map f) fun g => by apply mono_comp g.arrow f
 
 /-- `mono_over.map` commutes with composition (up to a natural isomorphism). -/
 def mapComp (f : X ⟶ Y) (g : Y ⟶ Z) [Mono f] [Mono g] : map (f ≫ g) ≅ map f ⋙ map g :=
@@ -246,18 +240,8 @@ instance faithful_map (f : X ⟶ Y) [Mono f] : Faithful (map f) where
 def mapIso {A B : C} (e : A ≅ B) : MonoOver A ≌ MonoOver B where
   Functor := map e.Hom
   inverse := map e.inv
-  unitIso :=
-    ((mapComp _ _).symm ≪≫
-        eqToIso
-            (by
-              simp ) ≪≫
-          map_id).symm
-  counitIso :=
-    (mapComp _ _).symm ≪≫
-      eqToIso
-          (by
-            simp ) ≪≫
-        map_id
+  unitIso := ((mapComp _ _).symm ≪≫ eqToIso (by simp) ≪≫ map_id).symm
+  counitIso := (mapComp _ _).symm ≪≫ eqToIso (by simp) ≪≫ map_id
 
 section
 
@@ -269,29 +253,15 @@ variable (X)
 def congr (e : C ≌ D) : MonoOver X ≌ MonoOver (e.Functor.obj X) where
   Functor :=
     (lift (Over.post e.Functor)) fun f => by
-      dsimp'
+      dsimp
       infer_instance
   inverse :=
     ((lift (Over.post e.inverse)) fun f => by
-        dsimp'
+        dsimp
         infer_instance) ⋙
       (mapIso (e.unitIso.symm.app X)).Functor
-  unitIso :=
-    NatIso.ofComponents
-      (fun Y =>
-        isoMk (e.unitIso.app Y)
-          (by
-            tidy))
-      (by
-        tidy)
-  counitIso :=
-    NatIso.ofComponents
-      (fun Y =>
-        isoMk (e.counitIso.app Y)
-          (by
-            tidy))
-      (by
-        tidy)
+  unitIso := NatIso.ofComponents (fun Y => isoMk (e.unitIso.app Y) (by tidy)) (by tidy)
+  counitIso := NatIso.ofComponents (fun Y => isoMk (e.counitIso.app Y) (by tidy)) (by tidy)
 
 end
 

@@ -33,12 +33,9 @@ namespace CliffordAlgebra
 
 instance : StarRing (CliffordAlgebra Q) where
   star := fun x => reverse (involute x)
-  star_involutive := fun x => by
-    simp only [reverse_involute_commute.eq, reverse_reverse, involute_involute]
-  star_mul := fun x y => by
-    simp only [map_mul, reverse.map_mul]
-  star_add := fun x y => by
-    simp only [map_add]
+  star_involutive := fun x => by simp only [reverse_involute_commute.eq, reverse_reverse, involute_involute]
+  star_mul := fun x y => by simp only [map_mul, reverse.map_mul]
+  star_add := fun x y => by simp only [map_add]
 
 theorem star_def (x : CliffordAlgebra Q) : star x = reverse (involute x) :=
   rfl
@@ -47,8 +44,7 @@ theorem star_def' (x : CliffordAlgebra Q) : star x = involute (reverse x) :=
   reverse_involute _
 
 @[simp]
-theorem star_ι (m : M) : star (ι Q m) = -ι Q m := by
-  rw [star_def, involute_ι, map_neg, reverse_ι]
+theorem star_ι (m : M) : star (ι Q m) = -ι Q m := by rw [star_def, involute_ι, map_neg, reverse_ι]
 
 /-- Note that this not match the `star_smul` implied by `star_module`; it certainly could if we
 also conjugated all the scalars, but there appears to be nothing in the literature that advocates

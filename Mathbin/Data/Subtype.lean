@@ -128,11 +128,9 @@ def restrictₓ {α} {β : α → Type _} (p : α → Prop) (f : ∀ x, β x) (x
   f x
 
 theorem restrict_applyₓ {α} {β : α → Type _} (f : ∀ x, β x) (p : α → Prop) (x : Subtype p) : restrictₓ p f x = f x.1 :=
-  by
-  rfl
+  by rfl
 
-theorem restrict_defₓ {α β} (f : α → β) (p : α → Prop) : restrictₓ p f = f ∘ coe := by
-  rfl
+theorem restrict_defₓ {α β} (f : α → β) (p : α → Prop) : restrictₓ p f = f ∘ coe := by rfl
 
 theorem restrict_injectiveₓ {α β} {f : α → β} (p : α → Prop) (h : Injective f) : Injective (restrictₓ p f) :=
   h.comp coe_injective
@@ -149,9 +147,7 @@ theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β 
 def coind {α β} (f : α → β) {p : β → Prop} (h : ∀ a, p (f a)) : α → Subtype p := fun a => ⟨f a, h a⟩
 
 theorem coind_injectiveₓ {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Injective f) :
-    Injective (coind f h) := fun x y hxy =>
-  hf <| by
-    apply congr_arg Subtype.val hxy
+    Injective (coind f h) := fun x y hxy => hf <| by apply congr_arg Subtype.val hxy
 
 theorem coind_surjectiveₓ {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Surjective f) :
     Surjective (coind f h) := fun x =>

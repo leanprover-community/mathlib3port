@@ -61,8 +61,7 @@ theorem exact_iff_image_eq_kernel : Exact f g ↔ imageSubobject f = kernelSubob
   constructor
   · intro h
     fapply subobject.eq_of_comm
-    · suffices is_iso (imageToKernel _ _ h.w) by
-        exact as_iso (imageToKernel _ _ h.w)
+    · suffices is_iso (imageToKernel _ _ h.w) by exact as_iso (imageToKernel _ _ h.w)
       exact is_iso_of_mono_of_epi _
       
     · simp
@@ -135,14 +134,9 @@ theorem exact_epi_comp_iff {W : C} (h : W ⟶ X) [Epi h] : Exact (h ≫ f) g ↔
   refine' ⟨fun hfg => _, fun h => exact_epi_comp h⟩
   let hc :=
     is_cokernel_of_comp _ _ (colimit.is_colimit (parallel_pair (h ≫ f) 0))
-      (by
-        rw [← cancel_epi h, ← category.assoc, cokernel_cofork.condition, comp_zero])
-      rfl
+      (by rw [← cancel_epi h, ← category.assoc, cokernel_cofork.condition, comp_zero]) rfl
   refine' (exact_iff' _ _ (limit.is_limit _) hc).2 ⟨_, ((exact_iff _ _).1 hfg).2⟩
-  exact
-    zero_of_epi_comp h
-      (by
-        rw [← hfg.1, category.assoc])
+  exact zero_of_epi_comp h (by rw [← hfg.1, category.assoc])
 
 /-- If `(f, g)` is exact, then `abelian.image.ι f` is a kernel of `g`. -/
 def isLimitImage (h : Exact f g) :
@@ -172,8 +166,7 @@ def isColimitCoimage (h : Exact f g) :
 def isColimitImage (h : Exact f g) :
     IsColimit (CokernelCofork.ofπ (Limits.factorThruImage g) (comp_factor_thru_image_eq_zero h.1)) :=
   IsCokernel.cokernelIso _ _ (isColimitCoimage f g h) (coimageIsoImage' g) <|
-    (cancel_mono (Limits.image.ι g)).1 <| by
-      simp
+    (cancel_mono (Limits.image.ι g)).1 <| by simp
 
 theorem exact_cokernel : Exact f (cokernel.π f) := by
   rw [exact_iff]
@@ -186,51 +179,36 @@ instance (h : Exact f g) : Mono (cokernel.desc f g h.w) :=
     from by
     rw [h]
     apply mono_comp
-  (cancel_epi (cokernel.π f)).1 <| by
-    simp
+  (cancel_epi (cokernel.π f)).1 <| by simp
 
 /-- If `ex : exact f g` and `epi g`, then `cokernel.desc _ _ ex.w` is an isomorphism. -/
 instance (ex : Exact f g) [Epi g] : IsIso (cokernel.desc f g ex.w) :=
   is_iso_of_mono_of_epi (Limits.cokernel.desc f g ex.w)
 
 @[simp, reassoc]
-theorem Cokernel.Desc.inv [Epi g] (ex : Exact f g) : g ≫ inv (cokernel.desc _ _ ex.w) = cokernel.π _ := by
-  simp
+theorem Cokernel.Desc.inv [Epi g] (ex : Exact f g) : g ≫ inv (cokernel.desc _ _ ex.w) = cokernel.π _ := by simp
 
 instance (ex : Exact f g) [Mono f] : IsIso (kernel.lift g f ex.w) :=
   is_iso_of_mono_of_epi (Limits.kernel.lift g f ex.w)
 
 @[simp, reassoc]
-theorem Kernel.Lift.inv [Mono f] (ex : Exact f g) : inv (kernel.lift _ _ ex.w) ≫ f = kernel.ι g := by
-  simp
+theorem Kernel.Lift.inv [Mono f] (ex : Exact f g) : inv (kernel.lift _ _ ex.w) ≫ f = kernel.ι g := by simp
 
 /-- If `X ⟶ Y ⟶ Z ⟶ 0` is exact, then the second map is a cokernel of the first. -/
 def isColimitOfExactOfEpi [Epi g] (h : Exact f g) : IsColimit (CokernelCofork.ofπ _ h.w) :=
   IsColimit.ofIsoColimit (colimit.isColimit _) <|
     Cocones.ext
-      ⟨cokernel.desc _ _ h.w, epiDesc g (cokernel.π f) ((exact_iff _ _).1 h).2,
-        (cancel_epi (cokernel.π f)).1
-          (by
-            tidy),
-        (cancel_epi g).1
-          (by
-            tidy)⟩
-      fun j => by
-      cases j <;> simp
+      ⟨cokernel.desc _ _ h.w, epiDesc g (cokernel.π f) ((exact_iff _ _).1 h).2, (cancel_epi (cokernel.π f)).1 (by tidy),
+        (cancel_epi g).1 (by tidy)⟩
+      fun j => by cases j <;> simp
 
 /-- If `0 ⟶ X ⟶ Y ⟶ Z` is exact, then the first map is a kernel of the second. -/
 def isLimitOfExactOfMono [Mono f] (h : Exact f g) : IsLimit (KernelFork.ofι _ h.w) :=
   IsLimit.ofIsoLimit (limit.isLimit _) <|
     Cones.ext
-      ⟨monoLift f (kernel.ι g) ((exact_iff _ _).1 h).2, kernel.lift _ _ h.w,
-        (cancel_mono (kernel.ι g)).1
-          (by
-            tidy),
-        (cancel_mono f).1
-          (by
-            tidy)⟩
-      fun j => by
-      cases j <;> simp
+      ⟨monoLift f (kernel.ι g) ((exact_iff _ _).1 h).2, kernel.lift _ _ h.w, (cancel_mono (kernel.ι g)).1 (by tidy),
+        (cancel_mono f).1 (by tidy)⟩
+      fun j => by cases j <;> simp
 
 theorem exact_of_is_cokernel (w : f ≫ g = 0) (h : IsColimit (CokernelCofork.ofπ _ w)) : Exact f g := by
   refine' (exact_iff _ _).2 ⟨w, _⟩
@@ -281,10 +259,7 @@ theorem tfae_epi : Tfae [Epi f, cokernel.π f = 0, Exact f (0 : Y ⟶ Z)] := by
   tfae_have 1 → 3
   · rw [exact_iff]
     intro
-    exact
-      ⟨by
-        simp , by
-        simp [cokernel.π_of_epi]⟩
+    exact ⟨by simp, by simp [cokernel.π_of_epi]⟩
     
   tfae_have 2 → 1
   · exact epi_of_cokernel_π_eq_zero _
@@ -302,9 +277,7 @@ section Opposite
 
 theorem Exact.op (h : Exact f g) : Exact g.op f.op := by
   rw [exact_iff]
-  refine'
-    ⟨by
-      simp [← op_comp, h.w], Quiver.Hom.unop_inj _⟩
+  refine' ⟨by simp [← op_comp, h.w], Quiver.Hom.unop_inj _⟩
   simp only [unop_comp, cokernel.π_op, eq_to_hom_refl, kernel.ι_op, category.id_comp, category.assoc,
     kernel_comp_cokernel_assoc _ _ h, zero_comp, comp_zero, unop_zero]
 
@@ -318,8 +291,7 @@ theorem Exact.unop {X Y Z : Cᵒᵖ} (g : X ⟶ Y) (f : Y ⟶ Z) (h : Exact g f)
   rwa [← exact.op_iff]
 
 theorem Exact.unop_iff {X Y Z : Cᵒᵖ} (g : X ⟶ Y) (f : Y ⟶ Z) : Exact f.unop g.unop ↔ Exact g f :=
-  ⟨fun e => by
-    rwa [← f.op_unop, ← g.op_unop, ← exact.op_iff] at e, fun e => @Exact.unop _ _ g f e⟩
+  ⟨fun e => by rwa [← f.op_unop, ← g.op_unop, ← exact.op_iff] at e, fun e => @Exact.unop _ _ g f e⟩
 
 end Opposite
 
@@ -339,12 +311,10 @@ instance (priority := 100) reflectsExactSequencesOfPreservesZeroMorphismsOfFaith
     refine' (abelian.exact_iff _ _).2 ⟨hfg.1, F.zero_of_map_zero _ _⟩
     obtain ⟨k, hk⟩ :=
       kernel.lift' (F.map g) (F.map (kernel.ι g))
-        (by
-          simp only [← F.map_comp, kernel.condition, CategoryTheory.Functor.map_zero])
+        (by simp only [← F.map_comp, kernel.condition, CategoryTheory.Functor.map_zero])
     obtain ⟨l, hl⟩ :=
       cokernel.desc' (F.map f) (F.map (cokernel.π f))
-        (by
-          simp only [← F.map_comp, cokernel.condition, CategoryTheory.Functor.map_zero])
+        (by simp only [← F.map_comp, cokernel.condition, CategoryTheory.Functor.map_zero])
     rw [F.map_comp, ← hk, ← hl, category.assoc, reassoc_of hfg.2, zero_comp, comp_zero]
 
 end
@@ -371,10 +341,7 @@ result is also true, see `functor.preserves_finite_limits_of_map_exact` and
 theorem map_exact {X Y Z : A} (f : X ⟶ Y) (g : Y ⟶ Z) (e1 : Exact f g) : Exact (L.map f) (L.map g) := by
   let hcoker := is_colimit_of_has_cokernel_of_preserves_colimit L f
   let hker := is_limit_of_has_kernel_of_preserves_limit L g
-  refine'
-    (exact_iff' _ _ hker hcoker).2
-      ⟨by
-        simp [← L.map_comp, e1.1], _⟩
+  refine' (exact_iff' _ _ hker hcoker).2 ⟨by simp [← L.map_comp, e1.1], _⟩
   rw [fork.ι_of_ι, cofork.π_of_π, ← L.map_comp, kernel_comp_cokernel _ _ e1, L.map_zero]
 
 end

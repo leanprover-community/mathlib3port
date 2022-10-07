@@ -89,9 +89,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
     apply (tendsto_order.1 this).2 δ
     simpa only [zero_mul] using δpos
   have E2 : ∀ᶠ h in 𝓝[>] (0 : ℝ), (h : ℝ) < 1 :=
-    mem_nhds_within_Ioi_iff_exists_Ioo_subset.2
-      ⟨(1 : ℝ), by
-        simp only [mem_Ioi, zero_lt_one], fun x hx => hx.2⟩
+    mem_nhds_within_Ioi_iff_exists_Ioo_subset.2 ⟨(1 : ℝ), by simp only [mem_Ioi, zero_lt_one], fun x hx => hx.2⟩
   filter_upwards [E1, E2, self_mem_nhds_within] with h hδ h_lt_1 hpos
   -- we consider `h` small enough that all points under consideration belong to this ball,
   -- and also with `0 < h < 1`.
@@ -144,14 +142,12 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
           simp only [norm_smul, Real.norm_eq_abs, hpos.le, abs_of_nonneg, abs_mul, ht.left, mul_assoc]
         _ ≤ h * ∥v∥ + 1 * (h * ∥w∥) :=
           add_le_add le_rflₓ (mul_le_mul_of_nonneg_right ht.2.le (mul_nonneg hpos.le (norm_nonneg _)))
-        _ = h * (∥v∥ + ∥w∥) := by
-          ring
+        _ = h * (∥v∥ + ∥w∥) := by ring
         
     calc
       ∥g' t∥ = ∥(f' (x + h • v + (t * h) • w) - f' x - f'' (h • v + (t * h) • w)) (h • w)∥ := by
         rw [hg']
-        have : h * (t * h) = t * (h * h) := by
-          ring
+        have : h * (t * h) = t * (h * h) := by ring
         simp only [ContinuousLinearMap.coe_sub', ContinuousLinearMap.map_add, pow_two, ContinuousLinearMap.add_apply,
           Pi.smul_apply, smul_sub, smul_add, smul_smul, ← sub_sub, ContinuousLinearMap.coe_smul', Pi.sub_apply,
           ContinuousLinearMap.map_smul, this]
@@ -181,7 +177,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
       norm_image_sub_le_of_norm_deriv_le_segment' g_deriv g'_bound 1 (right_mem_Icc.2 zero_le_one)
   convert I using 1
   · congr 1
-    dsimp' only [g]
+    dsimp only [g]
     simp only [Nat.one_ne_zero, add_zeroₓ, one_mulₓ, zero_div, zero_mul, sub_zero, zero_smul, Ne.def, not_false_iff,
       bit0_eq_zero, zero_pow']
     abel
@@ -201,24 +197,14 @@ theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v �
           h ^ 2 • f'' v w) =o[𝓝[>] 0]
       fun h => h ^ 2 :=
   by
-  have A : (1 : ℝ) / 2 ∈ Ioc (0 : ℝ) 1 :=
-    ⟨by
-      norm_num, by
-      norm_num⟩
-  have B : (1 : ℝ) / 2 ∈ Icc (0 : ℝ) 1 :=
-    ⟨by
-      norm_num, by
-      norm_num⟩
-  have C : ∀ w : E, (2 : ℝ) • w = 2 • w := fun w => by
-    simp only [two_smul]
+  have A : (1 : ℝ) / 2 ∈ Ioc (0 : ℝ) 1 := ⟨by norm_num, by norm_num⟩
+  have B : (1 : ℝ) / 2 ∈ Icc (0 : ℝ) 1 := ⟨by norm_num, by norm_num⟩
+  have C : ∀ w : E, (2 : ℝ) • w = 2 • w := fun w => by simp only [two_smul]
   have h2v2w : x + (2 : ℝ) • v + (2 : ℝ) • w ∈ Interior s := by
     convert s_conv.interior.add_smul_sub_mem h4v h4w B using 1
     simp only [smul_sub, smul_smul, one_div, add_sub_add_left_eq_sub, mul_addₓ, add_smul]
     norm_num
-    simp only
-      [show (4 : ℝ) = (2 : ℝ) + (2 : ℝ) by
-        norm_num,
-      add_smul]
+    simp only [show (4 : ℝ) = (2 : ℝ) + (2 : ℝ) by norm_num, add_smul]
     abel
   have h2vww : x + (2 • v + w) + w ∈ Interior s := by
     convert h2v2w using 1
@@ -298,8 +284,7 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
   obtain ⟨z, hz⟩ : ∃ z, z = ((1 : ℝ) / 4) • (y - x) := ⟨((1 : ℝ) / 4) • (y - x), rfl⟩
   have A : ∀ m : E, Filter.Tendsto (fun t : ℝ => x + (4 : ℝ) • (z + t • m)) (𝓝 0) (𝓝 y) := by
     intro m
-    have : x + (4 : ℝ) • (z + (0 : ℝ) • m) = y := by
-      simp [hz]
+    have : x + (4 : ℝ) • (z + (0 : ℝ) • m) = y := by simp [hz]
     rw [← this]
     refine' tendsto_const_nhds.add _
     refine' tendsto_const_nhds.smul _
@@ -342,8 +327,7 @@ derivative is symmetric. -/
 theorem second_derivative_symmetric_of_eventually {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F}
     (hf : ∀ᶠ y in 𝓝 x, HasFderivAt f (f' y) y) (hx : HasFderivAt f' f'' x) (v w : E) : f'' v w = f'' w v := by
   rcases Metric.mem_nhds_iff.1 hf with ⟨ε, εpos, hε⟩
-  have A : (Interior (Metric.Ball x ε)).Nonempty := by
-    rwa [metric.is_open_ball.interior_eq, Metric.nonempty_ball]
+  have A : (Interior (Metric.Ball x ε)).Nonempty := by rwa [metric.is_open_ball.interior_eq, Metric.nonempty_ball]
   exact
     Convex.second_derivative_within_at_symmetric (convex_ball x ε) A (fun y hy => hε (interior_subset hy))
       (Metric.mem_ball_self εpos) hx.has_fderiv_within_at v w

@@ -103,8 +103,7 @@ theorem fourier_zero {z : circle} : fourier 0 z = 1 :=
   rfl
 
 @[simp]
-theorem fourier_neg {n : ℤ} {z : circle} : fourier (-n) z = conj (fourier n z) := by
-  simp [← coe_inv_circle_eq_conj z]
+theorem fourier_neg {n : ℤ} {z : circle} : fourier (-n) z = conj (fourier n z) := by simp [← coe_inv_circle_eq_conj z]
 
 @[simp]
 theorem fourier_add {m n : ℤ} {z : circle} : fourier (m + n) z = fourier m z * fourier n z := by
@@ -193,8 +192,7 @@ theorem span_fourier_Lp_closure_eq_top {p : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p
 theorem fourier_add_half_inv_index {n : ℤ} (hn : n ≠ 0) (z : circle) :
     fourier n (expMapCircle (n⁻¹ * Real.pi) * z) = -fourier n z := by
   have : ↑n * ((↑n)⁻¹ * ↑Real.pi * Complex.i) = ↑Real.pi * Complex.i := by
-    have : (n : ℂ) ≠ 0 := by
-      exact_mod_cast hn
+    have : (n : ℂ) ≠ 0 := by exact_mod_cast hn
     field_simp
     ring
   simp [mul_zpow, ← Complex.exp_int_mul, Complex.exp_pi_mul_I, this]
@@ -220,10 +218,7 @@ section fourier
 /-- We define `fourier_series` to be a `ℤ`-indexed Hilbert basis for `Lp ℂ 2 haar_circle`, which by
 definition is an isometric isomorphism from `Lp ℂ 2 haar_circle` to `ℓ²(ℤ, ℂ)`. -/
 def fourierSeries : HilbertBasis ℤ ℂ (lp ℂ 2 haarCircle) :=
-  HilbertBasis.mk orthonormal_fourier
-    (span_fourier_Lp_closure_eq_top
-        (by
-          norm_num)).Ge
+  HilbertBasis.mk orthonormal_fourier (span_fourier_Lp_closure_eq_top (by norm_num)).Ge
 
 /-- The elements of the Hilbert basis `fourier_series` for `Lp ℂ 2 haar_circle` are the functions
 `fourier_Lp 2`, the monomials `λ z, z ^ n` on the circle considered as elements of `L2`. -/
@@ -245,8 +240,7 @@ theorem fourier_series_repr (f : lp ℂ 2 haarCircle) (i : ℤ) :
 
 /-- The Fourier series of an `L2` function `f` sums to `f`, in the `L2` topology on the circle. -/
 theorem has_sum_fourier_series (f : lp ℂ 2 haarCircle) : HasSum (fun i => fourierSeries.repr f i • fourierLp 2 i) f :=
-  by
-  simpa using HilbertBasis.has_sum_repr fourierSeries f
+  by simpa using HilbertBasis.has_sum_repr fourierSeries f
 
 /-- **Parseval's identity**: the sum of the squared norms of the Fourier coefficients equals the
 `L2` norm of the function. -/
@@ -255,8 +249,7 @@ theorem tsum_sq_fourier_series_repr (f : lp ℂ 2 haarCircle) :
   have H₁ : ∥fourier_series.repr f∥ ^ 2 = ∑' i, ∥fourier_series.repr f i∥ ^ 2 := by
     exact_mod_cast lp.norm_rpow_eq_tsum _ (fourier_series.repr f)
     norm_num
-  have H₂ : ∥fourier_series.repr f∥ ^ 2 = ∥f∥ ^ 2 := by
-    simp
+  have H₂ : ∥fourier_series.repr f∥ ^ 2 = ∥f∥ ^ 2 := by simp
   have H₃ := congr_arg IsROrC.re (@L2.inner_def circle ℂ ℂ _ _ _ _ f f)
   rw [← integral_re] at H₃
   · simp only [← norm_sq_eq_inner] at H₃

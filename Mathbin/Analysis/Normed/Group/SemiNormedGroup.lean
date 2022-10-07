@@ -86,8 +86,7 @@ theorem iso_isometry_of_norm_noninc {V W : SemiNormedGroup} (i : V ≅ W) (h1 : 
   intro v
   apply le_antisymmₓ (h1 v)
   calc
-    ∥v∥ = ∥i.inv (i.hom v)∥ := by
-      rw [iso.hom_inv_id_apply]
+    ∥v∥ = ∥i.inv (i.hom v)∥ := by rw [iso.hom_inv_id_apply]
     _ ≤ ∥i.hom v∥ := h2 _
     
 
@@ -204,8 +203,7 @@ theorem iso_isometry {V W : SemiNormedGroup₁} (i : V ≅ W) : Isometry i.hom :
   intro v
   apply le_antisymmₓ (i.hom.2 v)
   calc
-    ∥v∥ = ∥i.inv (i.hom v)∥ := by
-      rw [iso.hom_inv_id_apply]
+    ∥v∥ = ∥i.inv (i.hom v)∥ := by rw [iso.hom_inv_id_apply]
     _ ≤ ∥i.hom v∥ := i.inv.2 _
     
 

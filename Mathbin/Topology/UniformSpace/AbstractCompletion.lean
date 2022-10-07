@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
 import Mathbin.Topology.UniformSpace.UniformEmbedding
+import Mathbin.Topology.UniformSpace.Equiv
 
 /-!
 # Abstract theory of Hausdorff completions of uniform spaces
@@ -74,6 +75,10 @@ local notation "hatα" => pkg.Space
 -- mathport name: exprι
 local notation "ι" => pkg.coe
 
+/-- If `α` is complete, then it is an abstract completion of itself. -/
+def ofComplete [SeparatedSpace α] [CompleteSpace α] : AbstractCompletion α :=
+  mk α id inferInstance inferInstance inferInstance uniform_inducing_id dense_range_id
+
 theorem closure_range : Closure (Range ι) = univ :=
   pkg.dense.closure_range
 
@@ -116,15 +121,13 @@ theorem extend_coe [T2Space β] (hf : UniformContinuous f) (a : α) : (pkg.exten
 variable [CompleteSpace β]
 
 theorem uniform_continuous_extend : UniformContinuous (pkg.extend f) := by
-  by_cases' hf : UniformContinuous f
+  by_cases hf:UniformContinuous f
   · rw [pkg.extend_def hf]
     exact uniform_continuous_uniformly_extend pkg.uniform_inducing pkg.dense hf
     
   · change UniformContinuous (ite _ _ _)
     rw [if_neg hf]
-    exact
-      uniform_continuous_of_const fun a b => by
-        congr
+    exact uniform_continuous_of_const fun a b => by congr
     
 
 theorem continuous_extend : Continuous (pkg.extend f) :=
@@ -225,12 +228,14 @@ theorem inverse_compare : pkg.compare pkg' ∘ pkg'.compare pkg = id := by
   rw [comp_app, pkg'.compare_coe pkg, pkg.compare_coe pkg']
   rfl
 
-/-- The bijection between two completions of the same uniform space. -/
-def compareEquiv : pkg.Space ≃ pkg'.Space where
+/-- The uniform bijection between two completions of the same uniform space. -/
+def compareEquiv : pkg.Space ≃ᵤ pkg'.Space where
   toFun := pkg.compare pkg'
   invFun := pkg'.compare pkg
   left_inv := congr_fun (pkg'.inverse_compare pkg)
   right_inv := congr_fun (pkg.inverse_compare pkg')
+  uniform_continuous_to_fun := uniform_continuous_compare _ _
+  uniform_continuous_inv_fun := uniform_continuous_compare _ _
 
 theorem uniform_continuous_compare_equiv : UniformContinuous (pkg.compareEquiv pkg') :=
   pkg.uniform_continuous_compare pkg'
@@ -255,10 +260,8 @@ protected def prod : AbstractCompletion (α × β) where
   Space := hatα × hatβ
   coe := fun p => ⟨ι p.1, ι' p.2⟩
   uniformStruct := Prod.uniformSpace
-  complete := by
-    infer_instance
-  separation := by
-    infer_instance
+  complete := by infer_instance
+  separation := by infer_instance
   UniformInducing := UniformInducing.prod pkg.UniformInducing pkg'.UniformInducing
   dense := pkg.dense.prod_map pkg'.dense
 

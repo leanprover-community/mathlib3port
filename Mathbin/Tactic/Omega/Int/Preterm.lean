@@ -79,8 +79,7 @@ def canonize : Preterm → Term
 
 @[simp]
 theorem val_canonize {v : Nat → Int} : ∀ {t : Preterm}, (canonize t).val v = t.val v
-  | &i => by
-    simp only [preterm.val, add_zeroₓ, term.val, canonize, coeffs.val_nil]
+  | &i => by simp only [preterm.val, add_zeroₓ, term.val, canonize, coeffs.val_nil]
   | i ** n => by
     simp only [coeffs.val_set, canonize, preterm.val, zero_addₓ, term.val]
     split_ifs with h1 h2
@@ -90,8 +89,7 @@ theorem val_canonize {v : Nat → Int} : ∀ {t : Preterm}, (canonize t).val v =
       
     · rw [mul_comm]
       
-  | t +* s => by
-    simp only [canonize, val_canonize, term.val_add, preterm.val]
+  | t +* s => by simp only [canonize, val_canonize, term.val_add, preterm.val]
 
 end Int
 

@@ -29,7 +29,7 @@ section
 
 /-- Typeclass for expressing that a type `M₀` with multiplication and a zero satisfies
 `0 * a = 0` and `a * 0 = 0` for all `a : M₀`. -/
-@[protect_proj, ancestor Mul Zero]
+@[protect_proj]
 class MulZeroClassₓ (M₀ : Type _) extends Mul M₀, Zero M₀ where
   zero_mul : ∀ a : M₀, 0 * a = 0
   mul_zero : ∀ a : M₀, a * 0 = 0

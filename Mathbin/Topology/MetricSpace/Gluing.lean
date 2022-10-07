@@ -82,8 +82,7 @@ theorem glue_dist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : 
     have A : ∀ q, 0 ≤ dist (Φ p) (Φ q) + dist (Ψ p) (Ψ q) := fun q => by
       rw [← add_zeroₓ (0 : ℝ)] <;> exact add_le_add dist_nonneg dist_nonneg
     refine' le_antisymmₓ _ (le_cinfi A)
-    have : 0 = dist (Φ p) (Φ p) + dist (Ψ p) (Ψ p) := by
-      simp
+    have : 0 = dist (Φ p) (Φ p) + dist (Ψ p) (Ψ p) := by simp
     rw [this]
     exact cinfi_le ⟨0, forall_range_iff.2 A⟩ p
   rw [glue_dist, this, zero_addₓ]
@@ -110,7 +109,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         (⨅ p, dist y (Φ p) + dist x (Ψ p)) + dist y z =
           infi ((fun t => t + dist y z) ∘ fun p => dist y (Φ p) + dist x (Ψ p)) :=
         by
-        refine' Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ (B _ _)
+        refine' Monotoneₓ.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -118,8 +117,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
       calc
         dist z (Φ p) + dist x (Ψ p) ≤ dist y z + dist y (Φ p) + dist x (Ψ p) :=
           add_le_add (dist_triangle_left _ _ _) le_rflₓ
-        _ = dist y (Φ p) + dist x (Ψ p) + dist y z := by
-          ring
+        _ = dist y (Φ p) + dist x (Ψ p) + dist y z := by ring
         
     linarith
   | inr x, inr y, inl z => by
@@ -131,7 +129,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         (dist x y + ⨅ p, dist z (Φ p) + dist y (Ψ p)) =
           infi ((fun t => dist x y + t) ∘ fun p => dist z (Φ p) + dist y (Ψ p)) :=
         by
-        refine' Monotone.map_cinfi_of_continuous_at (continuous_at_const.add continuous_at_id) _ (B _ _)
+        refine' Monotoneₓ.map_cinfi_of_continuous_at (continuous_at_const.add continuous_at_id) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -139,8 +137,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
       calc
         dist z (Φ p) + dist x (Ψ p) ≤ dist z (Φ p) + (dist x y + dist y (Ψ p)) :=
           add_le_add le_rflₓ (dist_triangle _ _ _)
-        _ = dist x y + (dist z (Φ p) + dist y (Ψ p)) := by
-          ring
+        _ = dist x y + (dist z (Φ p) + dist y (Ψ p)) := by ring
         
     linarith
   | inl x, inl y, inr z => by
@@ -152,15 +149,14 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         (dist x y + ⨅ p, dist y (Φ p) + dist z (Ψ p)) =
           infi ((fun t => dist x y + t) ∘ fun p => dist y (Φ p) + dist z (Ψ p)) :=
         by
-        refine' Monotone.map_cinfi_of_continuous_at (continuous_at_const.add continuous_at_id) _ (B _ _)
+        refine' Monotoneₓ.map_cinfi_of_continuous_at (continuous_at_const.add continuous_at_id) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
       refine' cinfi_mono (B _ _) fun p => _
       calc
         dist x (Φ p) + dist z (Ψ p) ≤ dist x y + dist y (Φ p) + dist z (Ψ p) := add_le_add (dist_triangle _ _ _) le_rflₓ
-        _ = dist x y + (dist y (Φ p) + dist z (Ψ p)) := by
-          ring
+        _ = dist x y + (dist y (Φ p) + dist z (Ψ p)) := by ring
         
     linarith
   | inl x, inr y, inr z => by
@@ -172,7 +168,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         (⨅ p, dist x (Φ p) + dist y (Ψ p)) + dist y z =
           infi ((fun t => t + dist y z) ∘ fun p => dist x (Φ p) + dist y (Ψ p)) :=
         by
-        refine' Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ (B _ _)
+        refine' Monotoneₓ.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -180,81 +176,60 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
       calc
         dist x (Φ p) + dist z (Ψ p) ≤ dist x (Φ p) + (dist y z + dist y (Ψ p)) :=
           add_le_add le_rflₓ (dist_triangle_left _ _ _)
-        _ = dist x (Φ p) + dist y (Ψ p) + dist y z := by
-          ring
+        _ = dist x (Φ p) + dist y (Ψ p) + dist y z := by ring
         
     linarith
   | inl x, inr y, inl z =>
     le_of_forall_pos_le_add fun δ δpos => by
       obtain ⟨p, hp⟩ : ∃ p, dist x (Φ p) + dist y (Ψ p) < (⨅ p, dist x (Φ p) + dist y (Ψ p)) + δ / 2
-      exact
-        exists_lt_of_cinfi_lt
-          (by
-            linarith)
+      exact exists_lt_of_cinfi_lt (by linarith)
       obtain ⟨q, hq⟩ : ∃ q, dist z (Φ q) + dist y (Ψ q) < (⨅ p, dist z (Φ p) + dist y (Ψ p)) + δ / 2
-      exact
-        exists_lt_of_cinfi_lt
-          (by
-            linarith)
+      exact exists_lt_of_cinfi_lt (by linarith)
       have : dist (Φ p) (Φ q) ≤ dist (Ψ p) (Ψ q) + 2 * ε := by
         have := le_transₓ (le_abs_self _) (H p q)
         · linarith
           
       calc
         dist x z ≤ dist x (Φ p) + dist (Φ p) (Φ q) + dist (Φ q) z := dist_triangle4 _ _ _ _
-        _ ≤ dist x (Φ p) + dist (Ψ p) (Ψ q) + dist z (Φ q) + 2 * ε := by
-          rw [dist_comm z] <;> linarith
+        _ ≤ dist x (Φ p) + dist (Ψ p) (Ψ q) + dist z (Φ q) + 2 * ε := by rw [dist_comm z] <;> linarith
         _ ≤ dist x (Φ p) + (dist y (Ψ p) + dist y (Ψ q)) + dist z (Φ q) + 2 * ε :=
           add_le_add (add_le_add (add_le_add le_rflₓ (dist_triangle_left _ _ _)) le_rflₓ) le_rflₓ
-        _ ≤ (⨅ p, dist x (Φ p) + dist y (Ψ p)) + ε + ((⨅ p, dist z (Φ p) + dist y (Ψ p)) + ε) + δ := by
-          linarith
+        _ ≤ (⨅ p, dist x (Φ p) + dist y (Ψ p)) + ε + ((⨅ p, dist z (Φ p) + dist y (Ψ p)) + ε) + δ := by linarith
         
   | inr x, inl y, inr z =>
     le_of_forall_pos_le_add fun δ δpos => by
       obtain ⟨p, hp⟩ : ∃ p, dist y (Φ p) + dist x (Ψ p) < (⨅ p, dist y (Φ p) + dist x (Ψ p)) + δ / 2
-      exact
-        exists_lt_of_cinfi_lt
-          (by
-            linarith)
+      exact exists_lt_of_cinfi_lt (by linarith)
       obtain ⟨q, hq⟩ : ∃ q, dist y (Φ q) + dist z (Ψ q) < (⨅ p, dist y (Φ p) + dist z (Ψ p)) + δ / 2
-      exact
-        exists_lt_of_cinfi_lt
-          (by
-            linarith)
+      exact exists_lt_of_cinfi_lt (by linarith)
       have : dist (Ψ p) (Ψ q) ≤ dist (Φ p) (Φ q) + 2 * ε := by
         have := le_transₓ (neg_le_abs_self _) (H p q)
         · linarith
           
       calc
         dist x z ≤ dist x (Ψ p) + dist (Ψ p) (Ψ q) + dist (Ψ q) z := dist_triangle4 _ _ _ _
-        _ ≤ dist x (Ψ p) + dist (Φ p) (Φ q) + dist z (Ψ q) + 2 * ε := by
-          rw [dist_comm z] <;> linarith
+        _ ≤ dist x (Ψ p) + dist (Φ p) (Φ q) + dist z (Ψ q) + 2 * ε := by rw [dist_comm z] <;> linarith
         _ ≤ dist x (Ψ p) + (dist y (Φ p) + dist y (Φ q)) + dist z (Ψ q) + 2 * ε :=
           add_le_add (add_le_add (add_le_add le_rflₓ (dist_triangle_left _ _ _)) le_rflₓ) le_rflₓ
-        _ ≤ (⨅ p, dist y (Φ p) + dist x (Ψ p)) + ε + ((⨅ p, dist y (Φ p) + dist z (Ψ p)) + ε) + δ := by
-          linarith
+        _ ≤ (⨅ p, dist y (Φ p) + dist x (Ψ p)) + ε + ((⨅ p, dist y (Φ p) + dist z (Ψ p)) + ε) + δ := by linarith
         
 
 private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (ε0 : 0 < ε) :
     ∀ p q : Sum X Y, glueDist Φ Ψ ε p q = 0 → p = q
-  | inl x, inl y, h => by
-    rw [eq_of_dist_eq_zero h]
+  | inl x, inl y, h => by rw [eq_of_dist_eq_zero h]
   | inl x, inr y, h => by
     have : 0 ≤ ⨅ p, dist x (Φ p) + dist y (Ψ p) :=
-      le_cinfi fun p => by
-        simpa using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
+      le_cinfi fun p => by simpa using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
     have : 0 + ε ≤ glue_dist Φ Ψ ε (inl x) (inr y) := add_le_add this (le_reflₓ ε)
     exfalso
     linarith
   | inr x, inl y, h => by
     have : 0 ≤ ⨅ p, dist y (Φ p) + dist x (Ψ p) :=
-      le_cinfi fun p => by
-        simpa [add_commₓ] using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
+      le_cinfi fun p => by simpa [add_commₓ] using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
     have : 0 + ε ≤ glue_dist Φ Ψ ε (inr x) (inl y) := add_le_add this (le_reflₓ ε)
     exfalso
     linarith
-  | inr x, inr y, h => by
-    rw [eq_of_dist_eq_zero h]
+  | inr x, inr y, h => by rw [eq_of_dist_eq_zero h]
 
 /-- Given two maps `Φ` and `Ψ` intro metric spaces `X` and `Y` such that the distances between
 `Φ p` and `Φ q`, and between `Ψ p` and `Ψ q`, coincide up to `2 ε` where `ε > 0`, one can almost
@@ -300,11 +275,7 @@ def Sum.dist : Sum X Y → Sum X Y → ℝ
 
 theorem Sum.dist_eq_glue_dist {p q : Sum X Y} (x : X) (y : Y) :
     Sum.dist p q = glueDist (fun _ : Unit => Nonempty.some ⟨x⟩) (fun _ : Unit => Nonempty.some ⟨y⟩) 1 p q := by
-  cases p <;>
-    cases q <;>
-      first |
-        rfl|
-        simp [sum.dist, glue_dist, dist_comm, add_commₓ, add_left_commₓ]
+  cases p <;> cases q <;> first |rfl|simp [sum.dist, glue_dist, dist_comm, add_commₓ, add_left_commₓ]
 
 private theorem sum.dist_comm (x y : Sum X Y) : Sum.dist x y = Sum.dist y x := by
   cases x <;> cases y <;> simp only [sum.dist, dist_comm, add_commₓ, add_left_commₓ]
@@ -341,54 +312,29 @@ follow from our choice of the distance. The harder work is to show that the unif
 defined by the distance coincides with the disjoint union uniform structure. -/
 def metricSpaceSum : MetricSpace (Sum X Y) where
   dist := Sum.dist
-  dist_self := fun x => by
-    cases x <;> simp only [sum.dist, dist_self]
+  dist_self := fun x => by cases x <;> simp only [sum.dist, dist_self]
   dist_comm := Sum.dist_comm
   dist_triangle := fun p q r => by
     cases p <;> cases q <;> cases r
     · exact dist_triangle _ _ _
       
     · simp only [dist, sum.dist_eq_glue_dist p r]
-      exact
-        glue_dist_triangle _ _ _
-          (by
-            norm_num)
-          _ _ _
+      exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
       
     · simp only [dist, sum.dist_eq_glue_dist p q]
-      exact
-        glue_dist_triangle _ _ _
-          (by
-            norm_num)
-          _ _ _
+      exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
       
     · simp only [dist, sum.dist_eq_glue_dist p q]
-      exact
-        glue_dist_triangle _ _ _
-          (by
-            norm_num)
-          _ _ _
+      exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
       
     · simp only [dist, sum.dist_eq_glue_dist q p]
-      exact
-        glue_dist_triangle _ _ _
-          (by
-            norm_num)
-          _ _ _
+      exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
       
     · simp only [dist, sum.dist_eq_glue_dist q p]
-      exact
-        glue_dist_triangle _ _ _
-          (by
-            norm_num)
-          _ _ _
+      exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
       
     · simp only [dist, sum.dist_eq_glue_dist r p]
-      exact
-        glue_dist_triangle _ _ _
-          (by
-            norm_num)
-          _ _ _
+      exact glue_dist_triangle _ _ _ (by norm_num) _ _ _
       
     · exact dist_triangle _ _ _
       
@@ -442,10 +388,9 @@ their respective basepoints, plus the distance 1 between the basepoints.
 Since there is an arbitrary choice in this construction, it is not an instance by default. -/
 protected def dist : (Σi, E i) → (Σi, E i) → ℝ
   | ⟨i, x⟩, ⟨j, y⟩ =>
-    if h : i = j then by
-      have : E j = E i := by
-        rw [h]
-      exact HasDist.dist x (cast this y)
+    if h : i = j then
+      haveI : E j = E i := by rw [h]
+      HasDist.dist x (cast this y)
     else HasDist.dist x (Nonempty.some ⟨x⟩) + 1 + HasDist.dist (Nonempty.some ⟨y⟩) y
 
 /-- A `has_dist` instance on the disjoint union `Σ i, E i`.
@@ -493,8 +438,7 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
       calc
         dist x z ≤ dist x (Nonempty.some ⟨x⟩) + 0 + 0 + (0 + 0 + dist (Nonempty.some ⟨z⟩) z) := by
           simpa only [zero_addₓ, add_zeroₓ] using dist_triangle _ _ _
-        _ ≤ _ := by
-          apply_rules [add_le_add, le_rflₓ, dist_nonneg, zero_le_one]
+        _ ≤ _ := by apply_rules [add_le_add, le_rflₓ, dist_nonneg, zero_le_one]
         
       
     
@@ -503,10 +447,8 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
       calc
         dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z ≤
             dist x y + dist y (Nonempty.some ⟨y⟩) + 1 + dist (Nonempty.some ⟨z⟩) z :=
-          by
-          apply_rules [add_le_add, le_rflₓ, dist_triangle]
-        _ = _ := by
-          abel
+          by apply_rules [add_le_add, le_rflₓ, dist_triangle]
+        _ = _ := by abel
         
       
     · rcases eq_or_ne j k with (rfl | hjk)
@@ -514,20 +456,16 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
         calc
           dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z ≤
               dist x (Nonempty.some ⟨x⟩) + 1 + (dist (Nonempty.some ⟨z⟩) y + dist y z) :=
-            by
-            apply_rules [add_le_add, le_rflₓ, dist_triangle]
-          _ = _ := by
-            abel
+            by apply_rules [add_le_add, le_rflₓ, dist_triangle]
+          _ = _ := by abel
           
         
       · simp only [hik, hij, hjk, sigma.dist_ne, Ne.def, not_false_iff]
         calc
           dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z =
               dist x (Nonempty.some ⟨x⟩) + 1 + 0 + (0 + 0 + dist (Nonempty.some ⟨z⟩) z) :=
-            by
-            simp only [add_zeroₓ, zero_addₓ]
-          _ ≤ _ := by
-            apply_rules [add_le_add, zero_le_one, dist_nonneg, le_rflₓ]
+            by simp only [add_zeroₓ, zero_addₓ]
+          _ ≤ _ := by apply_rules [add_le_add, zero_le_one, dist_nonneg, le_rflₓ]
           
         
       
@@ -602,8 +540,7 @@ open Filter
 
 /-- The injection of a space in a disjoint union is an isometry -/
 theorem isometry_mk (i : ι) : Isometry (Sigma.mk i : E i → Σk, E k) :=
-  Isometry.of_dist_eq fun x y => by
-    simp
+  Isometry.of_dist_eq fun x y => by simp
 
 /-- A disjoint union of complete metric spaces is complete. -/
 protected theorem complete_space [∀ i, CompleteSpace (E i)] : CompleteSpace (Σi, E i) := by
@@ -638,9 +575,7 @@ def gluePremetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (S
   dist := glueDist Φ Ψ 0
   dist_self := glue_dist_self Φ Ψ 0
   dist_comm := glue_dist_comm Φ Ψ 0
-  dist_triangle :=
-    (glue_dist_triangle Φ Ψ 0) fun p q => by
-      rw [hΦ.dist_eq, hΨ.dist_eq] <;> simp
+  dist_triangle := (glue_dist_triangle Φ Ψ 0) fun p q => by rw [hΦ.dist_eq, hΨ.dist_eq] <;> simp
 
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a
 space  `glue_space hΦ hΨ` by identifying in `X ⊕ Y` the points `Φ x` and `Ψ x`. -/
@@ -714,14 +649,12 @@ theorem inductive_limit_dist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n
     congr <;> simp only [A]
     
   · intro hx hy
-    by_cases' h : max x.1 y.1 = m.succ
+    by_cases h:max x.1 y.1 = m.succ
     · unfold inductive_limit_dist
       congr <;> simp only [h]
       
-    · have : max x.1 y.1 ≤ succ m := by
-        simp [hx, hy]
-      have : max x.1 y.1 ≤ m := by
-        simpa [h] using of_le_succ this
+    · have : max x.1 y.1 ≤ succ m := by simp [hx, hy]
+      have : max x.1 y.1 ≤ m := by simpa [h] using of_le_succ this
       have xm : x.1 ≤ m := le_transₓ (le_max_leftₓ _ _) this
       have ym : y.1 ≤ m := le_transₓ (le_max_rightₓ _ _) this
       rw [le_rec_on_succ xm, le_rec_on_succ ym, (I m).dist_eq]
@@ -732,8 +665,7 @@ theorem inductive_limit_dist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n
 /-- Premetric space structure on `Σ n, X n`.-/
 def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σn, X n) where
   dist := inductiveLimitDist f
-  dist_self := fun x => by
-    simp [dist, inductive_limit_dist]
+  dist_self := fun x => by simp [dist, inductive_limit_dist]
   dist_comm := fun x y => by
     let m := max x.1 y.1
     have hx : x.1 ≤ m := le_max_leftₓ _ _

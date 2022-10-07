@@ -26,11 +26,9 @@ variable (𝕜 : Type _) [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 open Manifold
 
 -- the following two instances prevent poorly understood type class inference timeout problems
-instance smoothFunctionsAlgebra : Algebra 𝕜 C^∞⟮I, M; 𝕜⟯ := by
-  infer_instance
+instance smoothFunctionsAlgebra : Algebra 𝕜 C^∞⟮I, M; 𝕜⟯ := by infer_instance
 
-instance smooth_functions_tower : IsScalarTower 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯ := by
-  infer_instance
+instance smooth_functions_tower : IsScalarTower 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯ := by infer_instance
 
 /-- Type synonym, introduced to put a different `has_smul` action on `C^n⟮I, M; 𝕜⟯`
 which is defined as `f • r = f(x) * r`. -/
@@ -77,7 +75,8 @@ theorem smul_def (x : M) (f : C^∞⟮I, M; 𝕜⟯⟨x⟩) (k : 𝕜) : f • k
   rfl
 
 instance (x : M) :
-    IsScalarTower 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩ 𝕜 where smul_assoc := fun k f h => by
+    IsScalarTower 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩
+      𝕜 where smul_assoc := fun k f h => by
     simp only [smul_def, Algebra.id.smul_eq_mul, SmoothMap.coe_smul, Pi.smul_apply, mul_assoc]
 
 end PointedSmoothMap
@@ -122,11 +121,8 @@ def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) 
     PointDerivation I x →ₗ[𝕜] PointDerivation I' y where
   toFun := fun v =>
     Derivation.mk'
-      { toFun := fun g => v (g.comp f),
-        map_add' := fun g g' => by
-          rw [SmoothMap.add_comp, Derivation.map_add],
-        map_smul' := fun k g => by
-          simp only [SmoothMap.smul_comp, Derivation.map_smul, RingHom.id_apply] }
+      { toFun := fun g => v (g.comp f), map_add' := fun g g' => by rw [SmoothMap.add_comp, Derivation.map_add],
+        map_smul' := fun k g => by simp only [SmoothMap.smul_comp, Derivation.map_smul, RingHom.id_apply] }
       fun g g' => by
       simp only [Derivation.leibniz, SmoothMap.mul_comp, LinearMap.coe_mk, PointedSmoothMap.smul_def,
         ContMdiffMap.comp_apply, h]

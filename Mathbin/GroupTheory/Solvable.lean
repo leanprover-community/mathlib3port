@@ -111,9 +111,7 @@ theorem is_solvable_of_top_eq_bot (h : (⊤ : Subgroup G) = ⊥) : IsSolvable G 
   ⟨⟨0, h⟩⟩
 
 instance (priority := 100) is_solvable_of_subsingleton [Subsingleton G] : IsSolvable G :=
-  is_solvable_of_top_eq_bot G
-    (by
-      ext <;> simp at *)
+  is_solvable_of_top_eq_bot G (by ext <;> simp at *)
 
 variable {G}
 
@@ -189,25 +187,11 @@ theorem not_solvable_of_mem_derived_series {g : G} (h1 : g ≠ 1) (h2 : ∀ n : 
     (not_exists_of_forall_notₓ fun n h => h1 (Subgroup.mem_bot.mp ((congr_arg (Membership.Mem g) h).mp (h2 n))))
 
 theorem Equivₓ.Perm.fin_5_not_solvable : ¬IsSolvable (Equivₓ.Perm (Finₓ 5)) := by
-  let x : Equivₓ.Perm (Finₓ 5) :=
-    ⟨![1, 2, 0, 3, 4], ![2, 0, 1, 3, 4], by
-      decide, by
-      decide⟩
-  let y : Equivₓ.Perm (Finₓ 5) :=
-    ⟨![3, 4, 2, 0, 1], ![3, 4, 2, 0, 1], by
-      decide, by
-      decide⟩
-  let z : Equivₓ.Perm (Finₓ 5) :=
-    ⟨![0, 3, 2, 1, 4], ![0, 3, 2, 1, 4], by
-      decide, by
-      decide⟩
-  have key : x = z * ⁅x, y * x * y⁻¹⁆ * z⁻¹ := by
-    decide
-  refine'
-    not_solvable_of_mem_derived_series
-      (show x ≠ 1 by
-        decide)
-      fun n => _
+  let x : Equivₓ.Perm (Finₓ 5) := ⟨![1, 2, 0, 3, 4], ![2, 0, 1, 3, 4], by decide, by decide⟩
+  let y : Equivₓ.Perm (Finₓ 5) := ⟨![3, 4, 2, 0, 1], ![3, 4, 2, 0, 1], by decide, by decide⟩
+  let z : Equivₓ.Perm (Finₓ 5) := ⟨![0, 3, 2, 1, 4], ![0, 3, 2, 1, 4], by decide, by decide⟩
+  have key : x = z * ⁅x, y * x * y⁻¹⁆ * z⁻¹ := by decide
+  refine' not_solvable_of_mem_derived_series (show x ≠ 1 by decide) fun n => _
   induction' n with n ih
   · exact mem_top x
     

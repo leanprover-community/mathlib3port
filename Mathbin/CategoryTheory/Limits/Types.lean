@@ -110,13 +110,13 @@ noncomputable def Limit.mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : �
 @[simp]
 theorem Limit.π_mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) :
     limit.π F j (Limit.mk F x h) = x j := by
-  dsimp' [limit.mk]
+  dsimp [limit.mk]
   simp
 
 @[simp]
 theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j) (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) :
     limit.π F j (Limit.mk.{v, v} F x h) = x j := by
-  dsimp' [limit.mk]
+  dsimp [limit.mk]
   simp
 
 -- PROJECT: prove this for concrete categories where the forgetful functor preserves limits
@@ -284,7 +284,7 @@ theorem jointly_surjective (F : J ⥤ Type max v u) {t : Cocone F} (h : IsColimi
   suffices (fun x : t.X => ULift.up (∃ j y, t.ι.app j y = x)) = fun _ => ULift.up True by
     have := congr_fun this x
     have H := congr_arg ULift.down this
-    dsimp'  at H
+    dsimp at H
     rwa [eq_trueₓ] at H
   refine' h.hom_ext _
   intro j
@@ -314,8 +314,7 @@ protected def Rel (x y : Σj, F.obj j) : Prop :=
   ∃ (k : _)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2
 
 theorem rel_of_quot_rel (x y : Σj, F.obj j) : Quot.Rel F x y → FilteredColimit.Rel F x y := fun ⟨f, h⟩ =>
-  ⟨y.1, f, 𝟙 y.1, by
-    rw [← h, functor_to_types.map_id_apply]⟩
+  ⟨y.1, f, 𝟙 y.1, by rw [← h, functor_to_types.map_id_apply]⟩
 
 theorem eqv_gen_quot_rel_of_rel (x y : Σj, F.obj j) : FilteredColimit.Rel F x y → EqvGen (Quot.Rel F) x y :=
   fun ⟨k, f, g, h⟩ =>
@@ -366,20 +365,13 @@ protected theorem rel_equiv : Equivalenceₓ (FilteredColimit.Rel F) :=
     let ⟨m, n, hn⟩ := IsFilteredOrEmpty.cocone_maps (g ≫ fl) (f' ≫ gl)
     ⟨m, f ≫ fl ≫ n, g' ≫ gl ≫ n,
       calc
-        F.map (f ≫ fl ≫ n) x.2 = F.map (fl ≫ n) (F.map f x.2) := by
-          simp
-        _ = F.map (fl ≫ n) (F.map g y.2) := by
-          rw [h]
-        _ = F.map ((g ≫ fl) ≫ n) y.2 := by
-          simp
-        _ = F.map ((f' ≫ gl) ≫ n) y.2 := by
-          rw [hn]
-        _ = F.map (gl ≫ n) (F.map f' y.2) := by
-          simp
-        _ = F.map (gl ≫ n) (F.map g' z.2) := by
-          rw [h']
-        _ = F.map (g' ≫ gl ≫ n) z.2 := by
-          simp
+        F.map (f ≫ fl ≫ n) x.2 = F.map (fl ≫ n) (F.map f x.2) := by simp
+        _ = F.map (fl ≫ n) (F.map g y.2) := by rw [h]
+        _ = F.map ((g ≫ fl) ≫ n) y.2 := by simp
+        _ = F.map ((f' ≫ gl) ≫ n) y.2 := by rw [hn]
+        _ = F.map (gl ≫ n) (F.map f' y.2) := by simp
+        _ = F.map (gl ≫ n) (F.map g' z.2) := by rw [h']
+        _ = F.map (g' ≫ gl ≫ n) z.2 := by simp
         ⟩⟩
 
 protected theorem rel_eq_eqv_gen_quot_rel : FilteredColimit.Rel F = EqvGen (Quot.Rel F) := by
@@ -456,9 +448,7 @@ noncomputable def isImage : IsImage (monoFactorisation f) where
 instance : HasImage f :=
   HasImage.mk ⟨_, isImage f⟩
 
-instance :
-    HasImages (Type u) where HasImage := by
-    infer_instance
+instance : HasImages (Type u) where HasImage := by infer_instance
 
 instance :
     HasImageMaps

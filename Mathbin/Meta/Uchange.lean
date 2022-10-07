@@ -43,9 +43,7 @@ namespace Uchange
 variable {α : Type v} (a : α)
 
 unsafe instance [DecidableEq α] : DecidableEq (uchange α) :=
-  unchecked_cast'
-    (by
-      infer_instance : DecidableEq α)
+  unchecked_cast' (by infer_instance : DecidableEq α)
 
 /-- `uchange.down` embeds `α` to `uchange α`.
 

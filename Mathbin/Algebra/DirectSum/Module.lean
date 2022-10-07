@@ -61,7 +61,7 @@ include dec_ι
 variable (R ι M)
 
 /-- Create the direct sum given a family `M` of `R` modules indexed over `ι`. -/
-def lmk : ∀ s : Finset ι, (∀ i : (↑s : Set ι), M i.val) →ₗ[R] ⨁ i, M i :=
+def lmk : ∀ s : Finsetₓ ι, (∀ i : (↑s : Set ι), M i.val) →ₗ[R] ⨁ i, M i :=
   Dfinsupp.lmk
 
 /-- Inclusion of each component into the direct sum. -/
@@ -77,7 +77,7 @@ theorem single_eq_lof (i : ι) (b : M i) : Dfinsupp.single i b = lof R ι M i b 
   rfl
 
 /-- Scalar multiplication commutes with direct sums. -/
-theorem mk_smul (s : Finset ι) (c : R) (x) : mk M s (c • x) = c • mk M s x :=
+theorem mk_smul (s : Finsetₓ ι) (c : R) (x) : mk M s (c • x) = c • mk M s x :=
   (lmk R ι M s).map_smul c x
 
 /-- Scalar multiplication commutes with the inclusion of each component into the direct sum. -/
@@ -142,7 +142,7 @@ variable (ι M)
 /-- Given `fintype α`, `linear_equiv_fun_on_fintype R` is the natural `R`-linear equivalence
 between `⨁ i, M i` and `Π i, M i`. -/
 @[simps apply]
-def linearEquivFunOnFintype [Fintype ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
+def linearEquivFunOnFintype [Fintypeₓ ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
   { Dfinsupp.equivFunOnFintype with toFun := coeFn,
     map_add' := fun f g => by
       ext
@@ -154,14 +154,14 @@ def linearEquivFunOnFintype [Fintype ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
 variable {ι M}
 
 @[simp]
-theorem linear_equiv_fun_on_fintype_lof [Fintype ι] [DecidableEq ι] (i : ι) (m : M i) :
+theorem linear_equiv_fun_on_fintype_lof [Fintypeₓ ι] [DecidableEq ι] (i : ι) (m : M i) :
     (linearEquivFunOnFintype R ι M) (lof R ι M i m) = Pi.single i m := by
   ext a
   change (Dfinsupp.equivFunOnFintype (lof R ι M i m)) a = _
   convert _root_.congr_fun (Dfinsupp.equiv_fun_on_fintype_single i m) a
 
 @[simp]
-theorem linear_equiv_fun_on_fintype_symm_single [Fintype ι] [DecidableEq ι] (i : ι) (m : M i) :
+theorem linear_equiv_fun_on_fintype_symm_single [Fintypeₓ ι] [DecidableEq ι] (i : ι) (m : M i) :
     (linearEquivFunOnFintype R ι M).symm (Pi.single i m) = lof R ι M i m := by
   ext a
   change (dfinsupp.equiv_fun_on_fintype.symm (Pi.single i m)) a = _
@@ -169,7 +169,7 @@ theorem linear_equiv_fun_on_fintype_symm_single [Fintype ι] [DecidableEq ι] (i
   rfl
 
 @[simp]
-theorem linear_equiv_fun_on_fintype_symm_coe [Fintype ι] (f : ⨁ i, M i) : (linearEquivFunOnFintype R ι M).symm f = f :=
+theorem linear_equiv_fun_on_fintype_symm_coe [Fintypeₓ ι] (f : ⨁ i, M i) : (linearEquivFunOnFintype R ι M).symm f = f :=
   by
   ext
   simp [linear_equiv_fun_on_fintype]
@@ -195,8 +195,7 @@ theorem ext {f g : ⨁ i, M i} (h : ∀ i, component R ι M i f = component R ι
   Dfinsupp.ext h
 
 theorem ext_iff {f g : ⨁ i, M i} : f = g ↔ ∀ i, component R ι M i f = component R ι M i g :=
-  ⟨fun h _ => by
-    rw [h], ext R⟩
+  ⟨fun h _ => by rw [h], ext R⟩
 
 include dec_ι
 
@@ -237,9 +236,7 @@ variable [∀ i j, AddCommMonoidₓ (δ i j)] [∀ i j, Module R (δ i j)]
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 /-- `curry` as a linear map.-/
 noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
-  { sigmaCurry with
-    map_smul' := fun r => by
-      convert @Dfinsupp.sigma_curry_smul _ _ _ δ _ _ _ r }
+  { sigmaCurry with map_smul' := fun r => by convert @Dfinsupp.sigma_curry_smul _ _ _ δ _ _ _ r }
 
 @[simp]
 theorem sigma_lcurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaLcurry R f i j = f ⟨i, j⟩ :=
@@ -333,8 +330,7 @@ theorem IsInternal.collected_basis_coe (h : IsInternal A) {α : ι → Type _} (
   convert Dfinsupp.sum_add_hom_single (fun i => (A i).Subtype.toAddMonoidHom) a.1 (v a.1 a.2)
 
 theorem IsInternal.collected_basis_mem (h : IsInternal A) {α : ι → Type _} (v : ∀ i, Basis (α i) R (A i))
-    (a : Σi, α i) : h.collectedBasis v a ∈ A a.1 := by
-  simp
+    (a : Σi, α i) : h.collectedBasis v a ∈ A a.1 := by simp
 
 /-- When indexed by only two distinct elements, `direct_sum.is_internal` implies
 the two submodules are complementary. Over a `ring R`, this is true as an iff, as
@@ -376,8 +372,7 @@ theorem is_internal_submodule_iff_independent_and_supr_eq_top (A : ι → Submod
 `direct_sum.is_internal` is equivalent to `is_compl`. -/
 theorem is_internal_submodule_iff_is_compl (A : ι → Submodule R M) {i j : ι} (hij : i ≠ j)
     (h : (Set.Univ : Set ι) = {i, j}) : IsInternal A ↔ IsCompl (A i) (A j) := by
-  have : ∀ k, k = i ∨ k = j := fun k => by
-    simpa using set.ext_iff.mp h k
+  have : ∀ k, k = i ∨ k = j := fun k => by simpa using set.ext_iff.mp h k
   rw [is_internal_submodule_iff_independent_and_supr_eq_top, supr, ← Set.image_univ, h, Set.image_insert_eq,
     Set.image_singleton, Sup_pair, CompleteLattice.independent_pair hij this]
   exact ⟨fun ⟨hd, ht⟩ => ⟨hd, ht.Ge⟩, fun ⟨hd, ht⟩ => ⟨hd, eq_top_iff.mpr ht⟩⟩

@@ -81,8 +81,7 @@ theorem mk'_surjective : Function.Surjective <| mk' N :=
 
 @[to_additive]
 theorem mk'_eq_mk' {x y : G} : mk' N x = mk' N y ↔ ∃ z ∈ N, x * z = y :=
-  QuotientGroup.eq'.trans <| by
-    simp only [← _root_.eq_inv_mul_iff_mul_eq, exists_propₓ, exists_eq_right]
+  QuotientGroup.eq'.trans <| by simp only [← _root_.eq_inv_mul_iff_mul_eq, exists_propₓ, exists_eq_right]
 
 /-- Two `monoid_hom`s from a quotient group are equal if their compositions with
 `quotient_group.mk'` are equal.
@@ -153,10 +152,8 @@ def lift (φ : G →* H) (HN : ∀ x ∈ N, φ x = 1) : Q →* H :=
   ((QuotientGroup.con N).lift φ) fun x y h => by
     simp only [QuotientGroup.con, left_rel_apply, Con.rel_mk] at h
     calc
-      φ x = φ (y * (x⁻¹ * y)⁻¹) := by
-        rw [mul_inv_rev, inv_invₓ, mul_inv_cancel_left]
-      _ = φ y := by
-        rw [φ.map_mul, HN _ (N.inv_mem h), mul_oneₓ]
+      φ x = φ (y * (x⁻¹ * y)⁻¹) := by rw [mul_inv_rev, inv_invₓ, mul_inv_cancel_left]
+      _ = φ y := by rw [φ.map_mul, HN _ (N.inv_mem h), mul_oneₓ]
       
 
 @[simp, to_additive QuotientAddGroup.lift_mk]
@@ -189,6 +186,33 @@ theorem map_coe (M : Subgroup H) [M.Normal] (f : G →* H) (h : N ≤ M.comap f)
 theorem map_mk' (M : Subgroup H) [M.Normal] (f : G →* H) (h : N ≤ M.comap f) (x : G) : map N M f h (mk' _ x) = ↑(f x) :=
   QuotientGroup.lift_mk' _ _ x
 
+@[to_additive]
+theorem map_id_apply (h : N ≤ Subgroup.comap (MonoidHom.id _) N := (Subgroup.comap_id N).le) (x) :
+    map N N (MonoidHom.id _) h x = x := by
+  refine' induction_on' x fun x => _
+  simp only [map_coe, MonoidHom.id_apply]
+
+@[simp, to_additive]
+theorem map_id (h : N ≤ Subgroup.comap (MonoidHom.id _) N := (Subgroup.comap_id N).le) :
+    map N N (MonoidHom.id _) h = MonoidHom.id _ :=
+  MonoidHom.ext (map_id_apply N h)
+
+@[simp, to_additive]
+theorem map_map {I : Type _} [Groupₓ I] (M : Subgroup H) (O : Subgroup I) [M.Normal] [O.Normal] (f : G →* H)
+    (g : H →* I) (hf : N ≤ Subgroup.comap f M) (hg : M ≤ Subgroup.comap g O)
+    (hgf : N ≤ Subgroup.comap (g.comp f) O := hf.trans ((Subgroup.comap_mono hg).trans_eq (Subgroup.comap_comap _ _ _)))
+    (x : G ⧸ N) : map M O g hg (map N M f hf x) = map N O (g.comp f) hgf x := by
+  refine' induction_on' x fun x => _
+  simp only [map_coe, MonoidHom.comp_apply]
+
+@[simp, to_additive]
+theorem map_comp_map {I : Type _} [Groupₓ I] (M : Subgroup H) (O : Subgroup I) [M.Normal] [O.Normal] (f : G →* H)
+    (g : H →* I) (hf : N ≤ Subgroup.comap f M) (hg : M ≤ Subgroup.comap g O)
+    (hgf : N ≤ Subgroup.comap (g.comp f) O :=
+      hf.trans ((Subgroup.comap_mono hg).trans_eq (Subgroup.comap_comap _ _ _))) :
+    (map M O g hg).comp (map N M f hf) = map N O (g.comp f) hgf :=
+  MonoidHom.ext (map_map N M O f g hf hg hgf)
+
 omit nN
 
 variable (φ : G →* H)
@@ -211,17 +235,14 @@ theorem ker_lift_mk' (g : G) : (kerLift φ) (mk g) = φ g :=
 @[to_additive QuotientAddGroup.ker_lift_injective]
 theorem ker_lift_injective : Injective (kerLift φ) := fun a b =>
   (Quotientₓ.induction_on₂' a b) fun a b (h : φ a = φ b) =>
-    Quotientₓ.sound' <| by
-      rw [left_rel_apply, mem_ker, φ.map_mul, ← h, φ.map_inv, inv_mul_selfₓ]
+    Quotientₓ.sound' <| by rw [left_rel_apply, mem_ker, φ.map_mul, ← h, φ.map_inv, inv_mul_selfₓ]
 
 -- Note that `ker φ` isn't definitionally `ker (φ.range_restrict)`
 -- so there is a bit of annoying code duplication here
 /-- The induced map from the quotient by the kernel to the range. -/
 @[to_additive QuotientAddGroup.rangeKerLift "The induced map from the quotient by the kernel to\nthe range."]
 def rangeKerLift : G ⧸ ker φ →* φ.range :=
-  (lift _ φ.range_restrict) fun g hg =>
-    (mem_ker _).mp <| by
-      rwa [range_restrict_ker]
+  (lift _ φ.range_restrict) fun g hg => (mem_ker _).mp <| by rwa [range_restrict_ker]
 
 @[to_additive QuotientAddGroup.range_ker_lift_injective]
 theorem range_ker_lift_injective : Injective (rangeKerLift φ) := fun a b =>
@@ -250,11 +271,7 @@ with a right inverse `ψ : H → G`. -/
   simps]
 def quotientKerEquivOfRightInverse (ψ : H → G) (hφ : Function.RightInverse ψ φ) : G ⧸ ker φ ≃* H :=
   { kerLift φ with toFun := kerLift φ, invFun := mk ∘ ψ,
-    left_inv := fun x =>
-      ker_lift_injective φ
-        (by
-          rw [Function.comp_app, ker_lift_mk', hφ]),
-    right_inv := hφ }
+    left_inv := fun x => ker_lift_injective φ (by rw [Function.comp_app, ker_lift_mk', hφ]), right_inv := hφ }
 
 /-- The canonical isomorphism `G/⊥ ≃* G`. -/
 @[to_additive QuotientAddGroup.quotientBot "The canonical isomorphism `G/⊥ ≃+ G`.", simps]
@@ -273,31 +290,12 @@ noncomputable def quotientKerEquivOfSurjective (hφ : Function.Surjective φ) : 
 /-- If two normal subgroups `M` and `N` of `G` are the same, their quotient groups are
 isomorphic. -/
 @[to_additive "If two normal subgroups `M` and `N` of `G` are the same, their quotient groups are\nisomorphic."]
-def equivQuotientOfEq {M N : Subgroup G} [M.Normal] [N.Normal] (h : M = N) : G ⧸ M ≃* G ⧸ N where
-  toFun :=
-    lift M (mk' N) fun m hm =>
-      QuotientGroup.eq.mpr
-        (by
-          simpa [← h] using M.inv_mem hm)
-  invFun :=
-    lift N (mk' M) fun n hn =>
-      QuotientGroup.eq.mpr
-        (by
-          simpa [← h] using N.inv_mem hn)
-  left_inv := fun x =>
-    x.induction_on' <| by
-      intro
-      rfl
-  right_inv := fun x =>
-    x.induction_on' <| by
-      intro
-      rfl
-  map_mul' := fun x y => by
-    rw [MonoidHom.map_mul]
+def quotientMulEquivOfEq {M N : Subgroup G} [M.Normal] [N.Normal] (h : M = N) : G ⧸ M ≃* G ⧸ N :=
+  { Subgroup.quotientEquivOfEq h with map_mul' := fun q r => Quotientₓ.induction_on₂' q r fun g h => rfl }
 
 @[simp, to_additive]
-theorem equiv_quotient_of_eq_mk {M N : Subgroup G} [M.Normal] [N.Normal] (h : M = N) (x : G) :
-    QuotientGroup.equivQuotientOfEq h (QuotientGroup.mk x) = QuotientGroup.mk x :=
+theorem quotient_mul_equiv_of_eq_mk {M N : Subgroup G} [M.Normal] [N.Normal] (h : M = N) (x : G) :
+    QuotientGroup.quotientMulEquivOfEq h (QuotientGroup.mk x) = QuotientGroup.mk x :=
   rfl
 
 /-- Let `A', A, B', B` be subgroups of `G`. If `A' ≤ B'` and `A ≤ B`,
@@ -306,8 +304,7 @@ then there is a map `A / (A' ⊓ A) →* B / (B' ⊓ B)` induced by the inclusio
       "Let `A', A, B', B` be subgroups of `G`. If `A' ≤ B'` and `A ≤ B`,\nthen there is a map `A / (A' ⊓ A) →+ B / (B' ⊓ B)` induced by the inclusions."]
 def quotientMapSubgroupOfOfLe {A' A B' B : Subgroup G} [hAN : (A'.subgroupOf A).Normal] [hBN : (B'.subgroupOf B).Normal]
     (h' : A' ≤ B') (h : A ≤ B) : A ⧸ A'.subgroupOf A →* B ⧸ B'.subgroupOf B :=
-  map _ _ (Subgroup.inclusion h) <| by
-    simp [Subgroup.subgroupOf, Subgroup.comap_comap] <;> exact Subgroup.comap_mono h'
+  map _ _ (Subgroup.inclusion h) <| by simp [Subgroup.subgroupOf, Subgroup.comap_comap] <;> exact Subgroup.comap_mono h'
 
 @[simp, to_additive]
 theorem quotient_map_subgroup_of_of_le_coe {A' A B' B : Subgroup G} [hAN : (A'.subgroupOf A).Normal]
@@ -342,10 +339,7 @@ variable (f : A →* B) (g : B →* A) (e : A ≃* B) (d : B ≃* C) (n : ℤ)
 /-- The map of quotients by powers of an integer induced by a group homomorphism. -/
 @[to_additive "The map of quotients by multiples of an integer induced by an additive group\nhomomorphism."]
 def homQuotientZpowOfHom : A ⧸ (zpowGroupHom n : A →* A).range →* B ⧸ (zpowGroupHom n : B →* B).range :=
-  (lift _ ((mk' _).comp f)) fun g ⟨h, (hg : h ^ n = g)⟩ =>
-    (eq_one_iff _).mpr
-      ⟨_, by
-        simpa only [← hg, map_zpow] ⟩
+  (lift _ ((mk' _).comp f)) fun g ⟨h, (hg : h ^ n = g)⟩ => (eq_one_iff _).mpr ⟨_, by simpa only [← hg, map_zpow] ⟩
 
 @[to_additive, simp]
 theorem hom_quotient_zpow_of_hom_id : homQuotientZpowOfHom (MonoidHom.id A) n = MonoidHom.id _ :=
@@ -413,10 +407,7 @@ noncomputable def quotientInfEquivProdNormalQuotient (H N : Subgroup G) [N.Norma
       rw [left_rel_apply]
       change h⁻¹ * (h * n) ∈ N
       rwa [← mul_assoc, inv_mul_selfₓ, one_mulₓ]
-  (equivQuotientOfEq
-        (by
-          simp [comap_comap, ← comap_ker])).trans
-    (quotientKerEquivOfSurjective φ φ_surjective)
+  (quotientMulEquivOfEq (by simp [comap_comap, ← comap_ker])).trans (quotientKerEquivOfSurjective φ φ_surjective)
 
 end SndIsomorphismThm
 
@@ -462,10 +453,10 @@ def quotientQuotientEquivQuotient : (G ⧸ N) ⧸ M.map (QuotientGroup.mk' N) �
     (QuotientGroup.map _ _ (QuotientGroup.mk' N) (Subgroup.le_comap_map _ _))
     (by
       ext
-      simp )
+      simp)
     (by
       ext
-      simp )
+      simp)
 
 end ThirdIsoThm
 
@@ -473,7 +464,7 @@ section trivialₓ
 
 @[to_additive]
 theorem subsingleton_quotient_top : Subsingleton (G ⧸ (⊤ : Subgroup G)) := by
-  dsimp' [HasQuotient.Quotient, subgroup.has_quotient, Quotientₓ]
+  dsimp [HasQuotient.Quotient, subgroup.has_quotient, Quotientₓ]
   rw [left_rel_eq]
   exact @Trunc.subsingleton G
 
@@ -503,31 +494,31 @@ open Classical
 
 open QuotientGroup Subgroup
 
-variable {F G H : Type u} [Groupₓ F] [Groupₓ G] [Groupₓ H] [Fintype F] [Fintype H]
+variable {F G H : Type u} [Groupₓ F] [Groupₓ G] [Groupₓ H] [Fintypeₓ F] [Fintypeₓ H]
 
 variable (f : F →* G) (g : G →* H)
 
 /-- If `F` and `H` are finite such that `ker(G →* H) ≤ im(F →* G)`, then `G` is finite. -/
 @[to_additive "If `F` and `H` are finite such that `ker(G →+ H) ≤ im(F →+ G)`, then `G` is finite."]
-noncomputable def fintypeOfKerLeRange (h : g.ker ≤ f.range) : Fintype G :=
-  @Fintype.ofEquiv _ _
-    (@Prod.fintype _ _ (Fintype.ofInjective _ <| ker_lift_injective g) <|
-      Fintype.ofInjective _ <| inclusion_injective h)
+noncomputable def fintypeOfKerLeRange (h : g.ker ≤ f.range) : Fintypeₓ G :=
+  @Fintypeₓ.ofEquiv _ _
+    (@Prod.fintype _ _ (Fintypeₓ.ofInjective _ <| ker_lift_injective g) <|
+      Fintypeₓ.ofInjective _ <| inclusion_injective h)
     groupEquivQuotientTimesSubgroup.symm
 
 /-- If `F` and `H` are finite such that `ker(G →* H) = im(F →* G)`, then `G` is finite. -/
 @[to_additive "If `F` and `H` are finite such that `ker(G →+ H) = im(F →+ G)`, then `G` is finite."]
-noncomputable def fintypeOfKerEqRange (h : g.ker = f.range) : Fintype G :=
+noncomputable def fintypeOfKerEqRange (h : g.ker = f.range) : Fintypeₓ G :=
   fintypeOfKerLeRange _ _ h.le
 
 /-- If `ker(G →* H)` and `H` are finite, then `G` is finite. -/
 @[to_additive "If `ker(G →+ H)` and `H` are finite, then `G` is finite."]
-noncomputable def fintypeOfKerOfCodom [Fintype g.ker] : Fintype G :=
+noncomputable def fintypeOfKerOfCodom [Fintypeₓ g.ker] : Fintypeₓ G :=
   (fintypeOfKerLeRange ((topEquiv : _ ≃* G).toMonoidHom.comp <| inclusion le_top) g) fun x hx => ⟨⟨x, hx⟩, rfl⟩
 
 /-- If `F` and `coker(F →* G)` are finite, then `G` is finite. -/
 @[to_additive "If `F` and `coker(F →+ G)` are finite, then `G` is finite."]
-noncomputable def fintypeOfDomOfCoker [Normal f.range] [Fintype <| G ⧸ f.range] : Fintype G :=
+noncomputable def fintypeOfDomOfCoker [Normal f.range] [Fintypeₓ <| G ⧸ f.range] : Fintypeₓ G :=
   (fintypeOfKerLeRange _ (mk' f.range)) fun x => (eq_one_iff x).mp
 
 end Groupₓ

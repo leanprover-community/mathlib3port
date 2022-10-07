@@ -69,33 +69,30 @@ def objD (n : ℕ) : X _[n + 1] ⟶ X _[n] :=
 -/
 theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   -- we start by expanding d ≫ d as a double sum
-  dsimp'
+  dsimp
   rw [comp_sum]
   let d_l := fun j : Finₓ (n + 3) => (-1 : ℤ) ^ (j : ℕ) • X.δ j
   let d_r := fun i : Finₓ (n + 2) => (-1 : ℤ) ^ (i : ℕ) • X.δ i
-  rw
-    [show (fun i => (∑ j : Finₓ (n + 3), d_l j) ≫ d_r i) = fun i => ∑ j : Finₓ (n + 3), d_l j ≫ d_r i by
+  rw [show (fun i => (∑ j : Finₓ (n + 3), d_l j) ≫ d_r i) = fun i => ∑ j : Finₓ (n + 3), d_l j ≫ d_r i by
       ext i
       rw [sum_comp]]
-  rw [← Finset.sum_product']
+  rw [← Finsetₓ.sum_product']
   -- then, we decompose the index set P into a subet S and its complement Sᶜ
   let P := Finₓ (n + 2) × Finₓ (n + 3)
   let S := finset.univ.filter fun ij : P => (ij.2 : ℕ) ≤ (ij.1 : ℕ)
   let term := fun ij : P => d_l ij.2 ≫ d_r ij.1
-  erw
-    [show (∑ ij : P, term ij) = (∑ ij in S, term ij) + ∑ ij in Sᶜ, term ij by
-      rw [Finset.sum_add_sum_compl]]
-  rw [← eq_neg_iff_add_eq_zero, ← Finset.sum_neg_distrib]
+  erw [show (∑ ij : P, term ij) = (∑ ij in S, term ij) + ∑ ij in Sᶜ, term ij by rw [Finsetₓ.sum_add_sum_compl]]
+  rw [← eq_neg_iff_add_eq_zero, ← Finsetₓ.sum_neg_distrib]
   /- we are reduced to showing that two sums are equal, and this is obtained
     by constructing a bijection φ : S -> Sᶜ, which maps (i,j) to (j,i+1),
     and by comparing the terms -/
   let φ : ∀ ij : P, ij ∈ S → P := fun ij hij =>
     (Finₓ.castLt ij.2 (lt_of_le_of_ltₓ (finset.mem_filter.mp hij).right (Finₓ.is_lt ij.1)), ij.1.succ)
-  apply Finset.sum_bij φ
+  apply Finsetₓ.sum_bij φ
   · -- φ(S) is contained in Sᶜ
     intro ij hij
-    simp only [Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_andₓ, Finₓ.coe_succ, Finₓ.coe_cast_lt] at
-      hij⊢
+    simp only [Finsetₓ.mem_univ, Finsetₓ.compl_filter, Finsetₓ.mem_filter, true_andₓ, Finₓ.coe_succ,
+      Finₓ.coe_cast_lt] at hij⊢
     linarith
     
   · -- identification of corresponding terms in both sums
@@ -111,20 +108,18 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   · -- φ : S → Sᶜ is injective
     rintro ⟨i, j⟩ ⟨i', j'⟩ hij hij' h
     rw [Prod.mk.inj_iffₓ]
-    refine'
-      ⟨by
-        simpa using congr_arg Prod.snd h, _⟩
+    refine' ⟨by simpa using congr_arg Prod.snd h, _⟩
     have h1 := congr_arg Finₓ.castSucc (congr_arg Prod.fst h)
     simpa [Finₓ.cast_succ_cast_lt] using h1
     
   · -- φ : S → Sᶜ is surjective
     rintro ⟨i', j'⟩ hij'
-    simp only [true_andₓ, Finset.mem_univ, Finset.compl_filter, not_leₓ, Finset.mem_filter] at hij'
+    simp only [true_andₓ, Finsetₓ.mem_univ, Finsetₓ.compl_filter, not_leₓ, Finsetₓ.mem_filter] at hij'
     refine' ⟨(j'.pred _, Finₓ.castSucc i'), _, _⟩
     · intro H
       simpa only [H, Nat.not_lt_zeroₓ, Finₓ.coe_zero] using hij'
       
-    · simpa only [true_andₓ, Finset.mem_univ, Finₓ.coe_cast_succ, Finₓ.coe_pred, Finset.mem_filter] using
+    · simpa only [true_andₓ, Finsetₓ.mem_univ, Finₓ.coe_cast_succ, Finₓ.coe_pred, Finsetₓ.mem_filter] using
         Nat.le_pred_of_ltₓ hij'
       
     · simp only [Prod.mk.inj_iffₓ, Finₓ.succ_pred, Finₓ.cast_lt_cast_succ]
@@ -155,9 +150,9 @@ variable {X} {Y}
 /-- The alternating face map complex, on morphisms -/
 def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
   ChainComplex.ofHom _ _ _ _ _ _ (fun n => f.app (op [n])) fun n => by
-    dsimp'
+    dsimp
     rw [comp_sum, sum_comp]
-    apply Finset.sum_congr rfl fun x h => _
+    apply Finsetₓ.sum_congr rfl fun x h => _
     rw [comp_zsmul, zsmul_comp]
     congr 1
     symm
@@ -185,8 +180,7 @@ theorem alternating_face_map_complex_obj_X (X : SimplicialObject C) (n : ℕ) :
 
 @[simp]
 theorem alternating_face_map_complex_obj_d (X : SimplicialObject C) (n : ℕ) :
-    ((alternatingFaceMapComplex C).obj X).d (n + 1) n = AlternatingFaceMapComplex.objD X n := by
-  apply ChainComplex.of_d
+    ((alternatingFaceMapComplex C).obj X).d (n + 1) n = AlternatingFaceMapComplex.objD X n := by apply ChainComplex.of_d
 
 @[simp]
 theorem alternating_face_map_complex_map_f {X Y : SimplicialObject C} (f : X ⟶ Y) (n : ℕ) :
@@ -207,7 +201,7 @@ theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive 
   · intro X
     apply HomologicalComplex.ext
     · rintro i j (rfl : j + 1 = i)
-      dsimp' only [functor.comp_obj]
+      dsimp only [functor.comp_obj]
       simpa only [functor.map_homological_complex_obj_d, alternating_face_map_complex_obj_d, eq_to_hom_refl, id_comp,
         comp_id, alternating_face_map_complex.obj_d, functor.map_sum, functor.map_zsmul]
       
@@ -244,24 +238,17 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
       rw [def_t, comp_zsmul, ← zsmul_zero ((-1 : ℤ) ^ (j.succ : ℕ))]
       apply congr_arg
       rw [normalized_Moore_complex.obj_X]
-      rw [←
-        factor_thru_arrow _ _
-          (finset_inf_arrow_factors Finset.univ _ j
-            (by
-              simp only [Finset.mem_univ]))]
+      rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finsetₓ.univ _ j (by simp only [Finsetₓ.mem_univ]))]
       slice_lhs 2 3 => rw [kernel_subobject_arrow_comp (X.δ j.succ)]
       simp only [comp_zero]
-    rw [Fintype.sum_eq_zero _ null]
+    rw [Fintypeₓ.sum_eq_zero _ null]
     simp only [add_zeroₓ]
     -- finally, we study the remaining term which is induced by X.δ 0
     let eq := def_t 0
-    rw
-      [show (-1 : ℤ) ^ ((0 : Finₓ (n + 2)) : ℕ) = 1 by
-        ring] at
-      eq
+    rw [show (-1 : ℤ) ^ ((0 : Finₓ (n + 2)) : ℕ) = 1 by ring] at eq
     rw [one_smul] at eq
     rw [Eq]
-    cases n <;> dsimp' <;> simp
+    cases n <;> dsimp <;> simp
 
 @[simp]
 theorem inclusion_of_Moore_complex_map_f (X : SimplicialObject A) (n : ℕ) :
@@ -303,9 +290,9 @@ variable {X} {Y}
 @[simp]
 def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
   CochainComplex.ofHom _ _ _ _ _ _ (fun n => f.app [n]) fun n => by
-    dsimp'
+    dsimp
     rw [comp_sum, sum_comp]
-    apply Finset.sum_congr rfl fun x h => _
+    apply Finsetₓ.sum_congr rfl fun x h => _
     rw [comp_zsmul, zsmul_comp]
     congr 1
     symm

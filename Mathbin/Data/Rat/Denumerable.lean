@@ -37,6 +37,5 @@ end Ratₓ
 
 open Cardinal
 
-theorem Cardinal.mk_rat : (#ℚ) = ℵ₀ := by
-  simp
+theorem Cardinal.mk_rat : (#ℚ) = ℵ₀ := by simp
 

@@ -63,31 +63,22 @@ variable {Ω E : Type _} [MeasurableSpace E]
 `μ` on `E` if there exists a measurable function `f` such that the push-forward measure of `ℙ`
 along `X` equals `μ.with_density f`. -/
 class HasPdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
-  (μ : Measure E := by
-    run_tac
-      volume_tac) :
-  Prop where
+  (μ : Measure E := by exact MeasureTheory.MeasureSpace.volume) : Prop where
   pdf' : Measurable X ∧ ∃ f : E → ℝ≥0∞, Measurable f ∧ map X ℙ = μ.withDensity f
 
 @[measurability]
 theorem HasPdf.measurable {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
-    (μ : Measure E := by
-      run_tac
-        volume_tac)
-    [hX : HasPdf X ℙ μ] : Measurable X :=
+    (μ : Measure E := by exact MeasureTheory.MeasureSpace.volume) [hX : HasPdf X ℙ μ] : Measurable X :=
   hX.pdf'.1
 
 /-- If `X` is a random variable that `has_pdf X ℙ μ`, then `pdf X` is the measurable function `f`
 such that the push-forward measure of `ℙ` along `X` equals `μ.with_density f`. -/
 def pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
-    (μ : Measure E := by
-      run_tac
-        volume_tac) :=
+    (μ : Measure E := by exact MeasureTheory.MeasureSpace.volume) :=
   if hX : HasPdf X ℙ μ then Classical.choose hX.pdf'.2 else 0
 
 theorem pdf_undef {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} {X : Ω → E} (h : ¬HasPdf X ℙ μ) :
-    pdf X ℙ μ = 0 := by
-  simp only [pdf, dif_neg h]
+    pdf X ℙ μ = 0 := by simp only [pdf, dif_neg h]
 
 theorem has_pdf_of_pdf_ne_zero {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} {X : Ω → E} (h : pdf X ℙ μ ≠ 0) :
     HasPdf X ℙ μ := by
@@ -106,11 +97,8 @@ theorem measurable_of_pdf_ne_zero {m : MeasurableSpace Ω} {ℙ : Measure Ω} {�
 
 @[measurability]
 theorem measurable_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
-    (μ : Measure E := by
-      run_tac
-        volume_tac) :
-    Measurable (pdf X ℙ μ) := by
-  by_cases' hX : has_pdf X ℙ μ
+    (μ : Measure E := by exact MeasureTheory.MeasureSpace.volume) : Measurable (pdf X ℙ μ) := by
+  by_cases hX:has_pdf X ℙ μ
   · rw [pdf, dif_pos hX]
     exact (Classical.choose_spec hX.pdf'.2).1
     
@@ -119,18 +107,14 @@ theorem measurable_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω
     
 
 theorem map_eq_with_density_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
-    (μ : Measure E := by
-      run_tac
-        volume_tac)
-    [hX : HasPdf X ℙ μ] : Measure.map X ℙ = μ.withDensity (pdf X ℙ μ) := by
+    (μ : Measure E := by exact MeasureTheory.MeasureSpace.volume) [hX : HasPdf X ℙ μ] :
+    Measure.map X ℙ = μ.withDensity (pdf X ℙ μ) := by
   rw [pdf, dif_pos hX]
   exact (Classical.choose_spec hX.pdf'.2).2
 
 theorem map_eq_set_lintegral_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
-    (μ : Measure E := by
-      run_tac
-        volume_tac)
-    [hX : HasPdf X ℙ μ] {s : Set E} (hs : MeasurableSet s) : Measure.map X ℙ s = ∫⁻ x in s, pdf X ℙ μ x ∂μ := by
+    (μ : Measure E := by exact MeasureTheory.MeasureSpace.volume) [hX : HasPdf X ℙ μ] {s : Set E}
+    (hs : MeasurableSet s) : Measure.map X ℙ s = ∫⁻ x in s, pdf X ℙ μ x ∂μ := by
   rw [← with_density_apply _ hs, map_eq_with_density_pdf X ℙ μ]
 
 namespace Pdf
@@ -142,7 +126,7 @@ theorem lintegral_eq_measure_univ {X : Ω → E} [HasPdf X ℙ μ] : (∫⁻ x, 
     measure.map_apply (has_pdf.measurable X ℙ μ) MeasurableSet.univ, Set.preimage_univ]
 
 theorem ae_lt_top [IsFiniteMeasure ℙ] {μ : Measure E} {X : Ω → E} : ∀ᵐ x ∂μ, pdf X ℙ μ x < ∞ := by
-  by_cases' hpdf : has_pdf X ℙ μ
+  by_cases hpdf:has_pdf X ℙ μ
   · haveI := hpdf
     refine' ae_lt_top (measurable_pdf X ℙ μ) _
     rw [lintegral_eq_measure_univ]
@@ -167,7 +151,7 @@ function `f`, `f ∘ X` is a random variable with expectation `∫ x, f x * pdf 
 where `μ` is a measure on the codomain of `X`. -/
 theorem integral_fun_mul_eq_integral [IsFiniteMeasure ℙ] {X : Ω → E} [HasPdf X ℙ μ] {f : E → ℝ} (hf : Measurable f) :
     (∫ x, f x * (pdf X ℙ μ x).toReal ∂μ) = ∫ x, f (X x) ∂ℙ := by
-  by_cases' hpdf : integrable (fun x => f x * (pdf X ℙ μ x).toReal) μ
+  by_cases hpdf:integrable (fun x => f x * (pdf X ℙ μ x).toReal) μ
   · rw [← integral_map (has_pdf.measurable X ℙ μ).AeMeasurable hf.ae_strongly_measurable, map_eq_with_density_pdf X ℙ μ,
       integral_eq_lintegral_pos_part_sub_lintegral_neg_part hpdf, integral_eq_lintegral_pos_part_sub_lintegral_neg_part,
       lintegral_with_density_eq_lintegral_mul _ (measurable_pdf X ℙ μ) hf.neg.ennreal_of_real,
@@ -209,8 +193,7 @@ theorem integral_fun_mul_eq_integral [IsFiniteMeasure ℙ] {X : Ω → E} [HasPd
     
   · rw [integral_undef hpdf, integral_undef]
     rwa [← integrable_iff_integrable_mul_pdf hf] at hpdf
-    all_goals
-      infer_instance
+    all_goals infer_instance
     
 
 theorem map_absolutely_continuous {X : Ω → E} [HasPdf X ℙ μ] : map X ℙ ≪ μ := by
@@ -281,7 +264,7 @@ theorem Real.has_pdf_iff_of_measurable (hX : Measurable X) : HasPdf X ℙ ↔ ma
   exact fun h => inferInstance
 
 theorem Real.has_pdf_iff : HasPdf X ℙ ↔ Measurable X ∧ map X ℙ ≪ volume := by
-  by_cases' hX : Measurable X
+  by_cases hX:Measurable X
   · rw [real.has_pdf_iff_of_measurable hX, iff_and_self]
     exact fun h => hX
     infer_instance
@@ -318,9 +301,7 @@ section
 /-- A random variable `X` has uniform distribution if it has a probability density function `f`
 with support `s` such that `f = (μ s)⁻¹ 1ₛ` a.e. where `1ₛ` is the indicator function for `s`. -/
 def IsUniform {m : MeasurableSpace Ω} (X : Ω → E) (support : Set E) (ℙ : Measure Ω)
-    (μ : Measure E := by
-      run_tac
-        volume_tac) :=
+    (μ : Measure E := by exact MeasureTheory.MeasureSpace.volume) :=
   pdf X ℙ μ =ᵐ[μ] support.indicator ((μ support)⁻¹ • 1)
 
 namespace IsUniform
@@ -358,8 +339,7 @@ theorem measure_preimage {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure 
 theorem is_probability_measure {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : Measure E} {s : Set E}
     (hns : μ s ≠ 0) (hnt : μ s ≠ ∞) (hms : MeasurableSet s) (hu : IsUniform X s ℙ μ) : IsProbabilityMeasure ℙ :=
   ⟨by
-    have : X ⁻¹' Set.Univ = Set.Univ := by
-      simp only [Set.preimage_univ]
+    have : X ⁻¹' Set.Univ = Set.Univ := by simp only [Set.preimage_univ]
     rw [← this, hu.measure_preimage hns hnt hms MeasurableSet.univ, Set.inter_univ, Ennreal.div_self hns hnt]⟩
 
 variable {X : Ω → ℝ} {s : Set ℝ} (hms : MeasurableSet s) (hns : volume s ≠ 0)
@@ -368,14 +348,12 @@ include hms hns
 
 theorem mul_pdf_integrable [IsFiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUniform X s ℙ) :
     Integrable fun x : ℝ => x * (pdf X ℙ volume x).toReal := by
-  by_cases' hsupp : volume s = ∞
+  by_cases hsupp:volume s = ∞
   · have : pdf X ℙ =ᵐ[volume] 0 := by
       refine' ae_eq_trans huX _
       simp [hsupp]
     refine' integrable.congr (integrable_zero _ _ _) _
-    rw
-      [(by
-        simp : (fun x => 0 : ℝ → ℝ) = fun x => x * (0 : ℝ≥0∞).toReal)]
+    rw [(by simp : (fun x => 0 : ℝ → ℝ) = fun x => x * (0 : ℝ≥0∞).toReal)]
     refine' Filter.EventuallyEq.mul (ae_eq_refl _) (Filter.EventuallyEq.fun_comp this.symm Ennreal.toReal)
     
   refine' ⟨ae_strongly_measurable_id.mul (measurable_pdf X ℙ).AeMeasurable.ennreal_to_real.AeStronglyMeasurable, _⟩
@@ -406,7 +384,7 @@ theorem integral_eq (hnt : volume s ≠ ∞) (huX : IsUniform X s ℙ) : (∫ x,
         x * s.indicator ((volume s)⁻¹.toReal • (1 : ℝ → ℝ)) x :=
     by
     refine' fun x => congr_arg ((· * ·) x) _
-    by_cases' hx : x ∈ s
+    by_cases hx:x ∈ s
     · simp [Set.indicator_of_mem hx]
       
     · simp [Set.indicator_of_not_mem hx]

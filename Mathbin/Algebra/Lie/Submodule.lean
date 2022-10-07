@@ -53,8 +53,7 @@ variable {R L M} (N N' : LieSubmodule R L M)
 
 instance : SetLike (LieSubmodule R L M) M where
   coe := Carrier
-  coe_injective' := fun N O h => by
-    cases N <;> cases O <;> congr
+  coe_injective' := fun N O h => by cases N <;> cases O <;> congr
 
 instance : AddSubgroupClass (LieSubmodule R L M) M where
   add_mem := fun N _ _ => N.add_mem'
@@ -672,8 +671,7 @@ theorem coe_submodule_map : (N.map f : Submodule R M') = (N : Submodule R M).map
 def comap : LieSubmodule R L M :=
   { (N' : Submodule R M').comap (f : M →ₗ[R] M') with
     lie_mem := fun x m h => by
-      suffices ⁅x, f m⁆ ∈ N' by
-        simp [this]
+      suffices ⁅x, f m⁆ ∈ N' by simp [this]
       apply N'.lie_mem h }
 
 @[simp]
@@ -735,8 +733,7 @@ and so this is a special case of `lie_submodule.comap` but we do not exploit thi
 def comap : LieIdeal R L :=
   { (J : Submodule R L').comap (f : L →ₗ[R] L') with
     lie_mem := fun x y h => by
-      suffices ⁅f x, f y⁆ ∈ J by
-        simp [this]
+      suffices ⁅f x, f y⁆ ∈ J by simp [this]
       apply J.lie_mem h }
 
 @[simp]
@@ -787,12 +784,12 @@ theorem comap_map_le : I ≤ comap f (map f I) := by
   exact le_rflₓ
 
 @[mono]
-theorem map_mono : Monotone (map f) := fun I₁ I₂ h => by
+theorem map_mono : Monotoneₓ (map f) := fun I₁ I₂ h => by
   rw [SetLike.le_def] at h
   apply LieSubmodule.lie_span_mono (Set.image_subset (⇑f) h)
 
 @[mono]
-theorem comap_mono : Monotone (comap f) := fun J₁ J₂ h => by
+theorem comap_mono : Monotoneₓ (comap f) := fun J₁ J₂ h => by
   rw [← SetLike.coe_subset_coe] at h⊢
   exact Set.preimage_mono h
 
@@ -880,8 +877,7 @@ theorem ker_coe_submodule : (ker f : Submodule R L) = (f : L →ₗ[R] L').ker :
 
 @[simp]
 theorem mem_ker {x : L} : x ∈ ker f ↔ f x = 0 :=
-  show x ∈ (f.ker : Submodule R L) ↔ _ by
-    simp only [ker_coe_submodule, LinearMap.mem_ker, coe_to_linear_map]
+  show x ∈ (f.ker : Submodule R L) ↔ _ by simp only [ker_coe_submodule, LinearMap.mem_ker, coe_to_linear_map]
 
 theorem mem_ideal_range {x : L} : f x ∈ idealRange f := by
   rw [ideal_range_eq_map]
@@ -942,8 +938,7 @@ theorem coe_map_of_surjective (h : Function.Surjective f) :
   let J : LieIdeal R L' :=
     { (I : Submodule R L).map (f : L →ₗ[R] L') with
       lie_mem := fun x y hy => by
-        have hy' : ∃ x : L, x ∈ I ∧ f x = y := by
-          simpa [hy]
+        have hy' : ∃ x : L, x ∈ I ∧ f x = y := by simpa [hy]
         obtain ⟨z₂, hz₂, rfl⟩ := hy'
         obtain ⟨z₁, rfl⟩ := h x
         simp only [LieHom.coe_to_linear_map, SetLike.mem_coe, Set.mem_image, LieSubmodule.mem_coe_submodule,
@@ -983,8 +978,7 @@ theorem hom_of_le_injective {I₁ I₂ : LieIdeal R L} (h : I₁ ≤ I₂) : Fun
 
 @[simp]
 theorem map_sup_ker_eq_map : LieIdeal.map f (I ⊔ f.ker) = LieIdeal.map f I := by
-  suffices LieIdeal.map f (I ⊔ f.ker) ≤ LieIdeal.map f I by
-    exact le_antisymmₓ this (LieIdeal.map_mono le_sup_left)
+  suffices LieIdeal.map f (I ⊔ f.ker) ≤ LieIdeal.map f I by exact le_antisymmₓ this (LieIdeal.map_mono le_sup_left)
   apply LieSubmodule.lie_span_mono
   rintro x ⟨y, hy₁, hy₂⟩
   rw [← hy₂]
@@ -1133,16 +1127,13 @@ variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
 variable (N : LieSubmodule R L M)
 
 @[simp]
-theorem ker_incl : N.incl.ker = ⊥ := by
-  simp [← LieSubmodule.coe_to_submodule_eq_iff]
+theorem ker_incl : N.incl.ker = ⊥ := by simp [← LieSubmodule.coe_to_submodule_eq_iff]
 
 @[simp]
-theorem range_incl : N.incl.range = N := by
-  simp [← LieSubmodule.coe_to_submodule_eq_iff]
+theorem range_incl : N.incl.range = N := by simp [← LieSubmodule.coe_to_submodule_eq_iff]
 
 @[simp]
-theorem comap_incl_self : comap N.incl N = ⊤ := by
-  simp [← LieSubmodule.coe_to_submodule_eq_iff]
+theorem comap_incl_self : comap N.incl N = ⊤ := by simp [← LieSubmodule.coe_to_submodule_eq_iff]
 
 end LieSubmodule
 

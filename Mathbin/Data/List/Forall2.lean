@@ -26,8 +26,7 @@ mk_iff_of_inductive_prop List.Forall₂ List.forall₂_iff
 
 @[simp]
 theorem forall₂_cons {a b l₁ l₂} : Forall₂ R (a :: l₁) (b :: l₂) ↔ R a b ∧ Forall₂ R l₁ l₂ :=
-  ⟨fun h => by
-    cases' h with h₁ h₂ <;> constructor <;> assumption, fun ⟨h₁, h₂⟩ => Forall₂.cons h₁ h₂⟩
+  ⟨fun h => by cases' h with h₁ h₂ <;> constructor <;> assumption, fun ⟨h₁, h₂⟩ => Forall₂.cons h₁ h₂⟩
 
 theorem Forall₂.imp (H : ∀ a b, R a b → S a b) {l₁ l₂} (h : Forall₂ R l₁ l₂) : Forall₂ S l₁ l₂ := by
   induction h <;> constructor <;> solve_by_elim
@@ -43,10 +42,8 @@ theorem Forall₂.flip : ∀ {a b}, Forall₂ (flip R) b a → Forall₂ R a b
 
 @[simp]
 theorem forall₂_same : ∀ {l : List α}, Forall₂ Rₐ l l ↔ ∀ x ∈ l, Rₐ x x
-  | [] => by
-    simp
-  | a :: l => by
-    simp [@forall₂_same l]
+  | [] => by simp
+  | a :: l => by simp [@forall₂_same l]
 
 theorem forall₂_refl [IsRefl α Rₐ] (l : List α) : Forall₂ Rₐ l l :=
   forall₂_same.2 fun a h => refl _
@@ -68,15 +65,11 @@ theorem forall₂_eq_eq_eq : Forall₂ ((· = ·) : α → α → Prop) = (· = 
 
 @[simp]
 theorem forall₂_nil_left_iff {l} : Forall₂ R nil l ↔ l = nil :=
-  ⟨fun H => by
-    cases H <;> rfl, by
-    rintro rfl <;> exact forall₂.nil⟩
+  ⟨fun H => by cases H <;> rfl, by rintro rfl <;> exact forall₂.nil⟩
 
 @[simp]
 theorem forall₂_nil_right_iff {l} : Forall₂ R l nil ↔ l = nil :=
-  ⟨fun H => by
-    cases H <;> rfl, by
-    rintro rfl <;> exact forall₂.nil⟩
+  ⟨fun H => by cases H <;> rfl, by rintro rfl <;> exact forall₂.nil⟩
 
 theorem forall₂_cons_left_iff {a l u} : Forall₂ R (a :: l) u ↔ ∃ b u', R a b ∧ Forall₂ R l u' ∧ u = b :: u' :=
   Iff.intro
@@ -97,25 +90,20 @@ theorem forall₂_cons_right_iff {b l u} : Forall₂ R u (b :: l) ↔ ∃ a u', 
     | _, ⟨b, u', h₁, h₂, rfl⟩ => Forall₂.cons h₁ h₂
 
 theorem forall₂_and_left {p : α → Prop} : ∀ l u, Forall₂ (fun a b => p a ∧ R a b) l u ↔ (∀ a ∈ l, p a) ∧ Forall₂ R l u
-  | [], u => by
-    simp only [forall₂_nil_left_iff, forall_prop_of_false (not_mem_nil _), imp_true_iff, true_andₓ]
+  | [], u => by simp only [forall₂_nil_left_iff, forall_prop_of_false (not_mem_nil _), imp_true_iff, true_andₓ]
   | a :: l, u => by
     simp only [forall₂_and_left l, forall₂_cons_left_iff, forall_mem_cons, and_assocₓ, and_comm, And.left_comm,
       exists_and_distrib_left.symm]
 
 @[simp]
 theorem forall₂_map_left_iff {f : γ → α} : ∀ {l u}, Forall₂ R (map f l) u ↔ Forall₂ (fun c b => R (f c) b) l u
-  | [], _ => by
-    simp only [map, forall₂_nil_left_iff]
-  | a :: l, _ => by
-    simp only [map, forall₂_cons_left_iff, forall₂_map_left_iff]
+  | [], _ => by simp only [map, forall₂_nil_left_iff]
+  | a :: l, _ => by simp only [map, forall₂_cons_left_iff, forall₂_map_left_iff]
 
 @[simp]
 theorem forall₂_map_right_iff {f : γ → β} : ∀ {l u}, Forall₂ R l (map f u) ↔ Forall₂ (fun a c => R a (f c)) l u
-  | _, [] => by
-    simp only [map, forall₂_nil_right_iff]
-  | _, b :: u => by
-    simp only [map, forall₂_cons_right_iff, forall₂_map_right_iff]
+  | _, [] => by simp only [map, forall₂_nil_right_iff]
+  | _, b :: u => by simp only [map, forall₂_cons_right_iff, forall₂_map_right_iff]
 
 theorem left_unique_forall₂' (hr : LeftUnique R) : ∀ {a b c}, Forall₂ R a c → Forall₂ R b c → a = b
   | a₀, nil, a₁, forall₂.nil, forall₂.nil => rfl
@@ -173,20 +161,14 @@ theorem forall₂_iff_zip {l₁ l₂} : Forall₂ R l₁ l₂ ↔ length l₁ = 
       ⟩
 
 theorem forall₂_take : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (takeₓ n l₁) (takeₓ n l₂)
-  | 0, _, _, _ => by
-    simp only [forall₂.nil, take]
-  | n + 1, _, _, forall₂.nil => by
-    simp only [forall₂.nil, take]
-  | n + 1, _, _, forall₂.cons h₁ h₂ => by
-    simp [And.intro h₁ h₂, forall₂_take n]
+  | 0, _, _, _ => by simp only [forall₂.nil, take]
+  | n + 1, _, _, forall₂.nil => by simp only [forall₂.nil, take]
+  | n + 1, _, _, forall₂.cons h₁ h₂ => by simp [And.intro h₁ h₂, forall₂_take n]
 
 theorem forall₂_drop : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (dropₓ n l₁) (dropₓ n l₂)
-  | 0, _, _, h => by
-    simp only [drop, h]
-  | n + 1, _, _, forall₂.nil => by
-    simp only [forall₂.nil, drop]
-  | n + 1, _, _, forall₂.cons h₁ h₂ => by
-    simp [And.intro h₁ h₂, forall₂_drop n]
+  | 0, _, _, h => by simp only [drop, h]
+  | n + 1, _, _, forall₂.nil => by simp only [forall₂.nil, drop]
+  | n + 1, _, _, forall₂.cons h₁ h₂ => by simp [And.intro h₁ h₂, forall₂_drop n]
 
 theorem forall₂_take_append (l : List α) (l₁ : List β) (l₂ : List β) (h : Forall₂ R l (l₁ ++ l₂)) :
     Forall₂ R (List.takeₓ (length l₁) l) l₁ := by
@@ -199,8 +181,7 @@ theorem forall₂_drop_append (l : List α) (l₁ : List β) (l₂ : List β) (h
   rwa [drop_left] at h'
 
 theorem rel_mem (hr : BiUnique R) : (R ⇒ Forall₂ R ⇒ Iff) (· ∈ ·) (· ∈ ·)
-  | a, b, h, [], [], forall₂.nil => by
-    simp only [not_mem_nil]
+  | a, b, h, [], [], forall₂.nil => by simp only [not_mem_nil]
   | a, b, h, a' :: as, b' :: bs, forall₂.cons h₁ h₂ => rel_or (rel_eq hr h h₁) (rel_mem h h₂)
 
 theorem rel_map : ((R ⇒ P) ⇒ Forall₂ R ⇒ Forall₂ P) map map
@@ -232,7 +213,7 @@ theorem rel_join : (Forall₂ (Forall₂ R) ⇒ Forall₂ R) join join
 theorem rel_bind : (Forall₂ R ⇒ (R ⇒ Forall₂ P) ⇒ Forall₂ P) List.bind List.bind := fun a b h₁ f g h₂ =>
   rel_join (rel_map (@h₂) h₁)
 
-theorem rel_foldl : ((P ⇒ R ⇒ P) ⇒ P ⇒ Forall₂ R ⇒ P) foldlₓ foldlₓ
+theorem rel_foldl : ((P ⇒ R ⇒ P) ⇒ P ⇒ Forall₂ R ⇒ P) foldl foldl
   | f, g, hfg, _, _, h, _, _, forall₂.nil => h
   | f, g, hfg, x, y, hxy, _, _, forall₂.cons hab hs => rel_foldl (@hfg) (hfg hxy hab) hs
 
@@ -244,13 +225,11 @@ theorem rel_filter {p : α → Prop} {q : β → Prop} [DecidablePred p] [Decida
     (Forall₂ R ⇒ Forall₂ R) (filterₓ p) (filterₓ q)
   | _, _, forall₂.nil => Forall₂.nil
   | a :: as, b :: bs, forall₂.cons h₁ h₂ => by
-    by_cases' p a
-    · have : q b := by
-        rwa [← hpq h₁]
+    by_cases p a
+    · have : q b := by rwa [← hpq h₁]
       simp only [filter_cons_of_pos _ h, filter_cons_of_pos _ this, forall₂_cons, h₁, rel_filter h₂, and_trueₓ]
       
-    · have : ¬q b := by
-        rwa [← hpq h₁]
+    · have : ¬q b := by rwa [← hpq h₁]
       simp only [filter_cons_of_neg _ h, filter_cons_of_neg _ this, rel_filter h₂]
       
 

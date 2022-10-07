@@ -43,6 +43,10 @@ theorem commutator_element_one_left : ⁅(1 : G), g⁆ = 1 :=
   (Commute.one_left g).commutator_eq
 
 @[simp]
+theorem commutator_element_self : ⁅g, g⁆ = 1 :=
+  (Commute.refl g).commutator_eq
+
+@[simp]
 theorem commutator_element_inv : ⁅g₁, g₂⁆⁻¹ = ⁅g₂, g₁⁆ := by
   simp_rw [commutator_element_def, mul_inv_rev, inv_invₓ, mul_assoc]
 
@@ -195,7 +199,7 @@ theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _
       · rw [le_pi_iff]
         intro j hj
         rintro _ ⟨_, ⟨x, hx, rfl⟩, rfl⟩
-        by_cases' h : j = i
+        by_cases h:j = i
         · subst h
           simpa using hx
           

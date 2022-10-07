@@ -116,7 +116,7 @@ theorem second_obj_iso_pi_inters_π (f g : ΣV, { f : V ⟶ U // R f }) :
     (secondObjIsoPiInters F U R).Hom ≫ Pi.π _ (f, g) =
       Pi.π _ (f, g) ≫ F.map (eqToHom (CompleteLattice.pullback_eq_inf f.2.1 g.2.1).symm).op :=
   by
-  dunfold second_obj_iso_pi_inters
+  dsimp only [second_obj_iso_pi_inters]
   rw [has_limit.iso_of_nat_iso_hom_π]
   rfl
 
@@ -129,7 +129,7 @@ theorem fork_map_comp_first_obj_iso_pi_opens_eq (hR : Sieve.generate R ∈ Opens
   by
   ext ⟨f⟩
   rw [category.assoc, category.assoc, first_obj_iso_pi_opens_π]
-  dunfold presheaf.fork_map res
+  dsimp only [presheaf.fork_map, res]
   rw [limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app, ← F.map_comp]
   congr
 
@@ -142,7 +142,7 @@ theorem first_obj_iso_comp_left_res_eq :
   by
   ext ⟨f, g⟩
   rw [category.assoc, category.assoc, second_obj_iso_pi_inters_π]
-  dunfold left_res presheaf.first_map
+  dsimp only [left_res, presheaf.first_map]
   rw [limit.lift_π, fan.mk_π_app, limit.lift_π_assoc, fan.mk_π_app, ← category.assoc]
   erw [first_obj_iso_pi_opens_π, category.assoc, ← F.map_comp]
   rfl
@@ -155,7 +155,7 @@ theorem first_obj_iso_comp_right_res_eq :
       (firstObjIsoPiOpens F U R).Hom ≫ rightRes F (coveringOfPresieve U R) :=
   by
   ext ⟨f, g⟩
-  dunfold right_res presheaf.second_map
+  dsimp only [right_res, presheaf.second_map]
   rw [category.assoc, category.assoc, second_obj_iso_pi_inters_π, limit.lift_π, fan.mk_π_app, limit.lift_π_assoc,
     fan.mk_π_app, ← category.assoc, first_obj_iso_pi_opens_π, category.assoc, ← F.map_comp]
   rfl
@@ -215,7 +215,7 @@ def postcomposeDiagramForkIso (hR : Sieve.generate R ∈ Opens.grothendieckTopol
 end CoveringOfPresieve
 
 theorem is_sheaf_of_is_sheaf_equalizer_products (Fsh : F.IsSheafEqualizerProducts) : F.IsSheaf := by
-  delta' is_sheaf
+  delta is_sheaf
   rw [presheaf.is_sheaf_iff_is_sheaf']
   intro U R hR
   refine' ⟨_⟩
@@ -241,9 +241,7 @@ def PresieveOfCovering {ι : Type v} (U : ι → Opens X) : Presieve (supr U) :=
 theorem covering_presieve_eq_self {Y : Opens X} (R : Presieve Y) :
     PresieveOfCoveringAux (coveringOfPresieve Y R) Y = R := by
   ext Z f
-  exact
-    ⟨fun ⟨⟨_, _, h⟩, rfl⟩ => by
-      convert h, fun h => ⟨⟨Z, f, h⟩, rfl⟩⟩
+  exact ⟨fun ⟨⟨_, _, h⟩, rfl⟩ => by convert h, fun h => ⟨⟨Z, f, h⟩, rfl⟩⟩
 
 namespace PresieveOfCovering
 
@@ -310,7 +308,7 @@ hence `s i = s j` (module an `eq_to_hom` arrow).
 theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq (s : Limits.Fork (leftRes F U) (rightRes F U)) :
     s.ι ≫ piOpensToFirstObj F U ≫ firstObjToPiOpens F U = s.ι := by
   ext ⟨j⟩
-  dunfold first_obj_to_pi_opens pi_opens_to_first_obj
+  dsimp only [first_obj_to_pi_opens, pi_opens_to_first_obj]
   rw [category.assoc, category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app]
   -- The issue here is that `index_of_hom U (hom_of_index U j)` need not be equal to `j`.
   -- But `U j = U (index_of_hom U (hom_of_index U j))` and hence we obtain the following
@@ -327,17 +325,17 @@ theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq (s : Limits.Fork (left
       (fun f =>
         f ≫ pi.π (fun p : ι × ι => F.obj (op (U p.1 ⊓ U p.2))) (j, index_of_hom U (hom_of_index U j)) ≫ F.map i_eq.op)
       s.condition
-  dsimp'  at this
+  dsimp at this
   rw [category.assoc, category.assoc] at this
   symm
   -- We claim that this is equality is our goal
   convert this using 2
-  · dunfold left_res
+  · dsimp only [left_res]
     rw [limit.lift_π_assoc, fan.mk_π_app, category.assoc, ← F.map_comp]
     erw [F.map_id]
     rw [category.comp_id]
     
-  · dunfold right_res
+  · dsimp only [right_res]
     rw [limit.lift_π_assoc, fan.mk_π_app, category.assoc, ← F.map_comp]
     congr
     
@@ -348,15 +346,12 @@ sites diagram.
 def piIntersToSecondObj : piInters F U ⟶ Presheaf.secondObj.{v, v, u} (PresieveOfCovering U) F :=
   Pi.lift fun f =>
     Pi.π _ (indexOfHom U f.fst, indexOfHom U f.snd) ≫
-      F.map
-        (eqToHom
-            (by
-              rw [complete_lattice.pullback_eq_inf, ← index_of_hom_spec U, ← index_of_hom_spec U])).op
+      F.map (eqToHom (by rw [complete_lattice.pullback_eq_inf, ← index_of_hom_spec U, ← index_of_hom_spec U])).op
 
 theorem pi_opens_to_first_obj_comp_fist_map_eq :
     piOpensToFirstObj F U ≫ Presheaf.firstMap (PresieveOfCovering U) F = leftRes F U ≫ piIntersToSecondObj F U := by
   ext ⟨f, g⟩
-  dunfold pi_opens_to_first_obj presheaf.first_map left_res pi_inters_to_second_obj
+  dsimp only [pi_opens_to_first_obj, presheaf.first_map, left_res, pi_inters_to_second_obj]
   rw [category.assoc, category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app, ← category.assoc, ←
     category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app, category.assoc, category.assoc, ←
     F.map_comp, ← F.map_comp]
@@ -365,7 +360,7 @@ theorem pi_opens_to_first_obj_comp_fist_map_eq :
 theorem pi_opens_to_first_obj_comp_second_map_eq :
     piOpensToFirstObj F U ≫ Presheaf.secondMap (PresieveOfCovering U) F = rightRes F U ≫ piIntersToSecondObj F U := by
   ext ⟨f, g⟩
-  dunfold pi_opens_to_first_obj presheaf.second_map right_res pi_inters_to_second_obj
+  dsimp only [pi_opens_to_first_obj, presheaf.second_map, right_res, pi_inters_to_second_obj]
   rw [category.assoc, category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app, ← category.assoc, ←
     category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app, category.assoc, category.assoc, ←
     F.map_comp, ← F.map_comp]
@@ -374,14 +369,14 @@ theorem pi_opens_to_first_obj_comp_second_map_eq :
 theorem fork_map_comp_first_map_to_pi_opens_eq :
     Presheaf.forkMap (PresieveOfCovering U) F ≫ firstObjToPiOpens F U = res F U := by
   ext i
-  dsimp' [presheaf.fork_map, first_obj_to_pi_opens, res]
+  dsimp [presheaf.fork_map, first_obj_to_pi_opens, res]
   rw [category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app]
   rfl
 
 theorem res_comp_pi_opens_to_first_obj_eq :
     res F U ≫ piOpensToFirstObj F U = Presheaf.forkMap (PresieveOfCovering U) F := by
   ext f
-  dunfold res pi_opens_to_first_obj presheaf.fork_map
+  dsimp only [res, pi_opens_to_first_obj, presheaf.fork_map]
   rw [category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app, ← category.assoc, limit.lift_π,
     fan.mk_π_app, ← F.map_comp]
   congr
@@ -392,7 +387,7 @@ open PresieveOfCovering
 
 theorem is_sheaf_equalizer_products_of_is_sheaf (Fsh : F.IsSheaf) : F.IsSheafEqualizerProducts := by
   intro ι U
-  delta' is_sheaf  at Fsh
+  delta is_sheaf at Fsh
   rw [presheaf.is_sheaf_iff_is_sheaf'] at Fsh
   -- We know that the sites diagram for `presieve_of_covering U` is a limit fork
   obtain ⟨h_limit⟩ := Fsh (supr U) (presieve_of_covering U) (presieve_of_covering.mem_grothendieck_topology U)
@@ -456,15 +451,13 @@ open CategoryTheory TopologicalSpace Top Opposite
 
 variable {C : Type u} [Category.{v} C]
 
-variable {X : Top.{v}} {ι : Type _} {B : ι → Opens X}
+variable {X : Top.{w}} {ι : Type _} {B : ι → Opens X}
 
 variable (F : X.Presheaf C) (F' : Sheaf C X) (h : Opens.IsBasis (Set.Range B))
 
 /-- The empty component of a sheaf is terminal -/
 def isTerminalOfEmpty (F : Sheaf C X) : Limits.IsTerminal (F.val.obj (op ∅)) :=
-  F.isTerminalOfBotCover ∅
-    (by
-      tidy)
+  F.isTerminalOfBotCover ∅ (by tidy)
 
 /-- A variant of `is_terminal_of_empty` that is easier to `apply`. -/
 def isTerminalOfEqEmpty (F : X.Sheaf C) {U : Opens X} (h : U = ∅) : Limits.IsTerminal (F.val.obj (op U)) := by
@@ -480,7 +473,7 @@ def restrictHomEquivHom : ((inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op
 @[simp]
 theorem extend_hom_app (α : (inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) (i : ι) :
     (restrictHomEquivHom F F' h α).app (op (B i)) = α.app (op i) := by
-  nth_rw 1[← (restrict_hom_equiv_hom F F' h).left_inv α]
+  nth_rw 1 [← (restrict_hom_equiv_hom F F' h).left_inv α]
   rfl
 
 include h

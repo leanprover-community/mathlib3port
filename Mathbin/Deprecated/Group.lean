@@ -35,12 +35,12 @@ universe u v
 
 variable {α : Type u} {β : Type v}
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`map_add] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_add] []
 /-- Predicate for maps which preserve an addition. -/
 structure IsAddHom {α β : Type _} [Add α] [Add β] (f : α → β) : Prop where
   map_add : ∀ x y, f (x + y) = f x + f y
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`map_mul] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_mul] []
 /-- Predicate for maps which preserve a multiplication. -/
 @[to_additive]
 structure IsMulHom {α β : Type _} [Mul α] [Mul β] (f : α → β) : Prop where
@@ -58,16 +58,14 @@ theorem id : IsMulHom (id : α → α) :=
 /-- The composition of maps which preserve multiplication, also preserves multiplication. -/
 @[to_additive "The composition of addition preserving maps also preserves addition"]
 theorem comp {f : α → β} {g : β → γ} (hf : IsMulHom f) (hg : IsMulHom g) : IsMulHom (g ∘ f) :=
-  { map_mul := fun x y => by
-      simp only [Function.comp, hf.map_mul, hg.map_mul] }
+  { map_mul := fun x y => by simp only [Function.comp, hf.map_mul, hg.map_mul] }
 
 /-- A product of maps which preserve multiplication,
 preserves multiplication when the target is commutative. -/
 @[to_additive "A sum of maps which preserves addition, preserves addition when the target\nis commutative."]
 theorem mul {α β} [Semigroupₓ α] [CommSemigroupₓ β] {f g : α → β} (hf : IsMulHom f) (hg : IsMulHom g) :
     IsMulHom fun a => f a * g a :=
-  { map_mul := fun a b => by
-      simp only [hf.map_mul, hg.map_mul, mul_comm, mul_assoc, mul_left_commₓ] }
+  { map_mul := fun a b => by simp only [hf.map_mul, hg.map_mul, mul_comm, mul_assoc, mul_left_commₓ] }
 
 /-- The inverse of a map which preserves multiplication,
 preserves multiplication when the target is commutative. -/
@@ -77,12 +75,12 @@ theorem inv {α β} [Mul α] [CommGroupₓ β] {f : α → β} (hf : IsMulHom f)
 
 end IsMulHom
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`map_zero] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_zero] []
 /-- Predicate for add_monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
 structure IsAddMonoidHom [AddZeroClassₓ α] [AddZeroClassₓ β] (f : α → β) extends IsAddHom f : Prop where
   map_zero : f 0 = 0
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`map_one] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_one] []
 /-- Predicate for monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
 @[to_additive]
 structure IsMonoidHom [MulOneClassₓ α] [MulOneClassₓ β] (f : α → β) extends IsMulHom f : Prop where
@@ -150,10 +148,7 @@ end IsMonoidHom
 /-- A map to a group preserving multiplication is a monoid homomorphism. -/
 @[to_additive "A map to an additive group preserving addition is an additive monoid\nhomomorphism."]
 theorem IsMulHom.to_is_monoid_hom [MulOneClassₓ α] [Groupₓ β] {f : α → β} (hf : IsMulHom f) : IsMonoidHom f :=
-  { map_one :=
-      mul_right_eq_self.1 <| by
-        rw [← hf.map_mul, one_mulₓ],
-    map_mul := hf.map_mul }
+  { map_one := mul_right_eq_self.1 <| by rw [← hf.map_mul, one_mulₓ], map_mul := hf.map_mul }
 
 namespace IsMonoidHom
 
@@ -167,10 +162,7 @@ theorem id : IsMonoidHom (@id α) :=
 /-- The composite of two monoid homomorphisms is a monoid homomorphism. -/
 @[to_additive "The composite of two additive monoid homomorphisms is an additive monoid\nhomomorphism."]
 theorem comp (hf : IsMonoidHom f) {γ} [MulOneClassₓ γ] {g : β → γ} (hg : IsMonoidHom g) : IsMonoidHom (g ∘ f) :=
-  { IsMulHom.comp hf.to_is_mul_hom hg.to_is_mul_hom with
-    map_one :=
-      show g _ = 1 by
-        rw [hf.map_one, hg.map_one] }
+  { IsMulHom.comp hf.to_is_mul_hom hg.to_is_mul_hom with map_one := show g _ = 1 by rw [hf.map_one, hg.map_one] }
 
 end IsMonoidHom
 
@@ -230,8 +222,7 @@ theorem map_one : f 1 = 1 :=
 /-- A group homomorphism sends inverses to inverses. -/
 @[to_additive "An additive group homomorphism sends negations to negations."]
 theorem map_inv (hf : IsGroupHom f) (a : α) : f a⁻¹ = (f a)⁻¹ :=
-  eq_inv_of_mul_eq_one_left <| by
-    rw [← hf.map_mul, inv_mul_selfₓ, hf.map_one]
+  eq_inv_of_mul_eq_one_left <| by rw [← hf.map_mul, inv_mul_selfₓ, hf.map_one]
 
 @[to_additive]
 theorem map_div (hf : IsGroupHom f) (a b : α) : f (a / b) = f a / f b := by
@@ -250,11 +241,8 @@ theorem comp (hf : IsGroupHom f) {γ} [Groupₓ γ] {g : β → γ} (hg : IsGrou
 /-- A group homomorphism is injective iff its kernel is trivial. -/
 @[to_additive "An additive group homomorphism is injective if its kernel is trivial."]
 theorem injective_iff {f : α → β} (hf : IsGroupHom f) : Function.Injective f ↔ ∀ a, f a = 1 → a = 1 :=
-  ⟨fun h _ => by
-    rw [← hf.map_one] <;> exact @h _ _, fun h x y hxy =>
-    eq_of_div_eq_one <|
-      h _ <| by
-        rwa [hf.map_div, div_eq_one]⟩
+  ⟨fun h _ => by rw [← hf.map_one] <;> exact @h _ _, fun h x y hxy =>
+    eq_of_div_eq_one <| h _ <| by rwa [hf.map_div, div_eq_one]⟩
 
 /-- The product of group homomorphisms is a group homomorphism if the target is commutative. -/
 @[to_additive
@@ -312,8 +300,7 @@ theorem Inv.is_group_hom [CommGroupₓ α] : IsGroupHom (Inv.inv : α → α) :=
 /-- The difference of two additive group homomorphisms is an additive group
 homomorphism if the target is commutative. -/
 theorem IsAddGroupHom.sub {α β} [AddGroupₓ α] [AddCommGroupₓ β] {f g : α → β} (hf : IsAddGroupHom f)
-    (hg : IsAddGroupHom g) : IsAddGroupHom fun a => f a - g a := by
-  simpa only [sub_eq_add_neg] using hf.add hg.neg
+    (hg : IsAddGroupHom g) : IsAddGroupHom fun a => f a - g a := by simpa only [sub_eq_add_neg] using hf.add hg.neg
 
 namespace Units
 

@@ -197,7 +197,7 @@ variable [NontriviallyNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [Top
   {U : Set E}
 
 protected theorem IsClosed.balanced_core (hU : IsClosed U) : IsClosed (BalancedCore 𝕜 U) := by
-  by_cases' h : (0 : E) ∈ U
+  by_cases h:(0 : E) ∈ U
   · rw [balanced_core_eq_Inter h]
     refine' is_closed_Inter fun a => _
     refine' is_closed_Inter fun ha => _
@@ -234,7 +234,7 @@ theorem nhds_basis_balanced : (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ �
   Filter.has_basis_self.mpr fun s hs =>
     ⟨BalancedCore 𝕜 s, balanced_core_mem_nhds_zero hs, balanced_core_balanced s, balanced_core_subset s⟩
 
-theorem nhds_basis_closed_balanced [T3Space E] :
+theorem nhds_basis_closed_balanced [RegularSpace E] :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 𝓝 (0 : E) ∧ IsClosed s ∧ Balanced 𝕜 s) id := by
   refine' (closed_nhds_basis 0).to_has_basis (fun s hs => _) fun s hs => ⟨s, ⟨hs.1, hs.2.1⟩, rfl.subset⟩
   refine' ⟨BalancedCore 𝕜 s, ⟨balanced_core_mem_nhds_zero hs.1, _⟩, balanced_core_subset s⟩

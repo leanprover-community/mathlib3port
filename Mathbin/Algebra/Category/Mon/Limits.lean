@@ -40,11 +40,10 @@ instance monoidObj (F : J ⥤ Mon.{max v u}) (j) : Monoidₓ ((F ⋙ forget Mon)
 @[to_additive "The flat sections of a functor into `AddMon` form an additive submonoid of all sections."]
 def sectionsSubmonoid (F : J ⥤ Mon.{max v u}) : Submonoid (∀ j, F.obj j) where
   Carrier := (F ⋙ forget Mon).sections
-  one_mem' := fun j j' f => by
-    simp
+  one_mem' := fun j j' f => by simp
   mul_mem' := fun a b ah bh j j' f => by
     simp only [forget_map_eq_coe, functor.comp_map, MonoidHom.map_mul, Pi.mul_apply]
-    dsimp' [functor.sections]  at ah bh
+    dsimp [functor.sections] at ah bh
     rw [ah f, bh f]
 
 @[to_additive]
@@ -141,8 +140,7 @@ instance (F : J ⥤ CommMon.{max v u}) : CreatesLimit F (forget₂ CommMon Mon.{
           π :=
             { app := Mon.limitπMonoidHom (F ⋙ forget₂ CommMon Mon.{max v u}),
               naturality' := (Mon.HasLimits.limitCone (F ⋙ forget₂ CommMon Mon.{max v u})).π.naturality } },
-      validLift := by
-        apply is_limit.unique_up_to_iso (Mon.HasLimits.limitConeIsLimit _) t,
+      validLift := by apply is_limit.unique_up_to_iso (Mon.HasLimits.limitConeIsLimit _) t,
       makesLimit :=
         IsLimit.ofFaithful (forget₂ CommMon Mon.{max v u}) (Mon.HasLimits.limitConeIsLimit _) (fun s => _) fun s =>
           rfl }
@@ -180,9 +178,8 @@ This means the underlying type of a limit can be computed as a limit in the cate
       "The forgetful functor from additive\ncommutative monoids to additive monoids preserves all limits.\n\nThis means the underlying type of a limit can be computed as a limit in the category of additive\nmonoids."]
 instance forget₂MonPreservesLimitsOfSize :
     PreservesLimitsOfSize.{v, v}
-      (forget₂ CommMon Mon.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
-    { PreservesLimit := fun F => by
-        infer_instance }
+      (forget₂ CommMon
+        Mon.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 => { PreservesLimit := fun F => by infer_instance }
 
 @[to_additive]
 instance forget₂MonPreservesLimits : PreservesLimits (forget₂ CommMon Mon.{u}) :=

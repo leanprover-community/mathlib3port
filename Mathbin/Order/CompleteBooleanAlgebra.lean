@@ -72,11 +72,9 @@ instance OrderDual.coframe : Coframe αᵒᵈ :=
 theorem inf_Sup_eq : a ⊓ sup s = ⨆ b ∈ s, a ⊓ b :=
   (Frame.inf_Sup_le_supr_inf _ _).antisymm supr_inf_le_inf_Sup
 
-theorem Sup_inf_eq : sup s ⊓ b = ⨆ a ∈ s, a ⊓ b := by
-  simpa only [inf_comm] using @inf_Sup_eq α _ s b
+theorem Sup_inf_eq : sup s ⊓ b = ⨆ a ∈ s, a ⊓ b := by simpa only [inf_comm] using @inf_Sup_eq α _ s b
 
-theorem supr_inf_eq (f : ι → α) (a : α) : (⨆ i, f i) ⊓ a = ⨆ i, f i ⊓ a := by
-  rw [supr, Sup_inf_eq, supr_range]
+theorem supr_inf_eq (f : ι → α) (a : α) : (⨆ i, f i) ⊓ a = ⨆ i, f i ⊓ a := by rw [supr, Sup_inf_eq, supr_range]
 
 theorem inf_supr_eq (a : α) (f : ι → α) : (a ⊓ ⨆ i, f i) = ⨆ i, a ⊓ f i := by
   simpa only [inf_comm] using supr_inf_eq f a
@@ -92,8 +90,7 @@ theorem inf_bsupr_eq {f : ∀ i, κ i → α} (a : α) : (a ⊓ ⨆ (i) (j), f i
   simp only [inf_supr_eq]
 
 theorem supr_inf_supr {ι ι' : Type _} {f : ι → α} {g : ι' → α} :
-    ((⨆ i, f i) ⊓ ⨆ j, g j) = ⨆ i : ι × ι', f i.1 ⊓ g i.2 := by
-  simp only [inf_supr_eq, supr_inf_eq, supr_prod]
+    ((⨆ i, f i) ⊓ ⨆ j, g j) = ⨆ i : ι × ι', f i.1 ⊓ g i.2 := by simp only [inf_supr_eq, supr_inf_eq, supr_prod]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem bsupr_inf_bsupr {ι ι' : Type _} {f : ι → α} {g : ι' → α} {s : Set ι} {t : Set ι'} :
@@ -102,8 +99,7 @@ theorem bsupr_inf_bsupr {ι ι' : Type _} {f : ι → α} {g : ι' → α} {s : 
   exact (Equivₓ.surjective _).supr_congr (Equivₓ.Set.prod s t).symm fun x => rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem Sup_inf_Sup : sup s ⊓ sup t = ⨆ p ∈ s ×ˢ t, (p : α × α).1 ⊓ p.2 := by
-  simp only [Sup_eq_supr, bsupr_inf_bsupr]
+theorem Sup_inf_Sup : sup s ⊓ sup t = ⨆ p ∈ s ×ˢ t, (p : α × α).1 ⊓ p.2 := by simp only [Sup_eq_supr, bsupr_inf_bsupr]
 
 theorem supr_disjoint_iff {f : ι → α} : Disjoint (⨆ i, f i) a ↔ ∀ i, Disjoint (f i) a := by
   simp only [disjoint_iff, supr_inf_eq, supr_eq_bot]
@@ -125,16 +121,16 @@ theorem Sup_disjoint_iff {s : Set α} : Disjoint (sup s) a ↔ ∀ b ∈ s, Disj
 theorem disjoint_Sup_iff {s : Set α} : Disjoint a (sup s) ↔ ∀ b ∈ s, Disjoint a b := by
   simpa only [Disjoint.comm] using Sup_disjoint_iff
 
-theorem supr_inf_of_monotone {ι : Type _} [Preorderₓ ι] [IsDirected ι (· ≤ ·)] {f g : ι → α} (hf : Monotone f)
-    (hg : Monotone g) : (⨆ i, f i ⊓ g i) = (⨆ i, f i) ⊓ ⨆ i, g i := by
+theorem supr_inf_of_monotone {ι : Type _} [Preorderₓ ι] [IsDirected ι (· ≤ ·)] {f g : ι → α} (hf : Monotoneₓ f)
+    (hg : Monotoneₓ g) : (⨆ i, f i ⊓ g i) = (⨆ i, f i) ⊓ ⨆ i, g i := by
   refine' (le_supr_inf_supr f g).antisymm _
   rw [supr_inf_supr]
   refine' supr_mono' fun i => _
   rcases directed_of (· ≤ ·) i.1 i.2 with ⟨j, h₁, h₂⟩
   exact ⟨j, inf_le_inf (hf h₁) (hg h₂)⟩
 
-theorem supr_inf_of_antitone {ι : Type _} [Preorderₓ ι] [IsDirected ι (swap (· ≤ ·))] {f g : ι → α} (hf : Antitone f)
-    (hg : Antitone g) : (⨆ i, f i ⊓ g i) = (⨆ i, f i) ⊓ ⨆ i, g i :=
+theorem supr_inf_of_antitone {ι : Type _} [Preorderₓ ι] [IsDirected ι (swap (· ≤ ·))] {f g : ι → α} (hf : Antitoneₓ f)
+    (hg : Antitoneₓ g) : (⨆ i, f i ⊓ g i) = (⨆ i, f i) ⊓ ⨆ i, g i :=
   @supr_inf_of_monotone α _ ιᵒᵈ _ _ f g hf.dual_left hg.dual_left
 
 instance Pi.frame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Frame (∀ i, π i) :=
@@ -144,8 +140,7 @@ instance Pi.frame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Fra
 
 -- see Note [lower instance priority]
 instance (priority := 100) Frame.toDistribLattice : DistribLattice α :=
-  DistribLattice.ofInfSupLe fun a b c => by
-    rw [← Sup_pair, ← Sup_pair, inf_Sup_eq, ← Sup_image, image_pair]
+  DistribLattice.ofInfSupLe fun a b c => by rw [← Sup_pair, ← Sup_pair, inf_Sup_eq, ← Sup_image, image_pair]
 
 end Frame
 
@@ -191,12 +186,12 @@ theorem binfi_sup_binfi {ι ι' : Type _} {f : ι → α} {g : ι' → α} {s : 
 theorem Inf_sup_Inf : inf s ⊔ inf t = ⨅ p ∈ s ×ˢ t, (p : α × α).1 ⊔ p.2 :=
   @Sup_inf_Sup αᵒᵈ _ _ _
 
-theorem infi_sup_of_monotone {ι : Type _} [Preorderₓ ι] [IsDirected ι (swap (· ≤ ·))] {f g : ι → α} (hf : Monotone f)
-    (hg : Monotone g) : (⨅ i, f i ⊔ g i) = (⨅ i, f i) ⊔ ⨅ i, g i :=
+theorem infi_sup_of_monotone {ι : Type _} [Preorderₓ ι] [IsDirected ι (swap (· ≤ ·))] {f g : ι → α} (hf : Monotoneₓ f)
+    (hg : Monotoneₓ g) : (⨅ i, f i ⊔ g i) = (⨅ i, f i) ⊔ ⨅ i, g i :=
   supr_inf_of_antitone hf.dual_right hg.dual_right
 
-theorem infi_sup_of_antitone {ι : Type _} [Preorderₓ ι] [IsDirected ι (· ≤ ·)] {f g : ι → α} (hf : Antitone f)
-    (hg : Antitone g) : (⨅ i, f i ⊔ g i) = (⨅ i, f i) ⊔ ⨅ i, g i :=
+theorem infi_sup_of_antitone {ι : Type _} [Preorderₓ ι] [IsDirected ι (· ≤ ·)] {f g : ι → α} (hf : Antitoneₓ f)
+    (hg : Antitoneₓ g) : (⨅ i, f i ⊔ g i) = (⨅ i, f i) ⊔ ⨅ i, g i :=
   supr_inf_of_monotone hf.dual_right hg.dual_right
 
 instance Pi.coframe {ι : Type _} {π : ι → Type _} [∀ i, Coframe (π i)] : Coframe (∀ i, π i) :=
@@ -206,9 +201,7 @@ instance Pi.coframe {ι : Type _} {π : ι → Type _} [∀ i, Coframe (π i)] :
 
 -- see Note [lower instance priority]
 instance (priority := 100) Coframe.toDistribLattice : DistribLattice α :=
-  { ‹Coframe α› with
-    le_sup_inf := fun a b c => by
-      rw [← Inf_pair, ← Inf_pair, sup_Inf_eq, ← Inf_image, image_pair] }
+  { ‹Coframe α› with le_sup_inf := fun a b c => by rw [← Inf_pair, ← Inf_pair, sup_Inf_eq, ← Inf_image, image_pair] }
 
 end Coframe
 
@@ -235,11 +228,9 @@ instance Pi.completeBooleanAlgebra {ι : Type _} {π : ι → Type _} [∀ i, Co
 instance Prop.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
   { Prop.booleanAlgebra, Prop.completeLattice with
     infi_sup_le_sup_Inf := fun p s =>
-      Iff.mp <| by
-        simp only [forall_or_distrib_left, CompleteLattice.infₓ, infi_Prop_eq, sup_Prop_eq],
+      Iff.mp <| by simp only [forall_or_distrib_left, CompleteLattice.infₓ, infi_Prop_eq, sup_Prop_eq],
     inf_Sup_le_supr_inf := fun p s =>
-      Iff.mp <| by
-        simp only [CompleteLattice.supₓ, exists_and_distrib_leftₓ, inf_Prop_eq, supr_Prop_eq] }
+      Iff.mp <| by simp only [CompleteLattice.supₓ, exists_and_distrib_leftₓ, inf_Prop_eq, supr_Prop_eq] }
 
 section CompleteBooleanAlgebra
 
@@ -250,15 +241,11 @@ theorem compl_infi : infi fᶜ = ⨆ i, f iᶜ :=
     (supr_le fun i => compl_le_compl <| infi_le _ _)
 
 theorem compl_supr : supr fᶜ = ⨅ i, f iᶜ :=
-  compl_injective
-    (by
-      simp [compl_infi])
+  compl_injective (by simp [compl_infi])
 
-theorem compl_Inf : inf sᶜ = ⨆ i ∈ s, iᶜ := by
-  simp only [Inf_eq_infi, compl_infi]
+theorem compl_Inf : inf sᶜ = ⨆ i ∈ s, iᶜ := by simp only [Inf_eq_infi, compl_infi]
 
-theorem compl_Sup : sup sᶜ = ⨅ i ∈ s, iᶜ := by
-  simp only [Sup_eq_supr, compl_supr]
+theorem compl_Sup : sup sᶜ = ⨅ i ∈ s, iᶜ := by simp only [Sup_eq_supr, compl_supr]
 
 theorem compl_Inf' : inf sᶜ = sup (compl '' s) :=
   compl_Inf.trans Sup_image.symm
@@ -329,10 +316,7 @@ variable (s : Set PUnit.{u + 1}) (x y : PUnit.{u + 1})
 
 instance : CompleteBooleanAlgebra PUnit := by
   refine_struct { PUnit.booleanAlgebra with sup := fun _ => star, inf := fun _ => star } <;>
-    intros <;>
-      first |
-        trivial|
-        simp only [eq_iff_true_of_subsingleton, not_true, and_falseₓ]
+    intros <;> first |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_falseₓ]
 
 @[simp]
 theorem Sup_eq : sup s = star :=

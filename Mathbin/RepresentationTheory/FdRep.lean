@@ -33,7 +33,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
--- ./././Mathport/Syntax/Translate/Command.lean:276:31: unsupported: @[derive] abbrev
+-- ./././Mathport/Syntax/Translate/Command.lean:278:31: unsupported: @[derive] abbrev
 --, has_limits, has_colimits
 /-- The category of finite dimensional `k`-linear representations of a monoid `G`. -/
 abbrev FdRep (k G : Type u) [Field k] [Monoidₓ G] :=
@@ -83,8 +83,7 @@ def of {V : Type u} [AddCommGroupₓ V] [Module k V] [FiniteDimensional k V] (ρ
 instance : HasForget₂ (FdRep k G) (Rep k G) where forget₂ := (forget₂ (FinVect k) (ModuleCat k)).mapAction (Mon.of G)
 
 -- Verify that the monoidal structure is available.
-example : MonoidalCategory (FdRep k G) := by
-  infer_instance
+example : MonoidalCategory (FdRep k G) := by infer_instance
 
 end FdRep
 

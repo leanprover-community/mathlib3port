@@ -48,7 +48,7 @@ open Classical Affine BigOperators
 open Set
 
 variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {l : E →L[𝕜] 𝕜}
-  {A B C : Set E} {X : Finset E} {x : E}
+  {A B C : Set E} {X : Finsetₓ E} {x : E}
 
 /-- A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains
 all points maximizing it). Written `is_exposed 𝕜 A B`. -/
@@ -125,20 +125,20 @@ protected theorem inter (hB : IsExposed 𝕜 A B) (hC : IsExposed 𝕜 A C) : Is
   · exact (add_le_add_iff_left (l₁ x)).1 (le_transₓ (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
     
 
-theorem sInter {F : Finset (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀ F) := by
+theorem sInter {F : Finsetₓ (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀ F) := by
   revert hF F
-  refine' Finset.induction _ _
+  refine' Finsetₓ.induction _ _
   · rintro h
     exfalso
     exact empty_not_nonempty h
     
   rintro C F _ hF _ hCF
-  rw [Finset.coe_insert, sInter_insert]
+  rw [Finsetₓ.coe_insert, sInter_insert]
   obtain rfl | hFnemp := F.eq_empty_or_nonempty
-  · rw [Finset.coe_empty, sInter_empty, inter_univ]
-    exact hCF C (Finset.mem_singleton_self C)
+  · rw [Finsetₓ.coe_empty, sInter_empty, inter_univ]
+    exact hCF C (Finsetₓ.mem_singleton_self C)
     
-  exact (hCF C (Finset.mem_insert_self C F)).inter (hF hFnemp fun B hB => hCF B (Finset.mem_insert_of_mem hB))
+  exact (hCF C (Finsetₓ.mem_insert_self C F)).inter (hF hFnemp fun B hB => hCF B (Finsetₓ.mem_insert_of_mem hB))
 
 theorem inter_left (hC : IsExposed 𝕜 A C) (hCB : C ⊆ B) : IsExposed 𝕜 (A ∩ B) C := by
   rintro ⟨w, hw⟩

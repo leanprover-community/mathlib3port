@@ -251,8 +251,7 @@ include module_M module_S_M₂ re₁ re₂
 def symm (e : M ≃ₛₗ[σ] M₂) : M₂ ≃ₛₗ[σ'] M :=
   { e.toLinearMap.inverse e.invFun e.left_inv e.right_inv, e.toEquiv.symm with
     toFun := e.toLinearMap.inverse e.invFun e.left_inv e.right_inv, invFun := e.toEquiv.symm.invFun,
-    map_smul' := fun r x => by
-      rw [map_smulₛₗ] }
+    map_smul' := fun r x => by rw [map_smulₛₗ] }
 
 omit module_M module_S_M₂ re₁ re₂
 
@@ -467,7 +466,7 @@ theorem map_smul (e : N₁ ≃ₗ[R₁] N₂) (c : R₁) (x : N₁) : e (c • x
 omit module_N₁ module_N₂
 
 @[simp]
-theorem map_sum {s : Finset ι} (u : ι → M) : e (∑ i in s, u i) = ∑ i in s, e (u i) :=
+theorem map_sum {s : Finsetₓ ι} (u : ι → M) : e (∑ i in s, u i) = ∑ i in s, e (u i) :=
   e.toLinearMap.map_sum
 
 @[simp]

@@ -72,8 +72,7 @@ theorem differentiable_on_update_lim_of_is_o {f : ℂ → E} {s : Set ℂ} {c : 
   suffices DifferentiableOn ℂ F (s \ {c}) ∧ ContinuousAt F c by
     rw [differentiable_on_compl_singleton_and_continuous_at_iff hc, ← differentiable_on_dslope hc, dslope_sub_smul] at
         this <;>
-      try
-        infer_instance
+      try infer_instance
     have hc : tendsto f (𝓝[≠] c) (𝓝 (deriv F c)) := continuous_at_update_same.mp (this.continuous_on.continuous_at hc)
     rwa [hc.lim_eq]
   refine' ⟨(differentiable_on_id.sub_const _).smul hd, _⟩

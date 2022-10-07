@@ -18,7 +18,7 @@ The main result is `polynomial.induction_on`.
 
 noncomputable section
 
-open Finsupp Finset
+open Finsupp Finsetₓ
 
 namespace Polynomial
 
@@ -42,8 +42,8 @@ protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c
       
     · exact h_monomial _ _ ih
       
-  have B : ∀ s : Finset ℕ, M (s.Sum fun n : ℕ => C (p.coeff n) * X ^ n) := by
-    apply Finset.induction
+  have B : ∀ s : Finsetₓ ℕ, M (s.Sum fun n : ℕ => C (p.coeff n) * X ^ n) := by
+    apply Finsetₓ.induction
     · convert h_C 0
       exact C_0.symm
       
@@ -72,14 +72,14 @@ variable {f : R[X]} {I : Ideal R[X]}
 /-- If the coefficients of a polynomial belong to an ideal, then that ideal contains
 the ideal spanned by the coefficients of the polynomial. -/
 theorem span_le_of_C_coeff_mem (cf : ∀ i : ℕ, c (f.coeff i) ∈ I) : Ideal.span { g | ∃ i, g = c (f.coeff i) } ≤ I := by
-  simp (config := { singlePass := true })only [@eq_comm _ _ (C _)]
+  simp (config := { singlePass := true }) only [@eq_comm _ _ (C _)]
   exact (ideal.span_le.trans range_subset_iff).mpr cf
 
 theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coeff f i) } := by
   let p := Ideal.span { g : R[X] | ∃ i : ℕ, g = C (coeff f i) }
-  nth_rw 0[(sum_C_mul_X_eq f).symm]
+  nth_rw 0 [(sum_C_mul_X_eq f).symm]
   refine' Submodule.sum_mem _ fun n hn => _
-  dsimp'
+  dsimp
   have : C (coeff f n) ∈ p := by
     apply subset_span
     simp

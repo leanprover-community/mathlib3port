@@ -90,12 +90,10 @@ theorem cond_is_probability_measure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) : is
 section Bayes
 
 @[simp]
-theorem cond_empty : μ[|∅] = 0 := by
-  simp [cond]
+theorem cond_empty : μ[|∅] = 0 := by simp [cond]
 
 @[simp]
-theorem cond_univ [IsProbabilityMeasure μ] : μ[|Set.Univ] = μ := by
-  simp [cond, measure_univ, measure.restrict_univ]
+theorem cond_univ [IsProbabilityMeasure μ] : μ[|Set.Univ] = μ := by simp [cond, measure_univ, measure.restrict_univ]
 
 /-- The axiomatic definition of conditional probability derived from a measure-theoretic one. -/
 theorem cond_apply (hms : MeasurableSet s) (t : Set Ω) : μ[t|s] = (μ s)⁻¹ * μ (s ∩ t) := by
@@ -148,7 +146,7 @@ theorem cond_add_cond_compl_eq [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs
 /-- **Bayes' Theorem** -/
 theorem cond_eq_inv_mul_cond_mul [IsFiniteMeasure μ] (hms : MeasurableSet s) (hmt : MeasurableSet t) :
     μ[t|s] = (μ s)⁻¹ * μ[s|t] * μ t := by
-  by_cases' ht : μ t = 0
+  by_cases ht:μ t = 0
   · simp [cond, ht, measure.restrict_apply hmt, Or.inr (measure_inter_null_of_null_left s ht)]
     
   · rw [mul_assoc, cond_mul_eq_inter μ hmt ht s, Set.inter_comm, cond_apply _ hms]

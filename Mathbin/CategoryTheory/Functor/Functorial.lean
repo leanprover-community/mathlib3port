@@ -22,12 +22,8 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 /-- A unbundled functor. -/
 class Functorial (F : C → D) : Type max v₁ v₂ u₁ u₂ where
   map : ∀ {X Y : C}, (X ⟶ Y) → (F X ⟶ F Y)
-  map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (F X) := by
-    run_tac
-      obviously
-  map_comp' : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), map (f ≫ g) = map f ≫ map g := by
-    run_tac
-      obviously
+  map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (F X) := by obviously
+  map_comp' : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), map (f ≫ g) = map f ≫ map g := by obviously
 
 /-- If `F : C → D` (just a function) has `[functorial F]`,
 we can write `map F f : F X ⟶ F Y` for the action of `F` on a morphism `f : X ⟶ Y`.

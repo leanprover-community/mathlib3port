@@ -37,14 +37,8 @@ variable {μa : Measure α} {μb : Measure β} {μc : Measure γ} {μd : Measure
 /-- `f` is a measure preserving map w.r.t. measures `μa` and `μb` if `f` is measurable
 and `map f μa = μb`. -/
 @[protect_proj]
-structure MeasurePreserving (f : α → β)
-  (μa : Measure α := by
-    run_tac
-      volume_tac)
-  (μb : Measure β := by
-    run_tac
-      volume_tac) :
-  Prop where
+structure MeasurePreserving (f : α → β) (μa : Measure α := by exact MeasureTheory.MeasureSpace.volume)
+  (μb : Measure β := by exact MeasureTheory.MeasureSpace.volume) : Prop where
   Measurable : Measurable f
   map_eq : map f μa = μb
 
@@ -62,26 +56,22 @@ protected theorem ae_measurable {f : α → β} (hf : MeasurePreserving f μa μ
 
 theorem symm (e : α ≃ᵐ β) {μa : Measure α} {μb : Measure β} (h : MeasurePreserving e μa μb) :
     MeasurePreserving e.symm μb μa :=
-  ⟨e.symm.Measurable, by
-    rw [← h.map_eq, map_map e.symm.measurable e.measurable, e.symm_comp_self, map_id]⟩
+  ⟨e.symm.Measurable, by rw [← h.map_eq, map_map e.symm.measurable e.measurable, e.symm_comp_self, map_id]⟩
 
 theorem restrict_preimage {f : α → β} (hf : MeasurePreserving f μa μb) {s : Set β} (hs : MeasurableSet s) :
     MeasurePreserving f (μa.restrict (f ⁻¹' s)) (μb.restrict s) :=
-  ⟨hf.Measurable, by
-    rw [← hf.map_eq, restrict_map hf.measurable hs]⟩
+  ⟨hf.Measurable, by rw [← hf.map_eq, restrict_map hf.measurable hs]⟩
 
 theorem restrict_preimage_emb {f : α → β} (hf : MeasurePreserving f μa μb) (h₂ : MeasurableEmbedding f) (s : Set β) :
     MeasurePreserving f (μa.restrict (f ⁻¹' s)) (μb.restrict s) :=
-  ⟨hf.Measurable, by
-    rw [← hf.map_eq, h₂.restrict_map]⟩
+  ⟨hf.Measurable, by rw [← hf.map_eq, h₂.restrict_map]⟩
 
 theorem restrict_image_emb {f : α → β} (hf : MeasurePreserving f μa μb) (h₂ : MeasurableEmbedding f) (s : Set α) :
     MeasurePreserving f (μa.restrict s) (μb.restrict (f '' s)) := by
   simpa only [preimage_image_eq _ h₂.injective] using hf.restrict_preimage_emb h₂ (f '' s)
 
 theorem ae_measurable_comp_iff {f : α → β} (hf : MeasurePreserving f μa μb) (h₂ : MeasurableEmbedding f) {g : β → γ} :
-    AeMeasurable (g ∘ f) μa ↔ AeMeasurable g μb := by
-  rw [← hf.map_eq, h₂.ae_measurable_map_iff]
+    AeMeasurable (g ∘ f) μa ↔ AeMeasurable g μb := by rw [← hf.map_eq, h₂.ae_measurable_map_iff]
 
 protected theorem quasi_measure_preserving {f : α → β} (hf : MeasurePreserving f μa μb) :
     QuasiMeasurePreserving f μa μb :=
@@ -89,21 +79,16 @@ protected theorem quasi_measure_preserving {f : α → β} (hf : MeasurePreservi
 
 theorem comp {g : β → γ} {f : α → β} (hg : MeasurePreserving g μb μc) (hf : MeasurePreserving f μa μb) :
     MeasurePreserving (g ∘ f) μa μc :=
-  ⟨hg.1.comp hf.1, by
-    rw [← map_map hg.1 hf.1, hf.2, hg.2]⟩
+  ⟨hg.1.comp hf.1, by rw [← map_map hg.1 hf.1, hf.2, hg.2]⟩
 
 protected theorem sigma_finite {f : α → β} (hf : MeasurePreserving f μa μb) [SigmaFinite μb] : SigmaFinite μa :=
-  SigmaFinite.of_map μa hf.AeMeasurable
-    (by
-      rwa [hf.map_eq])
+  SigmaFinite.of_map μa hf.AeMeasurable (by rwa [hf.map_eq])
 
 theorem measure_preimage {f : α → β} (hf : MeasurePreserving f μa μb) {s : Set β} (hs : MeasurableSet s) :
-    μa (f ⁻¹' s) = μb s := by
-  rw [← hf.map_eq, map_apply hf.1 hs]
+    μa (f ⁻¹' s) = μb s := by rw [← hf.map_eq, map_apply hf.1 hs]
 
 theorem measure_preimage_emb {f : α → β} (hf : MeasurePreserving f μa μb) (hfe : MeasurableEmbedding f) (s : Set β) :
-    μa (f ⁻¹' s) = μb s := by
-  rw [← hf.map_eq, hfe.map_apply]
+    μa (f ⁻¹' s) = μb s := by rw [← hf.map_eq, hfe.map_apply]
 
 protected theorem iterate {f : α → α} (hf : MeasurePreserving f μa μa) : ∀ n, MeasurePreserving (f^[n]) μa μa
   | 0 => MeasurePreserving.id μa
@@ -117,20 +102,20 @@ theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f �
     (hvol : μ (Univ : Set α) < n * μ s) : ∃ x ∈ s, ∃ m ∈ Ioo 0 n, (f^[m]) x ∈ s := by
   have A : ∀ m, MeasurableSet (f^[m] ⁻¹' s) := fun m => (hf.iterate m).Measurable hs
   have B : ∀ m, μ (f^[m] ⁻¹' s) = μ s := fun m => (hf.iterate m).measure_preimage hs
-  have : μ (univ : Set α) < (Finset.range n).Sum fun m => μ (f^[m] ⁻¹' s) := by
-    simpa only [B, nsmul_eq_mul, Finset.sum_const, Finset.card_range]
+  have : μ (univ : Set α) < (Finsetₓ.range n).Sum fun m => μ (f^[m] ⁻¹' s) := by
+    simpa only [B, nsmul_eq_mul, Finsetₓ.sum_const, Finsetₓ.card_range]
   rcases exists_nonempty_inter_of_measure_univ_lt_sum_measure μ (fun m hm => A m) this with
     ⟨i, hi, j, hj, hij, x, hxi, hxj⟩
   -- without `tactic.skip` Lean closes the extra goal but it takes a long time; not sure why
   wlog (discharger := tactic.skip) hlt : i < j := hij.lt_or_lt using i j, j i
-  · simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj
+  · simp only [Set.mem_preimage, Finsetₓ.mem_range] at hi hj hxi hxj
     refine' ⟨(f^[i]) x, hxi, j - i, ⟨tsub_pos_of_lt hlt, lt_of_le_of_ltₓ (j.sub_le i) hj⟩, _⟩
     rwa [← iterate_add_apply, tsub_add_cancel_of_le hlt.le]
     
   · exact fun hi hj hij hxi hxj => this hj hi hij.symm hxj hxi
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (m «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m «expr ≠ » 0)
 /-- A self-map preserving a finite measure is conservative: if `μ s ≠ 0`, then at least one point
 `x ∈ s` comes back to `s` under iterations of `f`. Actually, a.e. point of `s` comes back to `s`
 infinitely many times, see `measure_theory.measure_preserving.conservative` and theorems about

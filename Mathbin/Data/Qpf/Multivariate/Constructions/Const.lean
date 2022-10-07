@@ -70,10 +70,8 @@ instance mvqpf : @Mvqpf _ (Const n A) Mvqpf.Const.mvfunctor where
   p := Mvpfunctor.const n A
   abs := fun α x => Mvpfunctor.const.get x
   repr := fun α x => Mvpfunctor.const.mk n x
-  abs_repr := by
-    intros <;> simp
-  abs_map := by
-    intros <;> simp <;> rfl
+  abs_repr := by intros <;> simp
+  abs_map := by intros <;> simp <;> rfl
 
 end Const
 

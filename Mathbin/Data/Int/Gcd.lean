@@ -39,8 +39,7 @@ def xgcdAux : ℕ → ℤ → ℤ → ℕ → ℤ → ℤ → ℕ × ℤ × ℤ
     xgcd_aux (r' % r) (s' - q * s) (t' - q * t) r s t
 
 @[simp]
-theorem xgcd_zero_left {s t r' s' t'} : xgcdAux 0 s t r' s' t' = (r', s', t') := by
-  simp [xgcd_aux]
+theorem xgcd_zero_left {s t r' s' t'} : xgcdAux 0 s t r' s' t' = (r', s', t') := by simp [xgcd_aux]
 
 theorem xgcd_aux_rec {r s t r' s' t'} (h : 0 < r) :
     xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
@@ -92,17 +91,12 @@ theorem gcd_b_zero_right {s : ℕ} (h : s ≠ 0) : gcdB s 0 = 0 := by
 
 @[simp]
 theorem xgcd_aux_fst (x y) : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcdₓ x y :=
-  gcdₓ.induction x y
-    (by
-      simp )
-    fun x y h IH s t s' t' => by
-    simp [xgcd_aux_rec, h, IH] <;> rw [← gcd_rec]
+  gcdₓ.induction x y (by simp) fun x y h IH s t s' t' => by simp [xgcd_aux_rec, h, IH] <;> rw [← gcd_rec]
 
 theorem xgcd_aux_val (x y) : xgcdAux x 1 0 y 0 1 = (gcdₓ x y, xgcd x y) := by
   rw [xgcd, ← xgcd_aux_fst x y 1 0 0 1] <;> cases xgcd_aux x 1 0 y 0 1 <;> rfl
 
-theorem xgcd_val (x y) : xgcd x y = (gcdA x y, gcdB x y) := by
-  unfold gcd_a gcd_b <;> cases xgcd x y <;> rfl
+theorem xgcd_val (x y) : xgcd x y = (gcdA x y, gcdB x y) := by unfold gcd_a gcd_b <;> cases xgcd x y <;> rfl
 
 section
 
@@ -112,13 +106,10 @@ private def P : ℕ × ℤ × ℤ → Prop
   | (r, s, t) => (r : ℤ) = x * s + y * t
 
 theorem xgcd_aux_P {r r'} : ∀ {s t s' t'}, P (r, s, t) → P (r', s', t') → P (xgcdAux r s t r' s' t') :=
-  (gcdₓ.induction r r'
-      (by
-        simp ))
-    fun a b h IH s t s' t' p p' => by
+  (gcdₓ.induction r r' (by simp)) fun a b h IH s t s' t' p p' => by
     rw [xgcd_aux_rec h]
     refine' IH _ p
-    dsimp' [P]  at *
+    dsimp [P] at *
     rw [Int.mod_defₓ]
     generalize (b / a : ℤ) = k
     rw [p, p']
@@ -128,13 +119,7 @@ theorem xgcd_aux_P {r r'} : ∀ {s t s' t'}, P (r, s, t) → P (r', s', t') → 
 `b = gcd_b x y` are computed by the extended Euclidean algorithm.
 -/
 theorem gcd_eq_gcd_ab : (gcdₓ x y : ℤ) = x * gcdA x y + y * gcdB x y := by
-  have :=
-      @xgcd_aux_P x y x y 1 0 0 1
-        (by
-          simp [P])
-        (by
-          simp [P]) <;>
-    rwa [xgcd_aux_val, xgcd_val] at this
+  have := @xgcd_aux_P x y x y 1 0 0 1 (by simp [P]) (by simp [P]) <;> rwa [xgcd_aux_val, xgcd_val] at this
 
 end
 
@@ -173,12 +158,8 @@ def gcdB : ℤ → ℤ → ℤ
 /-- **Bézout's lemma** -/
 theorem gcd_eq_gcd_ab : ∀ x y : ℤ, (gcdₓ x y : ℤ) = x * gcdA x y + y * gcdB x y
   | (m : ℕ), (n : ℕ) => Nat.gcd_eq_gcd_ab _ _
-  | (m : ℕ), -[1 + n] =>
-    show (_ : ℤ) = _ + -(n + 1) * -_ by
-      rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
-  | -[1 + m], (n : ℕ) =>
-    show (_ : ℤ) = -(m + 1) * -_ + _ by
-      rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
+  | (m : ℕ), -[1 + n] => show (_ : ℤ) = _ + -(n + 1) * -_ by rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
+  | -[1 + m], (n : ℕ) => show (_ : ℤ) = -(m + 1) * -_ + _ by rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
   | -[1 + m], -[1 + n] =>
     show (_ : ℤ) = -(m + 1) * -_ + -(n + 1) * -_ by
       rw [neg_mul_neg, neg_mul_neg]
@@ -190,16 +171,11 @@ theorem nat_abs_div (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natA
     simp [Int.div_zeroₓ]
     
   calc
-    nat_abs (a / b) = nat_abs (a / b) * 1 := by
-      rw [mul_oneₓ]
-    _ = nat_abs (a / b) * (nat_abs b / nat_abs b) := by
-      rw [Nat.div_selfₓ h]
-    _ = nat_abs (a / b) * nat_abs b / nat_abs b := by
-      rw [Nat.mul_div_assocₓ _ dvd_rfl]
-    _ = nat_abs (a / b * b) / nat_abs b := by
-      rw [nat_abs_mul (a / b) b]
-    _ = nat_abs a / nat_abs b := by
-      rw [Int.div_mul_cancelₓ H]
+    nat_abs (a / b) = nat_abs (a / b) * 1 := by rw [mul_oneₓ]
+    _ = nat_abs (a / b) * (nat_abs b / nat_abs b) := by rw [Nat.div_selfₓ h]
+    _ = nat_abs (a / b) * nat_abs b / nat_abs b := by rw [Nat.mul_div_assocₓ _ dvd_rfl]
+    _ = nat_abs (a / b * b) / nat_abs b := by rw [nat_abs_mul (a / b) b]
+    _ = nat_abs a / nat_abs b := by rw [Int.div_mul_cancelₓ H]
     
 
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Nat.Prime p) {m n : ℤ} {k l : ℕ}
@@ -223,8 +199,7 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Nat.Prime 
         apply Int.coe_nat_dvd.2 hsd2)
 
 theorem dvd_of_mul_dvd_mul_left {i j k : ℤ} (k_non_zero : k ≠ 0) (H : k * i ∣ k * j) : i ∣ j :=
-  Dvd.elim H fun l H1 => by
-    rw [mul_assoc] at H1 <;> exact ⟨_, mul_left_cancel₀ k_non_zero H1⟩
+  Dvd.elim H fun l H1 => by rw [mul_assoc] at H1 <;> exact ⟨_, mul_left_cancel₀ k_non_zero H1⟩
 
 theorem dvd_of_mul_dvd_mul_right {i j k : ℤ} (k_non_zero : k ≠ 0) (H : i * k ∣ j * k) : i ∣ j := by
   rw [mul_comm i k, mul_comm j k] at H <;> exact dvd_of_mul_dvd_mul_left k_non_zero H
@@ -262,16 +237,13 @@ theorem gcd_assoc (i j k : ℤ) : gcdₓ (gcdₓ i j) k = gcdₓ i (gcdₓ j k) 
   Nat.gcd_assocₓ _ _ _
 
 @[simp]
-theorem gcd_self (i : ℤ) : gcdₓ i i = natAbs i := by
-  simp [gcd]
+theorem gcd_self (i : ℤ) : gcdₓ i i = natAbs i := by simp [gcd]
 
 @[simp]
-theorem gcd_zero_left (i : ℤ) : gcdₓ 0 i = natAbs i := by
-  simp [gcd]
+theorem gcd_zero_left (i : ℤ) : gcdₓ 0 i = natAbs i := by simp [gcd]
 
 @[simp]
-theorem gcd_zero_right (i : ℤ) : gcdₓ i 0 = natAbs i := by
-  simp [gcd]
+theorem gcd_zero_right (i : ℤ) : gcdₓ i 0 = natAbs i := by simp [gcd]
 
 @[simp]
 theorem gcd_one_left (i : ℤ) : gcdₓ 1 i = 1 :=
@@ -338,14 +310,10 @@ theorem gcd_dvd_gcd_mul_right_right (i j k : ℤ) : gcdₓ i j ∣ gcdₓ i (j *
   gcd_dvd_gcd_of_dvd_right _ (dvd_mul_right _ _)
 
 theorem gcd_eq_left {i j : ℤ} (H : i ∣ j) : gcdₓ i j = natAbs i :=
-  Nat.dvd_antisymm
-    (by
-      unfold gcd <;> exact Nat.gcd_dvd_leftₓ _ _)
-    (by
-      unfold gcd <;> exact Nat.dvd_gcdₓ dvd_rfl (nat_abs_dvd_iff_dvd.mpr H))
+  Nat.dvd_antisymm (by unfold gcd <;> exact Nat.gcd_dvd_leftₓ _ _)
+    (by unfold gcd <;> exact Nat.dvd_gcdₓ dvd_rfl (nat_abs_dvd_iff_dvd.mpr H))
 
-theorem gcd_eq_right {i j : ℤ} (H : j ∣ i) : gcdₓ i j = natAbs j := by
-  rw [gcd_comm, gcd_eq_left H]
+theorem gcd_eq_right {i j : ℤ} (H : j ∣ i) : gcdₓ i j = natAbs j := by rw [gcd_comm, gcd_eq_left H]
 
 theorem ne_zero_of_gcd {x y : ℤ} (hc : gcdₓ x y ≠ 0) : x ≠ 0 ∨ y ≠ 0 := by
   contrapose! hc
@@ -389,8 +357,7 @@ Compare with `is_coprime.dvd_of_dvd_mul_left` and
 theorem dvd_of_dvd_mul_left_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab : gcdₓ a c = 1) : a ∣ b := by
   have := gcd_eq_gcd_ab a c
   simp only [hab, Int.coe_nat_zero, Int.coe_nat_succ, zero_addₓ] at this
-  have : b * a * gcd_a a c + b * c * gcd_b a c = b := by
-    simp [mul_assoc, ← mul_addₓ, ← this]
+  have : b * a * gcd_a a c + b * c * gcd_b a c = b := by simp [mul_assoc, ← mul_addₓ, ← this]
   rw [← this]
   exact dvd_add (dvd_mul_of_dvd_left (dvd_mul_left a b) _) (dvd_mul_of_dvd_left habc _)
 
@@ -471,8 +438,7 @@ theorem pow_gcd_eq_one {M : Type _} [Monoidₓ M] (x : M) {m n : ℕ} (hm : x ^ 
   cases m
   · simp only [hn, Nat.gcd_zero_leftₓ]
     
-  obtain ⟨x, rfl⟩ : IsUnit x := by
-    apply is_unit_of_pow_eq_one _ _ hm m.succ_pos
+  obtain ⟨x, rfl⟩ : IsUnit x := by apply is_unit_of_pow_eq_one _ _ hm m.succ_pos
   simp only [← Units.coe_pow] at *
   rw [← Units.coe_one, ← zpow_coe_nat, ← Units.ext_iff] at *
   simp only [Nat.gcd_eq_gcd_ab, zpow_add, zpow_mul, hm, hn, one_zpow, one_mulₓ]
@@ -523,8 +489,7 @@ theorem nat_gcd_helper_1 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * 
 
 theorem nat_lcm_helper (x y d m n : ℕ) (hd : Nat.gcdₓ x y = d) (d0 : 0 < d) (xy : x * y = n) (dm : d * m = n) :
     Nat.lcmₓ x y = m :=
-  (Nat.mul_right_inj d0).1 <| by
-    rw [dm, ← xy, ← hd, Nat.gcd_mul_lcmₓ]
+  (Nat.mul_right_inj d0).1 <| by rw [dm, ← xy, ← hd, Nat.gcd_mul_lcmₓ]
 
 theorem nat_coprime_helper_zero_left (x : ℕ) (h : 1 < x) : ¬Nat.Coprime 0 x :=
   mt (Nat.coprime_zero_leftₓ _).1 <| ne_of_gtₓ h
@@ -544,8 +509,7 @@ theorem nat_not_coprime_helper (d x y u v : ℕ) (hu : d * u = x) (hv : d * v = 
   Nat.not_coprime_of_dvd_of_dvdₓ h ⟨_, hu.symm⟩ ⟨_, hv.symm⟩
 
 theorem int_gcd_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (ny : ℤ) = y) (h : Nat.gcdₓ nx ny = d) :
-    Int.gcdₓ x y = d := by
-  rwa [← hx, ← hy, Int.coe_nat_gcd]
+    Int.gcdₓ x y = d := by rwa [← hx, ← hy, Int.coe_nat_gcd]
 
 theorem int_gcd_helper_neg_left (x y : ℤ) (d : ℕ) (h : Int.gcdₓ x y = d) : Int.gcdₓ (-x) y = d := by
   rw [Int.gcdₓ] at h⊢ <;> rwa [Int.nat_abs_neg]
@@ -554,8 +518,7 @@ theorem int_gcd_helper_neg_right (x y : ℤ) (d : ℕ) (h : Int.gcdₓ x y = d) 
   rw [Int.gcdₓ] at h⊢ <;> rwa [Int.nat_abs_neg]
 
 theorem int_lcm_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (ny : ℤ) = y) (h : Nat.lcmₓ nx ny = d) :
-    Int.lcm x y = d := by
-  rwa [← hx, ← hy, Int.coe_nat_lcm]
+    Int.lcm x y = d := by rwa [← hx, ← hy, Int.coe_nat_lcm]
 
 theorem int_lcm_helper_neg_left (x y : ℤ) (d : ℕ) (h : Int.lcm x y = d) : Int.lcm (-x) y = d := by
   rw [Int.lcm] at h⊢ <;> rwa [Int.nat_abs_neg]

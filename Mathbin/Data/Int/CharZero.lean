@@ -28,8 +28,7 @@ theorem cast_eq_zero [AddGroupWithOneₓ α] [CharZero α] {n : ℤ} : (n : α) 
     · rw [cast_neg_succ_of_nat, neg_eq_zero, Nat.cast_eq_zero] at h
       contradiction
       ,
-    fun h => by
-    rw [h, cast_zero]⟩
+    fun h => by rw [h, cast_zero]⟩
 
 @[simp, norm_cast]
 theorem cast_inj [AddGroupWithOneₓ α] [CharZero α] {m n : ℤ} : (m : α) = n ↔ m = n := by

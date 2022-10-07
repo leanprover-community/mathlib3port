@@ -35,7 +35,7 @@ variable {R A : Type _} {a b : A} {r : R}
 
 variable [OrderedCommRing R] [OrderedRing A] [Algebra R A] [OrderedSmul R A]
 
-theorem algebra_map_monotone : Monotone (algebraMap R A) := fun a b h => by
+theorem algebra_map_monotone : Monotoneₓ (algebraMap R A) := fun a b h => by
   rw [Algebra.algebra_map_eq_smul_one, Algebra.algebra_map_eq_smul_one, ← sub_nonneg, ← sub_smul]
   trans (b - a) • (0 : A)
   · simp

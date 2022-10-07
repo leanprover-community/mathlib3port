@@ -33,12 +33,10 @@ def Basis.tensorProduct (b : Basis ι R M) (c : Basis κ R N) : Basis (ι × κ)
 
 @[simp]
 theorem Basis.tensor_product_apply (b : Basis ι R M) (c : Basis κ R N) (i : ι) (j : κ) :
-    Basis.tensorProduct b c (i, j) = b i ⊗ₜ c j := by
-  simp [Basis.tensorProduct]
+    Basis.tensorProduct b c (i, j) = b i ⊗ₜ c j := by simp [Basis.tensorProduct]
 
 theorem Basis.tensor_product_apply' (b : Basis ι R M) (c : Basis κ R N) (i : ι × κ) :
-    Basis.tensorProduct b c i = b i.1 ⊗ₜ c i.2 := by
-  simp [Basis.tensorProduct]
+    Basis.tensorProduct b c i = b i.1 ⊗ₜ c i.2 := by simp [Basis.tensorProduct]
 
 end CommRingₓ
 

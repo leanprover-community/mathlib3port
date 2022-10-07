@@ -94,18 +94,20 @@ theorem NoTopOrder.to_no_max_order (α : Type _) [LinearOrderₓ α] [NoTopOrder
       simp_rw [not_leₓ] }
 
 theorem no_bot_order_iff_no_min_order (α : Type _) [LinearOrderₓ α] : NoBotOrder α ↔ NoMinOrder α :=
-  ⟨fun h => by
+  ⟨fun h =>
     haveI := h
-    exact NoBotOrder.to_no_min_order α, fun h => by
+    NoBotOrder.to_no_min_order α,
+    fun h =>
     haveI := h
-    exact NoMinOrder.to_no_bot_order α⟩
+    NoMinOrder.to_no_bot_order α⟩
 
 theorem no_top_order_iff_no_max_order (α : Type _) [LinearOrderₓ α] : NoTopOrder α ↔ NoMaxOrder α :=
-  ⟨fun h => by
+  ⟨fun h =>
     haveI := h
-    exact NoTopOrder.to_no_max_order α, fun h => by
+    NoTopOrder.to_no_max_order α,
+    fun h =>
     haveI := h
-    exact NoMaxOrder.to_no_top_order α⟩
+    NoMaxOrder.to_no_top_order α⟩
 
 theorem NoMinOrder.not_acc [LT α] [NoMinOrder α] (a : α) : ¬Acc (· < ·) a := fun h =>
   (Acc.recOnₓ h) fun x _ => (exists_lt x).recOn
@@ -240,12 +242,10 @@ theorem is_max_iff_forall_not_lt : IsMax a ↔ ∀ b, ¬a < b :=
   ⟨fun h _ => h.not_lt, fun h b hba => of_not_not fun hab => h _ <| hba.lt_of_not_le hab⟩
 
 @[simp]
-theorem not_is_min_iff : ¬IsMin a ↔ ∃ b, b < a := by
-  simp_rw [lt_iff_le_not_leₓ, IsMin, not_forall, exists_propₓ]
+theorem not_is_min_iff : ¬IsMin a ↔ ∃ b, b < a := by simp_rw [lt_iff_le_not_leₓ, IsMin, not_forall, exists_propₓ]
 
 @[simp]
-theorem not_is_max_iff : ¬IsMax a ↔ ∃ b, a < b := by
-  simp_rw [lt_iff_le_not_leₓ, IsMax, not_forall, exists_propₓ]
+theorem not_is_max_iff : ¬IsMax a ↔ ∃ b, a < b := by simp_rw [lt_iff_le_not_leₓ, IsMax, not_forall, exists_propₓ]
 
 @[simp]
 theorem not_is_min [NoMinOrder α] (a : α) : ¬IsMin a :=

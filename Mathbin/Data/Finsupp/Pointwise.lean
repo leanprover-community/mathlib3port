@@ -17,7 +17,7 @@ and `monoid_algebra`.
 
 noncomputable section
 
-open Finset
+open Finsetₓ
 
 universe u₁ u₂ u₃ u₄ u₅
 
@@ -91,7 +91,8 @@ instance pointwiseScalar [Semiringₓ β] :
     Finsupp.ofSupportFinite (fun a => f a • g a)
       (by
         apply Set.Finite.subset g.finite_support
-        simp only [Function.support_subset_iff, Finsupp.mem_support_iff, Ne.def, Finsupp.fun_support_eq, Finset.mem_coe]
+        simp only [Function.support_subset_iff, Finsupp.mem_support_iff, Ne.def, Finsupp.fun_support_eq,
+          Finsetₓ.mem_coe]
         intro x hx h
         apply hx
         rw [h, smul_zero])

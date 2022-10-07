@@ -96,20 +96,12 @@ instance add_contravariant_class_le : ContravariantClass Ordinal.{u} Ordinal.{u}
                 
             let g (b) := (this b).1
             have fr : ∀ b, f (Sum.inr b) = Sum.inr (g b) := fun b => (this b).2
-            ⟨⟨⟨g, fun x y h => by
-                  injection
-                    f.inj'
-                      (by
-                        rw [fr, fr, h] : f (Sum.inr x) = f (Sum.inr y))⟩,
-                fun a b => by
+            ⟨⟨⟨g, fun x y h => by injection f.inj' (by rw [fr, fr, h] : f (Sum.inr x) = f (Sum.inr y))⟩, fun a b => by
                 simpa only [Sum.lex_inr_inr, fr, RelEmbedding.coe_fn_to_embedding, InitialSeg.coe_fn_to_rel_embedding,
                   embedding.coe_fn_mk] using
                   @RelEmbedding.map_rel_iff _ _ _ _ f.to_rel_embedding (Sum.inr a) (Sum.inr b)⟩,
               fun a b H => by
-              rcases f.init'
-                  (by
-                    rw [fr] <;> exact Sum.lex_inr_inr.2 H) with
-                ⟨a' | a', h⟩
+              rcases f.init' (by rw [fr] <;> exact Sum.lex_inr_inr.2 H) with ⟨a' | a', h⟩
               · rw [fl] at h
                 cases h
                 
@@ -128,11 +120,9 @@ theorem succ_zero : succ (0 : Ordinal) = 1 :=
 theorem succ_one : succ (1 : Ordinal) = 2 :=
   rfl
 
-theorem one_le_iff_pos {o : Ordinal} : 1 ≤ o ↔ 0 < o := by
-  rw [← succ_zero, succ_le_iff]
+theorem one_le_iff_pos {o : Ordinal} : 1 ≤ o ↔ 0 < o := by rw [← succ_zero, succ_le_iff]
 
-theorem one_le_iff_ne_zero {o : Ordinal} : 1 ≤ o ↔ o ≠ 0 := by
-  rw [one_le_iff_pos, Ordinal.pos_iff_ne_zero]
+theorem one_le_iff_ne_zero {o : Ordinal} : 1 ≤ o ↔ o ≠ 0 := by rw [one_le_iff_pos, Ordinal.pos_iff_ne_zero]
 
 theorem succ_pos (o : Ordinal) : 0 < succ o :=
   (Ordinal.zero_le o).trans_lt (lt_succ o)
@@ -141,8 +131,7 @@ theorem succ_ne_zero (o : Ordinal) : succ o ≠ 0 :=
   ne_of_gtₓ <| succ_pos o
 
 @[simp]
-theorem card_succ (o : Ordinal) : card (succ o) = card o + 1 := by
-  simp only [← add_one_eq_succ, card_add, card_one]
+theorem card_succ (o : Ordinal) : card (succ o) = card o + 1 := by simp only [← add_one_eq_succ, card_add, card_one]
 
 theorem nat_cast_succ (n : ℕ) : ↑n.succ = succ (n : Ordinal) :=
   rfl
@@ -150,8 +139,7 @@ theorem nat_cast_succ (n : ℕ) : ↑n.succ = succ (n : Ordinal) :=
 theorem add_left_cancel (a) {b c : Ordinal} : a + b = a + c ↔ b = c := by
   simp only [le_antisymm_iffₓ, add_le_add_iff_left]
 
-theorem lt_one_iff_zero {a : Ordinal} : a < 1 ↔ a = 0 := by
-  simpa using @lt_succ_bot_iff _ _ _ a _ _
+theorem lt_one_iff_zero {a : Ordinal} : a < 1 ↔ a = 0 := by simpa using @lt_succ_bot_iff _ _ _ a _ _
 
 private theorem add_lt_add_iff_left' (a) {b c : Ordinal} : a + b < a + c ↔ b < c := by
   rw [← not_leₓ, ← not_leₓ, add_le_add_iff_left]
@@ -166,10 +154,8 @@ instance add_swap_contravariant_class_lt : ContravariantClass Ordinal.{u} Ordina
   ⟨fun a b c => lt_imp_lt_of_le_imp_leₓ fun h => add_le_add_right h _⟩
 
 theorem add_le_add_iff_right {a b : Ordinal} : ∀ n : ℕ, a + n ≤ b + n ↔ a ≤ b
-  | 0 => by
-    simp
-  | n + 1 => by
-    rw [nat_cast_succ, add_succ, add_succ, succ_le_succ_iff, add_le_add_iff_right]
+  | 0 => by simp
+  | n + 1 => by rw [nat_cast_succ, add_succ, add_succ, succ_le_succ_iff, add_le_add_iff_right]
 
 theorem add_right_cancel {a b : Ordinal} (n : ℕ) : a + n = b + n ↔ a = b := by
   simp only [le_antisymm_iffₓ, add_le_add_iff_right]
@@ -184,8 +170,7 @@ theorem card_eq_zero {o} : card o = 0 ↔ o = 0 :=
       rw [← succ_le_iff, succ_zero] at hn
       cases' hn with f
       exact ⟨f PUnit.unit⟩,
-    fun e => by
-    simp only [e, card_zero]⟩
+    fun e => by simp only [e, card_zero]⟩
 
 protected theorem one_ne_zero : (1 : Ordinal) ≠ 0 :=
   type_ne_zero_of_nonempty _
@@ -205,10 +190,7 @@ instance : ZeroLeOneClass Ordinal :=
   ⟨zero_lt_one.le⟩
 
 instance uniqueOutOne : Unique (1 : Ordinal).out.α where
-  default :=
-    enum (· < ·) 0
-      (by
-        simp )
+  default := enum (· < ·) 0 (by simp)
   uniq := fun a => by
     rw [← enum_typein (· < ·) a]
     unfold default
@@ -216,19 +198,13 @@ instance uniqueOutOne : Unique (1 : Ordinal).out.α where
     rw [← lt_one_iff_zero]
     apply typein_lt_self
 
-theorem one_out_eq (x : (1 : Ordinal).out.α) :
-    x =
-      enum (· < ·) 0
-        (by
-          simp ) :=
+theorem one_out_eq (x : (1 : Ordinal).out.α) : x = enum (· < ·) 0 (by simp) :=
   Unique.eq_default x
 
 @[simp]
-theorem typein_one_out (x : (1 : Ordinal).out.α) : typein (· < ·) x = 0 := by
-  rw [one_out_eq x, typein_enum]
+theorem typein_one_out (x : (1 : Ordinal).out.α) : typein (· < ·) x = 0 := by rw [one_out_eq x, typein_enum]
 
-theorem le_one_iff {a : Ordinal} : a ≤ 1 ↔ a = 0 ∨ a = 1 := by
-  simpa using @le_succ_bot_iff _ _ _ a _
+theorem le_one_iff {a : Ordinal} : a ≤ 1 ↔ a = 0 ∨ a = 1 := by simpa using @le_succ_bot_iff _ _ _ a _
 
 theorem add_eq_zero_iff {a b : Ordinal} : a + b = 0 ↔ a = 0 ∧ b = 0 :=
   (induction_on a) fun α r _ =>
@@ -259,20 +235,15 @@ theorem pred_le_self (o) : pred o ≤ o :=
   if h : ∃ a, o = succ a then by
     let ⟨a, e⟩ := h
     rw [e, pred_succ] <;> exact le_succ a
-  else by
-    rw [pred, dif_neg h]
+  else by rw [pred, dif_neg h]
 
 theorem pred_eq_iff_not_succ {o} : pred o = o ↔ ¬∃ a, o = succ a :=
-  ⟨fun e ⟨a, e'⟩ => by
-    rw [e', pred_succ] at e <;> exact (lt_succ a).Ne e, fun h => dif_neg h⟩
+  ⟨fun e ⟨a, e'⟩ => by rw [e', pred_succ] at e <;> exact (lt_succ a).Ne e, fun h => dif_neg h⟩
 
-theorem pred_eq_iff_not_succ' {o} : pred o = o ↔ ∀ a, o ≠ succ a := by
-  simpa using pred_eq_iff_not_succ
+theorem pred_eq_iff_not_succ' {o} : pred o = o ↔ ∀ a, o ≠ succ a := by simpa using pred_eq_iff_not_succ
 
 theorem pred_lt_iff_is_succ {o} : pred o < o ↔ ∃ a, o = succ a :=
-  Iff.trans
-    (by
-      simp only [le_antisymm_iffₓ, pred_le_self, true_andₓ, not_leₓ])
+  Iff.trans (by simp only [le_antisymm_iffₓ, pred_le_self, true_andₓ, not_leₓ])
     (iff_not_comm.1 pred_eq_iff_not_succ).symm
 
 @[simp]
@@ -280,8 +251,7 @@ theorem pred_zero : pred 0 = 0 :=
   pred_eq_iff_not_succ'.2 fun a => (succ_ne_zero a).symm
 
 theorem succ_pred_iff_is_succ {o} : succ (pred o) = o ↔ ∃ a, o = succ a :=
-  ⟨fun e => ⟨_, e.symm⟩, fun ⟨a, e⟩ => by
-    simp only [e, pred_succ]⟩
+  ⟨fun e => ⟨_, e.symm⟩, fun ⟨a, e⟩ => by simp only [e, pred_succ]⟩
 
 theorem succ_lt_of_not_succ {o b : Ordinal} (h : ¬∃ a, o = succ a) : succ b < o ↔ b < o :=
   ⟨(lt_succ b).trans, fun l => lt_of_le_of_neₓ (succ_le_of_lt l) fun e => h ⟨_, e.symm⟩⟩
@@ -290,8 +260,7 @@ theorem lt_pred {a b} : a < pred b ↔ succ a < b :=
   if h : ∃ a, b = succ a then by
     let ⟨c, e⟩ := h
     rw [e, pred_succ, succ_lt_succ_iff]
-  else by
-    simp only [pred, dif_neg h, succ_lt_of_not_succ h]
+  else by simp only [pred, dif_neg h, succ_lt_of_not_succ h]
 
 theorem pred_le {a b} : pred a ≤ b ↔ a ≤ succ b :=
   le_iff_le_iff_lt_iff_ltₓ.2 lt_pred
@@ -300,19 +269,13 @@ theorem pred_le {a b} : pred a ≤ b ↔ a ≤ succ b :=
 theorem lift_is_succ {o} : (∃ a, lift o = succ a) ↔ ∃ a, o = succ a :=
   ⟨fun ⟨a, h⟩ =>
     let ⟨b, e⟩ := lift_down <| show a ≤ lift o from le_of_ltₓ <| h.symm ▸ lt_succ a
-    ⟨b,
-      lift_inj.1 <| by
-        rw [h, ← e, lift_succ]⟩,
-    fun ⟨a, h⟩ =>
-    ⟨lift a, by
-      simp only [h, lift_succ]⟩⟩
+    ⟨b, lift_inj.1 <| by rw [h, ← e, lift_succ]⟩,
+    fun ⟨a, h⟩ => ⟨lift a, by simp only [h, lift_succ]⟩⟩
 
 @[simp]
 theorem lift_pred (o) : lift (pred o) = pred (lift o) :=
-  if h : ∃ a, o = succ a then by
-    cases' h with a e <;> simp only [e, pred_succ, lift_succ]
-  else by
-    rw [pred_eq_iff_not_succ.2 h, pred_eq_iff_not_succ.2 (mt lift_is_succ.1 h)]
+  if h : ∃ a, o = succ a then by cases' h with a e <;> simp only [e, pred_succ, lift_succ]
+  else by rw [pred_eq_iff_not_succ.2 h, pred_eq_iff_not_succ.2 (mt lift_is_succ.1 h)]
 
 /-! ### Limit ordinals -/
 
@@ -348,13 +311,8 @@ theorem lt_limit {o} (h : IsLimit o) {a} : a < o ↔ ∃ x < o, a < x := by
 
 @[simp]
 theorem lift_is_limit (o) : IsLimit (lift o) ↔ IsLimit o :=
-  and_congrₓ
-    (not_congr <| by
-      simpa only [lift_zero] using @lift_inj o 0)
-    ⟨fun H a h =>
-      lift_lt.1 <| by
-        simpa only [lift_succ] using H _ (lift_lt.2 h),
-      fun H a h => by
+  and_congrₓ (not_congr <| by simpa only [lift_zero] using @lift_inj o 0)
+    ⟨fun H a h => lift_lt.1 <| by simpa only [lift_succ] using H _ (lift_lt.2 h), fun H a h => by
       obtain ⟨a', rfl⟩ := lift_down h.le
       rw [← lift_succ, lift_lt]
       exact H a' (lift_lt.1 h)⟩
@@ -362,8 +320,7 @@ theorem lift_is_limit (o) : IsLimit (lift o) ↔ IsLimit o :=
 theorem IsLimit.pos {o : Ordinal} (h : IsLimit o) : 0 < o :=
   lt_of_le_of_neₓ (Ordinal.zero_le _) h.1.symm
 
-theorem IsLimit.one_lt {o : Ordinal} (h : IsLimit o) : 1 < o := by
-  simpa only [succ_zero] using h.2 _ h.pos
+theorem IsLimit.one_lt {o : Ordinal} (h : IsLimit o) : 1 < o := by simpa only [succ_zero] using h.2 _ h.pos
 
 theorem IsLimit.nat_lt {o : Ordinal} (h : IsLimit o) : ∀ n : ℕ, (n : Ordinal) < o
   | 0 => h.Pos
@@ -380,11 +337,9 @@ def limitRecOn {C : Ordinal → Sort _} (o : Ordinal) (H₁ : C 0) (H₂ : ∀ o
     (H₃ : ∀ o, IsLimit o → (∀ o' < o, C o') → C o) : C o :=
   lt_wf.fix
     (fun o IH =>
-      if o0 : o = 0 then by
-        rw [o0] <;> exact H₁
+      if o0 : o = 0 then by rw [o0] <;> exact H₁
       else
-        if h : ∃ a, o = succ a then by
-          rw [← succ_pred_iff_is_succ.2 h] <;> exact H₂ _ (IH _ <| pred_lt_iff_is_succ.2 h)
+        if h : ∃ a, o = succ a then by rw [← succ_pred_iff_is_succ.2 h] <;> exact H₂ _ (IH _ <| pred_lt_iff_is_succ.2 h)
         else H₃ _ ⟨o0, fun a => (succ_lt_of_not_succ h).2⟩ IH)
     o
 
@@ -407,8 +362,7 @@ theorem limit_rec_on_succ {C} (o H₁ H₂ H₃) : @limitRecOn C (succ o) H₁ H
 
 @[simp]
 theorem limit_rec_on_limit {C} (o H₁ H₂ H₃ h) : @limitRecOn C o H₁ H₂ H₃ = H₃ o h fun x h => @limitRecOn C x H₁ H₂ H₃ :=
-  by
-  rw [limit_rec_on, lt_wf.fix_eq, dif_neg h.1, dif_neg (not_succ_of_is_limit h)] <;> rfl
+  by rw [limit_rec_on, lt_wf.fix_eq, dif_neg h.1, dif_neg (not_succ_of_is_limit h)] <;> rfl
 
 instance orderTopOutSucc (o : Ordinal) : OrderTop (succ o).out.α :=
   ⟨_, le_enum_succ⟩
@@ -428,15 +382,13 @@ theorem has_succ_of_type_succ_lt {α} {r : α → α → Prop} [wo : IsWellOrder
   rw [enum_typein]
 
 theorem out_no_max_of_succ_lt {o : Ordinal} (ho : ∀ a < o, succ a < o) : NoMaxOrder o.out.α :=
-  ⟨has_succ_of_type_succ_lt
-      (by
-        rwa [type_lt])⟩
+  ⟨has_succ_of_type_succ_lt (by rwa [type_lt])⟩
 
 theorem bounded_singleton {r : α → α → Prop} [IsWellOrder α r] (hr : (type r).IsLimit) (x) : Bounded r {x} := by
   refine' ⟨enum r (succ (typein r x)) (hr.2 _ (typein_lt_type r x)), _⟩
   intro b hb
   rw [mem_singleton_iff.1 hb]
-  nth_rw 0[← enum_typein r x]
+  nth_rw 0 [← enum_typein r x]
   rw [@enum_lt_enum _ r]
   apply lt_succ
 
@@ -466,30 +418,28 @@ theorem IsNormal.limit_le {f} (H : IsNormal f) : ∀ {o}, IsLimit o → ∀ {a},
   H.2
 
 theorem IsNormal.limit_lt {f} (H : IsNormal f) {o} (h : IsLimit o) {a} : a < f o ↔ ∃ b < o, a < f b :=
-  not_iff_not.1 <| by
-    simpa only [exists_propₓ, not_exists, not_and, not_ltₓ] using H.2 _ h a
+  not_iff_not.1 <| by simpa only [exists_propₓ, not_exists, not_and, not_ltₓ] using H.2 _ h a
 
-theorem IsNormal.strict_mono {f} (H : IsNormal f) : StrictMono f := fun a b =>
+theorem IsNormal.strict_mono {f} (H : IsNormal f) : StrictMonoₓ f := fun a b =>
   limitRecOn b (Not.elim (not_lt_of_leₓ <| Ordinal.zero_le _))
     (fun b IH h => (lt_or_eq_of_leₓ (le_of_lt_succ h)).elim (fun h => (IH h).trans (H.1 _)) fun e => e ▸ H.1 _)
     fun b l IH h => lt_of_lt_of_leₓ (H.1 a) ((H.2 _ l _).1 le_rflₓ _ (l.2 _ h))
 
-theorem IsNormal.monotone {f} (H : IsNormal f) : Monotone f :=
+theorem IsNormal.monotone {f} (H : IsNormal f) : Monotoneₓ f :=
   H.StrictMono.Monotone
 
 theorem is_normal_iff_strict_mono_limit (f : Ordinal → Ordinal) :
-    IsNormal f ↔ StrictMono f ∧ ∀ o, IsLimit o → ∀ a, (∀ b < o, f b ≤ a) → f o ≤ a :=
+    IsNormal f ↔ StrictMonoₓ f ∧ ∀ o, IsLimit o → ∀ a, (∀ b < o, f b ≤ a) → f o ≤ a :=
   ⟨fun hf => ⟨hf.StrictMono, fun a ha c => (hf.2 a ha c).2⟩, fun ⟨hs, hl⟩ =>
     ⟨fun a => hs (lt_succ a), fun a ha c => ⟨fun hac b hba => ((hs hba).trans_le hac).le, hl a ha c⟩⟩⟩
 
 theorem IsNormal.lt_iff {f} (H : IsNormal f) {a b} : f a < f b ↔ a < b :=
-  StrictMono.lt_iff_lt <| H.StrictMono
+  StrictMonoₓ.lt_iff_lt <| H.StrictMono
 
 theorem IsNormal.le_iff {f} (H : IsNormal f) {a b} : f a ≤ f b ↔ a ≤ b :=
   le_iff_le_iff_lt_iff_ltₓ.2 H.lt_iff
 
-theorem IsNormal.inj {f} (H : IsNormal f) {a b} : f a = f b ↔ a = b := by
-  simp only [le_antisymm_iffₓ, H.le_iff]
+theorem IsNormal.inj {f} (H : IsNormal f) {a b} : f a = f b ↔ a = b := by simp only [le_antisymm_iffₓ, H.le_iff]
 
 theorem IsNormal.self_le {f} (H : IsNormal f) (a) : a ≤ f a :=
   lt_wf.self_le_of_strict_mono H.StrictMono a
@@ -550,10 +500,7 @@ theorem add_le_of_limit {a b c : Ordinal} (h : IsLimit b) : a + b ≤ c ↔ ∀ 
             · rcases a with ⟨a | b, h⟩
               · exact Sum.inl a
                 
-              · exact
-                  Sum.inr
-                    ⟨b, by
-                      cases h <;> assumption⟩
+              · exact Sum.inr ⟨b, by cases h <;> assumption⟩
                 
               
             · rcases a with ⟨a | a, h₁⟩ <;>
@@ -620,35 +567,24 @@ instance : HasExistsAddOfLe Ordinal :=
   ⟨fun a b h => ⟨_, (Ordinal.add_sub_cancel_of_le h).symm⟩⟩
 
 @[simp]
-theorem sub_zero (a : Ordinal) : a - 0 = a := by
-  simpa only [zero_addₓ] using add_sub_cancel 0 a
+theorem sub_zero (a : Ordinal) : a - 0 = a := by simpa only [zero_addₓ] using add_sub_cancel 0 a
 
 @[simp]
-theorem zero_sub (a : Ordinal) : 0 - a = 0 := by
-  rw [← Ordinal.le_zero] <;> apply sub_le_self
+theorem zero_sub (a : Ordinal) : 0 - a = 0 := by rw [← Ordinal.le_zero] <;> apply sub_le_self
 
 @[simp]
-theorem sub_self (a : Ordinal) : a - a = 0 := by
-  simpa only [add_zeroₓ] using add_sub_cancel a 0
+theorem sub_self (a : Ordinal) : a - a = 0 := by simpa only [add_zeroₓ] using add_sub_cancel a 0
 
 protected theorem sub_eq_zero_iff_le {a b : Ordinal} : a - b = 0 ↔ a ≤ b :=
-  ⟨fun h => by
-    simpa only [h, add_zeroₓ] using le_add_sub a b, fun h => by
-    rwa [← Ordinal.le_zero, sub_le, add_zeroₓ]⟩
+  ⟨fun h => by simpa only [h, add_zeroₓ] using le_add_sub a b, fun h => by rwa [← Ordinal.le_zero, sub_le, add_zeroₓ]⟩
 
 theorem sub_sub (a b c : Ordinal) : a - b - c = a - (b + c) :=
-  eq_of_forall_ge_iffₓ fun d => by
-    rw [sub_le, sub_le, sub_le, add_assocₓ]
+  eq_of_forall_ge_iffₓ fun d => by rw [sub_le, sub_le, sub_le, add_assocₓ]
 
-theorem add_sub_add_cancel (a b c : Ordinal) : a + b - (a + c) = b - c := by
-  rw [← sub_sub, add_sub_cancel]
+theorem add_sub_add_cancel (a b c : Ordinal) : a + b - (a + c) = b - c := by rw [← sub_sub, add_sub_cancel]
 
 theorem sub_is_limit {a b} (l : IsLimit a) (h : b < a) : IsLimit (a - b) :=
-  ⟨ne_of_gtₓ <|
-      lt_sub.2 <| by
-        rwa [add_zeroₓ],
-    fun c h => by
-    rw [lt_sub, add_succ] <;> exact l.2 _ (lt_sub.1 h)⟩
+  ⟨ne_of_gtₓ <| lt_sub.2 <| by rwa [add_zeroₓ], fun c h => by rw [lt_sub, add_succ] <;> exact l.2 _ (lt_sub.1 h)⟩
 
 @[simp]
 theorem one_add_omega : 1 + ω = ω := by
@@ -789,7 +725,7 @@ private theorem mul_le_of_limit_aux {α β r s} [IsWellOrder α r] [IsWellOrder 
   have := ((add_lt_add_iff_left _).2 (typein_lt_type _ a)).trans_le this
   refine' (RelEmbedding.ofMonotone (fun a => _) fun a b => _).ordinal_type_le.trans_lt this
   · rcases a with ⟨⟨b', a'⟩, h⟩
-    by_cases' e : b = b'
+    by_cases e:b = b'
     · refine' Sum.inr ⟨a', _⟩
       subst e
       cases' h with _ _ _ _ h _ _ _ h
@@ -809,7 +745,7 @@ private theorem mul_le_of_limit_aux {α β r s} [IsWellOrder α r] [IsWellOrder 
   · rcases a with ⟨⟨b₁, a₁⟩, h₁⟩
     rcases b with ⟨⟨b₂, a₂⟩, h₂⟩
     intro h
-    by_cases' e₁ : b = b₁ <;> by_cases' e₂ : b = b₂
+    by_cases e₁:b = b₁ <;> by_cases e₂:b = b₂
     · substs b₁ b₂
       simpa only [subrel_val, Prod.lex_defₓ, @irrefl _ s _ b, true_andₓ, false_orₓ, eq_self_iff_true, dif_pos,
         Sum.lex_inr_inr] using h
@@ -819,9 +755,7 @@ private theorem mul_le_of_limit_aux {α β r s} [IsWellOrder α r] [IsWellOrder 
         dif_neg, not_false_iff, Sum.lex_inr_inl, false_andₓ] at h⊢
       cases h₂ <;> [exact asymm h h₂_h, exact e₂ rfl]
       
-    · simp [e₂, dif_neg e₁,
-        show b₂ ≠ b₁ by
-          cc]
+    · simp [e₂, dif_neg e₁, show b₂ ≠ b₁ by cc]
       
     · simpa only [dif_neg e₁, dif_neg e₂, Prod.lex_defₓ, subrel_val, Subtype.mk_eq_mk, Sum.lex_inl_inl] using h
       
@@ -832,8 +766,8 @@ theorem mul_le_of_limit {a b c : Ordinal} (h : IsLimit b) : a * b ≤ c ↔ ∀ 
     le_of_not_ltₓ <| induction_on a (fun α r _ => (induction_on b) fun β s _ => mul_le_of_limit_aux) h H⟩
 
 theorem mul_is_normal {a : Ordinal} (h : 0 < a) : IsNormal ((· * ·) a) :=
-  ⟨fun b => by
-    rw [mul_succ] <;> simpa only [add_zeroₓ] using (add_lt_add_iff_left (a * b)).2 h, fun b l c => mul_le_of_limit l⟩
+  ⟨fun b => by rw [mul_succ] <;> simpa only [add_zeroₓ] using (add_lt_add_iff_left (a * b)).2 h, fun b l c =>
+    mul_le_of_limit l⟩
 
 theorem lt_mul_of_limit {a b c : Ordinal} (h : IsLimit c) : a < b * c ↔ ∃ c' < c, a < b * c' := by
   simpa only [not_ball, not_leₓ] using not_congr (@mul_le_of_limit b c a h)
@@ -850,8 +784,7 @@ theorem mul_lt_mul_of_pos_left {a b c : Ordinal} (h : a < b) (c0 : 0 < c) : c * 
 theorem mul_pos {a b : Ordinal} (h₁ : 0 < a) (h₂ : 0 < b) : 0 < a * b := by
   simpa only [mul_zero] using mul_lt_mul_of_pos_left h₂ h₁
 
-theorem mul_ne_zero {a b : Ordinal} : a ≠ 0 → b ≠ 0 → a * b ≠ 0 := by
-  simpa only [Ordinal.pos_iff_ne_zero] using mul_pos
+theorem mul_ne_zero {a b : Ordinal} : a ≠ 0 → b ≠ 0 → a * b ≠ 0 := by simpa only [Ordinal.pos_iff_ne_zero] using mul_pos
 
 theorem le_of_mul_le_mul_left {a b c : Ordinal} (h : c * a ≤ c * b) (h0 : 0 < c) : a ≤ b :=
   le_imp_le_of_lt_imp_ltₓ (fun h' => mul_lt_mul_of_pos_left h' h0) h
@@ -873,10 +806,8 @@ theorem mul_is_limit_left {a b : Ordinal} (l : IsLimit a) (b0 : 0 < b) : IsLimit
     
 
 theorem smul_eq_mul : ∀ (n : ℕ) (a : Ordinal), n • a = a * n
-  | 0, a => by
-    rw [zero_smul, Nat.cast_zeroₓ, mul_zero]
-  | n + 1, a => by
-    rw [succ_nsmul', Nat.cast_addₓ, mul_addₓ, Nat.cast_oneₓ, mul_oneₓ, smul_eq_mul]
+  | 0, a => by rw [zero_smul, Nat.cast_zeroₓ, mul_zero]
+  | n + 1, a => by rw [succ_nsmul', Nat.cast_addₓ, mul_addₓ, Nat.cast_oneₓ, mul_oneₓ, smul_eq_mul]
 
 /-! ### Division on ordinals -/
 
@@ -908,11 +839,9 @@ theorem div_le {a b c : Ordinal} (b0 : b ≠ 0) : a / b ≤ c ↔ a < b * succ c
   ⟨fun h => (lt_mul_succ_div a b0).trans_le (mul_le_mul_left' (succ_le_succ_iff.2 h) _), fun h => by
     rw [div_def a b0] <;> exact cInf_le' h⟩
 
-theorem lt_div {a b c : Ordinal} (h : c ≠ 0) : a < b / c ↔ c * succ a ≤ b := by
-  rw [← not_leₓ, div_le h, not_ltₓ]
+theorem lt_div {a b c : Ordinal} (h : c ≠ 0) : a < b / c ↔ c * succ a ≤ b := by rw [← not_leₓ, div_le h, not_ltₓ]
 
-theorem div_pos {b c : Ordinal} (h : c ≠ 0) : 0 < b / c ↔ c ≤ b := by
-  simp [lt_div h]
+theorem div_pos {b c : Ordinal} (h : c ≠ 0) : 0 < b / c ↔ c ≤ b := by simp [lt_div h]
 
 theorem le_div {a b c : Ordinal} (c0 : c ≠ 0) : a ≤ b / c ↔ c * a ≤ b := by
   apply limit_rec_on a
@@ -921,15 +850,14 @@ theorem le_div {a b c : Ordinal} (c0 : c ≠ 0) : a ≤ b / c ↔ c * a ≤ b :=
   · intros
     rw [succ_le_iff, lt_div c0]
     
-  · simp (config := { contextual := true })only [mul_le_of_limit, limit_le, iff_selfₓ, forall_true_iff]
+  · simp (config := { contextual := true }) only [mul_le_of_limit, limit_le, iff_selfₓ, forall_true_iff]
     
 
 theorem div_lt {a b c : Ordinal} (b0 : b ≠ 0) : a / b < c ↔ a < b * c :=
   lt_iff_lt_of_le_iff_leₓ <| le_div b0
 
 theorem div_le_of_le_mul {a b c : Ordinal} (h : a ≤ b * c) : a / b ≤ c :=
-  if b0 : b = 0 then by
-    simp only [b0, div_zero, Ordinal.zero_le]
+  if b0 : b = 0 then by simp only [b0, div_zero, Ordinal.zero_le]
   else (div_le b0).2 <| h.trans_lt <| mul_lt_mul_of_pos_left (lt_succ c) (Ordinal.pos_iff_ne_zero.2 b0)
 
 theorem mul_lt_of_lt_div {a b c : Ordinal} : a < b / c → c * a < b :=
@@ -940,9 +868,7 @@ theorem zero_div (a : Ordinal) : 0 / a = 0 :=
   Ordinal.le_zero.1 <| div_le_of_le_mul <| Ordinal.zero_le _
 
 theorem mul_div_le (a b : Ordinal) : b * (a / b) ≤ a :=
-  if b0 : b = 0 then by
-    simp only [b0, zero_mul, Ordinal.zero_le]
-  else (le_div b0).1 le_rflₓ
+  if b0 : b = 0 then by simp only [b0, zero_mul, Ordinal.zero_le] else (le_div b0).1 le_rflₓ
 
 theorem mul_add_div (a) {b : Ordinal} (b0 : b ≠ 0) (c) : (b * a + c) / b = a + c / b := by
   apply le_antisymmₓ
@@ -963,23 +889,18 @@ theorem mul_div_cancel (a) {b : Ordinal} (b0 : b ≠ 0) : b * a / b = a := by
   simpa only [add_zeroₓ, zero_div] using mul_add_div a b0 0
 
 @[simp]
-theorem div_one (a : Ordinal) : a / 1 = a := by
-  simpa only [one_mulₓ] using mul_div_cancel a Ordinal.one_ne_zero
+theorem div_one (a : Ordinal) : a / 1 = a := by simpa only [one_mulₓ] using mul_div_cancel a Ordinal.one_ne_zero
 
 @[simp]
-theorem div_self {a : Ordinal} (h : a ≠ 0) : a / a = 1 := by
-  simpa only [mul_oneₓ] using mul_div_cancel 1 h
+theorem div_self {a : Ordinal} (h : a ≠ 0) : a / a = 1 := by simpa only [mul_oneₓ] using mul_div_cancel 1 h
 
 theorem mul_sub (a b c : Ordinal) : a * (b - c) = a * b - a * c :=
-  if a0 : a = 0 then by
-    simp only [a0, zero_mul, sub_self]
-  else
-    eq_of_forall_ge_iffₓ fun d => by
-      rw [sub_le, ← le_div a0, sub_le, ← le_div a0, mul_add_div _ a0]
+  if a0 : a = 0 then by simp only [a0, zero_mul, sub_self]
+  else eq_of_forall_ge_iffₓ fun d => by rw [sub_le, ← le_div a0, sub_le, ← le_div a0, mul_add_div _ a0]
 
 theorem is_limit_add_iff {a b} : IsLimit (a + b) ↔ IsLimit b ∨ b = 0 ∧ IsLimit a := by
   constructor <;> intro h
-  · by_cases' h' : b = 0
+  · by_cases h':b = 0
     · rw [h', add_zeroₓ] at h
       right
       exact ⟨h', h⟩
@@ -997,32 +918,21 @@ theorem is_limit_add_iff {a b} : IsLimit (a + b) ↔ IsLimit b ∨ b = 0 ∧ IsL
 
 theorem dvd_add_iff : ∀ {a b c : Ordinal}, a ∣ b → (a ∣ b + c ↔ a ∣ c)
   | a, _, c, ⟨b, rfl⟩ =>
-    ⟨fun ⟨d, e⟩ =>
-      ⟨d - b, by
-        rw [mul_sub, ← e, add_sub_cancel]⟩,
-      fun ⟨d, e⟩ => by
+    ⟨fun ⟨d, e⟩ => ⟨d - b, by rw [mul_sub, ← e, add_sub_cancel]⟩, fun ⟨d, e⟩ => by
       rw [e, ← mul_addₓ]
       apply dvd_mul_right⟩
 
 theorem div_mul_cancel : ∀ {a b : Ordinal}, a ≠ 0 → a ∣ b → a * (b / a) = b
-  | a, _, a0, ⟨b, rfl⟩ => by
-    rw [mul_div_cancel _ a0]
+  | a, _, a0, ⟨b, rfl⟩ => by rw [mul_div_cancel _ a0]
 
 theorem le_of_dvd : ∀ {a b : Ordinal}, b ≠ 0 → a ∣ b → a ≤ b
   | a, _, b0, ⟨b, rfl⟩ => by
     simpa only [mul_oneₓ] using
-      mul_le_mul_left'
-        (one_le_iff_ne_zero.2 fun h : b = 0 => by
-          simpa only [h, mul_zero] using b0)
-        a
+      mul_le_mul_left' (one_le_iff_ne_zero.2 fun h : b = 0 => by simpa only [h, mul_zero] using b0) a
 
 theorem dvd_antisymm {a b : Ordinal} (h₁ : a ∣ b) (h₂ : b ∣ a) : a = b :=
-  if a0 : a = 0 then by
-    subst a <;> exact (eq_zero_of_zero_dvd h₁).symm
-  else
-    if b0 : b = 0 then by
-      subst b <;> exact eq_zero_of_zero_dvd h₂
-    else (le_of_dvd b0 h₁).antisymm (le_of_dvd a0 h₂)
+  if a0 : a = 0 then by subst a <;> exact (eq_zero_of_zero_dvd h₁).symm
+  else if b0 : b = 0 then by subst b <;> exact eq_zero_of_zero_dvd h₂ else (le_of_dvd b0 h₁).antisymm (le_of_dvd a0 h₂)
 
 instance : IsAntisymm Ordinal (· ∣ ·) :=
   ⟨@dvd_antisymm⟩
@@ -1036,37 +946,29 @@ theorem mod_def (a b : Ordinal) : a % b = a - b * (a / b) :=
   rfl
 
 @[simp]
-theorem mod_zero (a : Ordinal) : a % 0 = a := by
-  simp only [mod_def, div_zero, zero_mul, sub_zero]
+theorem mod_zero (a : Ordinal) : a % 0 = a := by simp only [mod_def, div_zero, zero_mul, sub_zero]
 
 theorem mod_eq_of_lt {a b : Ordinal} (h : a < b) : a % b = a := by
   simp only [mod_def, div_eq_zero_of_lt h, mul_zero, sub_zero]
 
 @[simp]
-theorem zero_mod (b : Ordinal) : 0 % b = 0 := by
-  simp only [mod_def, zero_div, mul_zero, sub_self]
+theorem zero_mod (b : Ordinal) : 0 % b = 0 := by simp only [mod_def, zero_div, mul_zero, sub_self]
 
 theorem div_add_mod (a b : Ordinal) : b * (a / b) + a % b = a :=
   Ordinal.add_sub_cancel_of_le <| mul_div_le _ _
 
 theorem mod_lt (a) {b : Ordinal} (h : b ≠ 0) : a % b < b :=
-  (add_lt_add_iff_left (b * (a / b))).1 <| by
-    rw [div_add_mod] <;> exact lt_mul_div_add a h
+  (add_lt_add_iff_left (b * (a / b))).1 <| by rw [div_add_mod] <;> exact lt_mul_div_add a h
 
 @[simp]
 theorem mod_self (a : Ordinal) : a % a = 0 :=
-  if a0 : a = 0 then by
-    simp only [a0, zero_mod]
-  else by
-    simp only [mod_def, div_self a0, mul_oneₓ, sub_self]
+  if a0 : a = 0 then by simp only [a0, zero_mod] else by simp only [mod_def, div_self a0, mul_oneₓ, sub_self]
 
 @[simp]
-theorem mod_one (a : Ordinal) : a % 1 = 0 := by
-  simp only [mod_def, div_one, one_mulₓ, sub_self]
+theorem mod_one (a : Ordinal) : a % 1 = 0 := by simp only [mod_def, div_one, one_mulₓ, sub_self]
 
 theorem dvd_of_mod_eq_zero {a b : Ordinal} (H : a % b = 0) : b ∣ a :=
-  ⟨a / b, by
-    simpa [H] using (div_add_mod a b).symm⟩
+  ⟨a / b, by simpa [H] using (div_add_mod a b).symm⟩
 
 theorem mod_eq_zero_of_dvd {a b : Ordinal} (H : b ∣ a) : a % b = 0 := by
   rcases H with ⟨c, rfl⟩
@@ -1115,8 +1017,7 @@ def familyOfBfamily (o : Ordinal) (f : ∀ a < o, α) : o.out.α → α :=
 
 @[simp]
 theorem bfamily_of_family'_typein {ι} (r : ι → ι → Prop) [IsWellOrder ι r] (f : ι → α) (i) :
-    bfamilyOfFamily' r f (typein r i) (typein_lt_type r i) = f i := by
-  simp only [bfamily_of_family', enum_typein]
+    bfamilyOfFamily' r f (typein r i) (typein_lt_type r i) = f i := by simp only [bfamily_of_family', enum_typein]
 
 @[simp]
 theorem bfamily_of_family_typein {ι} (f : ι → α) (i) : bfamilyOfFamily f (typein _ i) (typein_lt_type _ i) = f i :=
@@ -1124,14 +1025,7 @@ theorem bfamily_of_family_typein {ι} (f : ι → α) (i) : bfamilyOfFamily f (t
 
 @[simp]
 theorem family_of_bfamily'_enum {ι : Type u} (r : ι → ι → Prop) [IsWellOrder ι r] {o} (ho : type r = o) (f : ∀ a < o, α)
-    (i hi) :
-    familyOfBfamily' r ho f
-        (enum r i
-          (by
-            rwa [ho])) =
-      f i hi :=
-  by
-  simp only [family_of_bfamily', typein_enum]
+    (i hi) : familyOfBfamily' r ho f (enum r i (by rwa [ho])) = f i hi := by simp only [family_of_bfamily', typein_enum]
 
 @[simp]
 theorem family_of_bfamily_enum (o : Ordinal) (f : ∀ a < o, α) (i hi) :
@@ -1225,9 +1119,7 @@ theorem bdd_above_range {ι : Type u} (f : ι → Ordinal.{max u v}) : BddAbove 
 theorem le_sup {ι} (f : ι → Ordinal) : ∀ i, f i ≤ sup f := fun i => le_cSup (bdd_above_range f) (mem_range_self i)
 
 theorem sup_le_iff {ι} {f : ι → Ordinal} {a} : sup f ≤ a ↔ ∀ i, f i ≤ a :=
-  (cSup_le_iff' (bdd_above_range f)).trans
-    (by
-      simp )
+  (cSup_le_iff' (bdd_above_range f)).trans (by simp)
 
 theorem sup_le {ι} {f : ι → Ordinal} {a} : (∀ i, f i ≤ a) → sup f ≤ a :=
   sup_le_iff.2
@@ -1250,8 +1142,7 @@ theorem sup_eq_zero_iff {ι} {f : ι → Ordinal} : sup f = 0 ↔ ∀ i, f i = 0
   exact le_sup f i
 
 theorem IsNormal.sup {f} (H : IsNormal f) {ι} (g : ι → Ordinal) [Nonempty ι] : f (sup g) = sup (f ∘ g) :=
-  eq_of_forall_ge_iffₓ fun a => by
-    rw [sup_le_iff, comp, H.le_set' Set.Univ Set.univ_nonempty g] <;> simp [sup_le_iff]
+  eq_of_forall_ge_iffₓ fun a => by rw [sup_le_iff, comp, H.le_set' Set.Univ Set.univ_nonempty g] <;> simp [sup_le_iff]
 
 @[simp]
 theorem sup_empty {ι} [IsEmpty ι] (f : ι → Ordinal) : sup f = 0 :=
@@ -1340,9 +1231,7 @@ private theorem sup_le_sup {ι ι' : Type u} (r : ι → ι → Prop) (r' : ι' 
 theorem sup_eq_sup {ι ι' : Type u} (r : ι → ι → Prop) (r' : ι' → ι' → Prop) [IsWellOrder ι r] [IsWellOrder ι' r']
     {o : Ordinal.{u}} (ho : type r = o) (ho' : type r' = o) (f : ∀ a < o, Ordinal.{max u v}) :
     sup (familyOfBfamily' r ho f) = sup (familyOfBfamily' r' ho' f) :=
-  sup_eq_of_range_eq.{u, u, v}
-    (by
-      simp )
+  sup_eq_of_range_eq.{u, u, v} (by simp)
 
 /-- The supremum of a family of ordinals indexed by the set of ordinals less than some
     `o : ordinal.{u}`. This is a special case of `sup` over the family provided by
@@ -1370,8 +1259,7 @@ theorem bsup_eq_sup' {ι} (r : ι → ι → Prop) [IsWellOrder ι r] (f : ι �
   simp only [← sup_eq_bsup' r, enum_typein, family_of_bfamily', bfamily_of_family']
 
 theorem bsup_eq_bsup {ι : Type u} (r r' : ι → ι → Prop) [IsWellOrder ι r] [IsWellOrder ι r'] (f : ι → Ordinal) :
-    bsup _ (bfamilyOfFamily' r f) = bsup _ (bfamilyOfFamily' r' f) := by
-  rw [bsup_eq_sup', bsup_eq_sup']
+    bsup _ (bfamilyOfFamily' r f) = bsup _ (bfamilyOfFamily' r' f) := by rw [bsup_eq_sup', bsup_eq_sup']
 
 @[simp]
 theorem bsup_eq_sup {ι} (f : ι → Ordinal) : bsup _ (bfamilyOfFamily f) = sup f :=
@@ -1379,8 +1267,7 @@ theorem bsup_eq_sup {ι} (f : ι → Ordinal) : bsup _ (bfamilyOfFamily f) = sup
 
 @[congr]
 theorem bsup_congr {o₁ o₂ : Ordinal} (f : ∀ a < o₁, Ordinal) (ho : o₁ = o₂) :
-    bsup o₁ f = bsup o₂ fun a h => f a (h.trans_eq ho.symm) := by
-  subst ho
+    bsup o₁ f = bsup o₂ fun a h => f a (h.trans_eq ho.symm) := by subst ho
 
 theorem bsup_le_iff {o f a} : bsup.{u, v} o f ≤ a ↔ ∀ i h, f i h ≤ a :=
   sup_le_iff.trans
@@ -1540,9 +1427,7 @@ theorem lsub_unique {ι} [hι : Unique ι] (f : ι → Ordinal) : lsub f = succ 
 
 theorem lsub_le_of_range_subset {ι ι'} {f : ι → Ordinal} {g : ι' → Ordinal} (h : Set.Range f ⊆ Set.Range g) :
     lsub.{u, max v w} f ≤ lsub.{v, max u w} g :=
-  sup_le_of_range_subset
-    (by
-      convert Set.image_subset _ h <;> apply Set.range_comp)
+  sup_le_of_range_subset (by convert Set.image_subset _ h <;> apply Set.range_comp)
 
 theorem lsub_eq_of_range_eq {ι ι'} {f : ι → Ordinal} {g : ι' → Ordinal} (h : Set.Range f = Set.Range g) :
     lsub.{u, max v w} f = lsub.{v, max u w} g :=
@@ -1558,7 +1443,7 @@ theorem lsub_typein (o : Ordinal) : lsub.{u, u} (typein ((· < ·) : o.out.α �
   (lsub_le.{u, u} typein_lt_self).antisymm
     (by
       by_contra' h
-      nth_rw 0[← type_lt o]  at h
+      nth_rw 0 [← type_lt o]  at h
       simpa [typein_enum] using lt_lsub.{u, u} (typein (· < ·)) (enum (· < ·) _ h))
 
 theorem sup_typein_limit {o : Ordinal} (ho : ∀ a, a < o → succ a < o) :
@@ -1592,8 +1477,7 @@ theorem lsub_eq_blsub' {ι} (r : ι → ι → Prop) [IsWellOrder ι r] {o} (ho 
 
 theorem lsub_eq_lsub {ι ι' : Type u} (r : ι → ι → Prop) (r' : ι' → ι' → Prop) [IsWellOrder ι r] [IsWellOrder ι' r'] {o}
     (ho : type r = o) (ho' : type r' = o) (f : ∀ a < o, Ordinal) :
-    lsub (familyOfBfamily' r ho f) = lsub (familyOfBfamily' r' ho' f) := by
-  rw [lsub_eq_blsub', lsub_eq_blsub']
+    lsub (familyOfBfamily' r ho f) = lsub (familyOfBfamily' r' ho' f) := by rw [lsub_eq_blsub', lsub_eq_blsub']
 
 @[simp]
 theorem lsub_eq_blsub {o} (f : ∀ a < o, Ordinal) : lsub (familyOfBfamily o f) = blsub o f :=
@@ -1605,8 +1489,7 @@ theorem blsub_eq_lsub' {ι} (r : ι → ι → Prop) [IsWellOrder ι r] (f : ι 
   bsup_eq_sup' r (succ ∘ f)
 
 theorem blsub_eq_blsub {ι : Type u} (r r' : ι → ι → Prop) [IsWellOrder ι r] [IsWellOrder ι r'] (f : ι → Ordinal) :
-    blsub _ (bfamilyOfFamily' r f) = blsub _ (bfamilyOfFamily' r' f) := by
-  rw [blsub_eq_lsub', blsub_eq_lsub']
+    blsub _ (bfamilyOfFamily' r f) = blsub _ (bfamilyOfFamily' r' f) := by rw [blsub_eq_lsub', blsub_eq_lsub']
 
 @[simp]
 theorem blsub_eq_lsub {ι} (f : ι → Ordinal) : blsub _ (bfamilyOfFamily f) = lsub f :=
@@ -1614,8 +1497,7 @@ theorem blsub_eq_lsub {ι} (f : ι → Ordinal) : blsub _ (bfamilyOfFamily f) = 
 
 @[congr]
 theorem blsub_congr {o₁ o₂ : Ordinal} (f : ∀ a < o₁, Ordinal) (ho : o₁ = o₂) :
-    blsub o₁ f = blsub o₂ fun a h => f a (h.trans_eq ho.symm) := by
-  subst ho
+    blsub o₁ f = blsub o₂ fun a h => f a (h.trans_eq ho.symm) := by subst ho
 
 theorem blsub_le_iff {o f a} : blsub o f ≤ a ↔ ∀ i h, f i h < a := by
   convert bsup_le_iff
@@ -1678,8 +1560,7 @@ theorem blsub_eq_zero_iff {o} {f : ∀ a < o, Ordinal} : blsub o f = 0 ↔ o = 0
   exact out_empty_iff_eq_zero
 
 @[simp]
-theorem blsub_zero (f : ∀ a < (0 : Ordinal), Ordinal) : blsub 0 f = 0 := by
-  rwa [blsub_eq_zero_iff]
+theorem blsub_zero (f : ∀ a < (0 : Ordinal), Ordinal) : blsub 0 f = 0 := by rwa [blsub_eq_zero_iff]
 
 theorem blsub_pos {o : Ordinal} (ho : 0 < o) (f : ∀ a < o, Ordinal) : 0 < blsub o f :=
   (Ordinal.zero_le _).trans_lt (lt_blsub f 0 ho)
@@ -1688,9 +1569,7 @@ theorem blsub_type (r : α → α → Prop) [IsWellOrder α r] (f) :
     blsub (type r) f = lsub fun a => f (typein r a) (typein_lt_type _ _) :=
   eq_of_forall_ge_iffₓ fun o => by
     rw [blsub_le_iff, lsub_le_iff] <;>
-      exact
-        ⟨fun H b => H _ _, fun H i h => by
-          simpa only [typein_enum] using H (enum r i h)⟩
+      exact ⟨fun H b => H _ _, fun H i h => by simpa only [typein_enum] using H (enum r i h)⟩
 
 theorem blsub_const {o : Ordinal} (ho : o ≠ 0) (a : Ordinal) : (blsub.{u, v} o fun _ _ => a) = succ a :=
   bsup_const.{u, v} ho (succ a)
@@ -1770,8 +1649,7 @@ theorem is_normal_iff_lt_succ_and_blsub_eq {f} :
 
 theorem IsNormal.eq_iff_zero_and_succ {f g : Ordinal.{u} → Ordinal.{u}} (hf : IsNormal f) (hg : IsNormal g) :
     f = g ↔ f 0 = g 0 ∧ ∀ a, f a = g a → f (succ a) = g (succ a) :=
-  ⟨fun h => by
-    simp [h], fun ⟨h₁, h₂⟩ =>
+  ⟨fun h => by simp [h], fun ⟨h₁, h₂⟩ =>
     funext fun a => by
       apply a.limit_rec_on
       assumption'
@@ -1791,13 +1669,10 @@ def mex {ι : Type u} (f : ι → Ordinal.{max u v}) : Ordinal :=
 theorem mex_not_mem_range {ι : Type u} (f : ι → Ordinal.{max u v}) : mex f ∉ Set.Range f :=
   Inf_mem (nonempty_compl_range f)
 
-theorem ne_mex {ι} (f : ι → Ordinal) : ∀ i, f i ≠ mex f := by
-  simpa using mex_not_mem_range f
+theorem ne_mex {ι} (f : ι → Ordinal) : ∀ i, f i ≠ mex f := by simpa using mex_not_mem_range f
 
 theorem mex_le_of_ne {ι} {f : ι → Ordinal} {a} (ha : ∀ i, f i ≠ a) : mex f ≤ a :=
-  cInf_le'
-    (by
-      simp [ha])
+  cInf_le' (by simp [ha])
 
 theorem exists_of_lt_mex {ι} {f : ι → Ordinal} {a} (ha : a < mex f) : ∃ i, f i = a := by
   by_contra' ha'
@@ -1837,11 +1712,7 @@ theorem bmex_not_mem_brange {o : Ordinal} (f : ∀ a < o, Ordinal) : bmex o f �
   apply mex_not_mem_range
 
 theorem ne_bmex {o : Ordinal} (f : ∀ a < o, Ordinal) {i} (hi) : f i hi ≠ bmex o f := by
-  convert
-    ne_mex _
-      (enum (· < ·) i
-        (by
-          rwa [type_lt]))
+  convert ne_mex _ (enum (· < ·) i (by rwa [type_lt]))
   rw [family_of_bfamily_enum]
 
 theorem bmex_le_of_ne {o : Ordinal} {f : ∀ a < o, Ordinal} {a} (ha : ∀ i hi, f i hi ≠ a) : bmex o f ≤ a :=
@@ -1856,9 +1727,7 @@ theorem bmex_le_blsub {o : Ordinal} (f : ∀ a < o, Ordinal) : bmex o f ≤ blsu
 
 theorem bmex_monotone {o o' : Ordinal} {f : ∀ a < o, Ordinal} {g : ∀ a < o', Ordinal} (h : Brange o f ⊆ Brange o' g) :
     bmex o f ≤ bmex o' g :=
-  mex_monotone
-    (by
-      rwa [range_family_of_bfamily, range_family_of_bfamily])
+  mex_monotone (by rwa [range_family_of_bfamily, range_family_of_bfamily])
 
 theorem bmex_lt_ord_succ_card {o : Ordinal} (f : ∀ a < o, Ordinal) : bmex o f < (succ o.card).ord := by
   rw [← mk_ordinal_out]
@@ -1920,7 +1789,7 @@ theorem enum_ord_mem (hS : Unbounded (· < ·) S) (o) : enumOrd S o ∈ S :=
 theorem blsub_le_enum_ord (hS : Unbounded (· < ·) S) (o) : (blsub.{u, u} o fun c _ => enumOrd S c) ≤ enumOrd S o :=
   (enum_ord_mem_aux hS o).right
 
-theorem enum_ord_strict_mono (hS : Unbounded (· < ·) S) : StrictMono (enumOrd S) := fun _ _ h =>
+theorem enum_ord_strict_mono (hS : Unbounded (· < ·) S) : StrictMonoₓ (enumOrd S) := fun _ _ h =>
   (lt_blsub.{u, u} _ _ h).trans_le (blsub_le_enum_ord hS _)
 
 /-- A more workable definition for `enum_ord`. -/
@@ -1935,7 +1804,7 @@ theorem enum_ord_def_nonempty (hS : Unbounded (· < ·) S) {o} : { x | x ∈ S �
   ⟨_, enum_ord_mem hS o, fun _ b => enum_ord_strict_mono hS b⟩
 
 @[simp]
-theorem enum_ord_range {f : Ordinal → Ordinal} (hf : StrictMono f) : enumOrd (Range f) = f :=
+theorem enum_ord_range {f : Ordinal → Ordinal} (hf : StrictMonoₓ f) : enumOrd (Range f) = f :=
   funext fun o => by
     apply Ordinal.induction o
     intro a H
@@ -1953,7 +1822,7 @@ theorem enum_ord_range {f : Ordinal → Ordinal} (hf : StrictMono f) : enumOrd (
 @[simp]
 theorem enum_ord_univ : enumOrd Set.Univ = id := by
   rw [← range_id]
-  exact enum_ord_range strict_mono_id
+  exact enum_ord_range strict_mono_idₓ
 
 @[simp]
 theorem enum_ord_zero : enumOrd S 0 = inf S := by
@@ -1992,7 +1861,7 @@ theorem enum_ord_surjective (hS : Unbounded (· < ·) S) : ∀ s ∈ S, ∃ a, e
 
 /-- An order isomorphism between an unbounded set of ordinals and the ordinals. -/
 def enumOrdOrderIso (hS : Unbounded (· < ·) S) : Ordinal ≃o S :=
-  StrictMono.orderIsoOfSurjective (fun o => ⟨_, enum_ord_mem hS o⟩) (enum_ord_strict_mono hS) fun s =>
+  StrictMonoₓ.orderIsoOfSurjective (fun o => ⟨_, enum_ord_mem hS o⟩) (enum_ord_strict_mono hS) fun s =>
     let ⟨a, ha⟩ := enum_ord_surjective hS s s.Prop
     ⟨a, Subtype.eq ha⟩
 
@@ -2001,7 +1870,7 @@ theorem range_enum_ord (hS : Unbounded (· < ·) S) : Range (enumOrd S) = S := b
   exact ⟨enum_ord_mem hS, enum_ord_surjective hS⟩
 
 /-- A characterization of `enum_ord`: it is the unique strict monotonic function with range `S`. -/
-theorem eq_enum_ord (f : Ordinal → Ordinal) (hS : Unbounded (· < ·) S) : StrictMono f ∧ Range f = S ↔ f = enumOrd S :=
+theorem eq_enum_ord (f : Ordinal → Ordinal) (hS : Unbounded (· < ·) S) : StrictMonoₓ f ∧ Range f = S ↔ f = enumOrd S :=
   by
   constructor
   · rintro ⟨h₁, h₂⟩
@@ -2027,8 +1896,7 @@ theorem opow_def (a b : Ordinal) :
     (a^b) = if a = 0 then 1 - b else limitRecOn b 1 (fun _ IH => IH * a) fun b _ => bsup.{u, u} b :=
   rfl
 
-theorem zero_opow' (a : Ordinal) : (0^a) = 1 - a := by
-  simp only [opow_def, if_pos rfl]
+theorem zero_opow' (a : Ordinal) : (0^a) = 1 - a := by simp only [opow_def, if_pos rfl]
 
 @[simp]
 theorem zero_opow {a : Ordinal} (a0 : a ≠ 0) : (0^a) = 0 := by
@@ -2036,14 +1904,12 @@ theorem zero_opow {a : Ordinal} (a0 : a ≠ 0) : (0^a) = 0 := by
 
 @[simp]
 theorem opow_zero (a : Ordinal) : (a^0) = 1 := by
-  by_cases' a = 0 <;> [simp only [opow_def, if_pos h, sub_zero], simp only [opow_def, if_neg h, limit_rec_on_zero]]
+  by_cases a = 0 <;> [simp only [opow_def, if_pos h, sub_zero], simp only [opow_def, if_neg h, limit_rec_on_zero]]
 
 @[simp]
 theorem opow_succ (a b : Ordinal) : (a^succ b) = (a^b) * a :=
-  if h : a = 0 then by
-    subst a <;> simp only [zero_opow (succ_ne_zero _), mul_zero]
-  else by
-    simp only [opow_def, limit_rec_on_succ, if_neg h]
+  if h : a = 0 then by subst a <;> simp only [zero_opow (succ_ne_zero _), mul_zero]
+  else by simp only [opow_def, limit_rec_on_succ, if_neg h]
 
 theorem opow_limit {a b : Ordinal} (a0 : a ≠ 0) (h : IsLimit b) : (a^b) = bsup.{u, u} b fun c _ => a^c := by
   simp only [opow_def, if_neg a0] <;> rw [limit_rec_on_limit _ _ _ _ h] <;> rfl
@@ -2055,8 +1921,7 @@ theorem lt_opow_of_limit {a b c : Ordinal} (b0 : b ≠ 0) (h : IsLimit c) : a < 
   rw [← not_iff_not, not_exists] <;> simp only [not_ltₓ, opow_le_of_limit b0 h, exists_propₓ, not_and]
 
 @[simp]
-theorem opow_one (a : Ordinal) : (a^1) = a := by
-  rw [← succ_zero, opow_succ] <;> simp only [opow_zero, one_mulₓ]
+theorem opow_one (a : Ordinal) : (a^1) = a := by rw [← succ_zero, opow_succ] <;> simp only [opow_zero, one_mulₓ]
 
 @[simp]
 theorem one_opow (a : Ordinal) : (1^a) = 1 := by
@@ -2068,14 +1933,10 @@ theorem one_opow (a : Ordinal) : (1^a) = 1 := by
     
   refine' fun b l IH => eq_of_forall_ge_iffₓ fun c => _
   rw [opow_le_of_limit Ordinal.one_ne_zero l]
-  exact
-    ⟨fun H => by
-      simpa only [opow_zero] using H 0 l.pos, fun H b' h => by
-      rwa [IH _ h]⟩
+  exact ⟨fun H => by simpa only [opow_zero] using H 0 l.pos, fun H b' h => by rwa [IH _ h]⟩
 
 theorem opow_pos {a : Ordinal} (b) (a0 : 0 < a) : 0 < (a^b) := by
-  have h0 : 0 < (a^0) := by
-    simp only [opow_zero, zero_lt_one]
+  have h0 : 0 < (a^0) := by simp only [opow_zero, zero_lt_one]
   apply limit_rec_on b
   · exact h0
     
@@ -2091,8 +1952,7 @@ theorem opow_ne_zero {a : Ordinal} (b) (a0 : a ≠ 0) : (a^b) ≠ 0 :=
 
 theorem opow_is_normal {a : Ordinal} (h : 1 < a) : IsNormal ((·^·) a) :=
   have a0 : 0 < a := zero_lt_one.trans h
-  ⟨fun b => by
-    simpa only [mul_oneₓ, opow_succ] using (mul_lt_mul_iff_left (opow_pos b a0)).2 h, fun b l c =>
+  ⟨fun b => by simpa only [mul_oneₓ, opow_succ] using (mul_lt_mul_iff_left (opow_pos b a0)).2 h, fun b l c =>
     opow_le_of_limit (ne_of_gtₓ a0) l⟩
 
 theorem opow_lt_opow_iff_right {a b c : Ordinal} (a1 : 1 < a) : (a^b) < (a^c) ↔ b < c :=
@@ -2126,9 +1986,9 @@ theorem opow_le_opow_right {a b c : Ordinal} (h₁ : 0 < a) (h₂ : b ≤ c) : (
     
 
 theorem opow_le_opow_left {a b : Ordinal} (c) (ab : a ≤ b) : (a^c) ≤ (b^c) := by
-  by_cases' a0 : a = 0
+  by_cases a0:a = 0
   · subst a
-    by_cases' c0 : c = 0
+    by_cases c0:c = 0
     · subst c
       simp only [opow_zero]
       
@@ -2148,7 +2008,7 @@ theorem opow_le_opow_left {a b : Ordinal} (c) (ab : a ≤ b) : (a^c) ≤ (b^c) :
     
 
 theorem left_le_opow (a : Ordinal) {b : Ordinal} (b1 : 0 < b) : a ≤ (a^b) := by
-  nth_rw 0[← opow_one a]
+  nth_rw 0 [← opow_one a]
   cases' le_or_gtₓ a 1 with a1 a1
   · cases' lt_or_eq_of_leₓ a1 with a0 a1
     · rw [lt_one_iff_zero] at a0
@@ -2187,13 +2047,12 @@ theorem opow_add (a b c : Ordinal) : (a^b + c) = (a^b) * (a^c) := by
     
   · intro c l IH
     refine' eq_of_forall_ge_iffₓ fun d => (((opow_is_normal a1).trans (add_is_normal b)).limit_le l).trans _
-    dsimp' only [Function.comp]
-    simp (config := { contextual := true })only [IH]
+    dsimp only [Function.comp]
+    simp (config := { contextual := true }) only [IH]
     exact (((mul_is_normal <| opow_pos b (Ordinal.pos_iff_ne_zero.2 a0)).trans (opow_is_normal a1)).limit_le l).symm
     
 
-theorem opow_one_add (a b : Ordinal) : (a^1 + b) = a * (a^b) := by
-  rw [opow_add, opow_one]
+theorem opow_one_add (a b : Ordinal) : (a^1 + b) = a * (a^b) := by rw [opow_add, opow_one]
 
 theorem opow_dvd_opow (a) {b c : Ordinal} (h : b ≤ c) : (a^b) ∣ (a^c) := by
   rw [← Ordinal.add_sub_cancel_of_le h, opow_add]
@@ -2206,12 +2065,12 @@ theorem opow_dvd_opow_iff {a b c : Ordinal} (a1 : 1 < a) : (a^b) ∣ (a^c) ↔ b
     opow_dvd_opow _⟩
 
 theorem opow_mul (a b c : Ordinal) : (a^b * c) = ((a^b)^c) := by
-  by_cases' b0 : b = 0
+  by_cases b0:b = 0
   · simp only [b0, zero_mul, opow_zero, one_opow]
     
-  by_cases' a0 : a = 0
+  by_cases a0:a = 0
   · subst a
-    by_cases' c0 : c = 0
+    by_cases c0:c = 0
     · simp only [c0, mul_zero, opow_zero]
       
     simp only [zero_opow b0, zero_opow c0, zero_opow (mul_ne_zero b0 c0)]
@@ -2230,8 +2089,8 @@ theorem opow_mul (a b c : Ordinal) : (a^b * c) = ((a^b)^c) := by
     refine'
       eq_of_forall_ge_iffₓ fun d =>
         (((opow_is_normal a1).trans (mul_is_normal (Ordinal.pos_iff_ne_zero.2 b0))).limit_le l).trans _
-    dsimp' only [Function.comp]
-    simp (config := { contextual := true })only [IH]
+    dsimp only [Function.comp]
+    simp (config := { contextual := true }) only [IH]
     exact (opow_le_of_limit (opow_ne_zero _ a0) l).symm
     
 
@@ -2251,8 +2110,7 @@ theorem log_nonempty {b x : Ordinal} (h : 1 < b) : { o | x < (b^o) }.Nonempty :=
 theorem log_def {b : Ordinal} (h : 1 < b) (x : Ordinal) : log b x = pred (inf { o | x < (b^o) }) := by
   simp only [log, dif_pos h]
 
-theorem log_of_not_one_lt_left {b : Ordinal} (h : ¬1 < b) (x : Ordinal) : log b x = 0 := by
-  simp only [log, dif_neg h]
+theorem log_of_not_one_lt_left {b : Ordinal} (h : ¬1 < b) (x : Ordinal) : log b x = 0 := by simp only [log, dif_neg h]
 
 theorem log_of_left_le_one {b : Ordinal} (h : b ≤ 1) : ∀ x, log b x = 0 :=
   log_of_not_one_lt_left h.not_lt
@@ -2266,11 +2124,10 @@ theorem log_zero_right (b : Ordinal) : log b 0 = 0 :=
   if b1 : 1 < b then by
     rw [log_def b1, ← Ordinal.le_zero, pred_le]
     apply cInf_le'
-    dsimp'
+    dsimp
     rw [succ_zero, opow_one]
     exact zero_lt_one.trans b1
-  else by
-    simp only [log_of_not_one_lt_left b1]
+  else by simp only [log_of_not_one_lt_left b1]
 
 @[simp]
 theorem log_one_left : ∀ b, log 1 b = 0 :=
@@ -2339,22 +2196,18 @@ theorem log_eq_zero {b o : Ordinal} (hbo : o < b) : log b o = 0 := by
 
 @[mono]
 theorem log_mono_right (b) {x y : Ordinal} (xy : x ≤ y) : log b x ≤ log b y :=
-  if hx : x = 0 then by
-    simp only [hx, log_zero_right, Ordinal.zero_le]
+  if hx : x = 0 then by simp only [hx, log_zero_right, Ordinal.zero_le]
   else
     if hb : 1 < b then
       (opow_le_iff_le_log hb (lt_of_lt_of_leₓ (Ordinal.pos_iff_ne_zero.2 hx) xy).ne').1 <|
         (opow_log_le_self _ hx).trans xy
-    else by
-      simp only [log_of_not_one_lt_left hb, Ordinal.zero_le]
+    else by simp only [log_of_not_one_lt_left hb, Ordinal.zero_le]
 
 theorem log_le_self (b x : Ordinal) : log b x ≤ x :=
-  if hx : x = 0 then by
-    simp only [hx, log_zero_right, Ordinal.zero_le]
+  if hx : x = 0 then by simp only [hx, log_zero_right, Ordinal.zero_le]
   else
     if hb : 1 < b then (right_le_opow _ hb).trans (opow_log_le_self b hx)
-    else by
-      simp only [log_of_not_one_lt_left hb, Ordinal.zero_le]
+    else by simp only [log_of_not_one_lt_left hb, Ordinal.zero_le]
 
 @[simp]
 theorem log_one_right (b : Ordinal) : log b 1 = 0 :=
@@ -2385,8 +2238,7 @@ theorem opow_mul_add_pos {b v : Ordinal} (hb : b ≠ 0) (u) (hv : v ≠ 0) (w) :
     (le_mul_left _ <| Ordinal.pos_iff_ne_zero.2 hv).trans <| le_add_right _ _
 
 theorem opow_mul_add_lt_opow_mul_succ {b u w : Ordinal} (v : Ordinal) (hw : w < (b^u)) :
-    (b^u) * v + w < (b^u) * succ v := by
-  rwa [mul_succ, add_lt_add_iff_left]
+    (b^u) * v + w < (b^u) * succ v := by rwa [mul_succ, add_lt_add_iff_left]
 
 theorem opow_mul_add_lt_opow_succ {b u v w : Ordinal} (hvb : v < b) (hw : w < (b^u)) : (b^u) * v + w < (b^succ u) := by
   convert (opow_mul_add_lt_opow_mul_succ v hw).trans_le (mul_le_mul_left' (succ_le_of_lt hvb) _)
@@ -2415,7 +2267,7 @@ theorem div_opow_log_lt {b : Ordinal} (o : Ordinal) (hb : 1 < b) : o / (b^log b 
 
 theorem add_log_le_log_mul {x y : Ordinal} (b : Ordinal) (hx : x ≠ 0) (hy : y ≠ 0) :
     log b x + log b y ≤ log b (x * y) := by
-  by_cases' hb : 1 < b
+  by_cases hb:1 < b
   · rw [← opow_le_iff_le_log hb (mul_ne_zero hx hy), opow_add]
     exact mul_le_mul' (opow_log_le_self b hx) (opow_log_le_self b hy)
     
@@ -2426,29 +2278,23 @@ theorem add_log_le_log_mul {x y : Ordinal} (b : Ordinal) (hx : x ≠ 0) (hy : y 
 
 @[simp, norm_cast]
 theorem nat_cast_mul (m : ℕ) : ∀ n : ℕ, ((m * n : ℕ) : Ordinal) = m * n
-  | 0 => by
-    simp
-  | n + 1 => by
-    rw [Nat.mul_succ, Nat.cast_addₓ, nat_cast_mul, Nat.cast_succₓ, mul_add_one]
+  | 0 => by simp
+  | n + 1 => by rw [Nat.mul_succ, Nat.cast_addₓ, nat_cast_mul, Nat.cast_succₓ, mul_add_one]
 
 @[simp, norm_cast]
 theorem nat_cast_opow (m : ℕ) : ∀ n : ℕ, ((pow m n : ℕ) : Ordinal) = (m^n)
-  | 0 => by
-    simp
-  | n + 1 => by
-    rw [pow_succ'ₓ, nat_cast_mul, nat_cast_opow, Nat.cast_succₓ, add_one_eq_succ, opow_succ]
+  | 0 => by simp
+  | n + 1 => by rw [pow_succ'ₓ, nat_cast_mul, nat_cast_opow, Nat.cast_succₓ, add_one_eq_succ, opow_succ]
 
 @[simp, norm_cast]
 theorem nat_cast_le {m n : ℕ} : (m : Ordinal) ≤ n ↔ m ≤ n := by
   rw [← Cardinal.ord_nat, ← Cardinal.ord_nat, Cardinal.ord_le_ord, Cardinal.nat_cast_le]
 
 @[simp, norm_cast]
-theorem nat_cast_lt {m n : ℕ} : (m : Ordinal) < n ↔ m < n := by
-  simp only [lt_iff_le_not_leₓ, nat_cast_le]
+theorem nat_cast_lt {m n : ℕ} : (m : Ordinal) < n ↔ m < n := by simp only [lt_iff_le_not_leₓ, nat_cast_le]
 
 @[simp, norm_cast]
-theorem nat_cast_inj {m n : ℕ} : (m : Ordinal) = n ↔ m = n := by
-  simp only [le_antisymm_iffₓ, nat_cast_le]
+theorem nat_cast_inj {m n : ℕ} : (m : Ordinal) = n ↔ m = n := by simp only [le_antisymm_iffₓ, nat_cast_le]
 
 @[simp, norm_cast]
 theorem nat_cast_eq_zero {n : ℕ} : (n : Ordinal) = 0 ↔ n = 0 :=
@@ -2493,10 +2339,8 @@ theorem nat_cast_mod (m n : ℕ) : ((m % n : ℕ) : Ordinal) = m % n := by
 
 @[simp]
 theorem lift_nat_cast : ∀ n : ℕ, lift.{u, v} n = n
-  | 0 => by
-    simp
-  | n + 1 => by
-    simp [lift_nat_cast n]
+  | 0 => by simp
+  | n + 1 => by simp [lift_nat_cast n]
 
 end Ordinal
 
@@ -2539,8 +2383,7 @@ theorem omega_pos : 0 < ω :=
 theorem omega_ne_zero : ω ≠ 0 :=
   omega_pos.ne'
 
-theorem one_lt_omega : 1 < ω := by
-  simpa only [Nat.cast_oneₓ] using nat_lt_omega 1
+theorem one_lt_omega : 1 < ω := by simpa only [Nat.cast_oneₓ] using nat_lt_omega 1
 
 theorem omega_is_limit : IsLimit ω :=
   ⟨omega_ne_zero, fun o h => by
@@ -2645,14 +2488,29 @@ theorem sup_opow_nat {o : Ordinal} (ho : 0 < o) : (sup fun n : ℕ => o^n) = (o^
   · exact (opow_is_normal ho₁).apply_omega
     
   · rw [one_opow]
-    refine'
-      le_antisymmₓ
-        (sup_le fun n => by
-          rw [one_opow])
-        _
+    refine' le_antisymmₓ (sup_le fun n => by rw [one_opow]) _
     convert le_sup _ 0
     rw [Nat.cast_zeroₓ, opow_zero]
     
 
 end Ordinal
+
+namespace Tactic
+
+open Ordinal Positivity
+
+/-- Extension for the `positivity` tactic: `ordinal.opow` takes positive values on positive inputs.
+-/
+@[positivity]
+unsafe def positivity_opow : expr → tactic strictness
+  | quote.1 (@Pow.pow _ _ (%%ₓinst) (%%ₓa) (%%ₓb)) => do
+    let strictness_a ← core a
+    match strictness_a with
+      | positive p => positive <$> mk_app `` opow_pos [b, p]
+      | _ => failed
+  |-- We already know that `0 ≤ x` for all `x : ordinal`
+    _ =>
+    failed
+
+end Tactic
 

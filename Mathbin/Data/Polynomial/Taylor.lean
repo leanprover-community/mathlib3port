@@ -32,35 +32,29 @@ variable {R : Type _} [Semiringₓ R] (r : R) (f : R[X])
 def taylor (r : R) : R[X] →ₗ[R] R[X] where
   toFun := fun f => f.comp (X + c r)
   map_add' := fun f g => add_comp
-  map_smul' := fun c f => by
-    simp only [smul_eq_C_mul, C_mul_comp, RingHom.id_apply]
+  map_smul' := fun c f => by simp only [smul_eq_C_mul, C_mul_comp, RingHom.id_apply]
 
 theorem taylor_apply : taylor r f = f.comp (X + c r) :=
   rfl
 
 @[simp]
-theorem taylor_X : taylor r x = X + c r := by
-  simp only [taylor_apply, X_comp]
+theorem taylor_X : taylor r x = X + c r := by simp only [taylor_apply, X_comp]
 
 @[simp]
-theorem taylor_C (x : R) : taylor r (c x) = c x := by
-  simp only [taylor_apply, C_comp]
+theorem taylor_C (x : R) : taylor r (c x) = c x := by simp only [taylor_apply, C_comp]
 
 @[simp]
 theorem taylor_zero' : taylor (0 : R) = LinearMap.id := by
   ext
   simp only [taylor_apply, add_zeroₓ, comp_X, _root_.map_zero, LinearMap.id_comp, Function.comp_app, LinearMap.coe_comp]
 
-theorem taylor_zero (f : R[X]) : taylor 0 f = f := by
-  rw [taylor_zero', LinearMap.id_apply]
+theorem taylor_zero (f : R[X]) : taylor 0 f = f := by rw [taylor_zero', LinearMap.id_apply]
 
 @[simp]
-theorem taylor_one : taylor r (1 : R[X]) = c 1 := by
-  rw [← C_1, taylor_C]
+theorem taylor_one : taylor r (1 : R[X]) = c 1 := by rw [← C_1, taylor_C]
 
 @[simp]
-theorem taylor_monomial (i : ℕ) (k : R) : taylor r (monomial i k) = c k * (X + c r) ^ i := by
-  simp [taylor_apply]
+theorem taylor_monomial (i : ℕ) (k : R) : taylor r (monomial i k) = c k * (X + c r) ^ i := by simp [taylor_apply]
 
 /-- The `k`th coefficient of `polynomial.taylor r f` is `(polynomial.hasse_deriv k f).eval r`. -/
 theorem taylor_coeff (n : ℕ) : (taylor r f).coeff n = (hasseDeriv n f).eval r :=
@@ -71,7 +65,7 @@ theorem taylor_coeff (n : ℕ) : (taylor r f).coeff n = (hasseDeriv n f).eval r 
     simp only [leval_apply, mul_oneₓ, one_mulₓ, eval_monomial, LinearMap.comp_apply, coeff_C_mul, hasse_deriv_monomial,
       taylor_apply, monomial_comp, C_1, (commute_X (C r)).add_pow i, LinearMap.map_sum]
     simp only [lcoeff_apply, ← C_eq_nat_cast, mul_assoc, ← C_pow, ← C_mul, coeff_mul_C, (Nat.cast_commute _ _).Eq,
-      coeff_X_pow, boole_mul, Finset.sum_ite_eq, Finset.mem_range]
+      coeff_X_pow, boole_mul, Finsetₓ.sum_ite_eq, Finsetₓ.mem_range]
     split_ifs with h
     · rfl
       
@@ -83,8 +77,7 @@ theorem taylor_coeff_zero : (taylor r f).coeff 0 = f.eval r := by
   rw [taylor_coeff, hasse_deriv_zero, LinearMap.id_apply]
 
 @[simp]
-theorem taylor_coeff_one : (taylor r f).coeff 1 = f.derivative.eval r := by
-  rw [taylor_coeff, hasse_deriv_one]
+theorem taylor_coeff_one : (taylor r f).coeff 1 = f.derivative.eval r := by rw [taylor_coeff, hasse_deriv_one]
 
 @[simp]
 theorem nat_degree_taylor (p : R[X]) (r : R) : natDegree (taylor r p) = natDegree p := by

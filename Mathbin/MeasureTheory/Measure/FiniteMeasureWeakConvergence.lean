@@ -194,9 +194,7 @@ theorem Zero.mass : (0 : FiniteMeasure α).mass = 0 :=
 
 @[simp]
 theorem mass_zero_iff (μ : FiniteMeasure α) : μ.mass = 0 ↔ μ = 0 := by
-  refine'
-    ⟨fun μ_mass => _, fun hμ => by
-      simp only [hμ, zero.mass]⟩
+  refine' ⟨fun μ_mass => _, fun hμ => by simp only [hμ, zero.mass]⟩
   ext1
   apply measure.measure_univ_eq_zero.mp
   rwa [← ennreal_mass, Ennreal.coe_eq_zero]
@@ -265,8 +263,7 @@ instance {α : Type _} [MeasurableSpace α] : Module ℝ≥0 (FiniteMeasure α) 
 
 @[simp]
 theorem coe_fn_smul_apply [IsScalarTower R ℝ≥0 ℝ≥0] (c : R) (μ : FiniteMeasure α) (s : Set α) : (c • μ) s = c • μ s :=
-  by
-  simp only [coe_fn_smul, Pi.smul_apply]
+  by simp only [coe_fn_smul, Pi.smul_apply]
 
 variable [TopologicalSpace α]
 
@@ -298,8 +295,7 @@ theorem test_against_nn_coe_eq {μ : FiniteMeasure α} {f : α →ᵇ ℝ≥0} :
   Ennreal.coe_to_nnreal (lintegral_lt_top_of_bounded_continuous_to_nnreal _ f).Ne
 
 theorem test_against_nn_const (μ : FiniteMeasure α) (c : ℝ≥0) :
-    μ.testAgainstNn (BoundedContinuousFunction.const α c) = c * μ.mass := by
-  simp [← Ennreal.coe_eq_coe]
+    μ.testAgainstNn (BoundedContinuousFunction.const α c) = c * μ.mass := by simp [← Ennreal.coe_eq_coe]
 
 theorem test_against_nn_mono (μ : FiniteMeasure α) {f g : α →ᵇ ℝ≥0} (f_le_g : (f : α → ℝ≥0) ≤ g) :
     μ.testAgainstNn f ≤ μ.testAgainstNn g := by
@@ -364,21 +360,18 @@ theorem test_against_nn_lipschitz (μ : FiniteMeasure α) : LipschitzWith μ.mas
   by
   rw [lipschitz_with_iff_dist_le_mul]
   intro f₁ f₂
-  suffices abs (μ.test_against_nn f₁ - μ.test_against_nn f₂ : ℝ) ≤ μ.mass * dist f₁ f₂ by
-    rwa [Nnreal.dist_eq]
+  suffices abs (μ.test_against_nn f₁ - μ.test_against_nn f₂ : ℝ) ≤ μ.mass * dist f₁ f₂ by rwa [Nnreal.dist_eq]
   apply abs_le.mpr
   constructor
   · have key' := μ.test_against_nn_lipschitz_estimate f₂ f₁
     rw [mul_comm] at key'
-    suffices ↑(μ.test_against_nn f₂) ≤ ↑(μ.test_against_nn f₁) + ↑μ.mass * dist f₁ f₂ by
-      linarith
+    suffices ↑(μ.test_against_nn f₂) ≤ ↑(μ.test_against_nn f₁) + ↑μ.mass * dist f₁ f₂ by linarith
     have key := Nnreal.coe_mono key'
     rwa [Nnreal.coe_add, Nnreal.coe_mul, nndist_comm] at key
     
   · have key' := μ.test_against_nn_lipschitz_estimate f₁ f₂
     rw [mul_comm] at key'
-    suffices ↑(μ.test_against_nn f₁) ≤ ↑(μ.test_against_nn f₂) + ↑μ.mass * dist f₁ f₂ by
-      linarith
+    suffices ↑(μ.test_against_nn f₁) ≤ ↑(μ.test_against_nn f₂) + ↑μ.mass * dist f₁ f₂ by linarith
     have key := Nnreal.coe_mono key'
     rwa [Nnreal.coe_add, Nnreal.coe_mul] at key
     
@@ -412,8 +405,7 @@ theorem to_weak_dual_bcnn_continuous : Continuous (@toWeakDualBcnn α _ _ _) :=
 /- Integration of (nonnegative bounded continuous) test functions against finite Borel measures
 depends continuously on the measure. -/
 theorem continuous_test_against_nn_eval (f : α →ᵇ ℝ≥0) : Continuous fun μ : FiniteMeasure α => μ.testAgainstNn f :=
-  (by
-    apply (WeakBilin.eval_continuous _ _).comp to_weak_dual_bcnn_continuous :
+  (by apply (WeakBilin.eval_continuous _ _).comp to_weak_dual_bcnn_continuous :
     Continuous ((fun φ : WeakDual ℝ≥0 (α →ᵇ ℝ≥0) => φ f) ∘ to_weak_dual_bcnn))
 
 /-- The total mass of a finite measure depends continuously on the measure. -/
@@ -452,8 +444,7 @@ theorem tendsto_zero_test_against_nn_of_tendsto_zero_mass {γ : Type _} {F : Fil
   apply tendsto_iff_dist_tendsto_zero.mpr
   have obs := fun i => (μs i).test_against_nn_lipschitz_estimate f 0
   simp_rw [test_against_nn_zero, zero_addₓ] at obs
-  simp_rw
-    [show ∀ i, dist ((μs i).testAgainstNn f) 0 = (μs i).testAgainstNn f by
+  simp_rw [show ∀ i, dist ((μs i).testAgainstNn f) 0 = (μs i).testAgainstNn f by
       simp only [dist_nndist, Nnreal.nndist_zero_eq_val', eq_self_iff_true, implies_true_iff]]
   refine' squeeze_zero (fun i => Nnreal.coe_nonneg _) obs _
   simp_rw [Nnreal.coe_mul]
@@ -625,10 +616,8 @@ theorem tendsto_of_forall_integral_tendsto {γ : Type _} {F : Filter γ} {μs : 
   apply key.mp
   have lip : LipschitzWith 1 (coe : ℝ≥0 → ℝ) := isometry_subtype_coe.lipschitz
   set f₀ := BoundedContinuousFunction.comp _ lip f with def_f₀
-  have f₀_eq : ⇑f₀ = (coe : ℝ≥0 → ℝ) ∘ ⇑f := by
-    rfl
-  have f₀_nn : 0 ≤ ⇑f₀ := fun _ => by
-    simp only [f₀_eq, Pi.zero_apply, Nnreal.zero_le_coe]
+  have f₀_eq : ⇑f₀ = (coe : ℝ≥0 → ℝ) ∘ ⇑f := by rfl
+  have f₀_nn : 0 ≤ ⇑f₀ := fun _ => by simp only [f₀_eq, Pi.zero_apply, Nnreal.zero_le_coe]
   have f₀_ae_nn : 0 ≤ᵐ[(μ : Measureₓ α)] ⇑f₀ := eventually_of_forall f₀_nn
   have f₀_ae_nns : ∀ i, 0 ≤ᵐ[(μs i : Measureₓ α)] ⇑f₀ := fun i => eventually_of_forall f₀_nn
   have aux := integral_eq_lintegral_of_nonneg_ae f₀_ae_nn f₀.continuous.measurable.ae_strongly_measurable
@@ -807,11 +796,7 @@ theorem continuous_test_against_nn_eval (f : α →ᵇ ℝ≥0) :
 -- The canonical mapping from probability measures to finite measures is an embedding.
 theorem to_finite_measure_embedding (α : Type _) [MeasurableSpace α] [TopologicalSpace α] [OpensMeasurableSpace α] :
     Embedding (toFiniteMeasure : ProbabilityMeasure α → FiniteMeasure α) :=
-  { induced := rfl,
-    inj := fun μ ν h =>
-      Subtype.eq
-        (by
-          convert congr_arg coe h) }
+  { induced := rfl, inj := fun μ ν h => Subtype.eq (by convert congr_arg coe h) }
 
 theorem tendsto_nhds_iff_to_finite_measures_tendsto_nhds {δ : Type _} (F : Filter δ) {μs : δ → ProbabilityMeasure α}
     {μ₀ : ProbabilityMeasure α} : Tendsto μs F (𝓝 μ₀) ↔ Tendsto (to_finite_measure ∘ μs) F (𝓝 μ₀.toFiniteMeasure) :=
@@ -876,12 +861,11 @@ def normalize : ProbabilityMeasure α :=
 
 @[simp]
 theorem self_eq_mass_mul_normalize (s : Set α) : μ s = μ.mass * μ.normalize s := by
-  by_cases' μ = 0
+  by_cases μ = 0
   · rw [h]
     simp only [zero.mass, coe_fn_zero, Pi.zero_apply, zero_mul]
     
-  have mass_nonzero : μ.mass ≠ 0 := by
-    rwa [μ.mass_nonzero_iff]
+  have mass_nonzero : μ.mass ≠ 0 := by rwa [μ.mass_nonzero_iff]
   simp only [show μ ≠ 0 from h, mass_nonzero, normalize, not_false_iff, dif_neg]
   change μ s = μ.mass * (μ.mass⁻¹ • μ) s
   rw [coe_fn_smul_apply]
@@ -896,7 +880,7 @@ theorem normalize_eq_of_nonzero (nonzero : μ ≠ 0) (s : Set α) : μ.normalize
   simp only [μ.self_eq_mass_mul_normalize, μ.mass_nonzero_iff.mpr nonzero, inv_mul_cancel_left₀, Ne.def, not_false_iff]
 
 theorem normalize_eq_inv_mass_smul_of_nonzero (nonzero : μ ≠ 0) : μ.normalize.toFiniteMeasure = μ.mass⁻¹ • μ := by
-  nth_rw 2[μ.self_eq_mass_smul_normalize]
+  nth_rw 2 [μ.self_eq_mass_smul_normalize]
   rw [← smul_assoc]
   simp only [μ.mass_nonzero_iff.mpr nonzero, Algebra.id.smul_eq_mul, inv_mul_cancel, Ne.def, not_false_iff, one_smul]
 
@@ -926,7 +910,7 @@ variable [TopologicalSpace α]
 
 theorem test_against_nn_eq_mass_mul (f : α →ᵇ ℝ≥0) :
     μ.testAgainstNn f = μ.mass * μ.normalize.toFiniteMeasure.testAgainstNn f := by
-  nth_rw 0[μ.self_eq_mass_smul_normalize]
+  nth_rw 0 [μ.self_eq_mass_smul_normalize]
   rw [μ.normalize.to_finite_measure.smul_test_against_nn_apply μ.mass f]
   rfl
 
@@ -942,7 +926,7 @@ theorem tendsto_test_against_nn_of_tendsto_normalize_test_against_nn_of_tendsto_
     {μs : γ → FiniteMeasure α} (μs_lim : Tendsto (fun i => (μs i).normalize) F (𝓝 μ.normalize))
     (mass_lim : Tendsto (fun i => (μs i).mass) F (𝓝 μ.mass)) (f : α →ᵇ ℝ≥0) :
     Tendsto (fun i => (μs i).testAgainstNn f) F (𝓝 (μ.testAgainstNn f)) := by
-  by_cases' h_mass : μ.mass = 0
+  by_cases h_mass:μ.mass = 0
   · simp only [μ.mass_zero_iff.mp h_mass, zero.test_against_nn_apply, zero.mass, eq_self_iff_true] at *
     exact tendsto_zero_test_against_nn_of_tendsto_zero_mass mass_lim f
     
@@ -1034,20 +1018,16 @@ variable {α : Type _} [MeasurableSpace α]
 theorem le_measure_compl_liminf_of_limsup_measure_le {ι : Type _} {L : Filter ι} {μ : Measure α} {μs : ι → Measure α}
     [IsProbabilityMeasure μ] [∀ i, IsProbabilityMeasure (μs i)] {E : Set α} (E_mble : MeasurableSet E)
     (h : (L.limsup fun i => μs i E) ≤ μ E) : μ (Eᶜ) ≤ L.liminf fun i => μs i (Eᶜ) := by
-  by_cases' L_bot : L = ⊥
-  · simp only [L_bot, le_top,
-      show (liminf ⊥ fun i => μs i (Eᶜ)) = ⊤ by
-        simp only [liminf, Filter.map_bot, Liminf_bot]]
+  by_cases L_bot:L = ⊥
+  · simp only [L_bot, le_top, show (liminf ⊥ fun i => μs i (Eᶜ)) = ⊤ by simp only [liminf, Filter.map_bot, Liminf_bot]]
     
   have : L.ne_bot := { ne' := L_bot }
-  have meas_Ec : μ (Eᶜ) = 1 - μ E := by
-    simpa only [measure_univ] using measure_compl E_mble (measure_lt_top μ E).Ne
+  have meas_Ec : μ (Eᶜ) = 1 - μ E := by simpa only [measure_univ] using measure_compl E_mble (measure_lt_top μ E).Ne
   have meas_i_Ec : ∀ i, μs i (Eᶜ) = 1 - μs i E := by
     intro i
     simpa only [measure_univ] using measure_compl E_mble (measure_lt_top (μs i) E).Ne
   simp_rw [meas_Ec, meas_i_Ec]
-  have obs : (L.liminf fun i : ι => 1 - μs i E) = L.liminf ((fun x => 1 - x) ∘ fun i : ι => μs i E) := by
-    rfl
+  have obs : (L.liminf fun i : ι => 1 - μs i E) = L.liminf ((fun x => 1 - x) ∘ fun i : ι => μs i E) := by rfl
   rw [obs]
   simp_rw [←
     antitone_const_tsub.map_limsup_of_continuous_at (fun i => μs i E)
@@ -1062,20 +1042,16 @@ theorem le_measure_liminf_of_limsup_measure_compl_le {ι : Type _} {L : Filter �
 theorem limsup_measure_compl_le_of_le_liminf_measure {ι : Type _} {L : Filter ι} {μ : Measure α} {μs : ι → Measure α}
     [IsProbabilityMeasure μ] [∀ i, IsProbabilityMeasure (μs i)] {E : Set α} (E_mble : MeasurableSet E)
     (h : μ E ≤ L.liminf fun i => μs i E) : (L.limsup fun i => μs i (Eᶜ)) ≤ μ (Eᶜ) := by
-  by_cases' L_bot : L = ⊥
-  · simp only [L_bot, bot_le,
-      show (limsup ⊥ fun i => μs i (Eᶜ)) = ⊥ by
-        simp only [limsup, Filter.map_bot, Limsup_bot]]
+  by_cases L_bot:L = ⊥
+  · simp only [L_bot, bot_le, show (limsup ⊥ fun i => μs i (Eᶜ)) = ⊥ by simp only [limsup, Filter.map_bot, Limsup_bot]]
     
   have : L.ne_bot := { ne' := L_bot }
-  have meas_Ec : μ (Eᶜ) = 1 - μ E := by
-    simpa only [measure_univ] using measure_compl E_mble (measure_lt_top μ E).Ne
+  have meas_Ec : μ (Eᶜ) = 1 - μ E := by simpa only [measure_univ] using measure_compl E_mble (measure_lt_top μ E).Ne
   have meas_i_Ec : ∀ i, μs i (Eᶜ) = 1 - μs i E := by
     intro i
     simpa only [measure_univ] using measure_compl E_mble (measure_lt_top (μs i) E).Ne
   simp_rw [meas_Ec, meas_i_Ec]
-  have obs : (L.limsup fun i : ι => 1 - μs i E) = L.limsup ((fun x => 1 - x) ∘ fun i : ι => μs i E) := by
-    rfl
+  have obs : (L.limsup fun i : ι => 1 - μs i E) = L.limsup ((fun x => 1 - x) ∘ fun i : ι => μs i E) := by rfl
   rw [obs]
   simp_rw [←
     antitone_const_tsub.map_liminf_of_continuous_at (fun i => μs i E)
@@ -1170,12 +1146,11 @@ sequence converge to its measure under the candidate limit measure.
 theorem tendsto_measure_of_null_frontier {ι : Type _} {L : Filter ι} {μ : Measure α} {μs : ι → Measure α}
     [IsProbabilityMeasure μ] [∀ i, IsProbabilityMeasure (μs i)]
     (h_opens : ∀ G, IsOpen G → μ G ≤ L.liminf fun i => μs i G) {E : Set α} (E_nullbdry : μ (Frontier E) = 0) :
-    L.Tendsto (fun i => μs i E) (𝓝 (μ E)) := by
-  have h_closeds : ∀ F, IsClosed F → (L.limsup fun i => μs i F) ≤ μ F :=
+    L.Tendsto (fun i => μs i E) (𝓝 (μ E)) :=
+  haveI h_closeds : ∀ F, IsClosed F → (L.limsup fun i => μs i F) ≤ μ F :=
     limsup_measure_closed_le_iff_liminf_measure_open_ge.mpr h_opens
-  exact
-    tendsto_measure_of_le_liminf_measure_of_limsup_measure_le interior_subset subset_closure E_nullbdry
-      (h_opens _ is_open_interior) (h_closeds _ is_closed_closure)
+  tendsto_measure_of_le_liminf_measure_of_limsup_measure_le interior_subset subset_closure E_nullbdry
+    (h_opens _ is_open_interior) (h_closeds _ is_closed_closure)
 
 end TendstoOfNullFrontier
 
@@ -1259,7 +1234,7 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {α ι : Type _} {L : 
     [PseudoEmetricSpace α] [OpensMeasurableSpace α] {μ : FiniteMeasure α} {μs : ι → FiniteMeasure α}
     (μs_lim : Tendsto μs L (𝓝 μ)) {F : Set α} (F_closed : IsClosed F) :
     (L.limsup fun i => (μs i : Measure α) F) ≤ (μ : Measure α) F := by
-  by_cases' L = ⊥
+  by_cases L = ⊥
   · simp only [h, limsup, Filter.map_bot, Limsup_bot, Ennreal.bot_eq_zero, zero_le]
     
   apply Ennreal.le_of_forall_pos_le_add
@@ -1310,20 +1285,19 @@ is at least the measure of the open set under the limit probability measure.
 theorem ProbabilityMeasure.le_liminf_measure_open_of_tendsto {α ι : Type _} {L : Filter ι} [MeasurableSpace α]
     [PseudoEmetricSpace α] [OpensMeasurableSpace α] {μ : ProbabilityMeasure α} {μs : ι → ProbabilityMeasure α}
     (μs_lim : Tendsto μs L (𝓝 μ)) {G : Set α} (G_open : IsOpen G) :
-    (μ : Measure α) G ≤ L.liminf fun i => (μs i : Measure α) G := by
-  have h_closeds : ∀ F, IsClosed F → (L.limsup fun i => (μs i : Measureₓ α) F) ≤ (μ : Measureₓ α) F := fun F F_closed =>
-    probability_measure.limsup_measure_closed_le_of_tendsto μs_lim F_closed
-  exact
-    le_measure_liminf_of_limsup_measure_compl_le G_open.measurable_set (h_closeds _ (is_closed_compl_iff.mpr G_open))
+    (μ : Measure α) G ≤ L.liminf fun i => (μs i : Measure α) G :=
+  haveI h_closeds : ∀ F, IsClosed F → (L.limsup fun i => (μs i : Measureₓ α) F) ≤ (μ : Measureₓ α) F :=
+    fun F F_closed => probability_measure.limsup_measure_closed_le_of_tendsto μs_lim F_closed
+  le_measure_liminf_of_limsup_measure_compl_le G_open.measurable_set (h_closeds _ (is_closed_compl_iff.mpr G_open))
 
 theorem ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto' {α ι : Type _} {L : Filter ι}
     [MeasurableSpace α] [PseudoEmetricSpace α] [OpensMeasurableSpace α] {μ : ProbabilityMeasure α}
     {μs : ι → ProbabilityMeasure α} (μs_lim : Tendsto μs L (𝓝 μ)) {E : Set α}
     (E_nullbdry : (μ : Measure α) (Frontier E) = 0) :
-    Tendsto (fun i => (μs i : Measure α) E) L (𝓝 ((μ : Measure α) E)) := by
-  have h_opens : ∀ G, IsOpen G → (μ : Measureₓ α) G ≤ L.liminf fun i => (μs i : Measureₓ α) G := fun G G_open =>
+    Tendsto (fun i => (μs i : Measure α) E) L (𝓝 ((μ : Measure α) E)) :=
+  haveI h_opens : ∀ G, IsOpen G → (μ : Measureₓ α) G ≤ L.liminf fun i => (μs i : Measureₓ α) G := fun G G_open =>
     probability_measure.le_liminf_measure_open_of_tendsto μs_lim G_open
-  exact tendsto_measure_of_null_frontier h_opens E_nullbdry
+  tendsto_measure_of_null_frontier h_opens E_nullbdry
 
 /-- One implication of the portmanteau theorem:
 Weak convergence of probability measures implies that if the boundary of a Borel set

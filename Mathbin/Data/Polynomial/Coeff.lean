@@ -18,7 +18,7 @@ The theorems include formulas for computing coefficients, such as
 
 noncomputable section
 
-open Finsupp Finset AddMonoidAlgebra
+open Finsupp Finsetₓ AddMonoidAlgebra
 
 open BigOperators Polynomial
 
@@ -43,8 +43,7 @@ theorem coeff_add (p q : R[X]) (n : ℕ) : coeff (p + q) n = coeff p n + coeff q
   exact Finsupp.add_apply _ _ _
 
 @[simp]
-theorem coeff_bit0 (p : R[X]) (n : ℕ) : coeff (bit0 p) n = bit0 (coeff p n) := by
-  simp [bit0]
+theorem coeff_bit0 (p : R[X]) (n : ℕ) : coeff (bit0 p) n = bit0 (coeff p n) := by simp [bit0]
 
 @[simp]
 theorem coeff_smul [Monoidₓ S] [DistribMulAction S R] (r : S) (p : R[X]) (n : ℕ) : coeff (r • p) n = r • coeff p n := by
@@ -66,7 +65,7 @@ def lsum {R A M : Type _} [Semiringₓ R] [Semiringₓ A] [AddCommMonoidₓ M] [
   map_add' := fun p q => sum_add_index p q _ (fun n => (f n).map_zero) fun n _ _ => (f n).map_add _ _
   map_smul' := fun c p => by
     rw [sum_eq_of_subset _ (fun n r => f n r) (fun n => (f n).map_zero) _ (support_smul c p)]
-    simp only [sum_def, Finset.smul_sum, coeff_smul, LinearMap.map_smul, RingHom.id_apply]
+    simp only [sum_def, Finsetₓ.smul_sum, coeff_smul, LinearMap.map_smul, RingHom.id_apply]
 
 variable (R)
 
@@ -83,7 +82,7 @@ theorem lcoeff_apply (n : ℕ) (f : R[X]) : lcoeff R n f = coeff f n :=
   rfl
 
 @[simp]
-theorem finset_sum_coeff {ι : Type _} (s : Finset ι) (f : ι → R[X]) (n : ℕ) :
+theorem finset_sum_coeff {ι : Type _} (s : Finsetₓ ι) (f : ι → R[X]) (n : ℕ) :
     coeff (∑ b in s, f b) n = ∑ b in s, coeff (f b) n :=
   (lcoeff R n).map_sum
 
@@ -101,14 +100,11 @@ theorem coeff_mul (p q : R[X]) (n : ℕ) : coeff (p * q) n = ∑ x in Nat.antidi
   exact AddMonoidAlgebra.mul_apply_antidiagonal p q n _ fun x => nat.mem_antidiagonal
 
 @[simp]
-theorem mul_coeff_zero (p q : R[X]) : coeff (p * q) 0 = coeff p 0 * coeff q 0 := by
-  simp [coeff_mul]
+theorem mul_coeff_zero (p q : R[X]) : coeff (p * q) 0 = coeff p 0 * coeff q 0 := by simp [coeff_mul]
 
-theorem coeff_mul_X_zero (p : R[X]) : coeff (p * X) 0 = 0 := by
-  simp
+theorem coeff_mul_X_zero (p : R[X]) : coeff (p * X) 0 = 0 := by simp
 
-theorem coeff_X_mul_zero (p : R[X]) : coeff (X * p) 0 = 0 := by
-  simp
+theorem coeff_X_mul_zero (p : R[X]) : coeff (X * p) 0 = 0 := by simp
 
 theorem coeff_C_mul_X_pow (x : R) (k n : ℕ) : coeff (c x * X ^ k : R[X]) n = if n = k then x else 0 := by
   rw [← monomial_eq_C_mul_X, coeff_monomial]
@@ -138,12 +134,11 @@ theorem coeff_X_pow (k n : ℕ) : coeff (X ^ k : R[X]) n = if n = k then 1 else 
   simp only [one_mulₓ, RingHom.map_one, ← coeff_C_mul_X_pow]
 
 @[simp]
-theorem coeff_X_pow_self (n : ℕ) : coeff (X ^ n : R[X]) n = 1 := by
-  simp [coeff_X_pow]
+theorem coeff_X_pow_self (n : ℕ) : coeff (X ^ n : R[X]) n = 1 := by simp [coeff_X_pow]
 
 section Fewnomials
 
-open Finset
+open Finsetₓ
 
 theorem support_binomial {k m : ℕ} (hkm : k ≠ m) {x y : R} (hx : x ≠ 0) (hy : y ≠ 0) :
     (c x * X ^ k + c y * X ^ m).Support = {k, m} := by
@@ -191,7 +186,7 @@ theorem coeff_mul_X_pow' (p : R[X]) (n d : ℕ) : (p * X ^ n).coeff d = ite (n �
   split_ifs
   · rw [← tsub_add_cancel_of_le h, coeff_mul_X_pow, add_tsub_cancel_right]
     
-  · refine' (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => _)
+  · refine' (coeff_mul _ _ _).trans (Finsetₓ.sum_eq_zero fun x hx => _)
     rw [coeff_X_pow, if_neg, mul_zero]
     exact ((le_of_add_le_right (finset.nat.mem_antidiagonal.mp hx).le).trans_lt <| not_le.mp h).Ne
     
@@ -204,8 +199,7 @@ theorem coeff_mul_X (p : R[X]) (n : ℕ) : coeff (p * X) (n + 1) = coeff p n := 
   simpa only [pow_oneₓ] using coeff_mul_X_pow p 1 n
 
 @[simp]
-theorem coeff_X_mul (p : R[X]) (n : ℕ) : coeff (X * p) (n + 1) = coeff p n := by
-  rw [(commute_X p).Eq, coeff_mul_X]
+theorem coeff_X_mul (p : R[X]) (n : ℕ) : coeff (X * p) (n + 1) = coeff p n := by rw [(commute_X p).Eq, coeff_mul_X]
 
 theorem coeff_mul_monomial (p : R[X]) (n d : ℕ) (r : R) : coeff (p * monomial n r) (d + n) = coeff p d * r := by
   rw [monomial_eq_C_mul_X, ← X_pow_mul, ← mul_assoc, coeff_mul_C, coeff_mul_X_pow]
@@ -239,11 +233,11 @@ theorem C_mul_X_pow_eq_monomial (c : R) (n : ℕ) : c c * X ^ n = monomial n c :
 theorem coeff_X_add_C_pow (r : R) (n k : ℕ) : ((X + c r) ^ n).coeff k = r ^ (n - k) * (n.choose k : R) := by
   rw [(commute_X (C r : R[X])).add_pow, ← lcoeff_apply, LinearMap.map_sum]
   simp only [one_pow, mul_oneₓ, lcoeff_apply, ← C_eq_nat_cast, ← C_pow, coeff_mul_C, Nat.cast_id]
-  rw [Finset.sum_eq_single k, coeff_X_pow_self, one_mulₓ]
+  rw [Finsetₓ.sum_eq_single k, coeff_X_pow_self, one_mulₓ]
   · intro _ _ h
     simp [coeff_X_pow, h.symm]
     
-  · simp only [coeff_X_pow_self, one_mulₓ, not_ltₓ, Finset.mem_range]
+  · simp only [coeff_X_pow_self, one_mulₓ, not_ltₓ, Finsetₓ.mem_range]
     intro h
     rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zeroₓ, mul_zero]
     
@@ -267,7 +261,7 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : c r ∣ φ ↔ ∀ i, r ∣ φ
     let ψ : R[X] := ∑ i in φ.support, monomial i (c' i)
     use ψ
     ext i
-    simp only [ψ, c', coeff_C_mul, mem_support_iff, coeff_monomial, finset_sum_coeff, Finset.sum_ite_eq']
+    simp only [ψ, c', coeff_C_mul, mem_support_iff, coeff_monomial, finset_sum_coeff, Finsetₓ.sum_ite_eq']
     split_ifs with hi hi
     · rw [hc]
       
@@ -276,14 +270,12 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : c r ∣ φ ↔ ∀ i, r ∣ φ
       
     
 
-theorem coeff_bit0_mul (P Q : R[X]) (n : ℕ) : coeff (bit0 P * Q) n = 2 * coeff (P * Q) n := by
-  simp [bit0, add_mulₓ]
+theorem coeff_bit0_mul (P Q : R[X]) (n : ℕ) : coeff (bit0 P * Q) n = 2 * coeff (P * Q) n := by simp [bit0, add_mulₓ]
 
 theorem coeff_bit1_mul (P Q : R[X]) (n : ℕ) : coeff (bit1 P * Q) n = 2 * coeff (P * Q) n + coeff Q n := by
   simp [bit1, add_mulₓ, coeff_bit0_mul]
 
-theorem smul_eq_C_mul (a : R) : a • p = c a * p := by
-  simp [ext_iff]
+theorem smul_eq_C_mul (a : R) : a • p = c a * p := by simp [ext_iff]
 
 theorem update_eq_add_sub_coeff {R : Type _} [Ringₓ R] (p : R[X]) (n : ℕ) (a : R) :
     p.update n a = p + Polynomial.c (a - p.coeff n) * Polynomial.x ^ n := by
@@ -315,8 +307,7 @@ theorem nat_cast_inj {m n : ℕ} {R : Type _} [Semiringₓ R] [CharZero R] : (�
     
 
 @[simp]
-theorem int_cast_coeff_zero {i : ℤ} {R : Type _} [Ringₓ R] : (i : R[X]).coeff 0 = i := by
-  cases i <;> simp
+theorem int_cast_coeff_zero {i : ℤ} {R : Type _} [Ringₓ R] : (i : R[X]).coeff 0 = i := by cases i <;> simp
 
 @[simp, norm_cast]
 theorem int_cast_inj {m n : ℤ} {R : Type _} [Ringₓ R] [CharZero R] : (↑m : R[X]) = ↑n ↔ m = n := by

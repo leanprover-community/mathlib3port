@@ -27,10 +27,8 @@ theorem is_prime_pow_def : IsPrimePow n ↔ ∃ (p : R)(k : ℕ), Prime p ∧ 0 
 natural `k` such that `n` can be written as `p^(k+1)`. -/
 theorem is_prime_pow_iff_pow_succ : IsPrimePow n ↔ ∃ (p : R)(k : ℕ), Prime p ∧ p ^ (k + 1) = n :=
   (is_prime_pow_def _).trans
-    ⟨fun ⟨p, k, hp, hk, hn⟩ =>
-      ⟨_, _, hp, by
-        rwa [Nat.sub_add_cancelₓ hk]⟩,
-      fun ⟨p, k, hp, hn⟩ => ⟨_, _, hp, Nat.succ_pos', hn⟩⟩
+    ⟨fun ⟨p, k, hp, hk, hn⟩ => ⟨_, _, hp, by rwa [Nat.sub_add_cancelₓ hk]⟩, fun ⟨p, k, hp, hn⟩ =>
+      ⟨_, _, hp, Nat.succ_pos', hn⟩⟩
 
 theorem not_is_prime_pow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) := by
   simp only [is_prime_pow_def, not_exists, not_and', and_imp]
@@ -44,13 +42,11 @@ theorem not_is_prime_pow_one : ¬IsPrimePow (1 : R) := by
   exact ht.not_unit (is_unit_of_pow_eq_one x n hx hn)
 
 theorem Prime.is_prime_pow {p : R} (hp : Prime p) : IsPrimePow p :=
-  ⟨p, 1, hp, zero_lt_one, by
-    simp ⟩
+  ⟨p, 1, hp, zero_lt_one, by simp⟩
 
 theorem IsPrimePow.pow {n : R} (hn : IsPrimePow n) {k : ℕ} (hk : k ≠ 0) : IsPrimePow (n ^ k) :=
   let ⟨p, k', hp, hk', hn⟩ := hn
-  ⟨p, k * k', hp, mul_pos hk.bot_lt hk', by
-    rw [pow_mul', hn]⟩
+  ⟨p, k * k', hp, mul_pos hk.bot_lt hk', by rw [pow_mul', hn]⟩
 
 theorem IsPrimePow.ne_zero [NoZeroDivisors R] {n : R} (h : IsPrimePow n) : n ≠ 0 := fun t =>
   Eq.ndrec not_is_prime_pow_zero t.symm h
@@ -101,7 +97,7 @@ theorem IsPrimePow.dvd {n m : ℕ} (hn : IsPrimePow n) (hm : m ∣ n) (hm₁ : m
 
 theorem Nat.disjoint_divisors_filter_prime_pow {a b : ℕ} (hab : a.Coprime b) :
     Disjoint (a.divisors.filter IsPrimePow) (b.divisors.filter IsPrimePow) := by
-  simp only [Finset.disjoint_left, Finset.mem_filter, and_imp, Nat.mem_divisors, not_and]
+  simp only [Finsetₓ.disjoint_left, Finsetₓ.mem_filter, and_imp, Nat.mem_divisors, not_and]
   rintro n han ha hn hbn hb -
   exact hn.ne_one (Nat.eq_one_of_dvd_coprimes hab han hbn)
 

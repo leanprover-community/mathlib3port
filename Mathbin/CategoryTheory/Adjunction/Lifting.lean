@@ -77,7 +77,7 @@ def counitCoequalises [∀ X : B, RegularEpi (adj₁.counit.app X)] (X : B) :
     refine' ⟨(regular_epi.desc' (adj₁.counit.app X) s.π _).1, _, _⟩
     · rw [← cancel_epi (adj₁.counit.app (regular_epi.W (adj₁.counit.app X)))]
       rw [← adj₁.counit_naturality_assoc]
-      dsimp' only [functor.comp_obj]
+      dsimp only [functor.comp_obj]
       rw [← s.condition, ← F.map_comp_assoc, ← U.map_comp, regular_epi.w, U.map_comp, F.map_comp_assoc, s.condition, ←
         adj₁.counit_naturality_assoc]
       
@@ -111,7 +111,7 @@ instance (X : B) : IsReflexivePair (F'.map (U.map (adj₁.counit.app X))) (other
       rw [← F'.map_comp, adj₁.right_triangle_components]
       apply F'.map_id)
     (by
-      dsimp' [other_map]
+      dsimp [other_map]
       rw [← F'.map_comp_assoc, U.map_comp, adj₁.unit_naturality_assoc, adj₁.right_triangle_components, comp_id,
         adj₂.left_triangle_components])
 
@@ -175,7 +175,7 @@ noncomputable def adjointTriangleLift {U : B ⥤ C} {F : C ⥤ B} (R : A ⥤ B) 
   left := LiftAdjoint.constructLeftAdjoint R _ adj₁ (Adjunction.ofRightAdjoint _)
   adj := Adjunction.adjunctionOfEquivLeft _ _
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[":", expr is_right_adjoint R']]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr is_right_adjoint R']]
 /-- If `R ⋙ U` has a left adjoint, the domain of `R` has reflexive coequalizers and `U` is a monadic
 functor, then `R` has a left adjoint.
 This is a special case of `adjoint_triangle_lift` which is often more useful in practice.
@@ -184,9 +184,8 @@ noncomputable def monadicAdjointTriangleLift (U : B ⥤ C) [MonadicRightAdjoint 
     [HasReflexiveCoequalizers A] [IsRightAdjoint (R ⋙ U)] : IsRightAdjoint R := by
   let R' : A ⥤ _ := R ⋙ monad.comparison (adjunction.of_right_adjoint U)
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[\":\", expr is_right_adjoint R']]"
-  · let this : is_right_adjoint (R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv) := by
-      infer_instance
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[\":\", expr is_right_adjoint R']]"
+  · let this : is_right_adjoint (R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv) := by infer_instance
     · let this : R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv ≅ R :=
         (iso_whisker_left R (monad.comparison _).asEquivalence.unitIso.symm : _) ≪≫ R.right_unitor
       exact adjunction.right_adjoint_of_nat_iso this

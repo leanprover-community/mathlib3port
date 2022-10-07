@@ -52,7 +52,6 @@ theorem has_injective_coseparator [HasLimits C] [EnoughInjectives C] (G : C) (hG
 
 theorem has_projective_separator [HasColimits C] [EnoughProjectives C] (G : C) (hG : IsCoseparator G) :
     ∃ G : C, Projective G ∧ IsSeparator G := by
-  haveI : has_limits Cᵒᵖ := has_limits_op_of_has_colimits
   obtain ⟨T, hT₁, hT₂⟩ := has_injective_coseparator (op G) ((is_separator_op_iff _).2 hG)
   exact ⟨unop T, inferInstance, (is_separator_unop_iff _).2 hT₂⟩
 

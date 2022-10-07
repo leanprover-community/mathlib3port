@@ -123,7 +123,7 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
   apply presieve.is_sheaf_for_subsieve_aux P this
   apply is_sheaf_for_bind _ _ _ hR hS
   · intro Y f hf Z g
-    dsimp'
+    dsimp
     rw [← pullback_comp]
     apply (hS (R.downward_closed hf _)).IsSeparatedFor
     
@@ -179,8 +179,7 @@ def finestTopology (Ps : Set (Cᵒᵖ ⥤ Type v)) : GrothendieckTopology C :=
 
 /-- Check that if `P ∈ Ps`, then `P` is indeed a sheaf for the finest topology on `Ps`. -/
 theorem sheaf_for_finest_topology (Ps : Set (Cᵒᵖ ⥤ Type v)) (h : P ∈ Ps) : Presieve.IsSheaf (finestTopology Ps) P :=
-  fun X S hS => by
-  simpa using hS _ ⟨⟨_, _, ⟨_, h, rfl⟩, rfl⟩, rfl⟩ _ (𝟙 _)
+  fun X S hS => by simpa using hS _ ⟨⟨_, _, ⟨_, h, rfl⟩, rfl⟩, rfl⟩ _ (𝟙 _)
 
 /-- Check that if each `P ∈ Ps` is a sheaf for `J`, then `J` is a subtopology of `finest_topology Ps`.
 -/

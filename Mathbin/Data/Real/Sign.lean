@@ -30,20 +30,16 @@ otherwise. -/
 noncomputable def sign (r : ℝ) : ℝ :=
   if r < 0 then -1 else if 0 < r then 1 else 0
 
-theorem sign_of_neg {r : ℝ} (hr : r < 0) : sign r = -1 := by
-  rw [sign, if_pos hr]
+theorem sign_of_neg {r : ℝ} (hr : r < 0) : sign r = -1 := by rw [sign, if_pos hr]
 
-theorem sign_of_pos {r : ℝ} (hr : 0 < r) : sign r = 1 := by
-  rw [sign, if_pos hr, if_neg hr.not_lt]
+theorem sign_of_pos {r : ℝ} (hr : 0 < r) : sign r = 1 := by rw [sign, if_pos hr, if_neg hr.not_lt]
 
 @[simp]
-theorem sign_zero : sign 0 = 0 := by
-  rw [sign, if_neg (lt_irreflₓ _), if_neg (lt_irreflₓ _)]
+theorem sign_zero : sign 0 = 0 := by rw [sign, if_neg (lt_irreflₓ _), if_neg (lt_irreflₓ _)]
 
 @[simp]
 theorem sign_one : sign 1 = 1 :=
-  sign_of_pos <| by
-    norm_num
+  sign_of_pos <| by norm_num
 
 theorem sign_apply_eq (r : ℝ) : sign r = -1 ∨ sign r = 0 ∨ sign r = 1 := by
   obtain hn | rfl | hp := lt_trichotomyₓ r (0 : ℝ)
@@ -98,11 +94,7 @@ theorem sign_neg {r : ℝ} : sign (-r) = -sign r := by
 theorem sign_mul_nonneg (r : ℝ) : 0 ≤ sign r * r := by
   obtain hn | rfl | hp := lt_trichotomyₓ r (0 : ℝ)
   · rw [sign_of_neg hn]
-    exact
-      mul_nonneg_of_nonpos_of_nonpos
-        (by
-          norm_num)
-        hn.le
+    exact mul_nonneg_of_nonpos_of_nonpos (by norm_num) hn.le
     
   · rw [mul_zero]
     

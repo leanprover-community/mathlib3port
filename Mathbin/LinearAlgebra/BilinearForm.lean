@@ -101,20 +101,16 @@ theorem smul_right (a : R) (x y : M) : B x (a • y) = a * B x y :=
   bilin_smul_right B a x y
 
 @[simp]
-theorem zero_left (x : M) : B 0 x = 0 := by
-  rw [← @zero_smul R _ _ _ _ (0 : M), smul_left, zero_mul]
+theorem zero_left (x : M) : B 0 x = 0 := by rw [← @zero_smul R _ _ _ _ (0 : M), smul_left, zero_mul]
 
 @[simp]
-theorem zero_right (x : M) : B x 0 = 0 := by
-  rw [← @zero_smul _ _ _ _ _ (0 : M), smul_right, zero_mul]
+theorem zero_right (x : M) : B x 0 = 0 := by rw [← @zero_smul _ _ _ _ _ (0 : M), smul_right, zero_mul]
 
 @[simp]
-theorem neg_left (x y : M₁) : B₁ (-x) y = -B₁ x y := by
-  rw [← @neg_one_smul R₁ _ _, smul_left, neg_one_mul]
+theorem neg_left (x y : M₁) : B₁ (-x) y = -B₁ x y := by rw [← @neg_one_smul R₁ _ _, smul_left, neg_one_mul]
 
 @[simp]
-theorem neg_right (x y : M₁) : B₁ x (-y) = -B₁ x y := by
-  rw [← @neg_one_smul R₁ _ _, smul_right, neg_one_mul]
+theorem neg_right (x y : M₁) : B₁ x (-y) = -B₁ x y := by rw [← @neg_one_smul R₁ _ _, smul_right, neg_one_mul]
 
 @[simp]
 theorem sub_left (x y z : M₁) : B₁ (x - y) z = B₁ x z - B₁ y z := by
@@ -163,16 +159,13 @@ theorem zero_apply (x y : M) : (0 : BilinForm R M) x y = 0 :=
 variable (B D B₁ D₁)
 
 instance :
-    Add (BilinForm R M) where add := fun B D =>
-    { bilin := fun x y => B x y + D x y,
-      bilin_add_left := fun x y z => by
-        rw [add_left, add_left, add_add_add_commₓ],
-      bilin_smul_left := fun a x y => by
-        rw [smul_left, smul_left, mul_addₓ],
-      bilin_add_right := fun x y z => by
-        rw [add_right, add_right, add_add_add_commₓ],
-      bilin_smul_right := fun a x y => by
-        rw [smul_right, smul_right, mul_addₓ] }
+    Add
+      (BilinForm R
+        M) where add := fun B D =>
+    { bilin := fun x y => B x y + D x y, bilin_add_left := fun x y z => by rw [add_left, add_left, add_add_add_commₓ],
+      bilin_smul_left := fun a x y => by rw [smul_left, smul_left, mul_addₓ],
+      bilin_add_right := fun x y z => by rw [add_right, add_right, add_add_add_commₓ],
+      bilin_smul_right := fun a x y => by rw [smul_right, smul_right, mul_addₓ] }
 
 @[simp]
 theorem coe_add : ⇑(B + D) = B + D :=
@@ -188,16 +181,12 @@ multiplication.
 When `R` itself is commutative, this provides an `R`-action via `algebra.id`. -/
 instance {α} [Monoidₓ α] [DistribMulAction α R] [SmulCommClass α R R] :
     HasSmul α
-      (BilinForm R M) where smul := fun c B =>
-    { bilin := fun x y => c • B x y,
-      bilin_add_left := fun x y z => by
-        rw [add_left, smul_add],
-      bilin_smul_left := fun a x y => by
-        rw [smul_left, ← mul_smul_comm],
-      bilin_add_right := fun x y z => by
-        rw [add_right, smul_add],
-      bilin_smul_right := fun a x y => by
-        rw [smul_right, ← mul_smul_comm] }
+      (BilinForm R
+        M) where smul := fun c B =>
+    { bilin := fun x y => c • B x y, bilin_add_left := fun x y z => by rw [add_left, smul_add],
+      bilin_smul_left := fun a x y => by rw [smul_left, ← mul_smul_comm],
+      bilin_add_right := fun x y z => by rw [add_right, smul_add],
+      bilin_smul_right := fun a x y => by rw [smul_right, ← mul_smul_comm] }
 
 @[simp]
 theorem coe_smul {α} [Monoidₓ α] [DistribMulAction α R] [SmulCommClass α R R] (a : α) (B : BilinForm R M) :
@@ -213,16 +202,13 @@ instance : AddCommMonoidₓ (BilinForm R M) :=
   Function.Injective.addCommMonoid _ coe_injective coe_zero coe_add fun n x => coe_smul _ _
 
 instance :
-    Neg (BilinForm R₁ M₁) where neg := fun B =>
-    { bilin := fun x y => -B x y,
-      bilin_add_left := fun x y z => by
-        rw [add_left, neg_add],
-      bilin_smul_left := fun a x y => by
-        rw [smul_left, mul_neg],
-      bilin_add_right := fun x y z => by
-        rw [add_right, neg_add],
-      bilin_smul_right := fun a x y => by
-        rw [smul_right, mul_neg] }
+    Neg
+      (BilinForm R₁
+        M₁) where neg := fun B =>
+    { bilin := fun x y => -B x y, bilin_add_left := fun x y z => by rw [add_left, neg_add],
+      bilin_smul_left := fun a x y => by rw [smul_left, mul_neg],
+      bilin_add_right := fun x y z => by rw [add_right, neg_add],
+      bilin_smul_right := fun a x y => by rw [smul_right, mul_neg] }
 
 @[simp]
 theorem coe_neg : ⇑(-B₁) = -B₁ :=
@@ -233,16 +219,13 @@ theorem neg_apply (x y : M₁) : (-B₁) x y = -B₁ x y :=
   rfl
 
 instance :
-    Sub (BilinForm R₁ M₁) where sub := fun B D =>
-    { bilin := fun x y => B x y - D x y,
-      bilin_add_left := fun x y z => by
-        rw [add_left, add_left, add_sub_add_comm],
-      bilin_smul_left := fun a x y => by
-        rw [smul_left, smul_left, mul_sub],
-      bilin_add_right := fun x y z => by
-        rw [add_right, add_right, add_sub_add_comm],
-      bilin_smul_right := fun a x y => by
-        rw [smul_right, smul_right, mul_sub] }
+    Sub
+      (BilinForm R₁
+        M₁) where sub := fun B D =>
+    { bilin := fun x y => B x y - D x y, bilin_add_left := fun x y z => by rw [add_left, add_left, add_sub_add_comm],
+      bilin_smul_left := fun a x y => by rw [smul_left, smul_left, mul_sub],
+      bilin_add_right := fun x y z => by rw [add_right, add_right, add_sub_add_comm],
+      bilin_smul_right := fun a x y => by rw [smul_right, smul_right, mul_sub] }
 
 @[simp]
 theorem coe_sub : ⇑(B₁ - D₁) = B₁ - D₁ :=
@@ -340,11 +323,10 @@ def toLinHomAux₁ (A : BilinForm R M) (x : M) : M →ₗ[R] R where
 def toLinHomAux₂ (A : BilinForm R M) : M →ₗ[R₂] M →ₗ[R] R where
   toFun := toLinHomAux₁ A
   map_add' := fun x₁ x₂ =>
-    LinearMap.ext fun x => by
-      simp only [to_lin_hom_aux₁, LinearMap.coe_mk, LinearMap.add_apply, add_left]
+    LinearMap.ext fun x => by simp only [to_lin_hom_aux₁, LinearMap.coe_mk, LinearMap.add_apply, add_left]
   map_smul' := fun c x =>
     LinearMap.ext <| by
-      dsimp' [to_lin_hom_aux₁]
+      dsimp [to_lin_hom_aux₁]
       intros
       simp only [← algebra_map_smul R c x, Algebra.smul_def, LinearMap.coe_mk, LinearMap.smul_apply, smul_left]
 
@@ -360,12 +342,12 @@ def toLinHom : BilinForm R M →ₗ[R₂] M →ₗ[R₂] M →ₗ[R] R where
   toFun := toLinHomAux₂
   map_add' := fun A₁ A₂ =>
     LinearMap.ext fun x => by
-      dsimp' only [to_lin_hom_aux₁, to_lin_hom_aux₂]
+      dsimp only [to_lin_hom_aux₁, to_lin_hom_aux₂]
       apply LinearMap.ext
       intro y
       simp only [to_lin_hom_aux₂, to_lin_hom_aux₁, LinearMap.coe_mk, LinearMap.add_apply, add_apply]
   map_smul' := fun c A => by
-    dsimp' [to_lin_hom_aux₁, to_lin_hom_aux₂]
+    dsimp [to_lin_hom_aux₁, to_lin_hom_aux₂]
     apply LinearMap.ext
     intro x
     apply LinearMap.ext
@@ -385,11 +367,11 @@ abbrev toLin' : BilinForm R M →ₗ[ℕ] M →ₗ[ℕ] M →ₗ[R] R :=
   toLinHom ℕ
 
 @[simp]
-theorem sum_left {α} (t : Finset α) (g : α → M) (w : M) : B (∑ i in t, g i) w = ∑ i in t, B (g i) w :=
+theorem sum_left {α} (t : Finsetₓ α) (g : α → M) (w : M) : B (∑ i in t, g i) w = ∑ i in t, B (g i) w :=
   (BilinForm.toLin' B).map_sum₂ t g w
 
 @[simp]
-theorem sum_right {α} (t : Finset α) (w : M) (g : α → M) : B w (∑ i in t, g i) = ∑ i in t, B w (g i) :=
+theorem sum_right {α} (t : Finsetₓ α) (w : M) (g : α → M) : B w (∑ i in t, g i) = ∑ i in t, B w (g i) :=
   (BilinForm.toLin' B w).map_sum
 
 variable (R₂)
@@ -428,8 +410,7 @@ This is an auxiliary definition for the full linear equivalence `linear_map.to_b
 def LinearMap.toBilinAux (f : M₂ →ₗ[R₂] M₂ →ₗ[R₂] R₂) : BilinForm R₂ M₂ where
   bilin := fun x y => f x y
   bilin_add_left := fun x y z => (LinearMap.map_add f x y).symm ▸ LinearMap.add_apply (f x) (f y) z
-  bilin_smul_left := fun a x y => by
-    rw [LinearMap.map_smul, LinearMap.smul_apply, smul_eq_mul]
+  bilin_smul_left := fun a x y => by rw [LinearMap.map_smul, LinearMap.smul_apply, smul_eq_mul]
   bilin_add_right := fun x y z => LinearMap.map_add (f x) y z
   bilin_smul_right := fun a x y => LinearMap.map_smul (f x) a y
 
@@ -473,12 +454,10 @@ variable {R' : Type} [CommSemiringₓ R'] [Algebra R' R] [Module R' M] [IsScalar
 @[simps]
 def compBilinForm (f : R →ₗ[R'] R') (B : BilinForm R M) : BilinForm R' M where
   bilin := fun x y => f (B x y)
-  bilin_add_left := fun x y z => by
-    rw [BilinForm.add_left, map_add]
+  bilin_add_left := fun x y z => by rw [BilinForm.add_left, map_add]
   bilin_smul_left := fun r x y => by
     rw [← smul_one_smul R r (_ : M), BilinForm.smul_left, smul_one_mul r (_ : R), map_smul, smul_eq_mul]
-  bilin_add_right := fun x y z => by
-    rw [BilinForm.add_right, map_add]
+  bilin_add_right := fun x y z => by rw [BilinForm.add_right, map_add]
   bilin_smul_right := fun r x y => by
     rw [← smul_one_smul R r (_ : M), BilinForm.smul_right, smul_one_mul r (_ : R), map_smul, smul_eq_mul]
 
@@ -493,14 +472,10 @@ variable {M' : Type w} [AddCommMonoidₓ M'] [Module R M']
 /-- Apply a linear map on the left and right argument of a bilinear form. -/
 def comp (B : BilinForm R M') (l r : M →ₗ[R] M') : BilinForm R M where
   bilin := fun x y => B (l x) (r y)
-  bilin_add_left := fun x y z => by
-    rw [LinearMap.map_add, add_left]
-  bilin_smul_left := fun x y z => by
-    rw [LinearMap.map_smul, smul_left]
-  bilin_add_right := fun x y z => by
-    rw [LinearMap.map_add, add_right]
-  bilin_smul_right := fun x y z => by
-    rw [LinearMap.map_smul, smul_right]
+  bilin_add_left := fun x y z => by rw [LinearMap.map_add, add_left]
+  bilin_smul_left := fun x y z => by rw [LinearMap.map_smul, smul_left]
+  bilin_add_right := fun x y z => by rw [LinearMap.map_add, add_right]
+  bilin_smul_right := fun x y z => by rw [LinearMap.map_smul, smul_right]
 
 /-- Apply a linear map to the left argument of a bilinear form. -/
 def compLeft (B : BilinForm R M) (f : M →ₗ[R] M) : BilinForm R M :=
@@ -588,18 +563,10 @@ section congr
 def congr (e : M₂ ≃ₗ[R₂] M₂') : BilinForm R₂ M₂ ≃ₗ[R₂] BilinForm R₂ M₂' where
   toFun := fun B => B.comp e.symm e.symm
   invFun := fun B => B.comp e e
-  left_inv := fun B =>
-    ext fun x y => by
-      simp only [comp_apply, LinearEquiv.coe_coe, e.symm_apply_apply]
-  right_inv := fun B =>
-    ext fun x y => by
-      simp only [comp_apply, LinearEquiv.coe_coe, e.apply_symm_apply]
-  map_add' := fun B B' =>
-    ext fun x y => by
-      simp only [comp_apply, add_apply]
-  map_smul' := fun B B' =>
-    ext fun x y => by
-      simp [comp_apply, smul_apply]
+  left_inv := fun B => ext fun x y => by simp only [comp_apply, LinearEquiv.coe_coe, e.symm_apply_apply]
+  right_inv := fun B => ext fun x y => by simp only [comp_apply, LinearEquiv.coe_coe, e.apply_symm_apply]
+  map_add' := fun B B' => ext fun x y => by simp only [comp_apply, add_apply]
+  map_smul' := fun B B' => ext fun x y => by simp [comp_apply, smul_apply]
 
 @[simp]
 theorem congr_apply (e : M₂ ≃ₗ[R₂] M₂') (B : BilinForm R₂ M₂) (x y : M₂') : congr e B x y = B (e.symm x) (e.symm y) :=
@@ -638,14 +605,10 @@ section LinMulLin
 /-- `lin_mul_lin f g` is the bilinear form mapping `x` and `y` to `f x * g y` -/
 def linMulLin (f g : M₂ →ₗ[R₂] R₂) : BilinForm R₂ M₂ where
   bilin := fun x y => f x * g y
-  bilin_add_left := fun x y z => by
-    rw [LinearMap.map_add, add_mulₓ]
-  bilin_smul_left := fun x y z => by
-    rw [LinearMap.map_smul, smul_eq_mul, mul_assoc]
-  bilin_add_right := fun x y z => by
-    rw [LinearMap.map_add, mul_addₓ]
-  bilin_smul_right := fun x y z => by
-    rw [LinearMap.map_smul, smul_eq_mul, mul_left_commₓ]
+  bilin_add_left := fun x y z => by rw [LinearMap.map_add, add_mulₓ]
+  bilin_smul_left := fun x y z => by rw [LinearMap.map_smul, smul_eq_mul, mul_assoc]
+  bilin_add_right := fun x y z => by rw [LinearMap.map_add, mul_addₓ]
+  bilin_smul_right := fun x y z => by rw [LinearMap.map_smul, smul_eq_mul, mul_left_commₓ]
 
 variable {f g : M₂ →ₗ[R₂] R₂}
 
@@ -702,7 +665,7 @@ variable [AddCommGroupₓ M₄] [Module R₄ M₄] {G : BilinForm R₄ M₄}
 
 @[simp]
 theorem is_ortho_smul_left {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G (a • x) y ↔ IsOrtho G x y := by
-  dunfold is_ortho
+  dsimp only [is_ortho]
   constructor <;> intro H
   · rw [smul_left, mul_eq_zero] at H
     cases H
@@ -716,7 +679,7 @@ theorem is_ortho_smul_left {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G (a
 
 @[simp]
 theorem is_ortho_smul_right {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G x (a • y) ↔ IsOrtho G x y := by
-  dunfold is_ortho
+  dsimp only [is_ortho]
   constructor <;> intro H
   · rw [smul_right, mul_eq_zero] at H
     cases H
@@ -735,10 +698,9 @@ theorem linear_independent_of_is_Ortho {n : Type w} {B : BilinForm K V} {v : n �
   classical
   rw [linear_independent_iff']
   intro s w hs i hi
-  have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by
-    rw [hs, zero_left]
+  have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by rw [hs, zero_left]
   have hsum : (s.sum fun j : n => w j * B (v j) (v i)) = w i * B (v i) (v i) := by
-    apply Finset.sum_eq_single_of_mem i hi
+    apply Finsetₓ.sum_eq_single_of_mem i hi
     intro j hj hij
     rw [is_Ortho_def.1 hv₁ _ _ hij, mul_zero]
   simp_rw [sum_left, smul_left, hsum] at this
@@ -882,8 +844,7 @@ theorem IsAdjointPair.sub (h : IsAdjointPair B₁ B₁' f₁ g₁) (h' : IsAdjoi
 variable {B₂' : BilinForm R₂ M₂'} {f₂ f₂' : M₂ →ₗ[R₂] M₂'} {g₂ g₂' : M₂' →ₗ[R₂] M₂}
 
 theorem IsAdjointPair.smul (c : R₂) (h : IsAdjointPair B₂ B₂' f₂ g₂) : IsAdjointPair B₂ B₂' (c • f₂) (c • g₂) :=
-  fun x y => by
-  rw [LinearMap.smul_apply, LinearMap.smul_apply, smul_left, smul_right, h]
+  fun x y => by rw [LinearMap.smul_apply, LinearMap.smul_apply, smul_left, smul_right, h]
 
 variable {M'' : Type _} [AddCommMonoidₓ M''] [Module R M'']
 
@@ -894,8 +855,7 @@ theorem IsAdjointPair.comp {f' : M' →ₗ[R] M''} {g' : M'' →ₗ[R] M'} (h : 
   rw [LinearMap.comp_apply, LinearMap.comp_apply, h', h]
 
 theorem IsAdjointPair.mul {f g f' g' : Module.End R M} (h : IsAdjointPair B B f g) (h' : IsAdjointPair B B f' g') :
-    IsAdjointPair B B (f * f') (g' * g) := fun x y => by
-  rw [LinearMap.mul_apply, LinearMap.mul_apply, h, h']
+    IsAdjointPair B B (f * f') (g' * g) := fun x y => by rw [LinearMap.mul_apply, LinearMap.mul_apply, h, h']
 
 variable (B B' B₁ B₂) (F₂ : BilinForm R₂ M₂)
 
@@ -915,8 +875,7 @@ def isPairSelfAdjointSubmodule : Submodule R₂ (Module.End R₂ M₂) where
 
 @[simp]
 theorem mem_is_pair_self_adjoint_submodule (f : Module.End R₂ M₂) :
-    f ∈ isPairSelfAdjointSubmodule B₂ F₂ ↔ IsPairSelfAdjoint B₂ F₂ f := by
-  rfl
+    f ∈ isPairSelfAdjointSubmodule B₂ F₂ ↔ IsPairSelfAdjoint B₂ F₂ f := by rfl
 
 theorem is_pair_self_adjoint_equiv (e : M₂' ≃ₗ[R₂] M₂) (f : Module.End R₂ M₂) :
     IsPairSelfAdjoint B₂ F₂ f ↔ IsPairSelfAdjoint (B₂.comp ↑e ↑e) (F₂.comp ↑e ↑e) (e.symm.conj f) := by
@@ -986,8 +945,7 @@ def orthogonal (B : BilinForm R M) (N : Submodule R M) : Submodule R M where
   zero_mem' := fun x _ => is_ortho_zero_right x
   add_mem' := fun x y hx hy n hn => by
     rw [is_ortho, add_right, show B n x = 0 from hx n hn, show B n y = 0 from hy n hn, zero_addₓ]
-  smul_mem' := fun c x hx n hn => by
-    rw [is_ortho, smul_right, show B n x = 0 from hx n hn, mul_zero]
+  smul_mem' := fun c x hx n hn => by rw [is_ortho, smul_right, show B n x = 0 from hx n hn, mul_zero]
 
 variable {N L : Submodule R M}
 
@@ -1002,11 +960,11 @@ theorem le_orthogonal_orthogonal (b : B.IsRefl) : N ≤ B.orthogonal (B.orthogon
 -- ↓ This lemma only applies in fields as we require `a * b = 0 → a = 0 ∨ b = 0`
 theorem span_singleton_inf_orthogonal_eq_bot {B : BilinForm K V} {x : V} (hx : ¬B.IsOrtho x x) :
     (K ∙ x) ⊓ B.orthogonal (K ∙ x) = ⊥ := by
-  rw [← Finset.coe_singleton]
+  rw [← Finsetₓ.coe_singleton]
   refine' eq_bot_iff.2 fun y h => _
   rcases mem_span_finset.1 h.1 with ⟨μ, rfl⟩
   have := h.2 x _
-  · rw [Finset.sum_singleton] at this⊢
+  · rw [Finsetₓ.sum_singleton] at this⊢
     suffices hμzero : μ x = 0
     · rw [hμzero, zero_smul, Submodule.mem_bot]
       
@@ -1014,7 +972,7 @@ theorem span_singleton_inf_orthogonal_eq_bot {B : BilinForm K V} {x : V} (hx : �
     rw [smul_right] at this
     exact Or.elim (zero_eq_mul.mp this.symm) id fun hfalse => False.elim <| hx hfalse
     
-  · rw [Submodule.mem_span] <;> exact fun _ hp => hp <| Finset.mem_singleton_self _
+  · rw [Submodule.mem_span] <;> exact fun _ hp => hp <| Finsetₓ.mem_singleton_self _
     
 
 -- ↓ This lemma only applies in fields since we use the `mul_eq_zero`
@@ -1132,7 +1090,7 @@ theorem IsOrthoₓ.not_is_ortho_basis_self_of_nondegenerate {n : Type w} [Nontri
   refine' v.ne_zero i ((hB (v i)) fun m => _)
   obtain ⟨vi, rfl⟩ := v.repr.symm.surjective m
   rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, sum_right]
-  apply Finset.sum_eq_zero
+  apply Finsetₓ.sum_eq_zero
   rintro j -
   rw [smul_right]
   convert mul_zero _ using 2
@@ -1153,7 +1111,7 @@ theorem IsOrthoₓ.nondegenerate_iff_not_is_ortho_basis_self {n : Type w} [Nontr
   rw [Finsupp.zero_apply]
   specialize hB (v i)
   simp_rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, sum_left, smul_left] at hB
-  rw [Finset.sum_eq_single i] at hB
+  rw [Finsetₓ.sum_eq_single i] at hB
   · exact eq_zero_of_ne_zero_of_mul_right_eq_zero (ho i) hB
     
   · intro j hj hij
@@ -1252,7 +1210,7 @@ theorem to_dual_def {B : BilinForm K V} (b : B.Nondegenerate) {m n : V} : B.toDu
 
 section DualBasis
 
-variable {ι : Type _} [DecidableEq ι] [Fintype ι]
+variable {ι : Type _} [DecidableEq ι] [Fintypeₓ ι]
 
 /-- The `B`-dual basis `B.dual_basis hB b` to a finite basis `b` satisfies
 `B (B.dual_basis hB b i) (b j) = B (b i) (B.dual_basis hB b j) = if i = j then 1 else 0`,
@@ -1271,8 +1229,7 @@ theorem apply_dual_basis_left (B : BilinForm K V) (hB : B.Nondegenerate) (b : Ba
     Basis.coord_apply, Basis.repr_self, Finsupp.single_apply]
 
 theorem apply_dual_basis_right (B : BilinForm K V) (hB : B.Nondegenerate) (sym : B.IsSymm) (b : Basis ι K V) (i j) :
-    B (b i) (B.dualBasis hB b j) = if i = j then 1 else 0 := by
-  rw [Sym, apply_dual_basis_left]
+    B (b i) (B.dualBasis hB b j) = if i = j then 1 else 0 := by rw [Sym, apply_dual_basis_left]
 
 end DualBasis
 
@@ -1293,10 +1250,7 @@ theorem restrict_orthogonal_span_singleton_nondegenerate (B : BilinForm K V) (b�
   rcases Submodule.mem_sup.1 this with ⟨y, hy, z, hz, rfl⟩
   specialize hm ⟨z, hz⟩
   rw [restrict] at hm
-  erw [add_right,
-    show B m.1 y = 0 by
-      rw [b₂] <;> exact m.2 y hy,
-    hm, add_zeroₓ]
+  erw [add_right, show B m.1 y = 0 by rw [b₂] <;> exact m.2 y hy, hm, add_zeroₓ]
 
 section LinearAdjoints
 
@@ -1309,9 +1263,7 @@ theorem comp_left_injective (B : BilinForm R₁ M₁) (b : B.Nondegenerate) : Fu
 
 theorem is_adjoint_pair_unique_of_nondegenerate (B : BilinForm R₁ M₁) (b : B.Nondegenerate) (φ ψ₁ ψ₂ : M₁ →ₗ[R₁] M₁)
     (hψ₁ : IsAdjointPair B B ψ₁ φ) (hψ₂ : IsAdjointPair B B ψ₂ φ) : ψ₁ = ψ₂ :=
-  B.comp_left_injective b <|
-    ext fun v w => by
-      rw [comp_left_apply, comp_left_apply, hψ₁, hψ₂]
+  B.comp_left_injective b <| ext fun v w => by rw [comp_left_apply, comp_left_apply, hψ₁, hψ₂]
 
 variable [FiniteDimensional K V]
 

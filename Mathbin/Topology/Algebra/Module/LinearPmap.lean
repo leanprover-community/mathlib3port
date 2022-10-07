@@ -98,11 +98,9 @@ as `f.closure = f`. -/
 noncomputable def closure (f : E →ₗ.[R] F) : E →ₗ.[R] F :=
   if hf : f.IsClosable then hf.some else f
 
-theorem closure_def {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure = hf.some := by
-  simp [Closure, hf]
+theorem closure_def {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure = hf.some := by simp [Closure, hf]
 
-theorem closure_def' {f : E →ₗ.[R] F} (hf : ¬f.IsClosable) : f.closure = f := by
-  simp [Closure, hf]
+theorem closure_def' {f : E →ₗ.[R] F} (hf : ¬f.IsClosable) : f.closure = f := by simp [Closure, hf]
 
 /-- The closure (as a submodule) of the graph is equal to the graph of the closure
   (as a `linear_pmap`). -/
@@ -113,7 +111,7 @@ theorem IsClosable.graph_closure_eq_closure_graph {f : E →ₗ.[R] F} (hf : f.I
 
 /-- A `linear_pmap` is contained in its closure. -/
 theorem le_closure (f : E →ₗ.[R] F) : f ≤ f.closure := by
-  by_cases' hf : f.is_closable
+  by_cases hf:f.is_closable
   · refine' le_of_le_graph _
     rw [← hf.graph_closure_eq_closure_graph]
     exact (graph f).submodule_topological_closure
@@ -163,8 +161,7 @@ theorem closure_has_core (f : E →ₗ.[R] F) : f.closure.HasCore f.domain := by
     
   intro x y hxy
   let z : f.closure.domain := ⟨y.1, f.le_closure.1 y.2⟩
-  have hyz : (y : E) = z := by
-    simp
+  have hyz : (y : E) = z := by simp
   rw [f.le_closure.2 hyz]
   exact dom_restrict_apply (hxy.trans hyz)
 

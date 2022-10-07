@@ -95,8 +95,7 @@ def fNVOFFSETBASIS :=
 def fNVPRIME :=
   1099511628211
 
-def rADIX := by
-  apply_normed 2 ^ 64
+def rADIX := by apply_normed 2 ^ 64
 
 def hashByte (seed : ℕ) (c : Charₓ) : ℕ :=
   let n : ℕ := c.toNat

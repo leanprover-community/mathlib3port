@@ -20,7 +20,7 @@ open Classical BigOperators
 
 namespace Finsupp
 
-open Finset
+open Finsetₓ
 
 variable {α : Type _}
 
@@ -32,7 +32,7 @@ def antidiagonal' (f : α →₀ ℕ) : (α →₀ ℕ) × (α →₀ ℕ) →�
 
 /-- The antidiagonal of `s : α →₀ ℕ` is the finset of all pairs `(t₁, t₂) : (α →₀ ℕ) × (α →₀ ℕ)`
 such that `t₁ + t₂ = s`. -/
-def antidiagonal (f : α →₀ ℕ) : Finset ((α →₀ ℕ) × (α →₀ ℕ)) :=
+def antidiagonal (f : α →₀ ℕ) : Finsetₓ ((α →₀ ℕ) × (α →₀ ℕ)) :=
   f.antidiagonal'.Support
 
 @[simp]
@@ -41,8 +41,7 @@ theorem mem_antidiagonal {f : α →₀ ℕ} {p : (α →₀ ℕ) × (α →₀ 
   simp [antidiagonal, antidiagonal', ← And.assoc, ← finsupp.to_multiset.apply_eq_iff_eq]
 
 theorem swap_mem_antidiagonal {n : α →₀ ℕ} {f : (α →₀ ℕ) × (α →₀ ℕ)} : f.swap ∈ antidiagonal n ↔ f ∈ antidiagonal n :=
-  by
-  simp only [mem_antidiagonal, add_commₓ, Prod.swap]
+  by simp only [mem_antidiagonal, add_commₓ, Prod.swap]
 
 theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ) [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.1 = g)] :
     ((antidiagonal f).filter fun p => p.1 = g) = if g ≤ f then {(g, f - g)} else ∅ := by
@@ -79,7 +78,7 @@ theorem antidiagonal_zero : antidiagonal (0 : α →₀ ℕ) = singleton (0, 0) 
 @[to_additive]
 theorem prod_antidiagonal_swap {M : Type _} [CommMonoidₓ M] (n : α →₀ ℕ) (f : (α →₀ ℕ) → (α →₀ ℕ) → M) :
     (∏ p in antidiagonal n, f p.1 p.2) = ∏ p in antidiagonal n, f p.2 p.1 :=
-  Finset.prod_bij (fun p hp => p.swap) (fun p => swap_mem_antidiagonal.2) (fun p hp => rfl)
+  Finsetₓ.prod_bij (fun p hp => p.swap) (fun p => swap_mem_antidiagonal.2) (fun p hp => rfl)
     (fun p₁ p₂ _ _ h => Prod.swap_injectiveₓ h) fun p hp => ⟨p.swap, swap_mem_antidiagonal.2 hp, p.swap_swap.symm⟩
 
 end Finsupp

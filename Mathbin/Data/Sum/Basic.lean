@@ -167,26 +167,19 @@ theorem map_id_id (α β) : Sum.map (@id α) (@id β) = id :=
   funext fun x => Sum.recOn x (fun _ => rfl) fun _ => rfl
 
 theorem elim_comp_map {α β γ δ ε : Sort _} {f₁ : α → β} {f₂ : β → ε} {g₁ : γ → δ} {g₂ : δ → ε} :
-    Sum.elim f₂ g₂ ∘ Sum.map f₁ g₁ = Sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) := by
-  ext (_ | _) <;> rfl
+    Sum.elim f₂ g₂ ∘ Sum.map f₁ g₁ = Sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) := by ext (_ | _) <;> rfl
 
 open Function (update update_eq_iff update_comp_eq_of_injective update_comp_eq_of_forall_ne)
 
 @[simp]
 theorem update_elim_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : α → γ} {g : β → γ} {i : α} {x : γ} :
     update (Sum.elim f g) (inl i) x = Sum.elim (update f i x) g :=
-  update_eq_iff.2
-    ⟨by
-      simp , by
-      simp (config := { contextual := true })⟩
+  update_eq_iff.2 ⟨by simp, by simp (config := { contextual := true })⟩
 
 @[simp]
 theorem update_elim_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : α → γ} {g : β → γ} {i : β} {x : γ} :
     update (Sum.elim f g) (inr i) x = Sum.elim f (update g i x) :=
-  update_eq_iff.2
-    ⟨by
-      simp , by
-      simp (config := { contextual := true })⟩
+  update_eq_iff.2 ⟨by simp, by simp (config := { contextual := true })⟩
 
 @[simp]
 theorem update_inl_comp_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {x : γ} :
@@ -195,8 +188,7 @@ theorem update_inl_comp_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum 
 
 @[simp]
 theorem update_inl_apply_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i j : α} {x : γ} :
-    update f (inl i) x (inl j) = update (f ∘ inl) i x j := by
-  rw [← update_inl_comp_inl]
+    update f (inl i) x (inl j) = update (f ∘ inl) i x j := by rw [← update_inl_comp_inl]
 
 @[simp]
 theorem update_inl_comp_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {x : γ} :
@@ -225,8 +217,7 @@ theorem update_inr_comp_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : Sum 
 
 @[simp]
 theorem update_inr_apply_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i j : β} {x : γ} :
-    update f (inr i) x (inr j) = update (f ∘ inr) i x j := by
-  rw [← update_inr_comp_inr]
+    update f (inr i) x (inr j) = update (f ∘ inr) i x j := by rw [← update_inr_comp_inr]
 
 /-- Swap the factors of a sum type -/
 def swap : Sum α β → Sum β α :=
@@ -241,8 +232,7 @@ theorem swap_inr (x : β) : swap (inr x : Sum α β) = inl x :=
   rfl
 
 @[simp]
-theorem swap_swap (x : Sum α β) : swap (swap x) = x := by
-  cases x <;> rfl
+theorem swap_swap (x : Sum α β) : swap (swap x) = x := by cases x <;> rfl
 
 @[simp]
 theorem swap_swap_eq : swap ∘ swap = @id (Sum α β) :=
@@ -437,7 +427,7 @@ theorem elim_update_left [DecidableEq α] [DecidableEq β] (f : α → γ) (g : 
     Sum.elim (Function.update f i c) g = Function.update (Sum.elim f g) (inl i) c := by
   ext x
   cases x
-  · by_cases' h : x = i
+  · by_cases h:x = i
     · subst h
       simp
       
@@ -453,7 +443,7 @@ theorem elim_update_right [DecidableEq α] [DecidableEq β] (f : α → γ) (g :
   cases x
   · simp
     
-  · by_cases' h : x = i
+  · by_cases h:x = i
     · subst h
       simp
       

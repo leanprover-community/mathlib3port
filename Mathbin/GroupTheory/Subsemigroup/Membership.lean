@@ -44,8 +44,7 @@ namespace Subsemigroup
 theorem mem_supr_of_directed {S : ι → Subsemigroup M} (hS : Directed (· ≤ ·) S) {x : M} :
     (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i := by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supr S i) hi⟩
-  suffices x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i by
-    simpa only [closure_Union, closure_eq (S _)] using this
+  suffices x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i by simpa only [closure_Union, closure_eq (S _)] using this
   refine' fun hx => closure_induction hx (fun y hy => mem_Union.mp hy) _
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     rcases hS i j with ⟨k, hki, hkj⟩
@@ -55,8 +54,7 @@ theorem mem_supr_of_directed {S : ι → Subsemigroup M} (hS : Directed (· ≤ 
 @[to_additive]
 theorem coe_supr_of_directed {S : ι → Subsemigroup M} (hS : Directed (· ≤ ·) S) :
     ((⨆ i, S i : Subsemigroup M) : Set M) = ⋃ i, ↑(S i) :=
-  Set.ext fun x => by
-    simp [mem_supr_of_directed hS]
+  Set.ext fun x => by simp [mem_supr_of_directed hS]
 
 @[to_additive]
 theorem mem_Sup_of_directed_on {S : Set (Subsemigroup M)} (hS : DirectedOn (· ≤ ·) S) {x : M} :
@@ -66,8 +64,7 @@ theorem mem_Sup_of_directed_on {S : Set (Subsemigroup M)} (hS : DirectedOn (· �
 @[to_additive]
 theorem coe_Sup_of_directed_on {S : Set (Subsemigroup M)} (hS : DirectedOn (· ≤ ·) S) :
     (↑(sup S) : Set M) = ⋃ s ∈ S, ↑s :=
-  Set.ext fun x => by
-    simp [mem_Sup_of_directed_on hS]
+  Set.ext fun x => by simp [mem_Sup_of_directed_on hS]
 
 @[to_additive]
 theorem mem_sup_left {S T : Subsemigroup M} : ∀ {x : M}, x ∈ S → x ∈ S ⊔ T :=

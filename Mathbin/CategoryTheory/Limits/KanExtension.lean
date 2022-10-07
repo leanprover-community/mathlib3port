@@ -61,7 +61,7 @@ def cone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : ι ⋙ G ⟶ F) : Cone (diagra
     { app := fun i => G.map i.Hom ≫ f.app i.right,
       naturality' := by
         rintro ⟨⟨il⟩, ir, i⟩ ⟨⟨jl⟩, jr, j⟩ ⟨⟨⟨fl⟩⟩, fr, ff⟩
-        dsimp'  at *
+        dsimp at *
         simp only [category.id_comp, category.assoc] at *
         rw [ff]
         have := f.naturality
@@ -95,7 +95,7 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
     { app := fun x => f.app _ ≫ limit.π (diagram ι F (ι.obj x)) (StructuredArrow.mk (𝟙 _)),
       naturality' := by
         intro x y ff
-        dsimp' only [whiskering_left]
+        dsimp only [whiskering_left]
         simp only [functor.comp_map, nat_trans.naturality_assoc, loc_map, category.assoc]
         congr 1
         erw [limit.pre_π]
@@ -112,24 +112,21 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
   left_inv := by
     intro x
     ext k j
-    dsimp' only [cone]
+    dsimp only [cone]
     rw [limit.lift_π]
     simp only [nat_trans.naturality_assoc, loc_map]
     erw [limit.pre_π]
     congr
     rcases j with ⟨⟨⟩, _, _⟩
     tidy
-  right_inv := by
-    tidy
+  right_inv := by tidy
 
 end Ran
 
 /-- The right Kan extension of a functor. -/
 @[simps]
 def ran [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : (S ⥤ D) ⥤ L ⥤ D :=
-  Adjunction.rightAdjointOfEquiv (fun F G => (Ran.equiv ι G F).symm)
-    (by
-      tidy)
+  Adjunction.rightAdjointOfEquiv (fun F G => (Ran.equiv ι G F).symm) (by tidy)
 
 namespace Ran
 
@@ -145,7 +142,7 @@ theorem reflective [Full ι] [Faithful ι] [∀ X, HasLimitsOfShape (StructuredA
   intro F
   apply nat_iso.is_iso_of_is_iso_app _
   intro X
-  dsimp' [adjunction]
+  dsimp [adjunction]
   simp only [category.id_comp]
   exact
     is_iso.of_iso
@@ -171,7 +168,7 @@ def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) : Cocone (di
     { app := fun i => f.app i.left ≫ G.map i.Hom,
       naturality' := by
         rintro ⟨ir, ⟨il⟩, i⟩ ⟨jl, ⟨jr⟩, j⟩ ⟨fl, ⟨⟨fl⟩⟩, ff⟩
-        dsimp'  at *
+        dsimp at *
         simp only [functor.comp_map, category.comp_id, nat_trans.naturality_assoc]
         rw [← G.map_comp, ff]
         tidy }
@@ -209,11 +206,10 @@ def loc (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] : L ⥤ D where
 def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
     (loc ι F ⟶ G) ≃ (F ⟶ ((whiskeringLeft _ _ _).obj ι).obj G) where
   toFun := fun f =>
-    { app := fun x => by
-        apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _,-- sigh
+    { app := fun x => by apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _,-- sigh
       naturality' := by
         intro x y ff
-        dsimp' only [whiskering_left]
+        dsimp only [whiskering_left]
         simp only [functor.comp_map, category.assoc]
         rw [← f.naturality (ι.map ff), ← category.assoc, ← category.assoc]
         let fff : costructured_arrow ι _ ⥤ _ := costructured_arrow.map (ι.map ff)
@@ -241,7 +237,7 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
     intro x
     ext k j
     rw [colimit.ι_desc]
-    dsimp' only [cocone]
+    dsimp only [cocone]
     rw [category.assoc, ← x.naturality j.hom, ← category.assoc]
     congr 1
     change colimit.ι _ _ ≫ colimit.pre (diagram ι F k) (costructured_arrow.map _) = _
@@ -249,17 +245,14 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
     congr
     rcases j with ⟨_, ⟨⟩, _⟩
     tidy
-  right_inv := by
-    tidy
+  right_inv := by tidy
 
 end Lan
 
 /-- The left Kan extension of a functor. -/
 @[simps]
 def lan [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : (S ⥤ D) ⥤ L ⥤ D :=
-  Adjunction.leftAdjointOfEquiv (fun F G => Lan.equiv ι F G)
-    (by
-      tidy)
+  Adjunction.leftAdjointOfEquiv (fun F G => Lan.equiv ι F G) (by tidy)
 
 namespace Lan
 
@@ -275,7 +268,7 @@ theorem coreflective [Full ι] [Faithful ι] [∀ X, HasColimitsOfShape (Costruc
   intro F
   apply nat_iso.is_iso_of_is_iso_app _
   intro X
-  dsimp' [adjunction]
+  dsimp [adjunction]
   simp only [category.comp_id]
   exact
     is_iso.of_iso

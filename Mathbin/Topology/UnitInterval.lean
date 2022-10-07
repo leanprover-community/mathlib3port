@@ -60,8 +60,7 @@ instance hasZero : Zero I :=
   ⟨⟨0, zero_mem⟩⟩
 
 instance hasOne : One I :=
-  ⟨⟨1, by
-      constructor <;> norm_num⟩⟩
+  ⟨⟨1, by constructor <;> norm_num⟩⟩
 
 theorem coe_ne_zero {x : I} : (x : ℝ) ≠ 0 ↔ x ≠ 0 :=
   not_iff_not.mpr coe_eq_zero
@@ -90,45 +89,41 @@ localized [UnitInterval] notation "σ" => UnitInterval.symm
 
 @[simp]
 theorem symm_zero : σ 0 = 1 :=
-  Subtype.ext <| by
-    simp [symm]
+  Subtype.ext <| by simp [symm]
 
 @[simp]
 theorem symm_one : σ 1 = 0 :=
-  Subtype.ext <| by
-    simp [symm]
+  Subtype.ext <| by simp [symm]
 
 @[simp]
 theorem symm_symm (x : I) : σ (σ x) = x :=
-  Subtype.ext <| by
-    simp [symm]
+  Subtype.ext <| by simp [symm]
 
 @[simp]
 theorem coe_symm_eq (x : I) : (σ x : ℝ) = 1 - x :=
   rfl
 
 @[continuity]
-theorem continuous_symm : Continuous σ := by
-  continuity!
+theorem continuous_symm : Continuous σ := by continuity!
 
 instance : ConnectedSpace I :=
   Subtype.connected_space ⟨nonempty_Icc.mpr zero_le_one, is_preconnected_Icc⟩
 
 /-- Verify there is an instance for `compact_space I`. -/
-example : CompactSpace I := by
-  infer_instance
+example : CompactSpace I := by infer_instance
 
 theorem nonneg (x : I) : 0 ≤ (x : ℝ) :=
   x.2.1
 
-theorem one_minus_nonneg (x : I) : 0 ≤ 1 - (x : ℝ) := by
-  simpa using x.2.2
+theorem one_minus_nonneg (x : I) : 0 ≤ 1 - (x : ℝ) := by simpa using x.2.2
 
 theorem le_one (x : I) : (x : ℝ) ≤ 1 :=
   x.2.2
 
-theorem one_minus_le_one (x : I) : 1 - (x : ℝ) ≤ 1 := by
-  simpa using x.2.1
+theorem one_minus_le_one (x : I) : 1 - (x : ℝ) ≤ 1 := by simpa using x.2.1
+
+theorem add_pos {t : I} {x : ℝ} (hx : 0 < x) : 0 < (x + t : ℝ) :=
+  add_pos_of_pos_of_nonneg hx <| nonneg _
 
 /-- like `unit_interval.nonneg`, but with the inequality in `I`. -/
 theorem nonneg' {t : I} : 0 ≤ t :=
@@ -183,8 +178,7 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [Topo
 /-- The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
 -/
 theorem affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
-    affineHomeomorph a b h.Ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by
-  simp [h]
+    affineHomeomorph a b h.Ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by simp [h]
 
 /-- The affine homeomorphism from a nontrivial interval `[a,b]` to `[0,1]`.
 -/

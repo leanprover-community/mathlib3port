@@ -60,8 +60,7 @@ instance : GcdMonoid ℕ where
   gcd_dvd_left := Nat.gcd_dvd_leftₓ
   gcd_dvd_right := Nat.gcd_dvd_rightₓ
   dvd_gcd := fun a b c => Nat.dvd_gcdₓ
-  gcd_mul_lcm := fun a b => by
-    rw [Nat.gcd_mul_lcmₓ]
+  gcd_mul_lcm := fun a b => by rw [Nat.gcd_mul_lcmₓ]
   lcm_zero_left := Nat.lcm_zero_leftₓ
   lcm_zero_right := Nat.lcm_zero_rightₓ
 
@@ -87,25 +86,19 @@ instance : NormalizationMonoid ℤ where
       cases' hnb.lt_or_lt with hb hb <;> simp [mul_nonneg_iff, ha.le, ha.not_le, hb.le, hb.not_le]
   norm_unit_coe_units := fun u =>
     (units_eq_one_or u).elim (fun eq => Eq.symm ▸ if_pos zero_le_one) fun eq =>
-      Eq.symm ▸
-        if_neg
-          (not_le_of_gtₓ <|
-            show (-1 : ℤ) < 0 by
-              decide)
+      Eq.symm ▸ if_neg (not_le_of_gtₓ <| show (-1 : ℤ) < 0 by decide)
 
 theorem normalize_of_nonneg {z : ℤ} (h : 0 ≤ z) : normalize z = z :=
-  show z * ↑(ite _ _ _) = z by
-    rw [if_pos h, Units.coe_one, mul_oneₓ]
+  show z * ↑(ite _ _ _) = z by rw [if_pos h, Units.coe_one, mul_oneₓ]
 
 theorem normalize_of_neg {z : ℤ} (h : z < 0) : normalize z = -z :=
-  show z * ↑(ite _ _ _) = -z by
-    rw [if_neg (not_le_of_gtₓ h), Units.coe_neg, Units.coe_one, mul_neg_one]
+  show z * ↑(ite _ _ _) = -z by rw [if_neg (not_le_of_gtₓ h), Units.coe_neg, Units.coe_one, mul_neg_one]
 
 theorem normalize_coe_nat (n : ℕ) : normalize (n : ℤ) = n :=
   normalize_of_nonneg (coe_nat_le_coe_nat_of_le <| Nat.zero_leₓ n)
 
 theorem coe_nat_abs_eq_normalize (z : ℤ) : (z.natAbs : ℤ) = normalize z := by
-  by_cases' 0 ≤ z
+  by_cases 0 ≤ z
   · simp [nat_abs_of_nonneg h, normalize_of_nonneg h]
     
   · simp [of_nat_nat_abs_of_nonpos (le_of_not_geₓ h), normalize_of_neg (lt_of_not_geₓ h)]
@@ -239,7 +232,7 @@ def associatesIntEquivNat : Associates ℤ ≃ ℕ := by
     rw [Int.coe_nat_abs_eq_normalize, normalize_idem]
     
   · intro n
-    dsimp'
+    dsimp
     rw [← normalize_apply, ← Int.coe_nat_abs_eq_normalize, Int.nat_abs_of_nat, Int.nat_abs_of_nat]
     
 
@@ -363,9 +356,7 @@ theorem eq_pow_of_mul_eq_pow_bit1_left {a b c : ℤ} (hab : IsCoprime a b) {k : 
 
 theorem eq_pow_of_mul_eq_pow_bit1_right {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : a * b = c ^ bit1 k) :
     ∃ d, b = d ^ bit1 k :=
-  eq_pow_of_mul_eq_pow_bit1_left hab.symm
-    (by
-      rwa [mul_comm] at h)
+  eq_pow_of_mul_eq_pow_bit1_left hab.symm (by rwa [mul_comm] at h)
 
 theorem eq_pow_of_mul_eq_pow_bit1 {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ} (h : a * b = c ^ bit1 k) :
     (∃ d, a = d ^ bit1 k) ∧ ∃ e, b = e ^ bit1 k :=

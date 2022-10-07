@@ -68,14 +68,10 @@ variable {X} (S : DiscreteQuotient X)
 /-- Construct a discrete quotient from a clopen set. -/
 def ofClopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X where
   Rel := fun x y => x ∈ A ∧ y ∈ A ∨ x ∉ A ∧ y ∉ A
-  Equiv :=
-    ⟨by
-      tauto!, by
-      tauto!, by
-      tauto!⟩
+  Equiv := ⟨by tauto!, by tauto!, by tauto!⟩
   clopen := by
     intro x
-    by_cases' hx : x ∈ A
+    by_cases hx:x ∈ A
     · apply IsClopen.union
       · convert h
         ext
@@ -147,24 +143,15 @@ theorem fiber_clopen (A : Set S) : IsClopen (S.proj ⁻¹' A) :=
 
 instance : PartialOrderₓ (DiscreteQuotient X) where
   le := fun A B => ∀ x y : X, A.Rel x y → B.Rel x y
-  le_refl := fun a => by
-    tauto
-  le_trans := fun a b c h1 h2 => by
-    tauto
+  le_refl := fun a => by tauto
+  le_trans := fun a b c h1 h2 => by tauto
   le_antisymm := fun a b h1 h2 => by
     ext
     tauto
 
 instance : OrderTop (DiscreteQuotient X) where
-  top :=
-    ⟨fun a b => True,
-      ⟨by
-        tauto, by
-        tauto, by
-        tauto⟩,
-      fun _ => is_clopen_univ⟩
-  le_top := fun a => by
-    tauto
+  top := ⟨fun a b => True, ⟨by tauto, by tauto, by tauto⟩, fun _ => is_clopen_univ⟩
+  le_top := fun a => by tauto
 
 instance : SemilatticeInf (DiscreteQuotient X) :=
   { DiscreteQuotient.partialOrder with
@@ -174,12 +161,7 @@ instance : SemilatticeInf (DiscreteQuotient X) :=
           ⟨fun a => ⟨A.refl _, B.refl _⟩, fun a b h => ⟨A.symm _ _ h.1, B.symm _ _ h.2⟩, fun a b c h1 h2 =>
             ⟨A.trans _ _ _ h1.1 h2.1, B.trans _ _ _ h1.2 h2.2⟩⟩,
         clopen := fun x => IsClopen.inter (A.clopen _) (B.clopen _) },
-    inf_le_left := fun a b => by
-      tauto,
-    inf_le_right := fun a b => by
-      tauto,
-    le_inf := fun a b c h1 h2 => by
-      tauto }
+    inf_le_left := fun a b => by tauto, inf_le_right := fun a b => by tauto, le_inf := fun a b c h1 h2 => by tauto }
 
 instance : Inhabited (DiscreteQuotient X) :=
   ⟨⊤⟩
@@ -205,8 +187,7 @@ theorem comap_comp {Z : Type _} [TopologicalSpace Z] {g : Z → Y} (cont' : Cont
   ext
   rfl
 
-theorem comap_mono {A B : DiscreteQuotient X} (h : A ≤ B) : A.comap cont ≤ B.comap cont := by
-  tauto
+theorem comap_mono {A B : DiscreteQuotient X} (h : A ≤ B) : A.comap cont ≤ B.comap cont := by tauto
 
 end Comap
 
@@ -221,8 +202,7 @@ theorem of_le_refl {A : DiscreteQuotient X} : ofLe (le_reflₓ A) = id := by
   ext ⟨⟩
   rfl
 
-theorem of_le_refl_apply {A : DiscreteQuotient X} (a : A) : ofLe (le_reflₓ A) a = a := by
-  simp
+theorem of_le_refl_apply {A : DiscreteQuotient X} (a : A) : ofLe (le_reflₓ A) a = a := by simp
 
 @[simp]
 theorem of_le_comp {A B C : DiscreteQuotient X} (h1 : A ≤ B) (h2 : B ≤ C) :
@@ -231,8 +211,7 @@ theorem of_le_comp {A B C : DiscreteQuotient X} (h1 : A ≤ B) (h2 : B ≤ C) :
   rfl
 
 theorem of_le_comp_apply {A B C : DiscreteQuotient X} (h1 : A ≤ B) (h2 : B ≤ C) (a : A) :
-    ofLe (le_transₓ h1 h2) a = ofLe h2 (ofLe h1 a) := by
-  simp
+    ofLe (le_transₓ h1 h2) a = ofLe h2 (ofLe h1 a) := by simp
 
 theorem of_le_continuous {A B : DiscreteQuotient X} (h : A ≤ B) : Continuous (ofLe h) :=
   continuous_of_discrete_topology
@@ -277,12 +256,10 @@ def LeComap : Prop :=
 
 variable {cont A B}
 
-theorem le_comap_id (A : DiscreteQuotient X) : LeComap continuous_id A A := by
-  tauto
+theorem le_comap_id (A : DiscreteQuotient X) : LeComap continuous_id A A := by tauto
 
 theorem le_comap_comp {Z : Type _} [TopologicalSpace Z] {g : Z → Y} {cont' : Continuous g} {C : DiscreteQuotient Z} :
-    LeComap cont' C A → LeComap cont A B → LeComap (Continuous.comp cont cont') C B := by
-  tauto
+    LeComap cont' C A → LeComap cont A B → LeComap (Continuous.comp cont cont') C B := by tauto
 
 theorem le_comap_trans {C : DiscreteQuotient X} : LeComap cont A B → B ≤ C → LeComap cont A C := fun h1 h2 =>
   le_transₓ h1 <| comap_mono _ h2
@@ -364,23 +341,23 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
     exact hx _ ⟨Q, rfl⟩
     
   · refine' ⟨A ⊓ B, fun a ha => _, fun a ha => _⟩
-    · dsimp' only
+    · dsimp only
       erw [← compat (A ⊓ B) A inf_le_left]
       exact fiber_le_of_le _ _ ha
       
-    · dsimp' only
+    · dsimp only
       erw [← compat (A ⊓ B) B inf_le_right]
       exact fiber_le_of_le _ _ ha
       
     
   · obtain ⟨x, hx⟩ := i.proj_surjective (Qs i)
     refine' ⟨x, _⟩
-    dsimp' only
+    dsimp only
     rw [← hx, fiber_eq]
     apply i.refl
     
 
-noncomputable instance [CompactSpace X] : Fintype S := by
+noncomputable instance [CompactSpace X] : Fintypeₓ S := by
   have cond : IsCompact (⊤ : Set X) := compact_univ
   rw [is_compact_iff_finite_subcover] at cond
   have h :=
@@ -390,13 +367,9 @@ noncomputable instance [CompactSpace X] : Fintype S := by
   have hT := Classical.choose_spec h
   refine' ⟨T, fun s => _⟩
   rcases S.proj_surjective s with ⟨x, rfl⟩
-  rcases hT
-      (by
-        tauto : x ∈ ⊤) with
-    ⟨j, ⟨j, rfl⟩, h1, ⟨hj, rfl⟩, h2⟩
-  dsimp' only  at h2
-  suffices S.proj x = j by
-    rwa [this]
+  rcases hT (by tauto : x ∈ ⊤) with ⟨j, ⟨j, rfl⟩, h1, ⟨hj, rfl⟩, h2⟩
+  dsimp only at h2
+  suffices S.proj x = j by rwa [this]
   rcases j with ⟨j⟩
   apply Quotientₓ.sound'
   erw [fiber_eq] at h2
@@ -411,11 +384,7 @@ variable {X} {α : Type _} (f : LocallyConstant X α)
 /-- Any locally constant function induces a discrete quotient. -/
 def discreteQuotient : DiscreteQuotient X where
   Rel := fun a b => f b = f a
-  Equiv :=
-    ⟨by
-      tauto, by
-      tauto, fun a b c h1 h2 => by
-      rw [h2, h1]⟩
+  Equiv := ⟨by tauto, by tauto, fun a b c h1 h2 => by rw [h2, h1]⟩
   clopen := fun x => f.IsLocallyConstant.is_clopen_fiber _
 
 /-- The function from the discrete quotient associated to a locally constant function. -/

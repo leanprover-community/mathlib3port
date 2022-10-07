@@ -21,7 +21,7 @@ variable {𝕜 m n E : Type _}
 
 section EntrywiseSupNorm
 
-variable [IsROrC 𝕜] [Fintype n] [DecidableEq n]
+variable [IsROrC 𝕜] [Fintypeₓ n] [DecidableEq n]
 
 theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.unitaryGroup n 𝕜) (i j : n) : ∥U i j∥ ≤ 1 := by
   -- The norm squared of an entry is at most the L2 norm of its row.
@@ -35,7 +35,7 @@ theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.uni
       
     · rw [Multiset.mem_map]
       use j
-      simp only [eq_self_iff_true, Finset.mem_univ_val, and_selfₓ, sq_eq_sq]
+      simp only [eq_self_iff_true, Finsetₓ.mem_univ_val, and_selfₓ, sq_eq_sq]
       
   -- The L2 norm of a row is a diagonal entry of U ⬝ Uᴴ
   have diag_eq_norm_sum : (U ⬝ Uᴴ) i i = ∑ x : n, ∥U i x∥ ^ 2 := by

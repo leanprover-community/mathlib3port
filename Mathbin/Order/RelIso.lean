@@ -71,7 +71,7 @@ variable {F : Type _}
 
 theorem map_inf [SemilatticeInf α] [LinearOrderₓ β] [RelHomClass F ((· < ·) : β → β → Prop) ((· < ·) : α → α → Prop)]
     (a : F) (m n : β) : a (m ⊓ n) = a m ⊓ a n :=
-  (StrictMono.monotone fun x y => map_rel a).map_inf m n
+  (StrictMonoₓ.monotone fun x y => map_rel a).map_inf m n
 
 theorem map_sup [SemilatticeSup α] [LinearOrderₓ β] [RelHomClass F ((· > ·) : β → β → Prop) ((· > ·) : α → α → Prop)]
     (a : F) (m n : β) : a (m ⊔ n) = a m ⊔ a n :=
@@ -183,8 +183,7 @@ theorem Surjective.well_founded_iff {f : α → β} (hf : Surjective f) (o : ∀
       intro a b h
       apply o.2
       convert h
-      iterate 2 
-        apply Classical.choose_spec hf.has_right_inverse)
+      iterate 2 apply Classical.choose_spec hf.has_right_inverse)
     (RelHomClass.well_founded (⟨f, fun _ _ => o.1⟩ : r →r s))
 
 /-- A relation embedding with respect to a given pair of relations `r` and `s`
@@ -277,8 +276,7 @@ protected def refl (r : α → α → Prop) : r ↪r r :=
 /-- Composition of two relation embeddings is a relation embedding. -/
 @[trans]
 protected def trans (f : r ↪r s) (g : s ↪r t) : r ↪r t :=
-  ⟨f.1.trans g.1, fun a b => by
-    simp [f.map_rel_iff, g.map_rel_iff]⟩
+  ⟨f.1.trans g.1, fun a b => by simp [f.map_rel_iff, g.map_rel_iff]⟩
 
 instance (r : α → α → Prop) : Inhabited (r ↪r r) :=
   ⟨RelEmbedding.refl _⟩
@@ -367,8 +365,7 @@ noncomputable def _root_.quotient.out_rel_embedding [s : Setoidₓ α] {r : α �
 theorem _root_.well_founded_lift₂_iff [s : Setoidₓ α] {r : α → α → Prop} {H} :
     WellFounded (Quotientₓ.lift₂ r H) ↔ WellFounded r :=
   ⟨fun hr => by
-    suffices ∀ {x : Quotientₓ s} {a : α}, ⟦a⟧ = x → Acc r a by
-      exact ⟨fun a => this rfl⟩
+    suffices ∀ {x : Quotientₓ s} {a : α}, ⟦a⟧ = x → Acc r a by exact ⟨fun a => this rfl⟩
     · refine' fun x => hr.induction x _
       rintro x IH a rfl
       exact ⟨_, fun b hb => IH ⟦b⟧ hb rfl⟩
@@ -396,10 +393,7 @@ def ofMonotone [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H : ∀ a b
   haveI := @IsAsymm.is_irrefl β s _
   refine' ⟨⟨f, fun a b e => _⟩, fun a b => ⟨fun h => _, H _ _⟩⟩
   · refine' ((@trichotomous _ r _ a b).resolve_left _).resolve_right _ <;>
-      exact fun h =>
-        @irrefl _ s _ _
-          (by
-            simpa [e] using H _ _ h)
+      exact fun h => @irrefl _ s _ _ (by simpa [e] using H _ _ h)
     
   · refine' (@trichotomous _ r _ a b).resolve_right (Or.ndrec (fun e => _) fun h' => _)
     · subst e
@@ -437,8 +431,7 @@ def sumLiftRelInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum
 def sumLiftRelMap (f : r ↪r s) (g : t ↪r u) : Sum.LiftRel r t ↪r Sum.LiftRel s u where
   toFun := Sum.map f g
   inj' := f.Injective.sum_map g.Injective
-  map_rel_iff' := by
-    rintro (a | b) (c | d) <;> simp [f.map_rel_iff, g.map_rel_iff]
+  map_rel_iff' := by rintro (a | b) (c | d) <;> simp [f.map_rel_iff, g.map_rel_iff]
 
 /-- `sum.inl` as a relation embedding into `sum.lex r s`. -/
 @[simps]
@@ -459,32 +452,28 @@ def sumLexInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.Lex
 def sumLexMap (f : r ↪r s) (g : t ↪r u) : Sum.Lex r t ↪r Sum.Lex s u where
   toFun := Sum.map f g
   inj' := f.Injective.sum_map g.Injective
-  map_rel_iff' := by
-    rintro (a | b) (c | d) <;> simp [f.map_rel_iff, g.map_rel_iff]
+  map_rel_iff' := by rintro (a | b) (c | d) <;> simp [f.map_rel_iff, g.map_rel_iff]
 
 /-- `λ b, prod.mk a b` as a relation embedding. -/
 @[simps]
 def prodLexMkLeft (s : β → β → Prop) {a : α} (h : ¬r a a) : s ↪r Prod.Lex r s where
   toFun := Prod.mk a
   inj' := Prod.mk.inj_leftₓ a
-  map_rel_iff' := fun b₁ b₂ => by
-    simp [Prod.lex_defₓ, h]
+  map_rel_iff' := fun b₁ b₂ => by simp [Prod.lex_defₓ, h]
 
 /-- `λ a, prod.mk a b` as a relation embedding. -/
 @[simps]
 def prodLexMkRight (r : α → α → Prop) {b : β} (h : ¬s b b) : r ↪r Prod.Lex r s where
   toFun := fun a => (a, b)
   inj' := Prod.mk.inj_rightₓ b
-  map_rel_iff' := fun a₁ a₂ => by
-    simp [Prod.lex_defₓ, h]
+  map_rel_iff' := fun a₁ a₂ => by simp [Prod.lex_defₓ, h]
 
 /-- `prod.map` as a relation embedding. -/
 @[simps]
 def prodLexMap (f : r ↪r s) (g : t ↪r u) : Prod.Lex r t ↪r Prod.Lex s u where
   toFun := Prod.map f g
   inj' := f.Injective.prod_map g.Injective
-  map_rel_iff' := fun a b => by
-    simp [Prod.lex_defₓ, f.map_rel_iff, g.map_rel_iff]
+  map_rel_iff' := fun a b => by simp [Prod.lex_defₓ, f.map_rel_iff, g.map_rel_iff]
 
 end RelEmbedding
 
@@ -555,8 +544,7 @@ theorem ext_iff {f g : r ≃r s} : f = g ↔ ∀ x, f x = g x :=
 /-- Inverse map of a relation isomorphism is a relation isomorphism. -/
 @[symm]
 protected def symm (f : r ≃r s) : s ≃r r :=
-  ⟨f.toEquiv.symm, fun a b => by
-    erw [← f.map_rel_iff, f.1.apply_symm_apply, f.1.apply_symm_apply]⟩
+  ⟨f.toEquiv.symm, fun a b => by erw [← f.map_rel_iff, f.1.apply_symm_apply, f.1.apply_symm_apply]⟩
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
   because it is a composition of multiple projections. -/
@@ -628,11 +616,9 @@ theorem apply_symm_apply (e : r ≃r s) (x : β) : e (e.symm x) = x :=
 theorem symm_apply_apply (e : r ≃r s) (x : α) : e.symm (e x) = x :=
   e.toEquiv.symm_apply_apply x
 
-theorem rel_symm_apply (e : r ≃r s) {x y} : r x (e.symm y) ↔ s (e x) y := by
-  rw [← e.map_rel_iff, e.apply_symm_apply]
+theorem rel_symm_apply (e : r ≃r s) {x y} : r x (e.symm y) ↔ s (e x) y := by rw [← e.map_rel_iff, e.apply_symm_apply]
 
-theorem symm_apply_rel (e : r ≃r s) {x y} : r (e.symm x) y ↔ s x (e y) := by
-  rw [← e.map_rel_iff, e.apply_symm_apply]
+theorem symm_apply_rel (e : r ≃r s) {x y} : r (e.symm x) y ↔ s x (e y) := by rw [← e.map_rel_iff, e.apply_symm_apply]
 
 protected theorem bijective (e : r ≃r s) : Bijective e :=
   e.toEquiv.Bijective
@@ -681,8 +667,7 @@ lexicographic orders on the product.
 -/
 def prodLexCongr {α₁ α₂ β₁ β₂ r₁ r₂ s₁ s₂} (e₁ : @RelIso α₁ β₁ r₁ s₁) (e₂ : @RelIso α₂ β₂ r₂ s₂) :
     Prod.Lex r₁ r₂ ≃r Prod.Lex s₁ s₂ :=
-  ⟨Equivₓ.prodCongr e₁.toEquiv e₂.toEquiv, fun a b => by
-    simp [Prod.lex_defₓ, e₁.map_rel_iff, e₂.map_rel_iff]⟩
+  ⟨Equivₓ.prodCongr e₁.toEquiv e₂.toEquiv, fun a b => by simp [Prod.lex_defₓ, e₁.map_rel_iff, e₂.map_rel_iff]⟩
 
 instance : Groupₓ (r ≃r r) where
   one := RelIso.refl r
@@ -719,14 +704,12 @@ def relIsoOfIsEmpty (r : α → α → Prop) (s : β → β → Prop) [IsEmpty �
 /-- Two irreflexive relations on a unique type are isomorphic. -/
 def relIsoOfUniqueOfIrrefl (r : α → α → Prop) (s : β → β → Prop) [IsIrrefl α r] [IsIrrefl β s] [Unique α] [Unique β] :
     r ≃r s :=
-  ⟨Equivₓ.equivOfUnique α β, fun x y => by
-    simp [not_rel_of_subsingleton r, not_rel_of_subsingleton s]⟩
+  ⟨Equivₓ.equivOfUnique α β, fun x y => by simp [not_rel_of_subsingleton r, not_rel_of_subsingleton s]⟩
 
 /-- Two reflexive relations on a unique type are isomorphic. -/
 def relIsoOfUniqueOfRefl (r : α → α → Prop) (s : β → β → Prop) [IsRefl α r] [IsRefl β s] [Unique α] [Unique β] :
     r ≃r s :=
-  ⟨Equivₓ.equivOfUnique α β, fun x y => by
-    simp [rel_of_subsingleton r, rel_of_subsingleton s]⟩
+  ⟨Equivₓ.equivOfUnique α β, fun x y => by simp [rel_of_subsingleton r, rel_of_subsingleton s]⟩
 
 end RelIso
 

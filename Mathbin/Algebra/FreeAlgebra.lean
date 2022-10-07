@@ -260,13 +260,13 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A where
         simp
         
       repeat'
-        change lift_fun R X f _ + lift_fun R X f _ = _
-        rw [h_ih]
-        rfl
+      change lift_fun R X f _ + lift_fun R X f _ = _
+      rw [h_ih]
+      rfl
       repeat'
-        change lift_fun R X f _ * lift_fun R X f _ = _
-        rw [h_ih]
-        rfl
+      change lift_fun R X f _ * lift_fun R X f _ = _
+      rw [h_ih]
+      rfl
   map_one' := by
     change algebraMap _ _ _ = _
     simp
@@ -279,8 +279,7 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A where
   map_add' := by
     rintro ⟨⟩ ⟨⟩
     rfl
-  commutes' := by
-    tauto
+  commutes' := by tauto
 
 /-- Given a function `f : X → A` where `A` is an `R`-algebra, `lift R f` is the unique lift
 of `f` to a morphism of `R`-algebras `free_algebra R X → A`.
@@ -295,18 +294,18 @@ def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A) where
     ext x
     rcases x with ⟨⟩
     induction x
-    case pre.of =>
-      change ((F : FreeAlgebra R X → A) ∘ ι R) _ = _
-      rfl
-    case pre.of_scalar =>
-      change algebraMap _ _ x = F (algebraMap _ _ x)
-      rw [AlgHom.commutes F x]
-    case pre.add a b ha hb =>
-      change lift_aux R (F ∘ ι R) (Quot.mk _ _ + Quot.mk _ _) = F (Quot.mk _ _ + Quot.mk _ _)
-      rw [AlgHom.map_add, AlgHom.map_add, ha, hb]
-    case pre.mul a b ha hb =>
-      change lift_aux R (F ∘ ι R) (Quot.mk _ _ * Quot.mk _ _) = F (Quot.mk _ _ * Quot.mk _ _)
-      rw [AlgHom.map_mul, AlgHom.map_mul, ha, hb]
+    case of =>
+    change ((F : FreeAlgebra R X → A) ∘ ι R) _ = _
+    rfl
+    case of_scalar =>
+    change algebraMap _ _ x = F (algebraMap _ _ x)
+    rw [AlgHom.commutes F x]
+    case add a b ha hb =>
+    change lift_aux R (F ∘ ι R) (Quot.mk _ _ + Quot.mk _ _) = F (Quot.mk _ _ + Quot.mk _ _)
+    rw [AlgHom.map_add, AlgHom.map_add, ha, hb]
+    case mul a b ha hb =>
+    change lift_aux R (F ∘ ι R) (Quot.mk _ _ * Quot.mk _ _) = F (Quot.mk _ _ * Quot.mk _ _)
+    rw [AlgHom.map_mul, AlgHom.map_mul, ha, hb]
 
 @[simp]
 theorem lift_aux_eq (f : X → A) : liftAux R f = lift R f :=
@@ -378,7 +377,7 @@ noncomputable def equivMonoidAlgebraFreeMonoid : FreeAlgebra R X ≃ₐ[R] Monoi
         )
     (by
       ext
-      simp )
+      simp)
 
 instance [Nontrivial R] : Nontrivial (FreeAlgebra R X) :=
   equivMonoidAlgebraFreeMonoid.Surjective.Nontrivial
@@ -407,9 +406,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
 -- this proof is copied from the approach in `free_abelian_group.of_injective`
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) := fun x y hoxy =>
   Classical.by_contradiction fun hxy : x ≠ y =>
-    let f : FreeAlgebra R X →ₐ[R] R :=
-      lift R fun z => by
-        classical <;> exact if x = z then (1 : R) else 0
+    let f : FreeAlgebra R X →ₐ[R] R := lift R fun z => by classical <;> exact if x = z then (1 : R) else 0
     have hfx1 : f (ι R x) = 1 := (lift_ι_apply _ _).trans <| if_pos rfl
     have hfy1 : f (ι R y) = 1 := hoxy ▸ hfx1
     have hfy0 : f (ι R y) = 0 := (lift_ι_apply _ _).trans <| if_neg hxy

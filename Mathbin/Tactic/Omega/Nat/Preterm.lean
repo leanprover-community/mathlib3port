@@ -68,7 +68,7 @@ theorem val_const {v : Nat → Nat} {m : Nat} : (&m).val v = m :=
 @[simp]
 theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m * v n := by
   simp only [val]
-  by_cases' h1 : m = 1
+  by_cases h1:m = 1
   rw [if_pos h1, h1, one_mulₓ]
   rw [if_neg h1, mul_comm]
 
@@ -139,10 +139,8 @@ def canonize : Preterm → Term
 
 @[simp]
 theorem val_canonize {v : Nat → Nat} : ∀ {t : Preterm}, t.SubFree → ((canonize t).val fun x => ↑(v x)) = t.val v
-  | &i, h1 => by
-    simp only [canonize, preterm.val_const, term.val, coeffs.val_nil, add_zeroₓ]
-  | i ** n, h1 => by
-    simp only [preterm.val_var, coeffs.val_set, term.val, zero_addₓ, Int.coe_nat_mul, canonize]
+  | &i, h1 => by simp only [canonize, preterm.val_const, term.val, coeffs.val_nil, add_zeroₓ]
+  | i ** n, h1 => by simp only [preterm.val_var, coeffs.val_set, term.val, zero_addₓ, Int.coe_nat_mul, canonize]
   | t +* s, h1 => by
     simp only [val_canonize h1.left, val_canonize h1.right, Int.coe_nat_add, canonize, term.val_add, preterm.val_add]
 

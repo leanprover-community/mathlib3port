@@ -41,8 +41,7 @@ theorem tendsto_eval_pi (f : ∀ i, Filter (α i)) (i : ι) : Tendsto (eval i) (
   tendsto_infi' i tendsto_comap
 
 theorem tendsto_pi {β : Type _} {m : β → ∀ i, α i} {l : Filter β} :
-    Tendsto m l (pi f) ↔ ∀ i, Tendsto (fun x => m x i) l (f i) := by
-  simp only [pi, tendsto_infi, tendsto_comap_iff]
+    Tendsto m l (pi f) ↔ ∀ i, Tendsto (fun x => m x i) l (f i) := by simp only [pi, tendsto_infi, tendsto_comap_iff]
 
 theorem le_pi {g : Filter (∀ i, α i)} : g ≤ pi f ↔ ∀ i, Tendsto (eval i) g (f i) :=
   tendsto_pi
@@ -72,7 +71,7 @@ theorem mem_pi {s : Set (∀ i, α i)} :
     
 
 theorem mem_pi' {s : Set (∀ i, α i)} :
-    s ∈ pi f ↔ ∃ I : Finset ι, ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ Set.Pi (↑I) t ⊆ s :=
+    s ∈ pi f ↔ ∃ I : Finsetₓ ι, ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ Set.Pi (↑I) t ⊆ s :=
   mem_pi.trans exists_finite_iff_finset
 
 theorem mem_of_pi_mem_pi [∀ i, NeBot (f i)] {I : Set ι} (h : I.pi s ∈ pi f) {i : ι} (hi : i ∈ I) : s i ∈ f i := by
@@ -119,7 +118,7 @@ theorem pi_inf_principal_pi_eq_bot [∀ i, NeBot (f i)] {I : Set ι} :
     pi f ⊓ 𝓟 (Set.Pi I s) = ⊥ ↔ ∃ i ∈ I, f i ⊓ 𝓟 (s i) = ⊥ := by
   rw [← univ_pi_piecewise I, pi_inf_principal_univ_pi_eq_bot]
   refine' exists_congr fun i => _
-  by_cases' hi : i ∈ I <;> simp [hi, (‹∀ i, ne_bot (f i)› i).Ne]
+  by_cases hi:i ∈ I <;> simp [hi, (‹∀ i, ne_bot (f i)› i).Ne]
 
 @[simp]
 theorem pi_inf_principal_univ_pi_ne_bot : NeBot (pi f ⊓ 𝓟 (Set.Pi Univ s)) ↔ ∀ i, NeBot (f i ⊓ 𝓟 (s i)) := by
@@ -127,22 +126,38 @@ theorem pi_inf_principal_univ_pi_ne_bot : NeBot (pi f ⊓ 𝓟 (Set.Pi Univ s)) 
 
 @[simp]
 theorem pi_inf_principal_pi_ne_bot [∀ i, NeBot (f i)] {I : Set ι} :
-    NeBot (pi f ⊓ 𝓟 (I.pi s)) ↔ ∀ i ∈ I, NeBot (f i ⊓ 𝓟 (s i)) := by
-  simp [ne_bot_iff]
+    NeBot (pi f ⊓ 𝓟 (I.pi s)) ↔ ∀ i ∈ I, NeBot (f i ⊓ 𝓟 (s i)) := by simp [ne_bot_iff]
 
 instance PiInfPrincipalPi.ne_bot [h : ∀ i, NeBot (f i ⊓ 𝓟 (s i))] {I : Set ι} : NeBot (pi f ⊓ 𝓟 (I.pi s)) :=
   (pi_inf_principal_univ_pi_ne_bot.2 ‹_›).mono <| inf_le_inf_left _ <| principal_mono.2 fun x hx i hi => hx i trivialₓ
 
 @[simp]
-theorem pi_eq_bot : pi f = ⊥ ↔ ∃ i, f i = ⊥ := by
-  simpa using @pi_inf_principal_univ_pi_eq_bot ι α f fun _ => univ
+theorem pi_eq_bot : pi f = ⊥ ↔ ∃ i, f i = ⊥ := by simpa using @pi_inf_principal_univ_pi_eq_bot ι α f fun _ => univ
 
 @[simp]
-theorem pi_ne_bot : NeBot (pi f) ↔ ∀ i, NeBot (f i) := by
-  simp [ne_bot_iff]
+theorem pi_ne_bot : NeBot (pi f) ↔ ∀ i, NeBot (f i) := by simp [ne_bot_iff]
 
 instance [∀ i, NeBot (f i)] : NeBot (pi f) :=
   pi_ne_bot.2 ‹_›
+
+@[simp]
+theorem map_eval_pi (f : ∀ i, Filter (α i)) [∀ i, NeBot (f i)] (i : ι) : map (eval i) (pi f) = f i := by
+  refine' le_antisymmₓ (tendsto_eval_pi f i) fun s hs => _
+  rcases mem_pi.1 (mem_map.1 hs) with ⟨I, hIf, t, htf, hI⟩
+  rw [← image_subset_iff] at hI
+  refine' mem_of_superset (htf i) ((subset_eval_image_pi _ _).trans hI)
+  exact nonempty_of_mem (pi_mem_pi hIf fun i hi => htf i)
+
+@[simp]
+theorem pi_le_pi [∀ i, NeBot (f₁ i)] : pi f₁ ≤ pi f₂ ↔ ∀ i, f₁ i ≤ f₂ i :=
+  ⟨fun h i => map_eval_pi f₁ i ▸ (tendsto_eval_pi _ _).mono_left h, pi_mono⟩
+
+@[simp]
+theorem pi_inj [∀ i, NeBot (f₁ i)] : pi f₁ = pi f₂ ↔ f₁ = f₂ := by
+  refine' ⟨fun h => _, congr_arg pi⟩
+  have hle : f₁ ≤ f₂ := pi_le_pi.1 h.le
+  haveI : ∀ i, ne_bot (f₂ i) := fun i => ne_bot_of_le (hle i)
+  exact hle.antisymm (pi_le_pi.1 h.ge)
 
 end Pi
 

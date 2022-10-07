@@ -34,23 +34,13 @@ variable {C}
 /-- Any two functors to `discrete punit` are isomorphic. -/
 @[simps]
 def punitExt (F G : C ⥤ Discrete PUnit) : F ≅ G :=
-  NatIso.ofComponents
-    (fun _ =>
-      eqToIso
-        (by
-          decide))
-    fun _ _ _ => by
-    decide
+  NatIso.ofComponents (fun _ => eqToIso (by decide)) fun _ _ _ => by decide
 
 /-- Any two functors to `discrete punit` are *equal*.
 You probably want to use `punit_ext` instead of this.
 -/
 theorem punit_ext' (F G : C ⥤ Discrete PUnit) : F = G :=
-  Functor.ext
-    (fun _ => by
-      decide)
-    fun _ _ _ => by
-    decide
+  Functor.ext (fun _ => by decide) fun _ _ _ => by decide
 
 /-- The functor from `discrete punit` sending everything to the given object. -/
 abbrev fromPunit (X : C) : Discrete PUnit.{v + 1} ⥤ C :=
@@ -73,7 +63,7 @@ def equiv : Discrete PUnit ⥤ C ≌ C where
   counitIso := by
     refine' nat_iso.of_components iso.refl _
     intro X Y f
-    dsimp'
+    dsimp
     simp
 
 -- See note [dsimp, simp].
@@ -88,10 +78,8 @@ theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C 
     refine' ⟨⟨h.inverse.obj ⟨⟨⟩⟩⟩, fun x y => Nonempty.intro _⟩
     apply uniqueOfSubsingleton _
     swap
-    · have hx : x ⟶ h.inverse.obj ⟨⟨⟩⟩ := by
-        convert h.unit.app x
-      have hy : h.inverse.obj ⟨⟨⟩⟩ ⟶ y := by
-        convert h.unit_inv.app y
+    · have hx : x ⟶ h.inverse.obj ⟨⟨⟩⟩ := by convert h.unit.app x
+      have hy : h.inverse.obj ⟨⟨⟩⟩ ⟶ y := by convert h.unit_inv.app y
       exact hx ≫ hy
       
     have : ∀ z, z = h.unit.app x ≫ (h.functor ⋙ h.inverse).map z ≫ h.unit_inv.app y := by
@@ -108,11 +96,8 @@ theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C 
     refine'
       Nonempty.intro
         (CategoryTheory.Equivalence.mk ((Functor.Const _).obj ⟨⟨⟩⟩) ((Functor.Const _).obj p) _
-          (by
-            apply functor.punit_ext))
-    exact
-      nat_iso.of_components (fun _ => { Hom := default, inv := default }) fun _ _ _ => by
-        tidy
+          (by apply functor.punit_ext))
+    exact nat_iso.of_components (fun _ => { Hom := default, inv := default }) fun _ _ _ => by tidy
     
 
 end CategoryTheory

@@ -122,10 +122,10 @@ theorem extent_closure_intent_closure_extent_closure (t : Set β) :
     ExtentClosure r (IntentClosure r <| ExtentClosure r t) = ExtentClosure r t :=
   intent_closure_extent_closure_intent_closure _ t
 
-theorem intent_closure_anti : Antitone (IntentClosure r) :=
+theorem intent_closure_anti : Antitoneₓ (IntentClosure r) :=
   (gc_intent_closure_extent_closure r).monotone_l
 
-theorem extent_closure_anti : Antitone (ExtentClosure r) :=
+theorem extent_closure_anti : Antitoneₓ (ExtentClosure r) :=
   intent_closure_anti _
 
 /-! ### Concepts -/
@@ -150,7 +150,7 @@ attribute [simp] closure_fst closure_snd
 theorem ext (h : c.fst = d.fst) : c = d := by
   obtain ⟨⟨s₁, t₁⟩, h₁, _⟩ := c
   obtain ⟨⟨s₂, t₂⟩, h₂, _⟩ := d
-  dsimp'  at h₁ h₂ h
+  dsimp at h₁ h₂ h
   subst h
   subst h₁
   subst h₂
@@ -158,7 +158,7 @@ theorem ext (h : c.fst = d.fst) : c = d := by
 theorem ext' (h : c.snd = d.snd) : c = d := by
   obtain ⟨⟨s₁, t₁⟩, _, h₁⟩ := c
   obtain ⟨⟨s₂, t₂⟩, _, h₂⟩ := d
-  dsimp'  at h₁ h₂ h
+  dsimp at h₁ h₂ h
   subst h
   subst h₁
   subst h₂
@@ -205,9 +205,9 @@ theorem snd_subset_snd_iff : c.snd ⊆ d.snd ↔ d ≤ c := by
 theorem snd_ssubset_snd_iff : c.snd ⊂ d.snd ↔ d < c := by
   rw [ssubset_iff_subset_not_subset, lt_iff_le_not_leₓ, snd_subset_snd_iff, snd_subset_snd_iff]
 
-theorem strict_mono_fst : StrictMono (Prod.fst ∘ to_prod : Concept α β r → Set α) := fun c d => fst_ssubset_fst_iff.2
+theorem strict_mono_fst : StrictMonoₓ (Prod.fst ∘ to_prod : Concept α β r → Set α) := fun c d => fst_ssubset_fst_iff.2
 
-theorem strict_anti_snd : StrictAnti (Prod.snd ∘ to_prod : Concept α β r → Set β) := fun c d => snd_ssubset_snd_iff.2
+theorem strict_anti_snd : StrictAntiₓ (Prod.snd ∘ to_prod : Concept α β r → Set β) := fun c d => snd_ssubset_snd_iff.2
 
 instance : Lattice (Concept α β r) :=
   { Concept.semilatticeInf with sup := (· ⊔ ·), le_sup_left := fun c d => snd_subset_snd_iff.1 <| inter_subset_left _ _,
@@ -225,8 +225,7 @@ instance : BoundedOrder (Concept α β r) where
 instance : HasSupₓ (Concept α β r) :=
   ⟨fun S =>
     { fst := ExtentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd), snd := ⋂ c ∈ S, (c : Concept _ _ _).snd,
-      closure_fst := by
-        simp_rw [← closure_fst, ← intent_closure_Union₂, intent_closure_extent_closure_intent_closure],
+      closure_fst := by simp_rw [← closure_fst, ← intent_closure_Union₂, intent_closure_extent_closure_intent_closure],
       closure_snd := rfl }⟩
 
 instance : HasInfₓ (Concept α β r) :=

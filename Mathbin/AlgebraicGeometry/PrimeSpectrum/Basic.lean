@@ -239,15 +239,13 @@ theorem zero_locus_empty : ZeroLocus (∅ : Set R) = Set.Univ :=
   (gc_set R).l_bot
 
 @[simp]
-theorem vanishing_ideal_univ : vanishingIdeal (∅ : Set (PrimeSpectrum R)) = ⊤ := by
-  simpa using (gc R).u_top
+theorem vanishing_ideal_univ : vanishingIdeal (∅ : Set (PrimeSpectrum R)) = ⊤ := by simpa using (gc R).u_top
 
 theorem zero_locus_empty_of_one_mem {s : Set R} (h : (1 : R) ∈ s) : ZeroLocus s = ∅ := by
   rw [Set.eq_empty_iff_forall_not_mem]
   intro x hx
   rw [mem_zero_locus] at hx
-  have x_prime : x.as_ideal.is_prime := by
-    infer_instance
+  have x_prime : x.as_ideal.is_prime := by infer_instance
   have eq_top : x.as_ideal = ⊤ := by
     rw [Ideal.eq_top_iff_one]
     exact hx h
@@ -310,8 +308,7 @@ theorem zero_locus_mul (I J : Ideal R) : ZeroLocus ((I * J : Ideal R) : Set R) =
   Set.ext fun x => x.2.mul_le
 
 theorem zero_locus_singleton_mul (f g : R) : ZeroLocus ({f * g} : Set R) = ZeroLocus {f} ∪ ZeroLocus {g} :=
-  Set.ext fun x => by
-    simpa using x.2.mul_mem_iff_mem_or_mem
+  Set.ext fun x => by simpa using x.2.mul_mem_iff_mem_or_mem
 
 @[simp]
 theorem zero_locus_pow (I : Ideal R) {n : ℕ} (hn : 0 < n) : ZeroLocus ((I ^ n : Ideal R) : Set R) = ZeroLocus I :=
@@ -319,8 +316,7 @@ theorem zero_locus_pow (I : Ideal R) {n : ℕ} (hn : 0 < n) : ZeroLocus ((I ^ n 
 
 @[simp]
 theorem zero_locus_singleton_pow (f : R) (n : ℕ) (hn : 0 < n) : ZeroLocus ({f ^ n} : Set R) = ZeroLocus {f} :=
-  Set.ext fun x => by
-    simpa using x.2.pow_mem_iff_mem n hn
+  Set.ext fun x => by simpa using x.2.pow_mem_iff_mem n hn
 
 theorem sup_vanishing_ideal_le (t t' : Set (PrimeSpectrum R)) :
     vanishingIdeal t ⊔ vanishingIdeal t' ≤ vanishingIdeal (t ∩ t') := by
@@ -332,15 +328,13 @@ theorem sup_vanishing_ideal_le (t t' : Set (PrimeSpectrum R)) :
 
 theorem mem_compl_zero_locus_iff_not_mem {f : R} {I : PrimeSpectrum R} :
     I ∈ (ZeroLocus {f} : Set (PrimeSpectrum R))ᶜ ↔ f ∉ I.asIdeal := by
-  rw [Set.mem_compl_eq, mem_zero_locus, Set.singleton_subset_iff] <;> rfl
+  rw [Set.mem_compl_iff, mem_zero_locus, Set.singleton_subset_iff] <;> rfl
 
 /-- The Zariski topology on the prime spectrum of a commutative ring
 is defined via the closed sets of the topology:
 they are exactly those sets that are the zero locus of a subset of the ring. -/
 instance zariskiTopology : TopologicalSpace (PrimeSpectrum R) :=
-  TopologicalSpace.ofClosed (Set.Range PrimeSpectrum.ZeroLocus)
-    ⟨Set.Univ, by
-      simp ⟩
+  TopologicalSpace.ofClosed (Set.Range PrimeSpectrum.ZeroLocus) ⟨Set.Univ, by simp⟩
     (by
       intro Zs h
       rw [Set.sInter_eq_Inter]
@@ -392,8 +386,7 @@ theorem zero_locus_vanishing_ideal_eq_closure (t : Set (PrimeSpectrum R)) :
     ZeroLocus (vanishingIdeal t : Set R) = Closure t := by
   apply Set.Subset.antisymm
   · rintro x hx t' ⟨ht', ht⟩
-    obtain ⟨fs, rfl⟩ : ∃ s, t' = zero_locus s := by
-      rwa [is_closed_iff_zero_locus] at ht'
+    obtain ⟨fs, rfl⟩ : ∃ s, t' = zero_locus s := by rwa [is_closed_iff_zero_locus] at ht'
     rw [subset_zero_locus_iff_subset_vanishing_ideal] at ht
     exact Set.Subset.trans ht hx
     
@@ -416,7 +409,7 @@ theorem t1_space_iff_is_field [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsFie
           (not_not.2 rfl))
     
   · refine' ⟨fun x => (is_closed_singleton_iff_is_maximal x).2 _⟩
-    by_cases' hx : x.as_ideal = ⊥
+    by_cases hx:x.as_ideal = ⊥
     · exact hx.symm ▸ @Ideal.bot_is_maximal R (@Field.toDivisionRing _ h.to_field)
       
     · exact absurd h (Ringₓ.not_is_field_iff_exists_prime.2 ⟨x.as_ideal, ⟨hx, x.2⟩⟩)
@@ -474,10 +467,7 @@ instance : QuasiSober (PrimeSpectrum R) := by
   rw [is_generic_point_iff_forall_closed h₂]
   intro Z hZ hxZ
   obtain ⟨t, rfl⟩ := (is_closed_iff_zero_locus_ideal _).mp hZ
-  exact
-    zero_locus_anti_mono
-      (by
-        simpa [hs] using hxZ)
+  exact zero_locus_anti_mono (by simpa [hs] using hxZ)
   simp [hs]
 
 section Comap
@@ -531,9 +521,9 @@ theorem comap_injective_of_surjective (f : R →+* S) (hf : Function.Surjective 
       (congr_arg PrimeSpectrum.asIdeal h : (comap f x).asIdeal = (comap f y).asIdeal))
 
 theorem comap_singleton_is_closed_of_surjective (f : R →+* S) (hf : Function.Surjective f) (x : PrimeSpectrum S)
-    (hx : IsClosed ({x} : Set (PrimeSpectrum S))) : IsClosed ({comap f x} : Set (PrimeSpectrum R)) := by
+    (hx : IsClosed ({x} : Set (PrimeSpectrum S))) : IsClosed ({comap f x} : Set (PrimeSpectrum R)) :=
   haveI : x.as_ideal.is_maximal := (is_closed_singleton_iff_is_maximal x).1 hx
-  exact (is_closed_singleton_iff_is_maximal _).2 (Ideal.comap_is_maximal_of_surjective f hf)
+  (is_closed_singleton_iff_is_maximal _).2 (Ideal.comap_is_maximal_of_surjective f hf)
 
 theorem comap_singleton_is_closed_of_is_integral (f : R →+* S) (hf : f.IsIntegral) (x : PrimeSpectrum S)
     (hx : IsClosed ({x} : Set (PrimeSpectrum S))) : IsClosed ({comap f x} : Set (PrimeSpectrum R)) :=
@@ -565,7 +555,7 @@ theorem localization_comap_injective [Algebra R S] (M : Submonoid R) [IsLocaliza
     Function.Injective (comap (algebraMap R S)) := by
   intro p q h
   replace h := congr_arg (fun x : PrimeSpectrum R => Ideal.map (algebraMap R S) x.asIdeal) h
-  dsimp' only  at h
+  dsimp only at h
   erw [IsLocalization.map_comap M S, IsLocalization.map_comap M S] at h
   ext1
   exact h
@@ -599,8 +589,7 @@ theorem comap_inducing_of_surjective (hf : Surjective f) : Inducing (comap f) :=
       simp_rw [topological_space_eq_iff, ← is_closed_compl_iff, is_closed_induced_iff, is_closed_iff_zero_locus]
       refine' fun s =>
         ⟨fun ⟨F, hF⟩ =>
-          ⟨zero_locus (f ⁻¹' F), ⟨f ⁻¹' F, rfl⟩, by
-            rw [preimage_comap_zero_locus, surjective.image_preimage hf, hF]⟩,
+          ⟨zero_locus (f ⁻¹' F), ⟨f ⁻¹' F, rfl⟩, by rw [preimage_comap_zero_locus, surjective.image_preimage hf, hF]⟩,
           _⟩
       rintro ⟨-, ⟨F, rfl⟩, hF⟩
       exact ⟨f '' F, hF.symm.trans (preimage_comap_zero_locus f F)⟩ }
@@ -661,18 +650,15 @@ theorem is_open_basic_open {a : R} : IsOpen (basicOpen a : Set (PrimeSpectrum R)
 
 @[simp]
 theorem basic_open_eq_zero_locus_compl (r : R) : (basicOpen r : Set (PrimeSpectrum R)) = ZeroLocus {r}ᶜ :=
-  Set.ext fun x => by
-    simpa only [Set.mem_compl_eq, mem_zero_locus, Set.singleton_subset_iff]
+  Set.ext fun x => by simpa only [Set.mem_compl_iff, mem_zero_locus, Set.singleton_subset_iff]
 
 @[simp]
 theorem basic_open_one : basicOpen (1 : R) = ⊤ :=
-  TopologicalSpace.Opens.ext <| by
-    simp
+  TopologicalSpace.Opens.ext <| by simp
 
 @[simp]
 theorem basic_open_zero : basicOpen (0 : R) = ⊥ :=
-  TopologicalSpace.Opens.ext <| by
-    simp
+  TopologicalSpace.Opens.ext <| by simp
 
 theorem basic_open_le_basic_open_iff (f g : R) : basicOpen f ≤ basicOpen g ↔ f ∈ (Ideal.span ({g} : Set R)).radical :=
   by
@@ -680,8 +666,7 @@ theorem basic_open_le_basic_open_iff (f g : R) : basicOpen f ≤ basicOpen g ↔
     Set.compl_subset_compl, zero_locus_subset_zero_locus_singleton_iff]
 
 theorem basic_open_mul (f g : R) : basicOpen (f * g) = basicOpen f ⊓ basicOpen g :=
-  TopologicalSpace.Opens.ext <| by
-    simp [zero_locus_singleton_mul]
+  TopologicalSpace.Opens.ext <| by simp [zero_locus_singleton_mul]
 
 theorem basic_open_mul_le_left (f g : R) : basicOpen (f * g) ≤ basicOpen f := by
   rw [basic_open_mul f g]
@@ -693,8 +678,7 @@ theorem basic_open_mul_le_right (f g : R) : basicOpen (f * g) ≤ basicOpen g :=
 
 @[simp]
 theorem basic_open_pow (f : R) (n : ℕ) (hn : 0 < n) : basicOpen (f ^ n) = basicOpen f :=
-  TopologicalSpace.Opens.ext <| by
-    simpa using zero_locus_singleton_pow f n hn
+  TopologicalSpace.Opens.ext <| by simpa using zero_locus_singleton_pow f n hn
 
 theorem is_topological_basis_basic_opens :
     TopologicalSpace.IsTopologicalBasis (Set.Range fun r : R => (basicOpen r : Set (PrimeSpectrum R))) := by
@@ -703,7 +687,7 @@ theorem is_topological_basis_basic_opens :
     exact is_open_basic_open
     
   · rintro p U hp ⟨s, hs⟩
-    rw [← compl_compl U, Set.mem_compl_eq, ← hs, mem_zero_locus, Set.not_subset] at hp
+    rw [← compl_compl U, Set.mem_compl_iff, ← hs, mem_zero_locus, Set.not_subset] at hp
     obtain ⟨f, hfs, hfp⟩ := hp
     refine' ⟨basic_open f, ⟨f, rfl⟩, hfp, _⟩
     rw [← Set.compl_subset_compl, ← hs, basic_open_eq_zero_locus_compl, compl_compl]
@@ -749,7 +733,7 @@ theorem localization_away_comap_range (S : Type v) [CommRingₓ S] [Algebra R S]
   rw [localization_comap_range S (Submonoid.powers r)]
   ext
   simp only [mem_zero_locus, basic_open_eq_zero_locus_compl, SetLike.mem_coe, Set.mem_set_of_eq,
-    Set.singleton_subset_iff, Set.mem_compl_eq]
+    Set.singleton_subset_iff, Set.mem_compl_iff]
   constructor
   · intro h₁ h₂
     exact h₁ ⟨Submonoid.mem_powers r, h₂⟩

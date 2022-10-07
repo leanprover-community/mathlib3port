@@ -218,10 +218,7 @@ unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tac
           -- attempting to replace all occurrences of `e x`,
           -- calling it for now `j : β`, with `k : x = e.symm j`.
           generalize
-          ex
-          (by
-            infer_opt_param)
-          transparency.none
+          ex (by infer_opt_param) transparency.none
       -- Reintroduce `x` (now of type `b`), and the hypothesis `h`.
           intro
           x

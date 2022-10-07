@@ -185,8 +185,7 @@ theorem sup_eq_eqv_gen (r s : Setoidₓ α) : r ⊔ s = EqvGen.setoid fun x y =>
 
 /-- The supremum of 2 equivalence relations r and s is the equivalence closure of the
     supremum of the underlying binary operations. -/
-theorem sup_def {r s : Setoidₓ α} : r ⊔ s = EqvGen.setoid (r.Rel ⊔ s.Rel) := by
-  rw [sup_eq_eqv_gen] <;> rfl
+theorem sup_def {r s : Setoidₓ α} : r ⊔ s = EqvGen.setoid (r.Rel ⊔ s.Rel) := by rw [sup_eq_eqv_gen] <;> rfl
 
 /-- The supremum of a set S of equivalence relations is the equivalence closure of the binary
     relation `there exists r ∈ S relating x and y`. -/
@@ -207,10 +206,7 @@ theorem Sup_def {s : Set (Setoidₓ α)} : sup s = EqvGen.setoid (sup (rel '' s)
 /-- The equivalence closure of an equivalence relation r is r. -/
 @[simp]
 theorem eqv_gen_of_setoid (r : Setoidₓ α) : EqvGen.setoid r.R = r :=
-  le_antisymmₓ
-    (by
-      rw [eqv_gen_eq] <;> exact Inf_le fun _ _ => id)
-    EqvGen.rel
+  le_antisymmₓ (by rw [eqv_gen_eq] <;> exact Inf_le fun _ _ => id) EqvGen.rel
 
 /-- Equivalence closure is idempotent. -/
 @[simp]
@@ -249,9 +245,7 @@ theorem ker_iff_mem_preimage {f : α → β} {x y} : (ker f).Rel x y ↔ x ∈ f
 `quotient r → β`. -/
 def liftEquiv (r : Setoidₓ α) : { f : α → β // r ≤ ker f } ≃ (Quotientₓ r → β) where
   toFun := fun f => Quotientₓ.lift (f : α → β) f.2
-  invFun := fun f =>
-    ⟨f ∘ Quotientₓ.mk, fun x y h => by
-      simp [ker_def, Quotientₓ.sound h]⟩
+  invFun := fun f => ⟨f ∘ Quotientₓ.mk, fun x y h => by simp [ker_def, Quotientₓ.sound h]⟩
   left_inv := fun ⟨f, hf⟩ => Subtype.eq <| funext fun x => rfl
   right_inv := fun f => funext fun x => (Quotientₓ.induction_on' x) fun x => rfl
 
@@ -280,12 +274,8 @@ variable (r : Setoidₓ α) (f : α → β)
 noncomputable def quotientKerEquivRange : Quotientₓ (ker f) ≃ Set.Range f :=
   Equivₓ.ofBijective
     ((@Quotientₓ.lift _ (Set.Range f) (ker f) fun x => ⟨f x, Set.mem_range_self x⟩) fun _ _ h => Subtype.ext_val h)
-    ⟨fun x y h =>
-      ker_lift_injective f <| by
-        rcases x with ⟨⟩ <;> rcases y with ⟨⟩ <;> injections,
-      fun ⟨w, z, hz⟩ =>
-      ⟨@Quotientₓ.mk _ (ker f) z, by
-        rw [Quotientₓ.lift_mk] <;> exact Subtype.ext_iff_val.2 hz⟩⟩
+    ⟨fun x y h => ker_lift_injective f <| by rcases x with ⟨⟩ <;> rcases y with ⟨⟩ <;> injections, fun ⟨w, z, hz⟩ =>
+      ⟨@Quotientₓ.mk _ (ker f) z, by rw [Quotientₓ.lift_mk] <;> exact Subtype.ext_iff_val.2 hz⟩⟩
 
 /-- If `f` has a computable right-inverse, then the quotient by its kernel is equivalent to its
 domain. -/
@@ -320,12 +310,7 @@ def mapOfSurjective (r) (f : α → β) (h : ker f ≤ r) (hf : Surjective f) : 
       let ⟨y, hy⟩ := hf x
       ⟨y, y, hy, hy, r.refl' y⟩,
       fun _ _ ⟨x, y, hx, hy, h⟩ => ⟨y, x, hy, hx, r.symm' h⟩, fun _ _ _ ⟨x, y, hx, hy, h₁⟩ ⟨y', z, hy', hz, h₂⟩ =>
-      ⟨x, z, hx, hz,
-        r.trans' h₁ <|
-          r.trans'
-            (h <| by
-              rwa [← hy'] at hy)
-            h₂⟩⟩⟩
+      ⟨x, z, hx, hz, r.trans' h₁ <| r.trans' (h <| by rwa [← hy'] at hy) h₂⟩⟩⟩
 
 /-- A special case of the equivalence closure of an equivalence relation r equalling r. -/
 theorem map_of_surjective_eq_map (h : ker f ≤ r) (hf : Surjective f) : map r f = mapOfSurjective r f h hf := by
@@ -345,9 +330,7 @@ theorem comap_rel (f : α → β) (r : Setoidₓ β) (x y : α) : (comap f r).Re
 /-- Given a map `f : N → M` and an equivalence relation `r` on `β`, the equivalence relation
     induced on `α` by `f` equals the kernel of `r`'s quotient map composed with `f`. -/
 theorem comap_eq {f : α → β} {r : Setoidₓ β} : comap f r = ker (@Quotientₓ.mk _ r ∘ f) :=
-  ext fun x y =>
-    show _ ↔ ⟦_⟧ = ⟦_⟧ by
-      rw [Quotientₓ.eq] <;> rfl
+  ext fun x y => show _ ↔ ⟦_⟧ = ⟦_⟧ by rw [Quotientₓ.eq] <;> rfl
 
 /-- The second isomorphism theorem for sets. -/
 noncomputable def comapQuotientEquiv (f : α → β) (r : Setoidₓ β) :
@@ -364,13 +347,8 @@ def quotientQuotientEquivQuotient (s : Setoidₓ α) (h : r ≤ s) : Quotientₓ
   invFun := fun x =>
     (Quotientₓ.liftOn' x fun w => @Quotientₓ.mk _ (ker <| Quot.mapRight h) <| @Quotientₓ.mk _ r w) fun x y H =>
       Quotientₓ.sound' <| show @Quot.mk _ _ _ = @Quot.mk _ _ _ from Quotientₓ.sound H
-  left_inv := fun x =>
-    (Quotientₓ.induction_on' x) fun y =>
-      (Quotientₓ.induction_on' y) fun w => by
-        show ⟦_⟧ = _ <;> rfl
-  right_inv := fun x =>
-    (Quotientₓ.induction_on' x) fun y => by
-      show ⟦_⟧ = _ <;> rfl
+  left_inv := fun x => (Quotientₓ.induction_on' x) fun y => (Quotientₓ.induction_on' y) fun w => by show ⟦_⟧ = _ <;> rfl
+  right_inv := fun x => (Quotientₓ.induction_on' x) fun y => by show ⟦_⟧ = _ <;> rfl
 
 variable {r f}
 
@@ -380,9 +358,7 @@ open Quotientₓ
 equivalence relations containing `r` and the equivalence relations on the quotient of `α` by `r`. -/
 def correspondence (r : Setoidₓ α) : { s // r ≤ s } ≃o Setoidₓ (Quotientₓ r) where
   toFun := fun s => mapOfSurjective s.1 Quotientₓ.mk ((ker_mk_eq r).symm ▸ s.2) exists_rep
-  invFun := fun s =>
-    ⟨comap Quotientₓ.mk' s, fun x y h => by
-      rw [comap_rel, eq_rel.2 h]⟩
+  invFun := fun s => ⟨comap Quotientₓ.mk' s, fun x y h => by rw [comap_rel, eq_rel.2 h]⟩
   left_inv := fun s =>
     Subtype.ext_iff_val.2 <|
       ext' fun _ _ =>

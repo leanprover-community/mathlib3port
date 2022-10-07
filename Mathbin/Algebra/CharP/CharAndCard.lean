@@ -28,7 +28,7 @@ theorem is_unit_iff_not_dvd_char_of_ring_char_ne_zero (R : Type _) [CommRingₓ 
     have h₃ : ¬ringChar R ∣ q := by
       rintro ⟨r, hr⟩
       rw [hr, ← mul_assoc, mul_comm p, mul_assoc] at hq
-      nth_rw 0[← mul_oneₓ (ringChar R)]  at hq
+      nth_rw 0 [← mul_oneₓ (ringChar R)]  at hq
       exact Nat.Prime.not_dvd_one hp ⟨r, mul_left_cancel₀ hR hq⟩
     have h₄ := mt (CharP.int_cast_eq_zero_iff R (ringChar R) q).mp
     apply_fun (coe : ℕ → R)  at hq
@@ -53,13 +53,13 @@ theorem is_unit_iff_not_dvd_char (R : Type _) [CommRingₓ R] (p : ℕ) [Fact p.
 
 /-- The prime divisors of the characteristic of a finite commutative ring are exactly
 the prime divisors of its cardinality. -/
-theorem prime_dvd_char_iff_dvd_card {R : Type _} [CommRingₓ R] [Fintype R] (p : ℕ) [Fact p.Prime] :
-    p ∣ ringChar R ↔ p ∣ Fintype.card R := by
+theorem prime_dvd_char_iff_dvd_card {R : Type _} [CommRingₓ R] [Fintypeₓ R] (p : ℕ) [Fact p.Prime] :
+    p ∣ ringChar R ↔ p ∣ Fintypeₓ.card R := by
   refine'
     ⟨fun h =>
       h.trans <|
         int.coe_nat_dvd.mp <|
-          (CharP.int_cast_eq_zero_iff R (ringChar R) (Fintype.card R)).mp <| by
+          (CharP.int_cast_eq_zero_iff R (ringChar R) (Fintypeₓ.card R)).mp <| by
             exact_mod_cast CharP.cast_card_eq_zero R,
       fun h => _⟩
   by_contra h₀
@@ -73,7 +73,7 @@ theorem prime_dvd_char_iff_dvd_card {R : Type _} [CommRingₓ R] [Fintype R] (p 
 
 /-- A prime that does not divide the cardinality of a finite commutative ring `R`
 is a unit in `R`. -/
-theorem not_is_unit_prime_of_dvd_card {R : Type _} [CommRingₓ R] [Fintype R] (p : ℕ) [Fact p.Prime]
-    (hp : p ∣ Fintype.card R) : ¬IsUnit (p : R) :=
+theorem not_is_unit_prime_of_dvd_card {R : Type _} [CommRingₓ R] [Fintypeₓ R] (p : ℕ) [Fact p.Prime]
+    (hp : p ∣ Fintypeₓ.card R) : ¬IsUnit (p : R) :=
   mt (is_unit_iff_not_dvd_char R p).mp (not_not.mpr ((prime_dvd_char_iff_dvd_card p).mpr hp))
 

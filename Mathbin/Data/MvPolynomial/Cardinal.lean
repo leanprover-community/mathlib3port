@@ -53,14 +53,12 @@ end TwoUniverses
 
 variable {σ R : Type u} [CommSemiringₓ R]
 
-theorem cardinal_mk_eq_max [Nonempty σ] [Nontrivial R] : (#MvPolynomial σ R) = max (max (#R) (#σ)) ℵ₀ := by
-  simp
+theorem cardinal_mk_eq_max [Nonempty σ] [Nontrivial R] : (#MvPolynomial σ R) = max (max (#R) (#σ)) ℵ₀ := by simp
 
 /-- The cardinality of the multivariate polynomial ring, `mv_polynomial σ R` is at most the maximum
 of `#R`, `#σ` and `ℵ₀` -/
 theorem cardinal_mk_le_max : (#MvPolynomial σ R) ≤ max (max (#R) (#σ)) ℵ₀ :=
-  cardinal_lift_mk_le_max.trans <| by
-    rw [lift_id, lift_id]
+  cardinal_lift_mk_le_max.trans <| by rw [lift_id, lift_id]
 
 end MvPolynomial
 

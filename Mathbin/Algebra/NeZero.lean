@@ -32,8 +32,7 @@ theorem NeZero.ne' (n : ℕ) (R) [AddMonoidWithOneₓ R] [h : NeZero (n : R)] : 
 theorem ne_zero_iff {R : Type _} [Zero R] {n : R} : NeZero n ↔ n ≠ 0 :=
   ⟨fun h => h.out, NeZero.mk⟩
 
-theorem not_ne_zero {R : Type _} [Zero R] {n : R} : ¬NeZero n ↔ n = 0 := by
-  simp [ne_zero_iff]
+theorem not_ne_zero {R : Type _} [Zero R] {n : R} : ¬NeZero n ↔ n = 0 := by simp [ne_zero_iff]
 
 theorem eq_zero_or_ne_zero {α} [Zero α] (a : α) : a = 0 ∨ NeZero a :=
   (eq_or_ne a 0).imp_right NeZero.mk
@@ -88,9 +87,7 @@ theorem trans [Zero M] [Coe R S] [CoeTₓ S M] (h : NeZero ((r : S) : M)) : NeZe
   ⟨h.out⟩
 
 theorem of_map [Zero R] [Zero M] [ZeroHomClass F R M] (f : F) [NeZero (f r)] : NeZero r :=
-  ⟨fun h =>
-    ne (f r) <| by
-      convert map_zero f⟩
+  ⟨fun h => ne (f r) <| by convert map_zero f⟩
 
 theorem nat_of_ne_zero [Semiringₓ R] [Semiringₓ S] [RingHomClass F R S] (f : F) [hn : NeZero (n : S)] :
     NeZero (n : R) := by
@@ -105,10 +102,7 @@ theorem of_injective [Zero R] [h : NeZero r] [Zero M] [ZeroHomClass F R M] {f : 
 
 theorem nat_of_injective [NonAssocSemiringₓ M] [NonAssocSemiringₓ R] [h : NeZero (n : R)] [RingHomClass F R M] {f : F}
     (hf : Function.Injective f) : NeZero (n : M) :=
-  ⟨fun h =>
-    NeZero.ne' n R <|
-      hf <| by
-        simpa⟩
+  ⟨fun h => NeZero.ne' n R <| hf <| by simpa⟩
 
 variable (R M)
 

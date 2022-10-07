@@ -21,7 +21,7 @@ quadratic forms.
 
 namespace Matrix
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
+variable {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintypeₓ n]
 
 open Matrix
 
@@ -58,7 +58,7 @@ include hM
 
 theorem det_pos [DecidableEq n] : 0 < det M := by
   rw [hM.is_hermitian.det_eq_prod_eigenvalues]
-  apply Finset.prod_pos
+  apply Finsetₓ.prod_pos
   intro i _
   rw [hM.is_hermitian.eigenvalues_eq]
   apply hM.2 _ fun h => _
@@ -71,7 +71,7 @@ end Matrix
 
 namespace QuadraticForm
 
-variable {n : Type _} [Fintype n]
+variable {n : Type _} [Fintypeₓ n]
 
 theorem pos_def_of_to_matrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.toMatrix'.PosDef) : Q.PosDef := by
   rw [← to_quadratic_form_associated ℝ Q, ← bilin_form.to_matrix'.left_inv ((associated_hom _) Q)]
@@ -85,7 +85,7 @@ end QuadraticForm
 
 namespace Matrix
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
+variable {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintypeₓ n]
 
 /-- A positive definite matrix `M` induces an inner product `⟪x, y⟫ = xᴴMy`. -/
 noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDef) : InnerProductSpace 𝕜 (n → 𝕜) :=
@@ -94,7 +94,7 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
       conj_sym := fun x y => by
         rw [star_dot_product, star_ring_end_apply, star_star, star_mul_vec, dot_product_mul_vec, hM.is_hermitian.eq],
       nonneg_re := fun x => by
-        by_cases' h : x = 0
+        by_cases h:x = 0
         · simp [h]
           
         · exact le_of_ltₓ (hM.2 x h)
@@ -102,10 +102,8 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
       definite := fun x hx => by
         by_contra' h
         simpa [hx, lt_self_iff_falseₓ] using hM.2 x h,
-      add_left := by
-        simp only [star_add, add_dot_product, eq_self_iff_true, forall_const],
-      smul_left := fun x y r => by
-        rw [← smul_eq_mul, ← smul_dot_product, star_ring_end_apply, ← star_smul] }
+      add_left := by simp only [star_add, add_dot_product, eq_self_iff_true, forall_const],
+      smul_left := fun x y r => by rw [← smul_eq_mul, ← smul_dot_product, star_ring_end_apply, ← star_smul] }
 
 end Matrix
 

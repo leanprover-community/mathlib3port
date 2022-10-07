@@ -44,10 +44,7 @@ def DirectedOn (s : Set α) :=
 variable {r}
 
 theorem directed_on_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : s → α) := by
-  simp [Directed, DirectedOn] <;>
-    refine'
-      ball_congr fun x hx => by
-        simp <;> rfl
+  simp [Directed, DirectedOn] <;> refine' ball_congr fun x hx => by simp <;> rfl
 
 alias directed_on_iff_directed ↔ DirectedOn.directed_coe _
 
@@ -75,7 +72,7 @@ theorem Directed.mono_comp {ι} {rb : β → β → Prop} {g : α → β} {f : �
 theorem directed_of_sup [SemilatticeSup α] {f : α → β} {r : β → β → Prop} (H : ∀ ⦃i j⦄, i ≤ j → r (f i) (f j)) :
     Directed r f := fun a b => ⟨a ⊔ b, H le_sup_left, H le_sup_right⟩
 
-theorem Monotone.directed_le [SemilatticeSup α] [Preorderₓ β] {f : α → β} : Monotone f → Directed (· ≤ ·) f :=
+theorem Monotoneₓ.directed_le [SemilatticeSup α] [Preorderₓ β] {f : α → β} : Monotoneₓ f → Directed (· ≤ ·) f :=
   directed_of_sup
 
 /-- A set stable by supremum is `≤`-directed. -/
@@ -113,8 +110,7 @@ class IsDirected (α : Type _) (r : α → α → Prop) : Prop where
 theorem directed_of (r : α → α → Prop) [IsDirected α r] (a b : α) : ∃ c, r a c ∧ r b c :=
   IsDirected.directed _ _
 
-theorem directed_id [IsDirected α r] : Directed r id := by
-  convert directed_of r
+theorem directed_id [IsDirected α r] : Directed r id := by convert directed_of r
 
 theorem directed_id_iff : Directed r id ↔ IsDirected α r :=
   ⟨fun h => ⟨h⟩, @directed_id _ _⟩
@@ -145,11 +141,9 @@ theorem exists_ge_ge [LE α] [IsDirected α (· ≤ ·)] (a b : α) : ∃ c, a �
 theorem exists_le_le [LE α] [IsDirected α (· ≥ ·)] (a b : α) : ∃ c, c ≤ a ∧ c ≤ b :=
   directed_of (· ≥ ·) a b
 
-instance OrderDual.is_directed_ge [LE α] [IsDirected α (· ≤ ·)] : IsDirected αᵒᵈ (· ≥ ·) := by
-  assumption
+instance OrderDual.is_directed_ge [LE α] [IsDirected α (· ≤ ·)] : IsDirected αᵒᵈ (· ≥ ·) := by assumption
 
-instance OrderDual.is_directed_le [LE α] [IsDirected α (· ≥ ·)] : IsDirected αᵒᵈ (· ≤ ·) := by
-  assumption
+instance OrderDual.is_directed_le [LE α] [IsDirected α (· ≥ ·)] : IsDirected αᵒᵈ (· ≤ ·) := by assumption
 
 section Preorderₓ
 

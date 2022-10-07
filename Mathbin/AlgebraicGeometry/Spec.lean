@@ -71,10 +71,8 @@ theorem Spec.Top_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) :
 def Spec.toTop : CommRingₓₓᵒᵖ ⥤ Top where
   obj := fun R => Spec.topObj (unop R)
   map := fun R S f => Spec.topMap f.unop
-  map_id' := fun R => by
-    rw [unop_id, Spec.Top_map_id]
-  map_comp' := fun R S T f g => by
-    rw [unop_comp, Spec.Top_map_comp]
+  map_id' := fun R => by rw [unop_id, Spec.Top_map_id]
+  map_comp' := fun R S T f g => by rw [unop_comp, Spec.Top_map_comp]
 
 /-- The spectrum of a commutative ring, as a `SheafedSpace`.
 -/
@@ -98,7 +96,7 @@ theorem Spec.SheafedSpace_map_id {R : CommRingₓₓ} : Spec.sheafedSpaceMap (�
   PresheafedSpace.ext _ _ (Spec.Top_map_id R) <|
     NatTrans.ext _ _ <|
       funext fun U => by
-        dsimp'
+        dsimp
         erw [PresheafedSpace.id_c_app, comap_id]
         swap
         · rw [Spec.Top_map_id, TopologicalSpace.Opens.map_id_obj_unop]
@@ -110,7 +108,7 @@ theorem Spec.SheafedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S
   PresheafedSpace.ext _ _ (Spec.Top_map_comp f g) <|
     NatTrans.ext _ _ <|
       funext fun U => by
-        dsimp'
+        dsimp
         rw [CategoryTheory.Functor.map_id]
         rw [category.comp_id]
         erw [comap_comp f g]
@@ -122,10 +120,8 @@ theorem Spec.SheafedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S
 def Spec.toSheafedSpace : CommRingₓₓᵒᵖ ⥤ SheafedSpace CommRingₓₓ where
   obj := fun R => Spec.sheafedSpaceObj (unop R)
   map := fun R S f => Spec.sheafedSpaceMap f.unop
-  map_id' := fun R => by
-    rw [unop_id, Spec.SheafedSpace_map_id]
-  map_comp' := fun R S T f g => by
-    rw [unop_comp, Spec.SheafedSpace_map_comp]
+  map_id' := fun R => by rw [unop_id, Spec.SheafedSpace_map_id]
+  map_comp' := fun R S T f g => by rw [unop_comp, Spec.SheafedSpace_map_comp]
 
 /-- Spec, as a contravariant functor from commutative rings to presheafed spaces.
 -/
@@ -155,12 +151,7 @@ theorem Spec.basic_open_hom_ext {X : RingedSpace} {R : CommRingₓₓ} {α β : 
     (h :
       ∀ r : R,
         let U := PrimeSpectrum.basicOpen r
-        (toOpen R U ≫ α.c.app (op U)) ≫
-            X.Presheaf.map
-              (eqToHom
-                (by
-                  rw [w])) =
-          toOpen R U ≫ β.c.app (op U)) :
+        (toOpen R U ≫ α.c.app (op U)) ≫ X.Presheaf.map (eqToHom (by rw [w])) = toOpen R U ≫ β.c.app (op U)) :
     α = β := by
   ext1
   · apply ((Top.Sheaf.pushforward β.base).obj X.sheaf).hom_ext _ PrimeSpectrum.is_basis_basic_opens
@@ -176,10 +167,8 @@ theorem Spec.basic_open_hom_ext {X : RingedSpace} {R : CommRingₓₓ} {α β : 
 def Spec.locallyRingedSpaceObj (R : CommRingₓₓ) : LocallyRingedSpace :=
   { Spec.sheafedSpaceObj R with
     LocalRing := fun x =>
-      @RingEquiv.local_ring _
-        (show LocalRing (Localization.AtPrime _) by
-          infer_instance)
-        _ (iso.CommRing_iso_to_ring_equiv <| stalkIso R x).symm }
+      @RingEquiv.local_ring _ (show LocalRing (Localization.AtPrime _) by infer_instance) _
+        (iso.CommRing_iso_to_ring_equiv <| stalkIso R x).symm }
 
 @[elementwise]
 theorem stalk_map_to_stalk {R S : CommRingₓₓ} (f : R ⟶ S) (p : PrimeSpectrum S) :
@@ -240,10 +229,8 @@ theorem Spec.LocallyRingedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) 
 def Spec.toLocallyRingedSpace : CommRingₓₓᵒᵖ ⥤ LocallyRingedSpace where
   obj := fun R => Spec.locallyRingedSpaceObj (unop R)
   map := fun R S f => Spec.locallyRingedSpaceMap f.unop
-  map_id' := fun R => by
-    rw [unop_id, Spec.LocallyRingedSpace_map_id]
-  map_comp' := fun R S T f g => by
-    rw [unop_comp, Spec.LocallyRingedSpace_map_comp]
+  map_id' := fun R => by rw [unop_id, Spec.LocallyRingedSpace_map_id]
+  map_comp' := fun R S T f g => by rw [unop_comp, Spec.LocallyRingedSpace_map_comp]
 
 section SpecΓ
 
@@ -285,8 +272,7 @@ theorem Spec_map_localization_is_iso (R : CommRingₓₓ) (M : Submonoid R) (x :
   exact
     show
       is_iso (IsLocalization.localizationLocalizationAtPrimeIsoLocalization M x.as_ideal).toRingEquiv.toCommRingIso.Hom
-      by
-      infer_instance
+      by infer_instance
   infer_instance
 
 end AlgebraicGeometry

@@ -74,8 +74,7 @@ open Finsupp
 variable {X}
 
 @[simp]
-theorem to_finsupp_of (x : X) : toFinsupp (of x) = Finsupp.single x 1 := by
-  simp only [to_finsupp, lift.of]
+theorem to_finsupp_of (x : X) : toFinsupp (of x) = Finsupp.single x 1 := by simp only [to_finsupp, lift.of]
 
 @[simp]
 theorem to_finsupp_to_free_abelian_group (f : X →₀ ℤ) : f.toFreeAbelianGroup.toFinsupp = f := by
@@ -125,7 +124,7 @@ def coeff (x : X) : FreeAbelianGroup X →+ ℤ :=
 
 /-- `support a` for `a : free_abelian_group X` is the finite set of `x : X`
 that occur in the formal sum `a`. -/
-def support (a : FreeAbelianGroup X) : Finset X :=
+def support (a : FreeAbelianGroup X) : Finsetₓ X :=
   a.toFinsupp.Support
 
 theorem mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∈ a.Support ↔ coeff x a ≠ 0 := by

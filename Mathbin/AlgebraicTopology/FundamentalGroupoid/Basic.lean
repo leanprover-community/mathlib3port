@@ -50,10 +50,10 @@ theorem continuous_refl_trans_symm_aux : Continuous reflTransSymmAux := by
   · continuity
     
   intro x hx
-  norm_num[hx, mul_assoc]
+  norm_num [hx, mul_assoc]
 
 theorem refl_trans_symm_aux_mem_I (x : I × I) : reflTransSymmAux x ∈ I := by
-  dsimp' only [refl_trans_symm_aux]
+  dsimp only [refl_trans_symm_aux]
   split_ifs
   · constructor
     · apply mul_nonneg
@@ -100,12 +100,10 @@ theorem refl_trans_symm_aux_mem_I (x : I × I) : reflTransSymmAux x ∈ I := by
   `p.trans p.symm`. -/
 def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.symm) where
   toFun := fun x => p ⟨reflTransSymmAux x, refl_trans_symm_aux_mem_I x⟩
-  continuous_to_fun := by
-    continuity
-  map_zero_left' := by
-    norm_num[refl_trans_symm_aux]
+  continuous_to_fun := by continuity
+  map_zero_left' := by norm_num [refl_trans_symm_aux]
   map_one_left' := fun x => by
-    dsimp' only [refl_trans_symm_aux, Path.coe_to_continuous_map, Path.trans]
+    dsimp only [refl_trans_symm_aux, Path.coe_to_continuous_map, Path.trans]
     change _ = ite _ _ _
     split_ifs
     · rw [Path.extend, Set.Icc_extend_of_mem]
@@ -118,7 +116,7 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
     · rw [Path.symm, Path.extend, Set.Icc_extend_of_mem]
       · congr 1
         ext
-        norm_num[sub_sub_eq_add_sub]
+        norm_num [sub_sub_eq_add_sub]
         
       · rw [UnitInterval.two_mul_sub_one_mem_iff]
         exact ⟨(not_leₓ.1 h).le, UnitInterval.le_one x⟩
@@ -131,7 +129,7 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
       
     · rw [Set.mem_singleton_iff] at hx
       rw [hx]
-      norm_num[refl_trans_symm_aux]
+      norm_num [refl_trans_symm_aux]
       
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from the constant path based at `x₁` to
@@ -152,23 +150,19 @@ theorem continuous_trans_refl_reparam_aux : Continuous transReflReparamAux := by
   refine' continuous_if_le _ _ (Continuous.continuous_on _) (Continuous.continuous_on _) _ <;> [continuity, continuity,
     continuity, continuity, skip]
   intro x hx
-  norm_num[hx]
+  norm_num [hx]
 
 theorem trans_refl_reparam_aux_mem_I (t : I) : transReflReparamAux t ∈ I := by
   unfold trans_refl_reparam_aux
   split_ifs <;> constructor <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
 
-theorem trans_refl_reparam_aux_zero : transReflReparamAux 0 = 0 := by
-  norm_num[trans_refl_reparam_aux]
+theorem trans_refl_reparam_aux_zero : transReflReparamAux 0 = 0 := by norm_num [trans_refl_reparam_aux]
 
-theorem trans_refl_reparam_aux_one : transReflReparamAux 1 = 1 := by
-  norm_num[trans_refl_reparam_aux]
+theorem trans_refl_reparam_aux_one : transReflReparamAux 1 = 1 := by norm_num [trans_refl_reparam_aux]
 
 theorem trans_refl_reparam (p : Path x₀ x₁) :
     p.trans (Path.refl x₁) =
-      p.reparam (fun t => ⟨transReflReparamAux t, trans_refl_reparam_aux_mem_I t⟩)
-        (by
-          continuity)
+      p.reparam (fun t => ⟨transReflReparamAux t, trans_refl_reparam_aux_mem_I t⟩) (by continuity)
         (Subtype.ext trans_refl_reparam_aux_zero) (Subtype.ext trans_refl_reparam_aux_one) :=
   by
   ext
@@ -183,20 +177,14 @@ theorem trans_refl_reparam (p : Path x₀ x₁) :
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from `p.trans (path.refl x₁)` to `p`.
 -/
 def transRefl (p : Path x₀ x₁) : Homotopy (p.trans (Path.refl x₁)) p :=
-  ((Homotopy.reparam p (fun t => ⟨transReflReparamAux t, trans_refl_reparam_aux_mem_I t⟩)
-          (by
-            continuity)
+  ((Homotopy.reparam p (fun t => ⟨transReflReparamAux t, trans_refl_reparam_aux_mem_I t⟩) (by continuity)
           (Subtype.ext trans_refl_reparam_aux_zero) (Subtype.ext trans_refl_reparam_aux_one)).cast
       rfl (trans_refl_reparam p).symm).symm
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from `(path.refl x₀).trans p` to `p`.
 -/
 def reflTrans (p : Path x₀ x₁) : Homotopy ((Path.refl x₀).trans p) p :=
-  (transRefl p.symm).symm₂.cast
-    (by
-      simp )
-    (by
-      simp )
+  (transRefl p.symm).symm₂.cast (by simp) (by simp)
 
 end TransRefl
 
@@ -213,24 +201,20 @@ theorem continuous_trans_assoc_reparam_aux : Continuous transAssocReparamAux := 
           (continuous_if_le _ _ (Continuous.continuous_on _) (Continuous.continuous_on _) _).ContinuousOn _ <;>
       [continuity, continuity, continuity, continuity, continuity, continuity, continuity, skip, skip] <;>
     · intro x hx
-      norm_num[hx]
+      norm_num [hx]
       
 
 theorem trans_assoc_reparam_aux_mem_I (t : I) : transAssocReparamAux t ∈ I := by
   unfold trans_assoc_reparam_aux
   split_ifs <;> constructor <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
 
-theorem trans_assoc_reparam_aux_zero : transAssocReparamAux 0 = 0 := by
-  norm_num[trans_assoc_reparam_aux]
+theorem trans_assoc_reparam_aux_zero : transAssocReparamAux 0 = 0 := by norm_num [trans_assoc_reparam_aux]
 
-theorem trans_assoc_reparam_aux_one : transAssocReparamAux 1 = 1 := by
-  norm_num[trans_assoc_reparam_aux]
+theorem trans_assoc_reparam_aux_one : transAssocReparamAux 1 = 1 := by norm_num [trans_assoc_reparam_aux]
 
 theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : Path x₁ x₂) (r : Path x₂ x₃) :
     (p.trans q).trans r =
-      (p.trans (q.trans r)).reparam (fun t => ⟨transAssocReparamAux t, trans_assoc_reparam_aux_mem_I t⟩)
-        (by
-          continuity)
+      (p.trans (q.trans r)).reparam (fun t => ⟨transAssocReparamAux t, trans_assoc_reparam_aux_mem_I t⟩) (by continuity)
         (Subtype.ext trans_assoc_reparam_aux_zero) (Subtype.ext trans_assoc_reparam_aux_one) :=
   by
   ext
@@ -246,21 +230,16 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
   · exfalso
     linarith
     
-  · have h : ¬(x : ℝ) + 1 / 4 ≤ 1 / 2 := by
-      linarith
-    have h' : 2 * ((x : ℝ) + 1 / 4) - 1 ≤ 1 / 2 := by
-      linarith
-    have h'' : 2 * (2 * (x : ℝ)) - 1 = 2 * (2 * (↑x + 1 / 4) - 1) := by
-      linarith
+  · have h : ¬(x : ℝ) + 1 / 4 ≤ 1 / 2 := by linarith
+    have h' : 2 * ((x : ℝ) + 1 / 4) - 1 ≤ 1 / 2 := by linarith
+    have h'' : 2 * (2 * (x : ℝ)) - 1 = 2 * (2 * (↑x + 1 / 4) - 1) := by linarith
     simp only [h₄, h₁, h, h', h'', dif_neg (show ¬False from id), dif_pos True.intro, if_false, if_true]
     
   · exfalso
     linarith
     
-  · have h : ¬(1 / 2 : ℝ) * (x + 1) ≤ 1 / 2 := by
-      linarith
-    have h' : ¬2 * ((1 / 2 : ℝ) * (x + 1)) - 1 ≤ 1 / 2 := by
-      linarith
+  · have h : ¬(1 / 2 : ℝ) * (x + 1) ≤ 1 / 2 := by linarith
+    have h' : ¬2 * ((1 / 2 : ℝ) * (x + 1)) - 1 ≤ 1 / 2 := by linarith
     simp only [h₁, h₅, h, h', if_false, dif_neg (show ¬False from id)]
     congr
     ring
@@ -271,9 +250,7 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
 def transAssoc {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : Path x₁ x₂) (r : Path x₂ x₃) :
     Homotopy ((p.trans q).trans r) (p.trans (q.trans r)) :=
   ((Homotopy.reparam (p.trans (q.trans r)) (fun t => ⟨transAssocReparamAux t, trans_assoc_reparam_aux_mem_I t⟩)
-          (by
-            continuity)
-          (Subtype.ext trans_assoc_reparam_aux_zero) (Subtype.ext trans_assoc_reparam_aux_one)).cast
+          (by continuity) (Subtype.ext trans_assoc_reparam_aux_zero) (Subtype.ext trans_assoc_reparam_aux_one)).cast
       rfl (trans_assoc_reparam p q r).symm).symm
 
 end Assoc

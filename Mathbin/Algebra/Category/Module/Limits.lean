@@ -46,24 +46,21 @@ def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.
     Carrier := (F ⋙ forget (ModuleCat R)).sections,
     smul_mem' := fun r s sh j j' f => by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.smul_apply, LinearMap.map_smul]
-      dsimp' [functor.sections]  at sh
+      dsimp [functor.sections] at sh
       rw [sh f] }
 
 -- Adding the following instance speeds up `limit_module` noticeably,
 -- by preventing a bad unfold of `limit_add_comm_group`.
 instance limitAddCommMonoid (F : J ⥤ ModuleCat R) :
     AddCommMonoidₓ (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
-  show AddCommMonoidₓ (sectionsSubmodule F) by
-    infer_instance
+  show AddCommMonoidₓ (sectionsSubmodule F) by infer_instance
 
 instance limitAddCommGroup (F : J ⥤ ModuleCat R) :
     AddCommGroupₓ (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
-  show AddCommGroupₓ (sectionsSubmodule F) by
-    infer_instance
+  show AddCommGroupₓ (sectionsSubmodule F) by infer_instance
 
 instance limitModule (F : J ⥤ ModuleCat R) : Module R (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
-  show Module R (sectionsSubmodule F) by
-    infer_instance
+  show Module R (sectionsSubmodule F) by infer_instance
 
 /-- `limit.π (F ⋙ forget Ring) j` as a `ring_hom`. -/
 def limitπLinearMap (F : J ⥤ ModuleCat R) (j) :
@@ -101,7 +98,7 @@ end HasLimits
 
 open HasLimits
 
--- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:273:38: unsupported irreducible non-definition
 /-- The category of R-modules has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} (ModuleCat.{max v w} R) :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -199,7 +196,7 @@ def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : IsColimit (
   fac' := fun s i => by
     apply LinearMap.ext
     intro x
-    dsimp'
+    dsimp
     exact direct_limit.lift_of s.ι.app _ x
   uniq' := fun s m h => by
     have : s.ι.app = fun i => LinearMap.comp m (direct_limit.of R ι (fun i => G i) (fun i j H => f i j H) i) := by

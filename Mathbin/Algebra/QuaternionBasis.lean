@@ -60,16 +60,12 @@ variable (R)
 @[simps i j k]
 protected def self : Basis ℍ[R,c₁,c₂] c₁ c₂ where
   i := ⟨0, 1, 0, 0⟩
-  i_mul_i := by
-    ext <;> simp
+  i_mul_i := by ext <;> simp
   j := ⟨0, 0, 1, 0⟩
-  j_mul_j := by
-    ext <;> simp
+  j_mul_j := by ext <;> simp
   k := ⟨0, 0, 0, 1⟩
-  i_mul_j := by
-    ext <;> simp
-  j_mul_i := by
-    ext <;> simp
+  i_mul_j := by ext <;> simp
+  j_mul_i := by ext <;> simp
 
 variable {R}
 
@@ -83,20 +79,16 @@ include q
 attribute [simp] i_mul_i j_mul_j i_mul_j j_mul_i
 
 @[simp]
-theorem i_mul_k : q.i * q.k = c₁ • q.j := by
-  rw [← i_mul_j, ← mul_assoc, i_mul_i, smul_mul_assoc, one_mulₓ]
+theorem i_mul_k : q.i * q.k = c₁ • q.j := by rw [← i_mul_j, ← mul_assoc, i_mul_i, smul_mul_assoc, one_mulₓ]
 
 @[simp]
-theorem k_mul_i : q.k * q.i = -c₁ • q.j := by
-  rw [← i_mul_j, mul_assoc, j_mul_i, mul_neg, i_mul_k, neg_smul]
+theorem k_mul_i : q.k * q.i = -c₁ • q.j := by rw [← i_mul_j, mul_assoc, j_mul_i, mul_neg, i_mul_k, neg_smul]
 
 @[simp]
-theorem k_mul_j : q.k * q.j = c₂ • q.i := by
-  rw [← i_mul_j, mul_assoc, j_mul_j, mul_smul_comm, mul_oneₓ]
+theorem k_mul_j : q.k * q.j = c₂ • q.i := by rw [← i_mul_j, mul_assoc, j_mul_j, mul_smul_comm, mul_oneₓ]
 
 @[simp]
-theorem j_mul_k : q.j * q.k = -c₂ • q.i := by
-  rw [← i_mul_j, ← mul_assoc, j_mul_i, neg_mul, k_mul_j, neg_smul]
+theorem j_mul_k : q.j * q.k = -c₂ • q.i := by rw [← i_mul_j, ← mul_assoc, j_mul_i, neg_mul, k_mul_j, neg_smul]
 
 @[simp]
 theorem k_mul_k : q.k * q.k = -((c₁ * c₂) • 1) := by
@@ -107,11 +99,9 @@ theorem k_mul_k : q.k * q.k = -((c₁ * c₂) • 1) := by
 def lift (x : ℍ[R,c₁,c₂]) : A :=
   algebraMap R _ x.re + x.imI • q.i + x.imJ • q.j + x.imK • q.k
 
-theorem lift_zero : q.lift (0 : ℍ[R,c₁,c₂]) = 0 := by
-  simp [lift]
+theorem lift_zero : q.lift (0 : ℍ[R,c₁,c₂]) = 0 := by simp [lift]
 
-theorem lift_one : q.lift (1 : ℍ[R,c₁,c₂]) = 1 := by
-  simp [lift]
+theorem lift_one : q.lift (1 : ℍ[R,c₁,c₂]) = 1 := by simp [lift]
 
 theorem lift_add (x y : ℍ[R,c₁,c₂]) : q.lift (x + y) = q.lift x + q.lift y := by
   simp [lift, add_smul]
@@ -146,16 +136,12 @@ def liftHom : ℍ[R,c₁,c₂] →ₐ[R] A :=
 @[simps i j k]
 def compHom (F : A →ₐ[R] B) : Basis B c₁ c₂ where
   i := F q.i
-  i_mul_i := by
-    rw [← F.map_mul, q.i_mul_i, F.map_smul, F.map_one]
+  i_mul_i := by rw [← F.map_mul, q.i_mul_i, F.map_smul, F.map_one]
   j := F q.j
-  j_mul_j := by
-    rw [← F.map_mul, q.j_mul_j, F.map_smul, F.map_one]
+  j_mul_j := by rw [← F.map_mul, q.j_mul_j, F.map_smul, F.map_one]
   k := F q.k
-  i_mul_j := by
-    rw [← F.map_mul, q.i_mul_j]
-  j_mul_i := by
-    rw [← F.map_mul, q.j_mul_i, F.map_neg]
+  i_mul_j := by rw [← F.map_mul, q.i_mul_j]
+  j_mul_i := by rw [← F.map_mul, q.j_mul_i, F.map_neg]
 
 end Basis
 
@@ -164,11 +150,10 @@ end Basis
 def lift : Basis A c₁ c₂ ≃ (ℍ[R,c₁,c₂] →ₐ[R] A) where
   toFun := Basis.liftHom
   invFun := (Basis.self R).compHom
-  left_inv := fun q => by
-    ext <;> simp [basis.lift]
+  left_inv := fun q => by ext <;> simp [basis.lift]
   right_inv := fun F => by
     ext
-    dsimp' [basis.lift]
+    dsimp [basis.lift]
     rw [← F.commutes]
     simp only [← F.commutes, ← F.map_smul, ← F.map_add, mk_add_mk, smul_mk, smul_zero, algebra_map_eq]
     congr

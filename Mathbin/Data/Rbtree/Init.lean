@@ -146,9 +146,10 @@ end Rbnode
 
 open Rbnode
 
--- ./././Mathport/Syntax/Translate/Basic.lean:335:40: warning: unsupported option auto_param.check_exists
+-- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option auto_param.check_exists
 set_option auto_param.check_exists false
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
 def Rbtree (α : Type u)
     (lt : α → α → Prop := by
       run_tac
@@ -156,6 +157,7 @@ def Rbtree (α : Type u)
     Type u :=
   { t : Rbnode α // t.WellFormed lt }
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
 def mkRbtree (α : Type u)
     (lt : α → α → Prop := by
       run_tac
@@ -212,6 +214,7 @@ def find : Rbtree α lt → α → Option α
 def contains (t : Rbtree α lt) (a : α) : Bool :=
   (t.find a).isSome
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
 def fromList (l : List α)
     (lt : α → α → Prop := by
       run_tac
@@ -221,6 +224,7 @@ def fromList (l : List α)
 
 end Rbtree
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbtree.default_lt
 def rbtreeOf {α : Type u} (l : List α)
     (lt : α → α → Prop := by
       run_tac

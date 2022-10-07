@@ -42,9 +42,7 @@ open Submodule
 theorem ker_id_sub_eq_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : ker (id - p.Subtype.comp f) = p := by
   ext x
   simp only [comp_apply, mem_ker, subtype_apply, sub_apply, id_apply, sub_eq_zero]
-  exact
-    ⟨fun h => h.symm ▸ Submodule.coe_mem _, fun hx => by
-      erw [hf ⟨x, hx⟩, Subtype.coe_mk]⟩
+  exact ⟨fun h => h.symm ▸ Submodule.coe_mem _, fun hx => by erw [hf ⟨x, hx⟩, Subtype.coe_mk]⟩
 
 theorem range_eq_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : range f = ⊤ :=
   range_eq_top.2 fun x => ⟨x, hf x⟩
@@ -71,10 +69,8 @@ open LinearMap
 def quotientEquivOfIsCompl (h : IsCompl p q) : (E ⧸ p) ≃ₗ[R] q :=
   LinearEquiv.symm <|
     LinearEquiv.ofBijective (p.mkq.comp q.Subtype)
-      (by
-        simp only [← ker_eq_bot, ker_comp, ker_mkq, disjoint_iff_comap_eq_bot.1 h.symm.disjoint])
-      (by
-        rw [← range_eq_top, range_comp, range_subtype, map_mkq_eq_top, h.sup_eq_top])
+      (by rw [← ker_eq_bot, ker_comp, ker_mkq, disjoint_iff_comap_eq_bot.1 h.symm.disjoint])
+      (by rw [← range_eq_top, range_comp, range_subtype, map_mkq_eq_top, h.sup_eq_top])
 
 @[simp]
 theorem quotient_equiv_of_is_compl_symm_apply (h : IsCompl p q) (x : q) :
@@ -117,14 +113,12 @@ theorem coe_prod_equiv_of_is_compl' (h : IsCompl p q) (x : p × q) : prodEquivOf
 
 @[simp]
 theorem prod_equiv_of_is_compl_symm_apply_left (h : IsCompl p q) (x : p) : (prodEquivOfIsCompl p q h).symm x = (x, 0) :=
-  (prodEquivOfIsCompl p q h).symm_apply_eq.2 <| by
-    simp
+  (prodEquivOfIsCompl p q h).symm_apply_eq.2 <| by simp
 
 @[simp]
 theorem prod_equiv_of_is_compl_symm_apply_right (h : IsCompl p q) (x : q) :
     (prodEquivOfIsCompl p q h).symm x = (0, x) :=
-  (prodEquivOfIsCompl p q h).symm_apply_eq.2 <| by
-    simp
+  (prodEquivOfIsCompl p q h).symm_apply_eq.2 <| by simp
 
 @[simp]
 theorem prod_equiv_of_is_compl_symm_apply_fst_eq_zero (h : IsCompl p q) {x : E} :
@@ -161,8 +155,7 @@ theorem linear_proj_of_is_compl_range (h : IsCompl p q) : (linearProjOfIsCompl p
 
 @[simp]
 theorem linear_proj_of_is_compl_apply_eq_zero_iff (h : IsCompl p q) {x : E} : linearProjOfIsCompl p q h x = 0 ↔ x ∈ q :=
-  by
-  simp [linear_proj_of_is_compl]
+  by simp [linear_proj_of_is_compl]
 
 theorem linear_proj_of_is_compl_apply_right' (h : IsCompl p q) (x : E) (hx : x ∈ q) : linearProjOfIsCompl p q h x = 0 :=
   (linear_proj_of_is_compl_apply_eq_zero_iff h).2 hx
@@ -192,7 +185,7 @@ theorem exists_unique_add_of_is_compl (hc : IsCompl p q) (x : E) :
 
 theorem linear_proj_add_linear_proj_of_is_compl_eq_self (hpq : IsCompl p q) (x : E) :
     (p.linearProjOfIsCompl q hpq x + q.linearProjOfIsCompl p hpq.symm x : E) = x := by
-  dunfold linear_proj_of_is_compl
+  dsimp only [linear_proj_of_is_compl]
   rw [← prod_comm_trans_prod_equiv_of_is_compl _ _ hpq]
   exact (prod_equiv_of_is_compl _ _ hpq).apply_symm_apply x
 
@@ -211,13 +204,11 @@ variable {p q}
 
 @[simp]
 theorem of_is_compl_left_apply (h : IsCompl p q) {φ : p →ₗ[R] F} {ψ : q →ₗ[R] F} (u : p) :
-    ofIsCompl h φ ψ (u : E) = φ u := by
-  simp [of_is_compl]
+    ofIsCompl h φ ψ (u : E) = φ u := by simp [of_is_compl]
 
 @[simp]
 theorem of_is_compl_right_apply (h : IsCompl p q) {φ : p →ₗ[R] F} {ψ : q →ₗ[R] F} (v : q) :
-    ofIsCompl h φ ψ (v : E) = ψ v := by
-  simp [of_is_compl]
+    ofIsCompl h φ ψ (v : E) = ψ v := by simp [of_is_compl]
 
 theorem of_is_compl_eq (h : IsCompl p q) {φ : p →ₗ[R] F} {ψ : q →ₗ[R] F} {χ : E →ₗ[R] F} (hφ : ∀ u, φ u = χ u)
     (hψ : ∀ u, ψ u = χ u) : ofIsCompl h φ ψ = χ := by
@@ -236,21 +227,13 @@ theorem of_is_compl_zero (h : IsCompl p q) : (ofIsCompl h 0 0 : E →ₗ[R] F) =
 @[simp]
 theorem of_is_compl_add (h : IsCompl p q) {φ₁ φ₂ : p →ₗ[R] F} {ψ₁ ψ₂ : q →ₗ[R] F} :
     ofIsCompl h (φ₁ + φ₂) (ψ₁ + ψ₂) = ofIsCompl h φ₁ ψ₁ + ofIsCompl h φ₂ ψ₂ :=
-  of_is_compl_eq _
-    (by
-      simp )
-    (by
-      simp )
+  of_is_compl_eq _ (by simp) (by simp)
 
 @[simp]
 theorem of_is_compl_smul {R : Type _} [CommRingₓ R] {E : Type _} [AddCommGroupₓ E] [Module R E] {F : Type _}
     [AddCommGroupₓ F] [Module R F] {p q : Submodule R E} (h : IsCompl p q) {φ : p →ₗ[R] F} {ψ : q →ₗ[R] F} (c : R) :
     ofIsCompl h (c • φ) (c • ψ) = c • ofIsCompl h φ ψ :=
-  of_is_compl_eq _
-    (by
-      simp )
-    (by
-      simp )
+  of_is_compl_eq _ (by simp) (by simp)
 
 section
 
@@ -294,8 +277,7 @@ end
 theorem linear_proj_of_is_compl_of_proj (f : E →ₗ[R] p) (hf : ∀ x : p, f x = x) :
     p.linearProjOfIsCompl f.ker (is_compl_of_proj hf) = f := by
   ext x
-  have : x ∈ p ⊔ f.ker := by
-    simp only [(is_compl_of_proj hf).sup_eq_top, mem_top]
+  have : x ∈ p ⊔ f.ker := by simp only [(is_compl_of_proj hf).sup_eq_top, mem_top]
   rcases mem_sup'.1 this with ⟨x, y, rfl⟩
   simp [hf]
 
@@ -304,9 +286,7 @@ their kernels are complement of each other, then `x ↦ (f x, g x)` defines
 a linear equivalence `E ≃ₗ[R] F × G`. -/
 def equivProdOfSurjectiveOfIsCompl (f : E →ₗ[R] F) (g : E →ₗ[R] G) (hf : f.range = ⊤) (hg : g.range = ⊤)
     (hfg : IsCompl f.ker g.ker) : E ≃ₗ[R] F × G :=
-  LinearEquiv.ofBijective (f.Prod g)
-    (by
-      simp [← ker_eq_bot, hfg.inf_eq_bot])
+  LinearEquiv.ofBijective (f.Prod g) (by simp [← ker_eq_bot, hfg.inf_eq_bot])
     (by
       rw [← range_eq_top]
       simp [range_prod_eq hfg.sup_eq_top, *])
@@ -332,8 +312,7 @@ such that `∀ x : p, f x = x`. -/
 def isComplEquivProj : { q // IsCompl p q } ≃ { f : E →ₗ[R] p // ∀ x : p, f x = x } where
   toFun := fun q => ⟨linearProjOfIsCompl p q q.2, linear_proj_of_is_compl_apply_left q.2⟩
   invFun := fun f => ⟨(f : E →ₗ[R] p).ker, is_compl_of_proj f.2⟩
-  left_inv := fun ⟨q, hq⟩ => by
-    simp only [linear_proj_of_is_compl_ker, Subtype.coe_mk]
+  left_inv := fun ⟨q, hq⟩ => by simp only [linear_proj_of_is_compl_ker, Subtype.coe_mk]
   right_inv := fun ⟨f, hf⟩ => Subtype.eq <| f.linear_proj_of_is_compl_of_proj hf
 
 @[simp]

@@ -229,8 +229,7 @@ open Pointwise
 
 @[to_additive]
 theorem mem_closure_inv {G : Type _} [Groupₓ G] (S : Set G) (x : G) :
-    x ∈ Submonoid.closure S⁻¹ ↔ x⁻¹ ∈ Submonoid.closure S := by
-  rw [closure_inv, mem_inv]
+    x ∈ Submonoid.closure S⁻¹ ↔ x⁻¹ ∈ Submonoid.closure S := by rw [closure_inv, mem_inv]
 
 end Submonoid
 
@@ -384,10 +383,7 @@ theorem mul_le {M N P : AddSubmonoid R} : M * N ≤ P ↔ ∀ m ∈ M, ∀ n ∈
 @[elabAsElim]
 protected theorem mul_induction_on {M N : AddSubmonoid R} {C : R → Prop} {r : R} (hr : r ∈ M * N)
     (hm : ∀ m ∈ M, ∀ n ∈ N, C (m * n)) (ha : ∀ x y, C x → C y → C (x + y)) : C r :=
-  (@mul_le _ _ _ _
-        ⟨C, ha, by
-          simpa only [zero_mul] using hm _ (zero_mem _) _ (zero_mem _)⟩).2
-    hm hr
+  (@mul_le _ _ _ _ ⟨C, ha, by simpa only [zero_mul] using hm _ (zero_mem _) _ (zero_mem _)⟩).2 hm hr
 
 open Pointwise
 
@@ -398,16 +394,16 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
     intro a ha b hb
     apply closure_induction ha
     on_goal 1 =>
-      intros
-      apply closure_induction hb
-      on_goal 1 =>
-        intros
-        exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
+    intros
+    apply closure_induction hb
+    on_goal 1 =>
+    intros
+    exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
     all_goals
-      intros
-      simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm, smul_mul_assoc]
-      solve_by_elim(config := { max_depth := 4, discharger := tactic.interactive.apply_instance }) [add_mem _ _,
-        zero_mem _]
+    intros
+    simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm, smul_mul_assoc]
+    solve_by_elim (config := { max_depth := 4, discharger := tactic.interactive.apply_instance }) [add_mem _ _,
+      zero_mem _]
     
   · rw [closure_le]
     rintro _ ⟨a, b, ha, hb, rfl⟩
@@ -419,15 +415,11 @@ theorem mul_eq_closure_mul_set (M N : AddSubmonoid R) : M * N = closure (M * N) 
 
 @[simp]
 theorem mul_bot (S : AddSubmonoid R) : S * ⊥ = ⊥ :=
-  eq_bot_iff.2 <|
-    mul_le.2 fun m hm n hn => by
-      rw [AddSubmonoid.mem_bot] at hn⊢ <;> rw [hn, mul_zero]
+  eq_bot_iff.2 <| mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hn⊢ <;> rw [hn, mul_zero]
 
 @[simp]
 theorem bot_mul (S : AddSubmonoid R) : ⊥ * S = ⊥ :=
-  eq_bot_iff.2 <|
-    mul_le.2 fun m hm n hn => by
-      rw [AddSubmonoid.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
+  eq_bot_iff.2 <| mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
 
 @[mono]
 theorem mul_le_mul {M N P Q : AddSubmonoid R} (hmp : M ≤ P) (hnq : N ≤ Q) : M * N ≤ P * Q :=
@@ -482,10 +474,8 @@ variable [NonAssocSemiringₓ R]
 instance : MulOneClassₓ (AddSubmonoid R) where
   one := 1
   mul := (· * ·)
-  one_mul := fun M => by
-    rw [one_eq_closure_one_set, ← closure_eq M, closure_mul_closure, one_mulₓ]
-  mul_one := fun M => by
-    rw [one_eq_closure_one_set, ← closure_eq M, closure_mul_closure, mul_oneₓ]
+  one_mul := fun M => by rw [one_eq_closure_one_set, ← closure_eq M, closure_mul_closure, one_mulₓ]
+  mul_one := fun M => by rw [one_eq_closure_one_set, ← closure_eq M, closure_mul_closure, mul_oneₓ]
 
 end NonAssocSemiringₓ
 
@@ -516,10 +506,8 @@ instance : Monoidₓ (AddSubmonoid R) :=
   { AddSubmonoid.semigroup, AddSubmonoid.mulOneClass with one := 1, mul := (· * ·) }
 
 theorem closure_pow (s : Set R) : ∀ n : ℕ, closure s ^ n = closure (s ^ n)
-  | 0 => by
-    rw [pow_zeroₓ, pow_zeroₓ, one_eq_closure_one_set]
-  | n + 1 => by
-    rw [pow_succₓ, pow_succₓ, closure_pow, closure_mul_closure]
+  | 0 => by rw [pow_zeroₓ, pow_zeroₓ, one_eq_closure_one_set]
+  | n + 1 => by rw [pow_succₓ, pow_succₓ, closure_pow, closure_mul_closure]
 
 theorem pow_eq_closure_pow_set (s : AddSubmonoid R) (n : ℕ) : s ^ n = closure ((s : Set R) ^ n) := by
   rw [← closure_pow, closure_eq]

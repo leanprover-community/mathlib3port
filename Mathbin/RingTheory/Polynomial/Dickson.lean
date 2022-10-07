@@ -69,12 +69,10 @@ theorem dickson_zero : dickson k a 0 = 3 - k :=
 theorem dickson_one : dickson k a 1 = X :=
   rfl
 
-theorem dickson_two : dickson k a 2 = X ^ 2 - c a * (3 - k) := by
-  simp only [dickson, sq]
+theorem dickson_two : dickson k a 2 = X ^ 2 - c a * (3 - k) := by simp only [dickson, sq]
 
 @[simp]
-theorem dickson_add_two (n : ℕ) : dickson k a (n + 2) = X * dickson k a (n + 1) - c a * dickson k a n := by
-  rw [dickson]
+theorem dickson_add_two (n : ℕ) : dickson k a (n + 2) = X * dickson k a (n + 1) - c a * dickson k a n := by rw [dickson]
 
 theorem dickson_of_two_le {n : ℕ} (h : 2 ≤ n) : dickson k a n = X * dickson k a (n - 1) - c a * dickson k a (n - 2) :=
   by
@@ -88,8 +86,7 @@ theorem map_dickson (f : R →+* S) : ∀ n : ℕ, map f (dickson k a n) = dicks
   | 0 => by
     simp only [dickson_zero, Polynomial.map_sub, Polynomial.map_nat_cast, bit1, bit0, Polynomial.map_add,
       Polynomial.map_one]
-  | 1 => by
-    simp only [dickson_one, map_X]
+  | 1 => by simp only [dickson_one, map_X]
   | n + 2 => by
     simp only [dickson_add_two, Polynomial.map_sub, Polynomial.map_mul, map_X, map_C]
     rw [map_dickson, map_dickson]
@@ -101,8 +98,7 @@ theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = X ^ n
   | 0 => by
     simp only [dickson_zero, pow_zeroₓ]
     norm_num
-  | 1 => by
-    simp only [dickson_one, pow_oneₓ]
+  | 1 => by simp only [dickson_one, pow_oneₓ]
   | n + 2 => by
     simp only [dickson_add_two, C_0, zero_mul, sub_zero]
     rw [dickson_two_zero, pow_addₓ X (n + 1) 1, mul_comm, pow_oneₓ]
@@ -127,8 +123,7 @@ theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) : ∀ n, (dickson
   | 0 => by
     simp only [bit0, eval_one, eval_add, pow_zeroₓ, dickson_zero]
     norm_num
-  | 1 => by
-    simp only [eval_X, dickson_one, pow_oneₓ]
+  | 1 => by simp only [eval_X, dickson_one, pow_oneₓ]
   | n + 2 => by
     simp only [eval_sub, eval_mul, dickson_one_one_eval_add_inv, eval_X, dickson_add_two, C_1, eval_one]
     conv_lhs => simp only [pow_succₓ, add_mulₓ, mul_addₓ, h, ← mul_assoc, mul_comm y x, one_mulₓ]
@@ -220,15 +215,14 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
       let φ : K[X] := X ^ 2 - C x * X + 1
       have hφ : φ ≠ 0 := by
         intro H
-        have : φ.eval 0 = 0 := by
-          rw [H, eval_zero]
+        have : φ.eval 0 = 0 := by rw [H, eval_zero]
         simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul, mul_zero, sq, zero_addₓ, one_ne_zero]
       classical
       convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
       ext1 y
-      simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe, Multiset.mem_union, mem_roots hφ, is_root,
+      simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finsetₓ.mem_coe, Multiset.mem_union, mem_roots hφ, is_root,
         eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one, Multiset.mem_singleton]
-      by_cases' hy : y = 0
+      by_cases hy:y = 0
       · simp only [hy, eq_self_iff_true, or_trueₓ]
         
       apply or_congrₓ _ Iff.rfl
@@ -239,7 +233,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
     · apply (Set.eq_univ_of_forall _).symm
       intro x
       simp only [exists_propₓ, Set.mem_Union, Set.bind_def, Ne.def, Set.mem_set_of_eq]
-      by_cases' hx : x = 0
+      by_cases hx:x = 0
       · simp only [hx, and_trueₓ, eq_self_iff_true, inv_zero, or_trueₓ]
         exact ⟨_, 1, rfl, one_ne_zero⟩
         

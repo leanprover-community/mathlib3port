@@ -59,12 +59,9 @@ instance category : LargeCategory.{max v u} Groupoidₓ.{v, u} where
   Hom := fun C D => C ⥤ D
   id := fun C => 𝟭 C
   comp := fun C D E F G => F ⋙ G
-  id_comp' := fun C D F => by
-    cases F <;> rfl
-  comp_id' := fun C D F => by
-    cases F <;> rfl
-  assoc' := by
-    intros <;> rfl
+  id_comp' := fun C D F => by cases F <;> rfl
+  comp_id' := fun C D F => by cases F <;> rfl
+  assoc' := by intros <;> rfl
 
 /-- Functor that gets the set of objects of a groupoid. It is not
 called `forget`, because it is not a faithful functor. -/
@@ -103,7 +100,7 @@ def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → Groupoidₓ.{u, u}) : Limits.I
   Limits.mkFanLimit (piLimitFan F) (fun s => Functor.pi' fun j => s.proj j)
     (by
       intros
-      dunfold pi_limit_fan
+      dsimp only [pi_limit_fan]
       simp [hom_to_functor])
     (by
       intro s m w

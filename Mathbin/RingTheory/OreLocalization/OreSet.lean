@@ -73,13 +73,10 @@ instance oreSetBot : OreSet (⊥ : Submonoid R) where
 
 /-- Every submonoid of a commutative monoid is an Ore set. -/
 instance (priority := 100) oreSetComm {R} [CommMonoidₓ R] (S : Submonoid R) : OreSet S where
-  ore_left_cancel := fun m n s h =>
-    ⟨s, by
-      rw [mul_comm n s, mul_comm m s, h]⟩
+  ore_left_cancel := fun m n s h => ⟨s, by rw [mul_comm n s, mul_comm m s, h]⟩
   oreNum := fun r _ => r
   oreDenom := fun _ s => s
-  ore_eq := fun r s => by
-    rw [mul_comm]
+  ore_eq := fun r s => by rw [mul_comm]
 
 end Monoidₓ
 
@@ -93,9 +90,9 @@ def oreSetOfCancelMonoidWithZero {R : Type _} [CancelMonoidWithZero R] {S : Subm
 /-- In rings without zero divisors, the first (cancellability) condition is always fulfilled,
 it suffices to give a proof for the Ore condition itself. -/
 def oreSetOfNoZeroDivisors {R : Type _} [Ringₓ R] [NoZeroDivisors R] {S : Submonoid R} (ore_num : R → S → R)
-    (ore_denom : R → S → S) (ore_eq : ∀ (r : R) (s : S), r * ore_denom r s = s * ore_num r s) : OreSet S := by
+    (ore_denom : R → S → S) (ore_eq : ∀ (r : R) (s : S), r * ore_denom r s = s * ore_num r s) : OreSet S :=
   letI : CancelMonoidWithZero R := NoZeroDivisors.toCancelMonoidWithZero
-  exact ore_set_of_cancel_monoid_with_zero ore_num ore_denom ore_eq
+  ore_set_of_cancel_monoid_with_zero ore_num ore_denom ore_eq
 
 end OreLocalization
 

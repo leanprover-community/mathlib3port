@@ -43,11 +43,11 @@ We provide a few instances for concrete types:
 -/
 
 
-open Finset
+open Finsetₓ
 
-namespace Fintype
+namespace Fintypeₓ
 
-variable {ι α : Type _} [Fintype ι] [Fintype α]
+variable {ι α : Type _} [Fintypeₓ ι] [Fintypeₓ α]
 
 section Nonempty
 
@@ -86,10 +86,10 @@ open Classical
 @[reducible]
 noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLattice α :=
   { ‹Lattice α›, ‹BoundedOrder α› with sup := fun s => s.toFinset.sup id, inf := fun s => s.toFinset.inf id,
-    le_Sup := fun _ _ ha => Finset.le_sup (Set.mem_to_finset.mpr ha),
-    Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ <| Set.mem_to_finset.mp hb,
-    Inf_le := fun _ _ ha => Finset.inf_le (Set.mem_to_finset.mpr ha),
-    le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_to_finset.mp hb }
+    le_Sup := fun _ _ ha => Finsetₓ.le_sup (Set.mem_to_finset.mpr ha),
+    Sup_le := fun s _ ha => Finsetₓ.sup_le fun b hb => ha _ <| Set.mem_to_finset.mp hb,
+    Inf_le := fun _ _ ha => Finsetₓ.inf_le (Set.mem_to_finset.mpr ha),
+    le_Inf := fun s _ ha => Finsetₓ.le_inf fun b hb => ha _ <| Set.mem_to_finset.mp hb }
 
 -- See note [reducible non-instances]
 /-- A finite bounded distributive lattice is completely distributive. -/
@@ -97,13 +97,13 @@ noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLat
 noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α] : CompleteDistribLattice α :=
   { toCompleteLattice α with
     infi_sup_le_sup_Inf := fun a s => by
-      convert (Finset.inf_sup_distrib_left _ _ _).Ge
-      convert (Finset.inf_eq_infi _ _).symm
+      convert (Finsetₓ.inf_sup_distrib_left _ _ _).Ge
+      convert (Finsetₓ.inf_eq_infi _ _).symm
       simp_rw [Set.mem_to_finset]
       rfl,
     inf_Sup_le_supr_inf := fun a s => by
-      convert (Finset.sup_inf_distrib_left _ _ _).le
-      convert (Finset.sup_eq_supr _ _).symm
+      convert (Finsetₓ.sup_inf_distrib_left _ _ _).le
+      convert (Finsetₓ.sup_eq_supr _ _).symm
       simp_rw [Set.mem_to_finset]
       rfl }
 
@@ -117,7 +117,7 @@ noncomputable def toCompleteLinearOrder [LinearOrderₓ α] [BoundedOrder α] : 
 /-- A finite boolean algebra is complete. -/
 @[reducible]
 noncomputable def toCompleteBooleanAlgebra [BooleanAlgebra α] : CompleteBooleanAlgebra α :=
-  { Fintype.toCompleteDistribLattice α, ‹BooleanAlgebra α› with }
+  { Fintypeₓ.toCompleteDistribLattice α, ‹BooleanAlgebra α› with }
 
 end BoundedOrder
 
@@ -142,38 +142,38 @@ noncomputable def toCompleteLinearOrderOfNonempty [LinearOrderₓ α] : Complete
 
 end Nonempty
 
-end Fintype
+end Fintypeₓ
 
 /-! ### Concrete instances -/
 
 
 noncomputable instance {n : ℕ} : CompleteLinearOrder (Finₓ (n + 1)) :=
-  Fintype.toCompleteLinearOrder _
+  Fintypeₓ.toCompleteLinearOrder _
 
 noncomputable instance : CompleteLinearOrder Bool :=
-  Fintype.toCompleteLinearOrder _
+  Fintypeₓ.toCompleteLinearOrder _
 
 noncomputable instance : CompleteBooleanAlgebra Bool :=
-  Fintype.toCompleteBooleanAlgebra _
+  Fintypeₓ.toCompleteBooleanAlgebra _
 
 /-! ### Directed Orders -/
 
 
 variable {α : Type _}
 
-theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α} [Fintype β]
+theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α} [Fintypeₓ β]
     (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by
   classical
-  obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
-  exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
+  obtain ⟨z, hz⟩ := D.finset_le (Finsetₓ.image g Finsetₓ.univ)
+  exact ⟨z, fun i => hz (g i) (Finsetₓ.mem_image_of_mem g (Finsetₓ.mem_univ i))⟩
 
-theorem Fintype.exists_le [Nonempty α] [Preorderₓ α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β] (f : β → α) :
+theorem Fintypeₓ.exists_le [Nonempty α] [Preorderₓ α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintypeₓ β] (f : β → α) :
     ∃ M, ∀ i, f i ≤ M :=
   directed_id.fintype_le _
 
-theorem Fintype.bdd_above_range [Nonempty α] [Preorderₓ α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β] (f : β → α) :
-    BddAbove (Set.Range f) := by
-  obtain ⟨M, hM⟩ := Fintype.exists_le f
+theorem Fintypeₓ.bdd_above_range [Nonempty α] [Preorderₓ α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintypeₓ β]
+    (f : β → α) : BddAbove (Set.Range f) := by
+  obtain ⟨M, hM⟩ := Fintypeₓ.exists_le f
   refine' ⟨M, fun a ha => _⟩
   obtain ⟨b, rfl⟩ := ha
   exact hM b

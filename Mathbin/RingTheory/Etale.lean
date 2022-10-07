@@ -98,7 +98,7 @@ theorem FormallyUnramified.lift_unique {B : Type u} [CommRingₓ B] [_RB : Algeb
     apply h₂
     ext x
     replace e := AlgHom.congr_fun e x
-    dsimp' only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk]  at e⊢
+    dsimp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk] at e⊢
     rwa [Ideal.Quotient.eq, ← map_sub, Ideal.mem_quotient_iff_mem hIJ, ← Ideal.Quotient.eq]
     
 
@@ -237,9 +237,7 @@ theorem FormallyUnramified.comp [FormallyUnramified R A] [FormallyUnramified A B
   intro C _ _ I hI f₁ f₂ e
   have e' :=
     formally_unramified.lift_unique I ⟨2, hI⟩ (f₁.comp <| IsScalarTower.toAlgHom R A B)
-      (f₂.comp <| IsScalarTower.toAlgHom R A B)
-      (by
-        rw [← AlgHom.comp_assoc, e, AlgHom.comp_assoc])
+      (f₂.comp <| IsScalarTower.toAlgHom R A B) (by rw [← AlgHom.comp_assoc, e, AlgHom.comp_assoc])
   letI := (f₁.comp (IsScalarTower.toAlgHom R A B)).toRingHom.toAlgebra
   let F₁ : B →ₐ[A] C := { f₁ with commutes' := fun r => rfl }
   let F₂ : B →ₐ[A] C := { f₂ with commutes' := AlgHom.congr_fun e'.symm }
@@ -289,9 +287,7 @@ theorem FormallySmooth.of_split [FormallySmooth R P] (g : A →ₐ[R] P ⧸ f.to
     apply Ideal.Quotient.ring_hom_ext
     ext x
     exact (formally_smooth.mk_lift I ⟨2, hI⟩ (i.comp f) x).symm
-  exact
-    ⟨l.comp g, by
-      rw [← AlgHom.comp_assoc, ← this, AlgHom.comp_assoc, hg, AlgHom.comp_id]⟩
+  exact ⟨l.comp g, by rw [← AlgHom.comp_assoc, ← this, AlgHom.comp_assoc, hg, AlgHom.comp_id]⟩
 
 include hf
 
@@ -312,13 +308,13 @@ theorem FormallySmooth.iff_split_surjection [FormallySmooth R P] :
     have :=
       (Ideal.quotientKerAlgEquivOfSurjective surj).toAlgHom.congr_arg
         (formally_smooth.mk_lift _ ⟨2, sqz⟩ (Ideal.quotientKerAlgEquivOfSurjective surj).symm.toAlgHom x)
-    dsimp'  at this
+    dsimp at this
     rw [AlgEquiv.apply_symm_apply] at this
     conv_rhs => rw [← this, AlgHom.id_apply]
     obtain ⟨y, e⟩ :=
       Ideal.Quotient.mk_surjective
         (formally_smooth.lift _ ⟨2, sqz⟩ (Ideal.quotientKerAlgEquivOfSurjective surj).symm.toAlgHom x)
-    dsimp'  at e⊢
+    dsimp at e⊢
     rw [← e]
     rfl
     
@@ -338,7 +334,6 @@ variable {A : Type u} [Semiringₓ A] [Algebra R A]
 
 variable (B : Type u) [CommSemiringₓ B] [Algebra R B]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 instance FormallyUnramified.base_change [FormallyUnramified R A] : FormallyUnramified B (B ⊗[R] A) := by
   constructor
   intro C _ _ I hI f₁ f₂ e
@@ -346,11 +341,9 @@ instance FormallyUnramified.base_change [FormallyUnramified R A] : FormallyUnram
   haveI : IsScalarTower R B C := IsScalarTower.of_algebra_map_eq' rfl
   apply AlgHom.restrict_scalars_injective R
   apply TensorProduct.ext
-  any_goals {
-  }
+  any_goals infer_instance
   intro b a
-  have : b ⊗ₜ[R] a = b • 1 ⊗ₜ a := by
-    rw [TensorProduct.smul_tmul', smul_eq_mul, mul_oneₓ]
+  have : b ⊗ₜ[R] a = b • 1 ⊗ₜ a := by rw [TensorProduct.smul_tmul', smul_eq_mul, mul_oneₓ]
   rw [this, AlgHom.restrict_scalars_apply, AlgHom.restrict_scalars_apply, map_smul, map_smul]
   congr 1
   change
@@ -361,7 +354,6 @@ instance FormallyUnramified.base_change [FormallyUnramified R A] : FormallyUnram
   intro x
   exact AlgHom.congr_fun e (1 ⊗ₜ x)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 instance FormallySmooth.base_change [FormallySmooth R A] : FormallySmooth B (B ⊗[R] A) := by
   constructor
   intro C _ _ I hI f
@@ -372,11 +364,9 @@ instance FormallySmooth.base_change [FormallySmooth R A] : FormallySmooth B (B �
     
   · apply AlgHom.restrict_scalars_injective R
     apply TensorProduct.ext
-    any_goals {
-    }
+    any_goals infer_instance
     intro b a
-    suffices algebraMap B _ b * f (1 ⊗ₜ[R] a) = f (b ⊗ₜ[R] a) by
-      simpa [Algebra.of_id_apply]
+    suffices algebraMap B _ b * f (1 ⊗ₜ[R] a) = f (b ⊗ₜ[R] a) by simpa [Algebra.of_id_apply]
     rw [← Algebra.smul_def, ← map_smul, TensorProduct.smul_tmul', smul_eq_mul, mul_oneₓ]
     
 

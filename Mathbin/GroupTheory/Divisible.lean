@@ -112,10 +112,8 @@ implies the textbook approach.
 noncomputable def rootableByOfPowLeftSurj (H : ∀ {n : α}, n ≠ 0 → Function.Surjective (fun a => a ^ n : A → A)) :
     RootableBy A α where
   root := fun a n => @dite _ (n = 0) (Classical.dec _) (fun _ => (1 : A)) fun hn => (H hn a).some
-  root_zero := fun _ => by
-    classical <;> exact dif_pos rfl
-  root_cancel := fun n a hn => by
-    rw [dif_neg hn] <;> exact (H hn a).some_spec
+  root_zero := fun _ => by classical <;> exact dif_pos rfl
+  root_cancel := fun n a hn => by rw [dif_neg hn] <;> exact (H hn a).some_spec
 
 section Pi
 
@@ -158,11 +156,7 @@ theorem smul_top_eq_top_of_divisible_by_int [DivisibleBy A ℤ] {n : ℤ} (hn : 
 -/
 noncomputable def divisibleByIntOfSmulTopEqTop (H : ∀ {n : ℤ} (hn : n ≠ 0), n • (⊤ : AddSubgroup A) = ⊤) :
     DivisibleBy A ℤ where
-  div := fun a n =>
-    if hn : n = 0 then 0
-    else
-      show a ∈ n • (⊤ : AddSubgroup A) by
-          rw [H hn] <;> trivial.some
+  div := fun a n => if hn : n = 0 then 0 else show a ∈ n • (⊤ : AddSubgroup A) by rw [H hn] <;> trivial.some
   div_zero := fun a => dif_pos rfl
   div_cancel := fun n a hn => by
     rw [dif_neg hn]
@@ -173,8 +167,7 @@ end AddCommGroupₓ
 
 instance (priority := 100) divisibleByIntOfCharZero {𝕜} [DivisionRing 𝕜] [CharZero 𝕜] : DivisibleBy 𝕜 ℤ where
   div := fun q n => q / n
-  div_zero := fun q => by
-    norm_num
+  div_zero := fun q => by norm_num
   div_cancel := fun n q hn => by
     rw [zsmul_eq_mul, (Int.cast_commute n _).Eq, div_mul_cancel q (int.cast_ne_zero.mpr hn)]
 
@@ -212,10 +205,7 @@ def rootableByNatOfRootableByInt [RootableBy A ℤ] : RootableBy A ℕ where
   root := fun a n => RootableBy.root a (n : ℤ)
   root_zero := fun a => RootableBy.root_zero a
   root_cancel := fun n a hn => by
-    have :=
-      RootableBy.root_cancel a
-        (show (n : ℤ) ≠ 0 by
-          exact_mod_cast hn)
+    have := RootableBy.root_cancel a (show (n : ℤ) ≠ 0 by exact_mod_cast hn)
     norm_num at this
     exact this
 
@@ -236,9 +226,7 @@ noncomputable def Function.Surjective.rootableBy (hf : Function.Surjective f)
     (hpow : ∀ (a : A) (n : α), f (a ^ n) = f a ^ n) : RootableBy B α :=
   (rootableByOfPowLeftSurj _ _) fun n hn x =>
     let ⟨y, hy⟩ := hf x
-    ⟨f <| RootableBy.root y n,
-      (by
-        rw [← hpow (RootableBy.root y n) n, RootableBy.root_cancel _ hn, hy] : _ ^ _ = x)⟩
+    ⟨f <| RootableBy.root y n, (by rw [← hpow (RootableBy.root y n) n, RootableBy.root_cancel _ hn, hy] : _ ^ _ = x)⟩
 
 end Hom
 

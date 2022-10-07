@@ -64,9 +64,7 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
   dist := fun x y => ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0)
   dist_self := fun x =>
     (Nnreal.coe_eq_zero _).2 <|
-      nonpos_iff_eq_zero.1 <|
-        (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by
-          simp [dist_self]
+      nonpos_iff_eq_zero.1 <| (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by simp [dist_self]
   dist_comm := fun x y =>
     Nnreal.coe_eq.2 <| by
       refine' reverse_surjective.infi_congr _ fun l => _
@@ -93,12 +91,10 @@ theorem dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 
 theorem dist_of_prenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x)
     (x y : X) :
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x y ≤ d x y :=
-  Nnreal.coe_le_coe.2 <|
-    (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by
-      simp
+  Nnreal.coe_le_coe.2 <| (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by simp
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident z, ",", ident z', ",", ident hxz, ",", ident hzz', ",", ident hz'y, "⟩", ":", expr «expr∃ , »((z z' : X),
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident z, ",", ident z', ",", ident hxz, ",", ident hzz', ",", ident hz'y, "⟩", ":", expr «expr∃ , »((z z' : X),
     «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -127,18 +123,16 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
   simp only at ihn
   subst n
   set L := zip_with d (x::l) (l ++ [y])
-  have hL_len : length L = length l + 1 := by
-    simp
+  have hL_len : length L = length l + 1 := by simp
   cases' eq_or_ne (d x y) 0 with hd₀ hd₀
   · simp only [hd₀, zero_le]
     
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident z, \",\", ident z', \",\", ident hxz, \",\", ident hzz', \",\", ident hz'y, \"⟩\", \":\", expr «expr∃ , »((z z' : X),\n    «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident z, \",\", ident z', \",\", ident hxz, \",\", ident hzz', \",\", ident hz'y, \"⟩\", \":\", expr «expr∃ , »((z z' : X),\n    «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]"
   · exact (hd x z z' y).trans (mul_le_mul_left' (max_leₓ hxz (max_leₓ hzz' hz'y)) _)
     
   set s : Set ℕ := { m : ℕ | 2 * (take m L).Sum ≤ L.sum }
-  have hs₀ : 0 ∈ s := by
-    simp [s]
+  have hs₀ : 0 ∈ s := by simp [s]
   have hsne : s.nonempty := ⟨0, hs₀⟩
   obtain ⟨M, hMl, hMs⟩ : ∃ M ≤ length l, IsGreatest s M := by
     have hs_ub : length l ∈ UpperBounds s := by
@@ -153,8 +147,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
       exact hd₀ (hm.rel (mem_append.2 <| Or.inr <| mem_singleton_self _))
     have hs_bdd : BddAbove s := ⟨length l, hs_ub⟩
     exact ⟨Sup s, cSup_le hsne hs_ub, ⟨Nat.Sup_mem hsne hs_bdd, fun k => le_cSup hs_bdd⟩⟩
-  have hM_lt : M < length L := by
-    rwa [hL_len, Nat.lt_succ_iffₓ]
+  have hM_lt : M < length L := by rwa [hL_len, Nat.lt_succ_iff]
   have hM_ltx : M < length (x::l) := lt_length_left_of_zip_with hM_lt
   have hM_lty : M < length (l ++ [y]) := lt_length_right_of_zip_with hM_lt
   refine' ⟨(x::l).nthLe M hM_ltx, (l ++ [y]).nthLe M hM_lty, _, _, _⟩
@@ -217,7 +210,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
   set d : X → X → ℝ≥0 := fun x y => if h : ∃ n, (x, y) ∉ U n then (1 / 2) ^ Nat.findₓ h else 0
   have hd₀ : ∀ {x y}, d x y = 0 ↔ x ≈ y := by
     intro x y
-    dsimp' only [d]
+    dsimp only [d]
     refine' Iff.trans _ hB.to_has_basis.mem_separation_rel.symm
     simp only [true_implies_iff]
     split_ifs with h
@@ -228,7 +221,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       
   have hd_symm : ∀ x y, d x y = d y x := by
     intro x y
-    dsimp' only [d]
+    dsimp only [d]
     simp only [@SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
   have hr : (1 / 2 : ℝ≥0) ∈ Ioo (0 : ℝ≥0) 1 := ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_ne_zero⟩
   letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoidₓ.refl _)) hd_symm
@@ -245,7 +238,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       
   have hd_le : ∀ x y, ↑(d x y) ≤ 2 * dist x y := by
     refine' PseudoMetricSpace.le_two_mul_dist_of_prenndist _ _ _ fun x₁ x₂ x₃ x₄ => _
-    by_cases' H : ∃ n, (x₁, x₄) ∉ U n
+    by_cases H:∃ n, (x₁, x₄) ∉ U n
     · refine' (dif_pos H).trans_le _
       rw [← Nnreal.div_le_iff' two_ne_zero, ← mul_one_div (_ ^ _), ← pow_succ'ₓ]
       simp only [le_max_iff, hle_d, ← not_and_distrib]

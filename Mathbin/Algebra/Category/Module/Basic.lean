@@ -222,12 +222,8 @@ This version is better than `linear_equiv_to_Module_iso` when applicable, becaus
 def LinearEquiv.toModuleIso' {M N : ModuleCat.{v} R} (i : M ≃ₗ[R] N) : M ≅ N where
   Hom := i
   inv := i.symm
-  hom_inv_id' :=
-    LinearMap.ext fun x => by
-      simp
-  inv_hom_id' :=
-    LinearMap.ext fun x => by
-      simp
+  hom_inv_id' := LinearMap.ext fun x => by simp
+  inv_hom_id' := LinearMap.ext fun x => by simp
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
 
@@ -238,12 +234,8 @@ def LinearEquiv.toModuleIso'Left {X₁ : ModuleCat.{v} R} {g₂ : AddCommGroup�
     X₁ ≅ ModuleCat.of R X₂ where
   Hom := (e : X₁ →ₗ[R] X₂)
   inv := (e.symm : X₂ →ₗ[R] X₁)
-  hom_inv_id' :=
-    LinearMap.ext fun x => by
-      simp
-  inv_hom_id' :=
-    LinearMap.ext fun x => by
-      simp
+  hom_inv_id' := LinearMap.ext fun x => by simp
+  inv_hom_id' := LinearMap.ext fun x => by simp
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
 
@@ -254,12 +246,8 @@ def LinearEquiv.toModuleIso'Right {g₁ : AddCommGroupₓ X₁} {m₁ : Module R
     ModuleCat.of R X₁ ≅ X₂ where
   Hom := (e : X₁ →ₗ[R] X₂)
   inv := (e.symm : X₂ →ₗ[R] X₁)
-  hom_inv_id' :=
-    LinearMap.ext fun x => by
-      simp
-  inv_hom_id' :=
-    LinearMap.ext fun x => by
-      simp
+  hom_inv_id' := LinearMap.ext fun x => by simp
+  inv_hom_id' := LinearMap.ext fun x => by simp
 
 namespace CategoryTheory.Iso
 
@@ -268,14 +256,10 @@ namespace CategoryTheory.Iso
 def toLinearEquiv {X Y : ModuleCat R} (i : X ≅ Y) : X ≃ₗ[R] Y where
   toFun := i.Hom
   invFun := i.inv
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
-  map_add' := by
-    tidy
-  map_smul' := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
+  map_add' := by tidy
+  map_smul' := by tidy
 
 end CategoryTheory.Iso
 

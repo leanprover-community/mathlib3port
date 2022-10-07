@@ -63,19 +63,16 @@ theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s
   filter_upwards [this] with r hr
   simp only [image_add_left, singleton_add]
   intro y hy
-  obtain ⟨z, zs, hz⟩ : ∃ z : E, z ∈ s ∧ r • z = -x + y := by
-    simpa [mem_smul_set] using hy
+  obtain ⟨z, zs, hz⟩ : ∃ z : E, z ∈ s ∧ r • z = -x + y := by simpa [mem_smul_set] using hy
   have I : ∥r • z∥ ≤ ε :=
     calc
       ∥r • z∥ = ∥r∥ * ∥z∥ := norm_smul _ _
       _ ≤ ε / R * R :=
         mul_le_mul (mem_closed_ball_zero_iff.1 hr) (mem_closed_ball_zero_iff.1 (hR zs)) (norm_nonneg _)
           (div_pos εpos Rpos).le
-      _ = ε := by
-        field_simp [Rpos.ne']
+      _ = ε := by field_simp [Rpos.ne']
       
-  have : y = x + r • z := by
-    simp only [hz, add_neg_cancel_left]
+  have : y = x + r • z := by simp only [hz, add_neg_cancel_left]
   apply hε
   simpa only [this, dist_eq_norm, add_sub_cancel', mem_closed_ball] using I
 
@@ -90,15 +87,13 @@ theorem smul_unit_ball_of_pos {r : ℝ} (hr : 0 < r) : r • Ball 0 1 = Ball (0 
 theorem exists_dist_eq (x z : E) {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) :
     ∃ y, dist x y = b * dist x z ∧ dist y z = a * dist x z := by
   use a • x + b • z
-  nth_rw 0[← one_smul ℝ x]
-  nth_rw 3[← one_smul ℝ z]
+  nth_rw 0 [← one_smul ℝ x]
+  nth_rw 3 [← one_smul ℝ z]
   simp [dist_eq_norm, ← hab, add_smul, ← smul_sub, norm_smul_of_nonneg, ha, hb]
 
 theorem exists_dist_le_le (hδ : 0 ≤ δ) (hε : 0 ≤ ε) (h : dist x z ≤ ε + δ) : ∃ y, dist x y ≤ δ ∧ dist y z ≤ ε := by
   obtain rfl | hε' := hε.eq_or_lt
-  · exact
-      ⟨z, by
-        rwa [zero_addₓ] at h, (dist_self _).le⟩
+  · exact ⟨z, by rwa [zero_addₓ] at h, (dist_self _).le⟩
     
   have hεδ := add_pos_of_pos_of_nonneg hε' hδ
   refine'
@@ -121,13 +116,8 @@ theorem exists_dist_le_lt (hδ : 0 ≤ δ) (hε : 0 < ε) (h : dist x z < ε + �
 
 -- This is also true for `ℚ`-normed spaces
 theorem exists_dist_lt_le (hδ : 0 < δ) (hε : 0 ≤ ε) (h : dist x z < ε + δ) : ∃ y, dist x y < δ ∧ dist y z ≤ ε := by
-  obtain ⟨y, yz, xy⟩ :=
-    exists_dist_le_lt hε hδ
-      (show dist z x < δ + ε by
-        simpa only [dist_comm, add_commₓ] using h)
-  exact
-    ⟨y, by
-      simp [dist_comm x y, dist_comm y z, *]⟩
+  obtain ⟨y, yz, xy⟩ := exists_dist_le_lt hε hδ (show dist z x < δ + ε by simpa only [dist_comm, add_commₓ] using h)
+  exact ⟨y, by simp [dist_comm x y, dist_comm y z, *]⟩
 
 -- This is also true for `ℚ`-normed spaces
 theorem exists_dist_lt_lt (hδ : 0 < δ) (hε : 0 < ε) (h : dist x z < ε + δ) : ∃ y, dist x y < δ ∧ dist y z < ε := by
@@ -272,20 +262,16 @@ theorem ball_sub_ball (hε : 0 < ε) (hδ : 0 < δ) (a b : E) : Ball a ε - Ball
   simp_rw [sub_eq_add_neg, neg_ball, ball_add_ball hε hδ]
 
 theorem ball_add_closed_ball (hε : 0 < ε) (hδ : 0 ≤ δ) (a b : E) : Ball a ε + ClosedBall b δ = Ball (a + b) (ε + δ) :=
-  by
-  rw [ball_add, thickening_closed_ball hε hδ, vadd_ball, vadd_eq_add] <;> infer_instance
+  by rw [ball_add, thickening_closed_ball hε hδ, vadd_ball, vadd_eq_add] <;> infer_instance
 
 theorem ball_sub_closed_ball (hε : 0 < ε) (hδ : 0 ≤ δ) (a b : E) : Ball a ε - ClosedBall b δ = Ball (a - b) (ε + δ) :=
-  by
-  simp_rw [sub_eq_add_neg, neg_closed_ball, ball_add_closed_ball hε hδ]
+  by simp_rw [sub_eq_add_neg, neg_closed_ball, ball_add_closed_ball hε hδ]
 
 theorem closed_ball_add_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) : ClosedBall a ε + Ball b δ = Ball (a + b) (ε + δ) :=
-  by
-  rw [add_commₓ, ball_add_closed_ball hδ hε, add_commₓ, add_commₓ δ] <;> infer_instance
+  by rw [add_commₓ, ball_add_closed_ball hδ hε, add_commₓ, add_commₓ δ] <;> infer_instance
 
 theorem closed_ball_sub_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) : ClosedBall a ε - Ball b δ = Ball (a - b) (ε + δ) :=
-  by
-  simp_rw [sub_eq_add_neg, neg_ball, closed_ball_add_ball hε hδ]
+  by simp_rw [sub_eq_add_neg, neg_ball, closed_ball_add_ball hε hδ]
 
 theorem closed_ball_add_closed_ball [ProperSpace E] (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (a b : E) :
     ClosedBall a ε + ClosedBall b δ = ClosedBall (a + b) (ε + δ) := by
@@ -327,8 +313,7 @@ theorem NormedSpace.sphere_nonempty [Nontrivial E] {x : E} {r : ℝ} : (Sphere x
   obtain ⟨y, hy⟩ := exists_ne x
   refine'
     ⟨fun h => nonempty_closed_ball.1 (h.mono sphere_subset_closed_ball), fun hr => ⟨r • ∥y - x∥⁻¹ • (y - x) + x, _⟩⟩
-  have : ∥y - x∥ ≠ 0 := by
-    simpa [sub_eq_zero]
+  have : ∥y - x∥ ≠ 0 := by simpa [sub_eq_zero]
   simp [norm_smul, this, Real.norm_of_nonneg hr]
 
 theorem smul_sphere [Nontrivial E] (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) : c • Sphere x r = Sphere (c • x) (∥c∥ * r) :=

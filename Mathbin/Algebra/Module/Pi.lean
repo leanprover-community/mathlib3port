@@ -31,12 +31,12 @@ theorem _root_.is_smul_regular.pi {α : Type _} [∀ i, HasSmul α <| f i] {k : 
     IsSmulRegular (∀ i, f i) k := fun _ _ h => funext fun i => hk i (congr_fun h i : _)
 
 instance smulWithZero (α) [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] : SmulWithZero α (∀ i, f i) :=
-  { Pi.hasSmul with smul_zero := fun _ => funext fun _ => smul_zero' (f _) _,
+  { Pi.hasSmul with smul_zero := fun _ => funext fun _ => smul_zero _,
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 
 instance smulWithZero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)] [∀ i, SmulWithZero (g i) (f i)] :
     SmulWithZero (∀ i, g i) (∀ i, f i) :=
-  { Pi.hasSmul' with smul_zero := fun _ => funext fun _ => smul_zero' (f _) _,
+  { Pi.hasSmul' with smul_zero := fun _ => funext fun _ => smul_zero _,
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 
 instance mulActionWithZero (α) [MonoidWithZeroₓ α] [∀ i, Zero (f i)] [∀ i, MulActionWithZero α (f i)] :

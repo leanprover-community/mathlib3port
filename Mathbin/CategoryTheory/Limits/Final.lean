@@ -111,17 +111,9 @@ theorem final_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Final 
       (@zigzag_is_connected _ _ ⟨u⟩) fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
-            (show Zag f u from
-              Or.inr
-                ⟨StructuredArrow.homMk ((adj.homEquiv c f.right).symm f.Hom)
-                    (by
-                      simp )⟩))
+            (show Zag f u from Or.inr ⟨StructuredArrow.homMk ((adj.homEquiv c f.right).symm f.Hom) (by simp)⟩))
           (Relation.ReflTransGen.single
-            (show Zag u g from
-              Or.inl
-                ⟨StructuredArrow.homMk ((adj.homEquiv c g.right).symm g.Hom)
-                    (by
-                      simp )⟩)) }
+            (show Zag u g from Or.inl ⟨StructuredArrow.homMk ((adj.homEquiv c g.right).symm g.Hom) (by simp)⟩)) }
 
 /-- If a functor `L : C ⥤ D` is a left adjoint, it is initial. -/
 theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Initial L :=
@@ -130,17 +122,9 @@ theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Init
       (@zigzag_is_connected _ _ ⟨u⟩) fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
-            (show Zag f u from
-              Or.inl
-                ⟨CostructuredArrow.homMk (adj.homEquiv f.left d f.Hom)
-                    (by
-                      simp )⟩))
+            (show Zag f u from Or.inl ⟨CostructuredArrow.homMk (adj.homEquiv f.left d f.Hom) (by simp)⟩))
           (Relation.ReflTransGen.single
-            (show Zag u g from
-              Or.inr
-                ⟨CostructuredArrow.homMk (adj.homEquiv g.left d g.Hom)
-                    (by
-                      simp )⟩)) }
+            (show Zag u g from Or.inr ⟨CostructuredArrow.homMk (adj.homEquiv g.left d g.Hom) (by simp)⟩)) }
 
 instance (priority := 100) final_of_is_right_adjoint (F : C ⥤ D) [h : IsRightAdjoint F] : Final F :=
   final_of_adjunction h.adj
@@ -187,13 +171,13 @@ def induction {d : D} (Z : ∀ (X : C) (k : d ⟶ F.obj X), Sort _)
   · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.right _ a
     convert f.w.symm
-    dsimp'
+    dsimp
     simp
     
   · intro j₁ j₂ f a
     fapply h₂ _ _ _ _ f.right _ a
     convert f.w.symm
-    dsimp'
+    dsimp
     simp
     
 
@@ -208,7 +192,7 @@ def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G where
       ι :=
         { app := fun X => G.map (homToLift F X) ≫ c.ι.app (lift F X),
           naturality' := fun X Y f => by
-            dsimp'
+            dsimp
             simp
             -- This would be true if we'd chosen `lift F X` to be `lift F Y`
             -- and `hom_to_lift F X` to be `f ≫ hom_to_lift F Y`.
@@ -253,22 +237,8 @@ for any `G : D ⥤ E`.
 def coconesEquiv : Cocone (F ⋙ G) ≌ Cocone G where
   Functor := extendCocone
   inverse := Cocones.whiskering F
-  unitIso :=
-    NatIso.ofComponents
-      (fun c =>
-        Cocones.ext (Iso.refl _)
-          (by
-            tidy))
-      (by
-        tidy)
-  counitIso :=
-    NatIso.ofComponents
-      (fun c =>
-        Cocones.ext (Iso.refl _)
-          (by
-            tidy))
-      (by
-        tidy)
+  unitIso := NatIso.ofComponents (fun c => Cocones.ext (Iso.refl _) (by tidy)) (by tidy)
+  counitIso := NatIso.ofComponents (fun c => Cocones.ext (Iso.refl _) (by tidy)) (by tidy)
 
 variable {G}
 
@@ -295,16 +265,16 @@ instance (priority := 100) comp_has_colimit [HasColimit G] : HasColimit (F ⋙ G
 
 theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
     ((isColimitWhiskerEquiv F _).symm P).desc (t.whisker F) = 𝟙 t.x := by
-  dsimp' [is_colimit_whisker_equiv]
+  dsimp [is_colimit_whisker_equiv]
   apply P.hom_ext
   intro j
-  dsimp'
+  dsimp
   simp
 
 instance colimit_pre_is_iso [HasColimit G] : IsIso (colimit.pre G F) := by
   rw [colimit.pre_eq (colimit_cocone_comp F (get_colimit_cocone G)) (get_colimit_cocone G)]
   erw [colimit_pre_is_iso_aux]
-  dsimp'
+  dsimp
   infer_instance
 
 section
@@ -362,23 +332,22 @@ theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶
     (t : EqvGen (Types.Quot.Rel.{v, v} (F ⋙ coyoneda.obj (op d))) f₁ f₂) :
     Zigzag (StructuredArrow.mk f₁.2) (StructuredArrow.mk f₂.2) := by
   induction t
-  case eqv_gen.rel x y r =>
-    obtain ⟨f, w⟩ := r
-    fconstructor
-    swap
-    fconstructor
-    left
-    fconstructor
-    exact { right := f }
-  case eqv_gen.refl =>
-    fconstructor
-  case eqv_gen.symm x y h ih =>
-    apply zigzag_symmetric
-    exact ih
-  case eqv_gen.trans x y z h₁ h₂ ih₁ ih₂ =>
-    apply Relation.ReflTransGen.trans
-    exact ih₁
-    exact ih₂
+  case rel x y r =>
+  obtain ⟨f, w⟩ := r
+  fconstructor
+  swap
+  fconstructor
+  left
+  fconstructor
+  exact { right := f }
+  case refl => fconstructor
+  case symm x y h ih =>
+  apply zigzag_symmetric
+  exact ih
+  case trans x y z h₁ h₂ ih₁ ih₂ =>
+  apply Relation.ReflTransGen.trans
+  exact ih₁
+  exact ih₂
 
 /-- If `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit` for all `d : D`, then `F` is cofinal.
 -/
@@ -390,7 +359,7 @@ theorem cofinal_of_colimit_comp_coyoneda_iso_punit (I : ∀ d, colimit (F ⋙ co
       exact ⟨structured_arrow.mk y⟩
     apply zigzag_is_connected
     rintro ⟨⟨⟨⟩⟩, X₁, f₁⟩ ⟨⟨⟨⟩⟩, X₂, f₂⟩
-    dsimp'  at *
+    dsimp at *
     let y₁ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₁ f₁
     let y₂ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₂ f₂
     have e : y₁ = y₂ := by
@@ -441,13 +410,13 @@ def induction {d : D} (Z : ∀ (X : C) (k : F.obj X ⟶ d), Sort _)
   · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.left _ a
     convert f.w
-    dsimp'
+    dsimp
     simp
     
   · intro j₁ j₂ f a
     fapply h₂ _ _ _ _ f.left _ a
     convert f.w
-    dsimp'
+    dsimp
     simp
     
 
@@ -462,7 +431,7 @@ def extendCone : Cone (F ⋙ G) ⥤ Cone G where
       π :=
         { app := fun d => c.π.app (lift F d) ≫ G.map (homToLift F d),
           naturality' := fun X Y f => by
-            dsimp'
+            dsimp
             simp
             -- This would be true if we'd chosen `lift F Y` to be `lift F X`
             -- and `hom_to_lift F Y` to be `hom_to_lift F X ≫ f`.
@@ -509,22 +478,8 @@ for any `G : D ⥤ E`.
 def conesEquiv : Cone (F ⋙ G) ≌ Cone G where
   Functor := extendCone
   inverse := Cones.whiskering F
-  unitIso :=
-    NatIso.ofComponents
-      (fun c =>
-        Cones.ext (Iso.refl _)
-          (by
-            tidy))
-      (by
-        tidy)
-  counitIso :=
-    NatIso.ofComponents
-      (fun c =>
-        Cones.ext (Iso.refl _)
-          (by
-            tidy))
-      (by
-        tidy)
+  unitIso := NatIso.ofComponents (fun c => Cones.ext (Iso.refl _) (by tidy)) (by tidy)
+  counitIso := NatIso.ofComponents (fun c => Cones.ext (Iso.refl _) (by tidy)) (by tidy)
 
 variable {G}
 
@@ -551,7 +506,7 @@ instance (priority := 100) comp_has_limit [HasLimit G] : HasLimit (F ⋙ G) :=
 
 theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
     ((isLimitWhiskerEquiv F _).symm P).lift (t.whisker F) = 𝟙 t.x := by
-  dsimp' [is_limit_whisker_equiv]
+  dsimp [is_limit_whisker_equiv]
   apply P.hom_ext
   intro j
   simp
@@ -559,7 +514,7 @@ theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
 instance limit_pre_is_iso [HasLimit G] : IsIso (limit.pre G F) := by
   rw [limit.pre_eq (limit_cone_comp F (get_limit_cone G)) (get_limit_cone G)]
   erw [limit_pre_is_iso_aux]
-  dsimp'
+  dsimp
   infer_instance
 
 section

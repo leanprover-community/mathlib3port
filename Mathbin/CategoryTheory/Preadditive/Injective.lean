@@ -42,13 +42,9 @@ to some injective object `J`.
 @[nolint has_nonempty_instance]
 structure InjectivePresentation (X : C) where
   j : C
-  Injective : Injective J := by
-    run_tac
-      tactic.apply_instance
+  Injective : Injective J := by infer_instance
   f : X ⟶ J
-  mono : Mono f := by
-    run_tac
-      tactic.apply_instance
+  mono : Mono f := by infer_instance
 
 variable (C)
 
@@ -75,9 +71,7 @@ section
 open ZeroObject
 
 instance zero_injective [HasZeroObject C] [HasZeroMorphisms C] :
-    Injective (0 : C) where Factors := fun X Y g f mono =>
-    ⟨0, by
-      ext⟩
+    Injective (0 : C) where Factors := fun X Y g f mono => ⟨0, by ext⟩
 
 end
 
@@ -92,7 +86,8 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
 
 /-- The axiom of choice says that every nonempty type is an injective object in `Type`. -/
 instance (X : Type u₁) [Nonempty X] :
-    Injective X where Factors := fun Y Z g f mono =>
+    Injective
+      X where Factors := fun Y Z g f mono =>
     ⟨fun z => by
       classical <;> exact if h : z ∈ Set.Range f then g (Classical.choose h) else Nonempty.some inferInstance, by
       ext y
@@ -153,35 +148,25 @@ instance {P : Cᵒᵖ} [Projective P] :
     Injective
       (unop
         P) where Factors := fun X Y g f mono =>
-    ⟨(@projective.factor_thru Cᵒᵖ _ P _ _ _ g.op f.op _).unop,
-      Quiver.Hom.op_inj
-        (by
-          simp )⟩
+    ⟨(@projective.factor_thru Cᵒᵖ _ P _ _ _ g.op f.op _).unop, Quiver.Hom.op_inj (by simp)⟩
 
 instance {J : Cᵒᵖ} [Injective J] :
     Projective
-      (unop J) where Factors := fun E X f e he =>
-    ⟨(@factor_thru Cᵒᵖ _ J _ _ _ f.op e.op _).unop,
-      Quiver.Hom.op_inj
-        (by
-          simp )⟩
+      (unop
+        J) where Factors := fun E X f e he =>
+    ⟨(@factor_thru Cᵒᵖ _ J _ _ _ f.op e.op _).unop, Quiver.Hom.op_inj (by simp)⟩
 
 instance {J : C} [Injective J] :
     Projective
-      (op J) where Factors := fun E X f e epi =>
-    ⟨(@factor_thru C _ J _ _ _ f.unop e.unop _).op,
-      Quiver.Hom.unop_inj
-        (by
-          simp )⟩
+      (op
+        J) where Factors := fun E X f e epi =>
+    ⟨(@factor_thru C _ J _ _ _ f.unop e.unop _).op, Quiver.Hom.unop_inj (by simp)⟩
 
 instance {P : C} [Projective P] :
     Injective
       (op
         P) where Factors := fun X Y g f mono =>
-    ⟨(@projective.factor_thru C _ P _ _ _ g.unop f.unop _).op,
-      Quiver.Hom.unop_inj
-        (by
-          simp )⟩
+    ⟨(@projective.factor_thru C _ P _ _ _ g.unop f.unop _).op, Quiver.Hom.unop_inj (by simp)⟩
 
 theorem injective_iff_projective_op {J : C} : Injective J ↔ Projective (op J) :=
   ⟨fun h => inferInstance, fun h => show Injective (unop (op J)) from inferInstance⟩
@@ -205,9 +190,7 @@ variable {L : C ⥤ D} {R : D ⥤ C} [PreservesMonomorphisms L]
 theorem injective_of_adjoint (adj : L ⊣ R) (J : D) [Injective J] : injective <| R.obj J :=
   ⟨fun A A' g f im =>
     ⟨adj.hom_equiv _ _ (factor_thru ((adj.hom_equiv A J).symm g) (L.map f)),
-      (adj.hom_equiv _ _).symm.Injective
-        (by
-          simp )⟩⟩
+      (adj.hom_equiv _ _).symm.Injective (by simp)⟩⟩
 
 end Adjunction
 

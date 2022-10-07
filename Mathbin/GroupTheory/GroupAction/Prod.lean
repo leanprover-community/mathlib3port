@@ -100,38 +100,39 @@ instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] 
 instance has_faithful_smul_left [HasFaithfulSmul M α] [Nonempty β] : HasFaithfulSmul M (α × β) :=
   ⟨fun x y h =>
     let ⟨b⟩ := ‹Nonempty β›
-    eq_of_smul_eq_smul fun a : α => by
-      injection h (a, b)⟩
+    eq_of_smul_eq_smul fun a : α => by injection h (a, b)⟩
 
 @[to_additive]
 instance has_faithful_smul_right [Nonempty α] [HasFaithfulSmul M β] : HasFaithfulSmul M (α × β) :=
   ⟨fun x y h =>
     let ⟨a⟩ := ‹Nonempty α›
-    eq_of_smul_eq_smul fun b : β => by
-      injection h (a, b)⟩
+    eq_of_smul_eq_smul fun b : β => by injection h (a, b)⟩
 
 end
 
 @[to_additive]
 instance smul_comm_class_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [SmulCommClass M N N] [SmulCommClass M P P] :
     SmulCommClass M (N × P) (N × P) :=
-  ⟨fun c x y => by
-    simp [smul_def, mul_def, mul_smul_comm]⟩
+  ⟨fun c x y => by simp [smul_def, mul_def, mul_smul_comm]⟩
 
 instance is_scalar_tower_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [IsScalarTower M N N] [IsScalarTower M P P] :
     IsScalarTower M (N × P) (N × P) :=
-  ⟨fun c x y => by
-    simp [smul_def, mul_def, smul_mul_assoc]⟩
+  ⟨fun c x y => by simp [smul_def, mul_def, smul_mul_assoc]⟩
 
 @[to_additive]
 instance {m : Monoidₓ M} [MulAction M α] [MulAction M β] : MulAction M (α × β) where
   mul_smul := fun a₁ a₂ p => mk.inj_iffₓ.mpr ⟨mul_smul _ _ _, mul_smul _ _ _⟩
   one_smul := fun ⟨b, c⟩ => mk.inj_iffₓ.mpr ⟨one_smul _ _, one_smul _ _⟩
 
+instance {R M N : Type _} [Zero M] [Zero N] [SmulZeroClass R M] [SmulZeroClass R N] :
+    SmulZeroClass R (M × N) where smul_zero := fun a => mk.inj_iffₓ.mpr ⟨smul_zero _, smul_zero _⟩
+
+instance {R M N : Type _} [AddZeroClassₓ M] [AddZeroClassₓ N] [DistribSmul R M] [DistribSmul R N] :
+    DistribSmul R (M × N) where smul_add := fun a p₁ p₂ => mk.inj_iffₓ.mpr ⟨smul_add _ _ _, smul_add _ _ _⟩
+
 instance {R M N : Type _} {r : Monoidₓ R} [AddMonoidₓ M] [AddMonoidₓ N] [DistribMulAction R M] [DistribMulAction R N] :
-    DistribMulAction R (M × N) where
-  smul_add := fun a p₁ p₂ => mk.inj_iffₓ.mpr ⟨smul_add _ _ _, smul_add _ _ _⟩
-  smul_zero := fun a => mk.inj_iffₓ.mpr ⟨smul_zero _, smul_zero _⟩
+    DistribMulAction R (M × N) :=
+  { Prod.distribSmul with }
 
 instance {R M N : Type _} {r : Monoidₓ R} [Monoidₓ M] [Monoidₓ N] [MulDistribMulAction R M] [MulDistribMulAction R N] :
     MulDistribMulAction R (M × N) where

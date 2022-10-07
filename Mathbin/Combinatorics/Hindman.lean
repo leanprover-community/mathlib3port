@@ -61,9 +61,7 @@ theorem Ultrafilter.eventually_mul {M} [Mul M] (U V : Ultrafilter M) (p : M → 
 def Ultrafilter.semigroup {M} [Semigroupₓ M] : Semigroupₓ (Ultrafilter M) :=
   { Ultrafilter.hasMul with
     mul_assoc := fun U V W =>
-      Ultrafilter.coe_inj.mp <|
-        Filter.ext' fun p => by
-          simp only [Ultrafilter.eventually_mul, mul_assoc] }
+      Ultrafilter.coe_inj.mp <| Filter.ext' fun p => by simp only [Ultrafilter.eventually_mul, mul_assoc] }
 
 attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 
@@ -239,20 +237,20 @@ theorem FP.mul_two {M} [Semigroupₓ M] (a : Streamₓ M) (i j : ℕ) (ij : i < 
   rw [hd, add_commₓ, Nat.succ_add, Nat.add_succ]
 
 @[to_additive]
-theorem FP.finset_prod {M} [CommMonoidₓ M] (a : Streamₓ M) (s : Finset ℕ) (hs : s.Nonempty) :
+theorem FP.finset_prod {M} [CommMonoidₓ M] (a : Streamₓ M) (s : Finsetₓ ℕ) (hs : s.Nonempty) :
     (s.Prod fun i => a.nth i) ∈ FP a := by
   refine' FP_drop_subset_FP _ (s.min' hs) _
-  induction' s using Finset.strongInductionₓ with s ih
-  rw [← Finset.mul_prod_erase _ _ (s.min'_mem hs), ← Streamₓ.head_drop]
+  induction' s using Finsetₓ.strongInductionₓ with s ih
+  rw [← Finsetₓ.mul_prod_erase _ _ (s.min'_mem hs), ← Streamₓ.head_drop]
   cases' (s.erase (s.min' hs)).eq_empty_or_nonempty with h h
-  · rw [h, Finset.prod_empty, mul_oneₓ]
+  · rw [h, Finsetₓ.prod_empty, mul_oneₓ]
     exact FP.head _
     
   · apply FP.cons
     rw [Streamₓ.tail_eq_drop, Streamₓ.drop_drop, add_commₓ]
-    refine' Set.mem_of_subset_of_mem _ (ih _ (Finset.erase_ssubset <| s.min'_mem hs) h)
+    refine' Set.mem_of_subset_of_mem _ (ih _ (Finsetₓ.erase_ssubset <| s.min'_mem hs) h)
     have : s.min' hs + 1 ≤ (s.erase (s.min' hs)).min' h :=
-      Nat.succ_le_of_ltₓ (Finset.min'_lt_of_mem_erase_min' _ _ <| Finset.min'_mem _ _)
+      Nat.succ_le_of_ltₓ (Finsetₓ.min'_lt_of_mem_erase_min' _ _ <| Finsetₓ.min'_mem _ _)
     cases' le_iff_exists_add.mp this with d hd
     rw [hd, add_commₓ, ← Streamₓ.drop_drop]
     apply FP_drop_subset_FP

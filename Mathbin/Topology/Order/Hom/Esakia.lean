@@ -117,8 +117,7 @@ theorem ext {f g : PseudoEpimorphism α β} (h : ∀ a, f a = g a) : f = g :=
 /-- Copy of a `pseudo_epimorphism` with a new `to_fun` equal to the old one. Useful to fix
 definitional equalities. -/
 protected def copy (f : PseudoEpimorphism α β) (f' : α → β) (h : f' = f) : PseudoEpimorphism α β :=
-  ⟨f.toOrderHom.copy f' h, by
-    simpa only [h.symm, to_fun_eq_coe] using f.exists_map_eq_of_map_le'⟩
+  ⟨f.toOrderHom.copy f' h, by simpa only [h.symm, to_fun_eq_coe] using f.exists_map_eq_of_map_le'⟩
 
 variable (α)
 
@@ -182,11 +181,7 @@ theorem cancel_right {g₁ g₂ : PseudoEpimorphism β γ} {f : PseudoEpimorphis
 
 theorem cancel_left {g : PseudoEpimorphism β γ} {f₁ f₂ : PseudoEpimorphism α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end PseudoEpimorphism
 
@@ -228,8 +223,7 @@ theorem ext {f g : EsakiaHom α β} (h : ∀ a, f a = g a) : f = g :=
 /-- Copy of an `esakia_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (f : EsakiaHom α β) (f' : α → β) (h : f' = f) : EsakiaHom α β :=
-  ⟨f.toContinuousOrderHom.copy f' h, by
-    simpa only [h.symm, to_fun_eq_coe] using f.exists_map_eq_of_map_le'⟩
+  ⟨f.toContinuousOrderHom.copy f' h, by simpa only [h.symm, to_fun_eq_coe] using f.exists_map_eq_of_map_le'⟩
 
 variable (α)
 
@@ -301,11 +295,7 @@ theorem cancel_right {g₁ g₂ : EsakiaHom β γ} {f : EsakiaHom α β} (hf : S
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : EsakiaHom β γ} {f₁ f₂ : EsakiaHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end EsakiaHom
 

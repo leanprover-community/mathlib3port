@@ -98,16 +98,16 @@ theorem strong_rank_condition_iff_succ :
         (hf.comp (Function.extend_injective (RelEmbedding.injective _) 0))
     
 
-theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β] (f : (α → R) →ₗ[R] β → R)
-    (i : Injective f) : Fintype.card α ≤ Fintype.card β := by
-  let P := LinearEquiv.funCongrLeft R R (Fintype.equivFin α)
-  let Q := LinearEquiv.funCongrLeft R R (Fintype.equivFin β)
+theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintypeₓ α] [Fintypeₓ β] (f : (α → R) →ₗ[R] β → R)
+    (i : Injective f) : Fintypeₓ.card α ≤ Fintypeₓ.card β := by
+  let P := LinearEquiv.funCongrLeft R R (Fintypeₓ.equivFin α)
+  let Q := LinearEquiv.funCongrLeft R R (Fintypeₓ.equivFin β)
   exact
     le_of_fin_injective R ((Q.symm.to_linear_map.comp f).comp P.to_linear_map)
       (((LinearEquiv.symm Q).Injective.comp i).comp (LinearEquiv.injective P))
 
-theorem card_le_of_injective' [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β] (f : (α →₀ R) →ₗ[R] β →₀ R)
-    (i : Injective f) : Fintype.card α ≤ Fintype.card β := by
+theorem card_le_of_injective' [StrongRankCondition R] {α β : Type _} [Fintypeₓ α] [Fintypeₓ β]
+    (f : (α →₀ R) →ₗ[R] β →₀ R) (i : Injective f) : Fintypeₓ.card α ≤ Fintypeₓ.card β := by
   let P := Finsupp.linearEquivFunOnFintype R R β
   let Q := (Finsupp.linearEquivFunOnFintype R R α).symm
   exact card_le_of_injective R ((P.to_linear_map.comp f).comp Q.to_linear_map) ((P.injective.comp i).comp Q.injective)
@@ -120,16 +120,16 @@ class RankCondition : Prop where
 theorem le_of_fin_surjective [RankCondition R] {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R) : Surjective f → m ≤ n :=
   RankCondition.le_of_fin_surjective f
 
-theorem card_le_of_surjective [RankCondition R] {α β : Type _} [Fintype α] [Fintype β] (f : (α → R) →ₗ[R] β → R)
-    (i : Surjective f) : Fintype.card β ≤ Fintype.card α := by
-  let P := LinearEquiv.funCongrLeft R R (Fintype.equivFin α)
-  let Q := LinearEquiv.funCongrLeft R R (Fintype.equivFin β)
+theorem card_le_of_surjective [RankCondition R] {α β : Type _} [Fintypeₓ α] [Fintypeₓ β] (f : (α → R) →ₗ[R] β → R)
+    (i : Surjective f) : Fintypeₓ.card β ≤ Fintypeₓ.card α := by
+  let P := LinearEquiv.funCongrLeft R R (Fintypeₓ.equivFin α)
+  let Q := LinearEquiv.funCongrLeft R R (Fintypeₓ.equivFin β)
   exact
     le_of_fin_surjective R ((Q.symm.to_linear_map.comp f).comp P.to_linear_map)
       (((LinearEquiv.symm Q).Surjective.comp i).comp (LinearEquiv.surjective P))
 
-theorem card_le_of_surjective' [RankCondition R] {α β : Type _} [Fintype α] [Fintype β] (f : (α →₀ R) →ₗ[R] β →₀ R)
-    (i : Surjective f) : Fintype.card β ≤ Fintype.card α := by
+theorem card_le_of_surjective' [RankCondition R] {α β : Type _} [Fintypeₓ α] [Fintypeₓ β] (f : (α →₀ R) →ₗ[R] β →₀ R)
+    (i : Surjective f) : Fintypeₓ.card β ≤ Fintypeₓ.card α := by
   let P := Finsupp.linearEquivFunOnFintype R R β
   let Q := (Finsupp.linearEquivFunOnFintype R R α).symm
   exact
@@ -165,11 +165,11 @@ variable (R : Type u) [Semiringₓ R] [InvariantBasisNumber R]
 theorem eq_of_fin_equiv {n m : ℕ} : ((Finₓ n → R) ≃ₗ[R] Finₓ m → R) → n = m :=
   InvariantBasisNumber.eq_of_fin_equiv
 
-theorem card_eq_of_lequiv {α β : Type _} [Fintype α] [Fintype β] (f : (α → R) ≃ₗ[R] β → R) :
-    Fintype.card α = Fintype.card β :=
+theorem card_eq_of_lequiv {α β : Type _} [Fintypeₓ α] [Fintypeₓ β] (f : (α → R) ≃ₗ[R] β → R) :
+    Fintypeₓ.card α = Fintypeₓ.card β :=
   eq_of_fin_equiv R
-    ((LinearEquiv.funCongrLeft R R (Fintype.equivFin α)).trans f ≪≫ₗ
-      (LinearEquiv.funCongrLeft R R (Fintype.equivFin β)).symm)
+    ((LinearEquiv.funCongrLeft R R (Fintypeₓ.equivFin α)).trans f ≪≫ₗ
+      (LinearEquiv.funCongrLeft R R (Fintypeₓ.equivFin β)).symm)
 
 theorem nontrivial_of_invariant_basis_number : Nontrivial R := by
   by_contra h
@@ -177,11 +177,10 @@ theorem nontrivial_of_invariant_basis_number : Nontrivial R := by
   haveI := not_nontrivial_iff_subsingleton.1 h
   haveI : Subsingleton (Finₓ 1 → R) := ⟨fun a b => funext fun x => Subsingleton.elim _ _⟩
   refine' { .. } <;>
-    first |
-      · intros
+    first
+      |· intros
         exact 0
-        |
-      tidy
+        |tidy
 
 end
 
@@ -230,7 +229,7 @@ end
 
 section
 
-variable {R : Type u} [CommRingₓ R] (I : Ideal R) {ι : Type v} [Fintype ι] {ι' : Type w}
+variable {R : Type u} [CommRingₓ R] (I : Ideal R) {ι : Type v} [Fintypeₓ ι] {ι' : Type w}
 
 /-- An `R`-linear map `R^n → R^m` induces a function `R^n/I^n → R^m/I^m`. -/
 private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) : (ι → R) ⧸ I.pi ι → (ι' → R) ⧸ I.pi ι' := fun x =>
@@ -243,17 +242,15 @@ private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) : (ι
 
 /-- An isomorphism of `R`-modules `R^n ≃ R^m` induces an isomorphism of `R/I`-modules
     `R^n/I^n ≃ R^m/I^m`. -/
-private def induced_equiv [Fintype ι'] (I : Ideal R) (e : (ι → R) ≃ₗ[R] ι' → R) :
+private def induced_equiv [Fintypeₓ ι'] (I : Ideal R) (e : (ι → R) ≃ₗ[R] ι' → R) :
     ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] (ι' → R) ⧸ I.pi ι' := by
   refine' { toFun := induced_map I e, invFun := induced_map I e.symm.. }
   all_goals
-    first |
-      rintro ⟨a⟩ ⟨b⟩|
-      rintro ⟨a⟩
-    convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
-    congr
-    simp only [map_add, LinearEquiv.coe_coe, LinearEquiv.map_smulₛₗ, RingHom.id_apply, LinearEquiv.symm_apply_apply,
-      LinearEquiv.apply_symm_apply]
+  first |rintro ⟨a⟩ ⟨b⟩|rintro ⟨a⟩
+  convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
+  congr
+  simp only [map_add, LinearEquiv.coe_coe, LinearEquiv.map_smulₛₗ, RingHom.id_apply, LinearEquiv.symm_apply_apply,
+    LinearEquiv.apply_symm_apply]
 
 end
 

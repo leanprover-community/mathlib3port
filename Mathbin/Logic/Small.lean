@@ -99,13 +99,11 @@ to keep imports to `logic` to a minimum.
 
 instance small_Pi {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (∀ a, β a) :=
   ⟨⟨∀ a' : Shrink α, Shrink (β ((equivShrink α).symm a')),
-      ⟨Equivₓ.piCongr (equivShrink α) fun a => by
-          simpa using equivShrink (β a)⟩⟩⟩
+      ⟨Equivₓ.piCongr (equivShrink α) fun a => by simpa using equivShrink (β a)⟩⟩⟩
 
 instance small_sigma {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (Σa, β a) :=
   ⟨⟨Σa' : Shrink α, Shrink (β ((equivShrink α).symm a')),
-      ⟨Equivₓ.sigmaCongr (equivShrink α) fun a => by
-          simpa using equivShrink (β a)⟩⟩⟩
+      ⟨Equivₓ.sigmaCongr (equivShrink α) fun a => by simpa using equivShrink (β a)⟩⟩⟩
 
 instance small_prod {α β} [Small.{w} α] [Small.{w} β] : Small.{w} (α × β) :=
   ⟨⟨Shrink α × Shrink β, ⟨Equivₓ.prodCongr (equivShrink α) (equivShrink β)⟩⟩⟩

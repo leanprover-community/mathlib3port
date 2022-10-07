@@ -77,8 +77,7 @@ instance : ProperSpace ℕ :=
     exact (Set.finite_Icc _ _).IsCompact⟩
 
 instance : NoncompactSpace ℕ :=
-  noncompact_space_of_ne_bot <| by
-    simp [Filter.at_top_ne_bot]
+  noncompact_space_of_ne_bot <| by simp [Filter.at_top_ne_bot]
 
 end Nat
 

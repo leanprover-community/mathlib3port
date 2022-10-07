@@ -83,10 +83,8 @@ def isoOfHomeo {X Y : Top.{u}} (f : X ≃ₜ Y) : X ≅ Y where
 def homeoOfIso {X Y : Top.{u}} (f : X ≅ Y) : X ≃ₜ Y where
   toFun := f.Hom
   invFun := f.inv
-  left_inv := fun x => by
-    simp
-  right_inv := fun x => by
-    simp
+  left_inv := fun x => by simp
+  right_inv := fun x => by simp
   continuous_to_fun := f.Hom.Continuous
   continuous_inv_fun := f.inv.Continuous
 

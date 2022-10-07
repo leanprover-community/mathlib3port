@@ -3,8 +3,8 @@ Copyright (c) 2021 Christopher Hoskin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 -/
+import Mathbin.Algebra.Jordan.Basic
 import Mathbin.Algebra.Module.Basic
-import Mathbin.Tactic.Abel
 
 /-!
 # Symmetrized algebra
@@ -165,12 +165,10 @@ theorem unsym_neg [Neg α] (a : αˢʸᵐ) : unsym (-a) = -unsym a :=
   rfl
 
 theorem mul_def [Add α] [Mul α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) :
-    a * b = sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a)) := by
-  rfl
+    a * b = sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a)) := by rfl
 
 theorem unsym_mul [Mul α] [Add α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) :
-    unsym (a * b) = ⅟ 2 * (unsym a * unsym b + unsym b * unsym a) := by
-  rfl
+    unsym (a * b) = ⅟ 2 * (unsym a * unsym b + unsym b * unsym a) := by rfl
 
 theorem sym_mul_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a b : α) :
     sym a * sym b = sym (⅟ 2 * (a * b + b * a)) :=
@@ -228,10 +226,8 @@ instance {R : Type _} [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] : Modu
 
 instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] : Invertible (sym a) where
   invOf := sym (⅟ a)
-  inv_of_mul_self := by
-    rw [sym_mul_sym, mul_inv_of_self, inv_of_mul_self, ← bit0, inv_of_mul_self, sym_one]
-  mul_inv_of_self := by
-    rw [sym_mul_sym, mul_inv_of_self, inv_of_mul_self, ← bit0, inv_of_mul_self, sym_one]
+  inv_of_mul_self := by rw [sym_mul_sym, mul_inv_of_self, inv_of_mul_self, ← bit0, inv_of_mul_self, sym_one]
+  mul_inv_of_self := by rw [sym_mul_sym, mul_inv_of_self, inv_of_mul_self, ← bit0, inv_of_mul_self, sym_one]
 
 @[simp]
 theorem inv_of_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] : ⅟ (sym a) = sym (⅟ a) :=
@@ -239,14 +235,10 @@ theorem inv_of_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [In
 
 instance [Semiringₓ α] [Invertible (2 : α)] : NonAssocSemiringₓ αˢʸᵐ :=
   { SymAlg.addCommMonoid with one := 1, mul := (· * ·), zero := 0,
-    zero_mul := fun _ => by
-      rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zeroₓ, mul_zero, sym_zero],
-    mul_zero := fun _ => by
-      rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zeroₓ, mul_zero, sym_zero],
-    mul_one := fun _ => by
-      rw [mul_def, unsym_one, mul_oneₓ, one_mulₓ, ← two_mul, inv_of_mul_self_assoc, sym_unsym],
-    one_mul := fun _ => by
-      rw [mul_def, unsym_one, mul_oneₓ, one_mulₓ, ← two_mul, inv_of_mul_self_assoc, sym_unsym],
+    zero_mul := fun _ => by rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zeroₓ, mul_zero, sym_zero],
+    mul_zero := fun _ => by rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zeroₓ, mul_zero, sym_zero],
+    mul_one := fun _ => by rw [mul_def, unsym_one, mul_oneₓ, one_mulₓ, ← two_mul, inv_of_mul_self_assoc, sym_unsym],
+    one_mul := fun _ => by rw [mul_def, unsym_one, mul_oneₓ, one_mulₓ, ← two_mul, inv_of_mul_self_assoc, sym_unsym],
     left_distrib := fun a b c =>
       match a, b, c with
       | Sym a, Sym b, Sym c => by
@@ -273,6 +265,27 @@ theorem sym_mul_self [Semiringₓ α] [Invertible (2 : α)] (a : α) : sym (a * 
 
 theorem mul_comm [Mul α] [AddCommSemigroupₓ α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) : a * b = b * a := by
   rw [mul_def, mul_def, add_commₓ]
+
+instance [Ringₓ α] [Invertible (2 : α)] : IsCommJordan αˢʸᵐ where
+  mul_comm := SymAlg.mul_comm
+  lmul_comm_rmul_rmul := fun a b => by
+    -- Rearrange LHS
+    have commute_half_left := fun a : α => (Commute.one_left a).bit0_left.inv_of_left.Eq
+    rw [mul_def, mul_def a b, unsym_sym, ← mul_assoc, ← commute_half_left (unsym (a * a)), mul_assoc, mul_assoc, ←
+      mul_addₓ, ← mul_assoc, add_mulₓ, mul_addₓ (unsym (a * a)), ← add_assocₓ, ← mul_assoc, ← mul_assoc]
+    -- Rearrange RHS
+    nth_rw_rhs 0 [mul_def]
+    nth_rw_rhs 0 [mul_def]
+    nth_rw_rhs 2 [mul_def]
+    rw [unsym_sym, sym_inj, ← mul_assoc, ← commute_half_left (unsym a), mul_assoc (⅟ 2) (unsym a),
+      mul_assoc (⅟ 2) _ (unsym a), ← mul_addₓ, ← mul_assoc]
+    nth_rw_rhs 0 [mul_addₓ (unsym a)]
+    rw [add_mulₓ, ← add_assocₓ, ← mul_assoc, ← mul_assoc]
+    rw [unsym_mul_self]
+    rw [← mul_assoc, ← mul_assoc, ← mul_assoc, ← mul_assoc, ← sub_eq_zero, ← mul_sub]
+    convert mul_zero (⅟ (2 : α) * ⅟ (2 : α))
+    rw [add_sub_add_right_eq_sub, add_assocₓ, add_assocₓ, add_sub_add_left_eq_sub, add_commₓ, add_sub_add_right_eq_sub,
+      sub_eq_zero]
 
 end SymAlg
 

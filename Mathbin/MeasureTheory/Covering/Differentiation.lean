@@ -92,8 +92,7 @@ theorem ae_eventually_measure_pos [SecondCountableTopology α] : ∀ᵐ x ∂μ,
       congr
       ext1 x
       exact h.covering_mem x.2
-    _ = 0 := by
-      simp only [tsum_zero, add_zeroₓ]
+    _ = 0 := by simp only [tsum_zero, add_zeroₓ]
     
 
 /-- For every point `x`, sufficiently small sets in a Vitali family around `x` have finite measure.
@@ -151,8 +150,7 @@ theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⊥ₘ μ) :
         conv_lhs => rw [← inter_union_compl s o]
         exact measure_mono (union_subset_union_right _ (inter_subset_right _ _))
       _ ≤ μ (s ∩ o) + μ (oᶜ) := measure_union_le _ _
-      _ = μ (s ∩ o) := by
-        rw [μo, add_zeroₓ]
+      _ = μ (s ∩ o) := by rw [μo, add_zeroₓ]
       _ = ε⁻¹ * (ε • μ) (s ∩ o) := by
         simp only [coe_nnreal_smul_apply, ← mul_assoc, mul_comm _ (ε : ℝ≥0∞)]
         rw [Ennreal.mul_inv_cancel (Ennreal.coe_pos.2 εpos).ne' Ennreal.coe_ne_top, one_mulₓ]
@@ -161,13 +159,12 @@ theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⊥ₘ μ) :
         refine' v.measure_le_of_frequently_le ρ ((measure.absolutely_continuous.refl μ).smul ε) _ _
         intro x hx
         rw [hs] at hx
-        simp only [mem_inter_eq, not_ltₓ, not_eventually, mem_set_of_eq] at hx
+        simp only [mem_inter_iff, not_ltₓ, not_eventually, mem_set_of_eq] at hx
         exact hx.1
       _ ≤ ε⁻¹ * ρ o := Ennreal.mul_le_mul le_rflₓ (measure_mono (inter_subset_right _ _))
-      _ = 0 := by
-        rw [ρo, mul_zero]
+      _ = 0 := by rw [ρo, mul_zero]
       
-  obtain ⟨u, u_anti, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ≥0, StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
+  obtain ⟨u, u_anti, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ≥0, StrictAntiₓ u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
     exists_seq_strict_anti_tendsto (0 : ℝ≥0)
   have B : ∀ᵐ x ∂μ, ∀ n, ∀ᶠ a in v.filter_at x, ρ a < u n * μ a := ae_all_iff.2 fun n => A (u n) (u_pos n)
   filter_upwards [B, v.ae_eventually_measure_pos]
@@ -221,14 +218,14 @@ theorem ae_tendsto_div : ∀ᵐ x ∂μ, ∃ c, Tendsto (fun a => ρ a / μ a) (
     lift d to ℝ≥0 using I d hd
     apply v.null_of_frequently_le_of_frequently_ge hρ (Ennreal.coe_lt_coe.1 hcd)
     · simp only [and_imp, exists_propₓ, not_frequently, not_and, not_ltₓ, not_leₓ, not_eventually, mem_set_of_eq,
-        mem_compl_eq, not_forall]
+        mem_compl_iff, not_forall]
       intro x h1x h2x
       apply h1x.mono fun a ha => _
       refine' (Ennreal.div_le_iff_le_mul _ (Or.inr (bot_le.trans_lt ha).ne')).1 ha.le
       simp only [Ennreal.coe_ne_top, Ne.def, or_trueₓ, not_false_iff]
       
     · simp only [and_imp, exists_propₓ, not_frequently, not_and, not_ltₓ, not_leₓ, not_eventually, mem_set_of_eq,
-        mem_compl_eq, not_forall]
+        mem_compl_iff, not_forall]
       intro x h1x h2x
       apply h2x.mono fun a ha => _
       exact Ennreal.mul_le_of_le_div ha.le
@@ -236,8 +233,7 @@ theorem ae_tendsto_div : ∀ᵐ x ∂μ, ∃ c, Tendsto (fun a => ρ a / μ a) (
   have B :
     ∀ᵐ x ∂μ,
       ∀ c ∈ w, ∀ d ∈ w, c < d → ¬((∃ᶠ a in v.filter_at x, ρ a / μ a < c) ∧ ∃ᶠ a in v.filter_at x, d < ρ a / μ a) :=
-    by
-    simpa only [ae_ball_iff w_count, ae_all_iff]
+    by simpa only [ae_ball_iff w_count, ae_all_iff]
   filter_upwards [B]
   intro x hx
   exact tendsto_of_no_upcrossings w_dense hx
@@ -292,7 +288,7 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0} (hpq : p < q) :
   · exact (measurable_set_to_measurable _ _).union (MeasurableSet.Union fun n => measurable_set_to_measurable _ _)
     
   · intro x hx
-    by_cases' h : x ∈ s
+    by_cases h:x ∈ s
     · refine' Or.inr (mem_Union.2 ⟨spanning_sets_index (ρ + μ) x, _⟩)
       exact subset_to_measurable _ _ ⟨⟨h, hx⟩, mem_spanning_sets_index _ _⟩
       
@@ -300,7 +296,7 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0} (hpq : p < q) :
       
     
   · intro x hx
-    by_cases' h : x ∈ s
+    by_cases h:x ∈ s
     · refine' Or.inr (mem_Union.2 ⟨spanning_sets_index (ρ + μ) x, _⟩)
       exact subset_to_measurable _ _ ⟨⟨h, hx⟩, mem_spanning_sets_index _ _⟩
       
@@ -334,8 +330,7 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0} (hpq : p < q) :
         rw [measure_to_measurable, this, zero_addₓ]
       _ ≤ ∑' (m) (n), μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) :=
         (measure_Union_le _).trans (Ennreal.tsum_le_tsum fun m => measure_Union_le _)
-      _ = 0 := by
-        simp only [H, tsum_zero]
+      _ = 0 := by simp only [H, tsum_zero]
       
     
   -- now starts the nontrivial part of the argument. We fix `m` and `n`, and show that the
@@ -435,8 +430,7 @@ theorem measure_le_mul_of_subset_lim_ratio_meas_lt {p : ℝ≥0} {s : Set α} (h
   suffices H : ρ (s ∩ t) ≤ (p • μ) (s ∩ t)
   exact
     calc
-      ρ s = ρ (s ∩ t ∪ s ∩ tᶜ) := by
-        rw [inter_union_compl]
+      ρ s = ρ (s ∩ t ∪ s ∩ tᶜ) := by rw [inter_union_compl]
       _ ≤ ρ (s ∩ t) + ρ (s ∩ tᶜ) := measure_union_le _ _
       _ ≤ p * μ (s ∩ t) + 0 := add_le_add H ((measure_mono (inter_subset_right _ _)).trans (hρ A).le)
       _ ≤ p * μ s := by
@@ -460,8 +454,7 @@ theorem mul_measure_le_of_subset_lt_lim_ratio_meas {q : ℝ≥0} {s : Set α}
   suffices H : (q • μ) (s ∩ t) ≤ ρ (s ∩ t)
   exact
     calc
-      (q • μ) s = (q • μ) (s ∩ t ∪ s ∩ tᶜ) := by
-        rw [inter_union_compl]
+      (q • μ) s = (q • μ) (s ∩ t ∪ s ∩ tᶜ) := by rw [inter_union_compl]
       _ ≤ (q • μ) (s ∩ t) + (q • μ) (s ∩ tᶜ) := measure_union_le _ _
       _ ≤ ρ (s ∩ t) + q * μ (tᶜ) := by
         apply add_le_add H
@@ -534,8 +527,7 @@ theorem with_density_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (h
     show that the two measures are comparable up to `t` (in fact `t^2` for technical reasons of
     strict inequalities). -/
   have t_ne_zero' : t ≠ 0 := (zero_lt_one.trans ht).ne'
-  have t_ne_zero : (t : ℝ≥0∞) ≠ 0 := by
-    simpa only [Ennreal.coe_eq_zero, Ne.def] using t_ne_zero'
+  have t_ne_zero : (t : ℝ≥0∞) ≠ 0 := by simpa only [Ennreal.coe_eq_zero, Ne.def] using t_ne_zero'
   let ν := μ.with_density (v.lim_ratio_meas hρ)
   let f := v.lim_ratio_meas hρ
   have f_meas : Measurable f := v.lim_ratio_meas_measurable hρ
@@ -598,8 +590,7 @@ theorem le_mul_with_density {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (h
     `measure_le_mul_of_subset_lim_ratio_meas_lt` and `mul_measure_le_of_subset_lt_lim_ratio_meas` to
     show that the two measures are comparable up to `t`. -/
   have t_ne_zero' : t ≠ 0 := (zero_lt_one.trans ht).ne'
-  have t_ne_zero : (t : ℝ≥0∞) ≠ 0 := by
-    simpa only [Ennreal.coe_eq_zero, Ne.def] using t_ne_zero'
+  have t_ne_zero : (t : ℝ≥0∞) ≠ 0 := by simpa only [Ennreal.coe_eq_zero, Ne.def] using t_ne_zero'
   let ν := μ.with_density (v.lim_ratio_meas hρ)
   let f := v.lim_ratio_meas hρ
   have f_meas : Measurable f := v.lim_ratio_meas_measurable hρ

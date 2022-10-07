@@ -86,7 +86,7 @@ def AffineTargetMorphismProperty.ToProperty (P : AffineTargetMorphismProperty) :
 
 theorem AffineTargetMorphismProperty.to_property_apply (P : AffineTargetMorphismProperty) {X Y : Scheme} (f : X ⟶ Y)
     [IsAffine Y] : P.ToProperty f ↔ P f := by
-  delta' affine_target_morphism_property.to_property
+  delta affine_target_morphism_property.to_property
   simp [*]
 
 theorem affine_cancel_left_is_iso {P : AffineTargetMorphismProperty} (hP : P.ToProperty.RespectsIso) {X Y Z : Scheme}
@@ -115,9 +115,9 @@ def TargetAffineLocally (P : AffineTargetMorphismProperty) : MorphismProperty Sc
   fun {X Y : Scheme} (f : X ⟶ Y) => ∀ U : Y.AffineOpens, @P (f ∣_ U) U.Prop
 
 theorem IsAffineOpen.map_is_iso {X Y : Scheme} {U : Opens Y.Carrier} (hU : IsAffineOpen U) (f : X ⟶ Y) [IsIso f] :
-    IsAffineOpen ((Opens.map f.1.base).obj U) := by
+    IsAffineOpen ((Opens.map f.1.base).obj U) :=
   haveI : is_affine _ := hU
-  exact is_affine_of_iso (f ∣_ U)
+  is_affine_of_iso (f ∣_ U)
 
 theorem target_affine_locally_respects_iso {P : AffineTargetMorphismProperty} (hP : P.ToProperty.RespectsIso) :
     (TargetAffineLocally P).RespectsIso := by
@@ -128,7 +128,7 @@ theorem target_affine_locally_respects_iso {P : AffineTargetMorphismProperty} (h
     
   · introv H
     rintro ⟨U, hU : is_affine_open U⟩
-    dsimp'
+    dsimp
     haveI : is_affine _ := hU
     haveI : is_affine _ := hU.map_is_iso e.hom
     rw [morphism_restrict_comp, affine_cancel_right_is_iso hP]
@@ -148,7 +148,7 @@ structure AffineTargetMorphismProperty.IsLocal (P : AffineTargetMorphismProperty
     ∀ {X Y : Scheme} [IsAffine Y] (f : X ⟶ Y) (r : Y.Presheaf.obj <| op ⊤),
       P f → @P (f ∣_ Y.basic_open r) ((top_is_affine_open Y).basic_open_is_affine _)
   of_basic_open_cover :
-    ∀ {X Y : Scheme} [IsAffine Y] (f : X ⟶ Y) (s : Finset (Y.Presheaf.obj <| op ⊤))
+    ∀ {X Y : Scheme} [IsAffine Y] (f : X ⟶ Y) (s : Finsetₓ (Y.Presheaf.obj <| op ⊤))
       (hs : Ideal.span (s : Set (Y.Presheaf.obj <| op ⊤)) = ⊤),
       (∀ r : s, @P (f ∣_ Y.basic_open r.1) ((top_is_affine_open Y).basic_open_is_affine _)) → P f
 
@@ -175,7 +175,7 @@ theorem target_affine_locally_of_open_cover {P : AffineTargetMorphismProperty} (
     · apply_fun Ideal.comap (Y.presheaf.map (eq_to_hom U.1.open_embedding_obj_top.symm).op)  at hs
       rw [Ideal.comap_top] at hs
       rw [← hs]
-      simp only [eq_to_hom_op, eq_to_hom_map, Finset.coe_image]
+      simp only [eq_to_hom_op, eq_to_hom_map, Finsetₓ.coe_image]
       have :
         ∀ {R S : CommRingₓₓ} (e : S = R) (s : Set S),
           Ideal.span (eq_to_hom e '' s) = Ideal.comap (eq_to_hom e.symm) (Ideal.span s) :=
@@ -241,8 +241,8 @@ theorem AffineTargetMorphismProperty.IsLocal.affine_open_cover_tfae {P : AffineT
     rw [← P.to_property_apply] at H
     convert H
     all_goals
-      ext1
-      exact Subtype.range_coe
+    ext1
+    exact Subtype.range_coe
     
   tfae_have 1 → 5
   · intro H
@@ -271,15 +271,15 @@ theorem AffineTargetMorphismProperty.is_local_of_open_cover_imply (P : AffineTar
   · introv h
     skip
     haveI : is_affine _ := (top_is_affine_open Y).basic_open_is_affine r
-    delta' morphism_restrict
+    delta morphism_restrict
     rw [affine_cancel_left_is_iso hP]
     refine' @H f ⟨Scheme.open_cover_of_is_iso (𝟙 Y), _, _⟩ (Y.of_restrict _) _inst _
     · intro i
-      dsimp'
+      dsimp
       infer_instance
       
     · intro i
-      dsimp'
+      dsimp
       rwa [← category.comp_id pullback.snd, ← pullback.condition, affine_cancel_left_is_iso hP]
       
     
@@ -294,7 +294,7 @@ theorem AffineTargetMorphismProperty.is_local_of_open_cover_imply (P : AffineTar
     · rintro (i : s)
       specialize hs' i
       haveI : is_affine _ := (top_is_affine_open Y).basic_open_is_affine i.1
-      delta' morphism_restrict  at hs'
+      delta morphism_restrict at hs'
       rwa [affine_cancel_left_is_iso hP] at hs'
       
     
@@ -317,7 +317,7 @@ theorem AffineTargetMorphismProperty.IsLocal.affine_target_iff {P : AffineTarget
     
   swap
   · intro
-    dsimp'
+    dsimp
     infer_instance
     
   trans P (pullback.snd : pullback f (𝟙 _) ⟶ _)
@@ -352,7 +352,7 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
     rw [(hP.affine_open_cover_tfae f).out 0 1]
     refine' ⟨𝒰.bind fun _ => Scheme.affine_cover _, _, _⟩
     · intro i
-      dsimp' [Scheme.open_cover.bind]
+      dsimp [Scheme.open_cover.bind]
       infer_instance
       
     · intro i
@@ -421,8 +421,8 @@ theorem PropertyIsLocalAtTarget.open_cover_tfae {P : MorphismProperty Scheme} (h
     rw [← hP.1.arrow_mk_iso_iff (morphism_restrict_opens_range f _)]
     convert H i
     all_goals
-      ext1
-      exact Subtype.range_coe
+    ext1
+    exact Subtype.range_coe
     
   tfae_finish
 
@@ -450,8 +450,7 @@ theorem IsLocal.target_affine_locally_pullback_fst_of_right_of_stable_under_base
   use X.affine_cover, inferInstance
   intro i
   let e := pullback_symmetry _ _ ≪≫ pullback_right_pullback_fst_iso f g (X.affine_cover.map i)
-  have : e.hom ≫ pullback.fst = pullback.snd := by
-    simp
+  have : e.hom ≫ pullback.fst = pullback.snd := by simp
   rw [← this, affine_cancel_left_is_iso hP.1]
   apply hP' <;> assumption
 
@@ -471,15 +470,8 @@ theorem IsLocal.stable_under_base_change {P : AffineTargetMorphismProperty} (hP 
               _ ≪≫
                 (pullback_right_pullback_fst_iso (S.affine_cover.map i) g
                     (pullback.snd : pullback f (S.affine_cover.map i) ⟶ _)).symm
-        exact
-          as_iso
-            (pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
-              (by
-                simpa using pullback.condition)
-              (by
-                simp ))
-      have : e.hom ≫ pullback.fst = pullback.snd := by
-        simp
+        exact as_iso (pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) (by simpa using pullback.condition) (by simp))
+      have : e.hom ≫ pullback.fst = pullback.snd := by simp
       rw [← this, (target_affine_locally_respects_iso hP.1).cancel_left_is_iso]
       apply hP.target_affine_locally_pullback_fst_of_right_of_stable_under_base_change hP'
       rw [← pullback_symmetry_hom_comp_snd, affine_cancel_left_is_iso hP.1]

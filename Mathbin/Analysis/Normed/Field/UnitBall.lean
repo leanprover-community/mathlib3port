@@ -91,10 +91,7 @@ def Submonoid.unitSphere (𝕜 : Type _) [NormedDivisionRing 𝕜] : Submonoid �
   one_mem' := mem_sphere_zero_iff_norm.2 norm_one
 
 instance [NormedDivisionRing 𝕜] : Inv (Sphere (0 : 𝕜) 1) :=
-  ⟨fun x =>
-    ⟨x⁻¹,
-      mem_sphere_zero_iff_norm.2 <| by
-        rw [norm_inv, mem_sphere_zero_iff_norm.1 x.coe_prop, inv_one]⟩⟩
+  ⟨fun x => ⟨x⁻¹, mem_sphere_zero_iff_norm.2 <| by rw [norm_inv, mem_sphere_zero_iff_norm.1 x.coe_prop, inv_one]⟩⟩
 
 @[simp, norm_cast]
 theorem coe_inv_unit_sphere [NormedDivisionRing 𝕜] (x : Sphere (0 : 𝕜) 1) : ↑x⁻¹ = (x⁻¹ : 𝕜) :=
@@ -111,9 +108,7 @@ theorem coe_div_unit_sphere [NormedDivisionRing 𝕜] (x y : Sphere (0 : 𝕜) 1
   rfl
 
 instance [NormedDivisionRing 𝕜] : Pow (Sphere (0 : 𝕜) 1) ℤ :=
-  ⟨fun x n =>
-    ⟨x ^ n, by
-      rw [mem_sphere_zero_iff_norm, norm_zpow, mem_sphere_zero_iff_norm.1 x.coe_prop, one_zpow]⟩⟩
+  ⟨fun x n => ⟨x ^ n, by rw [mem_sphere_zero_iff_norm, norm_zpow, mem_sphere_zero_iff_norm.1 x.coe_prop, one_zpow]⟩⟩
 
 @[simp, norm_cast]
 theorem coe_zpow_unit_sphere [NormedDivisionRing 𝕜] (x : Sphere (0 : 𝕜) 1) (n : ℤ) : ↑(x ^ n) = (x ^ n : 𝕜) :=
@@ -144,8 +139,7 @@ theorem unit_sphere_to_units_apply_coe [NormedDivisionRing 𝕜] (x : Sphere (0 
   rfl
 
 theorem unit_sphere_to_units_injective [NormedDivisionRing 𝕜] : Function.Injective (unitSphereToUnits 𝕜) := fun x y h =>
-  Subtype.eq <| by
-    convert congr_arg Units.val h
+  Subtype.eq <| by convert congr_arg Units.val h
 
 instance [NormedDivisionRing 𝕜] : Groupₓ (Sphere (0 : 𝕜) 1) :=
   unit_sphere_to_units_injective.Group (unitSphereToUnits 𝕜) (Units.ext rfl) (fun x y => Units.ext rfl)

@@ -23,8 +23,7 @@ instance {n α} [Inhabited α] : Inhabited (Arrayₓ n α) :=
   DArray.inhabited
 
 theorem to_list_of_heq {n₁ n₂ α} {a₁ : Arrayₓ n₁ α} {a₂ : Arrayₓ n₂ α} (hn : n₁ = n₂) (ha : HEq a₁ a₂) :
-    a₁.toList = a₂.toList := by
-  congr <;> assumption
+    a₁.toList = a₂.toList := by congr <;> assumption
 
 -- rev_list
 section RevList
@@ -42,8 +41,7 @@ theorem rev_list_reverse : a.revList.reverse = a.toList :=
   rev_list_reverse_aux _ _ _
 
 @[simp]
-theorem to_list_reverse : a.toList.reverse = a.revList := by
-  rw [← rev_list_reverse, List.reverse_reverse]
+theorem to_list_reverse : a.toList.reverse = a.revList := by rw [← rev_list_reverse, List.reverse_reverse]
 
 end RevList
 
@@ -64,7 +62,7 @@ theorem mem_rev_list_aux :
       Or.elim (lt_or_eq_of_leₓ <| Nat.le_of_succ_le_succₓ ji1) (fun ji => List.mem_cons_of_memₓ _ <| IH.1 ⟨j, ji, e⟩)
         fun je => by
         simp [DArray.iterateAux] <;>
-          apply Or.inl <;> unfold read  at e <;> have H : j = ⟨i, h⟩ := Finₓ.eq_of_veq je <;> rwa [← H, e],
+          apply Or.inl <;> unfold read at e <;> have H : j = ⟨i, h⟩ := Finₓ.eq_of_veq je <;> rwa [← H, e],
       fun m => by
       simp [DArray.iterateAux, List.Memₓ] at m
       cases' m with e m'
@@ -80,8 +78,7 @@ theorem mem_rev_list : v ∈ a.revList ↔ v ∈ a :=
       (mem_rev_list_aux _)
 
 @[simp]
-theorem mem_to_list : v ∈ a.toList ↔ v ∈ a := by
-  rw [← rev_list_reverse] <;> exact list.mem_reverse.trans mem_rev_list
+theorem mem_to_list : v ∈ a.toList ↔ v ∈ a := by rw [← rev_list_reverse] <;> exact list.mem_reverse.trans mem_rev_list
 
 end Mem
 
@@ -146,12 +143,7 @@ theorem to_list_nth_le_aux (i : ℕ) (ih : i < n) :
         | 0, e, tl =>
           match i, e, ih with
           | _, rfl, _ => rfl
-        | k' + 1, _, tl => by
-          simp [List.nthLe] <;>
-            exact
-              al _ _
-                (by
-                  simp [add_commₓ, add_assocₓ, *] <;> cc)
+        | k' + 1, _, tl => by simp [List.nthLe] <;> exact al _ _ (by simp [add_commₓ, add_assocₓ, *] <;> cc)
 
 theorem to_list_nth_le (i : ℕ) (h h') : List.nthLe a.toList i h' = a.read ⟨i, h⟩ :=
   to_list_nth_le_aux _ _ _ fun k tl => absurd tl k.not_lt_zero
@@ -170,17 +162,13 @@ theorem to_list_nth {i v} : List.nth a.toList i = some v ↔ ∃ h, a.read ⟨i,
     
 
 theorem write_to_list {i v} : (a.write i v).toList = a.toList.updateNth i v :=
-  (List.ext_le
-      (by
-        simp ))
-    fun j h₁ h₂ => by
-    have h₃ : j < n := by
-      simpa using h₁
+  (List.ext_le (by simp)) fun j h₁ h₂ => by
+    have h₃ : j < n := by simpa using h₁
     rw [to_list_nth_le _ h₃]
     refine'
       let ⟨_, e⟩ := List.nth_eq_some.1 _
       e.symm
-    by_cases' ij : (i : ℕ) = j
+    by_cases ij:(i : ℕ) = j
     · subst j
       rw [show (⟨(i : ℕ), h₃⟩ : Finₓ _) = i from Finₓ.eq_of_veq rfl, Arrayₓ.read_write, List.nth_update_nth_of_lt]
       simp [h₃]
@@ -234,7 +222,7 @@ theorem push_back_rev_list_aux :
   | i + 1, h, h' => by
     simp [DArray.iterateAux]
     refine' ⟨_, push_back_rev_list_aux _ _ _⟩
-    dsimp' [read, DArray.read, push_back]
+    dsimp [read, DArray.read, push_back]
     rw [dif_neg]
     rfl
     exact ne_of_ltₓ h'
@@ -242,7 +230,7 @@ theorem push_back_rev_list_aux :
 @[simp]
 theorem push_back_rev_list : (a.pushBack v).revList = v :: a.revList := by
   unfold push_back rev_list foldl iterate DArray.iterate
-  dsimp' [DArray.iterateAux, read, DArray.read, push_back]
+  dsimp [DArray.iterateAux, read, DArray.read, push_back]
   rw [dif_pos (Eq.refl n)]
   apply congr_arg
   apply push_back_rev_list_aux
@@ -260,8 +248,7 @@ theorem read_push_back_left (i : Finₓ n) : (a.pushBack v).read i.cast_succ = a
 @[simp]
 theorem read_push_back_right : (a.pushBack v).read (Finₓ.last _) = v := by
   cases' hn : Finₓ.last n with k hk
-  have : k = n := by
-    simpa [Finₓ.eq_iff_veq] using hn.symm
+  have : k = n := by simpa [Finₓ.eq_iff_veq] using hn.symm
   simp [push_back, this, Finₓ.castSucc, Finₓ.castAdd, Finₓ.castLe, Finₓ.castLt, read, DArray.read]
 
 end PushBack

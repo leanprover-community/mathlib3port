@@ -135,11 +135,7 @@ theorem comp_id (f : CocompactMap α β) : f.comp (CocompactMap.id _) = f :=
 theorem tendsto_of_forall_preimage {f : α → β} (h : ∀ s, IsCompact s → IsCompact (f ⁻¹' s)) :
     Tendsto f (cocompact α) (cocompact β) := fun s hs =>
   match mem_cocompact.mp hs with
-  | ⟨t, ht, hts⟩ =>
-    mem_map.mpr
-      (mem_cocompact.mpr
-        ⟨f ⁻¹' t, h t ht, by
-          simpa using preimage_mono hts⟩)
+  | ⟨t, ht, hts⟩ => mem_map.mpr (mem_cocompact.mpr ⟨f ⁻¹' t, h t ht, by simpa using preimage_mono hts⟩)
 
 /-- If the codomain is Hausdorff, preimages of compact sets are compact under a cocompact
 continuous map. -/
@@ -150,10 +146,7 @@ theorem compact_preimage [T2Space β] (f : CocompactMap α β) ⦃s : Set β⦄ 
         simpa only [preimage_image_preimage, preimage_compl] using
           mem_map.mp
             (cocompact_tendsto f <| mem_cocompact.mpr ⟨s, hs, compl_subset_compl.mpr (image_preimage_subset f _)⟩))
-  exact
-    compact_of_is_closed_subset ht (hs.is_closed.preimage <| map_continuous f)
-      (by
-        simpa using hts)
+  exact compact_of_is_closed_subset ht (hs.is_closed.preimage <| map_continuous f) (by simpa using hts)
 
 end Basics
 

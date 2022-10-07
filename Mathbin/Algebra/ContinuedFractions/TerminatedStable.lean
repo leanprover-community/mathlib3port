@@ -50,16 +50,13 @@ theorem convergents'_aux_stable_step_of_terminated {s : Seqₓₓ <| Pair K} (te
     convergents'Aux s (n + 1) = convergents'Aux s n := by
   change s.nth n = none at terminated_at_n
   induction' n with n IH generalizing s
-  case nat.zero =>
-    simp only [convergents'_aux, terminated_at_n, Seqₓₓ.head]
-  case nat.succ =>
-    cases' s_head_eq : s.head with gp_head
-    case option.none =>
-      simp only [convergents'_aux, s_head_eq]
-    case option.some =>
-      have : s.tail.terminated_at n := by
-        simp only [Seqₓₓ.TerminatedAt, s.nth_tail, terminated_at_n]
-      simp only [convergents'_aux, s_head_eq, IH this]
+  case zero => simp only [convergents'_aux, terminated_at_n, Seqₓₓ.head]
+  case succ =>
+  cases' s_head_eq : s.head with gp_head
+  case none => simp only [convergents'_aux, s_head_eq]
+  case some =>
+  have : s.tail.terminated_at n := by simp only [Seqₓₓ.TerminatedAt, s.nth_tail, terminated_at_n]
+  simp only [convergents'_aux, s_head_eq, IH this]
 
 theorem convergents'_aux_stable_of_terminated {s : Seqₓₓ <| Pair K} (n_le_m : n ≤ m)
     (terminated_at_n : s.TerminatedAt n) : convergents'Aux s m = convergents'Aux s n := by
@@ -67,16 +64,15 @@ theorem convergents'_aux_stable_of_terminated {s : Seqₓₓ <| Pair K} (n_le_m 
   · rfl
     
   · cases' s_head_eq : s.head with gp_head
-    case option.none =>
-      cases n <;> simp only [convergents'_aux, s_head_eq]
-    case option.some =>
-      have : convergents'_aux s (n + 1) = convergents'_aux s n :=
-        convergents'_aux_stable_step_of_terminated terminated_at_n
-      rw [← this]
-      have : s.tail.terminated_at n := by
-        simpa only [Seqₓₓ.TerminatedAt, Seqₓₓ.nth_tail] using s.le_stable n.le_succ terminated_at_n
-      have : convergents'_aux s.tail m = convergents'_aux s.tail n := IH this
-      simp only [convergents'_aux, s_head_eq, this]
+    case none => cases n <;> simp only [convergents'_aux, s_head_eq]
+    case some =>
+    have : convergents'_aux s (n + 1) = convergents'_aux s n :=
+      convergents'_aux_stable_step_of_terminated terminated_at_n
+    rw [← this]
+    have : s.tail.terminated_at n := by
+      simpa only [Seqₓₓ.TerminatedAt, Seqₓₓ.nth_tail] using s.le_stable n.le_succ terminated_at_n
+    have : convergents'_aux s.tail m = convergents'_aux s.tail n := IH this
+    simp only [convergents'_aux, s_head_eq, this]
     
 
 theorem continuants_stable_of_terminated (n_le_m : n ≤ m) (terminated_at_n : g.TerminatedAt n) :

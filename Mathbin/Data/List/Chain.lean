@@ -50,8 +50,7 @@ theorem Chain.iff_mem {a : α} {l : List α} : Chain R a l ↔ Chain (fun x y =>
         exact IH.imp fun a b ⟨am, bm, h⟩ => ⟨mem_cons_of_mem _ am, mem_cons_of_mem _ bm, h⟩],
     Chain.imp fun a b h => h.2.2⟩
 
-theorem chain_singleton {a b : α} : Chain R a [b] ↔ R a b := by
-  simp only [chain_cons, chain.nil, and_trueₓ]
+theorem chain_singleton {a b : α} : Chain R a [b] ↔ R a b := by simp only [chain_cons, chain.nil, and_trueₓ]
 
 theorem chain_split {a b : α} {l₁ l₂ : List α} : Chain R a (l₁ ++ b :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ Chain R b l₂ := by
   induction' l₁ with x l₁ IH generalizing a <;>
@@ -59,16 +58,12 @@ theorem chain_split {a b : α} {l₁ l₂ : List α} : Chain R a (l₁ ++ b :: l
 
 @[simp]
 theorem chain_append_cons_cons {a b c : α} {l₁ l₂ : List α} :
-    Chain R a (l₁ ++ b :: c :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ R b c ∧ Chain R c l₂ := by
-  rw [chain_split, chain_cons]
+    Chain R a (l₁ ++ b :: c :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ R b c ∧ Chain R c l₂ := by rw [chain_split, chain_cons]
 
 theorem chain_iff_forall₂ : ∀ {a : α} {l : List α}, Chain R a l ↔ l = [] ∨ Forall₂ R (a :: init l) l
-  | a, [] => by
-    simp
-  | a, [b] => by
-    simp [init]
-  | a, b :: c :: l => by
-    simp [@chain_iff_forall₂ b]
+  | a, [] => by simp
+  | a, [b] => by simp [init]
+  | a, b :: c :: l => by simp [@chain_iff_forall₂ b]
 
 theorem chain_append_singleton_iff_forall₂ : Chain R a (l ++ [b]) ↔ Forall₂ R (a :: l) (l ++ [b]) := by
   simp [chain_iff_forall₂, init]
@@ -136,8 +131,7 @@ theorem chain_iff_nth_le {R} :
       Chain R a l ↔
         (∀ h : 0 < length l, R a (nthLe l 0 h)) ∧
           ∀ (i) (h : i < length l - 1), R (nthLe l i (lt_of_lt_pred h)) (nthLe l (i + 1) (lt_pred_iff.mp h))
-  | a, [] => by
-    simp
+  | a, [] => by simp
   | a, b :: t => by
     rw [chain_cons, chain_iff_nth_le]
     constructor
@@ -188,6 +182,12 @@ theorem chain'_singleton (a : α) : Chain' R [a] :=
 @[simp]
 theorem chain'_cons {x y l} : Chain' R (x :: y :: l) ↔ R x y ∧ Chain' R (y :: l) :=
   chain_cons
+
+theorem chain'_is_infix : ∀ l : List α, Chain' (fun x y => [x, y] <:+: l) l
+  | [] => chain'_nil
+  | [a] => chain'_singleton _
+  | a :: b :: l =>
+    chain'_cons.2 ⟨⟨[], l, by simp⟩, (chain'_is_infix (b :: l)).imp fun x y h => h.trans ⟨[a], [], by simp⟩⟩
 
 theorem chain'_split {a : α} : ∀ {l₁ l₂ : List α}, Chain' R (l₁ ++ a :: l₂) ↔ Chain' R (l₁ ++ [a]) ∧ Chain' R (a :: l₂)
   | [], l₂ => (and_iff_right (chain'_singleton a)).symm
@@ -264,16 +264,14 @@ theorem Chain'.append :
     have : chain' R (b :: l) := h₁.tail
     exact (this.append h₂ h).cons h₁.rel_head
 
-theorem chain'_pair {x y} : Chain' R [x, y] ↔ R x y := by
-  simp only [chain'_singleton, chain'_cons, and_trueₓ]
+theorem chain'_pair {x y} : Chain' R [x, y] ↔ R x y := by simp only [chain'_singleton, chain'_cons, and_trueₓ]
 
 theorem Chain'.imp_head {x y} (h : ∀ {z}, R x z → R y z) {l} (hl : Chain' R (x :: l)) : Chain' R (y :: l) :=
   hl.tail.cons' fun z hz => h <| hl.rel_head' hz
 
 theorem chain'_reverse : ∀ {l}, Chain' R (reverse l) ↔ Chain' (flip R) l
   | [] => Iff.rfl
-  | [a] => by
-    simp only [chain'_singleton, reverse_singleton]
+  | [a] => by simp only [chain'_singleton, reverse_singleton]
   | a :: b :: l => by
     rw [chain'_cons, reverse_cons, reverse_cons, append_assoc, cons_append, nil_append, chain'_split, ← reverse_cons,
       @chain'_reverse (b :: l), and_comm, chain'_pair, flip]
@@ -281,10 +279,8 @@ theorem chain'_reverse : ∀ {l}, Chain' R (reverse l) ↔ Chain' (flip R) l
 theorem chain'_iff_nth_le {R} :
     ∀ {l : List α},
       Chain' R l ↔ ∀ (i) (h : i < length l - 1), R (nthLe l i (lt_of_lt_pred h)) (nthLe l (i + 1) (lt_pred_iff.mp h))
-  | [] => by
-    simp
-  | [a] => by
-    simp
+  | [] => by simp
+  | [a] => by simp
   | a :: b :: t => by
     rw [chain'_cons, chain'_iff_nth_le]
     constructor

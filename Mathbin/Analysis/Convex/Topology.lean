@@ -48,13 +48,13 @@ alias Real.convex_iff_is_preconnected ↔ _ IsPreconnected.convex
 
 section StdSimplex
 
-variable [Fintype ι]
+variable [Fintypeₓ ι]
 
 /-- Every vector in `std_simplex 𝕜 ι` has `max`-norm at most `1`. -/
 theorem std_simplex_subset_closed_ball : StdSimplex ℝ ι ⊆ Metric.ClosedBall 0 1 := by
   intro f hf
   rw [Metric.mem_closed_ball, dist_zero_right]
-  refine' Nnreal.coe_one ▸ Nnreal.coe_le_coe.2 <| Finset.sup_le fun x hx => _
+  refine' Nnreal.coe_one ▸ Nnreal.coe_le_coe.2 <| Finsetₓ.sup_le fun x hx => _
   change abs (f x) ≤ 1
   rw [abs_of_nonneg <| hf.1 x]
   exact (mem_Icc_of_mem_std_simplex hf x).2
@@ -93,8 +93,7 @@ theorem Convex.combo_interior_closure_subset_interior {s : Set E} (hs : Convex �
     calc
       Interior (a • s) + b • Closure s ⊆ Interior (a • s) + Closure (b • s) :=
         add_subset_add Subset.rfl (smul_closure_subset b s)
-      _ = Interior (a • s) + b • s := by
-        rw [is_open_interior.add_closure (b • s)]
+      _ = Interior (a • s) + b • s := by rw [is_open_interior.add_closure (b • s)]
       _ ⊆ Interior (a • s + b • s) := subset_interior_add_left
       _ ⊆ Interior s := interior_mono <| hs.set_combo_subset ha.le hb hab
       
@@ -187,9 +186,8 @@ protected theorem Convex.interior {s : Set E} (hs : Convex 𝕜 s) : Convex 𝕜
 /-- In a topological vector space, the closure of a convex set is convex. -/
 protected theorem Convex.closure {s : Set E} (hs : Convex 𝕜 s) : Convex 𝕜 (Closure s) := fun x hx y hy a b ha hb hab =>
   let f : E → E → E := fun x' y' => a • x' + b • y'
-  have hf : Continuous fun p : E × E => f p.1 p.2 := (continuous_fst.const_smul _).add (continuous_snd.const_smul _)
-  show f x y ∈ Closure s from
-    mem_closure_of_continuous2 hf hx hy fun x' hx' y' hy' => subset_closure (hs hx' hy' ha hb hab)
+  have hf : Continuous (Function.uncurry f) := (continuous_fst.const_smul _).add (continuous_snd.const_smul _)
+  show f x y ∈ Closure s from map_mem_closure₂ hf hx hy fun x' hx' y' hy' => hs hx' hy' ha hb hab
 
 end HasContinuousConstSmul
 
@@ -281,8 +279,7 @@ theorem convex_on_norm (hs : Convex ℝ s) : ConvexOn ℝ s norm :=
   ⟨hs, fun x hx y hy a b ha hb hab =>
     calc
       ∥a • x + b • y∥ ≤ ∥a • x∥ + ∥b • y∥ := norm_add_le _ _
-      _ = a * ∥x∥ + b * ∥y∥ := by
-        rw [norm_smul, norm_smul, Real.norm_of_nonneg ha, Real.norm_of_nonneg hb]
+      _ = a * ∥x∥ + b * ∥y∥ := by rw [norm_smul, norm_smul, Real.norm_of_nonneg ha, Real.norm_of_nonneg hb]
       ⟩
 
 /-- The norm on a real normed space is convex on the whole space. See also `seminorm.convex_on`
@@ -364,12 +361,24 @@ instance (priority := 100) NormedSpace.path_connected : PathConnectedSpace E :=
 
 instance (priority := 100) NormedSpace.loc_path_connected : LocPathConnectedSpace E :=
   loc_path_connected_of_bases (fun x => Metric.nhds_basis_ball) fun x r r_pos =>
-    (convex_ball x r).IsPathConnected <| by
-      simp [r_pos]
+    (convex_ball x r).IsPathConnected <| by simp [r_pos]
 
 theorem dist_add_dist_of_mem_segment {x y z : E} (h : y ∈ [x -[ℝ] z]) : dist x y + dist y z = dist x z := by
   simp only [dist_eq_norm, mem_segment_iff_same_ray] at *
   simpa only [sub_add_sub_cancel', norm_sub_rev] using h.norm_add.symm
+
+/-- The set of vectors in the same ray as `x` is connected. -/
+theorem is_connected_set_of_same_ray (x : E) : IsConnected { y | SameRay ℝ x y } := by
+  by_cases hx:x = 0
+  · simpa [hx] using is_connected_univ
+    
+  simp_rw [← exists_nonneg_left_iff_same_ray hx]
+  exact is_connected_Ici.image _ (continuous_id.smul continuous_const).ContinuousOn
+
+/-- The set of nonzero vectors in the same ray as the nonzero vector `x` is connected. -/
+theorem is_connected_set_of_same_ray_and_ne_zero {x : E} (hx : x ≠ 0) : IsConnected { y | SameRay ℝ x y ∧ y ≠ 0 } := by
+  simp_rw [← exists_pos_left_iff_same_ray_and_ne_zero hx]
+  exact is_connected_Ioi.image _ (continuous_id.smul continuous_const).ContinuousOn
 
 end NormedSpace
 

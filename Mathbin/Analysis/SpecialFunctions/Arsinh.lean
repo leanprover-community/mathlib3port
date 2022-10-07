@@ -60,8 +60,7 @@ theorem exp_arsinh (x : ℝ) : exp (arsinh x) = x + sqrt (1 + x ^ 2) := by
     
 
 @[simp]
-theorem arsinh_zero : arsinh 0 = 0 := by
-  simp [arsinh]
+theorem arsinh_zero : arsinh 0 = 0 := by simp [arsinh]
 
 @[simp]
 theorem arsinh_neg (x : ℝ) : arsinh (-x) = -arsinh x := by
@@ -121,7 +120,7 @@ theorem arsinh_injective : Injective arsinh :=
 theorem arsinh_surjective : Surjective arsinh :=
   sinhEquiv.symm.Surjective
 
-theorem arsinh_strict_mono : StrictMono arsinh :=
+theorem arsinh_strict_mono : StrictMonoₓ arsinh :=
   sinhOrderIso.symm.StrictMono
 
 @[simp]
@@ -141,12 +140,10 @@ theorem arsinh_eq_zero_iff : arsinh x = 0 ↔ x = 0 :=
   arsinh_injective.eq_iff' arsinh_zero
 
 @[simp]
-theorem arsinh_nonneg_iff : 0 ≤ arsinh x ↔ 0 ≤ x := by
-  rw [← sinh_le_sinh, sinh_zero, sinh_arsinh]
+theorem arsinh_nonneg_iff : 0 ≤ arsinh x ↔ 0 ≤ x := by rw [← sinh_le_sinh, sinh_zero, sinh_arsinh]
 
 @[simp]
-theorem arsinh_nonpos_iff : arsinh x ≤ 0 ↔ x ≤ 0 := by
-  rw [← sinh_le_sinh, sinh_zero, sinh_arsinh]
+theorem arsinh_nonpos_iff : arsinh x ≤ 0 ↔ x ≤ 0 := by rw [← sinh_le_sinh, sinh_zero, sinh_arsinh]
 
 @[simp]
 theorem arsinh_pos_iff : 0 < arsinh x ↔ 0 < x :=

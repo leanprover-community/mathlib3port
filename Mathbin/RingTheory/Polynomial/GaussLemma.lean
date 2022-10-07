@@ -53,10 +53,7 @@ theorem IsPrimitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit (
 theorem IsPrimitive.irreducible_of_irreducible_map_of_injective (h_irr : Irreducible (map φ f)) : Irreducible f := by
   refine' ⟨fun h => h_irr.not_unit (IsUnit.map (map_ring_hom φ) h), _⟩
   intro a b h
-  rcases h_irr.is_unit_or_is_unit
-      (by
-        rw [h, Polynomial.map_mul]) with
-    (hu | hu)
+  rcases h_irr.is_unit_or_is_unit (by rw [h, Polynomial.map_mul]) with (hu | hu)
   · left
     rwa [(hf.is_primitive_of_dvd (Dvd.intro _ h.symm)).is_unit_iff_is_unit_map_of_injective hinj]
     
@@ -82,9 +79,7 @@ theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : K[X]}
   rw [Subtype.coe_mk, Algebra.smul_def, algebra_map_apply] at hc
   apply is_unit_of_mul_is_unit_right
   rw [← hc, (integer_normalization R⁰ p).eq_C_content_mul_prim_part, ← hu, ← RingHom.map_mul, is_unit_iff]
-  refine'
-    ⟨algebraMap R K ((integer_normalization R⁰ p).content * ↑u), is_unit_iff_ne_zero.2 fun con => _, by
-      simp ⟩
+  refine' ⟨algebraMap R K ((integer_normalization R⁰ p).content * ↑u), is_unit_iff_ne_zero.2 fun con => _, by simp⟩
   replace con := (injective_iff_map_eq_zero (algebraMap R K)).1 (IsFractionRing.injective _ _) _ Con
   rw [mul_eq_zero, content_eq_zero_iff, IsFractionRing.integer_normalization_eq_zero_iff] at con
   rcases Con with (con | con)
@@ -151,10 +146,10 @@ theorem IsPrimitive.dvd_of_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.Is
     rw [hu]
     
   iterate 2 
-    apply mul_ne_zero hq.ne_zero
-    rw [Ne.def, C_eq_zero]
-    contrapose! s0
-    simp [s0, mem_non_zero_divisors_iff_ne_zero]
+  apply mul_ne_zero hq.ne_zero
+  rw [Ne.def, C_eq_zero]
+  contrapose! s0
+  simp [s0, mem_non_zero_divisors_iff_ne_zero]
 
 variable (K)
 

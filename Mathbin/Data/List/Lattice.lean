@@ -37,95 +37,90 @@ variable {α : Type _} {l l₁ l₂ : List α} {p : α → Prop} {a : α}
 
 section Disjoint
 
-theorem Disjoint.symm (d : Disjoint l₁ l₂) : Disjoint l₂ l₁ := fun a i₂ i₁ => d i₁ i₂
+theorem Disjointₓ.symm (d : Disjointₓ l₁ l₂) : Disjointₓ l₂ l₁ := fun a i₂ i₁ => d i₁ i₂
 
-theorem disjoint_commₓ : Disjoint l₁ l₂ ↔ Disjoint l₂ l₁ :=
-  ⟨Disjoint.symm, Disjoint.symm⟩
+theorem disjoint_commₓ : Disjointₓ l₁ l₂ ↔ Disjointₓ l₂ l₁ :=
+  ⟨Disjointₓ.symm, Disjointₓ.symm⟩
 
-theorem disjoint_leftₓ : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₁ → a ∉ l₂ :=
+theorem disjoint_leftₓ : Disjointₓ l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₁ → a ∉ l₂ :=
   Iff.rfl
 
-theorem disjoint_rightₓ : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₂ → a ∉ l₁ :=
+theorem disjoint_rightₓ : Disjointₓ l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₂ → a ∉ l₁ :=
   disjoint_comm
 
-theorem disjoint_iff_neₓ : Disjoint l₁ l₂ ↔ ∀ a ∈ l₁, ∀ b ∈ l₂, a ≠ b := by
+theorem disjoint_iff_neₓ : Disjointₓ l₁ l₂ ↔ ∀ a ∈ l₁, ∀ b ∈ l₂, a ≠ b := by
   simp only [disjoint_left, imp_not_comm, forall_eq']
 
-theorem disjoint_of_subset_leftₓ (ss : l₁ ⊆ l) (d : Disjoint l l₂) : Disjoint l₁ l₂ := fun x m => d (ss m)
+theorem disjoint_of_subset_leftₓ (ss : l₁ ⊆ l) (d : Disjointₓ l l₂) : Disjointₓ l₁ l₂ := fun x m => d (ss m)
 
-theorem disjoint_of_subset_rightₓ (ss : l₂ ⊆ l) (d : Disjoint l₁ l) : Disjoint l₁ l₂ := fun x m m₁ => d m (ss m₁)
+theorem disjoint_of_subset_rightₓ (ss : l₂ ⊆ l) (d : Disjointₓ l₁ l) : Disjointₓ l₁ l₂ := fun x m m₁ => d m (ss m₁)
 
-theorem disjoint_of_disjoint_cons_leftₓ {l₁ l₂} : Disjoint (a :: l₁) l₂ → Disjoint l₁ l₂ :=
+theorem disjoint_of_disjoint_cons_leftₓ {l₁ l₂} : Disjointₓ (a :: l₁) l₂ → Disjointₓ l₁ l₂ :=
   disjoint_of_subset_leftₓ (List.subset_consₓ _ _)
 
-theorem disjoint_of_disjoint_cons_rightₓ {l₁ l₂} : Disjoint l₁ (a :: l₂) → Disjoint l₁ l₂ :=
+theorem disjoint_of_disjoint_cons_rightₓ {l₁ l₂} : Disjointₓ l₁ (a :: l₂) → Disjointₓ l₁ l₂ :=
   disjoint_of_subset_rightₓ (List.subset_consₓ _ _)
 
 @[simp]
-theorem disjoint_nil_leftₓ (l : List α) : Disjoint [] l := fun a => (not_mem_nilₓ a).elim
+theorem disjoint_nil_leftₓ (l : List α) : Disjointₓ [] l := fun a => (not_mem_nilₓ a).elim
 
 @[simp]
-theorem disjoint_nil_rightₓ (l : List α) : Disjoint l [] := by
+theorem disjoint_nil_rightₓ (l : List α) : Disjointₓ l [] := by
   rw [disjoint_comm]
   exact disjoint_nil_left _
 
 @[simp]
-theorem singleton_disjointₓ : Disjoint [a] l ↔ a ∉ l := by
+theorem singleton_disjointₓ : Disjointₓ [a] l ↔ a ∉ l := by
   simp only [Disjoint, mem_singleton, forall_eq]
   rfl
 
 @[simp]
-theorem disjoint_singletonₓ : Disjoint l [a] ↔ a ∉ l := by
-  rw [disjoint_comm, singleton_disjoint]
+theorem disjoint_singletonₓ : Disjointₓ l [a] ↔ a ∉ l := by rw [disjoint_comm, singleton_disjoint]
 
 @[simp]
-theorem disjoint_append_leftₓ : Disjoint (l₁ ++ l₂) l ↔ Disjoint l₁ l ∧ Disjoint l₂ l := by
+theorem disjoint_append_leftₓ : Disjointₓ (l₁ ++ l₂) l ↔ Disjointₓ l₁ l ∧ Disjointₓ l₂ l := by
   simp only [Disjoint, mem_append, or_imp_distrib, forall_and_distrib]
 
 @[simp]
-theorem disjoint_append_right : Disjoint l (l₁ ++ l₂) ↔ Disjoint l l₁ ∧ Disjoint l l₂ :=
-  disjoint_commₓ.trans <| by
-    simp only [disjoint_comm, disjoint_append_left]
+theorem disjoint_append_rightₓ : Disjointₓ l (l₁ ++ l₂) ↔ Disjointₓ l l₁ ∧ Disjointₓ l l₂ :=
+  disjoint_commₓ.trans <| by simp only [disjoint_comm, disjoint_append_left]
 
 @[simp]
-theorem disjoint_cons_leftₓ : Disjoint (a :: l₁) l₂ ↔ a ∉ l₂ ∧ Disjoint l₁ l₂ :=
-  (@disjoint_append_leftₓ _ l₂ [a] l₁).trans <| by
-    simp only [singleton_disjoint]
+theorem disjoint_cons_leftₓ : Disjointₓ (a :: l₁) l₂ ↔ a ∉ l₂ ∧ Disjointₓ l₁ l₂ :=
+  (@disjoint_append_leftₓ _ l₂ [a] l₁).trans <| by simp only [singleton_disjoint]
 
 @[simp]
-theorem disjoint_cons_right : Disjoint l₁ (a :: l₂) ↔ a ∉ l₁ ∧ Disjoint l₁ l₂ :=
-  disjoint_commₓ.trans <| by
-    simp only [disjoint_comm, disjoint_cons_left]
+theorem disjoint_cons_rightₓ : Disjointₓ l₁ (a :: l₂) ↔ a ∉ l₁ ∧ Disjointₓ l₁ l₂ :=
+  disjoint_commₓ.trans <| by simp only [disjoint_comm, disjoint_cons_left]
 
-theorem disjoint_of_disjoint_append_left_leftₓ (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₁ l :=
+theorem disjoint_of_disjoint_append_left_leftₓ (d : Disjointₓ (l₁ ++ l₂) l) : Disjointₓ l₁ l :=
   (disjoint_append_leftₓ.1 d).1
 
-theorem disjoint_of_disjoint_append_left_rightₓ (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₂ l :=
+theorem disjoint_of_disjoint_append_left_rightₓ (d : Disjointₓ (l₁ ++ l₂) l) : Disjointₓ l₂ l :=
   (disjoint_append_leftₓ.1 d).2
 
-theorem disjoint_of_disjoint_append_right_left (d : Disjoint l (l₁ ++ l₂)) : Disjoint l l₁ :=
-  (disjoint_append_right.1 d).1
+theorem disjoint_of_disjoint_append_right_leftₓ (d : Disjointₓ l (l₁ ++ l₂)) : Disjointₓ l l₁ :=
+  (disjoint_append_rightₓ.1 d).1
 
-theorem disjoint_of_disjoint_append_right_right (d : Disjoint l (l₁ ++ l₂)) : Disjoint l l₂ :=
-  (disjoint_append_right.1 d).2
+theorem disjoint_of_disjoint_append_right_rightₓ (d : Disjointₓ l (l₁ ++ l₂)) : Disjointₓ l l₂ :=
+  (disjoint_append_rightₓ.1 d).2
 
-theorem disjoint_take_drop {m n : ℕ} (hl : l.Nodup) (h : m ≤ n) : Disjoint (l.take m) (l.drop n) := by
+theorem disjoint_take_dropₓ {m n : ℕ} (hl : l.Nodup) (h : m ≤ n) : Disjointₓ (l.take m) (l.drop n) := by
   induction l generalizing m n
-  case list.nil m n =>
-    simp
-  case list.cons x xs xs_ih m n =>
-    cases m <;>
-      cases n <;>
-        simp only [disjoint_cons_left, mem_cons_iff, disjoint_cons_right, drop, true_orₓ, eq_self_iff_true, not_true,
-          false_andₓ, disjoint_nil_left, take]
-    · cases h
-      
-    cases' hl with _ _ h₀ h₁
-    constructor
-    · intro h
-      exact h₀ _ (mem_of_mem_drop h) rfl
-      
-    solve_by_elim(config := { max_depth := 4 }) [le_of_succ_le_succ]
+  case nil m n => simp
+  case cons x xs xs_ih m n =>
+  cases m <;>
+    cases n <;>
+      simp only [disjoint_cons_left, mem_cons_iff, disjoint_cons_right, drop, true_orₓ, eq_self_iff_true, not_true,
+        false_andₓ, disjoint_nil_left, take]
+  · cases h
+    
+  cases' hl with _ _ h₀ h₁
+  constructor
+  · intro h
+    exact h₀ _ (mem_of_mem_drop h) rfl
+    
+  solve_by_elim (config := { max_depth := 4 }) [le_of_succ_le_succ]
 
 end Disjoint
 
@@ -155,17 +150,11 @@ theorem mem_union_right (l₁ : List α) (h : a ∈ l₂) : a ∈ l₁ ∪ l₂ 
   mem_union.2 (Or.inr h)
 
 theorem sublist_suffix_of_union : ∀ l₁ l₂ : List α, ∃ t, t <+ l₁ ∧ t ++ l₂ = l₁ ∪ l₂
-  | [], l₂ =>
-    ⟨[], by
-      rfl, rfl⟩
+  | [], l₂ => ⟨[], by rfl, rfl⟩
   | a :: l₁, l₂ =>
     let ⟨t, s, e⟩ := sublist_suffix_of_union l₁ l₂
-    if h : a ∈ l₁ ∪ l₂ then
-      ⟨t, sublist_cons_of_sublist _ s, by
-        simp only [e, cons_union, insert_of_mem h]⟩
-    else
-      ⟨a :: t, s.cons_cons _, by
-        simp only [cons_append, cons_union, e, insert_of_not_mem h] <;> constructor <;> rfl⟩
+    if h : a ∈ l₁ ∪ l₂ then ⟨t, sublist_cons_of_sublist _ s, by simp only [e, cons_union, insert_of_mem h]⟩
+    else ⟨a :: t, s.cons_cons _, by simp only [cons_append, cons_union, e, insert_of_not_mem h] <;> constructor <;> rfl⟩
 
 theorem suffix_union_right (l₁ l₂ : List α) : l₂ <:+ l₁ ∪ l₂ :=
   (sublist_suffix_of_union l₁ l₂).imp fun a => And.right
@@ -222,7 +211,7 @@ theorem inter_subset_right (l₁ l₂ : List α) : l₁ ∩ l₂ ⊆ l₂ := fun
 
 theorem subset_inter {l l₁ l₂ : List α} (h₁ : l ⊆ l₁) (h₂ : l ⊆ l₂) : l ⊆ l₁ ∩ l₂ := fun a h => mem_inter.2 ⟨h₁ h, h₂ h⟩
 
-theorem inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ Disjoint l₁ l₂ := by
+theorem inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ Disjointₓ l₁ l₂ := by
   simp only [eq_nil_iff_forall_not_mem, mem_inter, not_and]
   rfl
 
@@ -233,8 +222,7 @@ theorem forall_mem_inter_of_forall_right (l₁ : List α) (h : ∀ x ∈ l₂, p
   Ball.imp_left (fun x => mem_of_mem_inter_right) h
 
 @[simp]
-theorem inter_reverse {xs ys : List α} : xs.inter ys.reverse = xs.inter ys := by
-  simp only [List.interₓ, mem_reverse]
+theorem inter_reverse {xs ys : List α} : xs.inter ys.reverse = xs.inter ys := by simp only [List.interₓ, mem_reverse]
 
 end Inter
 
@@ -244,12 +232,10 @@ end Inter
 section BagInter
 
 @[simp]
-theorem nil_bag_inter (l : List α) : [].bagInter l = [] := by
-  cases l <;> rfl
+theorem nil_bag_inter (l : List α) : [].bagInter l = [] := by cases l <;> rfl
 
 @[simp]
-theorem bag_inter_nil (l : List α) : l.bagInter [] = [] := by
-  cases l <;> rfl
+theorem bag_inter_nil (l : List α) : l.bagInter [] = [] := by cases l <;> rfl
 
 @[simp]
 theorem cons_bag_inter_of_pos (l₁ : List α) (h : a ∈ l₂) : (a :: l₁).bagInter l₂ = a :: l₁.bagInter (l₂.erase a) := by
@@ -264,12 +250,11 @@ theorem cons_bag_inter_of_neg (l₁ : List α) (h : a ∉ l₂) : (a :: l₁).ba
 
 @[simp]
 theorem mem_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter l₂ ↔ a ∈ l₁ ∧ a ∈ l₂
-  | [], l₂ => by
-    simp only [nil_bag_inter, not_mem_nil, false_andₓ]
+  | [], l₂ => by simp only [nil_bag_inter, not_mem_nil, false_andₓ]
   | b :: l₁, l₂ => by
-    by_cases' b ∈ l₂
+    by_cases b ∈ l₂
     · rw [cons_bag_inter_of_pos _ h, mem_cons_iff, mem_cons_iff, mem_bag_inter]
-      by_cases' ba : a = b
+      by_cases ba:a = b
       · simp only [ba, h, eq_self_iff_true, true_orₓ, true_andₓ]
         
       · simp only [mem_erase_of_ne ba, ba, false_orₓ]
@@ -284,13 +269,11 @@ theorem mem_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter 
 
 @[simp]
 theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, countₓ a (l₁.bagInter l₂) = min (countₓ a l₁) (countₓ a l₂)
-  | [], l₂ => by
-    simp
-  | l₁, [] => by
-    simp
+  | [], l₂ => by simp
+  | l₁, [] => by simp
   | h₁ :: l₁, h₂ :: l₂ => by
     simp only [List.bagInterₓ, List.mem_cons_iff]
-    by_cases' p₁ : h₂ = h₁ <;> by_cases' p₂ : h₁ = a
+    by_cases p₁:h₂ = h₁ <;> by_cases p₂:h₁ = a
     · simp only [p₁, p₂, count_bag_inter, min_succ_succ, erase_cons_head, if_true, mem_cons_iff, count_cons_self,
         true_orₓ, eq_self_iff_true]
       
@@ -298,7 +281,7 @@ theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, countₓ a (l₁.b
         eq_self_iff_true, if_false]
       
     · rw [p₂] at p₁
-      by_cases' p₃ : a ∈ l₂
+      by_cases p₃:a ∈ l₂
       · simp only [p₁, Ne.symm p₁, p₂, p₃, erase_cons, count_bag_inter, Eq.symm (min_succ_succ _ _),
           succ_pred_eq_of_pos (count_pos.2 p₃), if_true, mem_cons_iff, false_orₓ, count_cons_self, eq_self_iff_true,
           if_false, Ne.def, not_false_iff, count_erase_self, List.count_cons_of_ne]
@@ -306,16 +289,15 @@ theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, countₓ a (l₁.b
       · simp [Ne.symm p₁, p₂, p₃]
         
       
-    · by_cases' p₄ : h₁ ∈ l₂ <;>
+    · by_cases p₄:h₁ ∈ l₂ <;>
         simp only [Ne.symm p₁, Ne.symm p₂, p₄, count_bag_inter, if_true, if_false, mem_cons_iff, false_orₓ,
           eq_self_iff_true, Ne.def, not_false_iff, count_erase_of_ne, count_cons_of_ne]
       
 
 theorem bag_inter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInter l₂ <+ l₁
-  | [], l₂ => by
-    simp [nil_sublist]
+  | [], l₂ => by simp [nil_sublist]
   | b :: l₁, l₂ => by
-    by_cases' b ∈ l₂ <;> simp [h]
+    by_cases b ∈ l₂ <;> simp [h]
     · exact (bag_inter_sublist_left _ _).cons_cons _
       
     · apply sublist_cons_of_sublist
@@ -323,10 +305,9 @@ theorem bag_inter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInter l₂ <+ 
       
 
 theorem bag_inter_nil_iff_inter_nil : ∀ l₁ l₂ : List α, l₁.bagInter l₂ = [] ↔ l₁ ∩ l₂ = []
-  | [], l₂ => by
-    simp
+  | [], l₂ => by simp
   | b :: l₁, l₂ => by
-    by_cases' h : b ∈ l₂ <;> simp [h]
+    by_cases h:b ∈ l₂ <;> simp [h]
     exact bag_inter_nil_iff_inter_nil l₁ l₂
 
 end BagInter

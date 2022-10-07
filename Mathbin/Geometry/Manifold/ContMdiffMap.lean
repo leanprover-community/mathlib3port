@@ -73,12 +73,10 @@ protected theorem mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiabl
 protected theorem mdifferentiable_at (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
   f.Mdifferentiable x
 
-theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by
-  cases f <;> cases g <;> cases h <;> rfl
+theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by cases f <;> cases g <;> cases h <;> rfl
 
 @[ext]
-theorem ext (h : ∀ x, f x = g x) : f = g := by
-  cases f <;> cases g <;> congr <;> exact funext h
+theorem ext (h : ∀ x, f x = g x) : f = g := by cases f <;> cases g <;> congr <;> exact funext h
 
 /-- The identity as a smooth map. -/
 def id : C^n⟮I, M; I, M⟯ :=

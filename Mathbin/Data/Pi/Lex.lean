@@ -100,7 +100,7 @@ theorem Lex.le_of_of_lex_le [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ 
   Lex.le_of_forall_le h
 
 theorem to_lex_monotone [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] :
-    Monotone (@toLex (∀ i, β i)) := fun _ _ => Lex.le_of_forall_le
+    Monotoneₓ (@toLex (∀ i, β i)) := fun _ _ => Lex.le_of_forall_le
 
 instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] [∀ a, OrderBot (β a)] :
     OrderBot (Lex (∀ a, β a)) where
@@ -122,11 +122,7 @@ instance Lex.orderedCommGroup [LinearOrderₓ ι] [∀ a, OrderedCommGroup (β a
   { Pi.Lex.partialOrder, Pi.commGroup with
     mul_le_mul_left := fun x y hxy z =>
       hxy.elim (fun hxyz => hxyz ▸ le_rflₓ) fun ⟨i, hi⟩ =>
-        Or.inr
-          ⟨i, fun j hji =>
-            show z j * x j = z j * y j by
-              rw [hi.1 j hji],
-            mul_lt_mul_left' hi.2 _⟩ }
+        Or.inr ⟨i, fun j hji => show z j * x j = z j * y j by rw [hi.1 j hji], mul_lt_mul_left' hi.2 _⟩ }
 
 end Pi
 

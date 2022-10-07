@@ -25,7 +25,7 @@ Recall that `∑` and `∏` are notation for `finset.sum` and `finset.prod` resp
 -/
 
 
-open Finset
+open Finsetₓ
 
 open Multiset
 
@@ -37,29 +37,24 @@ variable {R : Type u} {ι : Type w}
 
 namespace Polynomial
 
-variable (s : Finset ι)
+variable (s : Finsetₓ ι)
 
 section Semiringₓ
 
 variable {S : Type _} [Semiringₓ S]
 
 theorem nat_degree_list_sum_le (l : List S[X]) : natDegree l.Sum ≤ (l.map natDegree).foldr max 0 :=
-  List.sum_le_foldr_max natDegree
-    (by
-      simp )
-    nat_degree_add_le _
+  List.sum_le_foldr_max natDegree (by simp) nat_degree_add_le _
 
 theorem nat_degree_multiset_sum_le (l : Multiset S[X]) :
     natDegree l.Sum ≤ (l.map natDegree).foldr max max_left_commₓ 0 :=
-  Quotientₓ.induction_on l
-    (by
-      simpa using nat_degree_list_sum_le)
+  Quotientₓ.induction_on l (by simpa using nat_degree_list_sum_le)
 
 theorem nat_degree_sum_le (f : ι → S[X]) : natDegree (∑ i in s, f i) ≤ s.fold max 0 (nat_degree ∘ f) := by
   simpa using nat_degree_multiset_sum_le (s.val.map f)
 
 theorem degree_list_sum_le (l : List S[X]) : degree l.Sum ≤ (l.map natDegree).maximum := by
-  by_cases' h : l.sum = 0
+  by_cases h:l.sum = 0
   · simp [h]
     
   · rw [degree_eq_nat_degree h]
@@ -122,9 +117,7 @@ section CommSemiringₓ
 variable [CommSemiringₓ R] (f : ι → R[X]) (t : Multiset R[X])
 
 theorem nat_degree_multiset_prod_le : t.Prod.natDegree ≤ (t.map natDegree).Sum :=
-  Quotientₓ.induction_on t
-    (by
-      simpa using nat_degree_list_prod_le)
+  Quotientₓ.induction_on t (by simpa using nat_degree_list_prod_le)
 
 theorem nat_degree_prod_le : (∏ i in s, f i).natDegree ≤ ∑ i in s, (f i).natDegree := by
   simpa using nat_degree_multiset_prod_le (s.1.map f)
@@ -133,9 +126,7 @@ theorem nat_degree_prod_le : (∏ i in s, f i).natDegree ≤ ∑ i in s, (f i).n
 where the degree of the zero polynomial is ⊥.
 -/
 theorem degree_multiset_prod_le : t.Prod.degree ≤ (t.map Polynomial.degree).Sum :=
-  Quotientₓ.induction_on t
-    (by
-      simpa using degree_list_prod_le)
+  Quotientₓ.induction_on t (by simpa using degree_list_prod_le)
 
 theorem degree_prod_le : (∏ i in s, f i).degree ≤ ∑ i in s, (f i).degree := by
   simpa only [Multiset.map_map] using degree_multiset_prod_le (s.1.map f)
@@ -165,10 +156,7 @@ where this condition is automatically satisfied.
 -/
 theorem leading_coeff_prod' (h : (∏ i in s, (f i).leadingCoeff) ≠ 0) :
     (∏ i in s, f i).leadingCoeff = ∏ i in s, (f i).leadingCoeff := by
-  simpa using
-    leading_coeff_multiset_prod' (s.1.map f)
-      (by
-        simpa using h)
+  simpa using leading_coeff_multiset_prod' (s.1.map f) (by simpa using h)
 
 /-- The degree of a product of polynomials is equal to
 the sum of the degrees, provided that the product of leading coefficients is nonzero.
@@ -198,10 +186,7 @@ where this condition is automatically satisfied.
 -/
 theorem nat_degree_prod' (h : (∏ i in s, (f i).leadingCoeff) ≠ 0) :
     (∏ i in s, f i).natDegree = ∑ i in s, (f i).natDegree := by
-  simpa using
-    nat_degree_multiset_prod' (s.1.map f)
-      (by
-        simpa using h)
+  simpa using nat_degree_multiset_prod' (s.1.map f) (by simpa using h)
 
 theorem nat_degree_multiset_prod_of_monic (h : ∀ f ∈ t, Monic f) : t.Prod.natDegree = (t.map natDegree).Sum := by
   nontriviality R
@@ -220,11 +205,7 @@ theorem nat_degree_multiset_prod_of_monic (h : ∀ f ∈ t, Monic f) : t.Prod.na
     
 
 theorem nat_degree_prod_of_monic (h : ∀ i ∈ s, (f i).Monic) : (∏ i in s, f i).natDegree = ∑ i in s, (f i).natDegree :=
-  by
-  simpa using
-    nat_degree_multiset_prod_of_monic (s.1.map f)
-      (by
-        simpa using h)
+  by simpa using nat_degree_multiset_prod_of_monic (s.1.map f) (by simpa using h)
 
 theorem coeff_multiset_prod_of_nat_degree_le (n : ℕ) (hl : ∀ p ∈ t, natDegree p ≤ n) :
     coeff t.Prod (t.card * n) = (t.map fun p => coeff p n).Prod := by
@@ -270,16 +251,13 @@ theorem multiset_prod_X_sub_C_next_coeff (t : Multiset R) : nextCoeff (t.map fun
     apply monic_X_sub_C
     
 
-theorem prod_X_sub_C_next_coeff {s : Finset ι} (f : ι → R) : nextCoeff (∏ i in s, X - c (f i)) = -∑ i in s, f i := by
+theorem prod_X_sub_C_next_coeff {s : Finsetₓ ι} (f : ι → R) : nextCoeff (∏ i in s, X - c (f i)) = -∑ i in s, f i := by
   simpa using multiset_prod_X_sub_C_next_coeff (s.1.map f)
 
 theorem multiset_prod_X_sub_C_coeff_card_pred (t : Multiset R) (ht : 0 < t.card) :
     (t.map fun x => X - c x).Prod.coeff (t.card - 1) = -t.Sum := by
   nontriviality R
-  convert
-    multiset_prod_X_sub_C_next_coeff
-      (by
-        assumption)
+  convert multiset_prod_X_sub_C_next_coeff (by assumption)
   rw [next_coeff]
   split_ifs
   · rw [nat_degree_multiset_prod_of_monic] at h <;> simp only [Multiset.mem_map] at *
@@ -297,12 +275,9 @@ theorem multiset_prod_X_sub_C_coeff_card_pred (t : Multiset R) (ht : 0 < t.card)
     · simp [nat_degree_X_sub_C, monic_X_sub_C]
       
 
-theorem prod_X_sub_C_coeff_card_pred (s : Finset ι) (f : ι → R) (hs : 0 < s.card) :
+theorem prod_X_sub_C_coeff_card_pred (s : Finsetₓ ι) (f : ι → R) (hs : 0 < s.card) :
     (∏ i in s, X - c (f i)).coeff (s.card - 1) = -∑ i in s, f i := by
-  simpa using
-    multiset_prod_X_sub_C_coeff_card_pred (s.1.map f)
-      (by
-        simpa using hs)
+  simpa using multiset_prod_X_sub_C_coeff_card_pred (s.1.map f) (by simpa using hs)
 
 end CommRingₓ
 

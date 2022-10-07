@@ -130,7 +130,7 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
     ∃ T : Set s, T.Countable ∧ (⋃ x ∈ T, ball (f' (x : E)) (r (f' x))) = ⋃ x : s, ball (f' x) (r (f' x)) :=
     TopologicalSpace.is_open_Union_countable _ fun x => is_open_ball
   -- fix a sequence `u` of positive reals tending to zero.
-  obtain ⟨u, u_anti, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ, StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
+  obtain ⟨u, u_anti, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ, StrictAntiₓ u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
     exists_seq_strict_anti_tendsto (0 : ℝ)
   -- `M n z` is the set of points `x` such that `f y - f x` is close to `f' z (y - x)` for `y`
   -- in the ball of radius `u n` around `x`.
@@ -146,11 +146,7 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
         simpa only [mem_ball, Subtype.coe_mk, dist_self] using (rpos (f' x)).bot_lt
       rwa [mem_Union₂] at this
     obtain ⟨ε, εpos, hε⟩ : ∃ ε : ℝ, 0 < ε ∧ ∥f' x - f' z∥ + ε ≤ r (f' z) := by
-      refine'
-        ⟨r (f' z) - ∥f' x - f' z∥, _,
-          le_of_eqₓ
-            (by
-              abel)⟩
+      refine' ⟨r (f' z) - ∥f' x - f' z∥, _, le_of_eqₓ (by abel)⟩
       simpa only [sub_pos] using mem_ball_iff_norm.mp hz
     obtain ⟨δ, δpos, hδ⟩ : ∃ (δ : ℝ)(H : 0 < δ), ball x δ ∩ s ⊆ { y | ∥f y - f x - (f' x) (y - x)∥ ≤ ε * ∥y - x∥ } :=
       Metric.mem_nhds_within_iff.1 (is_o.def (hf' x xs) εpos)
@@ -206,8 +202,7 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
     calc
       dist x y ≤ dist x (d p) + dist y (d p) := dist_triangle_right _ _ _
       _ ≤ u n / 3 + u n / 3 := add_le_add hx.2.2 hy.2.2
-      _ < u n := by
-        linarith [u_pos n]
+      _ < u n := by linarith [u_pos n]
       
   -- the sets `K n z p` are also closed, again by design.
   have K_closed : ∀ (n) (z : T) (p), IsClosed (K n z p) := fun n z p => is_closed_closure.inter is_closed_ball
@@ -242,7 +237,7 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
   obtain ⟨q, hq⟩ : ∃ q, F q = (n, z, p) := hF _
   -- then `x` belongs to `t q`.
   apply mem_Union.2 ⟨q, _⟩
-  simp only [hq, subset_closure hnz, hp, mem_inter_eq, and_selfₓ]
+  simp only [hq, subset_closure hnz, hp, mem_inter_iff, and_selfₓ]
 
 variable [MeasurableSpace E] [BorelSpace E] (μ : Measureₓ E) [IsAddHaarMeasure μ]
 
@@ -358,8 +353,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : 
             (∀ x : E, x ∈ t → 0 < r x) ∧
               (s ⊆ ⋃ x ∈ t, closed_ball x (r x)) ∧ (∑' x : ↥t, μ (closed_ball (↑x) (r ↑x))) ≤ μ s + a :=
       Besicovitch.exists_closed_ball_covering_tsum_measure_le μ ha.ne' (fun x => Ioi 0) s fun x xs δ δpos =>
-        ⟨δ / 2, by
-          simp [half_pos δpos, half_lt_self δpos]⟩
+        ⟨δ / 2, by simp [half_pos δpos, half_lt_self δpos]⟩
     haveI : Encodable t := t_count.to_encodable
     calc
       μ (f '' s) ≤ μ (⋃ x : t, f '' (s ∩ closed_ball x (r x))) := by
@@ -419,7 +413,7 @@ theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0} (hm : 
     exact ⟨δ₀, h', h⟩
   -- record smallness conditions for `δ` that will be needed to apply `hδ₀` below.
   have L1 : ∀ᶠ δ in 𝓝 (0 : ℝ≥0), Subsingleton E ∨ δ < ∥(B.symm : E →L[ℝ] E)∥₊⁻¹ := by
-    by_cases' Subsingleton E
+    by_cases Subsingleton E
     · simp only [h, true_orₓ, eventually_const]
       
     simp only [h, false_orₓ]
@@ -481,12 +475,7 @@ theorem _root_.approximates_linear_on.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ
   · have :
       tendsto (fun ε : ℝ => ((δ : ℝ) + ε) * (∥z∥ + ε) + ∥f' x - A∥ * ε) (𝓝[>] 0)
         (𝓝 ((δ + 0) * (∥z∥ + 0) + ∥f' x - A∥ * 0)) :=
-      tendsto.mono_left
-        (Continuous.tendsto
-          (by
-            continuity)
-          0)
-        nhds_within_le_nhds
+      tendsto.mono_left (Continuous.tendsto (by continuity) 0) nhds_within_le_nhds
     simp only [add_zeroₓ, mul_zero] at this
     apply le_of_tendsto_of_tendsto tendsto_const_nhds this
     filter_upwards [self_mem_nhds_within]
@@ -513,13 +502,10 @@ theorem _root_.approximates_linear_on.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ
   obtain ⟨a, az, ya⟩ : ∃ a, a ∈ closed_ball z ε ∧ y = x + r • a := by
     simp only [mem_smul_set, image_add_left, mem_preimage, singleton_add] at hy
     rcases hy with ⟨a, az, ha⟩
-    exact
-      ⟨a, az, by
-        simp only [ha, add_neg_cancel_left]⟩
+    exact ⟨a, az, by simp only [ha, add_neg_cancel_left]⟩
   have norm_a : ∥a∥ ≤ ∥z∥ + ε :=
     calc
-      ∥a∥ = ∥z + (a - z)∥ := by
-        simp only [add_sub_cancel'_right]
+      ∥a∥ = ∥z + (a - z)∥ := by simp only [add_sub_cancel'_right]
       _ ≤ ∥z∥ + ∥a - z∥ := norm_add_le _ _
       _ ≤ ∥z∥ + ε := add_le_add_left (mem_closed_ball_iff_norm.1 az) _
       
@@ -608,8 +594,7 @@ theorem add_haar_image_eq_zero_of_differentiable_on_of_add_haar_eq_zero (hf : Di
     _ ≤ ∑' n, (Real.toNnreal (abs (A n).det) + 1 : ℝ≥0) * 0 := by
       refine' Ennreal.tsum_le_tsum fun n => Ennreal.mul_le_mul le_rflₓ _
       exact le_transₓ (measure_mono (inter_subset_left _ _)) (le_of_eqₓ hs)
-    _ = 0 := by
-      simp only [tsum_zero, mul_zero]
+    _ = 0 := by simp only [tsum_zero, mul_zero]
     
 
 /-- A version of Sard lemma in fixed dimension: given a differentiable function from `E` to `E` and
@@ -682,8 +667,7 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero (hf' : ∀ x ∈ s, 
       μ (f '' ⋃ n : ℕ, s ∩ closed_ball 0 n) ≤ ∑' n : ℕ, μ (f '' (s ∩ closed_ball 0 n)) := by
         rw [image_Union]
         exact measure_Union_le _
-      _ ≤ 0 := by
-        simp only [H, tsum_zero, nonpos_iff_eq_zero]
+      _ ≤ 0 := by simp only [H, tsum_zero, nonpos_iff_eq_zero]
       
     
   intro R
@@ -784,16 +768,16 @@ theorem ae_measurable_to_nnreal_abs_det_fderiv_within (hs : MeasurableSet s)
 /-- If a function is differentiable and injective on a measurable set,
 then the image is measurable.-/
 theorem measurable_image_of_fderiv_within (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x)
-    (hf : InjOn f s) : MeasurableSet (f '' s) := by
-  have : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).DifferentiableWithinAt
-  exact hs.image_of_continuous_on_inj_on (DifferentiableOn.continuous_on this) hf
+    (hf : InjOn f s) : MeasurableSet (f '' s) :=
+  haveI : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).DifferentiableWithinAt
+  hs.image_of_continuous_on_inj_on (DifferentiableOn.continuous_on this) hf
 
 /-- If a function is differentiable and injective on a measurable set `s`, then its restriction
 to `s` is a measurable embedding. -/
 theorem measurable_embedding_of_fderiv_within (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x)
-    (hf : InjOn f s) : MeasurableEmbedding (s.restrict f) := by
-  have : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).DifferentiableWithinAt
-  exact this.continuous_on.measurable_embedding hs hf
+    (hf : InjOn f s) : MeasurableEmbedding (s.restrict f) :=
+  haveI : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).DifferentiableWithinAt
+  this.continuous_on.measurable_embedding hs hf
 
 /-!
 ### Proving the estimate for the measure of the image
@@ -833,8 +817,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
       rw [dist_eq_norm]
       calc
         ∥B - A∥ ≤ (min δ δ'' : ℝ≥0) := hB
-        _ ≤ δ'' := by
-          simp only [le_reflₓ, Nnreal.coe_min, min_le_iff, or_trueₓ]
+        _ ≤ δ'' := by simp only [le_reflₓ, Nnreal.coe_min, min_le_iff, or_trueₓ]
         _ < δ' := half_lt_self δ'pos
         
       
@@ -921,8 +904,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv (hs : MeasurableSet s)
     intro n
     apply MeasurableSet.disjointed fun i => _
     exact measurable_spanning_sets μ i
-  have A : s = ⋃ n, s ∩ u n := by
-    rw [← inter_Union, Union_disjointed, Union_spanning_sets, inter_univ]
+  have A : s = ⋃ n, s ∩ u n := by rw [← inter_Union, Union_disjointed, Union_spanning_sets, inter_univ]
   calc
     μ (f '' s) ≤ ∑' n, μ (f '' (s ∩ u n)) := by
       conv_lhs => rw [A, image_Union]
@@ -1087,8 +1069,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image (hs : MeasurableSet s)
     intro n
     apply MeasurableSet.disjointed fun i => _
     exact measurable_spanning_sets μ i
-  have A : s = ⋃ n, s ∩ u n := by
-    rw [← inter_Union, Union_disjointed, Union_spanning_sets, inter_univ]
+  have A : s = ⋃ n, s ∩ u n := by rw [← inter_Union, Union_disjointed, Union_spanning_sets, inter_univ]
   calc
     (∫⁻ x in s, Ennreal.ofReal (abs (f' x).det) ∂μ) = ∑' n, ∫⁻ x in s ∩ u n, Ennreal.ofReal (abs (f' x).det) ∂μ := by
       conv_lhs => rw [A]

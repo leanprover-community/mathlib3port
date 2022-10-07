@@ -67,9 +67,7 @@ def enumerateCountable {s : Set α} (h : s.Countable) (default : α) : ℕ → �
   | none => default
 
 theorem subset_range_enumerate {s : Set α} (h : s.Countable) (default : α) : s ⊆ Range (enumerateCountable h default) :=
-  fun x hx =>
-  ⟨@Encodable.encode s h.toEncodable ⟨x, hx⟩, by
-    simp [enumerate_countable, Encodable.encodek]⟩
+  fun x hx => ⟨@Encodable.encode s h.toEncodable ⟨x, hx⟩, by simp [enumerate_countable, Encodable.encodek]⟩
 
 end Enumerate
 
@@ -195,7 +193,7 @@ theorem Countable.insert {s : Set α} (a : α) (h : s.Countable) : (insert a s).
   countable_insert.2 h
 
 theorem Finite.countable {s : Set α} : s.Finite → s.Countable
-  | ⟨h⟩ => Trunc.nonempty (Fintype.truncEncodable s)
+  | ⟨h⟩ => Trunc.nonempty (Fintypeₓ.truncEncodable s)
 
 @[nontriviality]
 theorem Countable.of_subsingleton [Subsingleton α] (s : Set α) : s.Countable :=
@@ -214,20 +212,19 @@ theorem countable_is_bot (α : Type _) [PartialOrderₓ α] : { x : α | IsBot x
 theorem countable_set_of_finite_subset {s : Set α} : s.Countable → { t | Set.Finite t ∧ t ⊆ s }.Countable
   | ⟨h⟩ => by
     skip
-    refine' countable.mono _ (countable_range fun t : Finset s => { a | ∃ h : a ∈ s, Subtype.mk a h ∈ t })
+    refine' countable.mono _ (countable_range fun t : Finsetₓ s => { a | ∃ h : a ∈ s, Subtype.mk a h ∈ t })
     rintro t ⟨⟨ht⟩, ts⟩
     skip
     refine' ⟨finset.univ.map (embedding_of_subset _ _ ts), Set.ext fun a => _⟩
     simpa using @ts a
 
 theorem countable_univ_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (hs : ∀ a, (s a).Countable) :
-    (Pi Univ s).Countable := by
+    (Pi Univ s).Countable :=
   haveI := fun a => (hs a).to_subtype
-  exact (Countable.of_equiv _ (Equivₓ.Set.univPi s).symm).to_set
+  (Countable.of_equiv _ (Equivₓ.Set.univPi s).symm).to_set
 
 theorem countable_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (hs : ∀ a, (s a).Countable) :
-    { f : ∀ a, π a | ∀ a, f a ∈ s a }.Countable := by
-  simpa only [← mem_univ_pi] using countable_univ_pi hs
+    { f : ∀ a, π a | ∀ a, f a ∈ s a }.Countable := by simpa only [← mem_univ_pi] using countable_univ_pi hs
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 protected theorem Countable.prod {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Countable) :
@@ -243,6 +240,6 @@ theorem Countable.image2 {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Co
 
 end Set
 
-theorem Finset.countable_to_set (s : Finset α) : Set.Countable (↑s : Set α) :=
+theorem Finsetₓ.countable_to_set (s : Finsetₓ α) : Set.Countable (↑s : Set α) :=
   s.finite_to_set.Countable
 

@@ -6,7 +6,7 @@ Authors: Patrick Massot, Johannes Hölzl
 import Mathbin.Topology.UniformSpace.UniformConvergence
 import Mathbin.Topology.UniformSpace.UniformEmbedding
 import Mathbin.Topology.UniformSpace.CompleteSeparated
-import Mathbin.Topology.UniformSpace.CompactSeparated
+import Mathbin.Topology.UniformSpace.Compact
 import Mathbin.Topology.Algebra.Group
 import Mathbin.Tactic.Abel
 
@@ -27,6 +27,10 @@ group naturally induces a uniform structure.
   to construct a canonical uniformity for a topological add group.
 
 * extension of ℤ-bilinear maps to complete groups (useful for ring completions)
+
+* `quotient_group.complete_space` and `quotient_add_group.complete_space` guarantee that quotients
+  of first countable topological groups by normal subgroups are themselves complete. In particular,
+  the quotient of a Banach space by a subspace is complete.
 -/
 
 
@@ -54,8 +58,7 @@ attribute [to_additive] UniformGroup
 @[to_additive]
 theorem UniformGroup.mk' {α} [UniformSpace α] [Groupₓ α] (h₁ : UniformContinuous fun p : α × α => p.1 * p.2)
     (h₂ : UniformContinuous fun p : α => p⁻¹) : UniformGroup α :=
-  ⟨by
-    simpa only [div_eq_mul_inv] using h₁.comp (uniform_continuous_fst.prod_mk (h₂.comp uniform_continuous_snd))⟩
+  ⟨by simpa only [div_eq_mul_inv] using h₁.comp (uniform_continuous_fst.prod_mk (h₂.comp uniform_continuous_snd))⟩
 
 variable [UniformSpace α] [Groupₓ α] [UniformGroup α]
 
@@ -143,7 +146,7 @@ theorem uniform_embedding_translate_mul (a : α) : UniformEmbedding fun x : α =
   { comap_uniformity := by
       rw [← uniformity_translate_mul a, comap_map]
       rintro ⟨p₁, p₂⟩ ⟨q₁, q₂⟩
-      simp (config := { contextual := true })[Prod.eq_iff_fst_eq_snd_eqₓ],
+      simp (config := { contextual := true }) [Prod.eq_iff_fst_eq_snd_eqₓ],
     inj := mul_left_injective a }
 
 namespace MulOpposite
@@ -227,6 +230,18 @@ theorem uniformity_eq_comap_nhds_one_swapped : 𝓤 α = comap (fun x : α × α
   rw [← comap_swap_uniformity, uniformity_eq_comap_nhds_one, comap_comap, (· ∘ ·)]
   rfl
 
+@[to_additive]
+theorem UniformGroup.ext {G : Type _} [Groupₓ G] {u v : UniformSpace G} (hu : @UniformGroup G u _)
+    (hv : @UniformGroup G v _) (h : @nhds _ u.toTopologicalSpace 1 = @nhds _ v.toTopologicalSpace 1) : u = v := by
+  refine' uniform_space_eq _
+  change @uniformity _ u = @uniformity _ v
+  rw [@uniformity_eq_comap_nhds_one _ u _ hu, @uniformity_eq_comap_nhds_one _ v _ hv, h]
+
+@[to_additive]
+theorem UniformGroup.ext_iff {G : Type _} [Groupₓ G] {u v : UniformSpace G} (hu : @UniformGroup G u _)
+    (hv : @UniformGroup G v _) : u = v ↔ @nhds _ u.toTopologicalSpace 1 = @nhds _ v.toTopologicalSpace 1 :=
+  ⟨fun h => h ▸ rfl, hu.ext hv⟩
+
 variable {α}
 
 @[to_additive]
@@ -296,9 +311,7 @@ two uniform groups is uniformly continuous provided that it is continuous at one
       "An additive group homomorphism (a bundled morphism of a type that implements\n`add_monoid_hom_class`) between two uniform additive groups is uniformly continuous provided that it\nis continuous at zero. See also `continuous_of_continuous_at_zero`."]
 theorem uniform_continuous_of_continuous_at_one {hom : Type _} [UniformSpace β] [Groupₓ β] [UniformGroup β]
     [MonoidHomClass hom α β] (f : hom) (hf : ContinuousAt f 1) : UniformContinuous f :=
-  uniform_continuous_of_tendsto_one
-    (by
-      simpa using hf.tendsto)
+  uniform_continuous_of_tendsto_one (by simpa using hf.tendsto)
 
 @[to_additive]
 theorem MonoidHom.uniform_continuous_of_continuous_at_one [UniformSpace β] [Groupₓ β] [UniformGroup β] (f : α →* β)
@@ -323,8 +336,7 @@ theorem UniformGroup.uniform_continuous_iff_open_ker {hom : Type _} [UniformSpac
 theorem uniform_continuous_monoid_hom_of_continuous {hom : Type _} [UniformSpace β] [Groupₓ β] [UniformGroup β]
     [MonoidHomClass hom α β] {f : hom} (h : Continuous f) : UniformContinuous f :=
   uniform_continuous_of_tendsto_one <|
-    suffices Tendsto f (𝓝 1) (𝓝 (f 1)) by
-      rwa [map_one] at this
+    suffices Tendsto f (𝓝 1) (𝓝 (f 1)) by rwa [map_one] at this
     h.Tendsto 1
 
 @[to_additive]
@@ -418,7 +430,7 @@ def TopologicalGroup.toUniformSpace : UniformSpace G where
   uniformity := comap (fun p : G × G => p.2 / p.1) (𝓝 1)
   refl := by
     refine' map_le_iff_le_comap.1 (le_transₓ _ (pure_le_nhds 1)) <;>
-      simp (config := { contextual := true })[Set.subset_def]
+      simp (config := { contextual := true }) [Set.subset_def]
   symm := by
     suffices tendsto (fun p : G × G => (p.2 / p.1)⁻¹) (comap (fun p : G × G => p.2 / p.1) (𝓝 1)) (𝓝 1⁻¹) by
       simpa [tendsto_comap_iff]
@@ -441,7 +453,7 @@ def TopologicalGroup.toUniformSpace : UniformSpace G where
         simpa using V_sum _ Hz2 _ Hz1
       exact Set.Subset.trans comp_rel_sub U_sub
       
-    · exact monotone_comp_rel monotone_id monotone_id
+    · exact monotone_comp_rel monotone_idₓ monotone_idₓ
       
   is_open_uniformity := by
     intro S
@@ -581,8 +593,7 @@ theorem TopologicalGroup.t2_space_of_one_sep (H : ∀ x : G, x ≠ 1 → ∃ U �
   rw [← nhds_translation_mul_inv]
   use W, W_in
   rw [subset_compl_comm]
-  suffices x⁻¹ ∉ W by
-    simpa
+  suffices x⁻¹ ∉ W by simpa
   exact fun h => xU (UW h)
 
 end
@@ -659,7 +670,7 @@ variable {W' : Set G} (W'_nhd : W' ∈ 𝓝 (0 : G))
 
 include W'_nhd
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
 private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
     ∃ U₂ ∈ comap e (𝓝 x₀), ∀ (x x') (_ : x ∈ U₂) (_ : x' ∈ U₂), Φ (x' - x, y₁) ∈ W' := by
   let Nx := 𝓝 x₀
@@ -670,17 +681,16 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
         (tendsto_const_nhds : tendsto (fun p : β × β => y₁) (comap ee <| 𝓝 (x₀, x₀)) (𝓝 y₁))
     rw [nhds_prod_eq, prod_comap_comap_eq, ← nhds_prod_eq]
     exact (this : _)
-  have lim2 : tendsto Φ (𝓝 (0, y₁)) (𝓝 0) := by
-    simpa using hφ.tendsto (0, y₁)
+  have lim2 : tendsto Φ (𝓝 (0, y₁)) (𝓝 0) := by simpa using hφ.tendsto (0, y₁)
   have lim := lim2.comp lim1
   rw [tendsto_prod_self_iff] at lim
   simp_rw [ball_mem_comm]
   exact limₓ W' W'_nhd
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x x' «expr ∈ » U)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y y' «expr ∈ » V)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x x' «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y y' «expr ∈ » V)
 private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     ∃ U ∈ comap e (𝓝 x₀),
       ∃ V ∈ comap f (𝓝 y₀),
@@ -691,8 +701,7 @@ private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
   let dp := DenseInducing.prod de df
   let ee := fun u : β × β => (e u.1, e u.2)
   let ff := fun u : δ × δ => (f u.1, f u.2)
-  have lim_φ : Filter.Tendsto Φ (𝓝 (0, 0)) (𝓝 0) := by
-    simpa using hφ.tendsto (0, 0)
+  have lim_φ : Filter.Tendsto Φ (𝓝 (0, 0)) (𝓝 0) := by simpa using hφ.tendsto (0, 0)
   have lim_φ_sub_sub :
     tendsto (fun p : (β × β) × δ × δ => Φ (p.1.2 - p.1.1, p.2.2 - p.2.1))
       ((comap ee <| 𝓝 (x₀, x₀)) ×ᶠ (comap ff <| 𝓝 (y₀, y₀))) (𝓝 0) :=
@@ -712,8 +721,7 @@ private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
         ∀ (x x') (_ : x ∈ U₁) (_ : x' ∈ U₁), ∀ (y y') (_ : y ∈ V₁) (_ : y' ∈ V₁), Φ (x' - x, y' - y) ∈ W :=
     by
     have := tendsto_prod_iff.1 lim_φ_sub_sub W W_nhd
-    repeat'
-      rw [nhds_prod_eq, ← prod_comap_comap_eq] at this
+    repeat' rw [nhds_prod_eq, ← prod_comap_comap_eq] at this
     rcases this with ⟨U, U_in, V, V_in, H⟩
     rw [mem_prod_same_iff] at U_in V_in
     rcases U_in with ⟨U₁, U₁_in, HU₁⟩
@@ -793,4 +801,104 @@ theorem extend_Z_bilin : Continuous (extend (de.Prod df) Φ) := by
     
 
 end DenseInducing
+
+section CompleteQuotient
+
+universe u
+
+open TopologicalSpace Classical
+
+/-- The quotient `G ⧸ N` of a complete first countable topological group `G` by a normal subgroup
+is itself complete. [N. Bourbaki, *General Topology*, IX.3.1 Proposition 4][bourbaki1966b]
+
+Because a topological group is not equipped with a `uniform_space` instance by default, we must
+explicitly provide it in order to consider completeness. See `quotient_group.complete_space` for a
+version in which `G` is already equipped with a uniform structure. -/
+@[to_additive
+      "The quotient `G ⧸ N` of a complete first countable topological additive group\n`G` by a normal additive subgroup is itself complete. Consequently, quotients of Banach spaces by\nsubspaces are complete. [N. Bourbaki, *General Topology*, IX.3.1 Proposition 4][bourbaki1966b]\n\nBecause an additive topological group is not equipped with a `uniform_space` instance by default,\nwe must explicitly provide it in order to consider completeness. See\n`quotient_add_group.complete_space` for a version in which `G` is already equipped with a uniform\nstructure."]
+instance QuotientGroup.complete_space' (G : Type u) [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G]
+    [FirstCountableTopology G] (N : Subgroup G) [N.normal] [@CompleteSpace G (TopologicalGroup.toUniformSpace G)] :
+    @CompleteSpace (G ⧸ N) (TopologicalGroup.toUniformSpace (G ⧸ N)) := by
+  /- Since `G ⧸ N` is a topological group it is a uniform space, and since `G` is first countable
+    the uniformities of both `G` and `G ⧸ N` are countably generated. Moreover, we may choose a
+    sequential antitone neighborhood basis `u` for `𝓝 (1 : G)` so that `(u (n + 1)) ^ 2 ⊆ u n`, and
+    this descends to an antitone neighborhood basis `v` for `𝓝 (1 : G ⧸ N)`. Since `𝓤 (G ⧸ N)` is
+    countably generated, it suffices to show any Cauchy sequence `x` converges. -/
+  letI : UniformSpace (G ⧸ N) := TopologicalGroup.toUniformSpace (G ⧸ N)
+  letI : UniformSpace G := TopologicalGroup.toUniformSpace G
+  haveI : (𝓤 (G ⧸ N)).IsCountablyGenerated := comap.is_countably_generated _ _
+  obtain ⟨u, hu, u_mul⟩ := TopologicalGroup.exists_antitone_basis_nhds_one G
+  obtain ⟨hv, v_anti⟩ := @has_antitone_basis.map _ _ _ _ _ _ (coe : G → G ⧸ N) hu
+  rw [← QuotientGroup.nhds_eq N 1, QuotientGroup.coe_one] at hv
+  refine' UniformSpace.complete_of_cauchy_seq_tendsto fun x hx => _
+  /- Given `n : ℕ`, for sufficiently large `a b : ℕ`, given any lift of `x b`, we can find a lift
+    of `x a` such that the quotient of the lifts lies in `u n`. -/
+  have key₀ :
+    ∀ i j : ℕ, ∃ M : ℕ, j < M ∧ ∀ a b : ℕ, M ≤ a → M ≤ b → ∀ g : G, x b = g → ∃ g' : G, g / g' ∈ u i ∧ x a = g' := by
+    have h𝓤GN : (𝓤 (G ⧸ N)).HasBasis (fun _ => True) fun i => { x | x.snd / x.fst ∈ coe '' u i } := by
+      simpa [uniformity_eq_comap_nhds_one'] using hv.comap _
+    simp only [h𝓤GN.cauchy_seq_iff, ge_iff_leₓ, mem_set_of_eq, forall_true_left, mem_image] at hx
+    intro i j
+    rcases hx i with ⟨M, hM⟩
+    refine' ⟨max j M + 1, (le_max_leftₓ _ _).trans_lt (lt_add_one _), fun a b ha hb g hg => _⟩
+    obtain ⟨y, y_mem, hy⟩ :=
+      hM a (((le_max_rightₓ j _).trans (lt_add_one _).le).trans ha) b
+        (((le_max_rightₓ j _).trans (lt_add_one _).le).trans hb)
+    refine' ⟨y⁻¹ * g, by simpa only [div_eq_mul_inv, mul_inv_rev, inv_invₓ, mul_inv_cancel_left] using y_mem, _⟩
+    rw [QuotientGroup.coe_mul, QuotientGroup.coe_inv, hy, hg, inv_div, div_mul_cancel']
+  /- Inductively construct a subsequence `φ : ℕ → ℕ` using `key₀` so that if `a b : ℕ` exceed
+    `φ (n + 1)`, then we may find lifts whose quotients lie within `u n`. -/
+  set φ : ℕ → ℕ := fun n => Nat.recOn n (some <| key₀ 0 0) fun k yk => some <| key₀ (k + 1) yk
+  have hφ :
+    ∀ n : ℕ,
+      φ n < φ (n + 1) ∧
+        ∀ a b : ℕ, φ (n + 1) ≤ a → φ (n + 1) ≤ b → ∀ g : G, x b = g → ∃ g' : G, g / g' ∈ u (n + 1) ∧ x a = g' :=
+    fun n => some_spec (key₀ (n + 1) (φ n))
+  /- Inductively construct a sequence `x' n : G` of lifts of `x (φ (n + 1))` such that quotients of
+    successive terms lie in `x' n / x' (n + 1) ∈ u (n + 1)`. We actually need the proofs that each
+    term is a lift to construct the next term, so we use a Σ-type. -/
+  set x' : ∀ n, PSigma fun g : G => x (φ (n + 1)) = g := fun n =>
+    Nat.recOn n ⟨some (QuotientGroup.mk_surjective (x (φ 1))), (some_spec (QuotientGroup.mk_surjective (x (φ 1)))).symm⟩
+      fun k hk =>
+      ⟨some <| (hφ k).2 _ _ (hφ (k + 1)).1.le le_rflₓ hk.fst hk.snd,
+        (some_spec <| (hφ k).2 _ _ (hφ (k + 1)).1.le le_rflₓ hk.fst hk.snd).2⟩
+  have hx' : ∀ n : ℕ, (x' n).fst / (x' (n + 1)).fst ∈ u (n + 1) := fun n =>
+    (some_spec <| (hφ n).2 _ _ (hφ (n + 1)).1.le le_rflₓ (x' n).fst (x' n).snd).1
+  /- The sequence `x'` is Cauchy. This is where we exploit the condition on `u`. The key idea
+    is to show by decreasing induction that `x' m / x' n ∈ u m` if `m ≤ n`. -/
+  have x'_cauchy : CauchySeq fun n => (x' n).fst := by
+    have h𝓤G : (𝓤 G).HasBasis (fun _ => True) fun i => { x | x.snd / x.fst ∈ u i } := by
+      simpa [uniformity_eq_comap_nhds_one'] using hu.to_has_basis.comap _
+    simp only [h𝓤G.cauchy_seq_iff', ge_iff_leₓ, mem_set_of_eq, forall_true_left]
+    exact fun m =>
+      ⟨m, fun n hmn =>
+        Nat.decreasingInduction' (fun k hkn hkm hk => u_mul k ⟨_, _, hx' k, hk, div_mul_div_cancel' _ _ _⟩) hmn
+          (by simpa only [div_self'] using mem_of_mem_nhds (hu.mem _))⟩
+  /- Since `G` is complete, `x'` converges to some `x₀`, and so the image of this sequence under
+    the quotient map converges to `↑x₀`. The image of `x'` is a convergent subsequence of `x`, and
+    since `x` is Cauchy, this implies it converges. -/
+  rcases cauchy_seq_tendsto_of_complete x'_cauchy with ⟨x₀, hx₀⟩
+  refine'
+    ⟨↑x₀, tendsto_nhds_of_cauchy_seq_of_subseq hx (strict_mono_nat_of_lt_succ fun n => (hφ (n + 1)).1).tendsto_at_top _⟩
+  convert ((continuous_coinduced_rng : Continuous (coe : G → G ⧸ N)).Tendsto x₀).comp hx₀
+  exact funext fun n => (x' n).snd
+
+/-- The quotient `G ⧸ N` of a complete first countable uniform group `G` by a normal subgroup
+is itself complete. In constrast to `quotient_group.complete_space'`, in this version `G` is
+already equipped with a uniform structure.
+[N. Bourbaki, *General Topology*, IX.3.1 Proposition 4][bourbaki1966b]
+
+Even though `G` is equipped with a uniform structure, the quotient `G ⧸ N` does not inherit a
+uniform structure, so it is still provided manually via `topological_group.to_uniform_space`.
+In the most common use cases, this coincides (definitionally) with the uniform structure on the
+quotient obtained via other means.  -/
+@[to_additive
+      "The quotient `G ⧸ N` of a complete first countable uniform additive group\n`G` by a normal additive subgroup is itself complete. Consequently, quotients of Banach spaces by\nsubspaces are complete. In constrast to `quotient_add_group.complete_space'`, in this version\n`G` is already equipped with a uniform structure.\n[N. Bourbaki, *General Topology*, IX.3.1 Proposition 4][bourbaki1966b]\n\nEven though `G` is equipped with a uniform structure, the quotient `G ⧸ N` does not inherit a\nuniform structure, so it is still provided manually via `topological_add_group.to_uniform_space`.\nIn the most common use case ─ quotients of normed additive commutative groups by subgroups ─\nsignificant care was taken so that the uniform structure inherent in that setting coincides\n(definitionally) with the uniform structure provided here."]
+instance QuotientGroup.complete_space (G : Type u) [Groupₓ G] [us : UniformSpace G] [UniformGroup G]
+    [FirstCountableTopology G] (N : Subgroup G) [N.normal] [hG : CompleteSpace G] :
+    @CompleteSpace (G ⧸ N) (TopologicalGroup.toUniformSpace (G ⧸ N)) := by
+  rw [← @UniformGroup.to_uniform_space_eq _ us _ _] at hG
+  infer_instance
+
+end CompleteQuotient
 

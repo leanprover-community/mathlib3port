@@ -40,13 +40,13 @@ universe u
 variable (X : Profinite.{u})
 
 /-- The functor `discrete_quotient X ⥤ Fintype` whose limit is isomorphic to `X`. -/
-def fintypeDiagram : DiscreteQuotient X ⥤ Fintypeₓ where
-  obj := fun S => Fintypeₓ.of S
+def fintypeDiagram : DiscreteQuotient X ⥤ Fintypeₓₓ where
+  obj := fun S => Fintypeₓₓ.of S
   map := fun S T f => DiscreteQuotient.ofLe f.le
 
 /-- An abbreviation for `X.fintype_diagram ⋙ Fintype_to_Profinite`. -/
 abbrev diagram : DiscreteQuotient X ⥤ Profinite :=
-  X.fintypeDiagram ⋙ Fintypeₓ.toProfinite
+  X.fintypeDiagram ⋙ Fintypeₓₓ.toProfinite
 
 /-- A cone over `X.diagram` whose cone point is `X`. -/
 def asLimitCone : CategoryTheory.Limits.Cone X.diagram :=

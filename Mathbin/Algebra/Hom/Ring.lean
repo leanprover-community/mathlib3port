@@ -61,9 +61,9 @@ structure NonUnitalRingHom (α β : Type _) [NonUnitalNonAssocSemiringₓ α] [N
 infixr:25 " →ₙ+* " => NonUnitalRingHom
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident non_unital_ring_hom.to_mul_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident non_unital_ring_hom.to_mul_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident non_unital_ring_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident non_unital_ring_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 section NonUnitalRingHomClass
 
 /-- `non_unital_ring_hom_class F α β` states that `F` is a type of non-unital (semi)ring
@@ -94,8 +94,7 @@ include rα rβ
 
 instance : NonUnitalRingHomClass (α →ₙ+* β) α β where
   coe := NonUnitalRingHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_add := NonUnitalRingHom.map_add'
   map_zero := NonUnitalRingHom.map_zero'
   map_mul := NonUnitalRingHom.map_mul'
@@ -282,11 +281,7 @@ theorem cancel_right {g₁ g₂ : β →ₙ+* γ} {f : α →ₙ+* β} (hf : Sur
   ⟨fun h => ext <| hf.forall.2 (ext_iff.1 h), fun h => h ▸ rfl⟩
 
 theorem cancel_left {g : β →ₙ+* γ} {f₁ f₂ : α →ₙ+* β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun x =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    fun h => h ▸ rfl⟩
+  ⟨fun h => ext fun x => hg <| by rw [← comp_apply, h, comp_apply], fun h => h ▸ rfl⟩
 
 omit rα rβ rγ
 
@@ -303,13 +298,13 @@ structure RingHom (α : Type _) (β : Type _) [NonAssocSemiringₓ α] [NonAssoc
 infixr:25 " →+* " => RingHom
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ring_hom.to_monoid_with_zero_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident ring_hom.to_monoid_with_zero_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ring_hom.to_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident ring_hom.to_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ring_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident ring_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ring_hom.to_non_unital_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident ring_hom.to_non_unital_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 section RingHomClass
 
 /-- `ring_hom_class F α β` states that `F` is a type of (semi)ring homomorphisms.
@@ -325,8 +320,7 @@ variable [NonAssocSemiringₓ α] [NonAssocSemiringₓ β] [RingHomClass F α β
 
 /-- Ring homomorphisms preserve `bit1`. -/
 @[simp]
-theorem map_bit1 (f : F) (a : α) : (f (bit1 a) : β) = bit1 (f a) := by
-  simp [bit1]
+theorem map_bit1 (f : F) (a : α) : (f (bit1 a) : β) = bit1 (f a) := by simp [bit1]
 
 instance : CoeTₓ F (α →+* β) :=
   ⟨fun f =>
@@ -353,8 +347,7 @@ include rα rβ
 
 instance : RingHomClass (α →+* β) α β where
   coe := RingHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_add := RingHom.map_add'
   map_zero := RingHom.map_zero'
   map_mul := RingHom.map_mul'
@@ -476,25 +469,17 @@ protected theorem map_bit1 (f : α →+* β) : ∀ a, f (bit1 a) = bit1 (f a) :=
   map_bit1 f
 
 /-- `f : α →+* β` has a trivial codomain iff `f 1 = 0`. -/
-theorem codomain_trivial_iff_map_one_eq_zero : (0 : β) = 1 ↔ f 1 = 0 := by
-  rw [map_one, eq_comm]
+theorem codomain_trivial_iff_map_one_eq_zero : (0 : β) = 1 ↔ f 1 = 0 := by rw [map_one, eq_comm]
 
 /-- `f : α →+* β` has a trivial codomain iff it has a trivial range. -/
 theorem codomain_trivial_iff_range_trivial : (0 : β) = 1 ↔ ∀ x, f x = 0 :=
-  f.codomain_trivial_iff_map_one_eq_zero.trans
-    ⟨fun h x => by
-      rw [← mul_oneₓ x, map_mul, h, mul_zero], fun h => h 1⟩
+  f.codomain_trivial_iff_map_one_eq_zero.trans ⟨fun h x => by rw [← mul_oneₓ x, map_mul, h, mul_zero], fun h => h 1⟩
 
 /-- `f : α →+* β` has a trivial codomain iff its range is `{0}`. -/
 theorem codomain_trivial_iff_range_eq_singleton_zero : (0 : β) = 1 ↔ Set.Range f = {0} :=
   f.codomain_trivial_iff_range_trivial.trans
-    ⟨fun h =>
-      Set.ext fun y =>
-        ⟨fun ⟨x, hx⟩ => by
-          simp [← hx, h x], fun hy =>
-          ⟨0, by
-            simpa using hy.symm⟩⟩,
-      fun h x => Set.mem_singleton_iff.mp (h ▸ Set.mem_range_self x)⟩
+    ⟨fun h => Set.ext fun y => ⟨fun ⟨x, hx⟩ => by simp [← hx, h x], fun hy => ⟨0, by simpa using hy.symm⟩⟩, fun h x =>
+      Set.mem_singleton_iff.mp (h ▸ Set.mem_range_self x)⟩
 
 /-- `f : α →+* β` doesn't map `1` to `0` if `β` is nontrivial -/
 theorem map_one_ne_zero [Nontrivial β] : f 1 ≠ 0 :=
@@ -502,12 +487,7 @@ theorem map_one_ne_zero [Nontrivial β] : f 1 ≠ 0 :=
 
 /-- If there is a homomorphism `f : α →+* β` and `β` is nontrivial, then `α` is nontrivial. -/
 theorem domain_nontrivial [Nontrivial β] : Nontrivial α :=
-  ⟨⟨1, 0,
-      mt
-        (fun h =>
-          show f 1 = 0 by
-            rw [h, map_zero])
-        f.map_one_ne_zero⟩⟩
+  ⟨⟨1, 0, mt (fun h => show f 1 = 0 by rw [h, map_zero]) f.map_one_ne_zero⟩⟩
 
 theorem codomain_trivial (f : α →+* β) [h : Subsingleton α] : Subsingleton β :=
   (subsingleton_or_nontrivial β).resolve_right fun _ => not_nontrivial_iff_subsingleton.mpr h f.domain_nontrivial
@@ -539,8 +519,7 @@ protected theorem map_dvd (f : α →+* β) {a b : α} : a ∣ b → f a ∣ f b
 end Semiringₓ
 
 /-- The identity ring homomorphism from a semiring to itself. -/
-def id (α : Type _) [NonAssocSemiringₓ α] : α →+* α := by
-  refine' { toFun := id.. } <;> intros <;> rfl
+def id (α : Type _) [NonAssocSemiringₓ α] : α →+* α := by refine' { toFun := id.. } <;> intros <;> rfl
 
 include rα
 
@@ -565,9 +544,7 @@ include rβ rγ
 
 /-- Composition of ring homomorphisms is a ring homomorphism. -/
 def comp (g : β →+* γ) (f : α →+* β) : α →+* γ :=
-  { g.toNonUnitalRingHom.comp f.toNonUnitalRingHom with toFun := g ∘ f,
-    map_one' := by
-      simp }
+  { g.toNonUnitalRingHom.comp f.toNonUnitalRingHom with toFun := g ∘ f, map_one' := by simp }
 
 /-- Composition of semiring homomorphisms is associative. -/
 theorem comp_assoc {δ} {rδ : NonAssocSemiringₓ δ} (f : α →+* β) (g : β →+* γ) (h : γ →+* δ) :
@@ -620,11 +597,7 @@ theorem cancel_right {g₁ g₂ : β →+* γ} {f : α →+* β} (hf : Surjectiv
   ⟨fun h => RingHom.ext <| hf.forall.2 (ext_iff.1 h), fun h => h ▸ rfl⟩
 
 theorem cancel_left {g : β →+* γ} {f₁ f₂ : α →+* β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    RingHom.ext fun x =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    fun h => h ▸ rfl⟩
+  ⟨fun h => RingHom.ext fun x => hg <| by rw [← comp_apply, h, comp_apply], fun h => h ▸ rfl⟩
 
 end RingHom
 

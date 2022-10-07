@@ -75,10 +75,8 @@ theorem target (F : Homotopy p₀ p₁) (t : I) : F (t, 1) = x₁ := by
 -/
 def eval (F : Homotopy p₀ p₁) (t : I) : Path x₀ x₁ where
   toFun := F.toHomotopy.curry t
-  source' := by
-    simp
-  target' := by
-    simp
+  source' := by simp
+  target' := by simp
 
 @[simp]
 theorem eval_zero (F : Homotopy p₀ p₁) : F.eval 0 = p₀ := by
@@ -148,19 +146,12 @@ def hcomp (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) : Homotopy (p₀.tra
   continuous_to_fun := by
     refine'
       continuous_if_le (continuous_induced_dom.comp continuous_snd) continuous_const
-        (F.to_homotopy.continuous.comp
-            (by
-              continuity)).ContinuousOn
-        (G.to_homotopy.continuous.comp
-            (by
-              continuity)).ContinuousOn
-        _
+        (F.to_homotopy.continuous.comp (by continuity)).ContinuousOn
+        (G.to_homotopy.continuous.comp (by continuity)).ContinuousOn _
     intro x hx
-    norm_num[hx]
-  map_zero_left' := fun x => by
-    norm_num[Path.trans]
-  map_one_left' := fun x => by
-    norm_num[Path.trans]
+    norm_num [hx]
+  map_zero_left' := fun x => by norm_num [Path.trans]
+  map_one_left' := fun x => by norm_num [Path.trans]
   prop' := by
     rintro x t ht
     cases ht
@@ -176,18 +167,11 @@ theorem hcomp_apply (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) (x : I × 
     F.hcomp G x =
       if h : (x.2 : ℝ) ≤ 1 / 2 then F.eval x.1 ⟨2 * x.2, (UnitInterval.mul_pos_mem_iff zero_lt_two).2 ⟨x.2.2.1, h⟩⟩
       else G.eval x.1 ⟨2 * x.2 - 1, UnitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_leₓ.1 h).le, x.2.2.2⟩⟩ :=
-  show ite _ _ _ = _ by
-    split_ifs <;> exact Path.extend_extends _ _
+  show ite _ _ _ = _ by split_ifs <;> exact Path.extend_extends _ _
 
 theorem hcomp_half (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) (t : I) :
-    F.hcomp G
-        (t,
-          ⟨1 / 2, by
-            norm_num, by
-            norm_num⟩) =
-      x₁ :=
-  show ite _ _ _ = _ by
-    norm_num
+    F.hcomp G (t, ⟨1 / 2, by norm_num, by norm_num⟩) = x₁ :=
+  show ite _ _ _ = _ by norm_num
 
 end
 
@@ -199,25 +183,17 @@ def reparam (p : Path x₀ x₁) (f : I → I) (hf : Continuous f) (hf₀ : f 0 
     p
       ⟨σ x.1 * x.2 + x.1 * f x.2,
         show (σ x.1 : ℝ) • (x.2 : ℝ) + (x.1 : ℝ) • (f x.2 : ℝ) ∈ I from
-          convex_Icc _ _ x.2.2 (f x.2).2
-            (by
-              unit_interval)
-            (by
-              unit_interval)
-            (by
-              simp )⟩
-  map_zero_left' := fun x => by
-    norm_num
-  map_one_left' := fun x => by
-    norm_num
+          convex_Icc _ _ x.2.2 (f x.2).2 (by unit_interval) (by unit_interval) (by simp)⟩
+  map_zero_left' := fun x => by norm_num
+  map_one_left' := fun x => by norm_num
   prop' := fun t x hx => by
     cases hx
     · rw [hx]
-      norm_num[hf₀]
+      norm_num [hf₀]
       
     · rw [Set.mem_singleton_iff] at hx
       rw [hx]
-      norm_num[hf₁]
+      norm_num [hf₁]
       
 
 /-- Suppose `F : homotopy p q`. Then we have a `homotopy p.symm q.symm` by reversing the second
@@ -226,10 +202,8 @@ argument.
 @[simps]
 def symm₂ {p q : Path x₀ x₁} (F : p.Homotopy q) : p.symm.Homotopy q.symm where
   toFun := fun x => F ⟨x.1, σ x.2⟩
-  map_zero_left' := by
-    simp [Path.symm]
-  map_one_left' := by
-    simp [Path.symm]
+  map_zero_left' := by simp [Path.symm]
+  map_one_left' := by simp [Path.symm]
   prop' := fun t x hx => by
     cases hx
     · rw [hx]
@@ -246,10 +220,8 @@ def symm₂ {p q : Path x₀ x₁} (F : p.Homotopy q) : p.symm.Homotopy q.symm w
 @[simps]
 def map {p q : Path x₀ x₁} (F : p.Homotopy q) (f : C(X, Y)) : Homotopy (p.map f.Continuous) (q.map f.Continuous) where
   toFun := f ∘ F
-  map_zero_left' := by
-    simp
-  map_one_left' := by
-    simp
+  map_zero_left' := by simp
+  map_one_left' := by simp
   prop' := fun t x hx => by
     cases hx
     · simp [hx]
@@ -323,10 +295,8 @@ theorem map_lift (P₀ : Path x₀ x₁) (f : C(X, Y)) : ⟦P₀.map f.Continuou
   rfl
 
 theorem hpath_hext {p₁ : Path x₀ x₁} {p₂ : Path x₂ x₃} (hp : ∀ t, p₁ t = p₂ t) : HEq ⟦p₁⟧ ⟦p₂⟧ := by
-  obtain rfl : x₀ = x₂ := by
-    convert hp 0 <;> simp
-  obtain rfl : x₁ = x₃ := by
-    convert hp 1 <;> simp
+  obtain rfl : x₀ = x₂ := by convert hp 0 <;> simp
+  obtain rfl : x₁ = x₃ := by convert hp 1 <;> simp
   rw [heq_iff_eq]
   congr
   ext t

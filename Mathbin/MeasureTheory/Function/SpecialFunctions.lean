@@ -241,8 +241,7 @@ theorem measurable_of_re_im (hre : Measurable fun x => IsROrC.re (f x)) (him : M
   · ext1 x
     exact (IsROrC.re_add_im _).symm
     
-  all_goals
-    infer_instance
+  all_goals infer_instance
 
 theorem ae_measurable_of_re_im (hre : AeMeasurable (fun x => IsROrC.re (f x)) μ)
     (him : AeMeasurable (fun x => IsROrC.im (f x)) μ) : AeMeasurable f μ := by
@@ -252,8 +251,7 @@ theorem ae_measurable_of_re_im (hre : AeMeasurable (fun x => IsROrC.re (f x)) μ
   · ext1 x
     exact (IsROrC.re_add_im _).symm
     
-  all_goals
-    infer_instance
+  all_goals infer_instance
 
 end
 
@@ -303,7 +301,7 @@ theorem AeMeasurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMe
     (hg : AeMeasurable g μ) : AeMeasurable (fun x => ⟪f x, g x⟫) μ := by
   refine' ⟨fun x => ⟪hf.mk f x, hg.mk g x⟫, hf.measurable_mk.inner hg.measurable_mk, _⟩
   refine' hf.ae_eq_mk.mp (hg.ae_eq_mk.mono fun x hxg hxf => _)
-  dsimp' only
+  dsimp only
   congr
   exacts[hxf, hxg]
 

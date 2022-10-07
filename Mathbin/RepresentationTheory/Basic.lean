@@ -82,8 +82,7 @@ theorem as_algebra_hom_def : asAlgebraHom ρ = (lift k G _) ρ :=
 theorem as_algebra_hom_single (g : G) (r : k) : asAlgebraHom ρ (Finsupp.single g r) = r • ρ g := by
   simp only [as_algebra_hom_def, MonoidAlgebra.lift_single]
 
-theorem as_algebra_hom_single_one (g : G) : asAlgebraHom ρ (Finsupp.single g 1) = ρ g := by
-  simp
+theorem as_algebra_hom_single_one (g : G) : asAlgebraHom ρ (Finsupp.single g 1) = ρ g := by simp
 
 theorem as_algebra_hom_of (g : G) : asAlgebraHom ρ (of k G g) = ρ g := by
   simp only [MonoidAlgebra.of_apply, as_algebra_hom_single, one_smul]
@@ -201,14 +200,14 @@ theorem of_module_as_module_act (g : G) (x : RestrictScalars k (MonoidAlgebra k 
         (ρ.asModuleEquiv.symm (ρ g (ρ.asModuleEquiv (RestrictScalars.addEquiv _ _ _ x)))) :=
   by
   apply_fun RestrictScalars.addEquiv _ _ ρ.as_module using (RestrictScalars.addEquiv _ _ _).Injective
-  dsimp' [of_module, RestrictScalars.lsmul_apply_apply]
+  dsimp [of_module, RestrictScalars.lsmul_apply_apply]
   simp
 
 theorem smul_of_module_as_module (r : MonoidAlgebra k G) (m : (ofModule k G M).AsModule) :
     (RestrictScalars.addEquiv _ _ _) ((ofModule k G M).asModuleEquiv (r • m)) =
       r • (RestrictScalars.addEquiv _ _ _) ((ofModule k G M).asModuleEquiv m) :=
   by
-  dsimp'
+  dsimp
   simp only [AddEquiv.apply_symm_apply, of_module_as_algebra_hom_apply_apply]
 
 end
@@ -235,7 +234,7 @@ noncomputable def ofMulAction : Representation k G (H →₀ k) where
   toFun := fun g => Finsupp.lmapDomain k k ((· • ·) g)
   map_one' := by
     ext x y
-    dsimp'
+    dsimp
     simp
   map_mul' := fun x y => by
     ext z w
@@ -267,12 +266,8 @@ theorem of_mul_action_apply {H : Type _} [MulAction G H] (g : G) (f : H →₀ k
 
 theorem of_mul_action_self_smul_eq_mul (x : MonoidAlgebra k G) (y : (ofMulAction k G G).AsModule) :
     x • y = (x * y : MonoidAlgebra k G) :=
-  x.induction_on
-    (fun g => by
-      show as_algebra_hom _ _ _ = _ <;> ext <;> simp )
-    (fun x y hx hy => by
-      simp only [hx, hy, add_mulₓ, add_smul])
-    fun r x hx => by
+  x.induction_on (fun g => by show as_algebra_hom _ _ _ = _ <;> ext <;> simp)
+    (fun x y hx hy => by simp only [hx, hy, add_mulₓ, add_smul]) fun r x hx => by
     show as_algebra_hom _ _ _ = _ <;> simpa [← hx]
 
 /-- If we equip `k[G]` with the `k`-linear `G`-representation induced by the left regular action of
@@ -288,8 +283,7 @@ a group homomorphism from `G` into the invertible `k`-linear endomorphisms of `V
 def asGroupHom : G →* Units (V →ₗ[k] V) :=
   MonoidHom.toHomUnits ρ
 
-theorem as_group_hom_apply (g : G) : ↑(asGroupHom ρ g) = ρ g := by
-  simp only [as_group_hom, MonoidHom.coe_to_hom_units]
+theorem as_group_hom_apply (g : G) : ↑(asGroupHom ρ g) = ρ g := by simp only [as_group_hom, MonoidHom.coe_to_hom_units]
 
 end Groupₓ
 
@@ -308,10 +302,8 @@ tensor product `V ⊗[k] W`.
 -/
 def tprod : Representation k G (V ⊗[k] W) where
   toFun := fun g => TensorProduct.map (ρV g) (ρW g)
-  map_one' := by
-    simp only [map_one, TensorProduct.map_one]
-  map_mul' := fun g h => by
-    simp only [map_mul, TensorProduct.map_mul]
+  map_one' := by simp only [map_one, TensorProduct.map_one]
+  map_mul' := fun g h => by simp only [map_mul, TensorProduct.map_mul]
 
 -- mathport name: «expr ⊗ »
 local notation ρV " ⊗ " ρW => tprod ρV ρW
@@ -350,14 +342,9 @@ module `V →ₗ[k] W`, where `G` acts by conjugation.
 -/
 def linHom : Representation k G (V →ₗ[k] W) where
   toFun := fun g =>
-    { toFun := fun f => ρW g ∘ₗ f ∘ₗ ρV g⁻¹,
-      map_add' := fun f₁ f₂ => by
-        simp_rw [add_comp, comp_add],
-      map_smul' := fun r f => by
-        simp_rw [RingHom.id_apply, smul_comp, comp_smul] }
-  map_one' :=
-    LinearMap.ext fun x => by
-      simp_rw [coe_mk, inv_one, map_one, one_apply, one_eq_id, comp_id, id_comp]
+    { toFun := fun f => ρW g ∘ₗ f ∘ₗ ρV g⁻¹, map_add' := fun f₁ f₂ => by simp_rw [add_comp, comp_add],
+      map_smul' := fun r f => by simp_rw [RingHom.id_apply, smul_comp, comp_smul] }
+  map_one' := LinearMap.ext fun x => by simp_rw [coe_mk, inv_one, map_one, one_apply, one_eq_id, comp_id, id_comp]
   map_mul' := fun g h =>
     LinearMap.ext fun x => by
       simp_rw [coe_mul, coe_mk, Function.comp_applyₓ, mul_inv_rev, map_mul, mul_eq_comp, comp_assoc]
@@ -371,9 +358,7 @@ where `f : module.dual k V`.
 -/
 def dual : Representation k G (Module.Dual k V) where
   toFun := fun g =>
-    { toFun := fun f => f ∘ₗ ρV g⁻¹,
-      map_add' := fun f₁ f₂ => by
-        simp only [add_comp],
+    { toFun := fun f => f ∘ₗ ρV g⁻¹, map_add' := fun f₁ f₂ => by simp only [add_comp],
       map_smul' := fun r f => by
         ext
         simp only [coe_comp, Function.comp_app, smul_apply, RingHom.id_apply] }

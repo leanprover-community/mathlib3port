@@ -62,10 +62,7 @@ theorem is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent :
     rcases is_idempotent_complete.idempotents_split X p hp with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
     exact
       ⟨Nonempty.intro
-          { Cone :=
-              fork.of_ι i
-                (show i ≫ 𝟙 X = i ≫ p by
-                  rw [comp_id, ← h₂, ← assoc, h₁, id_comp]),
+          { Cone := fork.of_ι i (show i ≫ 𝟙 X = i ≫ p by rw [comp_id, ← h₂, ← assoc, h₁, id_comp]),
             IsLimit := by
               apply fork.is_limit.mk'
               intro s
@@ -86,14 +83,13 @@ theorem is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent :
     haveI := h X p hp
     use equalizer (𝟙 X) p
     use equalizer.ι (𝟙 X) p
-    use
-      equalizer.lift p
-        (show p ≫ 𝟙 X = p ≫ p by
-          rw [hp, comp_id])
+    use equalizer.lift p (show p ≫ 𝟙 X = p ≫ p by rw [hp, comp_id])
     constructor
     · ext
       rw [assoc, equalizer.lift_ι, id_comp]
-      conv => rhs erw [← comp_id (equalizer.ι (𝟙 X) p)]
+      conv =>
+      rhs
+      erw [← comp_id (equalizer.ι (𝟙 X) p)]
       exact (limits.fork.condition (equalizer.fork (𝟙 X) p)).symm
       
     · rw [equalizer.lift_ι]
@@ -165,14 +161,12 @@ theorem Equivalence.is_idempotent_complete {D : Type _} [Category D] (ε : C ≌
   refine' ⟨_⟩
   intro X' p hp
   let φ := ε.counit_iso.symm.app X'
-  erw
-    [split_iff_of_iso φ p (φ.inv ≫ p ≫ φ.hom)
+  erw [split_iff_of_iso φ p (φ.inv ≫ p ≫ φ.hom)
       (by
         slice_rhs 1 2 => rw [φ.hom_inv_id]
         rw [id_comp])]
   rcases is_idempotent_complete.idempotents_split (ε.inverse.obj X') (ε.inverse.map p)
-      (by
-        rw [← ε.inverse.map_comp, hp]) with
+      (by rw [← ε.inverse.map_comp, hp]) with
     ⟨Y, i, e, ⟨h₁, h₂⟩⟩
   use ε.functor.obj Y, ε.functor.map i, ε.functor.map e
   constructor
@@ -194,10 +188,7 @@ theorem is_idempotent_complete_of_is_idempotent_complete_opposite (h : IsIdempot
     IsIdempotentComplete C := by
   refine' ⟨_⟩
   intro X p hp
-  rcases is_idempotent_complete.idempotents_split (op X) p.op
-      (by
-        rw [← op_comp, hp]) with
-    ⟨Y, i, e, ⟨h₁, h₂⟩⟩
+  rcases is_idempotent_complete.idempotents_split (op X) p.op (by rw [← op_comp, hp]) with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
   use Y.unop, e.unop, i.unop
   constructor
   · simpa only [← unop_comp, h₁]
@@ -215,8 +206,7 @@ theorem is_idempotent_complete_iff_opposite : IsIdempotentComplete Cᵒᵖ ↔ I
     exact h
     
 
-instance [IsIdempotentComplete C] : IsIdempotentComplete Cᵒᵖ := by
-  rwa [is_idempotent_complete_iff_opposite]
+instance [IsIdempotentComplete C] : IsIdempotentComplete Cᵒᵖ := by rwa [is_idempotent_complete_iff_opposite]
 
 end Idempotents
 

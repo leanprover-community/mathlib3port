@@ -42,8 +42,7 @@ theorem sort_eq (s : Multiset α) : ↑(sort r s) = s :=
   (Quot.induction_on s) fun l => Quot.sound <| perm_merge_sort _ _
 
 @[simp]
-theorem mem_sort {s : Multiset α} {a : α} : a ∈ sort r s ↔ a ∈ s := by
-  rw [← mem_coe, sort_eq]
+theorem mem_sort {s : Multiset α} {a : α} : a ∈ sort r s ↔ a ∈ s := by rw [← mem_coe, sort_eq]
 
 @[simp]
 theorem length_sort {s : Multiset α} : (sort r s).length = s.card :=

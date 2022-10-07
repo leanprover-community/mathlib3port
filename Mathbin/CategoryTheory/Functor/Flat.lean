@@ -67,10 +67,7 @@ arrows over `X` with `f` as the cone point. This is the underlying diagram.
 @[simps]
 def toDiagram : J ⥤ StructuredArrow c.x K where
   obj := fun j => StructuredArrow.mk (c.π.app j)
-  map := fun j k g =>
-    StructuredArrow.homMk g
-      (by
-        simpa)
+  map := fun j k g => StructuredArrow.homMk g (by simpa)
 
 /-- Given a diagram of `structured_arrow X F`s, we may obtain a cone with cone point `X`. -/
 @[simps]
@@ -87,7 +84,7 @@ def toCone {X : D} (f : X ⟶ F.obj c.x) : Cone (toDiagram (F.mapCone c) ⋙ map
     { app := fun j => homMk (c.π.app j) rfl,
       naturality' := fun j k g => by
         ext
-        dsimp'
+        dsimp
         simp }
 
 end StructuredArrowCone
@@ -108,38 +105,29 @@ attribute [instance] representably_flat.cofiltered
 
 attribute [local instance] is_cofiltered.nonempty
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[":", expr is_cofiltered_or_empty (structured_arrow X («expr𝟭»() C))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr is_cofiltered_or_empty (structured_arrow X («expr𝟭»() C))]]
 instance RepresentablyFlat.id : RepresentablyFlat (𝟭 C) := by
   constructor
   intro X
   haveI : Nonempty (structured_arrow X (𝟭 C)) := ⟨structured_arrow.mk (𝟙 _)⟩
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[\":\", expr is_cofiltered_or_empty (structured_arrow X («expr𝟭»() C))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[\":\", expr is_cofiltered_or_empty (structured_arrow X («expr𝟭»() C))]]"
   · constructor
     
   constructor
   · intro Y Z
     use structured_arrow.mk (𝟙 _)
-    use
-      structured_arrow.hom_mk Y.hom
-        (by
-          erw [functor.id_map, category.id_comp])
-    use
-      structured_arrow.hom_mk Z.hom
-        (by
-          erw [functor.id_map, category.id_comp])
+    use structured_arrow.hom_mk Y.hom (by erw [functor.id_map, category.id_comp])
+    use structured_arrow.hom_mk Z.hom (by erw [functor.id_map, category.id_comp])
     
   · intro Y Z f g
     use structured_arrow.mk (𝟙 _)
-    use
-      structured_arrow.hom_mk Y.hom
-        (by
-          erw [functor.id_map, category.id_comp])
+    use structured_arrow.hom_mk Y.hom (by erw [functor.id_map, category.id_comp])
     ext
     trans Z.hom <;> simp
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[":", expr is_cofiltered_or_empty (structured_arrow X «expr ⋙ »(F, G))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[":", expr is_cofiltered_or_empty (structured_arrow X «expr ⋙ »(F, G))]]
 instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F] [RepresentablyFlat G] :
     RepresentablyFlat (F ⋙ G) := by
   constructor
@@ -149,7 +137,7 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     have f₂ : structured_arrow f₁.right F := Nonempty.some inferInstance
     exact ⟨structured_arrow.mk (f₁.hom ≫ G.map f₂.hom)⟩
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[\":\", expr is_cofiltered_or_empty (structured_arrow X «expr ⋙ »(F, G))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsufficesI #[[\":\", expr is_cofiltered_or_empty (structured_arrow X «expr ⋙ »(F, G))]]"
   · constructor
     
   constructor
@@ -162,14 +150,8 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     let Y'' : W' ⟶ _ := is_cofiltered.min_to_left _ _
     let Z'' : W' ⟶ _ := is_cofiltered.min_to_right _ _
     use structured_arrow.mk (W.hom ≫ G.map W'.hom)
-    use
-      structured_arrow.hom_mk Y''.right
-        (by
-          simp [← G.map_comp])
-    use
-      structured_arrow.hom_mk Z''.right
-        (by
-          simp [← G.map_comp])
+    use structured_arrow.hom_mk Y''.right (by simp [← G.map_comp])
+    use structured_arrow.hom_mk Z''.right (by simp [← G.map_comp])
     
   · intro Y Z f g
     let W :=
@@ -185,10 +167,7 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     let h' : W' ⟶ _ := is_cofiltered.eq_hom _ _
     let h'_cond : h' ≫ _ = h' ≫ _ := is_cofiltered.eq_condition _ _
     use structured_arrow.mk (W.hom ≫ G.map W'.hom)
-    use
-      structured_arrow.hom_mk h'.right
-        (by
-          simp [← G.map_comp])
+    use structured_arrow.hom_mk h'.right (by simp [← G.map_comp])
     ext
     exact (congr_arg comma_morphism.right h'_cond : _)
     
@@ -201,20 +180,19 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₁} D]
 
 attribute [local instance] has_finite_limits_of_has_finite_limits_of_size
 
-instance (priority := 100) cofiltered_of_has_finite_limits [HasFiniteLimits C] : IsCofiltered C where
-  cocone_objs := fun A B => ⟨Limits.prod A B, Limits.prod.fst, Limits.prod.snd, trivialₓ⟩
-  cocone_maps := fun A B f g => ⟨equalizer f g, equalizer.ι f g, equalizer.condition f g⟩
-  Nonempty := ⟨⊤_ C⟩
+theorem cofiltered_of_has_finite_limits [HasFiniteLimits C] : IsCofiltered C :=
+  { cocone_objs := fun A B => ⟨Limits.prod A B, Limits.prod.fst, Limits.prod.snd, trivialₓ⟩,
+    cocone_maps := fun A B f g => ⟨equalizer f g, equalizer.ι f g, equalizer.condition f g⟩, Nonempty := ⟨⊤_ C⟩ }
 
 theorem flat_of_preserves_finite_limits [HasFiniteLimits C] (F : C ⥤ D) [PreservesFiniteLimits F] :
     RepresentablyFlat F :=
-  ⟨fun X => by
+  ⟨fun X =>
     haveI : has_finite_limits (structured_arrow X F) := by
       apply has_finite_limits_of_has_finite_limits_of_size.{v₁} (structured_arrow X F)
       intro J sJ fJ
       skip
       constructor
-    infer_instance⟩
+    cofiltered_of_has_finite_limits⟩
 
 namespace PreservesFiniteLimitsOfFlat
 
@@ -238,14 +216,10 @@ noncomputable def lift : s.x ⟶ F.obj c.x :=
     (F.map <|
       hc.lift <|
         (Cones.postcompose
-              ({ app := fun X => 𝟙 _,
-                naturality' := by
-                  simp } :
-                (toDiagram s ⋙ pre s.x K F) ⋙ proj s.x F ⟶ K)).obj <|
+              ({ app := fun X => 𝟙 _, naturality' := by simp } : (toDiagram s ⋙ pre s.x K F) ⋙ proj s.x F ⟶ K)).obj <|
           (StructuredArrow.proj s.x F).mapCone s')
 
-theorem fac (x : J) : lift F hc s ≫ (F.mapCone c).π.app x = s.π.app x := by
-  simpa [lift, ← functor.map_comp]
+theorem fac (x : J) : lift F hc s ≫ (F.mapCone c).π.app x = s.π.app x := by simpa [lift, ← functor.map_comp]
 
 attribute [local simp] eq_to_hom_map
 
@@ -255,367 +229,342 @@ attribute [local simp] eq_to_hom_map
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(group
-           (Tactic.tacticLet_
-            "let"
-            (Term.letDecl
-             (Term.letIdDecl
-              `α₁
+         [(Tactic.tacticLet_
+           "let"
+           (Term.letDecl
+            (Term.letIdDecl
+             `α₁
+             []
+             [(Term.typeSpec
+               ":"
+               (Combinatorics.Quiver.Basic.«term_⟶_»
+                (CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                 (Term.app `to_diagram [(Term.app `F.map_cone [`c])])
+                 " ⋙ "
+                 (Term.app `map [`f₁]))
+                " ⟶ "
+                (Term.app `to_diagram [`s])))]
+             ":="
+             (Term.structInst
+              "{"
               []
-              [(Term.typeSpec
-                ":"
-                (Combinatorics.Quiver.Basic.«term_⟶_»
-                 (CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
-                  (Term.app `to_diagram [(Term.app `F.map_cone [`c])])
+              [(Term.structInstField
+                (Term.structInstLVal `app [])
+                ":="
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`X]
+                  []
+                  "=>"
+                  (Term.app
+                   `eq_to_hom
+                   [(Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented
+                       [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h₁)] "]"] [])])))]))))
+               ","
+               (Term.structInstField
+                (Term.structInstLVal `naturality' [])
+                ":="
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [(Term.hole "_") (Term.hole "_") (Term.hole "_")]
+                  []
+                  "=>"
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Std.Tactic.Ext.«tacticExt___:_» "ext" [] []) [] (Tactic.simp "simp" [] [] [] [] [])]))))))]
+              (Term.optEllipsis [])
+              []
+              "}"))))
+          []
+          (Tactic.tacticLet_
+           "let"
+           (Term.letDecl
+            (Term.letIdDecl
+             `α₂
+             []
+             [(Term.typeSpec
+               ":"
+               (Combinatorics.Quiver.Basic.«term_⟶_»
+                (CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                 (Term.app `to_diagram [(Term.app `F.map_cone [`c])])
+                 " ⋙ "
+                 (Term.app `map [`f₂]))
+                " ⟶ "
+                (Term.app `to_diagram [`s])))]
+             ":="
+             (Term.structInst
+              "{"
+              []
+              [(Term.structInstField
+                (Term.structInstLVal `app [])
+                ":="
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`X]
+                  []
+                  "=>"
+                  (Term.app
+                   `eq_to_hom
+                   [(Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented
+                       [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h₂)] "]"] [])])))]))))
+               ","
+               (Term.structInstField
+                (Term.structInstLVal `naturality' [])
+                ":="
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [(Term.hole "_") (Term.hole "_") (Term.hole "_")]
+                  []
+                  "=>"
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Std.Tactic.Ext.«tacticExt___:_» "ext" [] []) [] (Tactic.simp "simp" [] [] [] [] [])]))))))]
+              (Term.optEllipsis [])
+              []
+              "}"))))
+          []
+          (Tactic.tacticLet_
+           "let"
+           (Term.letDecl
+            (Term.letIdDecl
+             `c₁
+             []
+             [(Term.typeSpec
+               ":"
+               (Term.app
+                `cone
+                [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                  (Term.app `to_diagram [`s])
                   " ⋙ "
-                  (Term.app `map [`f₁]))
-                 " ⟶ "
-                 (Term.app `to_diagram [`s])))]
-              ":="
-              (Term.structInst
-               "{"
-               []
-               [(Term.structInstField
-                 (Term.structInstLVal `app [])
-                 ":="
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`X]
-                   []
-                   "=>"
-                   (Term.app
-                    `eq_to_hom
-                    [(Term.byTactic
-                      "by"
-                      (Tactic.tacticSeq
-                       (Tactic.tacticSeq1Indented
-                        [(group
-                          (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h₁)] "]"] [])
-                          [])])))]))))
-                ","
-                (Term.structInstField
-                 (Term.structInstLVal `naturality' [])
-                 ":="
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [(Term.hole "_") (Term.hole "_") (Term.hole "_")]
-                   []
-                   "=>"
-                   (Term.byTactic
-                    "by"
-                    (Tactic.tacticSeq
-                     (Tactic.tacticSeq1Indented
-                      [(group (Std.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
-                       (group (Tactic.simp "simp" [] [] [] [] []) [])]))))))]
-               (Term.optEllipsis [])
-               []
-               "}"))))
-           [])
-          (group
-           (Tactic.tacticLet_
-            "let"
-            (Term.letDecl
-             (Term.letIdDecl
-              `α₂
-              []
-              [(Term.typeSpec
-                ":"
-                (Combinatorics.Quiver.Basic.«term_⟶_»
-                 (CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
-                  (Term.app `to_diagram [(Term.app `F.map_cone [`c])])
+                  (Term.app `pre [`s.X `K `F]))]))]
+             ":="
+             (Term.app
+              (Term.proj
+               (Term.app
+                `cones.postcompose
+                [(Term.paren
+                  "("
+                  [(Term.app `whisker_right [`α₁ (Term.app `pre [`s.X `K `F])])
+                   [(Term.typeAscription ":" (Term.hole "_"))]]
+                  ")")])
+               "."
+               `obj)
+              [(Term.app `to_cone [`F `c `f₁])]))))
+          []
+          (Tactic.tacticLet_
+           "let"
+           (Term.letDecl
+            (Term.letIdDecl
+             `c₂
+             []
+             [(Term.typeSpec
+               ":"
+               (Term.app
+                `cone
+                [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                  (Term.app `to_diagram [`s])
                   " ⋙ "
-                  (Term.app `map [`f₂]))
-                 " ⟶ "
-                 (Term.app `to_diagram [`s])))]
-              ":="
-              (Term.structInst
-               "{"
-               []
-               [(Term.structInstField
-                 (Term.structInstLVal `app [])
-                 ":="
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`X]
-                   []
-                   "=>"
-                   (Term.app
-                    `eq_to_hom
-                    [(Term.byTactic
-                      "by"
-                      (Tactic.tacticSeq
-                       (Tactic.tacticSeq1Indented
-                        [(group
-                          (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h₂)] "]"] [])
-                          [])])))]))))
+                  (Term.app `pre [`s.X `K `F]))]))]
+             ":="
+             (Term.app
+              (Term.proj
+               (Term.app
+                `cones.postcompose
+                [(Term.paren
+                  "("
+                  [(Term.app `whisker_right [`α₂ (Term.app `pre [`s.X `K `F])])
+                   [(Term.typeAscription ":" (Term.hole "_"))]]
+                  ")")])
+               "."
+               `obj)
+              [(Term.app `to_cone [`F `c `f₂])]))))
+          []
+          (Tactic.tacticLet_
+           "let"
+           (Term.letDecl
+            (Term.letIdDecl
+             `c₀
+             []
+             []
+             ":="
+             (Term.app `is_cofiltered.cone [(Term.app `bicone_mk [(Term.hole "_") `c₁ `c₂])]))))
+          []
+          (Tactic.tacticLet_
+           "let"
+           (Term.letDecl
+            (Term.letIdDecl
+             `g₁
+             []
+             [(Term.typeSpec ":" (Combinatorics.Quiver.Basic.«term_⟶_» `c₀.X " ⟶ " `c₁.X))]
+             ":="
+             (Term.app `c₀.π.app [`bicone.left]))))
+          []
+          (Tactic.tacticLet_
+           "let"
+           (Term.letDecl
+            (Term.letIdDecl
+             `g₂
+             []
+             [(Term.typeSpec ":" (Combinatorics.Quiver.Basic.«term_⟶_» `c₀.X " ⟶ " `c₂.X))]
+             ":="
+             (Term.app `c₀.π.app [`bicone.right]))))
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             []
+             [(Term.typeSpec
+               ":"
+               (Term.forall
+                "∀"
+                [`j]
+                [(Term.typeSpec ":" `J)]
                 ","
-                (Term.structInstField
-                 (Term.structInstLVal `naturality' [])
-                 ":="
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [(Term.hole "_") (Term.hole "_") (Term.hole "_")]
-                   []
-                   "=>"
-                   (Term.byTactic
-                    "by"
-                    (Tactic.tacticSeq
-                     (Tactic.tacticSeq1Indented
-                      [(group (Std.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
-                       (group (Tactic.simp "simp" [] [] [] [] []) [])]))))))]
-               (Term.optEllipsis [])
-               []
-               "}"))))
-           [])
-          (group
-           (Tactic.tacticLet_
-            "let"
-            (Term.letDecl
-             (Term.letIdDecl
-              `c₁
-              []
-              [(Term.typeSpec
-                ":"
-                (Term.app
-                 `cone
-                 [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
-                   (Term.app `to_diagram [`s])
-                   " ⋙ "
-                   (Term.app `pre [`s.X `K `F]))]))]
-              ":="
-              (Term.app
-               (Term.proj
-                (Term.app
-                 `cones.postcompose
-                 [(Term.paren
-                   "("
-                   [(Term.app `whisker_right [`α₁ (Term.app `pre [`s.X `K `F])])
-                    [(Term.typeAscription ":" (Term.hole "_"))]]
-                   ")")])
-                "."
-                `obj)
-               [(Term.app `to_cone [`F `c `f₁])]))))
-           [])
-          (group
-           (Tactic.tacticLet_
-            "let"
-            (Term.letDecl
-             (Term.letIdDecl
-              `c₂
-              []
-              [(Term.typeSpec
-                ":"
-                (Term.app
-                 `cone
-                 [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
-                   (Term.app `to_diagram [`s])
-                   " ⋙ "
-                   (Term.app `pre [`s.X `K `F]))]))]
-              ":="
-              (Term.app
-               (Term.proj
-                (Term.app
-                 `cones.postcompose
-                 [(Term.paren
-                   "("
-                   [(Term.app `whisker_right [`α₂ (Term.app `pre [`s.X `K `F])])
-                    [(Term.typeAscription ":" (Term.hole "_"))]]
-                   ")")])
-                "."
-                `obj)
-               [(Term.app `to_cone [`F `c `f₂])]))))
-           [])
-          (group
-           (Tactic.tacticLet_
-            "let"
-            (Term.letDecl
-             (Term.letIdDecl
-              `c₀
-              []
-              []
-              ":="
-              (Term.app `is_cofiltered.cone [(Term.app `bicone_mk [(Term.hole "_") `c₁ `c₂])]))))
-           [])
-          (group
-           (Tactic.tacticLet_
-            "let"
-            (Term.letDecl
-             (Term.letIdDecl
-              `g₁
-              []
-              [(Term.typeSpec ":" (Combinatorics.Quiver.Basic.«term_⟶_» `c₀.X " ⟶ " `c₁.X))]
-              ":="
-              (Term.app `c₀.π.app [`bicone.left]))))
-           [])
-          (group
-           (Tactic.tacticLet_
-            "let"
-            (Term.letDecl
-             (Term.letIdDecl
-              `g₂
-              []
-              [(Term.typeSpec ":" (Combinatorics.Quiver.Basic.«term_⟶_» `c₀.X " ⟶ " `c₂.X))]
-              ":="
-              (Term.app `c₀.π.app [`bicone.right]))))
-           [])
-          (group
-           (Tactic.tacticHave_
-            "have"
-            (Term.haveDecl
-             (Term.haveIdDecl
-              []
-              [(Term.typeSpec
-                ":"
-                (Term.forall
-                 "∀"
-                 [`j]
-                 [(Term.typeSpec ":" `J)]
-                 ","
-                 («term_=_»
-                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g₁.right " ≫ " (Term.app `c.π.app [`j]))
-                  "="
-                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g₂.right " ≫ " (Term.app `c.π.app [`j])))))]
-              ":="
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(group (Tactic.intro "intro" [`j]) [])
-                  (group
-                   (Tactic.injection
-                    "injection"
-                    (Term.app `c₀.π.naturality [(Term.app `bicone_hom.left [`j])])
-                    ["with" ["_" `e₁]])
-                   [])
-                  (group
-                   (Tactic.injection
-                    "injection"
-                    (Term.app `c₀.π.naturality [(Term.app `bicone_hom.right [`j])])
-                    ["with" ["_" `e₂]])
-                   [])
-                  (group
-                   (Mathlib.Tactic.tacticSimpa!?_
-                    "simpa"
-                    []
-                    []
-                    (Mathlib.Tactic.simpaArgsRest
-                     []
-                     []
-                     []
-                     []
-                     []
-                     [(Tactic.usingArg "using" (Term.app `e₁.symm.trans [`e₂]))]))
-                   [])]))))))
-           [])
-          (group
-           (Tactic.tacticHave_
-            "have"
-            (Term.haveDecl
-             (Term.haveIdDecl
-              []
-              [(Term.typeSpec ":" («term_=_» (Term.app `c.extend [`g₁.right]) "=" (Term.app `c.extend [`g₂.right])))]
-              ":="
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(group (Tactic.unfold' "unfold" [] [(group `cone.extend)] []) [])
-                  (group (Tactic.congr' "congr" [(num "1")] []) [])
-                  (group
-                   (Std.Tactic.Ext.«tacticExt___:_»
-                    "ext"
-                    [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
-                    [])
-                   [])
-                  (group (Tactic.apply "apply" `this) [])]))))))
-           [])
-          (group (Mathlib.Tactic.tacticHave_ "have" [] [(Term.typeSpec ":" («term_=_» `g₁.right "=" `g₂.right))]) [])
-          (group
-           (calcTactic
-            "calc"
-            (calcStep
-             («term_=_» `g₁.right "=" (Term.app `hc.lift [(Term.app `c.extend [`g₁.right])]))
+                («term_=_»
+                 (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g₁.right " ≫ " (Term.app `c.π.app [`j]))
+                 "="
+                 (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g₂.right " ≫ " (Term.app `c.π.app [`j])))))]
              ":="
              (Term.byTactic
               "by"
               (Tactic.tacticSeq
                (Tactic.tacticSeq1Indented
-                [(group (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])])) [])
-                 (group (Tactic.tidy "tidy" []) [])]))))
-            [(calcStep
-              («term_=_» (Term.hole "_") "=" (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])]))
-              ":="
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(group (choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" [])) [])
-                  (group (Tactic.exact "exact" `this) [])]))))
-             (calcStep
-              («term_=_» (Term.hole "_") "=" `g₂.right)
-              ":="
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(group (Tactic.symm "symm") [])
-                  (group (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])])) [])
-                  (group (Tactic.tidy "tidy" []) [])]))))])
-           [])
-          (group
-           (calcTactic
-            "calc"
+                [(Tactic.intro "intro" [`j])
+                 []
+                 (Tactic.injection
+                  "injection"
+                  (Term.app `c₀.π.naturality [(Term.app `bicone_hom.left [`j])])
+                  ["with" ["_" `e₁]])
+                 []
+                 (Tactic.injection
+                  "injection"
+                  (Term.app `c₀.π.naturality [(Term.app `bicone_hom.right [`j])])
+                  ["with" ["_" `e₂]])
+                 []
+                 (Std.Tactic.simpa
+                  "simpa"
+                  []
+                  []
+                  (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `e₁.symm.trans [`e₂])]))]))))))
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             []
+             [(Term.typeSpec ":" («term_=_» (Term.app `c.extend [`g₁.right]) "=" (Term.app `c.extend [`g₂.right])))]
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.unfold "unfold" [`cone.extend] [])
+                 []
+                 (Tactic.congr' "congr" [(num "1")] [])
+                 []
+                 (Std.Tactic.Ext.«tacticExt___:_»
+                  "ext"
+                  [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+                  [])
+                 []
+                 (Tactic.apply "apply" `this)]))))))
+          []
+          (Mathlib.Tactic.tacticHave_ "have" [] [(Term.typeSpec ":" («term_=_» `g₁.right "=" `g₂.right))])
+          []
+          (calcTactic
+           "calc"
+           (calcStep
+            («term_=_» `g₁.right "=" (Term.app `hc.lift [(Term.app `c.extend [`g₁.right])]))
+            ":="
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
+                []
+                (Tactic.tidy "tidy" [])]))))
+           [(calcStep
+             («term_=_» (Term.hole "_") "=" (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])]))
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" [])) [] (Tactic.exact "exact" `this)]))))
+            (calcStep
+             («term_=_» (Term.hole "_") "=" `g₂.right)
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.symm "symm")
+                 []
+                 (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
+                 []
+                 (Tactic.tidy "tidy" [])]))))])
+          []
+          (calcTactic
+           "calc"
+           (calcStep
+            («term_=_»
+             `f₁
+             "="
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [(Term.hole "_")])
+              " ≫ "
+              `f₁))
+            ":="
+            (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))
+           [(calcStep
+             («term_=_»
+              (Term.hole "_")
+              "="
+              (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₁.right])))
+             ":="
+             `g₁.w)
             (calcStep
              («term_=_»
-              `f₁
+              (Term.hole "_")
+              "="
+              (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₂.right])))
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `this)] "]") [])]))))
+            (calcStep
+             («term_=_»
+              (Term.hole "_")
               "="
               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [(Term.hole "_")])
                " ≫ "
-               `f₁))
+               `f₂))
+             ":="
+             `g₂.w.symm)
+            (calcStep
+             («term_=_» (Term.hole "_") "=" `f₂)
              ":="
              (Term.byTactic
               "by"
-              (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] [] []) [])]))))
-            [(calcStep
-              («term_=_»
-               (Term.hole "_")
-               "="
-               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₁.right])))
-              ":="
-              `g₁.w)
-             (calcStep
-              («term_=_»
-               (Term.hole "_")
-               "="
-               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₂.right])))
-              ":="
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `this)] "]") []) [])]))))
-             (calcStep
-              («term_=_»
-               (Term.hole "_")
-               "="
-               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
-                (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [(Term.hole "_")])
-                " ≫ "
-                `f₂))
-              ":="
-              `g₂.w.symm)
-             (calcStep
-              («term_=_» (Term.hole "_") "=" `f₂)
-              ":="
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] [] []) [])]))))])
-           [])])))
+              (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (calcTactic
        "calc"
@@ -628,9 +577,7 @@ attribute [local simp] eq_to_hom_map
           " ≫ "
           `f₁))
         ":="
-        (Term.byTactic
-         "by"
-         (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] [] []) [])]))))
+        (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))
        [(calcStep
          («term_=_»
           (Term.hole "_")
@@ -648,7 +595,7 @@ attribute [local simp] eq_to_hom_map
           "by"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
-            [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `this)] "]") []) [])]))))
+            [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `this)] "]") [])]))))
         (calcStep
          («term_=_»
           (Term.hole "_")
@@ -662,13 +609,9 @@ attribute [local simp] eq_to_hom_map
         (calcStep
          («term_=_» (Term.hole "_") "=" `f₂)
          ":="
-         (Term.byTactic
-          "by"
-          (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] [] []) [])]))))])
+         (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] [] []) [])])))
+      (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp "simp" [] [] [] [] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -719,8 +662,7 @@ attribute [local simp] eq_to_hom_map
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `this)] "]") []) [])])))
+        (Tactic.tacticSeq1Indented [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `this)] "]") [])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `this)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -780,9 +722,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] [] []) [])])))
+      (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp "simp" [] [] [] [] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -818,7 +758,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (calcTactic
        "calc"
        (calcStep
@@ -828,8 +768,9 @@ attribute [local simp] eq_to_hom_map
          "by"
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
-           [(group (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])])) [])
-            (group (Tactic.tidy "tidy" []) [])]))))
+           [(Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
+            []
+            (Tactic.tidy "tidy" [])]))))
        [(calcStep
          («term_=_» (Term.hole "_") "=" (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])]))
          ":="
@@ -837,8 +778,7 @@ attribute [local simp] eq_to_hom_map
           "by"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
-            [(group (choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" [])) [])
-             (group (Tactic.exact "exact" `this) [])]))))
+            [(choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" [])) [] (Tactic.exact "exact" `this)]))))
         (calcStep
          («term_=_» (Term.hole "_") "=" `g₂.right)
          ":="
@@ -846,21 +786,25 @@ attribute [local simp] eq_to_hom_map
           "by"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
-            [(group (Tactic.symm "symm") [])
-             (group (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])])) [])
-             (group (Tactic.tidy "tidy" []) [])]))))])
+            [(Tactic.symm "symm")
+             []
+             (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
+             []
+             (Tactic.tidy "tidy" [])]))))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(group (Tactic.symm "symm") [])
-          (group (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])])) [])
-          (group (Tactic.tidy "tidy" []) [])])))
+         [(Tactic.symm "symm")
+          []
+          (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
+          []
+          (Tactic.tidy "tidy" [])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tidy "tidy" [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])])
@@ -879,7 +823,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.symm "symm")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
@@ -897,15 +841,14 @@ attribute [local simp] eq_to_hom_map
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(group (choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" [])) [])
-          (group (Tactic.exact "exact" `this) [])])))
+         [(choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" [])) [] (Tactic.exact "exact" `this)])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `this)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `this
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" []))
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
@@ -936,12 +879,13 @@ attribute [local simp] eq_to_hom_map
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(group (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])])) [])
-          (group (Tactic.tidy "tidy" []) [])])))
+         [(Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
+          []
+          (Tactic.tidy "tidy" [])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tidy "tidy" [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])])
@@ -984,7 +928,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Mathlib.Tactic.tacticHave_ "have" [] [(Term.typeSpec ":" («term_=_» `g₁.right "=" `g₂.right))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_» `g₁.right "=" `g₂.right)
@@ -996,7 +940,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticHave_
        "have"
        (Term.haveDecl
@@ -1008,46 +952,48 @@ attribute [local simp] eq_to_hom_map
           "by"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
-            [(group (Tactic.unfold' "unfold" [] [(group `cone.extend)] []) [])
-             (group (Tactic.congr' "congr" [(num "1")] []) [])
-             (group
-              (Std.Tactic.Ext.«tacticExt___:_»
-               "ext"
-               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
-               [])
+            [(Tactic.unfold "unfold" [`cone.extend] [])
+             []
+             (Tactic.congr' "congr" [(num "1")] [])
+             []
+             (Std.Tactic.Ext.«tacticExt___:_»
+              "ext"
+              [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
               [])
-             (group (Tactic.apply "apply" `this) [])]))))))
+             []
+             (Tactic.apply "apply" `this)]))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(group (Tactic.unfold' "unfold" [] [(group `cone.extend)] []) [])
-          (group (Tactic.congr' "congr" [(num "1")] []) [])
-          (group
-           (Std.Tactic.Ext.«tacticExt___:_»
-            "ext"
-            [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
-            [])
+         [(Tactic.unfold "unfold" [`cone.extend] [])
+          []
+          (Tactic.congr' "congr" [(num "1")] [])
+          []
+          (Std.Tactic.Ext.«tacticExt___:_»
+           "ext"
+           [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
            [])
-          (group (Tactic.apply "apply" `this) [])])))
+          []
+          (Tactic.apply "apply" `this)])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.apply "apply" `this)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `this
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.Ext.«tacticExt___:_»
        "ext"
        [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
        [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.congr' "congr" [(num "1")] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      (Tactic.unfold' "unfold" [] [(group `cone.extend)] [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.unfold "unfold" [`cone.extend] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1072,7 +1018,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticHave_
        "have"
        (Term.haveDecl
@@ -1094,63 +1040,47 @@ attribute [local simp] eq_to_hom_map
           "by"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
-            [(group (Tactic.intro "intro" [`j]) [])
-             (group
-              (Tactic.injection
-               "injection"
-               (Term.app `c₀.π.naturality [(Term.app `bicone_hom.left [`j])])
-               ["with" ["_" `e₁]])
-              [])
-             (group
-              (Tactic.injection
-               "injection"
-               (Term.app `c₀.π.naturality [(Term.app `bicone_hom.right [`j])])
-               ["with" ["_" `e₂]])
-              [])
-             (group
-              (Mathlib.Tactic.tacticSimpa!?_
-               "simpa"
-               []
-               []
-               (Mathlib.Tactic.simpaArgsRest
-                []
-                []
-                []
-                []
-                []
-                [(Tactic.usingArg "using" (Term.app `e₁.symm.trans [`e₂]))]))
-              [])]))))))
+            [(Tactic.intro "intro" [`j])
+             []
+             (Tactic.injection
+              "injection"
+              (Term.app `c₀.π.naturality [(Term.app `bicone_hom.left [`j])])
+              ["with" ["_" `e₁]])
+             []
+             (Tactic.injection
+              "injection"
+              (Term.app `c₀.π.naturality [(Term.app `bicone_hom.right [`j])])
+              ["with" ["_" `e₂]])
+             []
+             (Std.Tactic.simpa
+              "simpa"
+              []
+              []
+              (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `e₁.symm.trans [`e₂])]))]))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(group (Tactic.intro "intro" [`j]) [])
-          (group
-           (Tactic.injection
-            "injection"
-            (Term.app `c₀.π.naturality [(Term.app `bicone_hom.left [`j])])
-            ["with" ["_" `e₁]])
-           [])
-          (group
-           (Tactic.injection
-            "injection"
-            (Term.app `c₀.π.naturality [(Term.app `bicone_hom.right [`j])])
-            ["with" ["_" `e₂]])
-           [])
-          (group
-           (Mathlib.Tactic.tacticSimpa!?_
-            "simpa"
-            []
-            []
-            (Mathlib.Tactic.simpaArgsRest [] [] [] [] [] [(Tactic.usingArg "using" (Term.app `e₁.symm.trans [`e₂]))]))
-           [])])))
+         [(Tactic.intro "intro" [`j])
+          []
+          (Tactic.injection
+           "injection"
+           (Term.app `c₀.π.naturality [(Term.app `bicone_hom.left [`j])])
+           ["with" ["_" `e₁]])
+          []
+          (Tactic.injection
+           "injection"
+           (Term.app `c₀.π.naturality [(Term.app `bicone_hom.right [`j])])
+           ["with" ["_" `e₂]])
+          []
+          (Std.Tactic.simpa
+           "simpa"
+           []
+           []
+           (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `e₁.symm.trans [`e₂])]))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Mathlib.Tactic.tacticSimpa!?_
-       "simpa"
-       []
-       []
-       (Mathlib.Tactic.simpaArgsRest [] [] [] [] [] [(Tactic.usingArg "using" (Term.app `e₁.symm.trans [`e₂]))]))
+      (Std.Tactic.simpa "simpa" [] [] (Std.Tactic.simpaArgsRest [] [] [] [] ["using" (Term.app `e₁.symm.trans [`e₂])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `e₁.symm.trans [`e₂])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1161,7 +1091,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.injection
        "injection"
        (Term.app `c₀.π.naturality [(Term.app `bicone_hom.right [`j])])
@@ -1250,7 +1180,7 @@ noncomputable def preservesFiniteLimitsIffFlat [HasFiniteLimits C] (F : C ⥤ D)
   right_inv := fun x => by
     cases x
     unfold preserves_finite_limits_of_flat
-    dunfold preserves_finite_limits_of_preserves_finite_limits_of_size
+    dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]
     congr
 
 end HasLimit
@@ -1331,14 +1261,14 @@ noncomputable def preservesFiniteLimitsIffLanPreservesFiniteLimits (F : C ⥤ D)
   left_inv := fun x => by
     cases x
     unfold preserves_finite_limits_of_flat
-    dunfold preserves_finite_limits_of_preserves_finite_limits_of_size
+    dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]
     congr
   right_inv := fun x => by
     cases x
     unfold preserves_finite_limits_of_flat
     congr
     unfold CategoryTheory.lanPreservesFiniteLimitsOfPreservesFiniteLimits CategoryTheory.lanPreservesFiniteLimitsOfFlat
-    dunfold preserves_finite_limits_of_preserves_finite_limits_of_size
+    dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]
     congr
 
 end SmallCategory

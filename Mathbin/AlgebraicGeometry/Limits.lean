@@ -49,10 +49,7 @@ section Initial
 /-- The map from the empty scheme. -/
 @[simps]
 def Scheme.emptyTo (X : Scheme.{u}) : ∅ ⟶ X :=
-  ⟨{ base :=
-        ⟨fun x => Pempty.elimₓ x, by
-          continuity⟩,
-      c := { app := fun U => CommRingₓₓ.punitIsTerminal.from _ } },
+  ⟨{ base := ⟨fun x => Pempty.elimₓ x, by continuity⟩, c := { app := fun U => CommRingₓₓ.punitIsTerminal.from _ } },
     fun x => Pempty.elimₓ x⟩
 
 @[ext]
@@ -75,8 +72,7 @@ theorem empty_is_initial_to : emptyIsInitial.to = Scheme.empty_to :=
   rfl
 
 instance : IsEmpty Scheme.empty.Carrier :=
-  show IsEmpty Pempty by
-    infer_instance
+  show IsEmpty Pempty by infer_instance
 
 instance Spec_punit_is_empty : IsEmpty (Scheme.spec.obj (op <| CommRingₓₓ.of PUnit)).Carrier :=
   ⟨PrimeSpectrum.punit⟩
@@ -132,8 +128,7 @@ theorem bot_is_affine_open (X : Scheme) : IsAffineOpen (⊥ : Opens X.Carrier) :
   exact (false_iffₓ _).mpr fun x => isEmptyElim (show (⊥_ Scheme).Carrier from x.some)
 
 instance : HasStrictInitialObjects Scheme :=
-  has_strict_initial_objects_of_initial_is_strict fun A f => by
-    infer_instance
+  has_strict_initial_objects_of_initial_is_strict fun A f => by infer_instance
 
 end Initial
 

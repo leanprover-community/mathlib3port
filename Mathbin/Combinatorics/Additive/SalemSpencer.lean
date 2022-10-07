@@ -39,7 +39,7 @@ Salem-Spencer, Roth, arithmetic progression, average, three-free
 -/
 
 
-open Finset Function Metric Nat
+open Finsetₓ Function Metric Nat
 
 open Pointwise
 
@@ -62,7 +62,7 @@ def MulSalemSpencer : Prop :=
 
 /-- Whether a given finset is Salem-Spencer is decidable. -/
 @[to_additive "Whether a given finset is Salem-Spencer is decidable."]
-instance {α : Type _} [DecidableEq α] [Monoidₓ α] {s : Finset α} : Decidable (MulSalemSpencer (s : Set α)) :=
+instance {α : Type _} [DecidableEq α] [Monoidₓ α] {s : Finsetₓ α} : Decidable (MulSalemSpencer (s : Set α)) :=
   decidableOfIff (∀ a ∈ s, ∀ b ∈ s, ∀ c ∈ s, a * b = c * c → a = b)
     ⟨fun h a b c ha hb hc => h a ha b hb c hc, fun h a ha b hb c hc => h ha hb hc⟩
 
@@ -110,10 +110,7 @@ theorem MulSalemSpencer.of_image [FunLike F α fun _ => β] [FreimanHomClass F s
 theorem MulSalemSpencer.image [MulHomClass F α β] (f : F) (hf : (s * s).InjOn f) (h : MulSalemSpencer s) :
     MulSalemSpencer (f '' s) := by
   rintro _ _ _ ⟨a, ha, rfl⟩ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ habc
-  rw
-    [h ha hb hc
-      (hf (mul_mem_mul ha hb) (mul_mem_mul hc hc) <| by
-        rwa [map_mul, map_mul])]
+  rw [h ha hb hc (hf (mul_mem_mul ha hb) (mul_mem_mul hc hc) <| by rwa [map_mul, map_mul])]
 
 end CommMonoidₓ
 
@@ -137,8 +134,7 @@ theorem mul_salem_spencer_insert :
   obtain rfl | hb := hb <;> obtain rfl | hc := hc
   · rfl
     
-  all_goals
-    obtain rfl | hd := hd
+  all_goals obtain rfl | hd := hd
   · exact (mul_left_cancelₓ h).symm
     
   · exact ha hc hd h
@@ -258,11 +254,7 @@ theorem add_salem_spencer_frontier [LinearOrderedField 𝕜] [TopologicalSpace E
     {s : Set E} (hs₀ : IsClosed s) (hs₁ : StrictConvex 𝕜 s) : AddSalemSpencer (Frontier s) := by
   intro a b c ha hb hc habc
   obtain rfl : (1 / 2 : 𝕜) • a + (1 / 2 : 𝕜) • b = c := by
-    rwa [← smul_add, one_div,
-      inv_smul_eq_iff₀
-        (show (2 : 𝕜) ≠ 0 by
-          norm_num),
-      two_smul]
+    rwa [← smul_add, one_div, inv_smul_eq_iff₀ (show (2 : 𝕜) ≠ 0 by norm_num), two_smul]
   exact hs₁.eq (hs₀.frontier_subset ha) (hs₀.frontier_subset hb) one_half_pos one_half_pos (add_halves _) hc.2
 
 theorem add_salem_spencer_sphere [NormedAddCommGroup E] [NormedSpace ℝ E] [StrictConvexSpace ℝ E] (x : E) (r : ℝ) :
@@ -277,7 +269,7 @@ theorem add_salem_spencer_sphere [NormedAddCommGroup E] [NormedSpace ℝ E] [Str
 
 end SalemSpencer
 
-open Finset
+open Finsetₓ
 
 section RothNumber
 
@@ -285,14 +277,14 @@ variable [DecidableEq α]
 
 section Monoidₓ
 
-variable [Monoidₓ α] [DecidableEq β] [Monoidₓ β] (s t : Finset α)
+variable [Monoidₓ α] [DecidableEq β] [Monoidₓ β] (s t : Finsetₓ α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- The multiplicative Roth number of a finset is the cardinality of its biggest multiplicative
 Salem-Spencer subset. -/
 @[to_additive
       "The additive Roth number of a finset is the cardinality of its biggest additive\nSalem-Spencer subset. The usual Roth number corresponds to `add_roth_number (finset.range n)`, see\n`roth_number_nat`. "]
-def mulRothNumber : Finset α →o ℕ :=
+def mulRothNumber : Finsetₓ α →o ℕ :=
   ⟨fun s => Nat.findGreatest (fun m => ∃ (t : _)(_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α)) s.card, by
     rintro t u htu
     refine' Nat.find_greatest_mono (fun m => _) (card_le_of_subset htu)
@@ -300,11 +292,10 @@ def mulRothNumber : Finset α →o ℕ :=
     exact ⟨v, hvt.trans htu, hv⟩⟩
 
 @[to_additive]
-theorem mul_roth_number_le : mulRothNumber s ≤ s.card := by
-  convert Nat.find_greatest_le s.card
+theorem mul_roth_number_le : mulRothNumber s ≤ s.card := by convert Nat.find_greatest_le s.card
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s)
 @[to_additive]
 theorem mul_roth_number_spec : ∃ (t : _)(_ : t ⊆ s), t.card = mulRothNumber s ∧ MulSalemSpencer (t : Set α) :=
   @Nat.find_greatest_spec _ (fun m => ∃ (t : _)(_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α)) _ _
@@ -321,22 +312,21 @@ theorem MulSalemSpencer.roth_number_eq (hs : MulSalemSpencer (s : Set α)) : mul
   (mul_roth_number_le _).antisymm <| hs.le_mul_roth_number <| Subset.refl _
 
 @[simp, to_additive]
-theorem mul_roth_number_empty : mulRothNumber (∅ : Finset α) = 0 :=
+theorem mul_roth_number_empty : mulRothNumber (∅ : Finsetₓ α) = 0 :=
   Nat.eq_zero_of_le_zeroₓ <| (mul_roth_number_le _).trans card_empty.le
 
 @[simp, to_additive]
-theorem mul_roth_number_singleton (a : α) : mulRothNumber ({a} : Finset α) = 1 := by
+theorem mul_roth_number_singleton (a : α) : mulRothNumber ({a} : Finsetₓ α) = 1 := by
   convert MulSalemSpencer.roth_number_eq _
   rw [coe_singleton]
   exact mul_salem_spencer_singleton a
 
 @[to_additive]
-theorem mul_roth_number_union_le (s t : Finset α) : mulRothNumber (s ∪ t) ≤ mulRothNumber s + mulRothNumber t :=
+theorem mul_roth_number_union_le (s t : Finsetₓ α) : mulRothNumber (s ∪ t) ≤ mulRothNumber s + mulRothNumber t :=
   let ⟨u, hus, hcard, hu⟩ := mul_roth_number_spec (s ∪ t)
   calc
     mulRothNumber (s ∪ t) = u.card := hcard.symm
-    _ = (u ∩ s ∪ u ∩ t).card := by
-      rw [← inter_distrib_left, (inter_eq_left_iff_subset _ _).2 hus]
+    _ = (u ∩ s ∪ u ∩ t).card := by rw [← inter_distrib_left, (inter_eq_left_iff_subset _ _).2 hus]
     _ ≤ (u ∩ s).card + (u ∩ t).card := card_union_le _ _
     _ ≤ mulRothNumber s + mulRothNumber t :=
       add_le_add ((hu.mono <| inter_subset_left _ _).le_mul_roth_number <| inter_subset_right _ _)
@@ -345,7 +335,7 @@ theorem mul_roth_number_union_le (s t : Finset α) : mulRothNumber (s ∪ t) ≤
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
-theorem le_mul_roth_number_product (s : Finset α) (t : Finset β) :
+theorem le_mul_roth_number_product (s : Finsetₓ α) (t : Finsetₓ β) :
     mulRothNumber s * mulRothNumber t ≤ mulRothNumber (s ×ˢ t) := by
   obtain ⟨u, hus, hucard, hu⟩ := mul_roth_number_spec s
   obtain ⟨v, hvt, hvcard, hv⟩ := mul_roth_number_spec t
@@ -356,7 +346,7 @@ theorem le_mul_roth_number_product (s : Finset α) (t : Finset β) :
 
 @[to_additive]
 theorem mul_roth_number_lt_of_forall_not_mul_salem_spencer
-    (h : ∀ t ∈ powersetLen n s, ¬MulSalemSpencer ((t : Finset α) : Set α)) : mulRothNumber s < n := by
+    (h : ∀ t ∈ powersetLen n s, ¬MulSalemSpencer ((t : Finsetₓ α) : Set α)) : mulRothNumber s < n := by
   obtain ⟨t, hts, hcard, ht⟩ := mul_roth_number_spec s
   rw [← hcard, ← not_leₓ]
   intro hn
@@ -367,7 +357,7 @@ end Monoidₓ
 
 section CancelCommMonoid
 
-variable [CancelCommMonoid α] (s : Finset α) (a : α)
+variable [CancelCommMonoid α] (s : Finsetₓ α) (a : α)
 
 @[simp, to_additive]
 theorem mul_roth_number_map_mul_left : mulRothNumber (s.map <| mulLeftEmbedding a) = mulRothNumber s := by
@@ -397,7 +387,7 @@ end RothNumber
 
 section rothNumberNat
 
-variable {s : Finset ℕ} {k n : ℕ}
+variable {s : Finsetₓ ℕ} {k n : ℕ}
 
 /-- The Roth number of a natural `N` is the largest integer `m` for which there is a subset of
 `range N` of size `m` with no arithmetic progression of length 3.
@@ -415,14 +405,14 @@ theorem roth_number_nat_def (n : ℕ) : rothNumberNat n = addRothNumber (range n
 theorem roth_number_nat_le (N : ℕ) : rothNumberNat N ≤ N :=
   (add_roth_number_le _).trans (card_range _).le
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » range[finset.range] n)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » range[finset.range] n)
 theorem roth_number_nat_spec (n : ℕ) :
     ∃ (t : _)(_ : t ⊆ range n), t.card = rothNumberNat n ∧ AddSalemSpencer (t : Set ℕ) :=
   add_roth_number_spec _
 
 /-- A verbose specialization of `add_salem_spencer.le_add_roth_number`, sometimes convenient in
 practice. -/
-theorem AddSalemSpencer.le_roth_number_nat (s : Finset ℕ) (hs : AddSalemSpencer (s : Set ℕ)) (hsn : ∀ x ∈ s, x < n)
+theorem AddSalemSpencer.le_roth_number_nat (s : Finsetₓ ℕ) (hs : AddSalemSpencer (s : Set ℕ)) (hsn : ∀ x ∈ s, x < n)
     (hsk : s.card = k) : k ≤ rothNumberNat n :=
   hsk.Ge.trans <| hs.le_add_roth_number fun x hx => mem_range.2 <| hsn x hx
 
@@ -450,8 +440,7 @@ theorem add_roth_number_Ico (a b : ℕ) : addRothNumber (ico a b) = rothNumberNa
 open Asymptotics Filter
 
 theorem roth_number_nat_is_O_with_id : IsOWith 1 atTop (fun N => (rothNumberNat N : ℝ)) fun N => (N : ℝ) :=
-  is_O_with_of_le _ <| by
-    simpa only [Real.norm_coe_nat, Nat.cast_le] using roth_number_nat_le
+  is_O_with_of_le _ <| by simpa only [Real.norm_coe_nat, Nat.cast_le] using roth_number_nat_le
 
 /-- The Roth number has the trivial bound `roth_number_nat N = O(N)`. -/
 theorem roth_number_nat_is_O_id : (fun N => (rothNumberNat N : ℝ)) =O[at_top] fun N => (N : ℝ) :=

@@ -134,8 +134,7 @@ section Div
 variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] [HasContinuousMul G₀] {f g : α → G₀}
 
 theorem Filter.Tendsto.div {l : Filter α} {a b : G₀} (hf : Tendsto f l (𝓝 a)) (hg : Tendsto g l (𝓝 b)) (hy : b ≠ 0) :
-    Tendsto (f / g) l (𝓝 (a / b)) := by
-  simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ hy)
+    Tendsto (f / g) l (𝓝 (a / b)) := by simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ hy)
 
 variable [TopologicalSpace α] [TopologicalSpace β] {s : Set α} {a : α}
 
@@ -168,7 +167,7 @@ theorem ContinuousAt.comp_div_cases {f g : α → G₀} (h : α → G₀ → β)
     (hh : g a ≠ 0 → ContinuousAt (↿h) (a, f a / g a)) (h2h : g a = 0 → Tendsto (↿h) (𝓝 a ×ᶠ ⊤) (𝓝 (h a 0))) :
     ContinuousAt (fun x => h x (f x / g x)) a := by
   show ContinuousAt (↿h ∘ fun x => (x, f x / g x)) a
-  by_cases' hga : g a = 0
+  by_cases hga:g a = 0
   · rw [ContinuousAt]
     simp_rw [comp_app, hga, div_zero]
     exact (h2h hga).comp (continuous_at_id.prod_mk tendsto_top)

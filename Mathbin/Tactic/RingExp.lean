@@ -505,16 +505,13 @@ unsafe def pow_orig {et et'} (ps : ex et) (qs : ex et') : ring_exp_m expr :=
   mk_pow [ps.orig, qs.orig]
 
 /-- Congruence lemma for constructing `ex.sum`. -/
-theorem sum_congr {p p' ps ps' : α} : p = p' → ps = ps' → p + ps = p' + ps' := by
-  cc
+theorem sum_congr {p p' ps ps' : α} : p = p' → ps = ps' → p + ps = p' + ps' := by cc
 
 /-- Congruence lemma for constructing `ex.prod`. -/
-theorem prod_congr {p p' ps ps' : α} : p = p' → ps = ps' → p * ps = p' * ps' := by
-  cc
+theorem prod_congr {p p' ps ps' : α} : p = p' → ps = ps' → p * ps = p' * ps' := by cc
 
 /-- Congruence lemma for constructing `ex.exp`. -/
-theorem exp_congr {p p' : α} {ps ps' : ℕ} : p = p' → ps = ps' → p ^ ps = p' ^ ps' := by
-  cc
+theorem exp_congr {p p' : α} {ps ps' : ℕ} : p = p' → ps = ps' → p ^ ps = p' ^ ps' := by cc
 
 /-- Constructs `ex.zero` with the correct arguments. -/
 unsafe def ex_zero : ring_exp_m (ex Sum) := do
@@ -568,8 +565,7 @@ unsafe def ex_exp (p : ex base) (ps : ex Prod) : ring_exp_m (ex exp) := do
   let pps_pf ← mk_proof_or_refl pps_p `` exp_congr [p.orig, p.pretty, ps.orig, ps.pretty] [p.info, ps.info]
   pure (ex.exp ⟨pps_o, pps_p, pps_pf⟩ (p none none) (ps none none))
 
-theorem base_to_exp_pf {p p' : α} : p = p' → p = p' ^ 1 := by
-  simp
+theorem base_to_exp_pf {p p' : α} : p = p' → p = p' ^ 1 := by simp
 
 /-- Conversion from `ex base` to `ex exp`. -/
 unsafe def base_to_exp (p : ex base) : ring_exp_m (ex exp) := do
@@ -578,8 +574,7 @@ unsafe def base_to_exp (p : ex base) : ring_exp_m (ex exp) := do
   let pf ← mk_proof `` base_to_exp_pf [p.orig, p.pretty] [p.info]
   pure <| ps p pf
 
-theorem exp_to_prod_pf {p p' : α} : p = p' → p = p' * 1 := by
-  simp
+theorem exp_to_prod_pf {p p' : α} : p = p' → p = p' * 1 := by simp
 
 /-- Conversion from `ex exp` to `ex prod`. -/
 unsafe def exp_to_prod (p : ex exp) : ring_exp_m (ex Prod) := do
@@ -588,8 +583,7 @@ unsafe def exp_to_prod (p : ex exp) : ring_exp_m (ex Prod) := do
   let pf ← mk_proof `` exp_to_prod_pf [p.orig, p.pretty] [p.info]
   pure <| ps p pf
 
-theorem prod_to_sum_pf {p p' : α} : p = p' → p = p' + 0 := by
-  simp
+theorem prod_to_sum_pf {p p' : α} : p = p' → p = p' + 0 := by simp
 
 /-- Conversion from `ex prod` to `ex sum`. -/
 unsafe def prod_to_sum (p : ex Prod) : ring_exp_m (ex Sum) := do
@@ -598,8 +592,7 @@ unsafe def prod_to_sum (p : ex Prod) : ring_exp_m (ex Sum) := do
   let pf ← mk_proof `` prod_to_sum_pf [p.orig, p.pretty] [p.info]
   pure <| ps p pf
 
-theorem atom_to_sum_pf (p : α) : p = p ^ 1 * 1 + 0 := by
-  simp
+theorem atom_to_sum_pf (p : α) : p = p ^ 1 * 1 + 0 := by simp
 
 /-- A more efficient conversion from `atom` to `ex sum`.
 
@@ -716,15 +709,13 @@ unsafe inductive overlap : Type
 theorem add_overlap_pf {ps qs pq} (p : α) : ps + qs = pq → p * ps + p * qs = p * pq := fun pq_pf =>
   calc
     p * ps + p * qs = p * (ps + qs) := symm (mul_addₓ _ _ _)
-    _ = p * pq := by
-      rw [pq_pf]
+    _ = p * pq := by rw [pq_pf]
     
 
 theorem add_overlap_pf_zero {ps qs} (p : α) : ps + qs = 0 → p * ps + p * qs = 0 := fun pq_pf =>
   calc
     p * ps + p * qs = p * (ps + qs) := symm (mul_addₓ _ _ _)
-    _ = p * 0 := by
-      rw [pq_pf]
+    _ = p * 0 := by rw [pq_pf]
     _ = 0 := mul_zero _
     
 
@@ -762,39 +753,31 @@ section Addition
 
 theorem add_pf_z_sum {ps qs qs' : α} : ps = 0 → qs = qs' → ps + qs = qs' := fun ps_pf qs_pf =>
   calc
-    ps + qs = 0 + qs' := by
-      rw [ps_pf, qs_pf]
+    ps + qs = 0 + qs' := by rw [ps_pf, qs_pf]
     _ = qs' := zero_addₓ _
     
 
 theorem add_pf_sum_z {ps ps' qs : α} : ps = ps' → qs = 0 → ps + qs = ps' := fun ps_pf qs_pf =>
   calc
-    ps + qs = ps' + 0 := by
-      rw [ps_pf, qs_pf]
+    ps + qs = ps' + 0 := by rw [ps_pf, qs_pf]
     _ = ps' := add_zeroₓ _
     
 
 theorem add_pf_sum_overlap {pps p ps qqs q qs pq pqs : α} :
-    pps = p + ps → qqs = q + qs → p + q = pq → ps + qs = pqs → pps + qqs = pq + pqs := by
-  cc
+    pps = p + ps → qqs = q + qs → p + q = pq → ps + qs = pqs → pps + qqs = pq + pqs := by cc
 
 theorem add_pf_sum_overlap_zero {pps p ps qqs q qs pqs : α} :
     pps = p + ps → qqs = q + qs → p + q = 0 → ps + qs = pqs → pps + qqs = pqs := fun pps_pf qqs_pf pq_pf pqs_pf =>
   calc
-    pps + qqs = p + ps + (q + qs) := by
-      rw [pps_pf, qqs_pf]
-    _ = p + q + (ps + qs) := by
-      cc
-    _ = 0 + pqs := by
-      rw [pq_pf, pqs_pf]
+    pps + qqs = p + ps + (q + qs) := by rw [pps_pf, qqs_pf]
+    _ = p + q + (ps + qs) := by cc
+    _ = 0 + pqs := by rw [pq_pf, pqs_pf]
     _ = pqs := zero_addₓ _
     
 
-theorem add_pf_sum_lt {pps p ps qqs pqs : α} : pps = p + ps → ps + qqs = pqs → pps + qqs = p + pqs := by
-  cc
+theorem add_pf_sum_lt {pps p ps qqs pqs : α} : pps = p + ps → ps + qqs = pqs → pps + qqs = p + pqs := by cc
 
-theorem add_pf_sum_gt {pps qqs q qs pqs : α} : qqs = q + qs → pps + qs = pqs → pps + qqs = q + pqs := by
-  cc
+theorem add_pf_sum_gt {pps qqs q qs pqs : α} : qqs = q + qs → pps + qs = pqs → pps + qqs = q + pqs := by cc
 
 /-- Add two expressions.
 
@@ -843,25 +826,19 @@ end Addition
 
 section Multiplication
 
-theorem mul_pf_c_c {ps ps' qs qs' pq : α} : ps = ps' → qs = qs' → ps' * qs' = pq → ps * qs = pq := by
-  cc
+theorem mul_pf_c_c {ps ps' qs qs' pq : α} : ps = ps' → qs = qs' → ps' * qs' = pq → ps * qs = pq := by cc
 
-theorem mul_pf_c_prod {ps qqs q qs pqs : α} : qqs = q * qs → ps * qs = pqs → ps * qqs = q * pqs := by
-  cc
+theorem mul_pf_c_prod {ps qqs q qs pqs : α} : qqs = q * qs → ps * qs = pqs → ps * qqs = q * pqs := by cc
 
-theorem mul_pf_prod_c {pps p ps qs pqs : α} : pps = p * ps → ps * qs = pqs → pps * qs = p * pqs := by
-  cc
+theorem mul_pf_prod_c {pps p ps qs pqs : α} : pps = p * ps → ps * qs = pqs → pps * qs = p * pqs := by cc
 
 theorem mul_pp_pf_overlap {pps p_b ps qqs qs psqs : α} {p_e q_e : ℕ} :
     pps = p_b ^ p_e * ps → qqs = p_b ^ q_e * qs → p_b ^ (p_e + q_e) * (ps * qs) = psqs → pps * qqs = psqs :=
-  fun ps_pf qs_pf psqs_pf => by
-  simp [symm psqs_pf, pow_addₓ, ps_pf, qs_pf] <;> ac_rfl
+  fun ps_pf qs_pf psqs_pf => by simp [symm psqs_pf, pow_addₓ, ps_pf, qs_pf] <;> ac_rfl
 
-theorem mul_pp_pf_prod_lt {pps p ps qqs pqs : α} : pps = p * ps → ps * qqs = pqs → pps * qqs = p * pqs := by
-  cc
+theorem mul_pp_pf_prod_lt {pps p ps qqs pqs : α} : pps = p * ps → ps * qqs = pqs → pps * qqs = p * pqs := by cc
 
-theorem mul_pp_pf_prod_gt {pps qqs q qs pqs : α} : qqs = q * qs → pps * qs = pqs → pps * qqs = q * pqs := by
-  cc
+theorem mul_pp_pf_prod_gt {pps qqs q qs pqs : α} : qqs = q * qs → pps * qs = pqs → pps * qqs = q * pqs := by cc
 
 /-- Multiply two expressions.
 
@@ -915,14 +892,12 @@ unsafe def mul_pp : ex Prod → ex Prod → ring_exp_m (ex Prod)
           let pf ← mk_proof `` mul_pp_pf_prod_gt [pps, qqs, q, qs, pqs] [qqs, pqs]
           pure <| pqqs ppqqs_o pf
 
-theorem mul_p_pf_zero {ps qs : α} : ps = 0 → ps * qs = 0 := fun ps_pf => by
-  rw [ps_pf, zero_mul]
+theorem mul_p_pf_zero {ps qs : α} : ps = 0 → ps * qs = 0 := fun ps_pf => by rw [ps_pf, zero_mul]
 
 theorem mul_p_pf_sum {pps p ps qs ppsqs : α} : pps = p + ps → p * qs + ps * qs = ppsqs → pps * qs = ppsqs :=
   fun pps_pf ppsqs_pf =>
   calc
-    pps * qs = (p + ps) * qs := by
-      rw [pps_pf]
+    pps * qs = (p + ps) * qs := by rw [pps_pf]
     _ = p * qs + ps * qs := add_mulₓ _ _ _
     _ = ppsqs := ppsqs_pf
     
@@ -948,14 +923,12 @@ unsafe def mul_p : ex Sum → ex Prod → ring_exp_m (ex Sum)
     let pf ← mk_proof `` mul_p_pf_sum [pps.orig, p.pretty, ps.pretty, qs.orig, ppsqs.pretty] [pps.info, ppsqs.info]
     pure <| ppsqs ppsqs_o pf
 
-theorem mul_pf_zero {ps qs : α} : qs = 0 → ps * qs = 0 := fun qs_pf => by
-  rw [qs_pf, mul_zero]
+theorem mul_pf_zero {ps qs : α} : qs = 0 → ps * qs = 0 := fun qs_pf => by rw [qs_pf, mul_zero]
 
 theorem mul_pf_sum {ps qqs q qs psqqs : α} : qqs = q + qs → ps * q + ps * qs = psqqs → ps * qqs = psqqs :=
   fun qs_pf psqqs_pf =>
   calc
-    ps * qqs = ps * (q + qs) := by
-      rw [qs_pf]
+    ps * qqs = ps * (q + qs) := by rw [qs_pf]
     _ = ps * q + ps * qs := mul_addₓ _ _ _
     _ = psqqs := psqqs_pf
     
@@ -986,11 +959,9 @@ section Exponentiation
 theorem pow_e_pf_exp {pps p : α} {ps qs psqs : ℕ} : pps = p ^ ps → ps * qs = psqs → pps ^ qs = p ^ psqs :=
   fun pps_pf psqs_pf =>
   calc
-    pps ^ qs = (p ^ ps) ^ qs := by
-      rw [pps_pf]
+    pps ^ qs = (p ^ ps) ^ qs := by rw [pps_pf]
     _ = p ^ (ps * qs) := symm (pow_mulₓ _ _ _)
-    _ = p ^ psqs := by
-      rw [psqs_pf]
+    _ = p ^ psqs := by rw [psqs_pf]
     
 
 /-- Compute the exponentiation of two coefficients.
@@ -1016,11 +987,9 @@ unsafe def pow_e : ex exp → ex Prod → ring_exp_m (ex exp)
     let pf ← mk_proof `` pow_e_pf_exp [pps.orig, p.pretty, ps.pretty, qs.orig, psqs.pretty] [pps.info, psqs.info]
     pure <| ppsqs ppsqs_o pf
 
-theorem pow_pp_pf_one {ps : α} {qs : ℕ} : ps = 1 → ps ^ qs = 1 := fun ps_pf => by
-  rw [ps_pf, one_pow]
+theorem pow_pp_pf_one {ps : α} {qs : ℕ} : ps = 1 → ps ^ qs = 1 := fun ps_pf => by rw [ps_pf, one_pow]
 
-theorem pow_pf_c_c {ps ps' pq : α} {qs qs' : ℕ} : ps = ps' → qs = qs' → ps' ^ qs' = pq → ps ^ qs = pq := by
-  cc
+theorem pow_pf_c_c {ps ps' pq : α} {qs qs' : ℕ} : ps = ps' → qs = qs' → ps' ^ qs' = pq → ps ^ qs = pq := by cc
 
 theorem pow_pp_pf_c {ps ps' pqs : α} {qs qs' : ℕ} : ps = ps' → qs = qs' → ps' ^ qs' = pqs → ps ^ qs = pqs * 1 := by
   simp <;> cc
@@ -1028,11 +997,9 @@ theorem pow_pp_pf_c {ps ps' pqs : α} {qs qs' : ℕ} : ps = ps' → qs = qs' →
 theorem pow_pp_pf_prod {pps p ps pqs psqs : α} {qs : ℕ} :
     pps = p * ps → p ^ qs = pqs → ps ^ qs = psqs → pps ^ qs = pqs * psqs := fun pps_pf pqs_pf psqs_pf =>
   calc
-    pps ^ qs = (p * ps) ^ qs := by
-      rw [pps_pf]
+    pps ^ qs = (p * ps) ^ qs := by rw [pps_pf]
     _ = p ^ qs * ps ^ qs := mul_powₓ _ _ _
-    _ = pqs * psqs := by
-      rw [pqs_pf, psqs_pf]
+    _ = pqs * psqs := by rw [pqs_pf, psqs_pf]
     
 
 /-- Exponentiate two expressions.
@@ -1075,34 +1042,28 @@ unsafe def pow_pp : ex Prod → ex Prod → ring_exp_m (ex Prod)
 
 theorem pow_p_pf_one {ps ps' : α} {qs : ℕ} : ps = ps' → qs = succ zero → ps ^ qs = ps' := fun ps_pf qs_pf =>
   calc
-    ps ^ qs = ps' ^ 1 := by
-      rw [ps_pf, qs_pf]
+    ps ^ qs = ps' ^ 1 := by rw [ps_pf, qs_pf]
     _ = ps' := pow_oneₓ _
     
 
 theorem pow_p_pf_zero {ps : α} {qs qs' : ℕ} : ps = 0 → qs = succ qs' → ps ^ qs = 0 := fun ps_pf qs_pf =>
   calc
-    ps ^ qs = 0 ^ succ qs' := by
-      rw [ps_pf, qs_pf]
+    ps ^ qs = 0 ^ succ qs' := by rw [ps_pf, qs_pf]
     _ = 0 := zero_pow (succ_posₓ qs')
     
 
 theorem pow_p_pf_succ {ps pqqs : α} {qs qs' : ℕ} : qs = succ qs' → ps * ps ^ qs' = pqqs → ps ^ qs = pqqs :=
   fun qs_pf pqqs_pf =>
   calc
-    ps ^ qs = ps ^ succ qs' := by
-      rw [qs_pf]
+    ps ^ qs = ps ^ succ qs' := by rw [qs_pf]
     _ = ps * ps ^ qs' := pow_succₓ _ _
-    _ = pqqs := by
-      rw [pqqs_pf]
+    _ = pqqs := by rw [pqqs_pf]
     
 
 theorem pow_p_pf_singleton {pps p pqs : α} {qs : ℕ} : pps = p + 0 → p ^ qs = pqs → pps ^ qs = pqs :=
-  fun pps_pf pqs_pf => by
-  rw [pps_pf, add_zeroₓ, pqs_pf]
+  fun pps_pf pqs_pf => by rw [pps_pf, add_zeroₓ, pqs_pf]
 
-theorem pow_p_pf_cons {ps ps' : α} {qs qs' : ℕ} : ps = ps' → qs = qs' → ps ^ qs = ps' ^ qs' := by
-  cc
+theorem pow_p_pf_cons {ps ps' : α} {qs qs' : ℕ} : ps = ps' → qs = qs' → ps ^ qs = ps' ^ qs' := by cc
 
 /-- Exponentiate two expressions.
 
@@ -1149,16 +1110,14 @@ unsafe def pow_p : ex Sum → ex Prod → ring_exp_m (ex Sum)
 
 theorem pow_pf_zero {ps : α} {qs : ℕ} : qs = 0 → ps ^ qs = 1 := fun qs_pf =>
   calc
-    ps ^ qs = ps ^ 0 := by
-      rw [qs_pf]
+    ps ^ qs = ps ^ 0 := by rw [qs_pf]
     _ = 1 := pow_zeroₓ _
     
 
 theorem pow_pf_sum {ps psqqs : α} {qqs q qs : ℕ} : qqs = q + qs → ps ^ q * ps ^ qs = psqqs → ps ^ qqs = psqqs :=
   fun qqs_pf psqqs_pf =>
   calc
-    ps ^ qqs = ps ^ (q + qs) := by
-      rw [qqs_pf]
+    ps ^ qqs = ps ^ (q + qs) := by rw [qqs_pf]
     _ = ps ^ q * ps ^ qs := pow_addₓ _ _ _
     _ = psqqs := psqqs_pf
     
@@ -1184,20 +1143,15 @@ unsafe def pow : ex Sum → ex Sum → ring_exp_m (ex Sum)
 
 end Exponentiation
 
-theorem simple_pf_sum_zero {p p' : α} : p = p' → p + 0 = p' := by
-  simp
+theorem simple_pf_sum_zero {p p' : α} : p = p' → p + 0 = p' := by simp
 
-theorem simple_pf_prod_one {p p' : α} : p = p' → p * 1 = p' := by
-  simp
+theorem simple_pf_prod_one {p p' : α} : p = p' → p * 1 = p' := by simp
 
-theorem simple_pf_prod_neg_one {α} [Ringₓ α] {p p' : α} : p = p' → p * -1 = -p' := by
-  simp
+theorem simple_pf_prod_neg_one {α} [Ringₓ α] {p p' : α} : p = p' → p * -1 = -p' := by simp
 
-theorem simple_pf_var_one (p : α) : p ^ 1 = p := by
-  simp
+theorem simple_pf_var_one (p : α) : p ^ 1 = p := by simp
 
-theorem simple_pf_exp_one {p p' : α} : p = p' → p ^ 1 = p' := by
-  simp
+theorem simple_pf_exp_one {p p' : α} : p = p' → p ^ 1 = p' := by simp
 
 /-- Give a simpler, more human-readable representation of the normalized expression.
 
@@ -1289,8 +1243,7 @@ unsafe def eval_base (ps : expr) : ring_exp_m (ex Sum) :=
     let a ← resolve_atom ps
     atom_to_sum a
 
-theorem negate_pf {α} [Ringₓ α] {ps ps' : α} : -1 * ps = ps' → -ps = ps' := by
-  simp
+theorem negate_pf {α} [Ringₓ α] {ps ps' : α} : -1 * ps = ps' → -ps = ps' := by simp
 
 /-- Negate an expression by multiplying with `-1`.
 
@@ -1309,8 +1262,7 @@ unsafe def negate (ps : ex Sum) : ring_exp_m (ex Sum) := do
       pure <| ps' ps'_o pf
 
 theorem inverse_pf {α} [DivisionRing α] {ps ps_u ps_p e' e'' : α} :
-    ps = ps_u → ps_u = ps_p → ps_p⁻¹ = e' → e' = e'' → ps⁻¹ = e'' := by
-  cc
+    ps = ps_u → ps_u = ps_p → ps_p⁻¹ = e' → e' = e'' → ps⁻¹ = e'' := by cc
 
 /-- Invert an expression by simplifying, applying `has_inv.inv` and treating the result as an atom.
 
@@ -1333,11 +1285,9 @@ unsafe def inverse (ps : ex Sum) : ring_exp_m (ex Sum) := do
   let e''_o ← lift <| mk_app `` Inv.inv [ps.orig]
   pure <| e'' e''_o pf
 
-theorem sub_pf {α} [Ringₓ α] {ps qs psqs : α} (h : ps + -qs = psqs) : ps - qs = psqs := by
-  rwa [sub_eq_add_neg]
+theorem sub_pf {α} [Ringₓ α] {ps qs psqs : α} (h : ps + -qs = psqs) : ps - qs = psqs := by rwa [sub_eq_add_neg]
 
-theorem div_pf {α} [DivisionRing α] {ps qs psqs : α} (h : ps * qs⁻¹ = psqs) : ps / qs = psqs := by
-  rwa [div_eq_mul_inv]
+theorem div_pf {α} [DivisionRing α] {ps qs psqs : α} (h : ps * qs⁻¹ = psqs) : ps / qs = psqs := by rwa [div_eq_mul_inv]
 
 end Operations
 

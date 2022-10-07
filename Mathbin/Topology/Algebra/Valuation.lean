@@ -44,8 +44,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
       calc
         (v (r * s) : Γ₀) = v r * v s := Valuation.map_mul _ _ _
         _ < γ₀ * γ₀ := mul_lt_mul₀ r_in s_in
-        _ ≤ γ := by
-          exact_mod_cast h
+        _ ≤ γ := by exact_mod_cast h
         ,
     leftMul := by
       rintro x γ
@@ -108,9 +107,7 @@ def mk' (v : Valuation R Γ₀) : Valued R Γ₀ :=
       letI := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
       intro s
       rw [filter.has_basis_iff.mp v.subgroups_basis.has_basis_nhds_zero s]
-      exact
-        exists_congr fun γ => by
-          simpa }
+      exact exists_congr fun γ => by simpa }
 
 variable (R Γ₀) [_i : Valued R Γ₀]
 
@@ -147,7 +144,7 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
 instance (priority := 100) : TopologicalRing R :=
   (to_uniform_space_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.is_topological_ring
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x y «expr ∈ » M)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » M)
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔ F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), (v (y - x) : Γ₀) < γ := by
   rw [to_uniform_space_eq, AddGroupFilterBasis.cauchy_iff]

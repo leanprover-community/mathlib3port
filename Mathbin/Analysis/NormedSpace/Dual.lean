@@ -109,28 +109,23 @@ variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedAddCommGroup E] [Norm
     Compare `continuous_linear_map.op_norm_le_bound`. -/
 theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 𝕜 E, ∥f x∥ ≤ M * ∥f∥) : ∥x∥ ≤ M := by
   classical
-  by_cases' h : x = 0
+  by_cases h:x = 0
   · simp only [h, hMp, norm_zero]
     
   · obtain ⟨f, hf₁, hfx⟩ : ∃ f : E →L[𝕜] 𝕜, ∥f∥ = 1 ∧ f x = ∥x∥ := exists_dual_vector 𝕜 x h
     calc
       ∥x∥ = ∥(∥x∥ : 𝕜)∥ := is_R_or_C.norm_coe_norm.symm
-      _ = ∥f x∥ := by
-        rw [hfx]
+      _ = ∥f x∥ := by rw [hfx]
       _ ≤ M * ∥f∥ := hM f
-      _ = M := by
-        rw [hf₁, mul_oneₓ]
+      _ = M := by rw [hf₁, mul_oneₓ]
       
     
 
 theorem eq_zero_of_forall_dual_eq_zero {x : E} (h : ∀ f : Dual 𝕜 E, f x = (0 : 𝕜)) : x = 0 :=
-  norm_le_zero_iff.mp
-    (norm_le_dual_bound 𝕜 x le_rflₓ fun f => by
-      simp [h f])
+  norm_le_zero_iff.mp (norm_le_dual_bound 𝕜 x le_rflₓ fun f => by simp [h f])
 
 theorem eq_zero_iff_forall_dual_eq_zero (x : E) : x = 0 ↔ ∀ g : Dual 𝕜 E, g x = 0 :=
-  ⟨fun hx => by
-    simp [hx], fun h => eq_zero_of_forall_dual_eq_zero 𝕜 h⟩
+  ⟨fun hx => by simp [hx], fun h => eq_zero_of_forall_dual_eq_zero 𝕜 h⟩
 
 /-- See also `geometric_hahn_banach_point_point`. -/
 theorem eq_iff_forall_dual_eq {x y : E} : x = y ↔ ∀ g : Dual 𝕜 E, g x = g y := by
@@ -175,7 +170,7 @@ theorem polar_univ : Polar 𝕜 (Univ : Set E) = {(0 : dual 𝕜 E)} :=
   (dualPairing 𝕜 E).flip.polar_univ (LinearMap.flip_separating_right.mpr (dual_pairing_separating_left 𝕜 E))
 
 theorem is_closed_polar (s : Set E) : IsClosed (Polar 𝕜 s) := by
-  dunfold NormedSpace.Polar
+  dsimp only [NormedSpace.Polar]
   simp only [LinearMap.polar_eq_Inter, LinearMap.flip_apply]
   refine' is_closed_bInter fun z hz => _
   exact is_closed_Iic.preimage (ContinuousLinearMap.apply 𝕜 𝕜 z).Continuous.norm
@@ -192,7 +187,7 @@ variable {𝕜}
 /-- If `x'` is a dual element such that the norms `∥x' z∥` are bounded for `z ∈ s`, then a
 small scalar multiple of `x'` is in `polar 𝕜 s`. -/
 theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z ∈ s → ∥x' z∥ ≤ ∥c∥) : c⁻¹ • x' ∈ Polar 𝕜 s := by
-  by_cases' c_zero : c = 0
+  by_cases c_zero:c = 0
   · simp only [c_zero, inv_zero, zero_smul]
     exact (dual_pairing 𝕜 E).flip.zero_mem_polar _
     
@@ -201,8 +196,7 @@ theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z 
     intro z hzs
     rw [Eq z]
     apply mul_le_mul (le_of_eqₓ rfl) (hc z hzs) (norm_nonneg _) (norm_nonneg _)
-  have cancel : ∥c⁻¹∥ * ∥c∥ = 1 := by
-    simp only [c_zero, norm_eq_zero, Ne.def, not_false_iff, inv_mul_cancel, norm_inv]
+  have cancel : ∥c⁻¹∥ * ∥c∥ = 1 := by simp only [c_zero, norm_eq_zero, Ne.def, not_false_iff, inv_mul_cancel, norm_inv]
   rwa [cancel] at le
 
 theorem polar_ball_subset_closed_ball_div {c : 𝕜} (hc : 1 < ∥c∥) {r : ℝ} (hr : 0 < r) :
@@ -214,10 +208,7 @@ theorem polar_ball_subset_closed_ball_div {c : 𝕜} (hc : 1 < ∥c∥) {r : ℝ
   refine' ContinuousLinearMap.op_norm_le_of_shell hr hcr.le hc fun x h₁ h₂ => _
   calc
     ∥x' x∥ ≤ 1 := hx' _ h₂
-    _ ≤ ∥c∥ / r * ∥x∥ :=
-      (inv_pos_le_iff_one_le_mul' hcr).1
-        (by
-          rwa [inv_div])
+    _ ≤ ∥c∥ / r * ∥x∥ := (inv_pos_le_iff_one_le_mul' hcr).1 (by rwa [inv_div])
     
 
 variable (𝕜)

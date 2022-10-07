@@ -67,11 +67,8 @@ section Zero
 instance [UniformSpace α] [MonoidWithZeroₓ M] [Zero α] [MulActionWithZero M α] [HasUniformContinuousConstSmul M α] :
     MulActionWithZero M (Completion α) :=
   { Completion.mulAction M α with smul := (· • ·),
-    smul_zero := fun r => by
-      rw [← coe_zero, ← coe_smul, MulActionWithZero.smul_zero r],
-    zero_smul :=
-      (ext' (continuous_const_smul _) continuous_const) fun a => by
-        rw [← coe_smul, zero_smul, coe_zero] }
+    smul_zero := fun r => by rw [← coe_zero, ← coe_smul, MulActionWithZero.smul_zero r],
+    zero_smul := (ext' (continuous_const_smul _) continuous_const) fun a => by rw [← coe_smul, zero_smul, coe_zero] }
 
 end Zero
 
@@ -95,12 +92,10 @@ instance : AddMonoidₓ (Completion α) :=
   { Completion.hasZero, Completion.hasAdd with
     zero_add := fun a =>
       Completion.induction_on a (is_closed_eq (continuous_map₂ continuous_const continuous_id) continuous_id) fun a =>
-        show 0 + (a : Completion α) = a by
-          rw_mod_cast[zero_addₓ],
+        show 0 + (a : Completion α) = a by rw_mod_cast [zero_addₓ],
     add_zero := fun a =>
       Completion.induction_on a (is_closed_eq (continuous_map₂ continuous_id continuous_const) continuous_id) fun a =>
-        show (a : Completion α) + 0 = a by
-          rw_mod_cast[add_zeroₓ],
+        show (a : Completion α) + 0 = a by rw_mod_cast [add_zeroₓ],
     add_assoc := fun a b c =>
       Completion.induction_on₃ a b c
         (is_closed_eq
@@ -108,18 +103,14 @@ instance : AddMonoidₓ (Completion α) :=
             (continuous_snd.comp continuous_snd))
           (continuous_map₂ continuous_fst
             (continuous_map₂ (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd))))
-        fun a b c =>
-        show (a : Completion α) + b + c = a + (b + c) by
-          repeat'
-            rw_mod_cast[add_assocₓ],
+        fun a b c => show (a : Completion α) + b + c = a + (b + c) by repeat' rw_mod_cast [add_assocₓ],
     nsmul := (· • ·),
     nsmul_zero' := fun a =>
       Completion.induction_on a (is_closed_eq continuous_map continuous_const) fun a => by
         rw [← coe_smul, ← coe_zero, zero_smul],
     nsmul_succ' := fun n a =>
       Completion.induction_on a (is_closed_eq continuous_map <| continuous_map₂ continuous_id continuous_map) fun a =>
-        by
-        rw_mod_cast[succ_nsmul] }
+        by rw_mod_cast [succ_nsmul] }
 
 instance : SubNegMonoidₓ (Completion α) :=
   { Completion.addMonoid, Completion.hasNeg, Completion.hasSub with
@@ -127,17 +118,15 @@ instance : SubNegMonoidₓ (Completion α) :=
       Completion.induction_on₂ a b
         (is_closed_eq (continuous_map₂ continuous_fst continuous_snd)
           (continuous_map₂ continuous_fst (Completion.continuous_map.comp continuous_snd)))
-        fun a b => by
-        exact_mod_cast congr_arg coe (sub_eq_add_neg a b),
+        fun a b => by exact_mod_cast congr_arg coe (sub_eq_add_neg a b),
     zsmul := (· • ·),
     zsmul_zero' := fun a =>
       Completion.induction_on a (is_closed_eq continuous_map continuous_const) fun a => by
-        rw_mod_cast[zero_smul]
+        rw_mod_cast [zero_smul]
         rfl,
     zsmul_succ' := fun n a =>
       Completion.induction_on a (is_closed_eq continuous_map <| continuous_map₂ continuous_id continuous_map) fun a =>
-        by
-        rw_mod_cast[show Int.ofNat n.succ • a = a + Int.ofNat n • a from SubNegMonoidₓ.zsmul_succ' n a],
+        by rw_mod_cast [show Int.ofNat n.succ • a = a + Int.ofNat n • a from SubNegMonoidₓ.zsmul_succ' n a],
     zsmul_neg' := fun n a =>
       Completion.induction_on a (is_closed_eq continuous_map <| Completion.continuous_map.comp continuous_map) fun a =>
         by
@@ -150,7 +139,7 @@ instance : AddGroupₓ (Completion α) :=
       Completion.induction_on a
         (is_closed_eq (continuous_map₂ Completion.continuous_map continuous_id) continuous_const) fun a =>
         show -(a : Completion α) + a = 0 by
-          rw_mod_cast[add_left_negₓ]
+          rw_mod_cast [add_left_negₓ]
           rfl }
 
 instance : UniformAddGroup (Completion α) :=
@@ -163,10 +152,8 @@ instance {M} [Monoidₓ M] [DistribMulAction M α] [HasUniformContinuousConstSmu
       induction_on₂ x y
         (is_closed_eq ((continuous_fst.add continuous_snd).const_smul _)
           ((continuous_fst.const_smul _).add (continuous_snd.const_smul _)))
-        fun a b => by
-        simp only [← coe_add, ← coe_smul, smul_add],
-    smul_zero := fun r => by
-      rw [← coe_zero, ← coe_smul, smul_zero r] }
+        fun a b => by simp only [← coe_add, ← coe_smul, smul_add],
+    smul_zero := fun r => by rw [← coe_zero, ← coe_smul, smul_zero r] }
 
 /-- The map from a group to its completion as a group hom. -/
 @[simps]
@@ -220,15 +207,12 @@ open UniformSpace UniformSpace.Completion
 /-- Extension to the completion of a continuous group hom. -/
 def AddMonoidHom.extension [CompleteSpace β] [SeparatedSpace β] (f : α →+ β) (hf : Continuous f) : Completion α →+ β :=
   have hf : UniformContinuous f := uniform_continuous_add_monoid_hom_of_continuous hf
-  { toFun := Completion.extension f,
-    map_zero' := by
-      rw [← coe_zero, extension_coe hf, f.map_zero],
+  { toFun := Completion.extension f, map_zero' := by rw [← coe_zero, extension_coe hf, f.map_zero],
     map_add' := fun a b =>
       Completion.induction_on₂ a b
         (is_closed_eq (continuous_extension.comp continuous_add)
           ((continuous_extension.comp continuous_fst).add (continuous_extension.comp continuous_snd)))
-        fun a b => by
-        rw_mod_cast[extension_coe hf, extension_coe hf, extension_coe hf, f.map_add] }
+        fun a b => by rw_mod_cast [extension_coe hf, extension_coe hf, extension_coe hf, f.map_add] }
 
 theorem AddMonoidHom.extension_coe [CompleteSpace β] [SeparatedSpace β] (f : α →+ β) (hf : Continuous f) (a : α) :
     f.extension hf a = f a :=

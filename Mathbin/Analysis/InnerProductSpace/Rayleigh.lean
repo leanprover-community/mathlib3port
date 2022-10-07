@@ -54,13 +54,11 @@ variable (T : E →L[𝕜] E)
 local notation "rayleigh_quotient" => fun x : E => T.reApplyInnerSelf x / ∥(x : E)∥ ^ 2
 
 theorem rayleigh_smul (x : E) {c : 𝕜} (hc : c ≠ 0) : rayleigh_quotient (c • x) = rayleigh_quotient x := by
-  by_cases' hx : x = 0
+  by_cases hx:x = 0
   · simp [hx]
     
-  have : ∥c∥ ≠ 0 := by
-    simp [hc]
-  have : ∥x∥ ≠ 0 := by
-    simp [hx]
+  have : ∥c∥ ≠ 0 := by simp [hc]
+  have : ∥x∥ ≠ 0 := by simp [hx]
   field_simp [norm_smul, T.re_apply_inner_self_smul]
   ring
 
@@ -69,11 +67,9 @@ theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
   ext a
   constructor
   · rintro ⟨x, hx : x ≠ 0, hxT⟩
-    have : ∥x∥ ≠ 0 := by
-      simp [hx]
+    have : ∥x∥ ≠ 0 := by simp [hx]
     let c : 𝕜 := ↑∥x∥⁻¹ * r
-    have : c ≠ 0 := by
-      simp [c, hx, hr.ne']
+    have : c ≠ 0 := by simp [c, hx, hr.ne']
     refine' ⟨c • x, _, _⟩
     · field_simp [norm_smul, IsROrC.norm_eq_abs, abs_of_nonneg hr.le]
       
@@ -137,25 +133,22 @@ theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : F}
 theorem eq_smul_self_of_is_local_extr_on_real (hT : IsSelfAdjoint T) {x₀ : F}
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (Sphere (0 : F) ∥x₀∥) x₀) : T x₀ = rayleigh_quotient x₀ • x₀ := by
   obtain ⟨a, b, h₁, h₂⟩ := hT.linearly_dependent_of_is_local_extr_on hextr
-  by_cases' hx₀ : x₀ = 0
+  by_cases hx₀:x₀ = 0
   · simp [hx₀]
     
-  by_cases' hb : b = 0
-  · have : a ≠ 0 := by
-      simpa [hb] using h₁
+  by_cases hb:b = 0
+  · have : a ≠ 0 := by simpa [hb] using h₁
     refine' absurd _ hx₀
     apply smul_right_injective F this
     simpa [hb] using h₂
     
   let c : ℝ := -b⁻¹ * a
   have hc : T x₀ = c • x₀ := by
-    have : b * (b⁻¹ * a) = a := by
-      field_simp [mul_comm]
+    have : b * (b⁻¹ * a) = a := by field_simp [mul_comm]
     apply smul_right_injective F hb
     simp [c, eq_neg_of_add_eq_zero_left h₂, ← mul_smul, this]
   convert hc
-  have : ∥x₀∥ ≠ 0 := by
-    simp [hx₀]
+  have : ∥x₀∥ ≠ 0 := by simp [hx₀]
   field_simp
   simpa [inner_smul_left, real_inner_self_eq_norm_mul_norm, sq] using congr_arg (fun x => ⟪x, x₀⟫_ℝ) hc
 
@@ -191,16 +184,13 @@ theorem has_eigenvector_of_is_max_on (hT : IsSelfAdjoint T) {x₀ : E} (hx₀ : 
     (hextr : IsMaxOn T.reApplyInnerSelf (Sphere (0 : E) ∥x₀∥) x₀) :
     HasEigenvector (T : E →ₗ[𝕜] E) (↑(⨆ x : { x : E // x ≠ 0 }, rayleigh_quotient x)) x₀ := by
   convert hT.has_eigenvector_of_is_local_extr_on hx₀ (Or.inr hextr.localize)
-  have hx₀' : 0 < ∥x₀∥ := by
-    simp [hx₀]
-  have hx₀'' : x₀ ∈ sphere (0 : E) ∥x₀∥ := by
-    simp
+  have hx₀' : 0 < ∥x₀∥ := by simp [hx₀]
+  have hx₀'' : x₀ ∈ sphere (0 : E) ∥x₀∥ := by simp
   rw [T.supr_rayleigh_eq_supr_rayleigh_sphere hx₀']
   refine' IsMaxOn.supr_eq hx₀'' _
   intro x hx
-  dsimp'
-  have : ∥x∥ = ∥x₀∥ := by
-    simpa using hx
+  dsimp
+  have : ∥x∥ = ∥x₀∥ := by simpa using hx
   rw [this]
   exact div_le_div_of_le (sq_nonneg ∥x₀∥) (hextr hx)
 
@@ -211,16 +201,13 @@ theorem has_eigenvector_of_is_min_on (hT : IsSelfAdjoint T) {x₀ : E} (hx₀ : 
     (hextr : IsMinOn T.reApplyInnerSelf (Sphere (0 : E) ∥x₀∥) x₀) :
     HasEigenvector (T : E →ₗ[𝕜] E) (↑(⨅ x : { x : E // x ≠ 0 }, rayleigh_quotient x)) x₀ := by
   convert hT.has_eigenvector_of_is_local_extr_on hx₀ (Or.inl hextr.localize)
-  have hx₀' : 0 < ∥x₀∥ := by
-    simp [hx₀]
-  have hx₀'' : x₀ ∈ sphere (0 : E) ∥x₀∥ := by
-    simp
+  have hx₀' : 0 < ∥x₀∥ := by simp [hx₀]
+  have hx₀'' : x₀ ∈ sphere (0 : E) ∥x₀∥ := by simp
   rw [T.infi_rayleigh_eq_infi_rayleigh_sphere hx₀']
   refine' IsMinOn.infi_eq hx₀'' _
   intro x hx
-  dsimp'
-  have : ∥x∥ = ∥x₀∥ := by
-    simpa using hx
+  dsimp
+  have : ∥x∥ = ∥x₀∥ := by simpa using hx
   rw [this]
   exact div_le_div_of_le (sq_nonneg ∥x₀∥) (hextr hx)
 
@@ -246,18 +233,13 @@ theorem has_eigenvalue_supr_of_finite_dimensional (hT : T.IsSymmetric) :
   let T' := hT.to_self_adjoint
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
   have H₁ : IsCompact (sphere (0 : E) ∥x∥) := is_compact_sphere _ _
-  have H₂ : (sphere (0 : E) ∥x∥).Nonempty :=
-    ⟨x, by
-      simp ⟩
+  have H₂ : (sphere (0 : E) ∥x∥).Nonempty := ⟨x, by simp⟩
   -- key point: in finite dimension, a continuous function on the sphere has a max
   obtain ⟨x₀, hx₀', hTx₀⟩ := H₁.exists_forall_ge H₂ T'.val.re_apply_inner_self_continuous.continuous_on
-  have hx₀ : ∥x₀∥ = ∥x∥ := by
-    simpa using hx₀'
-  have : IsMaxOn T'.val.re_apply_inner_self (sphere 0 ∥x₀∥) x₀ := by
-    simpa only [← hx₀] using hTx₀
+  have hx₀ : ∥x₀∥ = ∥x∥ := by simpa using hx₀'
+  have : IsMaxOn T'.val.re_apply_inner_self (sphere 0 ∥x₀∥) x₀ := by simpa only [← hx₀] using hTx₀
   have hx₀_ne : x₀ ≠ 0 := by
-    have : ∥x₀∥ ≠ 0 := by
-      simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
+    have : ∥x₀∥ ≠ 0 := by simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
     simpa [← norm_eq_zero, Ne.def]
   exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_max_on hx₀_ne this)
 
@@ -269,18 +251,13 @@ theorem has_eigenvalue_infi_of_finite_dimensional (hT : T.IsSymmetric) :
   let T' := hT.to_self_adjoint
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
   have H₁ : IsCompact (sphere (0 : E) ∥x∥) := is_compact_sphere _ _
-  have H₂ : (sphere (0 : E) ∥x∥).Nonempty :=
-    ⟨x, by
-      simp ⟩
+  have H₂ : (sphere (0 : E) ∥x∥).Nonempty := ⟨x, by simp⟩
   -- key point: in finite dimension, a continuous function on the sphere has a min
   obtain ⟨x₀, hx₀', hTx₀⟩ := H₁.exists_forall_le H₂ T'.val.re_apply_inner_self_continuous.continuous_on
-  have hx₀ : ∥x₀∥ = ∥x∥ := by
-    simpa using hx₀'
-  have : IsMinOn T'.val.re_apply_inner_self (sphere 0 ∥x₀∥) x₀ := by
-    simpa only [← hx₀] using hTx₀
+  have hx₀ : ∥x₀∥ = ∥x∥ := by simpa using hx₀'
+  have : IsMinOn T'.val.re_apply_inner_self (sphere 0 ∥x₀∥) x₀ := by simpa only [← hx₀] using hTx₀
   have hx₀_ne : x₀ ≠ 0 := by
-    have : ∥x₀∥ ≠ 0 := by
-      simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
+    have : ∥x₀∥ ≠ 0 := by simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
     simpa [← norm_eq_zero, Ne.def]
   exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_min_on hx₀_ne this)
 

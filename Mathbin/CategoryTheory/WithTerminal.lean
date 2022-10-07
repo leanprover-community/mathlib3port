@@ -110,8 +110,7 @@ instance {X : WithTerminal C} : Unique (X ⟶ star) where
     match X with
     | of x => PUnit.unit
     | star => PUnit.unit
-  uniq := by
-    tidy
+  uniq := by tidy
 
 /-- `with_terminal.star` is terminal. -/
 def starTerminal : Limits.IsTerminal (star : WithTerminal C) :=
@@ -197,8 +196,7 @@ def liftToTerminalUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : L
 def homFrom (X : C) : incl.obj X ⟶ star :=
   starTerminal.from _
 
-instance is_iso_of_from_star {X : WithTerminal C} (f : star ⟶ X) : IsIso f := by
-  tidy
+instance is_iso_of_from_star {X : WithTerminal C} (f : star ⟶ X) : IsIso f := by tidy
 
 end WithTerminal
 
@@ -261,8 +259,7 @@ instance {X : WithInitial C} : Unique (star ⟶ X) where
     match X with
     | of x => PUnit.unit
     | star => PUnit.unit
-  uniq := by
-    tidy
+  uniq := by tidy
 
 /-- `with_initial.star` is initial. -/
 def starInitial : Limits.IsInitial (star : WithInitial C) :=
@@ -350,8 +347,7 @@ def liftToInitialUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Li
 def homTo (X : C) : star ⟶ incl.obj X :=
   starInitial.to _
 
-instance is_iso_of_to_star {X : WithInitial C} (f : X ⟶ star) : IsIso f := by
-  tidy
+instance is_iso_of_to_star {X : WithInitial C} (f : X ⟶ star) : IsIso f := by tidy
 
 end WithInitial
 

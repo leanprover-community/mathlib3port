@@ -131,8 +131,7 @@ theorem pure_one_hom_apply (a : α) : pureOneHom a = pure a :=
 variable [One β]
 
 @[simp, to_additive]
-protected theorem map_one [OneHomClass F α β] (φ : F) : map φ 1 = 1 := by
-  rw [Filter.map_one', map_one, pure_one]
+protected theorem map_one [OneHomClass F α β] (φ : F) : map φ 1 = 1 := by rw [Filter.map_one', map_one, pure_one]
 
 end One
 
@@ -182,16 +181,12 @@ section HasInvolutiveInv
 variable [HasInvolutiveInv α] {f : Filter α} {s : Set α}
 
 @[to_additive]
-theorem inv_mem_inv (hs : s ∈ f) : s⁻¹ ∈ f⁻¹ := by
-  rwa [mem_inv, inv_preimage, inv_invₓ]
+theorem inv_mem_inv (hs : s ∈ f) : s⁻¹ ∈ f⁻¹ := by rwa [mem_inv, inv_preimage, inv_invₓ]
 
 /-- Inversion is involutive on `filter α` if it is on `α`. -/
 @[to_additive "Negation is involutive on `filter α` if it is on `α`."]
 protected def hasInvolutiveInv : HasInvolutiveInv (Filter α) :=
-  { Filter.hasInv with
-    inv_inv := fun f =>
-      map_map.trans <| by
-        rw [inv_involutive.comp_self, map_id] }
+  { Filter.hasInv with inv_inv := fun f => map_map.trans <| by rw [inv_involutive.comp_self, map_id] }
 
 end HasInvolutiveInv
 
@@ -434,10 +429,8 @@ variable [MulOneClassₓ α] [MulOneClassₓ β]
 protected def mulOneClass : MulOneClassₓ (Filter α) where
   one := 1
   mul := (· * ·)
-  one_mul := fun f => by
-    simp only [← pure_one, ← map₂_mul, map₂_pure_left, one_mulₓ, map_id']
-  mul_one := fun f => by
-    simp only [← pure_one, ← map₂_mul, map₂_pure_right, mul_oneₓ, map_id']
+  one_mul := fun f => by simp only [← pure_one, ← map₂_mul, map₂_pure_left, one_mulₓ, map_id']
+  mul_one := fun f => by simp only [← pure_one, ← map₂_mul, map₂_pure_right, mul_oneₓ, map_id']
 
 localized [Pointwise]
   attribute [instance]
@@ -525,15 +518,13 @@ theorem top_mul_top : (⊤ : Filter α) * ⊤ = ⊤ :=
 theorem nsmul_top {α : Type _} [AddMonoidₓ α] : ∀ {n : ℕ}, n ≠ 0 → n • (⊤ : Filter α) = ⊤
   | 0 => fun h => (h rfl).elim
   | 1 => fun _ => one_nsmul _
-  | n + 2 => fun _ => by
-    rw [succ_nsmul, nsmul_top n.succ_ne_zero, top_add_top]
+  | n + 2 => fun _ => by rw [succ_nsmul, nsmul_top n.succ_ne_zero, top_add_top]
 
 @[to_additive nsmul_top]
 theorem top_pow : ∀ {n : ℕ}, n ≠ 0 → (⊤ : Filter α) ^ n = ⊤
   | 0 => fun h => (h rfl).elim
   | 1 => fun _ => pow_oneₓ _
-  | n + 2 => fun _ => by
-    rw [pow_succₓ, top_pow n.succ_ne_zero, top_mul_top]
+  | n + 2 => fun _ => by rw [pow_succₓ, top_pow n.succ_ne_zero, top_mul_top]
 
 @[to_additive]
 protected theorem _root_.is_unit.filter : IsUnit a → IsUnit (pure a : Filter α) :=
@@ -679,8 +670,7 @@ theorem is_unit_pure (a : α) : IsUnit (pure a : Filter α) :=
   (Groupₓ.is_unit a).filter
 
 @[simp]
-theorem is_unit_iff_singleton : IsUnit f ↔ ∃ a, f = pure a := by
-  simp only [is_unit_iff, Groupₓ.is_unit, and_trueₓ]
+theorem is_unit_iff_singleton : IsUnit f ↔ ∃ a, f = pure a := by simp only [is_unit_iff, Groupₓ.is_unit, and_trueₓ]
 
 include β
 
@@ -969,8 +959,7 @@ instance smul_comm_class [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ
 @[to_additive]
 instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower α β (Filter γ) :=
-  ⟨fun a b f => by
-    simp only [← map_smul, map_map, smul_assoc]⟩
+  ⟨fun a b f => by simp only [← map_smul, map_map, smul_assoc]⟩
 
 @[to_additive]
 instance is_scalar_tower' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
@@ -992,19 +981,15 @@ instance is_central_scalar [HasSmul α β] [HasSmul αᵐᵒᵖ β] [IsCentralSc
 @[to_additive
       "An additive action of an additive monoid `α` on a type `β` gives an additive action\nof `filter α` on `filter β`"]
 protected def mulAction [Monoidₓ α] [MulAction α β] : MulAction (Filter α) (Filter β) where
-  one_smul := fun f =>
-    map₂_pure_left.trans <| by
-      simp_rw [one_smul, map_id']
+  one_smul := fun f => map₂_pure_left.trans <| by simp_rw [one_smul, map_id']
   mul_smul := fun f g h => map₂_assoc mul_smul
 
 /-- A multiplicative action of a monoid on a type `β` gives a multiplicative action on `filter β`.
 -/
 @[to_additive "An additive action of an additive monoid on a type `β` gives an additive action on\n`filter β`."]
 protected def mulActionFilter [Monoidₓ α] [MulAction α β] : MulAction α (Filter β) where
-  mul_smul := fun a b f => by
-    simp only [← map_smul, map_map, Function.comp, ← mul_smul]
-  one_smul := fun f => by
-    simp only [← map_smul, one_smul, map_id']
+  mul_smul := fun a b f => by simp only [← map_smul, map_map, Function.comp, ← mul_smul]
+  one_smul := fun f => by simp only [← map_smul, one_smul, map_id']
 
 localized [Pointwise]
   attribute [instance] Filter.mulAction Filter.addAction Filter.mulActionFilter Filter.addActionFilter
@@ -1014,17 +999,13 @@ multiplicative action on `filter β`. -/
 protected def distribMulActionFilter [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β] :
     DistribMulAction α (Filter β) where
   smul_add := fun _ _ _ => map_map₂_distrib <| smul_add _
-  smul_zero := fun _ =>
-    (map_pure _ _).trans <| by
-      rw [smul_zero, pure_zero]
+  smul_zero := fun _ => (map_pure _ _).trans <| by rw [smul_zero, pure_zero]
 
 /-- A multiplicative action of a monoid on a monoid `β` gives a multiplicative action on `set β`. -/
 protected def mulDistribMulActionFilter [Monoidₓ α] [Monoidₓ β] [MulDistribMulAction α β] :
     MulDistribMulAction α (Set β) where
   smul_mul := fun _ _ _ => image_image2_distrib <| smul_mul' _
-  smul_one := fun _ =>
-    image_singleton.trans <| by
-      rw [smul_one, singleton_one]
+  smul_one := fun _ => image_singleton.trans <| by rw [smul_one, singleton_one]
 
 localized [Pointwise] attribute [instance] Filter.distribMulActionFilter Filter.mulDistribMulActionFilter
 
@@ -1041,7 +1022,7 @@ because `0 * ⊥ ≠ 0`.
 theorem NeBot.smul_zero_nonneg (hf : f.ne_bot) : 0 ≤ f • (0 : Filter β) :=
   le_smul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
-    ⟨_, _, ha, h₂, smul_zero' _ _⟩
+    ⟨_, _, ha, h₂, smul_zero _⟩
 
 theorem NeBot.zero_smul_nonneg (hg : g.ne_bot) : 0 ≤ (0 : Filter α) • g :=
   le_smul_iff.2 fun t₁ h₁ t₂ h₂ =>

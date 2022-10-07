@@ -63,8 +63,7 @@ variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 theorem snorm_rpow_two_norm_lt_top (f : lp F 2 μ) : snorm (fun x => ∥f x∥ ^ (2 : ℝ)) 1 μ < ∞ := by
-  have h_two : Ennreal.ofReal (2 : ℝ) = 2 := by
-    simp [zero_le_one]
+  have h_two : Ennreal.ofReal (2 : ℝ) = 2 := by simp [zero_le_one]
   rw [snorm_norm_rpow f zero_lt_two, one_mulₓ, h_two]
   exact Ennreal.rpow_lt_top_of_nonneg zero_le_two (Lp.snorm_ne_top f)
 
@@ -74,12 +73,7 @@ theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x
     refine' fun x => le_transₓ (h x) _
     rw [IsROrC.abs_to_real, abs_eq_self.mpr]
     swap
-    · exact
-        add_nonneg
-          (by
-            simp )
-          (by
-            simp )
+    · exact add_nonneg (by simp) (by simp)
       
     refine' le_transₓ _ (half_le_self (add_nonneg (sq_nonneg _) (sq_nonneg _)))
     refine' (le_div_iff (@zero_lt_two ℝ _ _)).mpr ((le_of_eqₓ _).trans (two_mul_le_add_sq _ _))
@@ -117,15 +111,13 @@ theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
     
   congr
   ext1 x
-  have h_two : (2 : ℝ) = ((2 : ℕ) : ℝ) := by
-    simp
+  have h_two : (2 : ℝ) = ((2 : ℕ) : ℝ) := by simp
   rw [← Real.rpow_nat_cast _ 2, ← h_two, ← Ennreal.of_real_rpow_of_nonneg (norm_nonneg _) zero_le_two,
     of_real_norm_eq_coe_nnnorm]
   norm_cast
 
 private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ∥f∥ ^ 2 = IsROrC.re ⟪f, f⟫ := by
-  have h_two : (2 : ℝ≥0∞).toReal = 2 := by
-    simp
+  have h_two : (2 : ℝ≥0∞).toReal = 2 := by simp
   rw [inner_def, integral_inner_eq_sq_snorm, norm_def, ← Ennreal.to_real_pow, IsROrC.of_real_re,
     Ennreal.to_real_eq_to_real (Ennreal.pow_ne_top (Lp.snorm_ne_top f)) _]
   · rw [← Ennreal.rpow_nat_cast, snorm_eq_snorm' Ennreal.two_ne_zero Ennreal.two_ne_top, snorm', ← Ennreal.rpow_mul,
@@ -164,8 +156,7 @@ private theorem smul_left' (f g : α →₂[μ] E) (r : 𝕜) : ⟪r • f, g⟫
 
 instance innerProductSpace : InnerProductSpace 𝕜 (α →₂[μ] E) where
   norm_sq_eq_inner := norm_sq_eq_inner'
-  conj_sym := fun _ _ => by
-    simp_rw [inner_def, ← integral_conj, inner_conj_sym]
+  conj_sym := fun _ _ => by simp_rw [inner_def, ← integral_conj, inner_conj_sym]
   add_left := add_left'
   smul_left := smul_left'
 

@@ -37,10 +37,8 @@ variable {G : SimpleGraph α} {H : SimpleGraph β} {I : SimpleGraph γ} {a a₁ 
 and `(a, b₁)` and `(a, b₂)` if `H` relates `b₁` and `b₂`. -/
 def boxProd (G : SimpleGraph α) (H : SimpleGraph β) : SimpleGraph (α × β) where
   Adj := fun x y => G.Adj x.1 y.1 ∧ x.2 = y.2 ∨ H.Adj x.2 y.2 ∧ x.1 = y.1
-  symm := fun x y => by
-    simp [and_comm, or_comm, eq_comm, adj_comm]
-  loopless := fun x => by
-    simp
+  symm := fun x y => by simp [and_comm, or_comm, eq_comm, adj_comm]
+  loopless := fun x => by simp
 
 -- mathport name: «expr □ »
 infixl:70 " □ " => boxProd
@@ -56,6 +54,14 @@ theorem box_prod_adj_left : (G □ H).Adj (a₁, b) (a₂, b) ↔ G.Adj a₁ a�
 @[simp]
 theorem box_prod_adj_right : (G □ H).Adj (a, b₁) (a, b₂) ↔ H.Adj b₁ b₂ := by
   rw [box_prod_adj, and_iff_leftₓ rfl, or_iff_right fun h : G.adj a a ∧ _ => h.1.Ne rfl]
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem box_prod_neighbor_set (x : α × β) :
+    (G □ H).NeighborSet x = G.NeighborSet x.1 ×ˢ {x.2} ∪ {x.1} ×ˢ H.NeighborSet x.2 := by
+  ext ⟨a', b'⟩
+  simp only [mem_neighbor_set, Set.mem_union, box_prod_adj, Set.mem_prod, Set.mem_singleton_iff]
+  simp only [eq_comm, and_comm]
 
 variable (G H I)
 
@@ -106,16 +112,14 @@ def ofBoxProdLeft [DecidableEq β] [DecidableRel G.Adj] : ∀ {x y : α × β}, 
   | _, _, nil => nil
   | x, z, cons h w =>
     Or.byCases h (fun hG => w.ofBoxProdLeft.cons hG.1) fun hH =>
-      show G.Walk x.1 z.1 by
-        rw [hH.2] <;> exact w.of_box_prod_left
+      show G.Walk x.1 z.1 by rw [hH.2] <;> exact w.of_box_prod_left
 
 /-- Project a walk on `G □ H` to a walk on `H` by discarding the moves in the direction of `G`. -/
 def ofBoxProdRight [DecidableEq α] [DecidableRel H.Adj] : ∀ {x y : α × β}, (G □ H).Walk x y → H.Walk x.2 y.2
   | _, _, nil => nil
   | x, z, cons h w =>
     (Or.symm h).byCases (fun hH => w.ofBoxProdRight.cons hH.1) fun hG =>
-      show H.Walk x.2 z.2 by
-        rw [hG.2] <;> exact w.of_box_prod_right
+      show H.Walk x.2 z.2 by rw [hG.2] <;> exact w.of_box_prod_right
 
 @[simp]
 theorem of_box_prod_left_box_prod_left [DecidableEq β] [DecidableRel G.Adj] :
@@ -176,6 +180,24 @@ protected theorem Connected.of_box_prod_right (h : (G □ H).Connected) : H.Conn
 @[simp]
 theorem box_prod_connected : (G □ H).Connected ↔ G.Connected ∧ H.Connected :=
   ⟨fun h => ⟨h.ofBoxProdLeft, h.ofBoxProdRight⟩, fun h => h.1.boxProd h.2⟩
+
+instance [DecidableEq α] [DecidableEq β] (x : α × β) [Fintypeₓ (G.NeighborSet x.1)] [Fintypeₓ (H.NeighborSet x.2)] :
+    Fintypeₓ ((G □ H).NeighborSet x) := by
+  rw [box_prod_neighbor_set]
+  infer_instance
+
+theorem box_prod_degree (x : α × β) [Fintypeₓ (G.NeighborSet x.1)] [Fintypeₓ (H.NeighborSet x.2)]
+    [Fintypeₓ ((G □ H).NeighborSet x)] : (G □ H).degree x = G.degree x.1 + H.degree x.2 := by
+  classical
+  simp_rw [← card_neighbor_set_eq_degree, box_prod_neighbor_set, ← Set.to_finset_card, Set.to_finset_union]
+  convert Finsetₓ.card_disjoint_union _ <;>
+    simp only [Set.to_finset_prod, Finsetₓ.card_product, Set.to_finset_card, Set.card_singleton, mul_oneₓ, one_mulₓ]
+  · rintro ⟨_, _⟩ q
+    simp only [Finsetₓ.inf_eq_inter, Finsetₓ.mem_inter, Finsetₓ.mem_product, Set.mem_to_finset, mem_neighbor_set,
+      Set.mem_singleton_iff] at q
+    obtain ⟨⟨q, rfl⟩, ⟨rfl, _⟩⟩ := q
+    exact (q.ne rfl).elim
+    
 
 end SimpleGraph
 

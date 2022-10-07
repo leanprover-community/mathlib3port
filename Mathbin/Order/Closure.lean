@@ -95,7 +95,7 @@ theorem ext : ∀ c₁ c₂ : ClosureOperator α, (c₁ : α → α) = (c₂ : �
 
 /-- Constructor for a closure operator using the weaker idempotency axiom: `f (f x) ≤ f x`. -/
 @[simps]
-def mk' (f : α → α) (hf₁ : Monotone f) (hf₂ : ∀ x, x ≤ f x) (hf₃ : ∀ x, f (f x) ≤ f x) : ClosureOperator α where
+def mk' (f : α → α) (hf₁ : Monotoneₓ f) (hf₂ : ∀ x, x ≤ f x) (hf₃ : ∀ x, f (f x) ≤ f x) : ClosureOperator α where
   toFun := f
   monotone' := hf₁
   le_closure' := hf₂
@@ -131,7 +131,7 @@ theorem closure_le_mk₃_iff {f : α → α} {p : α → Prop} {hf : ∀ x, x �
   hmin hxy hy
 
 @[mono]
-theorem monotone : Monotone c :=
+theorem monotone : Monotoneₓ c :=
   c.monotone'
 
 /-- Every element is less than its closure. This property is sometimes referred to as extensivity or
@@ -295,7 +295,7 @@ theorem ext : ∀ l₁ l₂ : LowerAdjoint u, (l₁ : α → β) = (l₂ : α �
     exact h
 
 @[mono]
-theorem monotone : Monotone (u ∘ l) :=
+theorem monotone : Monotoneₓ (u ∘ l) :=
   l.gc.monotone_u.comp l.gc.monotone_l
 
 /-- Every element is less than its closure. This property is sometimes referred to as extensivity or

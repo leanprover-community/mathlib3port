@@ -63,11 +63,8 @@ structure HalfBraiding (X : C) where
     ∀ U U',
       (β (U ⊗ U')).Hom =
         (α_ _ _ _).inv ≫ ((β U).Hom ⊗ 𝟙 U') ≫ (α_ _ _ _).Hom ≫ (𝟙 U ⊗ (β U').Hom) ≫ (α_ _ _ _).inv := by
-    run_tac
-      obviously
-  naturality' : ∀ {U U'} (f : U ⟶ U'), (𝟙 X ⊗ f) ≫ (β U').Hom = (β U).Hom ≫ (f ⊗ 𝟙 X) := by
-    run_tac
-      obviously
+    obviously
+  naturality' : ∀ {U U'} (f : U ⟶ U'), (𝟙 X ⊗ f) ≫ (β U').Hom = (β U).Hom ≫ (f ⊗ 𝟙 X) := by obviously
 
 restate_axiom half_braiding.monoidal'
 
@@ -97,9 +94,7 @@ variable {C}
 @[ext, nolint has_nonempty_instance]
 structure Hom (X Y : Center C) where
   f : X.1 ⟶ Y.1
-  comm' : ∀ U, (f ⊗ 𝟙 U) ≫ (Y.2.β U).Hom = (X.2.β U).Hom ≫ (𝟙 U ⊗ f) := by
-    run_tac
-      obviously
+  comm' : ∀ U, (f ⊗ 𝟙 U) ≫ (Y.2.β U).Hom = (X.2.β U).Hom ≫ (𝟙 U ⊗ f) := by obviously
 
 restate_axiom hom.comm'
 
@@ -132,9 +127,7 @@ a morphism whose underlying morphism is an isomorphism.
 @[simps]
 def isoMk {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : X ≅ Y where
   Hom := f
-  inv :=
-    ⟨inv f.f, fun U => by
-      simp [← cancel_epi (f.f ⊗ 𝟙 U), ← comp_tensor_id_assoc, ← id_tensor_comp]⟩
+  inv := ⟨inv f.f, fun U => by simp [← cancel_epi (f.f ⊗ 𝟙 U), ← comp_tensor_id_assoc, ← id_tensor_comp]⟩
 
 instance is_iso_of_f_is_iso {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : IsIso f := by
   change is_iso (iso_mk f).Hom
@@ -143,14 +136,14 @@ instance is_iso_of_f_is_iso {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : IsIso f
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
 def tensorObj (X Y : Center C) : Center C :=
   ⟨X.1 ⊗ Y.1,
     { β := fun U => α_ _ _ _ ≪≫ (Iso.refl X.1 ⊗ Y.2.β U) ≪≫ (α_ _ _ _).symm ≪≫ (X.2.β U ⊗ Iso.refl Y.1) ≪≫ α_ _ _ _,
       monoidal' := fun U U' => by
-        dsimp'
+        dsimp
         simp only [comp_tensor_id, id_tensor_comp, category.assoc, half_braiding.monoidal]
         -- On the RHS, we'd like to commute `((X.snd.β U).hom ⊗ 𝟙 Y.fst) ⊗ 𝟙 U'`
         -- and `𝟙 U ⊗ 𝟙 X.fst ⊗ (Y.snd.β U').hom` past each other,
@@ -165,9 +158,9 @@ def tensorObj (X Y : Center C) : Center C :=
         slice_rhs 7 7 => rw [associator_inv_conjugation]
         slice_rhs 6 6 => rw [associator_conjugation]
         slice_rhs 3 3 => rw [associator_conjugation]
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]",
+        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]",
       naturality' := fun U U' f => by
-        dsimp'
+        dsimp
         rw [category.assoc, category.assoc, category.assoc, category.assoc, id_tensor_associator_naturality_assoc, ←
           id_tensor_comp_assoc, half_braiding.naturality, id_tensor_comp_assoc, associator_inv_naturality_assoc, ←
           comp_tensor_id_assoc, half_braiding.naturality, comp_tensor_id_assoc, associator_naturality, ← tensor_id] }⟩
@@ -178,7 +171,7 @@ def tensorObj (X Y : Center C) : Center C :=
 def tensorHom {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : tensorObj X₁ X₂ ⟶ tensorObj Y₁ Y₂ where
   f := f.f ⊗ g.f
   comm' := fun U => by
-    dsimp'
+    dsimp
     rw [category.assoc, category.assoc, category.assoc, category.assoc, associator_naturality_assoc, ←
       tensor_id_comp_id_tensor, category.assoc, ← id_tensor_comp_assoc, g.comm, id_tensor_comp_assoc,
       tensor_id_comp_id_tensor_assoc, ← id_tensor_comp_tensor_id, category.assoc, associator_inv_naturality_assoc,
@@ -190,27 +183,25 @@ def tensorHom {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶
 @[simps]
 def tensorUnit : Center C :=
   ⟨𝟙_ C,
-    { β := fun U => λ_ U ≪≫ (ρ_ U).symm,
-      monoidal' := fun U U' => by
-        simp ,
+    { β := fun U => λ_ U ≪≫ (ρ_ U).symm, monoidal' := fun U U' => by simp,
       naturality' := fun U U' f => by
-        dsimp'
+        dsimp
         rw [left_unitor_naturality_assoc, right_unitor_inv_naturality, category.assoc] }⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def associator (X Y Z : Center C) : tensorObj (tensorObj X Y) Z ≅ tensorObj X (tensorObj Y Z) :=
   isoMk
     ⟨(α_ X.1 Y.1 Z.1).Hom, fun U => by
-      dsimp'
+      dsimp
       simp only [comp_tensor_id, id_tensor_comp, ← tensor_id, associator_conjugation]
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"⟩
+      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"⟩
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def leftUnitor (X : Center C) : tensorObj tensorUnit X ≅ X :=
   isoMk
     ⟨(λ_ X.1).Hom, fun U => by
-      dsimp'
+      dsimp
       simp only [category.comp_id, category.assoc, tensor_inv_hom_id, comp_tensor_id, tensor_id_comp_id_tensor,
         triangle_assoc_comp_right_inv]
       rw [← left_unitor_tensor, left_unitor_naturality, left_unitor_tensor'_assoc]⟩
@@ -219,11 +210,11 @@ def leftUnitor (X : Center C) : tensorObj tensorUnit X ≅ X :=
 def rightUnitor (X : Center C) : tensorObj X tensorUnit ≅ X :=
   isoMk
     ⟨(ρ_ X.1).Hom, fun U => by
-      dsimp'
+      dsimp
       simp only [tensor_id_comp_id_tensor_assoc, triangle_assoc, id_tensor_comp, category.assoc]
       rw [← tensor_id_comp_id_tensor_assoc (ρ_ U).inv, cancel_epi, ← right_unitor_tensor_inv_assoc, ←
         right_unitor_inv_naturality_assoc]
-      simp ⟩
+      simp⟩
 
 section
 
@@ -310,7 +301,7 @@ def forget : MonoidalFunctor (Center C) C where
 
 instance :
     ReflectsIsomorphisms (forget C).toFunctor where reflects := fun A B f i => by
-    dsimp'  at i
+    dsimp at i
     skip
     change is_iso (iso_mk f).Hom
     infer_instance
@@ -324,17 +315,17 @@ end
 def braiding (X Y : Center C) : X ⊗ Y ≅ Y ⊗ X :=
   isoMk
     ⟨(X.2.β Y.1).Hom, fun U => by
-      dsimp'
+      dsimp
       simp only [category.assoc]
       rw [← is_iso.inv_comp_eq, is_iso.iso.inv_hom, ← half_braiding.monoidal_assoc, ← half_braiding.naturality_assoc,
         half_braiding.monoidal]
-      simp ⟩
+      simp⟩
 
 instance braidedCategoryCenter : BraidedCategory (Center C) where
   braiding := braiding
   braiding_naturality' := fun X Y X' Y' f g => by
     ext
-    dsimp'
+    dsimp
     rw [← tensor_id_comp_id_tensor, category.assoc, half_braiding.naturality, f.comm_assoc, id_tensor_comp_tensor_id]
 
 -- `obviously` handles the hexagon axioms
@@ -364,13 +355,13 @@ def ofBraided : MonoidalFunctor C (Center C) where
   ε :=
     { f := 𝟙 _,
       comm' := fun U => by
-        dsimp'
+        dsimp
         rw [tensor_id, category.id_comp, tensor_id, category.comp_id, ← braiding_right_unitor, category.assoc,
           iso.hom_inv_id, category.comp_id] }
   μ := fun X Y =>
     { f := 𝟙 _,
       comm' := fun U => by
-        dsimp'
+        dsimp
         rw [tensor_id, tensor_id, category.id_comp, category.comp_id, ← iso.inv_comp_eq, ← category.assoc, ←
           category.assoc, ← iso.comp_inv_eq, category.assoc, hexagon_reverse, category.assoc] }
 

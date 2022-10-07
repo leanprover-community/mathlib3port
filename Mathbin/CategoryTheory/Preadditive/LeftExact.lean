@@ -47,8 +47,7 @@ def isLimitMapConeBinaryFanOfPreservesKernels {X Y Z : C} (π₁ : Z ⟶ X) (π�
     [PreservesLimit (parallelPair π₂ 0) F] (i : IsLimit (BinaryFan.mk π₁ π₂)) :
     IsLimit (F.mapCone (BinaryFan.mk π₁ π₂)) := by
   let bc := binary_bicone.of_limit_cone i
-  let presf : preserves_limit (parallel_pair bc.snd 0) F := by
-    simpa
+  let presf : preserves_limit (parallel_pair bc.snd 0) F := by simpa
   let hf : is_limit bc.snd_kernel_fork := binary_bicone.is_limit_snd_kernel_fork i
   exact
     (is_limit_map_cone_binary_fan_equiv F π₁ π₂).invFun
@@ -82,7 +81,7 @@ def preservesEqualizerOfPreservesKernels [∀ {X Y} (f : X ⟶ Y), PreservesLimi
   constructor
   intro c i
   let c' := is_limit_kernel_fork_of_fork (i.of_iso_limit (fork.iso_fork_of_ι c))
-  dsimp' only [kernel_fork_of_fork_of_ι]  at c'
+  dsimp only [kernel_fork_of_fork_of_ι] at c'
   let iFc := is_limit_fork_map_of_is_limit' F _ c'
   apply is_limit.of_iso_limit _ ((cones.functoriality _ F).mapIso (fork.iso_fork_of_ι c).symm)
   apply (is_limit_map_cone_fork_equiv F (fork.condition c)).invFun
@@ -122,8 +121,7 @@ def isColimitMapCoconeBinaryCofanOfPreservesCokernels {X Y Z : C} (ι₁ : X ⟶
     [PreservesColimit (parallelPair ι₂ 0) F] (i : IsColimit (BinaryCofan.mk ι₁ ι₂)) :
     IsColimit (F.mapCocone (BinaryCofan.mk ι₁ ι₂)) := by
   let bc := binary_bicone.of_colimit_cocone i
-  let presf : preserves_colimit (parallel_pair bc.inr 0) F := by
-    simpa
+  let presf : preserves_colimit (parallel_pair bc.inr 0) F := by simpa
   let hf : is_colimit bc.inr_cokernel_cofork := binary_bicone.is_colimit_inr_cokernel_cofork i
   exact
     (is_colimit_map_cocone_binary_cofan_equiv F ι₁ ι₂).invFun
@@ -159,16 +157,12 @@ def preservesCoequalizerOfPreservesCokernels [∀ {X Y} (f : X ⟶ Y), Preserves
   constructor
   intro c i
   let c' := is_colimit_cokernel_cofork_of_cofork (i.of_iso_colimit (cofork.iso_cofork_of_π c))
-  dsimp' only [cokernel_cofork_of_cofork_of_π]  at c'
+  dsimp only [cokernel_cofork_of_cofork_of_π] at c'
   let iFc := is_colimit_cofork_map_of_is_colimit' F _ c'
   apply is_colimit.of_iso_colimit _ ((cocones.functoriality _ F).mapIso (cofork.iso_cofork_of_π c).symm)
   apply (is_colimit_map_cocone_cofork_equiv F (cofork.condition c)).invFun
   let p : parallel_pair (F.map (f - g)) 0 ≅ parallel_pair (F.map f - F.map g) 0 :=
-    parallel_pair.ext (iso.refl _) (iso.refl _)
-      (by
-        simp )
-      (by
-        simp )
+    parallel_pair.ext (iso.refl _) (iso.refl _) (by simp) (by simp)
   refine'
     is_colimit.of_iso_colimit
       (is_colimit_cofork_of_cokernel_cofork ((is_colimit.precompose_hom_equiv p.symm _).symm iFc)) _

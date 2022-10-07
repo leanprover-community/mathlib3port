@@ -98,8 +98,7 @@ instance : CoeFun (X →[M'] Y) fun _ => X → Y :=
 
 instance : SmulHomClass (X →[M'] Y) M' X Y where
   coe := MulActionHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_smul := MulActionHom.map_smul'
 
 variable {M M' X Y}
@@ -133,8 +132,7 @@ variable {M M' X Y Z}
 def comp (g : Y →[M'] Z) (f : X →[M'] Y) : X →[M'] Z :=
   ⟨g ∘ f, fun m x =>
     calc
-      g (f (m • x)) = g (m • f x) := by
-        rw [f.map_smul]
+      g (f (m • x)) = g (m • f x) := by rw [f.map_smul]
       _ = m • g (f x) := g.map_smul _ _
       ⟩
 
@@ -144,13 +142,11 @@ theorem comp_apply (g : Y →[M'] Z) (f : X →[M'] Y) (x : X) : g.comp f x = g 
 
 @[simp]
 theorem id_comp (f : X →[M'] Y) : (MulActionHom.id M').comp f = f :=
-  ext fun x => by
-    rw [comp_apply, id_apply]
+  ext fun x => by rw [comp_apply, id_apply]
 
 @[simp]
 theorem comp_id (f : X →[M'] Y) : f.comp (MulActionHom.id M') = f :=
-  ext fun x => by
-    rw [comp_apply, id_apply]
+  ext fun x => by rw [comp_apply, id_apply]
 
 variable {A B}
 
@@ -160,12 +156,9 @@ def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h�
   toFun := g
   map_smul' := fun m x =>
     calc
-      g (m • x) = g (m • f (g x)) := by
-        rw [h₂]
-      _ = g (f (m • g x)) := by
-        rw [f.map_smul]
-      _ = m • g x := by
-        rw [h₁]
+      g (m • x) = g (m • f (g x)) := by rw [h₂]
+      _ = g (f (m • g x)) := by rw [f.map_smul]
+      _ = m • g x := by rw [h₁]
       
 
 end MulActionHom
@@ -174,9 +167,9 @@ end MulActionHom
 structure DistribMulActionHom extends A →[M] B, A →+ B
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident distrib_mul_action_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident distrib_mul_action_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident distrib_mul_action_hom.to_mul_action_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident distrib_mul_action_hom.to_mul_action_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- mathport name: «expr →+[ ] »
 notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
 
@@ -203,8 +196,7 @@ instance : CoeFun (A →+[M] B) fun _ => A → B :=
 
 instance : DistribMulActionHomClass (A →+[M] B) M A B where
   coe := DistribMulActionHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_smul := DistribMulActionHom.map_smul'
   map_zero := DistribMulActionHom.map_zero'
   map_add := DistribMulActionHom.map_add'
@@ -269,9 +261,7 @@ theorem id_apply (x : A) : DistribMulActionHom.id M x = x :=
 variable {M A B C}
 
 instance : Zero (A →+[M] B) :=
-  ⟨{ (0 : A →+ B) with
-      map_smul' := by
-        simp }⟩
+  ⟨{ (0 : A →+ B) with map_smul' := by simp }⟩
 
 instance : One (A →+[M] A) :=
   ⟨DistribMulActionHom.id M⟩
@@ -303,13 +293,11 @@ theorem comp_apply (g : B →+[M] C) (f : A →+[M] B) (x : A) : g.comp f x = g 
 
 @[simp]
 theorem id_comp (f : A →+[M] B) : (DistribMulActionHom.id M).comp f = f :=
-  ext fun x => by
-    rw [comp_apply, id_apply]
+  ext fun x => by rw [comp_apply, id_apply]
 
 @[simp]
 theorem comp_id (f : A →+[M] B) : f.comp (DistribMulActionHom.id M) = f :=
-  ext fun x => by
-    rw [comp_apply, id_apply]
+  ext fun x => by rw [comp_apply, id_apply]
 
 /-- The inverse of a bijective `distrib_mul_action_hom` is a `distrib_mul_action_hom`. -/
 @[simps]
@@ -337,9 +325,9 @@ end DistribMulActionHom
 structure MulSemiringActionHom extends R →+[M] S, R →+* S
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident mul_semiring_action_hom.to_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident mul_semiring_action_hom.to_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident mul_semiring_action_hom.to_distrib_mul_action_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident mul_semiring_action_hom.to_distrib_mul_action_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- mathport name: «expr →+*[ ] »
 notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
 
@@ -366,8 +354,7 @@ instance : CoeFun (R →+*[M] S) fun _ => R → S :=
 
 instance : MulSemiringActionHomClass (R →+*[M] S) M R S where
   coe := MulSemiringActionHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_smul := MulSemiringActionHom.map_smul'
   map_zero := MulSemiringActionHom.map_zero'
   map_add := MulSemiringActionHom.map_add'
@@ -434,13 +421,11 @@ theorem comp_apply (g : S →+*[M] T) (f : R →+*[M] S) (x : R) : g.comp f x = 
 
 @[simp]
 theorem id_comp (f : R →+*[M] S) : (MulSemiringActionHom.id M).comp f = f :=
-  ext fun x => by
-    rw [comp_apply, id_apply]
+  ext fun x => by rw [comp_apply, id_apply]
 
 @[simp]
 theorem comp_id (f : R →+*[M] S) : f.comp (MulSemiringActionHom.id M) = f :=
-  ext fun x => by
-    rw [comp_apply, id_apply]
+  ext fun x => by rw [comp_apply, id_apply]
 
 end MulSemiringActionHom
 

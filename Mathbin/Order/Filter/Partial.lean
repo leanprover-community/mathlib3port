@@ -55,11 +55,9 @@ open Filter
 that `rel.core` generalizes `set.preimage`. -/
 def rmap (r : Rel α β) (l : Filter α) : Filter β where
   Sets := { s | r.Core s ∈ l }
-  univ_sets := by
-    simp
+  univ_sets := by simp
   sets_of_superset := fun s t hs st => mem_of_superset hs <| Rel.core_mono _ st
-  inter_sets := fun s t hs ht => by
-    simp [Rel.core_inter, inter_mem hs ht]
+  inter_sets := fun s t hs ht => by simp [Rel.core_inter, inter_mem hs ht]
 
 theorem rmap_sets (r : Rel α β) (l : Filter α) : (l.rmap r).Sets = r.Core ⁻¹' l.Sets :=
   rfl
@@ -70,8 +68,7 @@ theorem mem_rmap (r : Rel α β) (l : Filter α) (s : Set β) : s ∈ l.rmap r �
 
 @[simp]
 theorem rmap_rmap (r : Rel α β) (s : Rel β γ) (l : Filter α) : rmap s (rmap r l) = rmap (r.comp s) l :=
-  filter_eq <| by
-    simp [rmap_sets, Set.Preimage, Rel.core_comp]
+  filter_eq <| by simp [rmap_sets, Set.Preimage, Rel.core_comp]
 
 @[simp]
 theorem rmap_compose (r : Rel α β) (s : Rel β γ) : rmap s ∘ rmap r = rmap (r.comp s) :=
@@ -213,8 +210,7 @@ theorem pmap_res (l : Filter α) (s : Set α) (f : α → β) : pmap (Pfun.res f
   rfl
 
 theorem tendsto_iff_ptendsto (l₁ : Filter α) (l₂ : Filter β) (s : Set α) (f : α → β) :
-    Tendsto f (l₁ ⊓ 𝓟 s) l₂ ↔ Ptendsto (Pfun.res f s) l₁ l₂ := by
-  simp only [tendsto, ptendsto, pmap_res]
+    Tendsto f (l₁ ⊓ 𝓟 s) l₂ ↔ Ptendsto (Pfun.res f s) l₁ l₂ := by simp only [tendsto, ptendsto, pmap_res]
 
 theorem tendsto_iff_ptendsto_univ (l₁ : Filter α) (l₂ : Filter β) (f : α → β) :
     Tendsto f l₁ l₂ ↔ Ptendsto (Pfun.res f Set.Univ) l₁ l₂ := by

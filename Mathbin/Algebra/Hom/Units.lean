@@ -36,10 +36,7 @@ variable {α : Type _} {M : Type u} {N : Type v} {P : Type w} [Monoidₓ M] [Mon
 @[to_additive "The `add_group` homomorphism on `add_unit`s induced by an `add_monoid_hom`."]
 def map (f : M →* N) : Mˣ →* Nˣ :=
   MonoidHom.mk'
-    (fun u =>
-      ⟨f u.val, f u.inv, by
-        rw [← f.map_mul, u.val_inv, f.map_one], by
-        rw [← f.map_mul, u.inv_val, f.map_one]⟩)
+    (fun u => ⟨f u.val, f u.inv, by rw [← f.map_mul, u.val_inv, f.map_one], by rw [← f.map_mul, u.inv_val, f.map_one]⟩)
     fun x y => ext (f.map_mul x y)
 
 @[simp, to_additive]
@@ -57,8 +54,7 @@ theorem map_comp (f : M →* N) (g : N →* P) : map (g.comp f) = (map g).comp (
 variable (M)
 
 @[simp, to_additive]
-theorem map_id : map (MonoidHom.id M) = MonoidHom.id Mˣ := by
-  ext <;> rfl
+theorem map_id : map (MonoidHom.id M) = MonoidHom.id Mˣ := by ext <;> rfl
 
 /-- Coercion `Mˣ → M` as a monoid homomorphism. -/
 @[to_additive "Coercion `add_units M → M` as an add_monoid homomorphism."]
@@ -88,8 +84,7 @@ theorem coe_zpow : ∀ (u : αˣ) (n : ℤ), ((u ^ n : αˣ) : α) = u ^ n :=
   (Units.coeHom α).map_zpow
 
 @[field_simps]
-theorem _root_.divp_eq_div (a : α) (u : αˣ) : a /ₚ u = a / u := by
-  rw [div_eq_mul_inv, divp, u.coe_inv]
+theorem _root_.divp_eq_div (a : α) (u : αˣ) : a /ₚ u = a / u := by rw [div_eq_mul_inv, divp, u.coe_inv]
 
 @[simp, to_additive]
 theorem _root_.map_units_inv {F : Type _} [MonoidHomClass F M α] (f : F) (u : Units M) : f ↑u⁻¹ = (f u)⁻¹ :=
@@ -104,9 +99,7 @@ this map is a monoid homomorphism too. -/
 def liftRight (f : M →* N) (g : M → Nˣ) (h : ∀ x, ↑(g x) = f x) : M →* Nˣ where
   toFun := g
   map_one' := Units.ext <| (h 1).symm ▸ f.map_one
-  map_mul' := fun x y =>
-    Units.ext <| by
-      simp only [h, coe_mul, f.map_mul]
+  map_mul' := fun x y => Units.ext <| by simp only [h, coe_mul, f.map_mul]
 
 @[simp, to_additive]
 theorem coe_lift_right {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) (x) : (liftRight f g h x : N) = f x :=
@@ -114,13 +107,11 @@ theorem coe_lift_right {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x
 
 @[simp, to_additive]
 theorem mul_lift_right_inv {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) (x) : f x * ↑(liftRight f g h x)⁻¹ = 1 :=
-  by
-  rw [Units.mul_inv_eq_iff_eq_mul, one_mulₓ, coe_lift_right]
+  by rw [Units.mul_inv_eq_iff_eq_mul, one_mulₓ, coe_lift_right]
 
 @[simp, to_additive]
 theorem lift_right_inv_mul {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) (x) : ↑(liftRight f g h x)⁻¹ * f x = 1 :=
-  by
-  rw [Units.inv_mul_eq_iff_eq_mul, mul_oneₓ, coe_lift_right]
+  by rw [Units.inv_mul_eq_iff_eq_mul, mul_oneₓ, coe_lift_right]
 
 end Units
 
@@ -155,8 +146,7 @@ theorem map [MonoidHomClass F M N] (f : F) {x : M} (h : IsUnit x) : IsUnit (f x)
 
 @[to_additive]
 theorem of_left_inverse [MonoidHomClass F M N] [MonoidHomClass G N M] {f : F} {x : M} (g : G)
-    (hfg : Function.LeftInverse g f) (h : IsUnit (f x)) : IsUnit x := by
-  simpa only [hfg x] using h.map g
+    (hfg : Function.LeftInverse g f) (h : IsUnit (f x)) : IsUnit x := by simpa only [hfg x] using h.map g
 
 @[to_additive]
 theorem _root_.is_unit_map_of_left_inverse [MonoidHomClass F M N] [MonoidHomClass G N M] {f : F} {x : M} (g : G)
@@ -214,8 +204,7 @@ protected theorem inv_mul_cancel_right (h : IsUnit b) (a : α) : a * b⁻¹ * b 
   h.unit'.inv_mul_cancel_right _
 
 @[to_additive]
-protected theorem div_self (h : IsUnit a) : a / a = 1 := by
-  rw [div_eq_mul_inv, h.mul_inv_cancel]
+protected theorem div_self (h : IsUnit a) : a / a = 1 := by rw [div_eq_mul_inv, h.mul_inv_cancel]
 
 @[to_additive]
 protected theorem eq_mul_inv_iff_mul_eq (h : IsUnit c) : a = b * c⁻¹ ↔ a * c = b :=
@@ -258,12 +247,10 @@ protected theorem mul_div_cancel (h : IsUnit b) (a : α) : a * b / b = a := by
   rw [div_eq_mul_inv, h.mul_inv_cancel_right]
 
 @[to_additive]
-protected theorem mul_one_div_cancel (h : IsUnit a) : a * (1 / a) = 1 := by
-  simp [h]
+protected theorem mul_one_div_cancel (h : IsUnit a) : a * (1 / a) = 1 := by simp [h]
 
 @[to_additive]
-protected theorem one_div_mul_cancel (h : IsUnit a) : 1 / a * a = 1 := by
-  simp [h]
+protected theorem one_div_mul_cancel (h : IsUnit a) : 1 / a * a = 1 := by simp [h]
 
 @[to_additive]
 theorem inv : IsUnit a → IsUnit a⁻¹ := by
@@ -282,12 +269,10 @@ protected theorem div_left_inj (h : IsUnit c) : a / c = b / c ↔ a = b := by
   exact Units.mul_left_inj h.inv.unit'
 
 @[to_additive]
-protected theorem div_eq_iff (h : IsUnit b) : a / b = c ↔ a = c * b := by
-  rw [div_eq_mul_inv, h.mul_inv_eq_iff_eq_mul]
+protected theorem div_eq_iff (h : IsUnit b) : a / b = c ↔ a = c * b := by rw [div_eq_mul_inv, h.mul_inv_eq_iff_eq_mul]
 
 @[to_additive]
-protected theorem eq_div_iff (h : IsUnit c) : a = b / c ↔ a * c = b := by
-  rw [div_eq_mul_inv, h.eq_mul_inv_iff_mul_eq]
+protected theorem eq_div_iff (h : IsUnit c) : a = b / c ↔ a * c = b := by rw [div_eq_mul_inv, h.eq_mul_inv_iff_mul_eq]
 
 @[to_additive]
 protected theorem div_eq_of_eq_mul (h : IsUnit b) : a = c * b → a / b = c :=
@@ -310,8 +295,7 @@ protected theorem mul_div_mul_right (h : IsUnit c) (a b : α) : a * c / (b * c) 
   simp only [div_eq_mul_inv, mul_inv_rev, mul_assoc, h.mul_inv_cancel_left]
 
 @[to_additive]
-protected theorem mul_mul_div (a : α) (h : IsUnit b) : a * b * (1 / b) = a := by
-  simp [h]
+protected theorem mul_mul_div (a : α) (h : IsUnit b) : a * b * (1 / b) = a := by simp [h]
 
 end DivisionMonoid
 
@@ -320,16 +304,13 @@ section DivisionCommMonoid
 variable [DivisionCommMonoid α] {a b c d : α}
 
 @[to_additive]
-protected theorem div_mul_right (h : IsUnit a) (b : α) : a / (a * b) = 1 / b := by
-  rw [mul_comm, h.div_mul_left]
+protected theorem div_mul_right (h : IsUnit a) (b : α) : a / (a * b) = 1 / b := by rw [mul_comm, h.div_mul_left]
 
 @[to_additive]
-protected theorem mul_div_cancel_left (h : IsUnit a) (b : α) : a * b / a = b := by
-  rw [mul_comm, h.mul_div_cancel]
+protected theorem mul_div_cancel_left (h : IsUnit a) (b : α) : a * b / a = b := by rw [mul_comm, h.mul_div_cancel]
 
 @[to_additive]
-protected theorem mul_div_cancel' (h : IsUnit a) (b : α) : a * (b / a) = b := by
-  rw [mul_comm, h.div_mul_cancel]
+protected theorem mul_div_cancel' (h : IsUnit a) (b : α) : a * (b / a) = b := by rw [mul_comm, h.div_mul_cancel]
 
 @[to_additive]
 protected theorem mul_div_mul_left (h : IsUnit c) (a b : α) : c * a / (c * b) = a / b := by
@@ -337,16 +318,14 @@ protected theorem mul_div_mul_left (h : IsUnit c) (a b : α) : c * a / (c * b) =
 
 @[to_additive]
 protected theorem mul_eq_mul_of_div_eq_div (hb : IsUnit b) (hd : IsUnit d) (a c : α) (h : a / b = c / d) :
-    a * d = c * b := by
-  rw [← mul_oneₓ a, ← hb.div_self, ← mul_comm_div, h, div_mul_eq_mul_div, hd.div_mul_cancel]
+    a * d = c * b := by rw [← mul_oneₓ a, ← hb.div_self, ← mul_comm_div, h, div_mul_eq_mul_div, hd.div_mul_cancel]
 
 @[to_additive]
 protected theorem div_eq_div_iff (hb : IsUnit b) (hd : IsUnit d) : a / b = c / d ↔ a * d = c * b := by
   rw [← (hb.mul hd).mul_left_inj, ← mul_assoc, hb.div_mul_cancel, ← mul_assoc, mul_right_commₓ, hd.div_mul_cancel]
 
 @[to_additive]
-protected theorem div_div_cancel (h : IsUnit a) : a / (a / b) = b := by
-  rw [div_div_eq_mul_div, h.mul_div_cancel_left]
+protected theorem div_div_cancel (h : IsUnit a) : a / (a / b) = b := by rw [div_div_eq_mul_div, h.mul_div_cancel_left]
 
 end DivisionCommMonoid
 

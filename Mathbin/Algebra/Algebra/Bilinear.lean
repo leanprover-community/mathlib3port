@@ -206,17 +206,17 @@ section Ringₓ
 
 variable {R A : Type _} [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
 
-theorem mul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mulLeft R x) := by
+theorem mul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mulLeft R x) :=
   letI : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-  exact mul_right_injective₀ hx
+  mul_right_injective₀ hx
 
-theorem mul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mulRight R x) := by
+theorem mul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mulRight R x) :=
   letI : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-  exact mul_left_injective₀ hx
+  mul_left_injective₀ hx
 
-theorem mul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mul R A x) := by
+theorem mul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mul R A x) :=
   letI : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-  exact mul_right_injective₀ hx
+  mul_right_injective₀ hx
 
 end Ringₓ
 

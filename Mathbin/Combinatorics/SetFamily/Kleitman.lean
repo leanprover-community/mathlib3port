@@ -24,40 +24,41 @@ Kleitman's bound stipulates that `k` intersecting families cover at most `2ⁿ -
 -/
 
 
-open Finset
+open Finsetₓ
 
-open Fintype (card)
+open Fintypeₓ (card)
 
-variable {ι α : Type _} [Fintype α] [DecidableEq α] [Nonempty α]
+variable {ι α : Type _} [Fintypeₓ α] [DecidableEq α] [Nonempty α]
 
 /-- **Kleitman's theorem**. An intersecting family on `n` elements contains at most `2ⁿ⁻¹` sets, and
 each further intersecting family takes at most half of the sets that are in no previous family. -/
-theorem Finset.card_bUnion_le_of_intersecting (s : Finset ι) (f : ι → Finset (Finset α))
-    (hf : ∀ i ∈ s, (f i : Set (Finset α)).Intersecting) : (s.bUnion f).card ≤ 2 ^ card α - 2 ^ (card α - s.card) := by
+theorem Finsetₓ.card_bUnion_le_of_intersecting (s : Finsetₓ ι) (f : ι → Finsetₓ (Finsetₓ α))
+    (hf : ∀ i ∈ s, (f i : Set (Finsetₓ α)).Intersecting) : (s.bUnion f).card ≤ 2 ^ card α - 2 ^ (card α - s.card) := by
   obtain hs | hs := le_totalₓ (card α) s.card
   · rw [tsub_eq_zero_of_le hs, pow_zeroₓ]
     refine'
       (card_le_of_subset <|
             bUnion_subset.2 fun i hi a ha => mem_compl.2 <| not_mem_singleton.2 <| (hf _ hi).ne_bot ha).trans_eq
         _
-    rw [card_compl, Fintype.card_finset, card_singleton]
+    rw [card_compl, Fintypeₓ.card_finset, card_singleton]
     
-  induction' s using Finset.cons_induction with i s hi ih generalizing f
+  induction' s using Finsetₓ.cons_induction with i s hi ih generalizing f
   · simp
     
   classical
-  set f' : ι → Finset (Finset α) := fun j => if hj : j ∈ cons i s hi then (hf j hj).exists_card_eq.some else ∅ with hf'
-  have hf₁ : ∀ j, j ∈ cons i s hi → f j ⊆ f' j ∧ 2 * (f' j).card = 2 ^ card α ∧ (f' j : Set (Finset α)).Intersecting :=
+  set f' : ι → Finsetₓ (Finsetₓ α) := fun j => if hj : j ∈ cons i s hi then (hf j hj).exists_card_eq.some else ∅ with
+    hf'
+  have hf₁ : ∀ j, j ∈ cons i s hi → f j ⊆ f' j ∧ 2 * (f' j).card = 2 ^ card α ∧ (f' j : Set (Finsetₓ α)).Intersecting :=
     by
     rintro j hj
-    simp_rw [hf', dif_pos hj, ← Fintype.card_finset]
+    simp_rw [hf', dif_pos hj, ← Fintypeₓ.card_finset]
     exact Classical.choose_spec (hf j hj).exists_card_eq
-  have hf₂ : ∀ j, j ∈ cons i s hi → IsUpperSet (f' j : Set (Finset α)) := by
+  have hf₂ : ∀ j, j ∈ cons i s hi → IsUpperSet (f' j : Set (Finsetₓ α)) := by
     refine' fun j hj => (hf₁ _ hj).2.2.is_upper_set' ((hf₁ _ hj).2.2.is_max_iff_card_eq.2 _)
-    rw [Fintype.card_finset]
+    rw [Fintypeₓ.card_finset]
     exact (hf₁ _ hj).2.1
   refine' (card_le_of_subset <| bUnion_mono fun j hj => (hf₁ _ hj).1).trans _
-  nth_rw 0[cons_eq_insert i]
+  nth_rw 0 [cons_eq_insert i]
   rw [bUnion_insert]
   refine' (card_mono <| @le_sup_sdiff _ _ _ <| f' i).trans ((card_union_le _ _).trans _)
   rw [union_sdiff_left, sdiff_eq_inter_compl]
@@ -73,7 +74,7 @@ theorem Finset.card_bUnion_le_of_intersecting (s : Finset ι) (f : ι → Finset
   · rw [coe_compl]
     exact (hf₂ _ <| mem_cons_self _ _).compl
     
-  rw [mul_tsub, card_compl, Fintype.card_finset, mul_left_commₓ, mul_tsub, (hf₁ _ <| mem_cons_self _ _).2.1, two_mul,
+  rw [mul_tsub, card_compl, Fintypeₓ.card_finset, mul_left_commₓ, mul_tsub, (hf₁ _ <| mem_cons_self _ _).2.1, two_mul,
     add_tsub_cancel_left, ← mul_tsub, ← mul_two, mul_assoc, ← add_mulₓ, mul_comm]
   refine' mul_le_mul_left' _ _
   refine'

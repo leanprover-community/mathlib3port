@@ -34,7 +34,7 @@ open Matrix
 
 variable {R : Type u} [CommRingₓ R]
 
-variable {n : Type w} [DecidableEq n] [Fintype n]
+variable {n : Type w} [DecidableEq n] [Fintypeₓ n]
 
 /-- The natural equivalence between linear endomorphisms of finite free modules and square matrices
 is compatible with the Lie algebra structures. -/
@@ -66,7 +66,7 @@ theorem Matrix.lie_conj_apply (P A : Matrix n n R) (h : Invertible P) : P.lieCon
 theorem Matrix.lie_conj_symm_apply (P A : Matrix n n R) (h : Invertible P) : (P.lieConj h).symm A = P⁻¹ ⬝ A ⬝ P := by
   simp [LinearEquiv.symm_conj_apply, Matrix.lieConj, LinearMap.to_matrix'_comp, LinearMap.to_matrix'_to_lin']
 
-variable {m : Type w₁} [DecidableEq m] [Fintype m] (e : n ≃ m)
+variable {m : Type w₁} [DecidableEq m] [Fintypeₓ m] (e : n ≃ m)
 
 /-- For square matrices, the natural map that reindexes a matrix's rows and columns with equivalent
 types, `matrix.reindex`, is an equivalence of Lie algebras. -/

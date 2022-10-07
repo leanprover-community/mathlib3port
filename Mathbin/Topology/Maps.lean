@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 -/
 import Mathbin.Topology.Order
+import Mathbin.Topology.NhdsSet
 
 /-!
 # Specific classes of maps between topological spaces
@@ -63,14 +64,11 @@ theorem inducing_id : Inducing (@id α) :=
   ⟨induced_id.symm⟩
 
 protected theorem Inducing.comp {g : β → γ} {f : α → β} (hg : Inducing g) (hf : Inducing f) : Inducing (g ∘ f) :=
-  ⟨by
-    rw [hf.induced, hg.induced, induced_compose]⟩
+  ⟨by rw [hf.induced, hg.induced, induced_compose]⟩
 
 theorem inducing_of_inducing_compose {f : α → β} {g : β → γ} (hf : Continuous f) (hg : Continuous g)
     (hgf : Inducing (g ∘ f)) : Inducing f :=
-  ⟨le_antisymmₓ
-      (by
-        rwa [← continuous_iff_le_induced])
+  ⟨le_antisymmₓ (by rwa [← continuous_iff_le_induced])
       (by
         rw [hgf.induced, ← continuous_iff_le_induced]
         apply hg.comp continuous_induced_dom)⟩
@@ -80,6 +78,9 @@ theorem inducing_iff_nhds {f : α → β} : Inducing f ↔ ∀ a, 𝓝 a = comap
 
 theorem Inducing.nhds_eq_comap {f : α → β} (hf : Inducing f) : ∀ a : α, 𝓝 a = comap f (𝓝 <| f a) :=
   inducing_iff_nhds.1 hf
+
+theorem Inducing.nhds_set_eq_comap {f : α → β} (hf : Inducing f) (s : Set α) : 𝓝ˢ s = comap f (𝓝ˢ (f '' s)) := by
+  simp only [nhdsSet, Sup_image, comap_supr, hf.nhds_eq_comap, supr_image]
 
 theorem Inducing.map_nhds_eq {f : α → β} (hf : Inducing f) (a : α) : (𝓝 a).map f = 𝓝[Range f] f a :=
   hf.induced.symm ▸ map_nhds_induced_eq a
@@ -93,12 +94,10 @@ theorem Inducing.image_mem_nhds_within {f : α → β} (hf : Inducing f) {a : α
   hf.map_nhds_eq a ▸ image_mem_map hs
 
 theorem Inducing.tendsto_nhds_iff {ι : Type _} {f : ι → β} {g : β → γ} {a : Filter ι} {b : β} (hg : Inducing g) :
-    Tendsto f a (𝓝 b) ↔ Tendsto (g ∘ f) a (𝓝 (g b)) := by
-  rw [hg.nhds_eq_comap, tendsto_comap_iff]
+    Tendsto f a (𝓝 b) ↔ Tendsto (g ∘ f) a (𝓝 (g b)) := by rw [hg.nhds_eq_comap, tendsto_comap_iff]
 
 theorem Inducing.continuous_at_iff {f : α → β} {g : β → γ} (hg : Inducing g) {x : α} :
-    ContinuousAt f x ↔ ContinuousAt (g ∘ f) x := by
-  simp_rw [ContinuousAt, Inducing.tendsto_nhds_iff hg]
+    ContinuousAt f x ↔ ContinuousAt (g ∘ f) x := by simp_rw [ContinuousAt, Inducing.tendsto_nhds_iff hg]
 
 theorem Inducing.continuous_iff {f : α → β} {g : β → γ} (hg : Inducing g) : Continuous f ↔ Continuous (g ∘ f) := by
   simp_rw [continuous_iff_continuous_at, hg.continuous_at_iff]
@@ -121,12 +120,10 @@ theorem Inducing.closure_eq_preimage_closure_image {f : α → β} (hf : Inducin
   rw [Set.mem_preimage, ← closure_induced, hf.induced]
 
 theorem Inducing.is_closed_iff {f : α → β} (hf : Inducing f) {s : Set α} : IsClosed s ↔ ∃ t, IsClosed t ∧ f ⁻¹' t = s :=
-  by
-  rw [hf.induced, is_closed_induced_iff]
+  by rw [hf.induced, is_closed_induced_iff]
 
 theorem Inducing.is_closed_iff' {f : α → β} (hf : Inducing f) {s : Set α} :
-    IsClosed s ↔ ∀ x, f x ∈ Closure (f '' s) → x ∈ s := by
-  rw [hf.induced, is_closed_induced_iff']
+    IsClosed s ↔ ∀ x, f x ∈ Closure (f '' s) → x ∈ s := by rw [hf.induced, is_closed_induced_iff']
 
 theorem Inducing.is_closed_preimage {f : α → β} (h : Inducing f) (s : Set β) (hs : IsClosed s) : IsClosed (f ⁻¹' s) :=
   (Inducing.is_closed_iff h).mpr ⟨s, hs, rfl⟩
@@ -165,9 +162,7 @@ theorem Embedding.comp {g : β → γ} {f : α → β} (hg : Embedding g) (hf : 
 theorem embedding_of_embedding_compose {f : α → β} {g : β → γ} (hf : Continuous f) (hg : Continuous g)
     (hgf : Embedding (g ∘ f)) : Embedding f :=
   { induced := (inducing_of_inducing_compose hf hg hgf.to_inducing).induced,
-    inj := fun a₁ a₂ h =>
-      hgf.inj <| by
-        simp [h, (· ∘ ·)] }
+    inj := fun a₁ a₂ h => hgf.inj <| by simp [h, (· ∘ ·)] }
 
 protected theorem Function.LeftInverse.embedding {f : α → β} {g : β → α} (h : LeftInverse f g) (hf : Continuous f)
     (hg : Continuous g) : Embedding g :=
@@ -213,8 +208,7 @@ protected theorem id : QuotientMap (@id α) :=
   ⟨fun a => ⟨a, rfl⟩, coinduced_id.symm⟩
 
 protected theorem comp (hg : QuotientMap g) (hf : QuotientMap f) : QuotientMap (g ∘ f) :=
-  ⟨hg.left.comp hf.left, by
-    rw [hg.right, hf.right, coinduced_compose]⟩
+  ⟨hg.left.comp hf.left, by rw [hg.right, hf.right, coinduced_compose]⟩
 
 protected theorem of_quotient_map_compose (hf : Continuous f) (hg : Continuous g) (hgf : QuotientMap (g ∘ f)) :
     QuotientMap g :=
@@ -223,8 +217,7 @@ protected theorem of_quotient_map_compose (hf : Continuous f) (hg : Continuous g
       (by
         rw [hgf.right, ← continuous_iff_coinduced_le]
         apply continuous_coinduced_rng.comp hf)
-      (by
-        rwa [← continuous_iff_coinduced_le])⟩
+      (by rwa [← continuous_iff_coinduced_le])⟩
 
 theorem of_inverse {g : β → α} (hf : Continuous f) (hg : Continuous g) (h : LeftInverse g f) : QuotientMap g :=
   QuotientMap.of_quotient_map_compose hf hg <| h.comp_eq_id.symm ▸ QuotientMap.id
@@ -255,8 +248,7 @@ namespace IsOpenMap
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {f : α → β}
 
-protected theorem id : IsOpenMap (@id α) := fun s hs => by
-  rwa [image_id]
+protected theorem id : IsOpenMap (@id α) := fun s hs => by rwa [image_id]
 
 protected theorem comp {g : β → γ} {f : α → β} (hg : IsOpenMap g) (hf : IsOpenMap f) : IsOpenMap (g ∘ f) := by
   intro s hs <;> rw [image_comp] <;> exact hg _ (hf _ hs)
@@ -290,11 +282,9 @@ theorem of_sections {f : α → β} (h : ∀ x, ∃ g : β → α, ContinuousAt 
   of_nhds_le fun x =>
     let ⟨g, hgc, hgx, hgf⟩ := h x
     calc
-      𝓝 (f x) = map f (map g (𝓝 (f x))) := by
-        rw [map_map, hgf.comp_eq_id, map_id]
+      𝓝 (f x) = map f (map g (𝓝 (f x))) := by rw [map_map, hgf.comp_eq_id, map_id]
       _ ≤ map f (𝓝 (g (f x))) := map_mono hgc
-      _ = map f (𝓝 x) := by
-        rw [hgx]
+      _ = map f (𝓝 x) := by rw [hgx]
       
 
 theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv : LeftInverse f f') (r_inv : RightInverse f f') :
@@ -342,10 +332,9 @@ theorem is_open_map_iff_nhds_le [TopologicalSpace α] [TopologicalSpace β] {f :
 theorem is_open_map_iff_interior [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
     IsOpenMap f ↔ ∀ s, f '' Interior s ⊆ Interior (f '' s) :=
   ⟨IsOpenMap.image_interior_subset, fun hs u hu =>
-    subset_interior_iff_open.mp <|
+    subset_interior_iff_is_open.mp <|
       calc
-        f '' u = f '' Interior u := by
-          rw [hu.interior_eq]
+        f '' u = f '' Interior u := by rw [hu.interior_eq]
         _ ⊆ Interior (f '' u) := hs u
         ⟩
 
@@ -371,8 +360,7 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 open Function
 
-protected theorem id : IsClosedMap (@id α) := fun s hs => by
-  rwa [image_id]
+protected theorem id : IsClosedMap (@id α) := fun s hs => by rwa [image_id]
 
 protected theorem comp {g : β → γ} {f : α → β} (hg : IsClosedMap g) (hf : IsClosedMap f) : IsClosedMap (g ∘ f) := by
   intro s hs
@@ -384,8 +372,7 @@ theorem closure_image_subset {f : α → β} (hf : IsClosedMap f) (s : Set α) :
 
 theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv : LeftInverse f f') (r_inv : RightInverse f f') :
     IsClosedMap f := fun s hs =>
-  have : f' ⁻¹' s = f '' s := by
-    ext x <;> simp [mem_image_iff_of_inverse r_inv l_inv]
+  have : f' ⁻¹' s = f '' s := by ext x <;> simp [mem_image_iff_of_inverse r_inv l_inv]
   this ▸ hs.Preimage h
 
 theorem of_nonempty {f : α → β} (h : ∀ s, IsClosed s → s.Nonempty → IsClosed (f '' s)) : IsClosedMap f := by
@@ -414,8 +401,7 @@ theorem is_closed_map_iff_closure_image [TopologicalSpace α] [TopologicalSpace 
     is_closed_of_closure_subset <|
       calc
         Closure (f '' c) ⊆ f '' Closure c := hs c
-        _ = f '' c := by
-          rw [hc.closure_eq]
+        _ = f '' c := by rw [hc.closure_eq]
         ⟩
 
 section OpenEmbedding
@@ -519,8 +505,7 @@ theorem ClosedEmbedding.closed_iff_preimage_closed (hf : ClosedEmbedding f) {s :
   rwa [image_preimage_eq_inter_range, inter_eq_self_of_subset_left]
 
 theorem closed_embedding_of_embedding_closed (h₁ : Embedding f) (h₂ : IsClosedMap f) : ClosedEmbedding f :=
-  ⟨h₁, by
-    convert h₂ univ is_closed_univ <;> simp ⟩
+  ⟨h₁, by convert h₂ univ is_closed_univ <;> simp⟩
 
 theorem closed_embedding_of_continuous_injective_closed (h₁ : Continuous f) (h₂ : Injective f) (h₃ : IsClosedMap f) :
     ClosedEmbedding f := by
@@ -535,14 +520,12 @@ theorem closed_embedding_of_continuous_injective_closed (h₁ : Continuous f) (h
   rw [preimage_image_eq _ h₂]
 
 theorem closed_embedding_id : ClosedEmbedding (@id α) :=
-  ⟨embedding_id, by
-    convert is_closed_univ <;> apply range_id⟩
+  ⟨embedding_id, by convert is_closed_univ <;> apply range_id⟩
 
 theorem ClosedEmbedding.comp {g : β → γ} {f : α → β} (hg : ClosedEmbedding g) (hf : ClosedEmbedding f) :
     ClosedEmbedding (g ∘ f) :=
   ⟨hg.toEmbedding.comp hf.toEmbedding,
-    show IsClosed (Range (g ∘ f)) by
-      rw [range_comp, ← hg.closed_iff_image_closed] <;> exact hf.closed_range⟩
+    show IsClosed (Range (g ∘ f)) by rw [range_comp, ← hg.closed_iff_image_closed] <;> exact hf.closed_range⟩
 
 theorem ClosedEmbedding.closure_image_eq {f : α → β} (hf : ClosedEmbedding f) (s : Set α) :
     Closure (f '' s) = f '' Closure s :=

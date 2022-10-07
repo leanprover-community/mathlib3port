@@ -43,8 +43,7 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 @[simps]
 def whiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) : F ⋙ G ⟶ F ⋙ H where
   app := fun X => α.app (F.obj X)
-  naturality' := fun X Y f => by
-    rw [functor.comp_map, functor.comp_map, α.naturality]
+  naturality' := fun X Y f => by rw [functor.comp_map, functor.comp_map, α.naturality]
 
 /-- If `α : G ⟶ H` then
 `whisker_right α F : (G ⋙ F) ⟶ (G ⋙ F)` has components `F.map (α.app X)`.
@@ -52,8 +51,7 @@ def whiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) : F ⋙ G ⟶ F ⋙
 @[simps]
 def whiskerRight {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) : G ⋙ F ⟶ H ⋙ F where
   app := fun X => F.map (α.app X)
-  naturality' := fun X Y f => by
-    rw [functor.comp_map, functor.comp_map, ← F.map_comp, ← F.map_comp, α.naturality]
+  naturality' := fun X Y f => by rw [functor.comp_map, functor.comp_map, ← F.map_comp, ← F.map_comp, α.naturality]
 
 variable (C D E)
 
@@ -69,11 +67,11 @@ def whiskeringLeft : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
     { app := fun H =>
         { app := fun c => H.map (τ.app c),
           naturality' := fun X Y f => by
-            dsimp'
+            dsimp
             rw [← H.map_comp, ← H.map_comp, ← τ.naturality] },
       naturality' := fun X Y f => by
         ext
-        dsimp'
+        dsimp
         rw [f.naturality] }
 
 /-- Right-composition gives a functor `(D ⥤ E) ⥤ ((C ⥤ D) ⥤ (C ⥤ E))`.
@@ -88,11 +86,11 @@ def whiskeringRight : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E where
     { app := fun F =>
         { app := fun c => τ.app (F.obj c),
           naturality' := fun X Y f => by
-            dsimp'
+            dsimp
             rw [τ.naturality] },
       naturality' := fun X Y f => by
         ext
-        dsimp'
+        dsimp
         rw [← nat_trans.naturality] }
 
 variable {C} {D} {E}
@@ -224,7 +222,7 @@ def associator (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) : (F ⋙ G) ⋙ H ≅ F
 theorem triangle (F : A ⥤ B) (G : B ⥤ C) :
     (associator F (𝟭 B) G).Hom ≫ whiskerLeft F (leftUnitor G).Hom = whiskerRight (rightUnitor F).Hom G := by
   ext
-  dsimp'
+  dsimp
   simp
 
 -- See note [dsimp, simp].
@@ -237,7 +235,7 @@ theorem pentagon :
       (associator (F ⋙ G) H K).Hom ≫ (associator F G (H ⋙ K)).Hom :=
   by
   ext
-  dsimp'
+  dsimp
   simp
 
 end Functor

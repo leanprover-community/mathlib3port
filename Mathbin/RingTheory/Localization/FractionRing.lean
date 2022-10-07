@@ -125,10 +125,8 @@ protected theorem mul_inv_cancel (x : K) (hx : x ≠ 0) : x * IsFractionRing.inv
 See note [reducible non-instances]. -/
 @[reducible]
 noncomputable def toField : Field K :=
-  { IsFractionRing.is_domain A,
-    show CommRingₓ K by
-      infer_instance with
-    inv := IsFractionRing.inv A, mul_inv_cancel := IsFractionRing.mul_inv_cancel A, inv_zero := dif_pos rfl }
+  { IsFractionRing.is_domain A, show CommRingₓ K by infer_instance with inv := IsFractionRing.inv A,
+    mul_inv_cancel := IsFractionRing.mul_inv_cancel A, inv_zero := dif_pos rfl }
 
 end CommRingₓ
 
@@ -145,8 +143,7 @@ theorem mk'_eq_div {r} (s : nonZeroDivisors A) : mk' K r s = algebraMap A K r / 
 
 theorem div_surjective (z : K) : ∃ (x y : A)(hy : y ∈ nonZeroDivisors A), algebraMap _ _ x / algebraMap _ _ y = z :=
   let ⟨x, ⟨y, hy⟩, h⟩ := mk'_surjective (nonZeroDivisors A) z
-  ⟨x, y, hy, by
-    rwa [mk'_eq_div] at h⟩
+  ⟨x, y, hy, by rwa [mk'_eq_div] at h⟩
 
 theorem is_unit_map_of_injective (hg : Function.Injective g) (y : nonZeroDivisors A) : IsUnit (g y) :=
   IsUnit.mk0 (g y) <| show g.toMonoidWithZeroHom y ≠ 0 from map_ne_zero_of_mem_non_zero_divisors g hg y.2
@@ -154,17 +151,13 @@ theorem is_unit_map_of_injective (hg : Function.Injective g) (y : nonZeroDivisor
 @[simp]
 theorem mk'_eq_zero_iff_eq_zero [Algebra R K] [IsFractionRing R K] {x : R} {y : nonZeroDivisors R} :
     mk' K x y = 0 ↔ x = 0 := by
-  refine'
-    ⟨fun hxy => _, fun h => by
-      rw [h, mk'_zero]⟩
+  refine' ⟨fun hxy => _, fun h => by rw [h, mk'_zero]⟩
   · simp_rw [mk'_eq_zero_iff, mul_right_coe_non_zero_divisors_eq_zero_iff] at hxy
     exact (exists_const _).mp hxy
     
 
 theorem mk'_eq_one_iff_eq {x : A} {y : nonZeroDivisors A} : mk' K x y = 1 ↔ x = y := by
-  refine'
-    ⟨_, fun hxy => by
-      rw [hxy, mk'_self']⟩
+  refine' ⟨_, fun hxy => by rw [hxy, mk'_self']⟩
   · intro hxy
     have hy : (algebraMap A K) ↑y ≠ (0 : K) := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors y.property
     rw [IsFractionRing.mk'_eq_div, div_eq_one_iff_eq hy] at hxy
@@ -221,7 +214,7 @@ variable (S)
 
 theorem is_fraction_ring_iff_of_base_ring_equiv (h : R ≃+* P) :
     IsFractionRing R S ↔ @IsFractionRing P _ S _ ((algebraMap R S).comp h.symm.toRingHom).toAlgebra := by
-  delta' IsFractionRing
+  delta IsFractionRing
   convert is_localization_iff_of_base_ring_equiv _ _ h
   ext x
   erw [Submonoid.map_equiv_eq_comap_symm]

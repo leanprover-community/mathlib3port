@@ -72,17 +72,9 @@ def e :=
 instance : Epi A.e :=
   A.2.2
 
-theorem ext' : A = ⟨A.1, ⟨A.e, A.2.2⟩⟩ := by
-  tidy
+theorem ext' : A = ⟨A.1, ⟨A.e, A.2.2⟩⟩ := by tidy
 
-theorem ext (A₁ A₂ : IndexSet Δ) (h₁ : A₁.1 = A₂.1)
-    (h₂ :
-      A₁.e ≫
-          eqToHom
-            (by
-              rw [h₁]) =
-        A₂.e) :
-    A₁ = A₂ := by
+theorem ext (A₁ A₂ : IndexSet Δ) (h₁ : A₁.1 = A₂.1) (h₂ : A₁.e ≫ eqToHom (by rw [h₁]) = A₂.e) : A₁ = A₂ := by
   rcases A₁ with ⟨Δ₁, ⟨α₁, hα₁⟩⟩
   rcases A₂ with ⟨Δ₂, ⟨α₂, hα₂⟩⟩
   simp only at h₁
@@ -90,10 +82,10 @@ theorem ext (A₁ A₂ : IndexSet Δ) (h₁ : A₁.1 = A₂.1)
   simp only [eq_to_hom_refl, comp_id, index_set.e] at h₂
   simp only [h₂]
 
-instance : Fintype (IndexSet Δ) :=
-  Fintype.ofInjective
+instance : Fintypeₓ (IndexSet Δ) :=
+  Fintypeₓ.ofInjective
     (fun A =>
-      ⟨⟨A.1.unop.len, Nat.lt_succ_iffₓ.mpr (SimplexCategory.len_le_of_epi (inferInstance : Epi A.e))⟩, A.e.toOrderHom⟩ :
+      ⟨⟨A.1.unop.len, Nat.lt_succ_iff.mpr (SimplexCategory.len_le_of_epi (inferInstance : Epi A.e))⟩, A.e.toOrderHom⟩ :
       IndexSet Δ → Sigma fun k : Finₓ (Δ.unop.len + 1) => Finₓ (Δ.unop.len + 1) → Finₓ (k + 1))
     (by
       rintro ⟨Δ₁, α₁⟩ ⟨Δ₂, α₂⟩ h₁
@@ -113,9 +105,7 @@ variable (Δ)
 /-- The distinguished element in `splitting.index_set Δ` which corresponds to the
 identity of `Δ`. -/
 def id : IndexSet Δ :=
-  ⟨Δ,
-    ⟨𝟙 _, by
-      infer_instance⟩⟩
+  ⟨Δ, ⟨𝟙 _, by infer_instance⟩⟩
 
 instance : Inhabited (IndexSet Δ) :=
   ⟨id Δ⟩
@@ -187,7 +177,7 @@ def ιSummand {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) : s.n A.1.unop.len 
 
 @[reassoc]
 theorem ι_summand_eq {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) : s.ιSummand A = s.ι A.1.unop.len ≫ X.map A.e.op := by
-  dsimp' only [ι_summand, iso.hom]
+  dsimp only [ι_summand, iso.hom]
   erw [colimit.ι_desc, cofan.mk_ι_app]
 
 theorem ι_summand_id (n : ℕ) : s.ιSummand (IndexSet.id (op [n])) = s.ι n := by
@@ -206,12 +196,12 @@ theorem ι_summand_comp_app (f : X ⟶ Y) {Δ : SimplexCategoryᵒᵖ} (A : Inde
     s.ιSummand A ≫ f.app Δ = s.φ f A.1.unop.len ≫ Y.map A.e.op := by
   simp only [ι_summand_eq_assoc, φ, nat_trans.naturality, assoc]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
 theorem hom_ext' {Z : C} {Δ : SimplexCategoryᵒᵖ} (f g : X.obj Δ ⟶ Z)
     (h : ∀ A : IndexSet Δ, s.ιSummand A ≫ f = s.ιSummand A ≫ g) : f = g := by
   rw [← cancel_epi (s.iso Δ).Hom]
   ext A
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
   simpa only [ι_summand_eq, iso_hom, colimit.ι_desc_assoc, cofan.mk_ι_app, assoc] using h A
 
 theorem hom_ext (f g : X ⟶ Y) (h : ∀ n : ℕ, s.φ f n = s.φ g n) : f = g := by
@@ -220,7 +210,7 @@ theorem hom_ext (f g : X ⟶ Y) (h : ∀ n : ℕ, s.φ f n = s.φ g n) : f = g :
   intro A
   induction Δ using Opposite.rec
   induction' Δ using SimplexCategory.rec with n
-  dsimp'
+  dsimp
   simp only [s.ι_summand_comp_app, h]
 
 /-- The map `X.obj Δ ⟶ Z` obtained by providing a family of morphisms on all the
@@ -231,7 +221,7 @@ def desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s.n A.1.
 @[simp, reassoc]
 theorem ι_desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s.n A.1.unop.len ⟶ Z) (A : IndexSet Δ) :
     s.ιSummand A ≫ s.desc Δ F = F A := by
-  dsimp' only [ι_summand, desc]
+  dsimp only [ι_summand, desc]
   simp only [assoc, iso.hom_inv_id_assoc, ι_coprod]
   erw [colimit.ι_desc, cofan.mk_ι_app]
 
@@ -285,7 +275,7 @@ theorem Hom.ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : Hom S₁ S₂) (h : ∀ n :
   simp only [eq_self_iff_true, and_trueₓ]
   apply S₁.s.hom_ext
   intro n
-  dsimp'
+  dsimp
   rw [c₁, c₂]
 
 restate_axiom hom.comm'
@@ -296,24 +286,16 @@ end Split
 
 instance : Category (Split C) where
   Hom := Split.Hom
-  id := fun S =>
-    { f := 𝟙 _, f := fun n => 𝟙 _,
-      comm' := by
-        tidy }
-  comp := fun S₁ S₂ S₃ Φ₁₂ Φ₂₃ =>
-    { f := Φ₁₂.f ≫ Φ₂₃.f, f := fun n => Φ₁₂.f n ≫ Φ₂₃.f n,
-      comm' := by
-        tidy }
+  id := fun S => { f := 𝟙 _, f := fun n => 𝟙 _, comm' := by tidy }
+  comp := fun S₁ S₂ S₃ Φ₁₂ Φ₂₃ => { f := Φ₁₂.f ≫ Φ₂₃.f, f := fun n => Φ₁₂.f n ≫ Φ₂₃.f n, comm' := by tidy }
 
 variable {C}
 
 namespace Split
 
-theorem congr_F {S₁ S₂ : Split C} {Φ₁ Φ₂ : S₁ ⟶ S₂} (h : Φ₁ = Φ₂) : Φ₁.f = Φ₂.f := by
-  rw [h]
+theorem congr_F {S₁ S₂ : Split C} {Φ₁ Φ₂ : S₁ ⟶ S₂} (h : Φ₁ = Φ₂) : Φ₁.f = Φ₂.f := by rw [h]
 
-theorem congr_f {S₁ S₂ : Split C} {Φ₁ Φ₂ : S₁ ⟶ S₂} (h : Φ₁ = Φ₂) (n : ℕ) : Φ₁.f n = Φ₂.f n := by
-  rw [h]
+theorem congr_f {S₁ S₂ : Split C} {Φ₁ Φ₂ : S₁ ⟶ S₂} (h : Φ₁ = Φ₂) (n : ℕ) : Φ₁.f n = Φ₂.f n := by rw [h]
 
 @[simp]
 theorem id_F (S : Split C) : (𝟙 S : S ⟶ S).f = 𝟙 S.x :=

@@ -26,7 +26,7 @@ namespace Polynomial
 
 open Polynomial
 
-open Finset
+open Finsetₓ
 
 section Semiringₓ
 
@@ -56,10 +56,7 @@ theorem trinomial_trailing_coeff' (hkm : k < m) (hmn : m < n) : (trinomial k m n
 theorem trinomial_nat_degree (hkm : k < m) (hmn : m < n) (hw : w ≠ 0) : (trinomial k m n u v w).natDegree = n := by
   refine'
     nat_degree_eq_of_degree_eq_some
-      (le_antisymmₓ (sup_le fun i h => _)
-        (le_degree_of_ne_zero
-          (by
-            rwa [trinomial_leading_coeff' hkm hmn])))
+      (le_antisymmₓ (sup_le fun i h => _) (le_degree_of_ne_zero (by rwa [trinomial_leading_coeff' hkm hmn])))
   replace h := support_trinomial' k m n u v w h
   rw [mem_insert, mem_insert, mem_singleton] at h
   rcases h with (rfl | rfl | rfl)
@@ -75,9 +72,7 @@ theorem trinomial_nat_trailing_degree (hkm : k < m) (hmn : m < n) (hu : u ≠ 0)
   refine'
     nat_trailing_degree_eq_of_trailing_degree_eq_some
       (le_antisymmₓ (le_inf fun i h => _)
-          (le_trailing_degree_of_ne_zero
-            (by
-              rwa [trinomial_trailing_coeff' hkm hmn]))).symm
+          (le_trailing_degree_of_ne_zero (by rwa [trinomial_trailing_coeff' hkm hmn]))).symm
   replace h := support_trinomial' k m n u v w h
   rw [mem_insert, mem_insert, mem_singleton] at h
   rcases h with (rfl | rfl | rfl)
@@ -89,12 +84,10 @@ theorem trinomial_nat_trailing_degree (hkm : k < m) (hmn : m < n) (hu : u ≠ 0)
     
 
 theorem trinomial_leading_coeff (hkm : k < m) (hmn : m < n) (hw : w ≠ 0) : (trinomial k m n u v w).leadingCoeff = w :=
-  by
-  rw [leading_coeff, trinomial_nat_degree hkm hmn hw, trinomial_leading_coeff' hkm hmn]
+  by rw [leading_coeff, trinomial_nat_degree hkm hmn hw, trinomial_leading_coeff' hkm hmn]
 
 theorem trinomial_trailing_coeff (hkm : k < m) (hmn : m < n) (hu : u ≠ 0) : (trinomial k m n u v w).trailingCoeff = u :=
-  by
-  rw [trailing_coeff, trinomial_nat_trailing_degree hkm hmn hu, trinomial_trailing_coeff' hkm hmn]
+  by rw [trailing_coeff, trinomial_nat_trailing_degree hkm hmn hu, trinomial_trailing_coeff' hkm hmn]
 
 theorem trinomial_monic (hkm : k < m) (hmn : m < n) : (trinomial k m n u v 1).Monic := by
   cases' subsingleton_or_nontrivial R with h h
@@ -147,17 +140,11 @@ theorem coeff_is_unit (hp : p.IsUnitTrinomial) {k : ℕ} (hk : k ∈ p.support) 
   have := support_trinomial' k m n (↑u) (↑v) (↑w) hk
   rw [mem_insert, mem_insert, mem_singleton] at this
   rcases this with (rfl | rfl | rfl)
-  · refine'
-      ⟨u, by
-        rw [trinomial_trailing_coeff' hkm hmn]⟩
+  · refine' ⟨u, by rw [trinomial_trailing_coeff' hkm hmn]⟩
     
-  · refine'
-      ⟨v, by
-        rw [trinomial_middle_coeff hkm hmn]⟩
+  · refine' ⟨v, by rw [trinomial_middle_coeff hkm hmn]⟩
     
-  · refine'
-      ⟨w, by
-        rw [trinomial_leading_coeff' hkm hmn]⟩
+  · refine' ⟨w, by rw [trinomial_leading_coeff' hkm hmn]⟩
     
 
 theorem leading_coeff_is_unit (hp : p.IsUnitTrinomial) : IsUnit p.leadingCoeff :=
@@ -212,8 +199,7 @@ theorem irreducible_aux1 {k m n : ℕ} (hkm : k < m) (hmn : m < n) (u v w : Unit
     c ↑v * (c ↑u * X ^ (m + n) + c ↑w * X ^ (n - m + k + n)) =
       ⟨Finsupp.filter (Set.Ioo (k + n) (n + n)) (p * p.mirror).toFinsupp⟩ :=
   by
-  have key : n - m + k < n := by
-    rwa [← lt_tsub_iff_right, tsub_lt_tsub_iff_left_of_le hmn.le]
+  have key : n - m + k < n := by rwa [← lt_tsub_iff_right, tsub_lt_tsub_iff_left_of_le hmn.le]
   rw [hp, trinomial_mirror hkm hmn u.ne_zero w.ne_zero]
   simp_rw [trinomial_def, ← monomial_eq_C_mul_X, add_mulₓ, mul_addₓ, monomial_mul_monomial, to_finsupp_add,
     to_finsupp_monomial, Finsupp.filter_add]

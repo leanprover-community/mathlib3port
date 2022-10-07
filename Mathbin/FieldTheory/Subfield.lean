@@ -133,7 +133,7 @@ structure Subfield (K : Type u) [Field K] extends Subring K where
   inv_mem' : ∀ x ∈ carrier, x⁻¹ ∈ carrier
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident subfield.to_subring]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident subfield.to_subring]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Subfield
 
 /-- The underlying `add_subgroup` of a subfield. -/
@@ -145,8 +145,7 @@ def toSubmonoid (s : Subfield K) : Submonoid K :=
   { s.toSubring.toSubmonoid with }
 
 instance : SetLike (Subfield K) K :=
-  ⟨Subfield.Carrier, fun p q h => by
-    cases p <;> cases q <;> congr⟩
+  ⟨Subfield.Carrier, fun p q h => by cases p <;> cases q <;> congr⟩
 
 instance : SubfieldClass (Subfield K) K where
   add_mem := add_mem'
@@ -259,11 +258,11 @@ protected theorem multiset_sum_mem (m : Multiset K) : (∀ a ∈ m, a ∈ s) →
   multiset_sum_mem m
 
 /-- Product of elements of a subfield indexed by a `finset` is in the subfield. -/
-protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c ∈ t, f c ∈ s) : (∏ i in t, f i) ∈ s :=
+protected theorem prod_mem {ι : Type _} {t : Finsetₓ ι} {f : ι → K} (h : ∀ c ∈ t, f c ∈ s) : (∏ i in t, f i) ∈ s :=
   prod_mem h
 
 /-- Sum of elements in a `subfield` indexed by a `finset` is in the `subfield`. -/
-protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c ∈ t, f c ∈ s) : (∑ i in t, f i) ∈ s :=
+protected theorem sum_mem {ι : Type _} {t : Finsetₓ ι} {f : ι → K} (h : ∀ c ∈ t, f c ∈ s) : (∑ i in t, f i) ∈ s :=
   sum_mem h
 
 protected theorem pow_mem {x : K} (hx : x ∈ s) (n : ℕ) : x ^ n ∈ s :=
@@ -474,7 +473,7 @@ theorem map_field_range : f.fieldRange.map g = (g.comp f).fieldRange := by
 /-- The range of a morphism of fields is a fintype, if the domain is a fintype.
 
 Note that this instance can cause a diamond with `subtype.fintype` if `L` is also a fintype.-/
-instance fintypeFieldRange [Fintype K] [DecidableEq L] (f : K →+* L) : Fintype f.fieldRange :=
+instance fintypeFieldRange [Fintypeₓ K] [DecidableEq L] (f : K →+* L) : Fintypeₓ f.fieldRange :=
   Set.fintypeRange f
 
 end RingHom
@@ -515,10 +514,7 @@ theorem coe_Inf (S : Set (Subfield K)) : ((inf S : Subfield K) : Set K) = ⋂ s 
     rw [Subring.coe_Inf, Set.mem_Inter, Set.mem_Inter]
     exact
       ⟨fun h s s' ⟨s_mem, s'_eq⟩ => h s.toSubring _ ⟨⟨s, s_mem, rfl⟩, s'_eq⟩,
-        fun h s s' ⟨⟨s'', s''_mem, s_eq⟩, (s'_eq : ↑s = s')⟩ =>
-        h s'' _
-          ⟨s''_mem, by
-            simp [← s_eq, ← s'_eq]⟩⟩
+        fun h s s' ⟨⟨s'', s''_mem, s_eq⟩, (s'_eq : ↑s = s')⟩ => h s'' _ ⟨s''_mem, by simp [← s_eq, ← s'_eq]⟩⟩
 
 theorem mem_Inf {S : Set (Subfield K)} {x : K} : x ∈ inf S ↔ ∀ p ∈ S, x ∈ p :=
   Subring.mem_Inf.trans ⟨fun h p hp => h p.toSubring ⟨p, hp, rfl⟩, fun h p ⟨p', hp', p_eq⟩ => p_eq ▸ h p' hp'⟩
@@ -562,10 +558,10 @@ def closure (s : Set K) : Subfield K where
   add_mem' := fun x y x_mem y_mem => by
     obtain ⟨nx, hnx, dx, hdx, rfl⟩ := id x_mem
     obtain ⟨ny, hny, dy, hdy, rfl⟩ := id y_mem
-    by_cases' hx0 : dx = 0
+    by_cases hx0:dx = 0
     · rwa [hx0, div_zero, zero_addₓ]
       
-    by_cases' hy0 : dy = 0
+    by_cases hy0:dy = 0
     · rwa [hy0, div_zero, add_zeroₓ]
       
     exact
@@ -674,8 +670,7 @@ theorem comap_top (f : K →+* L) : (⊤ : Subfield L).comap f = ⊤ :=
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (hS : Directed (· ≤ ·) S) {x : K} :
     (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i := by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supr S i) hi⟩
-  suffices x ∈ closure (⋃ i, (S i : Set K)) → ∃ i, x ∈ S i by
-    simpa only [closure_Union, closure_eq]
+  suffices x ∈ closure (⋃ i, (S i : Set K)) → ∃ i, x ∈ S i by simpa only [closure_Union, closure_eq]
   refine' fun hx => closure_induction hx (fun x => set.mem_Union.mp) _ _ _ _ _
   · exact hι.elim fun i => ⟨i, (S i).one_mem⟩
     
@@ -696,8 +691,7 @@ theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (h
 
 theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (hS : Directed (· ≤ ·) S) :
     ((⨆ i, S i : Subfield K) : Set K) = ⋃ i, ↑(S i) :=
-  Set.ext fun x => by
-    simp [mem_supr_of_directed hS]
+  Set.ext fun x => by simp [mem_supr_of_directed hS]
 
 theorem mem_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) {x : K} :
     x ∈ sup S ↔ ∃ s ∈ S, x ∈ s := by
@@ -706,8 +700,7 @@ theorem mem_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.Nonempty) (hS : D
 
 theorem coe_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) :
     (↑(sup S) : Set K) = ⋃ s ∈ S, ↑s :=
-  Set.ext fun x => by
-    simp [mem_Sup_of_directed_on Sne hS]
+  Set.ext fun x => by simp [mem_Sup_of_directed_on Sne hS]
 
 end Subfield
 
@@ -729,9 +722,7 @@ theorem coe_range_restrict_field (f : K →+* L) (x : K) : (f.rangeRestrictField
 the equalizer of f and g as a subfield of R -/
 def eqLocusField (f g : K →+* L) : Subfield K :=
   { (f : K →+* L).eqLocus g with
-    inv_mem' := fun x (hx : f x = g x) =>
-      show f x⁻¹ = g x⁻¹ by
-        rw [map_inv₀ f, map_inv₀ g, hx],
+    inv_mem' := fun x (hx : f x = g x) => show f x⁻¹ = g x⁻¹ by rw [map_inv₀ f, map_inv₀ g, hx],
     Carrier := { x | f x = g x } }
 
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subfield closure. -/

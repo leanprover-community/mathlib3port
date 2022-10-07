@@ -48,14 +48,11 @@ instance : StarRing (FreeAlgebra R X) where
     unfold HasStar.star
     simp only [Function.comp_applyₓ]
     refine' FreeAlgebra.induction R X _ _ _ _ x <;> intros <;> simp [*]
-  star_mul := fun a b => by
-    simp
-  star_add := fun a b => by
-    simp
+  star_mul := fun a b => by simp
+  star_add := fun a b => by simp
 
 @[simp]
-theorem star_ι (x : X) : star (ι R x) = ι R x := by
-  simp [star, HasStar.star]
+theorem star_ι (x : X) : star (ι R x) = ι R x := by simp [star, HasStar.star]
 
 @[simp]
 theorem star_algebra_map (r : R) : star (algebraMap R (FreeAlgebra R X) r) = algebraMap R _ r := by
@@ -63,9 +60,7 @@ theorem star_algebra_map (r : R) : star (algebraMap R (FreeAlgebra R X) r) = alg
 
 /-- `star` as an `alg_equiv` -/
 def starHom : FreeAlgebra R X ≃ₐ[R] (FreeAlgebra R X)ᵐᵒᵖ :=
-  { starRingEquiv with
-    commutes' := fun r => by
-      simp [star_algebra_map] }
+  { starRingEquiv with commutes' := fun r => by simp [star_algebra_map] }
 
 end FreeAlgebra
 

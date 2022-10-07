@@ -103,17 +103,13 @@ just `f₁`.
 The converse of `comp_of_mono`.
 -/
 def cancelRightOfMono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (big_k : IsKernelPair (f₁ ≫ f₂) a b) : IsKernelPair f₁ a b :=
-  cancelRight
-    (by
-      rw [← cancel_mono f₂, assoc, assoc, big_k.comm])
-    big_k
+  cancelRight (by rw [← cancel_mono f₂, assoc, assoc, big_k.comm]) big_k
 
 /-- If `(a,b)` is a kernel pair for `f₁` and `f₂` is mono, then `(a,b)` is a kernel pair for `f₁ ≫ f₂`.
 The converse of `cancel_right_of_mono`.
 -/
 def compOfMono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : IsKernelPair f₁ a b) : IsKernelPair (f₁ ≫ f₂) a b where
-  comm := by
-    rw [small_k.comm_assoc]
+  comm := by rw [small_k.comm_assoc]
   IsLimit :=
     (PullbackCone.isLimitAux' _) fun s => by
       refine' ⟨_, _, _, _⟩
@@ -158,15 +154,8 @@ def toCoequalizer (k : IsKernelPair f a b) [r : RegularEpi f] : IsColimit (Cofor
 (`A ×[Z] X ⟶ Y ×[Z] X`) is a kernel pair for `Y ×[Z] X ⟶ X`. -/
 protected noncomputable def pullback {X Y Z A : C} {g : Y ⟶ Z} {a₁ a₂ : A ⟶ Y} (h : IsKernelPair g a₁ a₂) (f : X ⟶ Z)
     [HasPullback f g] [HasPullback f (a₁ ≫ g)] :
-    IsKernelPair (pullback.fst : pullback f g ⟶ X)
-      (pullback.map f _ f _ (𝟙 X) a₁ (𝟙 Z)
-          (by
-            simp ) <|
-        Category.comp_id _)
-      (pullback.map _ _ _ _ (𝟙 X) a₂ (𝟙 Z)
-          (by
-            simp ) <|
-        (Category.comp_id _).trans h.1) :=
+    IsKernelPair (pullback.fst : pullback f g ⟶ X) (pullback.map f _ f _ (𝟙 X) a₁ (𝟙 Z) (by simp) <| Category.comp_id _)
+      (pullback.map _ _ _ _ (𝟙 X) a₂ (𝟙 Z) (by simp) <| (Category.comp_id _).trans h.1) :=
   by
   fconstructor
   · rw [pullback.lift_fst, pullback.lift_fst]

@@ -61,18 +61,12 @@ theorem Valuation.inversion_estimate {x y : K} {γ : Γ₀ˣ} (y_ne : y ≠ 0) (
     rw [mul_sub_left_distrib, sub_mul, mul_assoc, show y * y⁻¹ = 1 from mul_inv_cancel y_ne,
       show x⁻¹ * x = 1 from inv_mul_cancel x_ne, mul_oneₓ, one_mulₓ]
   calc
-    v (x⁻¹ - y⁻¹) = v (x⁻¹ * (y - x) * y⁻¹) := by
-      rw [decomp]
-    _ = v x⁻¹ * (v <| y - x) * v y⁻¹ := by
-      repeat'
-        rw [Valuation.map_mul]
-    _ = (v x)⁻¹ * (v <| y - x) * (v y)⁻¹ := by
-      rw [map_inv₀, map_inv₀]
-    _ = (v <| y - x) * (v y * v y)⁻¹ := by
-      rw [mul_assoc, mul_comm, key, mul_assoc, mul_inv_rev]
+    v (x⁻¹ - y⁻¹) = v (x⁻¹ * (y - x) * y⁻¹) := by rw [decomp]
+    _ = v x⁻¹ * (v <| y - x) * v y⁻¹ := by repeat' rw [Valuation.map_mul]
+    _ = (v x)⁻¹ * (v <| y - x) * (v y)⁻¹ := by rw [map_inv₀, map_inv₀]
+    _ = (v <| y - x) * (v y * v y)⁻¹ := by rw [mul_assoc, mul_comm, key, mul_assoc, mul_inv_rev]
     _ = (v <| y - x) * (v y * v y)⁻¹ := rfl
-    _ = (v <| x - y) * (v y * v y)⁻¹ := by
-      rw [Valuation.map_sub_swap]
+    _ = (v <| x - y) * (v y * v y)⁻¹ := by rw [Valuation.map_sub_swap]
     _ < γ := hyp1'
     
 
@@ -83,8 +77,7 @@ open Valued
 /-- The topology coming from a valuation on a division ring makes it a topological division ring
     [BouAC, VI.5.1 middle of Proposition 1] -/
 instance (priority := 100) Valued.topological_division_ring [Valued K Γ₀] : TopologicalDivisionRing K :=
-  { (by
-      infer_instance : TopologicalRing K) with
+  { (by infer_instance : TopologicalRing K) with
     continuous_at_inv₀ := by
       intro x x_ne s s_in
       cases' valued.mem_nhds.mp s_in with γ hs
@@ -109,9 +102,7 @@ instance (priority := 100) ValuedRing.separated [Valued K Γ₀] : SeparatedSpac
   rw [Valued.mem_nhds]
   have vx_ne := (Valuation.ne_zero_iff <| v).mpr x_ne
   let γ' := Units.mk0 _ vx_ne
-  exact
-    ⟨γ', fun y hy => by
-      simpa using hy⟩
+  exact ⟨γ', fun y hy => by simpa using hy⟩
 
 section
 
@@ -122,19 +113,14 @@ open Valued
 theorem Valued.continuous_valuation [Valued K Γ₀] : Continuous (v : K → Γ₀) := by
   rw [continuous_iff_continuous_at]
   intro x
-  classical
-  by_cases' h : x = 0
-  · rw [h]
-    change tendsto _ _ (𝓝 (v (0 : K)))
-    erw [Valuation.map_zero]
-    rw [LinearOrderedCommGroupWithZero.tendsto_zero]
-    intro γ
-    rw [Valued.mem_nhds_zero]
-    use γ, Set.Subset.refl _
+  rcases eq_or_ne x 0 with (rfl | h)
+  · rw [ContinuousAt, map_zero, LinearOrderedCommGroupWithZero.tendsto_zero]
+    intro γ hγ
+    rw [Filter.Eventually, Valued.mem_nhds_zero]
+    use Units.mk0 γ hγ, subset.rfl
     
-  · change tendsto _ _ _
-    have v_ne : (v x : Γ₀) ≠ 0 := (Valuation.ne_zero_iff _).mpr h
-    rw [LinearOrderedCommGroupWithZero.tendsto_of_ne_zero v_ne]
+  · have v_ne : (v x : Γ₀) ≠ 0 := (Valuation.ne_zero_iff _).mpr h
+    rw [ContinuousAt, LinearOrderedCommGroupWithZero.tendsto_of_ne_zero v_ne]
     apply Valued.loc_const v_ne
     
 
@@ -215,21 +201,14 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 noncomputable def extension : hat K → Γ₀ :=
   Completion.dense_inducing_coe.extend (v : K → Γ₀)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x y «expr ∈ » V')
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » V')
 theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) := by
   refine' completion.dense_inducing_coe.continuous_extend _
   intro x₀
-  by_cases' h : x₀ = coe 0
+  rcases eq_or_ne x₀ 0 with (rfl | h)
   · refine' ⟨0, _⟩
-    erw [h, ← completion.dense_inducing_coe.to_inducing.nhds_eq_comap] <;>
-      try
-        infer_instance
-    rw [LinearOrderedCommGroupWithZero.tendsto_zero]
-    intro γ₀
-    rw [Valued.mem_nhds]
-    exact
-      ⟨γ₀, by
-        simp ⟩
+    erw [← completion.dense_inducing_coe.to_inducing.nhds_eq_comap]
+    exact valued.continuous_valuation.tendsto' 0 0 (map_zero v)
     
   · have preimage_one : v ⁻¹' {(1 : Γ₀)} ∈ 𝓝 (1 : K) := by
       have : (v (1 : K) : Γ₀) ≠ 0 := by
@@ -243,7 +222,11 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
     have : ∃ V' ∈ 𝓝 (1 : hat K), (0 : hat K) ∉ V' ∧ ∀ (x y) (_ : x ∈ V') (_ : y ∈ V'), x * y⁻¹ ∈ V := by
       have : tendsto (fun p : hat K × hat K => p.1 * p.2⁻¹) ((𝓝 1).Prod (𝓝 1)) (𝓝 1) := by
         rw [← nhds_prod_eq]
-        conv => congr skip skip rw [← one_mulₓ (1 : hat K)]
+        conv =>
+        congr
+        skip
+        skip
+        rw [← one_mulₓ (1 : hat K)]
         refine' tendsto.mul continuous_fst.continuous_at (tendsto.comp _ continuous_snd.continuous_at)
         convert continuous_at_inv₀ (zero_ne_one.symm : 1 ≠ (0 : hat K))
         exact inv_one.symm
@@ -277,33 +260,26 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       rintro rfl
       exact mul_ne_zero (ne_of_mem_of_not_memₓ y₀_in zeroV') h H
     rcases this with ⟨z₀, y₀, y₀_in, hz₀, z₀_ne⟩
-    have vz₀_ne : (v z₀ : Γ₀) ≠ 0 := by
-      rwa [Valuation.ne_zero_iff]
+    have vz₀_ne : (v z₀ : Γ₀) ≠ 0 := by rwa [Valuation.ne_zero_iff]
     refine' ⟨v z₀, _⟩
-    rw [LinearOrderedCommGroupWithZero.tendsto_of_ne_zero vz₀_ne, mem_comap]
-    use (fun x => x * x₀) '' V', nhds_right
-    intro x x_in
-    rcases mem_preimage.1 x_in with ⟨y, y_in, hy⟩
-    clear x_in
-    change y * x₀ = coe x at hy
-    have : (v (x * z₀⁻¹) : Γ₀) = 1 := by
+    rw [LinearOrderedCommGroupWithZero.tendsto_of_ne_zero vz₀_ne, eventually_comap]
+    filter_upwards [nhds_right] with x x_in a ha
+    rcases x_in with ⟨y, y_in, rfl⟩
+    have : (v (a * z₀⁻¹) : Γ₀) = 1 := by
       apply hV
       have : ((z₀⁻¹ : K) : hat K) = z₀⁻¹ := map_inv₀ (completion.coe_ring_hom : K →+* hat K) z₀
-      rw [completion.coe_mul, this, ← hy, hz₀, mul_inv, mul_comm y₀⁻¹, ← mul_assoc, mul_assoc y, mul_inv_cancel h,
+      rw [completion.coe_mul, this, ha, hz₀, mul_inv, mul_comm y₀⁻¹, ← mul_assoc, mul_assoc y, mul_inv_cancel h,
         mul_oneₓ]
       solve_by_elim
     calc
-      v x = v (x * z₀⁻¹ * z₀) := by
-        rw [mul_assoc, inv_mul_cancel z₀_ne, mul_oneₓ]
-      _ = v (x * z₀⁻¹) * v z₀ := Valuation.map_mul _ _ _
-      _ = v z₀ := by
-        rw [this, one_mulₓ]
+      v a = v (a * z₀⁻¹ * z₀) := by rw [mul_assoc, inv_mul_cancel z₀_ne, mul_oneₓ]
+      _ = v (a * z₀⁻¹) * v z₀ := Valuation.map_mul _ _ _
+      _ = v z₀ := by rw [this, one_mulₓ]
       
     
 
 @[simp, norm_cast]
 theorem extension_extends (x : K) : extension (x : hat K) = v x := by
-  haveI : T2Space Γ₀ := T3Space.t2_space _
   refine' completion.dense_inducing_coe.extend_eq_of_tendsto _
   rw [← completion.dense_inducing_coe.nhds_eq_comap]
   exact valued.continuous_valuation.continuous_at
@@ -338,7 +314,7 @@ noncomputable def extensionValuation : Valuation (hat K) Γ₀ where
           (is_closed_le (cont.comp continuous_add) <| cont.comp continuous_snd)
       
     · intro x y
-      dsimp'
+      dsimp
       norm_cast
       rw [← le_max_iff]
       exact v.map_add x y
@@ -353,9 +329,7 @@ theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
     cases eq_or_ne γ₀ 0
     · simp only [h, (Valuation.zero_iff _).mp h, mem_set_of_eq, Valuation.map_zero, Units.zero_lt, iff_trueₓ]
       apply subset_closure
-      exact
-        ⟨0, by
-          simpa only [mem_set_of_eq, Valuation.map_zero, Units.zero_lt, true_andₓ] ⟩
+      exact ⟨0, by simpa only [mem_set_of_eq, Valuation.map_zero, Units.zero_lt, true_andₓ] ⟩
       
     · exact this h
       
@@ -384,9 +358,7 @@ noncomputable instance valuedCompletion : Valued (hat K) Γ₀ where
   is_topological_valuation := fun s => by
     suffices has_basis (𝓝 (0 : hat K)) (fun _ => True) fun γ : Γ₀ˣ => { x | extension_valuation x < γ } by
       rw [this.mem_iff]
-      exact
-        exists_congr fun γ => by
-          simp
+      exact exists_congr fun γ => by simp
     simp_rw [← closure_coe_completion_v_lt]
     exact (has_basis_nhds_zero K Γ₀).has_basis_of_dense_inducing completion.dense_inducing_coe
 

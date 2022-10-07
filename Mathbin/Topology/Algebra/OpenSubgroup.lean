@@ -36,19 +36,18 @@ open TopologicalSpace
 open TopologicalSpace
 
 /-- The type of open subgroups of a topological additive group. -/
-@[ancestor AddSubgroup]
 structure OpenAddSubgroup (G : Type _) [AddGroupₓ G] [TopologicalSpace G] extends AddSubgroup G where
   is_open' : IsOpen carrier
 
 /-- The type of open subgroups of a topological group. -/
-@[ancestor Subgroup, to_additive]
+@[to_additive]
 structure OpenSubgroup (G : Type _) [Groupₓ G] [TopologicalSpace G] extends Subgroup G where
   is_open' : IsOpen carrier
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident open_subgroup.to_subgroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident open_subgroup.to_subgroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident open_add_subgroup.to_add_subgroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident open_add_subgroup.to_add_subgroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace OpenSubgroup
 
 open Function TopologicalSpace
@@ -238,9 +237,7 @@ theorem is_open_of_one_mem_interior {G : Type _} [Groupₓ G] [TopologicalSpace 
     nhds_le_of_le h_1_int is_open_interior (Filter.principal_mono.2 interior_subset)
   rw [is_open_iff_nhds]
   intro g hg
-  rw
-    [show 𝓝 g = Filter.map (⇑(Homeomorph.mulLeft g)) (𝓝 1) by
-      simp ]
+  rw [show 𝓝 g = Filter.map (⇑(Homeomorph.mulLeft g)) (𝓝 1) by simp]
   convert Filter.map_mono h
   simp only [Homeomorph.coe_mul_left, Filter.map_principal, Set.image_mul_left, Filter.principal_eq_iff_eq]
   ext

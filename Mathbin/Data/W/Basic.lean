@@ -103,18 +103,18 @@ theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he :
         
       ⟩
 
-variable [∀ a : α, Fintype (β a)]
+variable [∀ a : α, Fintypeₓ (β a)]
 
 /-- The depth of a finitely branching tree. -/
 def depth : WType β → ℕ
-  | ⟨a, f⟩ => (Finset.sup Finset.univ fun n => depth (f n)) + 1
+  | ⟨a, f⟩ => (Finsetₓ.sup Finsetₓ.univ fun n => depth (f n)) + 1
 
 theorem depth_pos (t : WType β) : 0 < t.depth := by
   cases t
   apply Nat.succ_posₓ
 
 theorem depth_lt_depth_mk (a : α) (f : β a → WType β) (i : β a) : depth (f i) < depth ⟨a, f⟩ :=
-  Nat.lt_succ_of_leₓ (Finset.le_sup (Finset.mem_univ i))
+  Nat.lt_succ_of_leₓ (Finsetₓ.le_sup (Finsetₓ.mem_univ i))
 
 /-
 Show that W types are encodable when `α` is an encodable fintype and for every `a : α`, `β a` is
@@ -125,7 +125,7 @@ induction on `n` that these are all encodable. These auxiliary constructions are
 and of themselves, so we mark them as `private`.
 -/
 @[reducible]
-private def W_type' {α : Type _} (β : α → Type _) [∀ a : α, Fintype (β a)] [∀ a : α, Encodable (β a)] (n : ℕ) :=
+private def W_type' {α : Type _} (β : α → Type _) [∀ a : α, Fintypeₓ (β a)] [∀ a : α, Encodable (β a)] (n : ℕ) :=
   { t : WType β // t.depth ≤ n }
 
 variable [∀ a : α, Encodable (β a)]
@@ -148,7 +148,7 @@ private def f (n : ℕ) : WType' β (n + 1) → Σa : α, β a → WType' β n
 private def finv (n : ℕ) : (Σa : α, β a → WType' β n) → WType' β (n + 1)
   | ⟨a, f⟩ =>
     let f' := fun i : β a => (f i).val
-    have : WType.depth ⟨a, f'⟩ ≤ n + 1 := add_le_add_right (Finset.sup_le fun b h => (f b).2) 1
+    have : WType.depth ⟨a, f'⟩ ≤ n + 1 := add_le_add_right (Finsetₓ.sup_le fun b h => (f b).2) 1
     ⟨⟨a, f'⟩, this⟩
 
 variable [Encodable α]

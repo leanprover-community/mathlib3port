@@ -30,13 +30,12 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
--- ./././Mathport/Syntax/Translate/Command.lean:276:31: unsupported: @[derive] abbrev
+-- ./././Mathport/Syntax/Translate/Command.lean:278:31: unsupported: @[derive] abbrev
 /-- The category of `k`-linear representations of a monoid `G`. -/
 abbrev Rep (k G : Type u) [Ringₓ k] [Monoidₓ G] :=
   Action (ModuleCat.{u} k) (Mon.of G)
 
-instance (k G : Type u) [CommRingₓ k] [Monoidₓ G] : Linear k (Rep k G) := by
-  infer_instance
+instance (k G : Type u) [CommRingₓ k] [Monoidₓ G] : Linear k (Rep k G) := by infer_instance
 
 namespace Rep
 
@@ -71,11 +70,9 @@ theorem of_ρ {V : Type u} [AddCommGroupₓ V] [Module k V] (ρ : G →* V →�
   rfl
 
 -- Verify that limits are calculated correctly.
-noncomputable example : PreservesLimits (forget₂ (Rep k G) (ModuleCat.{u} k)) := by
-  infer_instance
+noncomputable example : PreservesLimits (forget₂ (Rep k G) (ModuleCat.{u} k)) := by infer_instance
 
-noncomputable example : PreservesColimits (forget₂ (Rep k G) (ModuleCat.{u} k)) := by
-  infer_instance
+noncomputable example : PreservesColimits (forget₂ (Rep k G) (ModuleCat.{u} k)) := by infer_instance
 
 end Rep
 
@@ -89,14 +86,11 @@ namespace Rep
 variable {k G : Type u} [CommRingₓ k] [Monoidₓ G]
 
 -- Verify that the symmetric monoidal structure is available.
-example : SymmetricCategory (Rep k G) := by
-  infer_instance
+example : SymmetricCategory (Rep k G) := by infer_instance
 
-example : MonoidalPreadditive (Rep k G) := by
-  infer_instance
+example : MonoidalPreadditive (Rep k G) := by infer_instance
 
-example : MonoidalLinear k (Rep k G) := by
-  infer_instance
+example : MonoidalLinear k (Rep k G) := by infer_instance
 
 noncomputable section
 
@@ -147,12 +141,12 @@ theorem of_Module_monoid_algebra_obj_ρ (M : ModuleCat.{u} (MonoidAlgebra k G)) 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def counitIsoAddEquiv {M : ModuleCat.{u} (MonoidAlgebra k G)} :
     (of_Module_monoid_algebra ⋙ to_Module_monoid_algebra).obj M ≃+ M := by
-  dsimp' [of_Module_monoid_algebra, to_Module_monoid_algebra]
+  dsimp [of_Module_monoid_algebra, to_Module_monoid_algebra]
   refine' (Representation.ofModule k G ↥M).asModuleEquiv.trans (RestrictScalars.addEquiv _ _ _)
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def unitIsoAddEquiv {V : Rep k G} : V ≃+ (to_Module_monoid_algebra ⋙ of_Module_monoid_algebra).obj V := by
-  dsimp' [of_Module_monoid_algebra, to_Module_monoid_algebra]
+  dsimp [of_Module_monoid_algebra, to_Module_monoid_algebra]
   refine' V.ρ.as_module_equiv.symm.trans _
   exact (RestrictScalars.addEquiv _ _ _).symm
 
@@ -162,14 +156,14 @@ def counitIso (M : ModuleCat.{u} (MonoidAlgebra k G)) :
   LinearEquiv.toModuleIso'
     { counitIsoAddEquiv with
       map_smul' := fun r x => by
-        dsimp' [counit_iso_add_equiv]
+        dsimp [counit_iso_add_equiv]
         simp }
 
 theorem unit_iso_comm (V : Rep k G) (g : G) (x : V) :
     unitIsoAddEquiv ((V.ρ g).toFun x) =
       ((ofModuleMonoidAlgebra.obj (toModuleMonoidAlgebra.obj V)).ρ g).toFun (unitIsoAddEquiv x) :=
   by
-  dsimp' [unit_iso_add_equiv, of_Module_monoid_algebra, to_Module_monoid_algebra]
+  dsimp [unit_iso_add_equiv, of_Module_monoid_algebra, to_Module_monoid_algebra]
   simp only [AddEquiv.apply_eq_iff_eq, AddEquiv.apply_symm_apply, Representation.as_module_equiv_symm_map_rho,
     Representation.of_module_as_module_act]
 
@@ -179,7 +173,7 @@ def unitIso (V : Rep k G) : V ≅ (to_Module_monoid_algebra ⋙ of_Module_monoid
     (LinearEquiv.toModuleIso'
       { unitIsoAddEquiv with
         map_smul' := fun r x => by
-          dsimp' [unit_iso_add_equiv]
+          dsimp [unit_iso_add_equiv]
           simp only [Representation.as_module_equiv_symm_map_smul,
             RestrictScalars.add_equiv_symm_map_algebra_map_smul] })
     fun g => by
@@ -190,14 +184,8 @@ def unitIso (V : Rep k G) : V ≅ (to_Module_monoid_algebra ⋙ of_Module_monoid
 def equivalenceModuleMonoidAlgebra : Rep k G ≌ ModuleCat.{u} (MonoidAlgebra k G) where
   Functor := toModuleMonoidAlgebra
   inverse := ofModuleMonoidAlgebra
-  unitIso :=
-    NatIso.ofComponents (fun V => unitIso V)
-      (by
-        tidy)
-  counitIso :=
-    NatIso.ofComponents (fun M => counitIso M)
-      (by
-        tidy)
+  unitIso := NatIso.ofComponents (fun V => unitIso V) (by tidy)
+  counitIso := NatIso.ofComponents (fun M => counitIso M) (by tidy)
 
 -- TODO Verify that the equivalence with `Module (monoid_algebra k G)` is a monoidal functor.
 end Rep

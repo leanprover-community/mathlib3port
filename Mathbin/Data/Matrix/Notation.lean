@@ -49,21 +49,19 @@ variable {α : Type u} {o n m : ℕ} {m' n' o' : Type _}
 
 open Matrix
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
 /-- Matrices can be reflected whenever their entries can. We insert an `@id (matrix m' n' α)` to
 prevent immediate decay to a function. -/
 unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [reflected_univ.{u_2}] [reflected _ α]
     [reflected _ m'] [reflected _ n'] [h : has_reflect (m' → n' → α)] : has_reflect (Matrix m' n' α) := fun m =>
-  (by
-          trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]" :
+  (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
           reflected _ @id.{max u_1 u_2 u + 1}).subst₂
-      ((by
-            trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]" :
+      ((by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
             reflected _ @Matrix.{u_1, u_2, u}).subst₃
         (quote.1 _) (quote.1 _) (quote.1 _)) <|
     by
-    dunfold Matrix
+    dsimp only [Matrix]
     exact h m
 
 section Parser
@@ -153,7 +151,7 @@ variable [AddCommMonoidₓ α] [Mul α]
 
 @[simp]
 theorem dot_product_empty (v w : Finₓ 0 → α) : dotProduct v w = 0 :=
-  Finset.sum_empty
+  Finsetₓ.sum_empty
 
 @[simp]
 theorem cons_dot_product (x : α) (v : Finₓ n → α) (w : Finₓ n.succ → α) :
@@ -167,8 +165,7 @@ theorem dot_product_cons (v : Finₓ n.succ → α) (x : α) (w : Finₓ n → �
 
 @[simp]
 theorem cons_dot_product_cons (x : α) (v : Finₓ n → α) (y : α) (w : Finₓ n → α) :
-    dotProduct (vecCons x v) (vecCons y w) = x * y + dotProduct v w := by
-  simp
+    dotProduct (vecCons x v) (vecCons y w) = x * y + dotProduct v w := by simp
 
 end DotProduct
 
@@ -227,7 +224,7 @@ section Mul
 variable [Semiringₓ α]
 
 @[simp]
-theorem empty_mul [Fintype n'] (A : Matrix (Finₓ 0) n' α) (B : Matrix n' o' α) : A ⬝ B = of ![] :=
+theorem empty_mul [Fintypeₓ n'] (A : Matrix (Finₓ 0) n' α) (B : Matrix n' o' α) : A ⬝ B = of ![] :=
   empty_eq _
 
 @[simp]
@@ -235,15 +232,15 @@ theorem empty_mul_empty (A : Matrix m' (Finₓ 0) α) (B : Matrix (Finₓ 0) o' 
   rfl
 
 @[simp]
-theorem mul_empty [Fintype n'] (A : Matrix m' n' α) (B : Matrix n' (Finₓ 0) α) : A ⬝ B = of fun _ => ![] :=
+theorem mul_empty [Fintypeₓ n'] (A : Matrix m' n' α) (B : Matrix n' (Finₓ 0) α) : A ⬝ B = of fun _ => ![] :=
   funext fun _ => empty_eq _
 
-theorem mul_val_succ [Fintype n'] (A : Matrix (Finₓ m.succ) n' α) (B : Matrix n' o' α) (i : Finₓ m) (j : o') :
+theorem mul_val_succ [Fintypeₓ n'] (A : Matrix (Finₓ m.succ) n' α) (B : Matrix n' o' α) (i : Finₓ m) (j : o') :
     (A ⬝ B) i.succ j = (of (vecTail (of.symm A)) ⬝ B) i j :=
   rfl
 
 @[simp]
-theorem cons_mul [Fintype n'] (v : n' → α) (A : Finₓ m → n' → α) (B : Matrix n' o' α) :
+theorem cons_mul [Fintypeₓ n'] (v : n' → α) (A : Finₓ m → n' → α) (B : Matrix n' o' α) :
     of (vecCons v A) ⬝ B = of (vecCons (vecMulₓ v B) (of.symm (of A ⬝ B))) := by
   ext i j
   refine' Finₓ.cases _ _ i
@@ -262,7 +259,7 @@ theorem empty_vec_mul (v : Finₓ 0 → α) (B : Matrix (Finₓ 0) o' α) : vecM
   rfl
 
 @[simp]
-theorem vec_mul_empty [Fintype n'] (v : n' → α) (B : Matrix n' (Finₓ 0) α) : vecMulₓ v B = ![] :=
+theorem vec_mul_empty [Fintypeₓ n'] (v : n' → α) (B : Matrix n' (Finₓ 0) α) : vecMulₓ v B = ![] :=
   empty_eq _
 
 @[simp]
@@ -279,8 +276,7 @@ theorem vec_mul_cons (v : Finₓ n.succ → α) (w : o' → α) (B : Finₓ n �
 
 @[simp]
 theorem cons_vec_mul_cons (x : α) (v : Finₓ n → α) (w : o' → α) (B : Finₓ n → o' → α) :
-    vecMulₓ (vecCons x v) (of <| vecCons w B) = x • w + vecMulₓ v (of B) := by
-  simp
+    vecMulₓ (vecCons x v) (of <| vecCons w B) = x • w + vecMulₓ v (of B) := by simp
 
 end VecMul
 
@@ -289,7 +285,7 @@ section MulVec
 variable [Semiringₓ α]
 
 @[simp]
-theorem empty_mul_vec [Fintype n'] (A : Matrix (Finₓ 0) n' α) (v : n' → α) : mulVecₓ A v = ![] :=
+theorem empty_mul_vec [Fintypeₓ n'] (A : Matrix (Finₓ 0) n' α) (v : n' → α) : mulVecₓ A v = ![] :=
   empty_eq _
 
 @[simp]
@@ -297,7 +293,7 @@ theorem mul_vec_empty (A : Matrix m' (Finₓ 0) α) (v : Finₓ 0 → α) : mulV
   rfl
 
 @[simp]
-theorem cons_mul_vec [Fintype n'] (v : n' → α) (A : Finₓ m → n' → α) (w : n' → α) :
+theorem cons_mul_vec [Fintypeₓ n'] (v : n' → α) (A : Finₓ m → n' → α) (w : n' → α) :
     mulVecₓ (of <| vecCons v A) w = vecCons (dotProduct v w) (mulVecₓ (of A) w) := by
   ext i
   refine' Finₓ.cases _ _ i <;> simp [mul_vec]
@@ -446,12 +442,10 @@ theorem mul_fin_three [AddCommMonoidₓ α] [Mul α]
   ext i j
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Finₓ.sum_univ_succ, ← add_assocₓ]
 
-theorem vec2_eq {a₀ a₁ b₀ b₁ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) : ![a₀, a₁] = ![b₀, b₁] := by
-  subst_vars
+theorem vec2_eq {a₀ a₁ b₀ b₁ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) : ![a₀, a₁] = ![b₀, b₁] := by subst_vars
 
 theorem vec3_eq {a₀ a₁ a₂ b₀ b₁ b₂ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) (h₂ : a₂ = b₂) : ![a₀, a₁, a₂] = ![b₀, b₁, b₂] :=
-  by
-  subst_vars
+  by subst_vars
 
 theorem vec2_add [Add α] (a₀ a₁ b₀ b₁ : α) : ![a₀, a₁] + ![b₀, b₁] = ![a₀ + b₀, a₁ + b₁] := by
   rw [cons_add_cons, cons_add_cons, empty_add_empty]
@@ -463,8 +457,7 @@ theorem smul_vec2 {R : Type _} [HasSmul R α] (x : R) (a₀ a₁ : α) : x • !
   rw [smul_cons, smul_cons, smul_empty]
 
 theorem smul_vec3 {R : Type _} [HasSmul R α] (x : R) (a₀ a₁ a₂ : α) : x • ![a₀, a₁, a₂] = ![x • a₀, x • a₁, x • a₂] :=
-  by
-  rw [smul_cons, smul_cons, smul_cons, smul_empty]
+  by rw [smul_cons, smul_cons, smul_cons, smul_empty]
 
 variable [AddCommMonoidₓ α] [Mul α]
 

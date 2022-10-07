@@ -90,8 +90,7 @@ theorem mem_jacobson_iff {x : R} : x ∈ jacobson I ↔ ∀ y, ∃ z, z * y * x 
       (fun hxy : I ⊔ span {y * x + 1} = ⊤ =>
         let ⟨p, hpi, q, hq, hpq⟩ := Submodule.mem_sup.1 ((eq_top_iff_one _).1 hxy)
         let ⟨r, hr⟩ := mem_span_singleton'.1 hq
-        ⟨r, by
-          rw [mul_assoc, ← mul_add_one, hr, ← hpq, ← neg_sub, add_sub_cancel] <;> exact I.neg_mem hpi⟩)
+        ⟨r, by rw [mul_assoc, ← mul_add_one, hr, ← hpq, ← neg_sub, add_sub_cancel] <;> exact I.neg_mem hpi⟩)
       fun hxy : I ⊔ span {y * x + 1} ≠ ⊤ =>
       let ⟨M, hm1, hm2⟩ := exists_le_maximal _ hxy
       suffices x ∉ M from (this <| mem_Inf.1 hx ⟨le_transₓ le_sup_left hm2, hm1⟩).elim
@@ -146,7 +145,7 @@ theorem eq_jacobson_iff_Inf_maximal' :
       let ⟨M, hM⟩ := h
       ⟨M, ⟨fun J hJ => Or.rec_on (Classical.em (J = ⊤)) (fun h => Or.inr h) fun h => Or.inl ⟨⟨h, hM.1 J hJ⟩⟩, hM.2⟩⟩⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » I)
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/
 theorem eq_jacobson_iff_not_mem : I.jacobson = I ↔ ∀ (x) (_ : x ∉ I), ∃ M : Ideal R, (I ≤ M ∧ M.IsMaximal) ∧ x ∉ M := by
@@ -238,15 +237,11 @@ theorem mem_jacobson_bot {x : R} : x ∈ jacobson (⊥ : Ideal R) ↔ ∀ y, IsU
   ⟨fun hx y =>
     let ⟨z, hz⟩ := (mem_jacobson_iff.1 hx) y
     is_unit_iff_exists_inv.2
-      ⟨z, by
-        rwa [add_mulₓ, one_mulₓ, ← sub_eq_zero, mul_right_commₓ, mul_comm _ z, mul_right_commₓ]⟩,
+      ⟨z, by rwa [add_mulₓ, one_mulₓ, ← sub_eq_zero, mul_right_commₓ, mul_comm _ z, mul_right_commₓ]⟩,
     fun h =>
     mem_jacobson_iff.mpr fun y =>
       let ⟨b, hb⟩ := is_unit_iff_exists_inv.1 (h y)
-      ⟨b,
-        (Submodule.mem_bot R).2
-          (hb ▸ by
-            ring)⟩⟩
+      ⟨b, (Submodule.mem_bot R).2 (hb ▸ by ring)⟩⟩
 
 /-- An ideal `I` of `R` is equal to its Jacobson radical if and only if
 the Jacobson radical of the quotient ring `R/I` is the zero ideal -/
@@ -308,15 +303,13 @@ theorem jacobson_bot_polynomial_le_Inf_map_maximal :
     rwa [map_jacobson_of_bijective _, map_bot] at this
     exact RingEquiv.bijective (polynomial_quotient_equiv_quotient_polynomial j)
   refine' eq_bot_iff.2 fun f hf => _
-  simpa [(fun hX => by
-      simpa using congr_arg (fun f => coeff f 1) hX : (X : (R ⧸ j)[X]) ≠ 0)] using
+  simpa [(fun hX => by simpa using congr_arg (fun f => coeff f 1) hX : (X : (R ⧸ j)[X]) ≠ 0)] using
     eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit ((mem_jacobson_bot.1 hf) X))
 
 theorem jacobson_bot_polynomial_of_jacobson_bot (h : jacobson (⊥ : Ideal R) = ⊥) : jacobson (⊥ : Ideal R[X]) = ⊥ := by
   refine' eq_bot_iff.2 (le_transₓ jacobson_bot_polynomial_le_Inf_map_maximal _)
   refine' fun f hf => (Submodule.mem_bot _).2 (Polynomial.ext fun n => trans _ (coeff_zero n).symm)
-  suffices f.coeff n ∈ Ideal.jacobson ⊥ by
-    rwa [h, Submodule.mem_bot] at this
+  suffices f.coeff n ∈ Ideal.jacobson ⊥ by rwa [h, Submodule.mem_bot] at this
   exact mem_Inf.2 fun j hj => (mem_map_C_iff.1 ((mem_Inf.1 hf) ⟨j, ⟨hj.2, rfl⟩⟩)) n
 
 end Polynomial
@@ -347,9 +340,7 @@ theorem IsLocal.mem_jacobson_or_exists_inv {I : Ideal R} (hi : IsLocal I) (x : R
     (fun h : I ⊔ span {x} = ⊤ =>
       let ⟨p, hpi, q, hq, hpq⟩ := Submodule.mem_sup.1 ((eq_top_iff_one _).1 h)
       let ⟨r, hr⟩ := mem_span_singleton.1 hq
-      Or.inr
-        ⟨r, by
-          rw [← hpq, mul_comm, ← hr, ← neg_sub, add_sub_cancel] <;> exact I.neg_mem hpi⟩)
+      Or.inr ⟨r, by rw [← hpq, mul_comm, ← hr, ← neg_sub, add_sub_cancel] <;> exact I.neg_mem hpi⟩)
     fun h : I ⊔ span {x} ≠ ⊤ =>
     Or.inl <| le_transₓ le_sup_right (hi.le_jacobson le_sup_left h) <| mem_span_singleton.2 <| dvd_refl x
 

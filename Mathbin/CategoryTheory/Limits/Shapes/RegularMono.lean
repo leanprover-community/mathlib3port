@@ -56,10 +56,7 @@ instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] : Regula
   right := h
   w := equalizer.condition g h
   IsLimit :=
-    Fork.IsLimit.mk _ (fun s => limit.lift _ s)
-      (by
-        simp )
-      fun s m w => by
+    Fork.IsLimit.mk _ (fun s => limit.lift _ s) (by simp) fun s m w => by
       ext1
       simp [← w]
 
@@ -68,8 +65,7 @@ instance (priority := 100) RegularMono.ofIsSplitMono (f : X ⟶ Y) [IsSplitMono 
   z := Y
   left := 𝟙 Y
   right := retraction f ≫ f
-  w := by
-    tidy
+  w := by tidy
   IsLimit := isSplitMonoEqualizes f
 
 /-- If `f` is a regular mono, then any map `k : W ⟶ Y` equalizing `regular_mono.left` and
@@ -89,8 +85,7 @@ def regularOfIsPullbackSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h
   z := hr.z
   left := k ≫ hr.left
   right := k ≫ hr.right
-  w := by
-    rw [← reassoc_of comm, ← reassoc_of comm, hr.w]
+  w := by rw [← reassoc_of comm, ← reassoc_of comm, hr.w]
   IsLimit := by
     apply fork.is_limit.mk' _ _
     intro s
@@ -176,10 +171,7 @@ instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] : Re
   right := h
   w := coequalizer.condition g h
   IsColimit :=
-    Cofork.IsColimit.mk _ (fun s => colimit.desc _ s)
-      (by
-        simp )
-      fun s m w => by
+    Cofork.IsColimit.mk _ (fun s => colimit.desc _ s) (by simp) fun s m w => by
       ext1
       simp [← w]
 
@@ -188,8 +180,7 @@ instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [IsSplitEpi f] : 
   w := X
   left := 𝟙 X
   right := f ≫ section_ f
-  w := by
-    tidy
+  w := by tidy
   IsColimit := isSplitEpiCoequalizes f
 
 /-- If `f` is a regular epi, then every morphism `k : X ⟶ W` coequalizing `regular_epi.left` and
@@ -208,8 +199,7 @@ def regularOfIsPushoutSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h 
   w := gr.w
   left := gr.left ≫ f
   right := gr.right ≫ f
-  w := by
-    rw [category.assoc, category.assoc, comm, reassoc_of gr.w]
+  w := by rw [category.assoc, category.assoc, comm, reassoc_of gr.w]
   IsColimit := by
     apply cofork.is_colimit.mk' _ _
     intro s
@@ -247,10 +237,7 @@ instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [RegularEpi f
       obtain ⟨t, ht⟩ := regular_epi.desc' f u this
       exact
         comm_sq.has_lift.mk'
-          ⟨t, ht,
-            (cancel_epi f).1
-              (by
-                simp only [← category.assoc, ht, ← sq.w, arrow.mk_hom, arrow.hom_mk'_right])⟩)
+          ⟨t, ht, (cancel_epi f).1 (by simp only [← category.assoc, ht, ← sq.w, arrow.mk_hom, arrow.hom_mk'_right])⟩)
 
 /-- A regular epimorphism is an isomorphism if it is a monomorphism. -/
 theorem is_iso_of_regular_epi_of_mono (f : X ⟶ Y) [RegularEpi f] [m : Mono f] : IsIso f :=

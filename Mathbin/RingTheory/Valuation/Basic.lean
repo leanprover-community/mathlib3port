@@ -164,22 +164,22 @@ theorem map_add_le {x y g} (hx : v x ≤ g) (hy : v y ≤ g) : v (x + y) ≤ g :
 theorem map_add_lt {x y g} (hx : v x < g) (hy : v y < g) : v (x + y) < g :=
   lt_of_le_of_ltₓ (v.map_add x y) <| max_ltₓ hx hy
 
-theorem map_sum_le {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf : ∀ i ∈ s, v (f i) ≤ g) :
+theorem map_sum_le {ι : Type _} {s : Finsetₓ ι} {f : ι → R} {g : Γ₀} (hf : ∀ i ∈ s, v (f i) ≤ g) :
     v (∑ i in s, f i) ≤ g := by
-  refine' Finset.induction_on s (fun _ => trans_rel_right (· ≤ ·) v.map_zero zero_le') (fun a s has ih hf => _) hf
-  rw [Finset.forall_mem_insert] at hf
-  rw [Finset.sum_insert has]
+  refine' Finsetₓ.induction_on s (fun _ => trans_rel_right (· ≤ ·) v.map_zero zero_le') (fun a s has ih hf => _) hf
+  rw [Finsetₓ.forall_mem_insert] at hf
+  rw [Finsetₓ.sum_insert has]
   exact v.map_add_le hf.1 (ih hf.2)
 
-theorem map_sum_lt {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g ≠ 0) (hf : ∀ i ∈ s, v (f i) < g) :
+theorem map_sum_lt {ι : Type _} {s : Finsetₓ ι} {f : ι → R} {g : Γ₀} (hg : g ≠ 0) (hf : ∀ i ∈ s, v (f i) < g) :
     v (∑ i in s, f i) < g := by
   refine'
-    Finset.induction_on s (fun _ => trans_rel_right (· < ·) v.map_zero (zero_lt_iff.2 hg)) (fun a s has ih hf => _) hf
-  rw [Finset.forall_mem_insert] at hf
-  rw [Finset.sum_insert has]
+    Finsetₓ.induction_on s (fun _ => trans_rel_right (· < ·) v.map_zero (zero_lt_iff.2 hg)) (fun a s has ih hf => _) hf
+  rw [Finsetₓ.forall_mem_insert] at hf
+  rw [Finsetₓ.sum_insert has]
   exact v.map_add_lt hf.1 (ih hf.2)
 
-theorem map_sum_lt' {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : 0 < g) (hf : ∀ i ∈ s, v (f i) < g) :
+theorem map_sum_lt' {ι : Type _} {s : Finsetₓ ι} {f : ι → R} {g : Γ₀} (hg : 0 < g) (hf : ∀ i ∈ s, v (f i) < g) :
     v (∑ i in s, f i) < g :=
   v.map_sum_lt (ne_of_gtₓ hg) hf
 
@@ -211,8 +211,7 @@ theorem unit_map_eq (u : Rˣ) : (Units.map (v : R →* Γ₀) u : Γ₀) = v u :
 /-- A ring homomorphism `S → R` induces a map `valuation R Γ₀ → valuation S Γ₀`. -/
 def comap {S : Type _} [Ringₓ S] (f : S →+* R) (v : Valuation R Γ₀) : Valuation S Γ₀ :=
   { v.toMonoidWithZeroHom.comp f.toMonoidWithZeroHom with toFun := v ∘ f,
-    map_add_le_max' := fun x y => by
-      simp only [comp_app, map_add, f.map_add] }
+    map_add_le_max' := fun x y => by simp only [comp_app, map_add, f.map_add] }
 
 @[simp]
 theorem comap_apply {S : Type _} [Ringₓ S] (f : S →+* R) (v : Valuation R Γ₀) (s : S) : v.comap f s = v (f s) :=
@@ -228,7 +227,7 @@ theorem comap_comp {S₁ : Type _} {S₂ : Type _} [Ringₓ S₁] [Ringₓ S₂]
 
 /-- A `≤`-preserving group homomorphism `Γ₀ → Γ'₀` induces a map `valuation R Γ₀ → valuation R Γ'₀`.
 -/
-def map (f : Γ₀ →*₀ Γ'₀) (hf : Monotone f) (v : Valuation R Γ₀) : Valuation R Γ'₀ :=
+def map (f : Γ₀ →*₀ Γ'₀) (hf : Monotoneₓ f) (v : Valuation R Γ₀) : Valuation R Γ'₀ :=
   { MonoidWithZeroHom.comp f v.toMonoidWithZeroHom with toFun := f ∘ v,
     map_add_le_max' := fun r s =>
       calc
@@ -255,11 +254,9 @@ theorem map_sub_swap (x y : R) : v (x - y) = v (y - x) :=
 
 theorem map_sub (x y : R) : v (x - y) ≤ max (v x) (v y) :=
   calc
-    v (x - y) = v (x + -y) := by
-      rw [sub_eq_add_neg]
+    v (x - y) = v (x + -y) := by rw [sub_eq_add_neg]
     _ ≤ max (v x) (v <| -y) := v.map_add _ _
-    _ = max (v x) (v y) := by
-      rw [map_neg]
+    _ = max (v x) (v y) := by rw [map_neg]
     
 
 theorem map_sub_le {x y g} (hx : v x ≤ g) (hy : v y ≤ g) : v (x - y) ≤ g := by
@@ -276,8 +273,7 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = max (v x) (v y) 
   · rw [max_eq_left_of_ltₓ vyx] at h'
     apply lt_irreflₓ (v x)
     calc
-      v x = v (x + y - y) := by
-        simp
+      v x = v (x + y - y) := by simp
       _ ≤ max (v <| x + y) (v y) := map_sub _ _ _
       _ < v x := max_ltₓ h' vyx
       
@@ -324,8 +320,7 @@ def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) : AddSubgroup R where
     contrapose! h
     simpa using h
   add_mem' := fun x y x_in y_in => lt_of_le_of_ltₓ (v.map_add x y) (max_ltₓ x_in y_in)
-  neg_mem' := fun x x_in => by
-    rwa [Set.mem_set_of_eq, map_neg]
+  neg_mem' := fun x x_in => by rwa [Set.mem_set_of_eq, map_neg]
 
 end Groupₓ
 
@@ -351,19 +346,16 @@ theorem symm (h : v₁.IsEquiv v₂) : v₂.IsEquiv v₁ := fun _ _ => Iff.symm 
 @[trans]
 theorem trans (h₁₂ : v₁.IsEquiv v₂) (h₂₃ : v₂.IsEquiv v₃) : v₁.IsEquiv v₃ := fun _ _ => Iff.trans (h₁₂ _ _) (h₂₃ _ _)
 
-theorem of_eq {v' : Valuation R Γ₀} (h : v = v') : v.IsEquiv v' := by
-  subst h
+theorem of_eq {v' : Valuation R Γ₀} (h : v = v') : v.IsEquiv v' := by subst h
 
-theorem map {v' : Valuation R Γ₀} (f : Γ₀ →*₀ Γ'₀) (hf : Monotone f) (inf : Injective f) (h : v.IsEquiv v') :
+theorem map {v' : Valuation R Γ₀} (f : Γ₀ →*₀ Γ'₀) (hf : Monotoneₓ f) (inf : Injective f) (h : v.IsEquiv v') :
     (v.map f hf).IsEquiv (v'.map f hf) :=
-  let H : StrictMono f := hf.strict_mono_of_injective inf
+  let H : StrictMonoₓ f := hf.strict_mono_of_injective inf
   fun r s =>
   calc
-    f (v r) ≤ f (v s) ↔ v r ≤ v s := by
-      rw [H.le_iff_le]
+    f (v r) ≤ f (v s) ↔ v r ≤ v s := by rw [H.le_iff_le]
     _ ↔ v' r ≤ v' s := h r s
-    _ ↔ f (v' r) ≤ f (v' s) := by
-      rw [H.le_iff_le]
+    _ ↔ f (v' r) ≤ f (v' s) := by rw [H.le_iff_le]
     
 
 /-- `comap` preserves equivalence. -/
@@ -383,21 +375,18 @@ end IsEquiv
 section
 
 theorem is_equiv_of_map_strict_mono [LinearOrderedCommMonoidWithZero Γ₀] [LinearOrderedCommMonoidWithZero Γ'₀] [Ringₓ R]
-    {v : Valuation R Γ₀} (f : Γ₀ →*₀ Γ'₀) (H : StrictMono f) : IsEquiv (v.map f H.Monotone) v := fun x y =>
+    {v : Valuation R Γ₀} (f : Γ₀ →*₀ Γ'₀) (H : StrictMonoₓ f) : IsEquiv (v.map f H.Monotone) v := fun x y =>
   ⟨H.le_iff_le.mp, fun h => H.Monotone h⟩
 
 theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀]
     (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) (h : ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1) : v.IsEquiv v' := by
   intro x y
-  by_cases' hy : y = 0
+  by_cases hy:y = 0
   · simp [hy, zero_iff]
     
-  rw
-    [show y = 1 * y by
-      rw [one_mulₓ]]
+  rw [show y = 1 * y by rw [one_mulₓ]]
   rw [← inv_mul_cancel_right₀ hy x]
-  iterate 2 
-    rw [v.map_mul _ y, v'.map_mul _ y]
+  iterate 2 rw [v.map_mul _ y, v'.map_mul _ y]
   rw [v.map_one, v'.map_one]
   constructor <;> intro H
   · apply mul_le_mul_right'
@@ -413,8 +402,7 @@ theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrd
 
 theorem is_equiv_iff_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀]
     (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) : v.IsEquiv v' ↔ ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1 :=
-  ⟨fun h x => by
-    simpa using h x 1, is_equiv_of_val_le_one _ _⟩
+  ⟨fun h x => by simpa using h x 1, is_equiv_of_val_le_one _ _⟩
 
 theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀]
     (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) : v.IsEquiv v' ↔ ∀ {x : K}, v x = 1 ↔ v' x = 1 := by
@@ -433,9 +421,7 @@ theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOr
           apply map_add_eq_of_lt_left
           simpa
         rw [h] at this
-        rw
-          [show x = -1 + (1 + x) by
-            simp ]
+        rw [show x = -1 + (1 + x) by simp]
         refine' le_transₓ (v'.map_add _ _) _
         simp [this]
         
@@ -450,9 +436,7 @@ theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOr
           apply map_add_eq_of_lt_left
           simpa
         rw [← h] at this
-        rw
-          [show x = -1 + (1 + x) by
-            simp ]
+        rw [show x = -1 + (1 + x) by simp]
         refine' le_transₓ (v.map_add _ _) _
         simp [this]
         
@@ -471,7 +455,7 @@ theorem is_equiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOr
     
   · rw [is_equiv_iff_val_eq_one]
     intro h x
-    by_cases' hx : x = 0
+    by_cases hx:x = 0
     · simp only [(zero_iff _).2 hx, zero_ne_one]
       
     constructor
@@ -576,12 +560,8 @@ theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a := by
     simp [h']
   apply le_antisymmₓ (aux a s h)
   calc
-    v a = v (a + s + -s) := by
-      simp
-    _ ≤ v (a + s) :=
-      aux (a + s) (-s)
-        (by
-          rwa [← Ideal.neg_mem_iff] at h)
+    v a = v (a + s + -s) := by simp
+    _ ≤ v (a + s) := aux (a + s) (-s) (by rwa [← Ideal.neg_mem_iff] at h)
     
 
 /-- If `hJ : J ⊆ supp v` then `on_quot_val hJ` is the induced function on R/J as a function.
@@ -589,8 +569,7 @@ Note: it's just the function; the valuation is `on_quot hJ`. -/
 def onQuotVal {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ := fun q =>
   (Quotientₓ.liftOn' q v) fun a b h =>
     calc
-      v a = v (b + -(-a + b)) := by
-        simp
+      v a = v (b + -(-a + b)) := by simp
       _ = v b := v.map_add_supp b <| (Ideal.neg_mem_iff _).2 <| hJ <| QuotientAddGroup.left_rel_apply.mp h
       
 
@@ -724,15 +703,15 @@ theorem map_le_add {x y g} (hx : g ≤ v x) (hy : g ≤ v y) : g ≤ v (x + y) :
 theorem map_lt_add {x y g} (hx : g < v x) (hy : g < v y) : g < v (x + y) :=
   v.map_add_lt hx hy
 
-theorem map_le_sum {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf : ∀ i ∈ s, g ≤ v (f i)) :
+theorem map_le_sum {ι : Type _} {s : Finsetₓ ι} {f : ι → R} {g : Γ₀} (hf : ∀ i ∈ s, g ≤ v (f i)) :
     g ≤ v (∑ i in s, f i) :=
   v.map_sum_le hf
 
-theorem map_lt_sum {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g ≠ ⊤) (hf : ∀ i ∈ s, g < v (f i)) :
+theorem map_lt_sum {ι : Type _} {s : Finsetₓ ι} {f : ι → R} {g : Γ₀} (hg : g ≠ ⊤) (hf : ∀ i ∈ s, g < v (f i)) :
     g < v (∑ i in s, f i) :=
   v.map_sum_lt hg hf
 
-theorem map_lt_sum' {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g < ⊤) (hf : ∀ i ∈ s, g < v (f i)) :
+theorem map_lt_sum' {ι : Type _} {s : Finsetₓ ι} {f : ι → R} {g : Γ₀} (hg : g < ⊤) (hf : ∀ i ∈ s, g < v (f i)) :
     g < v (∑ i in s, f i) :=
   v.map_sum_lt' hg hf
 
@@ -776,7 +755,7 @@ theorem comap_comp {S₁ : Type _} {S₂ : Type _} [Ringₓ S₁] [Ringₓ S₂]
 /-- A `≤`-preserving, `⊤`-preserving group homomorphism `Γ₀ → Γ'₀` induces a map
   `add_valuation R Γ₀ → add_valuation R Γ'₀`.
 -/
-def map (f : Γ₀ →+ Γ'₀) (ht : f ⊤ = ⊤) (hf : Monotone f) (v : AddValuation R Γ₀) : AddValuation R Γ'₀ :=
+def map (f : Γ₀ →+ Γ'₀) (ht : f ⊤ = ⊤) (hf : Monotoneₓ f) (v : AddValuation R Γ₀) : AddValuation R Γ'₀ :=
   v.map { toFun := f, map_mul' := f.map_add, map_one' := f.map_zero, map_zero' := ht } fun x y h => hf h
 
 /-- Two additive valuations on `R` are defined to be equivalent if they induce the same
@@ -844,7 +823,7 @@ theorem trans (h₁₂ : v₁.IsEquiv v₂) (h₂₃ : v₂.IsEquiv v₃) : v₁
 theorem of_eq {v' : AddValuation R Γ₀} (h : v = v') : v.IsEquiv v' :=
   Valuation.IsEquiv.of_eq h
 
-theorem map {v' : AddValuation R Γ₀} (f : Γ₀ →+ Γ'₀) (ht : f ⊤ = ⊤) (hf : Monotone f) (inf : Injective f)
+theorem map {v' : AddValuation R Γ₀} (f : Γ₀ →+ Γ'₀) (ht : f ⊤ = ⊤) (hf : Monotoneₓ f) (inf : Injective f)
     (h : v.IsEquiv v') : (v.map f ht hf).IsEquiv (v'.map f ht hf) :=
   h.map { toFun := f, map_mul' := f.map_add, map_one' := f.map_zero, map_zero' := ht } (fun x y h => hf h) inf
 

@@ -39,8 +39,7 @@ def verschiebungFun (x : 𝕎 R) : 𝕎 R :=
   (mk p) fun n => if n = 0 then 0 else x.coeff (n - 1)
 
 theorem verschiebung_fun_coeff (x : 𝕎 R) (n : ℕ) : (verschiebungFun x).coeff n = if n = 0 then 0 else x.coeff (n - 1) :=
-  by
-  rw [verschiebung_fun, coeff_mk]
+  by rw [verschiebung_fun, coeff_mk]
 
 theorem verschiebung_fun_coeff_zero (x : 𝕎 R) : (verschiebungFun x).coeff 0 = 0 := by
   rw [verschiebung_fun_coeff, if_pos rfl]
@@ -53,15 +52,15 @@ include hp
 
 @[ghost_simps]
 theorem ghost_component_zero_verschiebung_fun (x : 𝕎 R) : ghostComponent 0 (verschiebungFun x) = 0 := by
-  rw [ghost_component_apply, aeval_witt_polynomial, Finset.range_one, Finset.sum_singleton, verschiebung_fun_coeff_zero,
-    pow_zeroₓ, pow_zeroₓ, pow_oneₓ, one_mulₓ]
+  rw [ghost_component_apply, aeval_witt_polynomial, Finsetₓ.range_one, Finsetₓ.sum_singleton,
+    verschiebung_fun_coeff_zero, pow_zeroₓ, pow_zeroₓ, pow_oneₓ, one_mulₓ]
 
 @[ghost_simps]
 theorem ghost_component_verschiebung_fun (x : 𝕎 R) (n : ℕ) :
     ghostComponent (n + 1) (verschiebungFun x) = p * ghostComponent n x := by
   simp only [ghost_component_apply, aeval_witt_polynomial]
-  rw [Finset.sum_range_succ', verschiebung_fun_coeff, if_pos rfl, zero_pow (pow_pos hp.1.Pos _), mul_zero, add_zeroₓ,
-    Finset.mul_sum, Finset.sum_congr rfl]
+  rw [Finsetₓ.sum_range_succ', verschiebung_fun_coeff, if_pos rfl, zero_pow (pow_pos hp.1.Pos _), mul_zero, add_zeroₓ,
+    Finsetₓ.mul_sum, Finsetₓ.sum_congr rfl]
   rintro i -
   simp only [pow_succₓ, mul_assoc, verschiebung_fun_coeff, if_neg (Nat.succ_ne_zero i), Nat.succ_sub_succ, tsub_zero]
 
@@ -106,8 +105,7 @@ This is a additive monoid hom with underlying function `verschiebung_fun`.
 -/
 noncomputable def verschiebung : 𝕎 R →+ 𝕎 R where
   toFun := verschiebungFun
-  map_zero' := by
-    ext ⟨⟩ <;> rw [verschiebung_fun_coeff] <;> simp only [if_true, eq_self_iff_true, zero_coeff, if_t_t]
+  map_zero' := by ext ⟨⟩ <;> rw [verschiebung_fun_coeff] <;> simp only [if_true, eq_self_iff_true, zero_coeff, if_t_t]
   map_add' := by
     ghost_calc _ _
     rintro ⟨⟩ <;> ghost_simp

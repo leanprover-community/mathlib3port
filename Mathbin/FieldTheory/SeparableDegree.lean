@@ -97,10 +97,7 @@ https://stacks.math.columbia.edu/tag/09H0 -/
 theorem _root_.irreducible.has_separable_contraction (q : ℕ) [hF : ExpChar F q] (f : F[X]) (irred : Irreducible f) :
     HasSeparableContraction q f := by
   cases hF
-  · exact
-      ⟨f, irred.separable,
-        ⟨0, by
-          rw [pow_zeroₓ, expand_one]⟩⟩
+  · exact ⟨f, irred.separable, ⟨0, by rw [pow_zeroₓ, expand_one]⟩⟩
     
   · rcases exists_separable_of_irreducible q irred ‹q.prime›.ne_zero with ⟨n, g, hgs, hge⟩
     exact ⟨g, hgs, n, hge⟩
@@ -123,11 +120,10 @@ theorem contraction_degree_eq_aux [hq : Fact q.Prime] [hF : CharP F q] (g g' : F
 theorem contraction_degree_eq_or_insep [hq : Fact q.Prime] [CharP F q] (g g' : F[X]) (m m' : ℕ)
     (h_expand : expand F (q ^ m) g = expand F (q ^ m') g') (hg : g.Separable) (hg' : g'.Separable) :
     g.natDegree = g'.natDegree := by
-  by_cases' h : m = m'
+  by_cases h:m = m'
   · -- if `m = m'` then we show `g.nat_degree = g'.nat_degree` by unfolding the definitions
     rw [h] at h_expand
-    have expand_deg : ((expand F (q ^ m')) g).natDegree = (expand F (q ^ m') g').natDegree := by
-      rw [h_expand]
+    have expand_deg : ((expand F (q ^ m')) g).natDegree = (expand F (q ^ m') g').natDegree := by rw [h_expand]
     rw [nat_degree_expand (q ^ m') g, nat_degree_expand (q ^ m') g'] at expand_deg
     apply Nat.eq_of_mul_eq_mul_leftₓ (pow_pos hq.1.Pos m')
     rw [mul_comm] at expand_deg

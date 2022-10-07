@@ -104,8 +104,7 @@ variable {k : Type _} [Field k] [CharP k p] [IsAlgClosed k]
 
 theorem root_exists (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :
     ∃ b : k, (succNthDefiningPoly p n a₁ a₂ bs).IsRoot b :=
-  IsAlgClosed.exists_root _ <| by
-    simp [succ_nth_defining_poly_degree p n a₁ a₂ bs ha₁ ha₂, hp.out.ne_zero]
+  IsAlgClosed.exists_root _ <| by simp [succ_nth_defining_poly_degree p n a₁ a₂ bs ha₁ ha₂, hp.out.ne_zero]
 
 /-- This is the `n+1`st coefficient of our solution, projected from `root_exists`. -/
 def succNthVal (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) : k :=
@@ -140,8 +139,7 @@ include hp
 variable {k : Type _} [Field k] [IsAlgClosed k]
 
 theorem solution_pow (a₁ a₂ : 𝕎 k) : ∃ x : k, x ^ (p - 1) = a₂.coeff 0 / a₁.coeff 0 :=
-  IsAlgClosed.exists_pow_nat_eq _ <| by
-    linarith [hp.out.one_lt, le_of_ltₓ hp.out.one_lt]
+  IsAlgClosed.exists_pow_nat_eq _ <| by linarith [hp.out.one_lt, le_of_ltₓ hp.out.one_lt]
 
 /-- The base case (0th coefficient) of our solution vector. -/
 def solution (a₁ a₂ : 𝕎 k) : k :=
@@ -163,9 +161,12 @@ theorem solution_spec' {a₁ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0) (a₂ : 𝕎
     solution p a₁ a₂ ^ p * a₁.coeff 0 = solution p a₁ a₂ * a₂.coeff 0 := by
   have := solution_spec p a₁ a₂
   cases' Nat.exists_eq_succ_of_ne_zero hp.out.ne_zero with q hq
-  have hq' : q = p - 1 := by
-    simp only [hq, tsub_zero, Nat.succ_sub_succ_eq_sub]
-  conv_lhs => congr congr skip rw [hq]
+  have hq' : q = p - 1 := by simp only [hq, tsub_zero, Nat.succ_sub_succ_eq_sub]
+  conv_lhs =>
+  congr
+  congr
+  skip
+  rw [hq]
   rw [pow_succ'ₓ, hq', this]
   field_simp [ha₁, mul_comm]
 
@@ -231,13 +232,10 @@ theorem exists_frobenius_solution_fraction_ring_aux (m n : ℕ) (r' q' : 𝕎 k)
   intro b
   have key : WittVector.frobenius b * p ^ m * r' * p ^ n = p ^ m * b * (p ^ n * q') := by
     have H := congr_arg (fun x : 𝕎 k => x * p ^ m * p ^ n) (frobenius_frobenius_rotation p hr' hq')
-    dsimp'  at H
+    dsimp at H
     refine' (Eq.trans _ H).trans _ <;> ring
   have hq'' : algebraMap (𝕎 k) (FractionRing (𝕎 k)) q' ≠ 0 := by
-    have hq''' : q' ≠ 0 := fun h =>
-      hq'
-        (by
-          simp [h])
+    have hq''' : q' ≠ 0 := fun h => hq' (by simp [h])
     simpa only [Ne.def, map_zero] using (IsFractionRing.injective (𝕎 k) (FractionRing (𝕎 k))).Ne hq'''
   rw [zpow_sub₀ (fraction_ring.p_nonzero p k)]
   field_simp [fraction_ring.p_nonzero p k]
@@ -256,10 +254,7 @@ theorem exists_frobenius_solution_fraction_ring {a : FractionRing (𝕎 k)} (ha 
   refine' Localization.induction_on a _
   rintro ⟨r, q, hq⟩ hrq
   have hq0 : q ≠ 0 := mem_non_zero_divisors_iff_ne_zero.1 hq
-  have hr0 : r ≠ 0 := fun h =>
-    hrq
-      (by
-        simp [h])
+  have hr0 : r ≠ 0 := fun h => hrq (by simp [h])
   obtain ⟨m, r', hr', rfl⟩ := exists_eq_pow_p_mul r hr0
   obtain ⟨n, q', hq', rfl⟩ := exists_eq_pow_p_mul q hq0
   let b := frobenius_rotation p hr' hq'

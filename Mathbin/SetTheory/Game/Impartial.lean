@@ -45,7 +45,7 @@ namespace Impartial
 
 instance impartial_zero : Impartial 0 := by
   rw [impartial_def]
-  dsimp'
+  dsimp
   simp
 
 instance impartial_star : Impartial star := by
@@ -82,15 +82,15 @@ instance impartial_add : ∀ (G H : Pgame) [G.Impartial] [H.Impartial], (G + H).
         fun k => _⟩
     · apply left_moves_add_cases k
       all_goals
-        intro i
-        simp only [add_move_left_inl, add_move_left_inr]
-        apply impartial_add
+      intro i
+      simp only [add_move_left_inl, add_move_left_inr]
+      apply impartial_add
       
     · apply right_moves_add_cases k
       all_goals
-        intro i
-        simp only [add_move_right_inl, add_move_right_inr]
-        apply impartial_add
+      intro i
+      simp only [add_move_right_inl, add_move_right_inr]
+      apply impartial_add
       
 
 instance impartial_neg : ∀ (G : Pgame) [G.Impartial], (-G).Impartial
@@ -112,12 +112,12 @@ variable (G : Pgame) [Impartial G]
 
 theorem nonpos : ¬0 < G := fun h => by
   have h' := neg_lt_neg_iff.2 h
-  rw [Pgame.neg_zero, lt_congr_left (neg_equiv_self G).symm] at h'
+  rw [neg_zero, lt_congr_left (neg_equiv_self G).symm] at h'
   exact (h.trans h').False
 
 theorem nonneg : ¬G < 0 := fun h => by
   have h' := neg_lt_neg_iff.2 h
-  rw [Pgame.neg_zero, lt_congr_right (neg_equiv_self G).symm] at h'
+  rw [neg_zero, lt_congr_right (neg_equiv_self G).symm] at h'
   exact (h.trans h').False
 
 /-- In an impartial game, either the first player always wins, or the second player always wins. -/

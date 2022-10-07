@@ -36,9 +36,7 @@ of `α`. See `tactic.typical_variable_names`.
 -/
 class HasVariableNames (α : Sort u) : Type where
   names : List Name
-  names_nonempty : 0 < names.length := by
-    run_tac
-      tactic.exact_dec_trivial
+  names_nonempty : 0 < names.length := by decide
 
 namespace Tactic
 
@@ -69,8 +67,7 @@ the generated instance for `β` has names `as`, `bs`, ... This can be used to
 create instances for 'containers' such as lists or sets.
 -/
 def makeListlikeInstance (α : Sort u) [HasVariableNames α] {β : Sort v} : HasVariableNames β :=
-  ⟨(names α).map fun n => n.appendSuffix "s", by
-    simp [names_nonempty]⟩
+  ⟨(names α).map fun n => n.appendSuffix "s", by simp [names_nonempty]⟩
 
 /-- `@make_inheriting_instance α _ β` creates an instance `has_variable_names β`
 from an instance `has_variable_names α`. The generated instance contains the

@@ -154,16 +154,15 @@ theorem InftyValuation.map_zero' : inftyValuationDef Fq 0 = 0 :=
   if_pos rfl
 
 theorem InftyValuation.map_one' : inftyValuationDef Fq 1 = 1 :=
-  (if_neg one_ne_zero).trans <| by
-    rw [Ratfunc.int_degree_one, of_add_zero, WithZero.coe_one]
+  (if_neg one_ne_zero).trans <| by rw [Ratfunc.int_degree_one, of_add_zero, WithZero.coe_one]
 
 theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :
     inftyValuationDef Fq (x * y) = inftyValuationDef Fq x * inftyValuationDef Fq y := by
   rw [infty_valuation_def, infty_valuation_def, infty_valuation_def]
-  by_cases' hx : x = 0
+  by_cases hx:x = 0
   · rw [hx, zero_mul, if_pos (Eq.refl _), zero_mul]
     
-  · by_cases' hy : y = 0
+  · by_cases hy:y = 0
     · rw [hy, mul_zero, if_pos (Eq.refl _), mul_zero]
       
     · rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ← of_add_add,
@@ -173,19 +172,19 @@ theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :
 
 theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
     inftyValuationDef Fq (x + y) ≤ max (inftyValuationDef Fq x) (inftyValuationDef Fq y) := by
-  by_cases' hx : x = 0
+  by_cases hx:x = 0
   · rw [hx, zero_addₓ]
     conv_rhs => rw [infty_valuation_def, if_pos (Eq.refl _)]
     rw [max_eq_rightₓ (WithZero.zero_le (infty_valuation_def Fq y))]
     exact le_reflₓ _
     
-  · by_cases' hy : y = 0
+  · by_cases hy:y = 0
     · rw [hy, add_zeroₓ]
       conv_rhs => rw [max_commₓ, infty_valuation_def, if_pos (Eq.refl _)]
       rw [max_eq_rightₓ (WithZero.zero_le (infty_valuation_def Fq x))]
       exact le_reflₓ _
       
-    · by_cases' hxy : x + y = 0
+    · by_cases hxy:x + y = 0
       · rw [infty_valuation_def, if_pos hxy]
         exact zero_le'
         
@@ -199,8 +198,7 @@ theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
 
 @[simp]
 theorem infty_valuation_of_nonzero {x : Ratfunc Fq} (hx : x ≠ 0) :
-    inftyValuationDef Fq x = Multiplicative.ofAdd x.intDegree := by
-  rw [infty_valuation_def, if_neg hx]
+    inftyValuationDef Fq x = Multiplicative.ofAdd x.intDegree := by rw [infty_valuation_def, if_neg hx]
 
 /-- The valuation at infinity on `Fq(t)`. -/
 def inftyValuation : Valuation (Ratfunc Fq) ℤₘ₀ where
@@ -243,9 +241,9 @@ theorem inftyValuedFqt.def {x : Ratfunc Fq} :
 def FqtInfty :=
   @UniformSpace.Completion (Ratfunc Fq) <| (inftyValuedFqt Fq).toUniformSpace
 
-instance : Field (FqtInfty Fq) := by
+instance : Field (FqtInfty Fq) :=
   letI := infty_valued_Fqt Fq
-  exact UniformSpace.Completion.field
+  UniformSpace.Completion.field
 
 instance : Inhabited (FqtInfty Fq) :=
   ⟨(0 : FqtInfty Fq)⟩

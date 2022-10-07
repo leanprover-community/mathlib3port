@@ -74,15 +74,12 @@ attribute [to_additive] GroupFilterBasis.conj'
 attribute [to_additive] GroupFilterBasis.toFilterBasis
 
 /-- `group_filter_basis` constructor in the commutative group case. -/
-@[to_additive "`add_group_filter_basis` constructor in the commutative group case."]
+@[to_additive "`add_group_filter_basis` constructor in the additive commutative group case."]
 def groupFilterBasisOfComm {G : Type _} [CommGroupₓ G] (sets : Set (Set G)) (nonempty : sets.Nonempty)
     (inter_sets : ∀ x y, x ∈ sets → y ∈ sets → ∃ z ∈ sets, z ⊆ x ∩ y) (one : ∀ U ∈ sets, (1 : G) ∈ U)
     (mul : ∀ U ∈ sets, ∃ V ∈ sets, V * V ⊆ U) (inv : ∀ U ∈ sets, ∃ V ∈ sets, V ⊆ (fun x => x⁻¹) ⁻¹' U) :
     GroupFilterBasis G :=
-  { Sets, Nonempty, inter_sets, one' := one, mul' := mul, inv' := inv,
-    conj' := fun x U U_in =>
-      ⟨U, U_in, by
-        simp ⟩ }
+  { Sets, Nonempty, inter_sets, one' := one, mul' := mul, inv' := inv, conj' := fun x U U_in => ⟨U, U_in, by simp⟩ }
 
 namespace GroupFilterBasis
 
@@ -114,8 +111,7 @@ is discrete. -/
 instance : Inhabited (GroupFilterBasis G) :=
   ⟨by
     refine' { Sets := {{1}}, Nonempty := singleton_nonempty _.. }
-    all_goals
-      simp only [exists_propₓ, mem_singleton_iff]
+    all_goals simp only [exists_propₓ, mem_singleton_iff]
     · rintro - - rfl rfl
       use {1}
       simp
@@ -144,8 +140,7 @@ theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U 
 def n (B : GroupFilterBasis G) : G → Filter G := fun x => map (fun y => x * y) B.toFilterBasis.filter
 
 @[simp, to_additive]
-theorem N_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by
-  simp only [N, one_mulₓ, map_id']
+theorem N_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by simp only [N, one_mulₓ, map_id']
 
 @[to_additive]
 protected theorem has_basis (B : GroupFilterBasis G) (x : G) :
@@ -180,9 +175,7 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
       apply subset.trans _ H
       clear H
       rintro z ⟨w, wW, rfl⟩
-      exact
-        ⟨t * w, hW (mul_mem_mul tW wW), by
-          simp [mul_assoc]⟩
+      exact ⟨t * w, hW (mul_mem_mul tW wW), by simp [mul_assoc]⟩
       
     
 
@@ -219,8 +212,7 @@ instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @Topo
   have basis' := Basis.prod Basis
   refine' TopologicalGroup.of_nhds_one _ _ _ _
   · rw [basis'.tendsto_iff Basis]
-    suffices ∀ U ∈ B, ∃ V W, (V ∈ B ∧ W ∈ B) ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by
-      simpa
+    suffices ∀ U ∈ B, ∃ V W, (V ∈ B ∧ W ∈ B) ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by simpa
     intro U U_in
     rcases mul U_in with ⟨V, V_in, hV⟩
     use V, V, V_in, V_in
@@ -284,8 +276,7 @@ instance (priority := 100) is_topological_ring {R : Type u} [Ringₓ R] (B : Rin
   haveI := B'.is_topological_add_group
   apply TopologicalRing.of_add_group_of_nhds_zero
   · rw [basis'.tendsto_iff Basis]
-    suffices ∀ U ∈ B', ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by
-      simpa
+    suffices ∀ U ∈ B', ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by simpa
     intro U U_in
     rcases B.mul U_in with ⟨V, V_in, hV⟩
     use V, V, V_in, V_in

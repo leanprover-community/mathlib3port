@@ -52,12 +52,8 @@ theorem smul_X (m : M) : (m • X : R[X]) = X :=
 variable (S : Type _) [CommSemiringₓ S] [MulSemiringAction M S]
 
 theorem smul_eval_smul (m : M) (f : S[X]) (x : S) : (m • f).eval (m • x) = m • f.eval x :=
-  Polynomial.induction_on f
-    (fun r => by
-      rw [smul_C, eval_C, eval_C])
-    (fun f g ihf ihg => by
-      rw [smul_add, eval_add, ihf, ihg, eval_add, smul_add])
-    fun n r ih => by
+  Polynomial.induction_on f (fun r => by rw [smul_C, eval_C, eval_C])
+    (fun f g ihf ihg => by rw [smul_add, eval_add, ihf, ihg, eval_add, smul_add]) fun n r ih => by
     rw [smul_mul', smul_pow', smul_C, smul_X, eval_mul, eval_C, eval_pow, eval_X, eval_mul, eval_C, eval_pow, eval_X,
       smul_mul', smul_pow']
 
@@ -73,7 +69,7 @@ end Polynomial
 
 section CommRingₓ
 
-variable (G : Type _) [Groupₓ G] [Fintype G]
+variable (G : Type _) [Groupₓ G] [Fintypeₓ G]
 
 variable (R : Type _) [CommRingₓ R] [MulSemiringAction G R]
 
@@ -83,7 +79,7 @@ open Classical
 
 /-- the product of `(X - g • x)` over distinct `g • x`. -/
 noncomputable def prodXSubSmul (x : R) : R[X] :=
-  (Finset.univ : Finset (G ⧸ MulAction.stabilizer G x)).Prod fun g =>
+  (Finsetₓ.univ : Finsetₓ (G ⧸ MulAction.stabilizer G x)).Prod fun g =>
     Polynomial.x - Polynomial.c (ofQuotientStabilizer G x g)
 
 theorem prodXSubSmul.monic (x : R) : (prodXSubSmul G R x).Monic :=
@@ -91,17 +87,15 @@ theorem prodXSubSmul.monic (x : R) : (prodXSubSmul G R x).Monic :=
 
 theorem prodXSubSmul.eval (x : R) : (prodXSubSmul G R x).eval x = 0 :=
   (MonoidHom.map_prod ((Polynomial.aeval x).toRingHom.toMonoidHom : R[X] →* R) _ _).trans <|
-    Finset.prod_eq_zero (Finset.mem_univ <| QuotientGroup.mk 1) <| by
-      simp
+    Finsetₓ.prod_eq_zero (Finsetₓ.mem_univ <| QuotientGroup.mk 1) <| by simp
 
 theorem prodXSubSmul.smul (x : R) (g : G) : g • prodXSubSmul G R x = prodXSubSmul G R x :=
-  Finset.smul_prod.trans <|
-    Fintype.prod_bijective _ (MulAction.bijective g) _ _ fun g' => by
+  Finsetₓ.smul_prod.trans <|
+    Fintypeₓ.prod_bijective _ (MulAction.bijective g) _ _ fun g' => by
       rw [of_quotient_stabilizer_smul, smul_sub, Polynomial.smul_X, Polynomial.smul_C]
 
 theorem prodXSubSmul.coeff (x : R) (g : G) (n : ℕ) : g • (prodXSubSmul G R x).coeff n = (prodXSubSmul G R x).coeff n :=
-  by
-  rw [← Polynomial.coeff_smul, prodXSubSmul.smul]
+  by rw [← Polynomial.coeff_smul, prodXSubSmul.smul]
 
 end CommRingₓ
 
@@ -119,12 +113,8 @@ open Polynomial
 protected noncomputable def polynomial (g : P →+*[M] Q) : P[X] →+*[M] Q[X] where
   toFun := map g
   map_smul' := fun m p =>
-    Polynomial.induction_on p
-      (fun b => by
-        rw [smul_C, map_C, coe_fn_coe, g.map_smul, map_C, coe_fn_coe, smul_C])
-      (fun p q ihp ihq => by
-        rw [smul_add, Polynomial.map_add, ihp, ihq, Polynomial.map_add, smul_add])
-      fun n b ih => by
+    Polynomial.induction_on p (fun b => by rw [smul_C, map_C, coe_fn_coe, g.map_smul, map_C, coe_fn_coe, smul_C])
+      (fun p q ihp ihq => by rw [smul_add, Polynomial.map_add, ihp, ihq, Polynomial.map_add, smul_add]) fun n b ih => by
       rw [smul_mul', smul_C, smul_pow', smul_X, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X, coe_fn_coe,
         g.map_smul, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X, smul_mul', smul_C, smul_pow', smul_X,
         coe_fn_coe]

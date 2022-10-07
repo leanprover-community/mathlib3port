@@ -84,6 +84,9 @@ instance : CanonicallyOrderedAddMonoid PUnit := by
 instance : LinearOrderedCancelAddCommMonoid PUnit :=
   { PUnit.canonicallyOrderedAddMonoid, PUnit.linearOrder with le_of_add_le_add_left := fun _ _ _ _ => trivialₓ }
 
+instance : LinearOrderedAddCommMonoidWithTop PUnit :=
+  { PUnit.completeBooleanAlgebra, PUnit.linearOrderedCancelAddCommMonoid with top_add' := fun _ => rfl }
+
 instance : HasSmul R PUnit where smul := fun _ _ => unit
 
 @[simp]

@@ -135,12 +135,10 @@ theorem dist_map (x y : P) : dist (f x) (f y) = dist x y := by
   rw [dist_eq_norm_vsub V₂, dist_eq_norm_vsub V, ← map_vsub, f.linear_isometry.norm_map]
 
 @[simp]
-theorem nndist_map (x y : P) : nndist (f x) (f y) = nndist x y := by
-  simp [nndist_dist]
+theorem nndist_map (x y : P) : nndist (f x) (f y) = nndist x y := by simp [nndist_dist]
 
 @[simp]
-theorem edist_map (x y : P) : edist (f x) (f y) = edist x y := by
-  simp [edist_dist]
+theorem edist_map (x y : P) : edist (f x) (f y) = edist x y := by simp [edist_dist]
 
 protected theorem isometry : Isometry f :=
   f.edist_map
@@ -246,9 +244,32 @@ theorem coe_mul (f g : P →ᵃⁱ[𝕜] P) : ⇑(f * g) = f ∘ g :=
 
 end AffineIsometry
 
--- remark: by analogy with the `linear_isometry` file from which this is adapted, there should
--- follow here a section defining an "inclusion" affine isometry from `p : affine_subspace 𝕜 P`
--- into `P`; we omit this for now
+namespace AffineSubspace
+
+include V
+
+/-- `affine_subspace.subtype` as an `affine_isometry`. -/
+def subtypeₐᵢ (s : AffineSubspace 𝕜 P) [Nonempty s] : s →ᵃⁱ[𝕜] P :=
+  { s.Subtype with norm_map := s.direction.subtypeₗᵢ.norm_map }
+
+theorem subtypeₐᵢ_linear (s : AffineSubspace 𝕜 P) [Nonempty s] : s.subtypeₐᵢ.linear = s.direction.Subtype :=
+  rfl
+
+@[simp]
+theorem subtypeₐᵢ_linear_isometry (s : AffineSubspace 𝕜 P) [Nonempty s] :
+    s.subtypeₐᵢ.LinearIsometry = s.direction.subtypeₗᵢ :=
+  rfl
+
+@[simp]
+theorem coe_subtypeₐᵢ (s : AffineSubspace 𝕜 P) [Nonempty s] : ⇑s.subtypeₐᵢ = s.Subtype :=
+  rfl
+
+@[simp]
+theorem subtypeₐᵢ_to_affine_map (s : AffineSubspace 𝕜 P) [Nonempty s] : s.subtypeₐᵢ.toAffineMap = s.Subtype :=
+  rfl
+
+end AffineSubspace
+
 variable (𝕜 P P₂)
 
 include V V₂

@@ -55,22 +55,14 @@ you will not typically need to use this bundled object, and will instead use
 structure InjectiveResolution (Z : C) where
   cocomplex : CochainComplex C ℕ
   ι : (CochainComplex.single₀ C).obj Z ⟶ cocomplex
-  Injective : ∀ n, Injective (cocomplex.x n) := by
-    run_tac
-      tactic.apply_instance
-  exact₀ : Exact (ι.f 0) (cocomplex.d 0 1) := by
-    run_tac
-      tactic.apply_instance
-  exact : ∀ n, Exact (cocomplex.d n (n + 1)) (cocomplex.d (n + 1) (n + 2)) := by
-    run_tac
-      tactic.apply_instance
-  mono : Mono (ι.f 0) := by
-    run_tac
-      tactic.apply_instance
+  Injective : ∀ n, Injective (cocomplex.x n) := by infer_instance
+  exact₀ : Exact (ι.f 0) (cocomplex.d 0 1) := by infer_instance
+  exact : ∀ n, Exact (cocomplex.d n (n + 1)) (cocomplex.d (n + 1) (n + 2)) := by infer_instance
+  mono : Mono (ι.f 0) := by infer_instance
 
 attribute [instance] InjectiveResolution.injective InjectiveResolution.mono
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`out] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- An object admits a injective resolution. -/
 class HasInjectiveResolution (Z : C) : Prop where
   out : Nonempty (InjectiveResolution Z)
@@ -93,7 +85,7 @@ namespace InjectiveResolution
 @[simp]
 theorem ι_f_succ {Z : C} (I : InjectiveResolution Z) (n : ℕ) : I.ι.f (n + 1) = 0 := by
   apply zero_of_source_iso_zero
-  dsimp'
+  dsimp
   rfl
 
 @[simp]
@@ -105,8 +97,7 @@ theorem complex_d_comp {Z : C} (I : InjectiveResolution Z) (n : ℕ) :
     I.cocomplex.d n (n + 1) ≫ I.cocomplex.d (n + 1) (n + 2) = 0 :=
   (I.exact _).w
 
-instance {Z : C} (I : InjectiveResolution Z) (n : ℕ) : CategoryTheory.Mono (I.ι.f n) := by
-  cases n <;> infer_instance
+instance {Z : C} (I : InjectiveResolution Z) (n : ℕ) : CategoryTheory.Mono (I.ι.f n) := by cases n <;> infer_instance
 
 /-- An injective object admits a trivial injective resolution: itself in degree 0. -/
 def self (Z : C) [CategoryTheory.Injective Z] : InjectiveResolution Z where
@@ -114,17 +105,17 @@ def self (Z : C) [CategoryTheory.Injective Z] : InjectiveResolution Z where
   ι := 𝟙 ((CochainComplex.single₀ C).obj Z)
   Injective := fun n => by
     cases n <;>
-      · dsimp'
+      · dsimp
         infer_instance
         
   exact₀ := by
-    dsimp'
+    dsimp
     exact exact_epi_zero _
   exact := fun n => by
-    dsimp'
+    dsimp
     exact exact_of_zero _ _
   mono := by
-    dsimp'
+    dsimp
     infer_instance
 
 end InjectiveResolution

@@ -30,20 +30,18 @@ universe v w
 
 namespace Matrix
 
-variable {R : Type v} [Semiringₓ R] {n : Type w} [Fintype n]
+variable {R : Type v} [Semiringₓ R] {n : Type w} [Fintypeₓ n]
 
 @[simp]
 theorem dot_product_std_basis_eq_mul [DecidableEq n] (v : n → R) (c : R) (i : n) :
     dotProduct v (LinearMap.stdBasis R (fun _ => R) i c) = v i * c := by
-  rw [dot_product, Finset.sum_eq_single i, LinearMap.std_basis_same]
-  exact fun _ _ hb => by
-    rw [LinearMap.std_basis_ne _ _ _ _ hb, mul_zero]
-  exact fun hi => False.elim (hi <| Finset.mem_univ _)
+  rw [dot_product, Finsetₓ.sum_eq_single i, LinearMap.std_basis_same]
+  exact fun _ _ hb => by rw [LinearMap.std_basis_ne _ _ _ _ hb, mul_zero]
+  exact fun hi => False.elim (hi <| Finsetₓ.mem_univ _)
 
 @[simp]
 theorem dot_product_std_basis_one [DecidableEq n] (v : n → R) (i : n) :
-    dotProduct v (LinearMap.stdBasis R (fun _ => R) i 1) = v i := by
-  rw [dot_product_std_basis_eq_mul, mul_oneₓ]
+    dotProduct v (LinearMap.stdBasis R (fun _ => R) i 1) = v i := by rw [dot_product_std_basis_eq_mul, mul_oneₓ]
 
 theorem dot_product_eq (v w : n → R) (h : ∀ u, dotProduct v u = dotProduct w u) : v = w := by
   funext x

@@ -41,14 +41,7 @@ localized [Real] notation "ψ" => goldenConj
 
 /-- The inverse of the golden ratio is the opposite of its conjugate. -/
 theorem inv_gold : φ⁻¹ = -ψ := by
-  have : 1 + Real.sqrt 5 ≠ 0 :=
-    ne_of_gtₓ
-      (add_pos
-          (by
-            norm_num) <|
-        real.sqrt_pos.mpr
-          (by
-            norm_num))
+  have : 1 + Real.sqrt 5 ≠ 0 := ne_of_gtₓ (add_pos (by norm_num) <| real.sqrt_pos.mpr (by norm_num))
   field_simp [sub_mul, mul_addₓ]
   norm_num
 
@@ -73,11 +66,9 @@ theorem gold_add_gold_conj : φ + ψ = 1 := by
   rw [goldenRatio, goldenConj]
   ring
 
-theorem one_sub_gold_conj : 1 - φ = ψ := by
-  linarith [gold_add_gold_conj]
+theorem one_sub_gold_conj : 1 - φ = ψ := by linarith [gold_add_gold_conj]
 
-theorem one_sub_gold : 1 - ψ = φ := by
-  linarith [gold_add_gold_conj]
+theorem one_sub_gold : 1 - ψ = φ := by linarith [gold_add_gold_conj]
 
 @[simp]
 theorem gold_sub_gold_conj : φ - ψ = Real.sqrt 5 := by
@@ -97,10 +88,7 @@ theorem gold_conj_sq : ψ ^ 2 = ψ + 1 := by
   rw [Real.sq_sqrt] <;> norm_num
 
 theorem gold_pos : 0 < φ :=
-  mul_pos
-      (by
-        apply add_pos <;> norm_num) <|
-    inv_pos.2 zero_lt_two
+  mul_pos (by apply add_pos <;> norm_num) <| inv_pos.2 zero_lt_two
 
 theorem gold_ne_zero : φ ≠ 0 :=
   ne_of_gtₓ gold_pos
@@ -109,8 +97,7 @@ theorem one_lt_gold : 1 < φ := by
   refine' lt_of_mul_lt_mul_left _ (le_of_ltₓ gold_pos)
   simp [← sq, gold_pos, zero_lt_one]
 
-theorem gold_conj_neg : ψ < 0 := by
-  linarith [one_sub_gold_conj, one_lt_gold]
+theorem gold_conj_neg : ψ < 0 := by linarith [one_sub_gold_conj, one_lt_gold]
 
 theorem gold_conj_ne_zero : ψ ≠ 0 :=
   ne_of_ltₓ gold_conj_neg
@@ -126,29 +113,17 @@ theorem neg_one_lt_gold_conj : -1 < ψ := by
 
 /-- The golden ratio is irrational. -/
 theorem gold_irrational : Irrational φ := by
-  have :=
-    Nat.Prime.irrational_sqrt
-      (show Nat.Prime 5 by
-        norm_num)
+  have := Nat.Prime.irrational_sqrt (show Nat.Prime 5 by norm_num)
   have := this.rat_add 1
-  have :=
-    this.rat_mul
-      (show (0.5 : ℚ) ≠ 0 by
-        norm_num)
+  have := this.rat_mul (show (0.5 : ℚ) ≠ 0 by norm_num)
   convert this
   field_simp
 
 /-- The conjugate of the golden ratio is irrational. -/
 theorem gold_conj_irrational : Irrational ψ := by
-  have :=
-    Nat.Prime.irrational_sqrt
-      (show Nat.Prime 5 by
-        norm_num)
+  have := Nat.Prime.irrational_sqrt (show Nat.Prime 5 by norm_num)
   have := this.rat_sub 1
-  have :=
-    this.rat_mul
-      (show (0.5 : ℚ) ≠ 0 by
-        norm_num)
+  have := this.rat_mul (show (0.5 : ℚ) ≠ 0 by norm_num)
   convert this
   field_simp
 
@@ -173,7 +148,7 @@ open Polynomial
 /-- The characteristic polynomial of `fib_rec` is `X² - (X + 1)`. -/
 theorem fib_rec_char_poly_eq {β : Type _} [CommRingₓ β] : fibRec.charPoly = X ^ 2 - (X + (1 : Polynomial β)) := by
   rw [fibRec, LinearRecurrence.charPoly]
-  simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', monomial_eq_smul_X]
+  simp [Finsetₓ.sum_fin_eq_sum_range, Finsetₓ.sum_range_succ', monomial_eq_smul_X]
 
 end Poly
 
@@ -183,7 +158,7 @@ theorem fib_is_sol_fib_rec : fibRec.IsSolution (fun x => x.fib : ℕ → α) := 
   intro n
   simp only
   rw [Nat.fib_add_two, add_commₓ]
-  simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ']
+  simp [Finsetₓ.sum_fin_eq_sum_range, Finsetₓ.sum_range_succ']
 
 /-- The geometric sequence `λ n, φ^n` is a solution of `fib_rec`. -/
 theorem geom_gold_is_sol_fib_rec : fibRec.IsSolution (pow φ) := by

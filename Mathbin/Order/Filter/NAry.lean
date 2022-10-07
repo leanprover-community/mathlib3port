@@ -176,27 +176,20 @@ theorem map₂_pure_left : map₂ m (pure a) g = g.map fun b => m a b :=
   Filter.ext fun u =>
     ⟨fun ⟨s, t, hs, ht, hu⟩ =>
       mem_of_superset (image_mem_map ht) ((image_subset_image2_right <| mem_pure.1 hs).trans hu), fun h =>
-      ⟨{a}, _, singleton_mem_pure, h, by
-        rw [image2_singleton_left, image_subset_iff]⟩⟩
+      ⟨{a}, _, singleton_mem_pure, h, by rw [image2_singleton_left, image_subset_iff]⟩⟩
 
 @[simp]
 theorem map₂_pure_right : map₂ m f (pure b) = f.map fun a => m a b :=
   Filter.ext fun u =>
     ⟨fun ⟨s, t, hs, ht, hu⟩ =>
       mem_of_superset (image_mem_map hs) ((image_subset_image2_left <| mem_pure.1 ht).trans hu), fun h =>
-      ⟨_, {b}, h, singleton_mem_pure, by
-        rw [image2_singleton_right, image_subset_iff]⟩⟩
+      ⟨_, {b}, h, singleton_mem_pure, by rw [image2_singleton_right, image_subset_iff]⟩⟩
 
-theorem map₂_pure : map₂ m (pure a) (pure b) = pure (m a b) := by
-  rw [map₂_pure_right, map_pure]
+theorem map₂_pure : map₂ m (pure a) (pure b) = pure (m a b) := by rw [map₂_pure_right, map_pure]
 
 theorem map₂_swap (m : α → β → γ) (f : Filter α) (g : Filter β) : map₂ m f g = map₂ (fun a b => m b a) g f := by
   ext u
-  constructor <;>
-    rintro ⟨s, t, hs, ht, hu⟩ <;>
-      refine'
-        ⟨t, s, ht, hs, by
-          rwa [image2_swap]⟩
+  constructor <;> rintro ⟨s, t, hs, ht, hu⟩ <;> refine' ⟨t, s, ht, hs, by rwa [image2_swap]⟩
 
 @[simp]
 theorem map₂_left (h : g.ne_bot) : map₂ (fun x y => x) f g = f := by
@@ -207,8 +200,7 @@ theorem map₂_left (h : g.ne_bot) : map₂ (fun x y => x) f g = f := by
   exact mem_of_superset hs hu
 
 @[simp]
-theorem map₂_right (h : f.ne_bot) : map₂ (fun x y => y) f g = g := by
-  rw [map₂_swap, map₂_left h]
+theorem map₂_right (h : f.ne_bot) : map₂ (fun x y => y) f g = g := by rw [map₂_swap, map₂_left h]
 
 /-- The image of a ternary function `m : α → β → γ → δ` as a function
 `filter α → filter β → filter γ → filter δ`. Mathematically this should be thought of as the image
@@ -236,9 +228,7 @@ theorem map₂_map₂_left (m : δ → γ → ε) (n : α → β → δ) :
     exact (image2_subset_right hs).trans hw
     
   · rintro ⟨s, t, u, hs, ht, hu, hw⟩
-    exact
-      ⟨_, u, image2_mem_map₂ hs ht, hu, by
-        rwa [image2_image2_left]⟩
+    exact ⟨_, u, image2_mem_map₂ hs ht, hu, by rwa [image2_image2_left]⟩
     
 
 theorem map₂_map₂_right (m : α → δ → ε) (n : β → γ → δ) :
@@ -251,15 +241,11 @@ theorem map₂_map₂_right (m : α → δ → ε) (n : β → γ → δ) :
     exact (image2_subset_left ht).trans hw
     
   · rintro ⟨s, t, u, hs, ht, hu, hw⟩
-    exact
-      ⟨s, _, hs, image2_mem_map₂ ht hu, by
-        rwa [image2_image2_right]⟩
+    exact ⟨s, _, hs, image2_mem_map₂ ht hu, by rwa [image2_image2_right]⟩
     
 
 theorem map_map₂ (m : α → β → γ) (n : γ → δ) : (map₂ m f g).map n = map₂ (fun a b => n (m a b)) f g :=
-  Filter.ext fun u =>
-    exists₂_congrₓ fun s t => by
-      rw [← image_subset_iff, image_image2]
+  Filter.ext fun u => exists₂_congrₓ fun s t => by rw [← image_subset_iff, image_image2]
 
 theorem map₂_map_left (m : γ → β → δ) (n : α → γ) : map₂ m (f.map n) g = map₂ (fun a b => m (n a) b) f g := by
   ext u
@@ -270,9 +256,7 @@ theorem map₂_map_left (m : γ → β → δ) (n : α → γ) : map₂ m (f.map
     exact (image2_subset_right <| image_preimage_subset _ _).trans hu
     
   · rintro ⟨s, t, hs, ht, hu⟩
-    exact
-      ⟨_, t, image_mem_map hs, ht, by
-        rwa [image2_image_left]⟩
+    exact ⟨_, t, image_mem_map hs, ht, by rwa [image2_image_left]⟩
     
 
 theorem map₂_map_right (m : α → γ → δ) (n : β → γ) : map₂ m f (g.map n) = map₂ (fun a b => m a (n b)) f g := by
@@ -294,8 +278,7 @@ theorem map₂_assoc {m : δ → γ → ε} {n : α → β → δ} {m' : α → 
   simp only [map₂_map₂_left, map₂_map₂_right, h_assoc]
 
 theorem map₂_comm {n : β → α → γ} (h_comm : ∀ a b, m a b = n b a) : map₂ m f g = map₂ n g f :=
-  (map₂_swap _ _ _).trans <| by
-    simp_rw [h_comm]
+  (map₂_swap _ _ _).trans <| by simp_rw [h_comm]
 
 theorem map₂_left_comm {m : α → δ → ε} {n : β → γ → δ} {m' : α → γ → δ'} {n' : β → δ' → ε}
     (h_left_comm : ∀ a b c, m a (n b c) = n' b (m' a c)) : map₂ m f (map₂ n g h) = map₂ n' g (map₂ m' f h) := by

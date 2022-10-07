@@ -191,11 +191,7 @@ The typeclass argument is explicit: any instance can be used.
 def expTerminalIsoSelf [Exponentiable (⊤_ C)] : (⊤_ C) ⟹ X ≅ X :=
   yoneda.ext ((⊤_ C) ⟹ X) X (fun Y f => (prod.leftUnitor Y).inv ≫ CartesianClosed.uncurry f)
     (fun Y f => CartesianClosed.curry ((prod.leftUnitor Y).Hom ≫ f))
-    (fun Z g => by
-      rw [curry_eq_iff, iso.hom_inv_id_assoc])
-    (fun Z g => by
-      simp )
-    fun Z W f g => by
+    (fun Z g => by rw [curry_eq_iff, iso.hom_inv_id_assoc]) (fun Z g => by simp) fun Z W f g => by
     rw [uncurry_natural_left, prod.left_unitor_inv_naturality_assoc f]
 
 /-- The internal element which points at the given morphism. -/
@@ -223,13 +219,11 @@ theorem coev_app_comp_pre_app (f : B ⟶ A) [Exponentiable B] :
   unit_transfer_nat_trans_self _ _ (prod.functor.map f) X
 
 @[simp]
-theorem pre_id (A : C) [Exponentiable A] : pre (𝟙 A) = 𝟙 _ := by
-  simp [pre]
+theorem pre_id (A : C) [Exponentiable A] : pre (𝟙 A) = 𝟙 _ := by simp [pre]
 
 @[simp]
 theorem pre_map {A₁ A₂ A₃ : C} [Exponentiable A₁] [Exponentiable A₂] [Exponentiable A₃] (f : A₁ ⟶ A₂) (g : A₂ ⟶ A₃) :
-    pre (f ≫ g) = pre g ≫ pre f := by
-  rw [pre, pre, pre, transfer_nat_trans_self_comp, prod.functor.map_comp]
+    pre (f ≫ g) = pre g ≫ pre f := by rw [pre, pre, pre, transfer_nat_trans_self_comp, prod.functor.map_comp]
 
 end Pre
 
@@ -331,10 +325,10 @@ def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] :
           apply prod.map_iso (iso.refl _) (e.unit_iso.app Y).symm
           
         · intro Y Z g
-          dsimp' [prod_comparison]
+          dsimp [prod_comparison]
           simp [prod.comp_lift, ← e.inverse.map_comp, ← e.inverse.map_comp_assoc]
           -- I wonder if it would be a good idea to make `map_comp` a simp lemma the other way round
-          dsimp'
+          dsimp
           simp
           
         -- See note [dsimp, simp]

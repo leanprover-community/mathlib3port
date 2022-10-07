@@ -31,7 +31,7 @@ matrix, diagonal, det, block triangular
 -/
 
 
-open Finset Function OrderDual
+open Finsetₓ Function OrderDual
 
 open BigOperators Matrix
 
@@ -82,10 +82,8 @@ theorem upper_two_block_triangular [Preorderₓ α] (A : Matrix m m R) (B : Matr
   have hor : ∀ k : Sum m n, Sum.elim (fun i => a) (fun j => b) k = a ∨ Sum.elim (fun i => a) (fun j => b) k = b := by
     simp
   have hne : a ≠ b := fun h => lt_irreflₓ _ (lt_of_lt_of_eqₓ hab h.symm)
-  have ha : ∀ k : Sum m n, Sum.elim (fun i => a) (fun j => b) k = a → ∃ i, k = Sum.inl i := by
-    simp [hne.symm]
-  have hb : ∀ k : Sum m n, Sum.elim (fun i => a) (fun j => b) k = b → ∃ j, k = Sum.inr j := by
-    simp [hne]
+  have ha : ∀ k : Sum m n, Sum.elim (fun i => a) (fun j => b) k = a → ∃ i, k = Sum.inl i := by simp [hne.symm]
+  have hb : ∀ k : Sum m n, Sum.elim (fun i => a) (fun j => b) k = b → ∃ j, k = Sum.inr j := by simp [hne]
   cases' hor k1 with hk1 hk1 <;> cases' hor k2 with hk2 hk2 <;> rw [hk1, hk2] at hk12
   · exact False.elim (lt_irreflₓ a hk12)
     
@@ -102,16 +100,16 @@ theorem upper_two_block_triangular [Preorderₓ α] (A : Matrix m m R) (B : Matr
 /-! ### Determinant -/
 
 
-variable [DecidableEq m] [Fintype m] [DecidableEq n] [Fintype n]
+variable [DecidableEq m] [Fintypeₓ m] [DecidableEq n] [Fintypeₓ n]
 
 theorem equiv_block_det (M : Matrix m m R) {p q : m → Prop} [DecidablePred p] [DecidablePred q] (e : ∀ x, q x ↔ p x) :
     (toSquareBlockProp M p).det = (toSquareBlockProp M q).det := by
   convert Matrix.det_reindex_self (Equivₓ.subtypeEquivRight e) (to_square_block_prop M q)
 
 @[simp]
-theorem det_to_square_block_id (M : Matrix m m R) (i : m) : (M.toSquareBlock id i).det = M i i := by
+theorem det_to_square_block_id (M : Matrix m m R) (i : m) : (M.toSquareBlock id i).det = M i i :=
   letI : Unique { a // id a = i } := ⟨⟨⟨i, rfl⟩⟩, fun j => Subtype.ext j.property⟩
-  exact (det_unique _).trans rfl
+  (det_unique _).trans rfl
 
 theorem det_to_block (M : Matrix m m R) (p : m → Prop) [DecidablePred p] :
     M.det =
@@ -151,9 +149,9 @@ theorem two_block_triangular_det' (M : Matrix m m R) (p : m → Prop) [Decidable
 
 protected theorem BlockTriangular.det [DecidableEq α] [LinearOrderₓ α] (hM : BlockTriangular M b) :
     M.det = ∏ a in univ.Image b, (M.toSquareBlock b a).det := by
-  induction' hs : univ.image b using Finset.strongInductionₓ with s ih generalizing m
+  induction' hs : univ.image b using Finsetₓ.strongInductionₓ with s ih generalizing m
   subst hs
-  by_cases' h : univ.image b = ∅
+  by_cases h:univ.image b = ∅
   · haveI := univ_eq_empty_iff.1 (image_eq_empty.1 h)
     simp [h]
     
@@ -181,14 +179,14 @@ protected theorem BlockTriangular.det [DecidableEq α] [LinearOrderₓ α] (hM :
           exact ⟨⟨a, ne_of_mem_erase hi⟩, mem_univ _, rfl⟩
           
       rw [ih ((univ.image b).erase k) (erase_ssubset (max'_mem _ _)) h' hb']
-      apply Finset.prod_congr rfl
+      apply Finsetₓ.prod_congr rfl
       intro l hl
-      let he : { a // b' a = l } ≃ { a // b a = l } := by
-        have hc : ∀ i : m, (fun a => b a = l) i → (fun a => b a ≠ k) i := by
+      let he : { a // b' a = l } ≃ { a // b a = l } :=
+        haveI hc : ∀ i : m, (fun a => b a = l) i → (fun a => b a ≠ k) i := by
           intro i hbi
           rw [hbi]
           exact ne_of_mem_erase hl
-        exact Equivₓ.subtypeSubtypeEquivSubtype hc
+        Equivₓ.subtypeSubtypeEquivSubtype hc
       simp only [to_square_block_def]
       rw [← Matrix.det_reindex_self he.symm fun i j : { a // b a = l } => M ↑i ↑j]
       refine' congr_arg _ _
@@ -199,11 +197,11 @@ protected theorem BlockTriangular.det [DecidableEq α] [LinearOrderₓ α] (hM :
       apply hM
       rw [hi]
       apply lt_of_le_of_neₓ _ hj
-      exact Finset.le_max' (univ.image b) _ (mem_image_of_mem _ (mem_univ _))
+      exact Finsetₓ.le_max' (univ.image b) _ (mem_image_of_mem _ (mem_univ _))
       
     
 
-theorem BlockTriangular.det_fintype [DecidableEq α] [Fintype α] [LinearOrderₓ α] (h : BlockTriangular M b) :
+theorem BlockTriangular.det_fintype [DecidableEq α] [Fintypeₓ α] [LinearOrderₓ α] (h : BlockTriangular M b) :
     M.det = ∏ k : α, (M.toSquareBlock b k).det := by
   refine' h.det.trans ((prod_subset (subset_univ _)) fun a _ ha => _)
   have : IsEmpty { i // b i = a } := ⟨fun i => ha <| mem_image.2 ⟨i, mem_univ _, i.2⟩⟩

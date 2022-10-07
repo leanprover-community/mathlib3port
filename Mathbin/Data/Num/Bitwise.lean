@@ -288,12 +288,10 @@ def bit1 : Snum → Snum :=
   bit true
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem bit_zero (b) : (b::zero b) = zero b := by
-  cases b <;> rfl
+theorem bit_zero (b) : (b::zero b) = zero b := by cases b <;> rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem bit_one (b) : (b::zero (bnot b)) = msb b := by
-  cases b <;> rfl
+theorem bit_one (b) : (b::zero (bnot b)) = msb b := by cases b <;> rfl
 
 end Snum
 
@@ -305,8 +303,7 @@ open Snum
 /-- A dependent induction principle for `nzsnum`, with base cases
       `0 : snum` and `(-1) : snum`. -/
 def drec' {C : Snum → Sort _} (z : ∀ b, C (Snum.zero b)) (s : ∀ b p, C p → C (b::p)) : ∀ p : Nzsnum, C p
-  | msb b => by
-    rw [← bit_one] <;> exact s b (Snum.zero (bnot b)) (z (bnot b))
+  | msb b => by rw [← bit_one] <;> exact s b (Snum.zero (bnot b)) (z (bnot b))
   | bit b p => s b p (drec' p)
 
 end Nzsnum

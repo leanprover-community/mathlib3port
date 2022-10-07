@@ -37,11 +37,9 @@ theorem Concrete.to_product_injective_of_is_limit {D : Cone F} (hD : IsLimit D) 
   change Function.Injective (T.hom ≫ fun x j => G.π.app j x)
   have h : Function.Injective T.hom := by
     intro a b h
-    suffices T.inv (T.hom a) = T.inv (T.hom b) by
-      simpa
+    suffices T.inv (T.hom a) = T.inv (T.hom b) by simpa
     rw [h]
-  suffices Function.Injective fun (x : G.X) j => G.π.app j x by
-    exact this.comp h
+  suffices Function.Injective fun (x : G.X) j => G.π.app j x by exact this.comp h
   apply Subtype.ext
 
 theorem Concrete.is_limit_ext {D : Cone F} (hD : IsLimit D) (x y : D.x) : (∀ j, D.π.app j x = D.π.app j y) → x = y :=
@@ -108,7 +106,7 @@ def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
           
         · rfl
           
-        · dsimp'
+        · dsimp
           erw [← x.2 b']
           rfl
           
@@ -206,8 +204,7 @@ theorem Concrete.is_colimit_rep_eq_of_exists {D : Cocone F} {i j : J} (hD : IsCo
   let TX : E.X ≅ G.X := (cocones.forget _).mapIso T
   apply_fun TX.hom
   swap
-  · suffices Function.Bijective TX.hom by
-      exact this.1
+  · suffices Function.Bijective TX.hom by exact this.1
     rw [← is_iso_iff_bijective]
     apply is_iso.of_iso
     
@@ -242,31 +239,29 @@ theorem Concrete.is_colimit_exists_of_rep_eq {D : Cocone F} {i j : J} (hD : IsCo
   suffices
     ∀ (a b : Σj, F.obj j) (h : EqvGen (Limits.Types.Quot.Rel.{v, v} (F ⋙ forget C)) a b),
       ∃ (k : _)(f : a.1 ⟶ k)(g : b.1 ⟶ k), F.map f a.2 = F.map g b.2
-    by
-    exact this ⟨i, x⟩ ⟨j, y⟩ h
+    by exact this ⟨i, x⟩ ⟨j, y⟩ h
   intro a b h
   induction h
-  case eqv_gen.rel x y hh =>
-    obtain ⟨e, he⟩ := hh
-    use y.1, e, 𝟙 _
-    simpa using he.symm
-  case eqv_gen.refl x =>
-    use x.1, 𝟙 _, 𝟙 _, rfl
-  case eqv_gen.symm x y _ hh =>
-    obtain ⟨k, f, g, hh⟩ := hh
-    use k, g, f, hh.symm
-  case eqv_gen.trans x y z _ _ hh1 hh2 =>
-    obtain ⟨k1, f1, g1, h1⟩ := hh1
-    obtain ⟨k2, f2, g2, h2⟩ := hh2
-    let k0 : J := is_filtered.max k1 k2
-    let e1 : k1 ⟶ k0 := is_filtered.left_to_max _ _
-    let e2 : k2 ⟶ k0 := is_filtered.right_to_max _ _
-    let k : J := is_filtered.coeq (g1 ≫ e1) (f2 ≫ e2)
-    let e : k0 ⟶ k := is_filtered.coeq_hom _ _
-    use k, f1 ≫ e1 ≫ e, g2 ≫ e2 ≫ e
-    simp only [F.map_comp, comp_apply, h1, ← h2]
-    simp only [← comp_apply, ← F.map_comp]
-    rw [is_filtered.coeq_condition]
+  case rel x y hh =>
+  obtain ⟨e, he⟩ := hh
+  use y.1, e, 𝟙 _
+  simpa using he.symm
+  case refl x => use x.1, 𝟙 _, 𝟙 _, rfl
+  case symm x y _ hh =>
+  obtain ⟨k, f, g, hh⟩ := hh
+  use k, g, f, hh.symm
+  case trans x y z _ _ hh1 hh2 =>
+  obtain ⟨k1, f1, g1, h1⟩ := hh1
+  obtain ⟨k2, f2, g2, h2⟩ := hh2
+  let k0 : J := is_filtered.max k1 k2
+  let e1 : k1 ⟶ k0 := is_filtered.left_to_max _ _
+  let e2 : k2 ⟶ k0 := is_filtered.right_to_max _ _
+  let k : J := is_filtered.coeq (g1 ≫ e1) (f2 ≫ e2)
+  let e : k0 ⟶ k := is_filtered.coeq_hom _ _
+  use k, f1 ≫ e1 ≫ e, g2 ≫ e2 ≫ e
+  simp only [F.map_comp, comp_apply, h1, ← h2]
+  simp only [← comp_apply, ← F.map_comp]
+  rw [is_filtered.coeq_condition]
 
 theorem Concrete.is_colimit_rep_eq_iff_exists {D : Cocone F} {i j : J} (hD : IsColimit D) (x : F.obj i) (y : F.obj j) :
     D.ι.app i x = D.ι.app j y ↔ ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y :=

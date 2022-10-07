@@ -53,9 +53,9 @@ def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] : Invertible
 
 /-- A natural number that is invertible when coerced to `R` is also invertible
 when coerced to any `R`-algebra. -/
-def invertibleAlgebraCoeNat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n : A) := by
+def invertibleAlgebraCoeNat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n : A) :=
   haveI : Invertible (algebraMap ℕ R n) := inv
-  exact invertible.algebra_tower ℕ R A n
+  invertible.algebra_tower ℕ R A n
 
 end Semiringₓ
 
@@ -118,7 +118,7 @@ theorem Algebra.fg_trans' {R S A : Type _} [CommSemiringₓ R] [CommSemiringₓ 
   let ⟨s, hs⟩ := hRS
   let ⟨t, ht⟩ := hSA
   ⟨s.Image (algebraMap S A) ∪ t, by
-    rw [Finset.coe_union, Finset.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin, Algebra.adjoin_algebra_map, hs,
+    rw [Finsetₓ.coe_union, Finsetₓ.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin, Algebra.adjoin_algebra_map, hs,
       Algebra.map_top, IsScalarTower.adjoin_range_to_alg_hom, ht, Subalgebra.restrict_scalars_top]⟩
 
 end
@@ -135,8 +135,7 @@ variable (b : Basis ι R M) (h : Function.Bijective (algebraMap R A))
 then a basis for `M` as `R`-module is also a basis for `M` as `R'`-module. -/
 @[simps]
 noncomputable def Basis.algebraMapCoeffs : Basis ι A M :=
-  b.mapCoeffs (RingEquiv.ofBijective _ h) fun c x => by
-    simp
+  b.mapCoeffs (RingEquiv.ofBijective _ h) fun c x => by simp
 
 theorem Basis.algebra_map_coeffs_apply (i : ι) : b.algebraMapCoeffs A h i = b i :=
   b.map_coeffs_apply _ _ _
@@ -167,16 +166,15 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
   rw [linear_independent_iff'] at hb hc
   rw [linear_independent_iff'']
   rintro s g hg hsg ⟨i, k⟩
-  by_cases' hik : (i, k) ∈ s
+  by_cases hik:(i, k) ∈ s
   · have h1 : (∑ i in s.image Prod.fst ×ˢ s.image Prod.snd, g i • b i.1 • c i.2) = 0 := by
       rw [← hsg]
       exact
-        ((Finset.sum_subset Finset.subset_product) fun p _ hp =>
-            show g p • b p.1 • c p.2 = 0 by
-              rw [hg p hp, zero_smul]).symm
-    rw [Finset.sum_product_right] at h1
-    simp_rw [← smul_assoc, ← Finset.sum_smul] at h1
-    exact hb _ _ (hc _ _ h1 k (Finset.mem_image_of_mem _ hik)) i (Finset.mem_image_of_mem _ hik)
+        ((Finsetₓ.sum_subset Finsetₓ.subset_product) fun p _ hp =>
+            show g p • b p.1 • c p.2 = 0 by rw [hg p hp, zero_smul]).symm
+    rw [Finsetₓ.sum_product_right] at h1
+    simp_rw [← smul_assoc, ← Finsetₓ.sum_smul] at h1
+    exact hb _ _ (hc _ _ h1 k (Finsetₓ.mem_image_of_mem _ hik)) i (Finsetₓ.mem_image_of_mem _ hik)
     
   exact hg _ hik
 
@@ -190,8 +188,7 @@ noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R 
 
 @[simp]
 theorem Basis.smul_repr {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (x ij) :
-    (b.smul c).repr x ij = b.repr (c.repr x ij.2) ij.1 := by
-  simp [Basis.smul]
+    (b.smul c).repr x ij = b.repr (c.repr x ij.2) ij.1 := by simp [Basis.smul]
 
 theorem Basis.smul_repr_mk {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (x i j) :
     (b.smul c).repr x (i, j) = b.repr (c.repr x j) i :=
@@ -204,7 +201,7 @@ theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (
   rw [Basis.apply_eq_iff]
   ext ⟨i', j'⟩
   rw [Basis.smul_repr, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply]
-  dsimp' only
+  dsimp only
   split_ifs with hi
   · simp [hi, Finsupp.single_apply]
     
@@ -236,7 +233,7 @@ variable [CommSemiringₓ A] [CommSemiringₓ B] [Semiringₓ C]
 
 variable [Algebra A B] [Algebra B C] [Algebra A C] [IsScalarTower A B C]
 
-open Finset Submodule
+open Finsetₓ Submodule
 
 open Classical
 
@@ -247,17 +244,17 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
   have := hy
   simp_rw [eq_top_iff', mem_span_finset] at this
   choose f hf
-  let s : Finset B := Finset.image₂ f (x ∪ y * y) y
-  have hxy : ∀ xi ∈ x, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) := fun xi hxi =>
+  let s : Finsetₓ B := Finsetₓ.image₂ f (x ∪ y * y) y
+  have hxy : ∀ xi ∈ x, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finsetₓ C) : Set C) := fun xi hxi =>
     hf xi ▸
       sum_mem fun yj hyj =>
-        smul_mem (span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C))
+        smul_mem (span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finsetₓ C) : Set C))
           ⟨f xi yj, Algebra.subset_adjoin <| mem_image₂_of_mem (mem_union_left _ hxi) hyj⟩
           (subset_span <| mem_insert_of_mem hyj)
   have hyy :
-    span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) *
-        span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) ≤
-      span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
+    span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finsetₓ C) : Set C) *
+        span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finsetₓ C) : Set C) ≤
+      span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finsetₓ C) : Set C) :=
     by
     rw [span_mul_span, span_le, coe_insert]
     rintro _ ⟨yi, yj, rfl | hyi, rfl | hyj, rfl⟩
@@ -335,7 +332,7 @@ def algHomEquivSigma : (C →ₐ[A] D) ≃ Σf : B →ₐ[A] D, @AlgHom B C D _ 
     let alg := fg.1.toRingHom.toAlgebra
     fg.2.restrictScalars A
   left_inv := fun f => by
-    dsimp' only
+    dsimp only
     ext
     rfl
   right_inv := by

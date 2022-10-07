@@ -50,17 +50,17 @@ variable [ist : IsScalarTower R S L] [iic : IsIntegralClosure S R L]
 
 variable {R S} (abv : AbsoluteValue R ℤ)
 
-variable {ι : Type _} [DecidableEq ι] [Fintype ι] (bS : Basis ι R S)
+variable {ι : Type _} [DecidableEq ι] [Fintypeₓ ι] (bS : Basis ι R S)
 
 /-- If `b` is an `R`-basis of `S` of cardinality `n`, then `norm_bound abv b` is an integer
 such that for every `R`-integral element `a : S` with coordinates `≤ y`,
 we have algebra.norm a ≤ norm_bound abv b * y ^ n`. (See also `norm_le` and `norm_lt`). -/
 noncomputable def normBound : ℤ :=
-  let n := Fintype.card ι
+  let n := Fintypeₓ.card ι
   let i : ι := Nonempty.some bS.index_nonempty
   let m : ℤ :=
-    Finset.max' (Finset.univ.Image fun ijk : ι × ι × ι => abv (Algebra.leftMulMatrix bS (bS ijk.1) ijk.2.1 ijk.2.2))
-      ⟨_, Finset.mem_image.mpr ⟨⟨i, i, i⟩, Finset.mem_univ _, rfl⟩⟩
+    Finsetₓ.max' (Finsetₓ.univ.Image fun ijk : ι × ι × ι => abv (Algebra.leftMulMatrix bS (bS ijk.1) ijk.2.1 ijk.2.2))
+      ⟨_, Finsetₓ.mem_image.mpr ⟨⟨i, i, i⟩, Finsetₓ.mem_univ _, rfl⟩⟩
   Nat.factorial n • (n • m) ^ n
 
 theorem norm_bound_pos : 0 < normBound abv bS := by
@@ -74,40 +74,40 @@ theorem norm_bound_pos : 0 < normBound abv bS := by
   simp only [norm_bound, Algebra.smul_def, eq_nat_cast]
   refine' mul_pos (int.coe_nat_pos.mpr (Nat.factorial_pos _)) _
   refine' pow_pos (mul_pos (int.coe_nat_pos.mpr (fintype.card_pos_iff.mpr ⟨i⟩)) _) _
-  refine' lt_of_lt_of_leₓ (abv.pos hijk) (Finset.le_max' _ _ _)
-  exact finset.mem_image.mpr ⟨⟨i, j, k⟩, Finset.mem_univ _, rfl⟩
+  refine' lt_of_lt_of_leₓ (abv.pos hijk) (Finsetₓ.le_max' _ _ _)
+  exact finset.mem_image.mpr ⟨⟨i, j, k⟩, Finsetₓ.mem_univ _, rfl⟩
 
 /-- If the `R`-integral element `a : S` has coordinates `≤ y` with respect to some basis `b`,
 its norm is less than `norm_bound abv b * y ^ dim S`. -/
 theorem norm_le (a : S) {y : ℤ} (hy : ∀ k, abv (bS.repr a k) ≤ y) :
-    abv (Algebra.norm R a) ≤ normBound abv bS * y ^ Fintype.card ι := by
+    abv (Algebra.norm R a) ≤ normBound abv bS * y ^ Fintypeₓ.card ι := by
   conv_lhs => rw [← bS.sum_repr a]
   rw [Algebra.norm_apply, ← LinearMap.det_to_matrix bS]
   simp only [Algebra.norm_apply, AlgHom.map_sum, AlgHom.map_smul, LinearEquiv.map_sum, LinearEquiv.map_smul,
     Algebra.to_matrix_lmul_eq, norm_bound, smul_mul_assoc, ← mul_powₓ]
-  convert Matrix.det_sum_smul_le Finset.univ _ hy using 3
-  · rw [Finset.card_univ, smul_mul_assoc, mul_comm]
+  convert Matrix.det_sum_smul_le Finsetₓ.univ _ hy using 3
+  · rw [Finsetₓ.card_univ, smul_mul_assoc, mul_comm]
     
   · intro i j k
-    apply Finset.le_max'
-    exact finset.mem_image.mpr ⟨⟨i, j, k⟩, Finset.mem_univ _, rfl⟩
+    apply Finsetₓ.le_max'
+    exact finset.mem_image.mpr ⟨⟨i, j, k⟩, Finsetₓ.mem_univ _, rfl⟩
     
 
 /-- If the `R`-integral element `a : S` has coordinates `< y` with respect to some basis `b`,
 its norm is strictly less than `norm_bound abv b * y ^ dim S`. -/
 theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T} (hy : ∀ k, (abv (bS.repr a k) : T) < y) :
-    (abv (Algebra.norm R a) : T) < normBound abv bS * y ^ Fintype.card ι := by
+    (abv (Algebra.norm R a) : T) < normBound abv bS * y ^ Fintypeₓ.card ι := by
   obtain ⟨i⟩ := bS.index_nonempty
   have him : (finset.univ.image fun k => abv (bS.repr a k)).Nonempty :=
-    ⟨_, finset.mem_image.mpr ⟨i, Finset.mem_univ _, rfl⟩⟩
-  set y' : ℤ := Finset.max' _ him with y'_def
+    ⟨_, finset.mem_image.mpr ⟨i, Finsetₓ.mem_univ _, rfl⟩⟩
+  set y' : ℤ := Finsetₓ.max' _ him with y'_def
   have hy' : ∀ k, abv (bS.repr a k) ≤ y' := by
     intro k
-    exact Finset.le_max' _ _ (finset.mem_image.mpr ⟨k, Finset.mem_univ _, rfl⟩)
+    exact Finsetₓ.le_max' _ _ (finset.mem_image.mpr ⟨k, Finsetₓ.mem_univ _, rfl⟩)
   have : (y' : T) < y := by
-    rw [y'_def, ← Finset.max'_image (show Monotone (coe : ℤ → T) from fun x y h => int.cast_le.mpr h)]
-    apply (Finset.max'_lt_iff _ (him.image _)).mpr
-    simp only [Finset.mem_image, exists_propₓ]
+    rw [y'_def, ← Finsetₓ.max'_image (show Monotoneₓ (coe : ℤ → T) from fun x y h => int.cast_le.mpr h)]
+    apply (Finsetₓ.max'_lt_iff _ (him.image _)).mpr
+    simp only [Finsetₓ.mem_image, exists_propₓ]
     rintro _ ⟨x, ⟨k, -, rfl⟩, rfl⟩
     exact hy k
   have y'_nonneg : 0 ≤ y' := le_transₓ (abv.nonneg _) (hy' i)
@@ -156,7 +156,7 @@ The value of `cardM` is not at all optimal: for specific choices of `R`,
 the minimum cardinality can be exponentially smaller.
 -/
 noncomputable def cardM : ℕ :=
-  adm.card (normBound abv bS ^ (-1 / Fintype.card ι : ℝ)) ^ Fintype.card ι
+  adm.card (normBound abv bS ^ (-1 / Fintypeₓ.card ι : ℝ)) ^ Fintypeₓ.card ι
 
 variable [Infinite R]
 
@@ -168,16 +168,16 @@ variable [DecidableEq R]
 
 /-- `finset_approx` is a finite set such that each fractional ideal in the integral closure
 contains an element close to `finset_approx`. -/
-noncomputable def finsetApprox : Finset R :=
-  (Finset.univ.Image fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase 0
+noncomputable def finsetApprox : Finsetₓ R :=
+  (Finsetₓ.univ.Image fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase 0
 
 theorem finsetApprox.zero_not_mem : (0 : R) ∉ finsetApprox bS adm :=
-  Finset.not_mem_erase _ _
+  Finsetₓ.not_mem_erase _ _
 
 @[simp]
 theorem mem_finset_approx {x : R} :
     x ∈ finsetApprox bS adm ↔ ∃ i j, i ≠ j ∧ distinctElems bS adm i - distinctElems bS adm j = x := by
-  simp only [finset_approx, Finset.mem_erase, Finset.mem_image]
+  simp only [finset_approx, Finsetₓ.mem_erase, Finsetₓ.mem_image]
   constructor
   · rintro ⟨hx, ⟨i, j⟩, _, rfl⟩
     refine' ⟨i, j, _, rfl⟩
@@ -185,7 +185,7 @@ theorem mem_finset_approx {x : R} :
     simpa using hx
     
   · rintro ⟨i, j, hij, rfl⟩
-    refine' ⟨_, ⟨i, j⟩, Finset.mem_univ _, rfl⟩
+    refine' ⟨_, ⟨i, j⟩, Finsetₓ.mem_univ _, rfl⟩
     rw [Ne.def, sub_eq_zero]
     exact fun h => hij ((distinct_elems bS adm).Injective h)
     
@@ -202,16 +202,16 @@ theorem exists_mem_finset_approx (a : S) {b} (hb : b ≠ (0 : R)) :
       ∃ r ∈ finsetApprox bS adm, abv (Algebra.norm R (r • a - b • q)) < abv (Algebra.norm R (algebraMap R S b)) :=
   by
   have dim_pos := fintype.card_pos_iff.mpr bS.index_nonempty
-  set ε : ℝ := norm_bound abv bS ^ (-1 / Fintype.card ι : ℝ) with ε_eq
+  set ε : ℝ := norm_bound abv bS ^ (-1 / Fintypeₓ.card ι : ℝ) with ε_eq
   have hε : 0 < ε := Real.rpow_pos_of_pos (int.cast_pos.mpr (norm_bound_pos abv bS)) _
-  have ε_le : (norm_bound abv bS : ℝ) * (abv b • ε) ^ Fintype.card ι ≤ abv b ^ Fintype.card ι := by
+  have ε_le : (norm_bound abv bS : ℝ) * (abv b • ε) ^ Fintypeₓ.card ι ≤ abv b ^ Fintypeₓ.card ι := by
     have := norm_bound_pos abv bS
     have := abv.nonneg b
     rw [ε_eq, Algebra.smul_def, eq_int_cast, ← rpow_nat_cast, mul_rpow, ← rpow_mul, div_mul_cancel, rpow_neg_one,
         mul_left_commₓ, mul_inv_cancel, mul_oneₓ, rpow_nat_cast] <;>
       try
-        norm_cast
-        linarith
+      norm_cast
+      linarith
     · apply rpow_nonneg_of_nonneg
       norm_cast
       linarith
@@ -229,29 +229,28 @@ theorem exists_mem_finset_approx (a : S) {b} (hb : b ≠ (0 : R)) :
   have μ_mul_a_eq : ∀ j, μ j • a = (b • ∑ i, qs j i • bS i) + ∑ i, rs j i • bS i := by
     intro j
     rw [← bS.sum_repr a]
-    simp only [Finset.smul_sum, ← Finset.sum_add_distrib]
-    refine' Finset.sum_congr rfl fun i _ => _
+    simp only [Finsetₓ.smul_sum, ← Finsetₓ.sum_add_distrib]
+    refine' Finsetₓ.sum_congr rfl fun i _ => _
     rw [← s_eq, ← mul_smul, μ_eq, add_smul, mul_smul]
   obtain ⟨j, k, j_ne_k, hjk⟩ := adm.exists_approx hε hb fun j i => μ j * s i
-  have hjk' : ∀ i, (abv (rs k i - rs j i) : ℝ) < abv b • ε := by
-    simpa only [r_eq] using hjk
+  have hjk' : ∀ i, (abv (rs k i - rs j i) : ℝ) < abv b • ε := by simpa only [r_eq] using hjk
   set q := ∑ i, (qs k i - qs j i) • bS i with q_eq
   set r := μ k - μ j with r_eq
   refine' ⟨q, r, (mem_finset_approx bS adm).mpr _, _⟩
   · exact ⟨k, j, j_ne_k.symm, rfl⟩
     
   have : r • a - b • q = ∑ x : ι, rs k x • bS x - rs j x • bS x := by
-    simp only [r_eq, sub_smul, μ_mul_a_eq, q_eq, Finset.smul_sum, ← Finset.sum_add_distrib, ← Finset.sum_sub_distrib,
+    simp only [r_eq, sub_smul, μ_mul_a_eq, q_eq, Finsetₓ.smul_sum, ← Finsetₓ.sum_add_distrib, ← Finsetₓ.sum_sub_distrib,
       smul_sub]
-    refine' Finset.sum_congr rfl fun x _ => _
+    refine' Finsetₓ.sum_congr rfl fun x _ => _
     ring
   rw [this, Algebra.norm_algebra_map_of_basis bS, abv.map_pow]
   refine' int.cast_lt.mp ((norm_lt abv bS _ fun i => lt_of_le_of_ltₓ _ (hjk' i)).trans_le _)
   · apply le_of_eqₓ
     congr
-    simp_rw [LinearEquiv.map_sum, LinearEquiv.map_sub, LinearEquiv.map_smul, Finset.sum_apply', Finsupp.sub_apply,
-      Finsupp.smul_apply, Finset.sum_sub_distrib, Basis.repr_self_apply, smul_eq_mul, mul_boole, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true]
+    simp_rw [LinearEquiv.map_sum, LinearEquiv.map_sub, LinearEquiv.map_smul, Finsetₓ.sum_apply', Finsupp.sub_apply,
+      Finsupp.smul_apply, Finsetₓ.sum_sub_distrib, Basis.repr_self_apply, smul_eq_mul, mul_boole, Finsetₓ.sum_ite_eq',
+      Finsetₓ.mem_univ, if_true]
     
   · exact_mod_cast ε_le
     
@@ -278,7 +277,7 @@ end Real
 
 theorem prod_finset_approx_ne_zero : algebraMap R S (∏ m in finsetApprox bS adm, m) ≠ 0 := by
   refine' mt ((injective_iff_map_eq_zero _).mp bS.algebra_map_injective _) _
-  simp only [Finset.prod_eq_zero_iff, not_exists]
+  simp only [Finsetₓ.prod_eq_zero_iff, not_exists]
   rintro x hx rfl
   exact finset_approx.zero_not_mem bS adm hx
 
@@ -354,17 +353,15 @@ See also `class_group.fintype_of_admissible_of_finite` where `L` is a finite
 extension of `K = Frac(R)`, supplying most of the required assumptions automatically.
 -/
 noncomputable def fintypeOfAdmissibleOfAlgebraic [IsFractionRing S L] [IsDedekindDomain S]
-    (h : Algebra.IsAlgebraic R L) : Fintype (ClassGroup S L) :=
-  @Fintype.ofSurjective _ _ _
-    (@Fintype.ofEquiv _ { J // J ∣ Ideal.span ({algebraMap R S (∏ m : R in finsetApprox bS adm, m)} : Set S) }
+    (h : Algebra.IsAlgebraic R L) : Fintypeₓ (ClassGroup S L) :=
+  @Fintypeₓ.ofSurjective _ _ _
+    (@Fintypeₓ.ofEquiv _ { J // J ∣ Ideal.span ({algebraMap R S (∏ m : R in finsetApprox bS adm, m)} : Set S) }
       (UniqueFactorizationMonoid.fintypeSubtypeDvd _
         (by
           rw [Ne.def, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
           exact prod_finset_approx_ne_zero bS adm))
       ((Equivₓ.refl _).subtypeEquiv fun I =>
-        Ideal.dvd_iff_le.trans
-          (by
-            rw [Equivₓ.refl_apply, Ideal.span_le, Set.singleton_subset_iff])))
+        Ideal.dvd_iff_le.trans (by rw [Equivₓ.refl_apply, Ideal.span_le, Set.singleton_subset_iff])))
     (ClassGroup.mkMMem L bS adm) (ClassGroup.mk_M_mem_surjective L bS adm h)
 
 /-- The main theorem: the class group of an integral closure `S` of `R` in a
@@ -375,7 +372,7 @@ See also `class_group.fintype_of_admissible_of_algebraic` where `L` is an
 algebraic extension of `R`, that includes some extra assumptions.
 -/
 noncomputable def fintypeOfAdmissibleOfFinite [IsDedekindDomain R] :
-    Fintype (@ClassGroup S L _ _ _ (IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S)) := by
+    Fintypeₓ (@ClassGroup S L _ _ _ (IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S)) := by
   letI := Classical.decEq L
   letI := IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S
   letI := IsIntegralClosure.is_dedekind_domain R K L S

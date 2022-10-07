@@ -12,7 +12,7 @@ namespace Real
 
 open Real TopologicalSpace BigOperators
 
-open Filter Finset intervalIntegral
+open Filter Finsetₓ intervalIntegral
 
 theorem integral_sin_pow_div_tendsto_one :
     Tendsto (fun k => (∫ x in 0 ..π, sin x ^ (2 * k + 1)) / ∫ x in 0 ..π, sin x ^ (2 * k)) atTop (𝓝 1) := by
@@ -20,11 +20,7 @@ theorem integral_sin_pow_div_tendsto_one :
     (div_le_one (integral_sin_pow_pos _)).mpr (integral_sin_pow_succ_le _)
   have h₄ : ∀ n, ((∫ x in 0 ..π, sin x ^ (2 * n + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n)) ≥ 2 * n / (2 * n + 1) := by
     rintro ⟨n⟩
-    · have : 0 ≤ (1 + 1) / π :=
-        div_nonneg
-          (by
-            norm_num)
-          pi_pos.le
+    · have : 0 ≤ (1 + 1) / π := div_nonneg (by norm_num) pi_pos.le
       simp [this]
       
     calc
@@ -36,18 +32,20 @@ theorem integral_sin_pow_div_tendsto_one :
       _ = 2 * ↑n.succ / (2 * ↑n.succ + 1) := by
         rw [div_eq_iff (integral_sin_pow_pos (2 * n + 1)).ne']
         convert integral_sin_pow (2 * n + 1)
-        simp' with field_simps
+        simp [field_simps]
         norm_cast
       
   refine' tendsto_of_tendsto_of_tendsto_of_le_of_le _ _ (fun n => (h₄ n).le) fun n => h₃ n
   · refine' metric.tendsto_at_top.mpr fun ε hε => ⟨⌈1 / ε⌉₊, fun n hn => _⟩
     have h : (2 : ℝ) * n / (2 * n + 1) - 1 = -1 / (2 * n + 1) := by
       conv_lhs =>
-        congr skip rw [←
-          @div_self _ _ ((2 : ℝ) * n + 1)
-            (by
-              norm_cast
-              linarith)]
+      congr
+      skip
+      rw [←
+        @div_self _ _ ((2 : ℝ) * n + 1)
+          (by
+            norm_cast
+            linarith)]
       rw [← sub_div, ← sub_sub, sub_self, zero_sub]
     have hpos : (0 : ℝ) < 2 * n + 1 := by
       norm_cast
@@ -55,8 +53,7 @@ theorem integral_sin_pow_div_tendsto_one :
     rw [dist_eq, h, abs_div, abs_neg, abs_one, abs_of_pos hpos, one_div_lt hpos hε]
     calc
       1 / ε ≤ ⌈1 / ε⌉₊ := Nat.le_ceil _
-      _ ≤ n := by
-        exact_mod_cast hn.le
+      _ ≤ n := by exact_mod_cast hn.le
       _ < 2 * n + 1 := by
         norm_cast
         linarith
@@ -85,10 +82,7 @@ theorem tendsto_prod_pi_div_two :
   suffices h :
     tendsto (fun k => (π / 2)⁻¹ * ∏ i in range k, (2 * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3))) at_top (𝓝 1)
   · convert h.const_mul (π / 2)
-    · simp_rw
-        [mul_inv_cancel_left₀
-          (show π / 2 ≠ 0 by
-            norm_num[pi_ne_zero])]
+    · simp_rw [mul_inv_cancel_left₀ (show π / 2 ≠ 0 by norm_num [pi_ne_zero] )]
       
     · rw [mul_oneₓ]
       

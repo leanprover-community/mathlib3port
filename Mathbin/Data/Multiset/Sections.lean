@@ -45,32 +45,17 @@ theorem coe_sections :
 @[simp]
 theorem sections_add (s t : Multiset (Multiset α)) :
     sections (s + t) = (sections s).bind fun m => (sections t).map ((· + ·) m) :=
-  Multiset.induction_on s
-    (by
-      simp )
-    fun a s ih => by
-    simp [ih, bind_assoc, map_bind, bind_map, -add_commₓ]
+  Multiset.induction_on s (by simp) fun a s ih => by simp [ih, bind_assoc, map_bind, bind_map, -add_commₓ]
 
 theorem mem_sections {s : Multiset (Multiset α)} : ∀ {a}, a ∈ sections s ↔ s.Rel (fun s a => a ∈ s) a :=
-  Multiset.induction_on s
-    (by
-      simp )
-    fun a s ih a' => by
+  Multiset.induction_on s (by simp) fun a s ih a' => by
     simp [ih, rel_cons_left, -exists_and_distrib_leftₓ, exists_and_distrib_left.symm, eq_comm]
 
 theorem card_sections {s : Multiset (Multiset α)} : card (sections s) = prod (s.map card) :=
-  Multiset.induction_on s
-    (by
-      simp )
-    (by
-      simp (config := { contextual := true }))
+  Multiset.induction_on s (by simp) (by simp (config := { contextual := true }))
 
 theorem prod_map_sum [CommSemiringₓ α] {s : Multiset (Multiset α)} : prod (s.map sum) = sum ((sections s).map prod) :=
-  Multiset.induction_on s
-    (by
-      simp )
-    fun a s ih => by
-    simp [ih, map_bind, sum_map_mul_left, sum_map_mul_right]
+  Multiset.induction_on s (by simp) fun a s ih => by simp [ih, map_bind, sum_map_mul_left, sum_map_mul_right]
 
 end Sections
 

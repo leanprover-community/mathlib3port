@@ -72,12 +72,11 @@ def res : F.obj (op (supr U)) ⟶ piOpens F U :=
   Pi.lift fun i : ι => F.map (TopologicalSpace.Opens.leSupr U i).op
 
 @[simp, elementwise]
-theorem res_π (i : ι) : res F U ≫ limit.π _ ⟨i⟩ = F.map (Opens.leSupr U i).op := by
-  rw [res, limit.lift_π, fan.mk_π_app]
+theorem res_π (i : ι) : res F U ≫ limit.π _ ⟨i⟩ = F.map (Opens.leSupr U i).op := by rw [res, limit.lift_π, fan.mk_π_app]
 
 @[elementwise]
 theorem w : res F U ≫ leftRes F U = res F U ≫ rightRes F U := by
-  dsimp' [res, left_res, right_res]
+  dsimp [res, left_res, right_res]
   ext
   simp only [limit.lift_π, limit.lift_π_assoc, fan.mk_π_app, category.assoc]
   rw [← F.map_comp]
@@ -154,7 +153,7 @@ def fork.isoOfIso (α : F ≅ G) : fork F U ≅ (Cones.postcompose (diagram.isoO
   · apply α.app
     
   · ext
-    dunfold fork.ι
+    dsimp only [fork.ι]
     -- Ugh, `simp` can't unfold abbreviations.
     simp [res, diagram.iso_of_iso]
     
@@ -183,7 +182,7 @@ def piInters.isoOfOpenEmbedding : piInters (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 
   Pi.mapIso fun X =>
     F.mapIso
       (by
-        dsimp' [IsOpenMap.functor]
+        dsimp [IsOpenMap.functor]
         exact
           iso.op
             { Hom :=
@@ -209,18 +208,18 @@ def diagram.isoOfOpenEmbedding : diagram (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 �
       · simp
         
       · ext
-        dsimp' [left_res, IsOpenMap.functor]
+        dsimp [left_res, IsOpenMap.functor]
         simp only [limit.lift_π, cones.postcompose_obj_π, iso.op_hom, discrete.nat_iso_hom_app, functor.map_iso_refl,
           functor.map_iso_hom, lim_map_π_assoc, limit.lift_map, fan.mk_π_app, nat_trans.comp_app, category.assoc]
-        dsimp'
+        dsimp
         rw [category.id_comp, ← F.map_comp]
         rfl
         
       · ext
-        dsimp' [right_res, IsOpenMap.functor]
+        dsimp [right_res, IsOpenMap.functor]
         simp only [limit.lift_π, cones.postcompose_obj_π, iso.op_hom, discrete.nat_iso_hom_app, functor.map_iso_refl,
           functor.map_iso_hom, lim_map_π_assoc, limit.lift_map, fan.mk_π_app, nat_trans.comp_app, category.assoc]
-        dsimp'
+        dsimp
         rw [category.id_comp, ← F.map_comp]
         rfl
         
@@ -239,27 +238,23 @@ def fork.isoOfOpenEmbedding :
       (Cones.postcompose (diagram.isoOfOpenEmbedding oe 𝒰).inv).obj (fork F (Cover.ofOpenEmbedding oe 𝒰)) :=
   by
   fapply fork.ext
-  · dsimp' [IsOpenMap.functor]
+  · dsimp [IsOpenMap.functor]
     exact
       F.map_iso
         (iso.op
           { Hom :=
-              hom_of_le
-                (by
-                  simp only [coe_supr, supr_mk, le_def, Subtype.coe_mk, Set.le_eq_subset, Set.image_Union]),
+              hom_of_le (by simp only [coe_supr, supr_mk, le_def, Subtype.coe_mk, Set.le_eq_subset, Set.image_Union]),
             inv :=
-              hom_of_le
-                (by
-                  simp only [coe_supr, supr_mk, le_def, Subtype.coe_mk, Set.le_eq_subset, Set.image_Union]) })
+              hom_of_le (by simp only [coe_supr, supr_mk, le_def, Subtype.coe_mk, Set.le_eq_subset, Set.image_Union]) })
     
   · ext ⟨j⟩
-    dunfold fork.ι
+    dsimp only [fork.ι]
     -- Ugh, it is unpleasant that we need this.
     simp only [res, diagram.iso_of_open_embedding, discrete.nat_iso_inv_app, functor.map_iso_inv, limit.lift_π,
       cones.postcompose_obj_π, functor.comp_map, fork_π_app_walking_parallel_pair_zero, pi_opens.iso_of_open_embedding,
       nat_iso.of_components_inv_app, functor.map_iso_refl, functor.op_map, limit.lift_map, fan.mk_π_app,
       nat_trans.comp_app, Quiver.Hom.unop_op, category.assoc, lim_map_eq_lim_map]
-    dsimp'
+    dsimp
     rw [category.comp_id, ← F.map_comp]
     rfl
     

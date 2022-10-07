@@ -81,7 +81,7 @@ structure PrelaxFunctor (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiv
   map₂ {a b : B} {f g : a ⟶ b} : (f ⟶ g) → (map f ⟶ map g)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident prelax_functor.to_prefunctor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident prelax_functor.to_prefunctor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace PrelaxFunctor
 
 instance hasCoeToPrefunctor : Coe (PrelaxFunctor B C) (Prefunctor B C) :=
@@ -157,32 +157,21 @@ structure OplaxFunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u�
   map_comp_naturality_left' :
     ∀ {a b c : B} {f f' : a ⟶ b} (η : f ⟶ f') (g : b ⟶ c),
       map₂ (η ▷ g) ≫ map_comp f' g = map_comp f g ≫ map₂ η ▷ map g := by
-    run_tac
-      obviously
+    obviously
   map_comp_naturality_right' :
     ∀ {a b c : B} (f : a ⟶ b) {g g' : b ⟶ c} (η : g ⟶ g'),
       map₂ (f ◁ η) ≫ map_comp f g' = map_comp f g ≫ map f ◁ map₂ η := by
-    run_tac
-      obviously
-  map₂_id' : ∀ {a b : B} (f : a ⟶ b), map₂ (𝟙 f) = 𝟙 (map f) := by
-    run_tac
-      obviously
-  map₂_comp' : ∀ {a b : B} {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h), map₂ (η ≫ θ) = map₂ η ≫ map₂ θ := by
-    run_tac
-      obviously
+    obviously
+  map₂_id' : ∀ {a b : B} (f : a ⟶ b), map₂ (𝟙 f) = 𝟙 (map f) := by obviously
+  map₂_comp' : ∀ {a b : B} {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h), map₂ (η ≫ θ) = map₂ η ≫ map₂ θ := by obviously
   map₂_associator' :
     ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d),
       OplaxFunctor.Map₂AssociatorAux obj (fun _ _ => map) (fun a b f g => map₂) (fun a b c => map_comp) f g h := by
-    run_tac
-      obviously
+    obviously
   map₂_left_unitor' :
-    ∀ {a b : B} (f : a ⟶ b), map₂ (λ_ f).Hom = map_comp (𝟙 a) f ≫ map_id a ▷ map f ≫ (λ_ (map f)).Hom := by
-    run_tac
-      obviously
+    ∀ {a b : B} (f : a ⟶ b), map₂ (λ_ f).Hom = map_comp (𝟙 a) f ≫ map_id a ▷ map f ≫ (λ_ (map f)).Hom := by obviously
   map₂_right_unitor' :
-    ∀ {a b : B} (f : a ⟶ b), map₂ (ρ_ f).Hom = map_comp f (𝟙 b) ≫ map f ◁ map_id b ≫ (ρ_ (map f)).Hom := by
-    run_tac
-      obviously
+    ∀ {a b : B} (f : a ⟶ b), map₂ (ρ_ f).Hom = map_comp f (𝟙 b) ≫ map f ◁ map_id b ≫ (ρ_ (map f)).Hom := by obviously
 
 namespace OplaxFunctor
 
@@ -210,7 +199,7 @@ attribute [simp] map₂_comp map₂_left_unitor map₂_right_unitor
 section
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident oplax_functor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident oplax_functor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 instance hasCoeToPrelax : Coe (OplaxFunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
 
@@ -252,20 +241,20 @@ def comp (F : OplaxFunctor B C) (G : OplaxFunctor C D) : OplaxFunctor B D :=
   { (F : PrelaxFunctor B C).comp ↑G with map_id := fun a => (G.mapFunctor _ _).map (F.map_id a) ≫ G.map_id (F.obj a),
     map_comp := fun a b c f g => (G.mapFunctor _ _).map (F.map_comp f g) ≫ G.map_comp (F.map f) (F.map g),
     map_comp_naturality_left' := fun a b c f f' η g => by
-      dsimp'
+      dsimp
       rw [← map₂_comp_assoc, map_comp_naturality_left, map₂_comp_assoc, map_comp_naturality_left, assoc],
     map_comp_naturality_right' := fun a b c f g g' η => by
-      dsimp'
+      dsimp
       rw [← map₂_comp_assoc, map_comp_naturality_right, map₂_comp_assoc, map_comp_naturality_right, assoc],
     map₂_associator' := fun a b c d f g h => by
-      dsimp'
+      dsimp
       simp only [map₂_associator, ← map₂_comp_assoc, ← map_comp_naturality_right_assoc, whisker_left_comp, assoc]
       simp only [map₂_associator, map₂_comp, map_comp_naturality_left_assoc, comp_whisker_right, assoc],
     map₂_left_unitor' := fun a b f => by
-      dsimp'
+      dsimp
       simp only [map₂_left_unitor, map₂_comp, map_comp_naturality_left_assoc, comp_whisker_right, assoc],
     map₂_right_unitor' := fun a b f => by
-      dsimp'
+      dsimp
       simp only [map₂_right_unitor, map₂_comp, map_comp_naturality_right_assoc, whisker_left_comp, assoc] }
 
 /-- A structure on an oplax functor that promotes an oplax functor to a pseudofunctor.
@@ -275,12 +264,8 @@ See `pseudofunctor.mk_of_oplax`.
 structure PseudoCore (F : OplaxFunctor B C) where
   mapIdIso (a : B) : F.map (𝟙 a) ≅ 𝟙 (F.obj a)
   mapCompIso {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : F.map (f ≫ g) ≅ F.map f ≫ F.map g
-  map_id_iso_hom' : ∀ {a : B}, (map_id_iso a).Hom = F.map_id a := by
-    run_tac
-      obviously
-  map_comp_iso_hom' : ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c), (map_comp_iso f g).Hom = F.map_comp f g := by
-    run_tac
-      obviously
+  map_id_iso_hom' : ∀ {a : B}, (map_id_iso a).Hom = F.map_id a := by obviously
+  map_comp_iso_hom' : ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c), (map_comp_iso f g).Hom = F.map_comp f g := by obviously
 
 restate_axiom pseudo_core.map_id_iso_hom'
 
@@ -324,35 +309,26 @@ structure Pseudofunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u�
   PrelaxFunctor B C where
   map_id (a : B) : map (𝟙 a) ≅ 𝟙 (obj a)
   map_comp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : map (f ≫ g) ≅ map f ≫ map g
-  map₂_id' : ∀ {a b : B} (f : a ⟶ b), map₂ (𝟙 f) = 𝟙 (map f) := by
-    run_tac
-      obviously
-  map₂_comp' : ∀ {a b : B} {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h), map₂ (η ≫ θ) = map₂ η ≫ map₂ θ := by
-    run_tac
-      obviously
+  map₂_id' : ∀ {a b : B} (f : a ⟶ b), map₂ (𝟙 f) = 𝟙 (map f) := by obviously
+  map₂_comp' : ∀ {a b : B} {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h), map₂ (η ≫ θ) = map₂ η ≫ map₂ θ := by obviously
   map₂_whisker_left' :
     ∀ {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g ⟶ h),
       map₂ (f ◁ η) = (map_comp f g).Hom ≫ map f ◁ map₂ η ≫ (map_comp f h).inv := by
-    run_tac
-      obviously
+    obviously
   map₂_whisker_right' :
     ∀ {a b c : B} {f g : a ⟶ b} (η : f ⟶ g) (h : b ⟶ c),
       map₂ (η ▷ h) = (map_comp f h).Hom ≫ map₂ η ▷ map h ≫ (map_comp g h).inv := by
-    run_tac
-      obviously
+    obviously
   map₂_associator' :
     ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d),
       Pseudofunctor.Map₂AssociatorAux obj (fun a b => map) (fun a b f g => map₂) (fun a b c => map_comp) f g h := by
-    run_tac
-      obviously
+    obviously
   map₂_left_unitor' :
     ∀ {a b : B} (f : a ⟶ b), map₂ (λ_ f).Hom = (map_comp (𝟙 a) f).Hom ≫ (map_id a).Hom ▷ map f ≫ (λ_ (map f)).Hom := by
-    run_tac
-      obviously
+    obviously
   map₂_right_unitor' :
     ∀ {a b : B} (f : a ⟶ b), map₂ (ρ_ f).Hom = (map_comp f (𝟙 b)).Hom ≫ map f ◁ (map_id b).Hom ≫ (ρ_ (map f)).Hom := by
-    run_tac
-      obviously
+    obviously
 
 namespace Pseudofunctor
 
@@ -380,7 +356,7 @@ section
 open Iso
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident pseudofunctor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident pseudofunctor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 instance hasCoeToPrelaxFunctor : Coe (Pseudofunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
 
@@ -461,13 +437,13 @@ def comp (F : Pseudofunctor B C) (G : Pseudofunctor C D) : Pseudofunctor B D :=
 def mkOfOplax (F : OplaxFunctor B C) (F' : F.PseudoCore) : Pseudofunctor B C :=
   { (F : PrelaxFunctor B C) with map_id := F'.mapIdIso, map_comp := fun _ _ _ => F'.mapCompIso,
     map₂_whisker_left' := fun a b c f g h η => by
-      dsimp'
+      dsimp
       rw [F'.map_comp_iso_hom f g, ← F.map_comp_naturality_right_assoc, ← F'.map_comp_iso_hom f h, hom_inv_id, comp_id],
     map₂_whisker_right' := fun a b c f g η h => by
-      dsimp'
+      dsimp
       rw [F'.map_comp_iso_hom f h, ← F.map_comp_naturality_left_assoc, ← F'.map_comp_iso_hom g h, hom_inv_id, comp_id],
     map₂_associator' := fun a b c d f g h => by
-      dsimp'
+      dsimp
       rw [F'.map_comp_iso_hom (f ≫ g) h, F'.map_comp_iso_hom f g, ← F.map₂_associator_assoc, ←
         F'.map_comp_iso_hom f (g ≫ h), ← F'.map_comp_iso_hom g h, hom_inv_whisker_left_assoc, hom_inv_id, comp_id] }
 
@@ -479,13 +455,13 @@ noncomputable def mkOfOplax' (F : OplaxFunctor B C) [∀ a, IsIso (F.map_id a)]
   { (F : PrelaxFunctor B C) with map_id := fun a => asIso (F.map_id a),
     map_comp := fun a b c f g => asIso (F.map_comp f g),
     map₂_whisker_left' := fun a b c f g h η => by
-      dsimp'
+      dsimp
       rw [← assoc, is_iso.eq_comp_inv, F.map_comp_naturality_right],
     map₂_whisker_right' := fun a b c f g η h => by
-      dsimp'
+      dsimp
       rw [← assoc, is_iso.eq_comp_inv, F.map_comp_naturality_left],
     map₂_associator' := fun a b c d f g h => by
-      dsimp'
+      dsimp
       simp only [← assoc]
       rw [is_iso.eq_comp_inv, ← inv_whisker_left, is_iso.eq_comp_inv]
       simp only [assoc, F.map₂_associator] }

@@ -64,9 +64,7 @@ instance [Inv α] : Inv (WithOne α) :=
 @[to_additive]
 instance [HasInvolutiveInv α] : HasInvolutiveInv (WithOne α) :=
   { WithOne.hasInv with
-    inv_inv := fun a =>
-      (Option.map_mapₓ _ _ _).trans <| by
-        simp_rw [inv_comp_inv, Option.map_id, id] }
+    inv_inv := fun a => (Option.map_mapₓ _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
 
 @[to_additive]
 instance : Inhabited (WithOne α) :=
@@ -115,10 +113,7 @@ theorem ne_one_iff_exists {x : WithOne α} : x ≠ 1 ↔ ∃ a : α, ↑a = x :=
   Option.ne_none_iff_exists
 
 @[to_additive]
-instance : CanLift (WithOne α) α where
-  coe := coe
-  cond := fun a => a ≠ 1
-  prf := fun a => ne_one_iff_exists.1
+instance canLift : CanLift (WithOne α) α coe fun a => a ≠ 1 where prf := fun a => ne_one_iff_exists.1
 
 @[simp, norm_cast, to_additive]
 theorem coe_inj {a b : α} : (a : WithOne α) = b ↔ a = b :=
@@ -280,8 +275,7 @@ theorem coe_one [One α] : ((1 : α) : WithZero α) = 1 :=
 
 instance [Mul α] : MulZeroClassₓ (WithZero α) :=
   { WithZero.hasZero with mul := fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a * b) o₂, zero_mul := fun a => rfl,
-    mul_zero := fun a => by
-      cases a <;> rfl }
+    mul_zero := fun a => by cases a <;> rfl }
 
 @[simp, norm_cast]
 theorem coe_mul {α : Type u} [Mul α] {a b : α} : ((a * b : α) : WithZero α) = a * b :=
@@ -292,8 +286,7 @@ theorem zero_mul {α : Type u} [Mul α] (a : WithZero α) : 0 * a = 0 :=
   rfl
 
 @[simp]
-theorem mul_zero {α : Type u} [Mul α] (a : WithZero α) : a * 0 = 0 := by
-  cases a <;> rfl
+theorem mul_zero {α : Type u} [Mul α] (a : WithZero α) : a * 0 = 0 := by cases a <;> rfl
 
 instance [Mul α] : NoZeroDivisors (WithZero α) :=
   ⟨by
@@ -368,9 +361,7 @@ theorem inv_zero [Inv α] : (0 : WithZero α)⁻¹ = 0 :=
 
 instance [HasInvolutiveInv α] : HasInvolutiveInv (WithZero α) :=
   { WithZero.hasInv with
-    inv_inv := fun a =>
-      (Option.map_mapₓ _ _ _).trans <| by
-        simp_rw [inv_comp_inv, Option.map_id, id] }
+    inv_inv := fun a => (Option.map_mapₓ _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
 
 instance [Div α] : Div (WithZero α) :=
   ⟨fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a / b) o₂⟩
@@ -423,10 +414,8 @@ instance [DivisionMonoid α] : DivisionMonoid (WithZero α) :=
     inv_eq_of_mul := fun a b =>
       match a, b with
       | none, none => fun _ => rfl
-      | none, some b => by
-        contradiction
-      | some a, none => by
-        contradiction
+      | none, some b => by contradiction
+      | some a, none => by contradiction
       | some a, some b => fun h => congr_arg some <| inv_eq_of_mul_eq_one_right <| Option.some_injective _ h }
 
 instance [DivisionCommMonoid α] : DivisionCommMonoid (WithZero α) :=
@@ -438,8 +427,7 @@ variable [Groupₓ α]
 
 @[simp]
 theorem inv_one : (1 : WithZero α)⁻¹ = 1 :=
-  show ((1⁻¹ : α) : WithZero α) = 1 by
-    simp
+  show ((1⁻¹ : α) : WithZero α) = 1 by simp
 
 /-- if `G` is a group then `with_zero G` is a group with zero. -/
 instance : GroupWithZeroₓ (WithZero α) :=
@@ -472,33 +460,23 @@ instance [Semiringₓ α] : Semiringₓ (WithZero α) :=
       cases' a with a
       · rfl
         
-      cases' b with b <;>
-        cases' c with c <;>
-          try
-            rfl
+      cases' b with b <;> cases' c with c <;> try rfl
       exact congr_arg some (left_distrib _ _ _),
     right_distrib := fun a b c => by
       cases' c with c
       · change (a + b) * 0 = a * 0 + b * 0
         simp
         
-      cases' a with a <;>
-        cases' b with b <;>
-          try
-            rfl
+      cases' a with a <;> cases' b with b <;> try rfl
       exact congr_arg some (right_distrib _ _ _) }
 
 /-- Any group is isomorphic to the units of itself adjoined with `0`. -/
 def unitsWithZeroEquiv [Groupₓ α] : (WithZero α)ˣ ≃* α where
   toFun := fun a => unzero a.ne_zero
   invFun := fun a => Units.mk0 a coe_ne_zero
-  left_inv := fun _ =>
-    Units.ext <| by
-      simpa only [coe_unzero]
+  left_inv := fun _ => Units.ext <| by simpa only [coe_unzero]
   right_inv := fun _ => rfl
-  map_mul' := fun _ _ =>
-    coe_inj.mp <| by
-      simpa only [coe_unzero, coe_mul]
+  map_mul' := fun _ _ => coe_inj.mp <| by simpa only [coe_unzero, coe_mul]
 
 end WithZero
 

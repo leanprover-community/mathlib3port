@@ -34,7 +34,7 @@ namespace OplaxNatTrans
 def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ ⟶ η ≫ ι where
   app := fun a => η.app a ◁ Γ.app a
   naturality' := fun a b f => by
-    dsimp'
+    dsimp
     rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc]
     simp
 
@@ -43,30 +43,24 @@ def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ �
 def whiskerRight {η θ : F ⟶ G} (Γ : η ⟶ θ) (ι : G ⟶ H) : η ≫ ι ⟶ θ ≫ ι where
   app := fun a => Γ.app a ▷ ι.app a
   naturality' := fun a b f => by
-    dsimp'
+    dsimp
     simp_rw [assoc, ← associator_inv_naturality_left, whisker_exchange_assoc]
     simp
 
 /-- Associator for the vertical composition of oplax natural transformations. -/
 @[simps]
 def associator (η : F ⟶ G) (θ : G ⟶ H) (ι : H ⟶ I) : (η ≫ θ) ≫ ι ≅ η ≫ θ ≫ ι :=
-  ModificationIso.ofComponents (fun a => α_ (η.app a) (θ.app a) (ι.app a))
-    (by
-      tidy)
+  ModificationIso.ofComponents (fun a => α_ (η.app a) (θ.app a) (ι.app a)) (by tidy)
 
 /-- Left unitor for the vertical composition of oplax natural transformations. -/
 @[simps]
 def leftUnitor (η : F ⟶ G) : 𝟙 F ≫ η ≅ η :=
-  ModificationIso.ofComponents (fun a => λ_ (η.app a))
-    (by
-      tidy)
+  ModificationIso.ofComponents (fun a => λ_ (η.app a)) (by tidy)
 
 /-- Right unitor for the vertical composition of oplax natural transformations. -/
 @[simps]
 def rightUnitor (η : F ⟶ G) : η ≫ 𝟙 G ≅ η :=
-  ModificationIso.ofComponents (fun a => ρ_ (η.app a))
-    (by
-      tidy)
+  ModificationIso.ofComponents (fun a => ρ_ (η.app a)) (by tidy)
 
 end OplaxNatTrans
 

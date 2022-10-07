@@ -108,8 +108,7 @@ def compHausToTop : CompHaus.{u} ⥤ Top.{u} :=
   inducedFunctor _ deriving Full, Faithful
 
 instance CompHaus.forget_reflects_isomorphisms : ReflectsIsomorphisms (forget CompHaus.{u}) :=
-  ⟨by
-    intro A B f hf <;> exact CompHaus.is_iso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
+  ⟨by intro A B f hf <;> exact CompHaus.is_iso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
 
 /-- (Implementation) The object part of the compactification functor from topological spaces to
 compact Hausdorff spaces.
@@ -227,10 +226,10 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
     have H : h = g := by
       rw [← cancel_epi f]
       ext x
-      dsimp'
+      dsimp
       simp only [comp_apply, ContinuousMap.coe_mk, Subtype.coe_mk, hφ0 (Set.mem_range_self x), Pi.zero_apply]
     apply_fun fun e => (e y).down  at H
-    dsimp'  at H
+    dsimp at H
     simp only [Subtype.mk_eq_mk, hφ1 (Set.mem_singleton y), Pi.one_apply] at H
     exact zero_ne_one H
     

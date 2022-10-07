@@ -30,7 +30,7 @@ noncomputable section
 
 open Classical BigOperators
 
-open MulAction Finset FiniteDimensional
+open MulAction Finsetₓ FiniteDimensional
 
 universe u v w
 
@@ -85,14 +85,11 @@ def subfield : Subfield F :=
       ext z
       simp [fixed_points, FixedBy.subfield, infi, Subfield.mem_Inf])
 
-instance :
-    IsInvariantSubfield M (FixedPoints.subfield M F) where smul_mem := fun g x hx g' => by
-    rw [hx, hx]
+instance : IsInvariantSubfield M (FixedPoints.subfield M F) where smul_mem := fun g x hx g' => by rw [hx, hx]
 
 instance :
-    SmulCommClass M (FixedPoints.subfield M F) F where smul_comm := fun m f f' =>
-    show m • (↑f * f') = f * m • f' by
-      rw [smul_mul', f.prop m]
+    SmulCommClass M (FixedPoints.subfield M F)
+      F where smul_comm := fun m f f' => show m • (↑f * f') = f * m • f' by rw [smul_mul', f.prop m]
 
 instance smul_comm_class' : SmulCommClass (FixedPoints.subfield M F) M F :=
   SmulCommClass.symm _ _ _
@@ -104,26 +101,20 @@ theorem smul (m : M) (x : FixedPoints.subfield M F) : m • x = x :=
 -- Why is this so slow?
 @[simp]
 theorem smul_polynomial (m : M) (p : Polynomial (FixedPoints.subfield M F)) : m • p = p :=
-  Polynomial.induction_on p
-    (fun x => by
-      rw [Polynomial.smul_C, smul])
-    (fun p q ihp ihq => by
-      rw [smul_add, ihp, ihq])
-    fun n x ih => by
-    rw [smul_mul', Polynomial.smul_C, smul, smul_pow', Polynomial.smul_X]
+  Polynomial.induction_on p (fun x => by rw [Polynomial.smul_C, smul]) (fun p q ihp ihq => by rw [smul_add, ihp, ihq])
+    fun n x ih => by rw [smul_mul', Polynomial.smul_C, smul, smul_pow', Polynomial.smul_X]
 
-instance : Algebra (FixedPoints.subfield M F) F := by
-  infer_instance
+instance : Algebra (FixedPoints.subfield M F) F := by infer_instance
 
 theorem coe_algebra_map : algebraMap (FixedPoints.subfield M F) F = Subfield.subtype (FixedPoints.subfield M F) :=
   rfl
 
-theorem linear_independent_smul_of_linear_independent {s : Finset F} :
+theorem linear_independent_smul_of_linear_independent {s : Finsetₓ F} :
     (LinearIndependent (FixedPoints.subfield G F) fun i : (s : Set F) => (i : F)) →
       LinearIndependent F fun i : (s : Set F) => MulAction.toFun G F i :=
   by
-  haveI : IsEmpty ((∅ : Finset F) : Set F) := ⟨Subtype.prop⟩
-  refine' Finset.induction_on s (fun _ => linear_independent_empty_type) fun a s has ih hs => _
+  haveI : IsEmpty ((∅ : Finsetₓ F) : Set F) := ⟨Subtype.prop⟩
+  refine' Finsetₓ.induction_on s (fun _ => linear_independent_empty_type) fun a s has ih hs => _
   rw [coe_insert] at hs⊢
   rw [linear_independent_insert (mt mem_coe.1 has)] at hs
   rw [linear_independent_insert' (mt mem_coe.1 has)]
@@ -143,20 +134,29 @@ theorem linear_independent_smul_of_linear_independent {s : Finset F} :
       (linear_independent_iff'.1 (ih hs.1) s.attach (fun i => g • l i - l i) _ ⟨i, his⟩ (mem_attach _ _) : _)
   refine' (@sum_attach _ _ s _ fun i => (g • l i - l i) • MulAction.toFun G F i).trans _
   ext g'
-  dsimp' only
-  conv_lhs => rw [sum_apply]congr skip ext rw [Pi.smul_apply, sub_smul, smul_eq_mul]
+  dsimp only
+  conv_lhs =>
+  rw [sum_apply]
+  congr
+  skip
+  ext
+  rw [Pi.smul_apply, sub_smul, smul_eq_mul]
   rw [sum_sub_distrib, Pi.zero_apply, sub_eq_zero]
-  conv_lhs => congr skip ext rw [to_fun_apply, ← mul_inv_cancel_left g g', mul_smul, ← smul_mul', ← to_fun_apply _ x]
+  conv_lhs =>
+  congr
+  skip
+  ext
+  rw [to_fun_apply, ← mul_inv_cancel_left g g', mul_smul, ← smul_mul', ← to_fun_apply _ x]
   show
     (∑ x in s, g • (fun y => l y • MulAction.toFun G F y) x (g⁻¹ * g')) =
       ∑ x in s, (fun y => l y • MulAction.toFun G F y) x g'
   rw [← smul_sum, ← sum_apply _ _ fun y => l y • to_fun G F y, ← sum_apply _ _ fun y => l y • to_fun G F y]
-  dsimp' only
+  dsimp only
   rw [hla, to_fun_apply, to_fun_apply, smul_smul, mul_inv_cancel_left]
 
-section Fintype
+section Fintypeₓ
 
-variable [Fintype G] (x : F)
+variable [Fintypeₓ G] (x : F)
 
 /-- `minpoly G F x` is the minimal polynomial of `(x : F)` over `fixed_points G F`. -/
 def minpoly : Polynomial (FixedPoints.subfield G F) :=
@@ -179,15 +179,14 @@ theorem eval₂' : Polynomial.eval₂ (Subfield.subtype <| FixedPoints.subfield 
 
 theorem ne_one : minpoly G F x ≠ (1 : Polynomial (FixedPoints.subfield G F)) := fun H =>
   have := eval₂ G F x
-  (one_ne_zero : (1 : F) ≠ 0) <| by
-    rwa [H, Polynomial.eval₂_one] at this
+  (one_ne_zero : (1 : F) ≠ 0) <| by rwa [H, Polynomial.eval₂_one] at this
 
 theorem of_eval₂ (f : Polynomial (FixedPoints.subfield G F))
     (hf : Polynomial.eval₂ (Subfield.subtype <| FixedPoints.subfield G F) x f = 0) : minpoly G F x ∣ f := by
   erw [← Polynomial.map_dvd_map' (Subfield.subtype <| FixedPoints.subfield G F), minpoly,
     Polynomial.map_to_subring _ (Subfield G F).toSubring, prodXSubSmul]
   refine'
-    Fintype.prod_dvd_of_coprime (Polynomial.pairwise_coprime_X_sub_C <| MulAction.injective_of_quotient_stabilizer G x)
+    Fintypeₓ.prod_dvd_of_coprime (Polynomial.pairwise_coprime_X_sub_C <| MulAction.injective_of_quotient_stabilizer G x)
       fun y => (QuotientGroup.induction_on y) fun g => _
   rw [Polynomial.dvd_iff_is_root, Polynomial.IsRoot.def, MulAction.of_quotient_stabilizer_mk, Polynomial.eval_smul', ←
     Subfield.toSubring.subtype_eq_subtype, ← IsInvariantSubring.coe_subtype_hom' G (FixedPoints.subfield G F).toSubring,
@@ -225,26 +224,26 @@ theorem irreducible : Irreducible (minpoly G F x) :=
 
 end minpoly
 
-end Fintype
+end Fintypeₓ
 
 theorem is_integral [Finite G] (x : F) : IsIntegral (FixedPoints.subfield G F) x := by
   cases nonempty_fintype G
   exact ⟨minpoly G F x, minpoly.monic G F x, minpoly.eval₂ G F x⟩
 
-section Fintype
+section Fintypeₓ
 
-variable [Fintype G] (x : F)
+variable [Fintypeₓ G] (x : F)
 
 theorem minpoly_eq_minpoly : minpoly G F x = minpoly (FixedPoints.subfield G F) x :=
   minpoly.eq_of_irreducible_of_monic (minpoly.irreducible G F x) (minpoly.eval₂ G F x) (minpoly.monic G F x)
 
-theorem dim_le_card : Module.rank (FixedPoints.subfield G F) F ≤ Fintype.card G :=
+theorem dim_le_card : Module.rank (FixedPoints.subfield G F) F ≤ Fintypeₓ.card G :=
   dim_le fun s hs => by
-    simpa only [dim_fun', Cardinal.mk_coe_finset, Finset.coe_sort_coe, Cardinal.lift_nat_cast,
+    simpa only [dim_fun', Cardinal.mk_coe_finset, Finsetₓ.coe_sort_coe, Cardinal.lift_nat_cast,
       Cardinal.nat_cast_le] using
       cardinal_lift_le_dim_of_linear_independent' (linear_independent_smul_of_linear_independent G F hs)
 
-end Fintype
+end Fintypeₓ
 
 section Finite
 
@@ -273,7 +272,7 @@ instance : FiniteDimensional (subfield G F) F := by
 
 end Finite
 
-theorem finrank_le_card [Fintype G] : finrank (subfield G F) F ≤ Fintype.card G := by
+theorem finrank_le_card [Fintypeₓ G] : finrank (subfield G F) F ≤ Fintypeₓ.card G := by
   rw [← Cardinal.nat_cast_le, finrank_eq_dim]
   apply dim_le_card
 
@@ -294,21 +293,21 @@ theorem cardinal_mk_alg_hom (K : Type u) (V : Type v) (W : Type w) [Field K] [Fi
   cardinal_mk_le_finrank_of_linear_independent <| linear_independent_to_linear_map K V W
 
 noncomputable instance AlgEquiv.fintype (K : Type u) (V : Type v) [Field K] [Field V] [Algebra K V]
-    [FiniteDimensional K V] : Fintype (V ≃ₐ[K] V) :=
-  Fintype.ofEquiv (V →ₐ[K] V) (algEquivEquivAlgHom K V).symm
+    [FiniteDimensional K V] : Fintypeₓ (V ≃ₐ[K] V) :=
+  Fintypeₓ.ofEquiv (V →ₐ[K] V) (algEquivEquivAlgHom K V).symm
 
 theorem finrank_alg_hom (K : Type u) (V : Type v) [Field K] [Field V] [Algebra K V] [FiniteDimensional K V] :
-    Fintype.card (V →ₐ[K] V) ≤ finrank V (V →ₗ[K] V) :=
+    Fintypeₓ.card (V →ₐ[K] V) ≤ finrank V (V →ₗ[K] V) :=
   fintype_card_le_finrank_of_linear_independent <| linear_independent_to_linear_map K V V
 
 namespace FixedPoints
 
-theorem finrank_eq_card (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintype G] [MulSemiringAction G F]
-    [HasFaithfulSmul G F] : finrank (FixedPoints.subfield G F) F = Fintype.card G :=
+theorem finrank_eq_card (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintypeₓ G] [MulSemiringAction G F]
+    [HasFaithfulSmul G F] : finrank (FixedPoints.subfield G F) F = Fintypeₓ.card G :=
   le_antisymmₓ (FixedPoints.finrank_le_card G F) <|
     calc
-      Fintype.card G ≤ Fintype.card (F →ₐ[FixedPoints.subfield G F] F) :=
-        Fintype.card_le_of_injective _ (MulSemiringAction.to_alg_hom_injective _ F)
+      Fintypeₓ.card G ≤ Fintypeₓ.card (F →ₐ[FixedPoints.subfield G F] F) :=
+        Fintypeₓ.card_le_of_injective _ (MulSemiringAction.to_alg_hom_injective _ F)
       _ ≤ finrank F (F →ₗ[FixedPoints.subfield G F] F) := finrank_alg_hom (FixedPoints G F) F
       _ = finrank (FixedPoints.subfield G F) F := finrank_linear_map' _ _ _
       
@@ -317,12 +316,12 @@ theorem finrank_eq_card (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintyp
 theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Finite G] [MulSemiringAction G F]
     [HasFaithfulSmul G F] : Function.Bijective (MulSemiringAction.toAlgHom _ _ : G → F →ₐ[subfield G F] F) := by
   cases nonempty_fintype G
-  rw [Fintype.bijective_iff_injective_and_card]
+  rw [Fintypeₓ.bijective_iff_injective_and_card]
   constructor
   · exact MulSemiringAction.to_alg_hom_injective _ F
     
   · apply le_antisymmₓ
-    · exact Fintype.card_le_of_injective _ (MulSemiringAction.to_alg_hom_injective _ F)
+    · exact Fintypeₓ.card_le_of_injective _ (MulSemiringAction.to_alg_hom_injective _ F)
       
     · rw [← finrank_eq_card G F]
       exact LE.le.trans_eqₓ (finrank_alg_hom _ F) (finrank_linear_map' _ _ _)
@@ -330,7 +329,7 @@ theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Groupₓ G] [Field F] [F
     
 
 /-- Bijection between G and algebra homomorphisms that fix the fixed points -/
-def toAlgHomEquiv (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintype G] [MulSemiringAction G F]
+def toAlgHomEquiv (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintypeₓ G] [MulSemiringAction G F]
     [HasFaithfulSmul G F] : G ≃ (F →ₐ[FixedPoints.subfield G F] F) :=
   Equivₓ.ofBijective _ (to_alg_hom_bijective G F)
 

@@ -35,7 +35,7 @@ We also provide the equivalence of the following notions for a domain `R` in `va
 
 universe u v w
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`cond] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`cond] []
 /-- An integral domain is called a `valuation ring` provided that for any pair
 of elements `a b : A`, either `a` divides `b` or vice versa. -/
 class ValuationRing (A : Type u) [CommRingₓ A] [IsDomain A] : Prop where
@@ -69,7 +69,7 @@ instance : LE (ValueGroup A K) :=
           simpa [mul_smul] using he
           
         · rintro ⟨e, he⟩
-          dsimp'
+          dsimp
           use (d⁻¹ : Aˣ) * c * e
           erw [← he, ← mul_smul, ← mul_smul]
           congr 1
@@ -89,7 +89,7 @@ instance : Mul (ValueGroup A K) :=
       (by
         rintro _ _ a b ⟨c, rfl⟩ ⟨d, rfl⟩
         apply Quotientₓ.sound'
-        dsimp'
+        dsimp
         use c * d
         simp only [mul_smul, Algebra.smul_def, Units.smul_def, RingHom.map_mul, Units.coe_mul]
         ring)
@@ -101,7 +101,7 @@ instance : Inv (ValueGroup A K) :=
         rintro _ a ⟨b, rfl⟩
         apply Quotientₓ.sound'
         use b⁻¹
-        dsimp'
+        dsimp
         rw [Units.smul_def, Units.smul_def, Algebra.smul_def, Algebra.smul_def, mul_inv, map_units_inv])
 
 variable [IsDomain A] [ValuationRing A] [IsFractionRing A K]
@@ -145,7 +145,7 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
       rw [mul_smul],
     le_antisymm := by
       rintro ⟨a⟩ ⟨b⟩ ⟨e, rfl⟩ ⟨f, hf⟩
-      by_cases' hb : b = 0
+      by_cases hb:b = 0
       · simp [hb]
         
       have : IsUnit e := by
@@ -153,7 +153,7 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
         use f
         rw [mul_comm]
         rw [← mul_smul, Algebra.smul_def] at hf
-        nth_rw 1[← one_mulₓ b]  at hf
+        nth_rw 1 [← one_mulₓ b]  at hf
         rw [← (algebraMap A K).map_one] at hf
         exact IsFractionRing.injective _ _ (CancelCommMonoidWithZero.mul_right_cancel_of_ne_zero hb hf).symm
       apply Quotientₓ.sound'
@@ -197,9 +197,7 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
       apply Quotientₓ.sound'
       rw [mul_zero]
       apply Setoidₓ.refl',
-    zero_le_one :=
-      ⟨0, by
-        rw [zero_smul]⟩,
+    zero_le_one := ⟨0, by rw [zero_smul]⟩,
     exists_pair_ne := by
       use 0, 1
       intro c
@@ -234,7 +232,7 @@ def valuation : Valuation K (ValueGroup A K) where
     have : (algebraMap A K) ya ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hya
     have : (algebraMap A K) yb ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hyb
     obtain ⟨c, h | h⟩ := ValuationRing.cond (xa * yb) (xb * ya)
-    dsimp'
+    dsimp
     · apply le_transₓ _ (le_max_leftₓ _ _)
       use c + 1
       rw [Algebra.smul_def]
@@ -281,7 +279,7 @@ noncomputable def equivInteger : A ≃+* (valuation A K).integer :=
       constructor
       · intro x y h
         apply_fun (coe : _ → K)  at h
-        dsimp'  at h
+        dsimp at h
         exact IsFractionRing.injective _ _ h
         
       · rintro ⟨a, ha : a ∈ (Valuation A K).integer⟩
@@ -322,7 +320,7 @@ instance [DecidableRel ((· ≤ ·) : Ideal A → Ideal A → Prop)] : LinearOrd
   { (inferInstance : CompleteLattice (Ideal A)) with
     le_total := by
       intro α β
-      by_cases' h : α ≤ β
+      by_cases h:α ≤ β
       · exact Or.inl h
         
       erw [not_forall] at h
@@ -376,36 +374,27 @@ theorem unique_irreducible [ValuationRing R] ⦃p q : R⦄ (hp : Irreducible p) 
 
 variable (R)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 theorem iff_is_integer_or_is_integer :
     ValuationRing R ↔ ∀ x : K, IsLocalization.IsInteger R x ∨ IsLocalization.IsInteger R x⁻¹ := by
   constructor
   · intro H x
     obtain ⟨x : R, y, hy, rfl⟩ := IsFractionRing.div_surjective x
-    any_goals {
-    }
+    any_goals infer_instance
     have := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr (nonZeroDivisors.ne_zero hy)
     obtain ⟨s, rfl | rfl⟩ := ValuationRing.cond x y
-    · exact
-        Or.inr
-          ⟨s,
-            eq_inv_of_mul_eq_one_left <| by
-              rwa [mul_div, div_eq_one_iff_eq, map_mul, mul_comm]⟩
+    · exact Or.inr ⟨s, eq_inv_of_mul_eq_one_left <| by rwa [mul_div, div_eq_one_iff_eq, map_mul, mul_comm]⟩
       
-    · exact
-        Or.inl
-          ⟨s, by
-            rwa [eq_div_iff, map_mul, mul_comm]⟩
+    · exact Or.inl ⟨s, by rwa [eq_div_iff, map_mul, mul_comm]⟩
       
     
   · intro H
     constructor
     intro a b
-    by_cases' ha : a = 0
+    by_cases ha:a = 0
     · subst ha
       exact ⟨0, Or.inr <| mul_zero b⟩
       
-    by_cases' hb : b = 0
+    by_cases hb:b = 0
     · subst hb
       exact ⟨0, Or.inl <| mul_zero a⟩
       
@@ -453,26 +442,17 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
     ideal.mem_span_singleton'.mp
       (show a ∈ Ideal.span {g} by
         rw [← e]
-        exact
-          Ideal.subset_span
-            (by
-              simp ))
+        exact Ideal.subset_span (by simp))
   obtain ⟨b, rfl⟩ :=
     ideal.mem_span_singleton'.mp
       (show b ∈ Ideal.span {g} by
         rw [← e]
-        exact
-          Ideal.subset_span
-            (by
-              simp ))
+        exact Ideal.subset_span (by simp))
   obtain ⟨x, y, e'⟩ :=
     ideal.mem_span_pair.mp
       (show g ∈ Ideal.span {a * g, b * g} by
         rw [e]
-        exact
-          Ideal.subset_span
-            (by
-              simp ))
+        exact Ideal.subset_span (by simp))
   cases' eq_or_ne g 0 with h h
   · simp [h]
     
@@ -483,8 +463,7 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
   left
   swap
   right
-  all_goals
-    exact mul_dvd_mul_right (is_unit_iff_forall_dvd.mp (is_unit_of_mul_is_unit_right h') _) _
+  all_goals exact mul_dvd_mul_right (is_unit_iff_forall_dvd.mp (is_unit_of_mul_is_unit_right h') _) _
 
 protected theorem tfae (R : Type u) [CommRingₓ R] [IsDomain R] :
     Tfae
@@ -546,7 +525,7 @@ variable (K : Type u) [Field K]
 instance (priority := 100) of_field : ValuationRing K := by
   constructor
   intro a b
-  by_cases' b = 0
+  by_cases b = 0
   · use 0
     left
     simp [h]
@@ -567,12 +546,12 @@ variable (A : Type u) [CommRingₓ A] [IsDomain A] [DiscreteValuationRing A]
 instance (priority := 100) of_discrete_valuation_ring : ValuationRing A := by
   constructor
   intro a b
-  by_cases' ha : a = 0
+  by_cases ha:a = 0
   · use 0
     right
     simp [ha]
     
-  by_cases' hb : b = 0
+  by_cases hb:b = 0
   · use 0
     left
     simp [hb]

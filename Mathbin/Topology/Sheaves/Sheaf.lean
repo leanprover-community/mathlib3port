@@ -95,9 +95,7 @@ def IsSheaf (F : Presheaf.{w, v, u} C X) : Prop :=
 /-- The presheaf valued in `unit` over any topological space is a sheaf.
 -/
 theorem is_sheaf_unit (F : Presheaf (CategoryTheory.Discrete Unit) X) : F.IsSheaf := fun x U S hS x hx =>
-  ⟨eqToHom (Subsingleton.elim _ _), by
-    tidy, by
-    tidy⟩
+  ⟨eqToHom (Subsingleton.elim _ _), by tidy, by tidy⟩
 
 theorem is_sheaf_iso_iff {F G : Presheaf C X} (α : F ≅ G) : F.IsSheaf ↔ G.IsSheaf :=
   Presheaf.is_sheaf_of_iso_iff α

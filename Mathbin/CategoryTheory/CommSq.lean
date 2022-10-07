@@ -56,14 +56,12 @@ theorem of_arrow {f g : Arrow C} (h : f ⟶ g) : CommSq f.Hom h.left h.right g.H
 
 /-- The commutative square in the opposite category associated to a commutative square. -/
 theorem op (p : CommSq f g h i) : CommSq i.op h.op g.op f.op :=
-  ⟨by
-    simp only [← op_comp, p.w]⟩
+  ⟨by simp only [← op_comp, p.w]⟩
 
 /-- The commutative square associated to a commutative square in the opposite category. -/
 theorem unop {W X Y Z : Cᵒᵖ} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z} (p : CommSq f g h i) :
     CommSq i.unop h.unop g.unop f.unop :=
-  ⟨by
-    simp only [← unop_comp, p.w]⟩
+  ⟨by simp only [← unop_comp, p.w]⟩
 
 end CommSq
 
@@ -74,8 +72,7 @@ variable {D : Type _} [Category D]
 variable (F : C ⥤ D) {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 
 theorem map_comm_sq (s : CommSq f g h i) : CommSq (F.map f) (F.map g) (F.map h) (F.map i) :=
-  ⟨by
-    simpa using congr_arg (fun k : W ⟶ Z => F.map k) s.w⟩
+  ⟨by simpa using congr_arg (fun k : W ⟶ Z => F.map k) s.w⟩
 
 end Functor
 
@@ -104,10 +101,8 @@ corresponding square in the opposite category. -/
 @[simps]
 def op {sq : CommSq f i p g} (l : LiftStruct sq) : LiftStruct sq.op where
   l := l.l.op
-  fac_left' := by
-    rw [← op_comp, l.fac_right]
-  fac_right' := by
-    rw [← op_comp, l.fac_left]
+  fac_left' := by rw [← op_comp, l.fac_right]
+  fac_right' := by rw [← op_comp, l.fac_left]
 
 /-- A `lift_struct` for a commutative square in the opposite category
 gives a `lift_struct` for the corresponding square in the original category. -/
@@ -115,10 +110,8 @@ gives a `lift_struct` for the corresponding square in the original category. -/
 def unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y} {sq : CommSq f i p g} (l : LiftStruct sq) :
     LiftStruct sq.unop where
   l := l.l.unop
-  fac_left' := by
-    rw [← unop_comp, l.fac_right]
-  fac_right' := by
-    rw [← unop_comp, l.fac_left]
+  fac_left' := by rw [← unop_comp, l.fac_right]
+  fac_right' := by rw [← unop_comp, l.fac_left]
 
 /-- Equivalences of `lift_struct` for a square and the corresponding square
 in the opposite category. -/
@@ -126,10 +119,8 @@ in the opposite category. -/
 def opEquiv (sq : CommSq f i p g) : LiftStruct sq ≃ LiftStruct sq.op where
   toFun := op
   invFun := unop
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
 
 /-- Equivalences of `lift_struct` for a square in the oppositive category and
 the corresponding square in the original category. -/
@@ -137,10 +128,8 @@ def unopEquiv {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g :
     LiftStruct sq ≃ LiftStruct sq.unop where
   toFun := unop
   invFun := op
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
 
 end LiftStruct
 

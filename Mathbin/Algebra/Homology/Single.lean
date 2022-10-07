@@ -52,17 +52,17 @@ def single (j : ι) : V ⥤ HomologicalComplex V c where
         if h : i = j then
           eqToHom
               (by
-                dsimp'
+                dsimp
                 rw [if_pos h]) ≫
             f ≫
               eqToHom
                 (by
-                  dsimp'
+                  dsimp
                   rw [if_pos h])
         else 0 }
   map_id' := fun A => by
     ext
-    dsimp'
+    dsimp
     split_ifs with h
     · subst h
       simp
@@ -72,7 +72,7 @@ def single (j : ι) : V ⥤ HomologicalComplex V c where
       
   map_comp' := fun A B C f g => by
     ext
-    dsimp'
+    dsimp
     split_ifs with h
     · subst h
       simp
@@ -84,9 +84,7 @@ def single (j : ι) : V ⥤ HomologicalComplex V c where
 -/
 @[simps]
 def singleObjXSelf (j : ι) (A : V) : ((single V c j).obj A).x j ≅ A :=
-  eqToIso
-    (by
-      simp )
+  eqToIso (by simp)
 
 @[simp]
 theorem single_map_f_self (j : ι) {A B : V} (f : A ⟶ B) :
@@ -97,31 +95,24 @@ theorem single_map_f_self (j : ι) {A B : V} (f : A ⟶ B) :
 instance (j : ι) :
     Faithful (single V c j) where map_injective' := fun X Y f g w => by
     have := congr_hom w j
-    dsimp'  at this
+    dsimp at this
     simp only [dif_pos] at this
     rw [← is_iso.inv_comp_eq, inv_eq_to_hom, eq_to_hom_trans_assoc, eq_to_hom_refl, category.id_comp, ←
       is_iso.comp_inv_eq, category.assoc, inv_eq_to_hom, eq_to_hom_trans, eq_to_hom_refl, category.comp_id] at this
     exact this
 
 instance (j : ι) : Full (single V c j) where
-  preimage := fun X Y f =>
-    eqToHom
-        (by
-          simp ) ≫
-      f.f j ≫
-        eqToHom
-          (by
-            simp )
+  preimage := fun X Y f => eqToHom (by simp) ≫ f.f j ≫ eqToHom (by simp)
   witness' := fun X Y f => by
     ext i
-    dsimp'
+    dsimp
     split_ifs
     · subst h
       simp
       
     · symm
       apply zero_of_target_iso_zero
-      dsimp'
+      dsimp
       rw [if_neg h]
       
 
@@ -154,14 +145,14 @@ def single₀ : V ⥤ ChainComplex V ℕ where
     ext n
     cases n
     rfl
-    dsimp'
+    dsimp
     unfold_aux
     simp
   map_comp' := fun X Y Z f g => by
     ext n
     cases n
     rfl
-    dsimp'
+    dsimp
     unfold_aux
     simp
 
@@ -208,17 +199,9 @@ variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 is the same as doing nothing.
 -/
 noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
-  NatIso.ofComponents
-    (fun X =>
-      homology.congr _ _
-          (by
-            simp )
-          (by
-            simp ) ≪≫
-        homologyZeroZero)
-    fun X Y f => by
+  NatIso.ofComponents (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero) fun X Y f => by
     ext
-    dsimp' [homologyFunctor]
+    dsimp [homologyFunctor]
     simp
 
 /-- Sending objects to chain complexes supported at `0` then taking `(n+1)`-st homology
@@ -226,13 +209,7 @@ is the same as the zero functor.
 -/
 noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) : single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
   NatIso.ofComponents
-    (fun X =>
-      homology.congr _ _
-          (by
-            simp )
-          (by
-            simp ) ≪≫
-        homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
+    (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
     fun X Y f => (functor.zero_obj _).eq_of_tgt _ _
 
 end
@@ -247,7 +224,7 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : (C ⟶ (single₀ V).obj
   toFun := fun f =>
     ⟨f.f 0, by
       rw [← f.comm 1 0]
-      simp ⟩
+      simp⟩
   invFun := fun f =>
     { f := fun i =>
         match i with
@@ -270,8 +247,7 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : (C ⟶ (single₀ V).obj
       
     · ext
       
-  right_inv := by
-    tidy
+  right_inv := by tidy
 
 variable (V)
 
@@ -279,15 +255,11 @@ variable (V)
 def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
   NatIso.ofComponents
     (fun X =>
-      { Hom :=
-          { f := fun i => by
-              cases i <;> simpa using 𝟙 _ },
-        inv :=
-          { f := fun i => by
-              cases i <;> simpa using 𝟙 _ },
+      { Hom := { f := fun i => by cases i <;> simpa using 𝟙 _ },
+        inv := { f := fun i => by cases i <;> simpa using 𝟙 _ },
         hom_inv_id' := by
           ext (_ | i) <;>
-            · dsimp'
+            · dsimp
               simp
               ,
         inv_hom_id' := by
@@ -298,7 +270,7 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
              })
     fun X Y f => by
     ext (_ | i) <;>
-      · dsimp'
+      · dsimp
         simp
         
 
@@ -335,14 +307,14 @@ def single₀ : V ⥤ CochainComplex V ℕ where
     ext n
     cases n
     rfl
-    dsimp'
+    dsimp
     unfold_aux
     simp
   map_comp' := fun X Y Z f g => by
     ext n
     cases n
     rfl
-    dsimp'
+    dsimp
     unfold_aux
     simp
 
@@ -389,17 +361,9 @@ variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 is the same as doing nothing.
 -/
 noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
-  NatIso.ofComponents
-    (fun X =>
-      homology.congr _ _
-          (by
-            simp )
-          (by
-            simp ) ≪≫
-        homologyZeroZero)
-    fun X Y f => by
+  NatIso.ofComponents (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero) fun X Y f => by
     ext
-    dsimp' [homologyFunctor]
+    dsimp [homologyFunctor]
     simp
 
 /-- Sending objects to cochain complexes supported at `0` then taking `(n+1)`-st homology
@@ -407,13 +371,7 @@ is the same as the zero functor.
 -/
 noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) : single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
   NatIso.ofComponents
-    (fun X =>
-      homology.congr _ _
-          (by
-            simp )
-          (by
-            simp ) ≪≫
-        homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
+    (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
     fun X Y f => (functor.zero_obj _).eq_of_tgt _ _
 
 end
@@ -429,7 +387,7 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
   toFun := fun f =>
     ⟨f.f 0, by
       rw [f.comm 0 1]
-      simp ⟩
+      simp⟩
   invFun := fun f =>
     { f := fun i =>
         match i with
@@ -455,8 +413,7 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
       
     · ext
       
-  right_inv := by
-    tidy
+  right_inv := by tidy
 
 variable (V)
 
@@ -464,15 +421,11 @@ variable (V)
 def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
   NatIso.ofComponents
     (fun X =>
-      { Hom :=
-          { f := fun i => by
-              cases i <;> simpa using 𝟙 _ },
-        inv :=
-          { f := fun i => by
-              cases i <;> simpa using 𝟙 _ },
+      { Hom := { f := fun i => by cases i <;> simpa using 𝟙 _ },
+        inv := { f := fun i => by cases i <;> simpa using 𝟙 _ },
         hom_inv_id' := by
           ext (_ | i) <;>
-            · dsimp'
+            · dsimp
               simp
               ,
         inv_hom_id' := by
@@ -483,7 +436,7 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
              })
     fun X Y f => by
     ext (_ | i) <;>
-      · dsimp'
+      · dsimp
         simp
         
 

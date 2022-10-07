@@ -69,12 +69,7 @@ structure EllipticCurve (R : Type u) [CommRingₓ R] where
 namespace EllipticCurve
 
 instance : Inhabited (EllipticCurve ℚ) :=
-  ⟨⟨0, 0, 1, -1, 0,
-      ⟨37, 37⁻¹, by
-        norm_num1, by
-        norm_num1⟩,
-      show (37 : ℚ) = _ + _ by
-        norm_num1⟩⟩
+  ⟨⟨0, 0, 1, -1, 0, ⟨37, 37⁻¹, by norm_num1, by norm_num1⟩, show (37 : ℚ) = _ + _ by norm_num1⟩⟩
 
 variable {R : Type u} [CommRingₓ R] (E : EllipticCurve R)
 
@@ -150,7 +145,7 @@ theorem twoTorsionPolynomial.disc_eq : (twoTorsionPolynomial E A).disc = 16 * al
     map_one, map_bit0, map_bit1]
   ring1
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr - »(hdisc, two_torsion_polynomial.disc_eq E A)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr - »(hdisc, two_torsion_polynomial.disc_eq E A)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
 theorem twoTorsionPolynomial.disc_ne_zero {K : Type u} [Field K] [Invertible (2 : K)] (E : EllipticCurve K) (A : Type v)
     [CommRingₓ A] [Nontrivial A] [Algebra K A] : (twoTorsionPolynomial E A).disc ≠ 0 := fun hdisc =>
   E.Δ.ne_zero <|
@@ -159,7 +154,7 @@ theorem twoTorsionPolynomial.disc_ne_zero {K : Type u} [Field K] [Invertible (2 
         (by
           simp only [map_mul, map_pow, map_bit0, map_one, map_zero]
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr - »(hdisc, two_torsion_polynomial.disc_eq E A)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args")
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr - »(hdisc, two_torsion_polynomial.disc_eq E A)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args")
 
 end TorsionPolynomial
 
@@ -244,19 +239,18 @@ theorem c₆_eq : (E.changeOfVariable u r s t).c₆ = ↑u⁻¹ ^ 6 * E.c₆ := 
 theorem Δ_eq : (E.changeOfVariable u r s t).Δ = u⁻¹ ^ 12 * E.Δ :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«expr * »(«expr↑ »(«expr ⁻¹»(E.Δ)),
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr * »(«expr↑ »(«expr ⁻¹»(E.Δ)),
      «expr ^ »(«expr - »(«expr ^ »(«expr + »(«expr ^ »(E.a₁, 2), «expr * »(4, E.a₂)), 2),
        «expr * »(24, «expr + »(«expr * »(2, E.a₄), «expr * »(E.a₁, E.a₃)))),
       3)),
     hu)],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
 @[simp]
 theorem j_eq : (E.changeOfVariable u r s t).j = E.j := by
   simp only [j, c₄, Δ_eq, inv_pow, mul_inv_rev, inv_invₓ, Units.coe_mul, Units.coe_pow, c₄_eq, b₂, b₄]
-  have hu : (u * ↑u⁻¹ : R) ^ 12 = 1 := by
-    rw [u.mul_inv, one_pow]
+  have hu : (u * ↑u⁻¹ : R) ^ 12 = 1 := by rw [u.mul_inv, one_pow]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«expr * »(«expr↑ »(«expr ⁻¹»(E.Δ)),\n     «expr ^ »(«expr - »(«expr ^ »(«expr + »(«expr ^ »(E.a₁, 2), «expr * »(4, E.a₂)), 2),\n       «expr * »(24, «expr + »(«expr * »(2, E.a₄), «expr * »(E.a₁, E.a₃)))),\n      3)),\n    hu)],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr * »(«expr↑ »(«expr ⁻¹»(E.Δ)),\n     «expr ^ »(«expr - »(«expr ^ »(«expr + »(«expr ^ »(E.a₁, 2), «expr * »(4, E.a₂)), 2),\n       «expr * »(24, «expr + »(«expr * »(2, E.a₄), «expr * »(E.a₁, E.a₃)))),\n      3)),\n    hu)],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
 
 end ChangeOfVariable
 

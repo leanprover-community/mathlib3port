@@ -174,11 +174,9 @@ def rmatch : RegularExpression α → List α → Bool
   | P, a :: as => rmatch (P.deriv a) as
 
 @[simp]
-theorem zero_rmatch (x : List α) : rmatch 0 x = ff := by
-  induction x <;> simp [rmatch, match_epsilon, *]
+theorem zero_rmatch (x : List α) : rmatch 0 x = ff := by induction x <;> simp [rmatch, match_epsilon, *]
 
-theorem one_rmatch_iff (x : List α) : rmatch 1 x ↔ x = [] := by
-  induction x <;> simp [rmatch, match_epsilon, *]
+theorem one_rmatch_iff (x : List α) : rmatch 1 x ↔ x = [] := by induction x <;> simp [rmatch, match_epsilon, *]
 
 theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] := by
   cases' x with _ x
@@ -197,8 +195,7 @@ theorem add_rmatch_iff (P Q : RegularExpression α) (x : List α) : (P + Q).rmat
   induction' x with _ _ ih generalizing P Q
   · simp only [rmatch, match_epsilon, bor_coe_iff]
     
-  · repeat'
-      rw [rmatch]
+  · repeat' rw [rmatch]
     rw [deriv]
     exact ih _ _
     
@@ -217,8 +214,7 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
       cases' List.append_eq_nil.1 h₁.symm with ht hu
       subst ht
       subst hu
-      repeat'
-        rw [rmatch] at h₂
+      repeat' rw [rmatch] at h₂
       simp [h₂]
       
     
@@ -227,9 +223,7 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
     · rw [add_rmatch_iff, ih]
       constructor
       · rintro (⟨t, u, _⟩ | h)
-        · exact
-            ⟨a :: t, u, by
-              tauto⟩
+        · exact ⟨a :: t, u, by tauto⟩
           
         · exact ⟨[], a :: x, rfl, hepsilon, h⟩
           
@@ -252,9 +246,7 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
       
     · rw [ih]
       constructor <;> rintro ⟨t, u, h, hP, hQ⟩
-      · exact
-          ⟨a :: t, u, by
-            tauto⟩
+      · exact ⟨a :: t, u, by tauto⟩
         
       · cases' t with b t
         · contradiction
@@ -299,9 +291,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
         · intro t' ht'
           cases' ht' with ht' ht'
           · rw [ht']
-            exact
-              ⟨by
-                decide, ht⟩
+            exact ⟨by decide, ht⟩
             
           · exact helem _ ht'
             
@@ -314,9 +304,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
         
       · rw [rmatch, deriv, mul_rmatch_iff]
         cases' S with t' U
-        · exact
-            ⟨[], [], by
-              tauto⟩
+        · exact ⟨[], [], by tauto⟩
           
         · cases' t' with b t
           · simp only [forall_eq_or_imp, List.mem_cons_iff] at helem
@@ -325,10 +313,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
             
           simp only [List.join, List.cons_append] at hsum
           refine' ⟨t, U.join, hsum.2, _, _⟩
-          · specialize
-              helem (b :: t)
-                (by
-                  simp )
+          · specialize helem (b :: t) (by simp)
             rw [rmatch] at helem
             convert helem.2
             exact hsum.1
@@ -351,54 +336,50 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
   intro x
   induction P generalizing x
   all_goals
-    try
-      rw [zero_def]
-    try
-      rw [one_def]
-    try
-      rw [plus_def]
-    try
-      rw [comp_def]
-    rw [matches]
+  try rw [zero_def]
+  try rw [one_def]
+  try rw [plus_def]
+  try rw [comp_def]
+  rw [matches]
   case zero =>
-    rw [zero_rmatch]
-    tauto
+  rw [zero_rmatch]
+  tauto
   case epsilon =>
-    rw [one_rmatch_iff]
-    rfl
+  rw [one_rmatch_iff]
+  rfl
   case char =>
-    rw [char_rmatch_iff]
-    rfl
+  rw [char_rmatch_iff]
+  rfl
   case plus _ _ ih₁ ih₂ =>
-    rw [add_rmatch_iff, ih₁, ih₂]
-    rfl
+  rw [add_rmatch_iff, ih₁, ih₂]
+  rfl
   case comp P Q ih₁ ih₂ =>
-    simp only [mul_rmatch_iff, comp_def, Language.mul_def, exists_and_distrib_leftₓ, Set.mem_image2, Set.image_prod]
-    constructor
-    · rintro ⟨x, y, hsum, hmatch₁, hmatch₂⟩
-      rw [ih₁] at hmatch₁
-      rw [ih₂] at hmatch₂
-      exact ⟨x, hmatch₁, y, hmatch₂, hsum.symm⟩
-      
-    · rintro ⟨x, hmatch₁, y, hmatch₂, hsum⟩
-      rw [← ih₁] at hmatch₁
-      rw [← ih₂] at hmatch₂
-      exact ⟨x, y, hsum.symm, hmatch₁, hmatch₂⟩
-      
+  simp only [mul_rmatch_iff, comp_def, Language.mul_def, exists_and_distrib_leftₓ, Set.mem_image2, Set.image_prod]
+  constructor
+  · rintro ⟨x, y, hsum, hmatch₁, hmatch₂⟩
+    rw [ih₁] at hmatch₁
+    rw [ih₂] at hmatch₂
+    exact ⟨x, hmatch₁, y, hmatch₂, hsum.symm⟩
+    
+  · rintro ⟨x, hmatch₁, y, hmatch₂, hsum⟩
+    rw [← ih₁] at hmatch₁
+    rw [← ih₂] at hmatch₂
+    exact ⟨x, y, hsum.symm, hmatch₁, hmatch₂⟩
+    
   case star _ ih =>
-    rw [star_rmatch_iff, Language.star_def_nonempty]
-    constructor
-    all_goals
-      rintro ⟨S, hx, hS⟩
-      refine' ⟨S, hx, _⟩
-      intro y
-      specialize hS y
-    · rw [← ih y]
-      tauto
-      
-    · rw [ih y]
-      tauto
-      
+  rw [star_rmatch_iff, Language.star_def_nonempty]
+  constructor
+  all_goals
+  rintro ⟨S, hx, hS⟩
+  refine' ⟨S, hx, _⟩
+  intro y
+  specialize hS y
+  · rw [← ih y]
+    tauto
+    
+  · rw [ih y]
+    tauto
+    
 
 instance (P : RegularExpression α) : DecidablePred P.Matches := by
   intro x
@@ -428,24 +409,18 @@ theorem map_id : ∀ P : RegularExpression α, P.map id = P
   | 0 => rfl
   | 1 => rfl
   | Charₓ a => rfl
-  | R + S => by
-    simp_rw [map, map_id]
-  | R * S => by
-    simp_rw [map, map_id]
-  | star R => by
-    simp_rw [map, map_id]
+  | R + S => by simp_rw [map, map_id]
+  | R * S => by simp_rw [map, map_id]
+  | star R => by simp_rw [map, map_id]
 
 @[simp]
 theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, (P.map f).map g = P.map (g ∘ f)
   | 0 => rfl
   | 1 => rfl
   | Charₓ a => rfl
-  | R + S => by
-    simp_rw [map, map_map]
-  | R * S => by
-    simp_rw [map, map_map]
-  | star R => by
-    simp_rw [map, map_map]
+  | R + S => by simp_rw [map, map_map]
+  | R * S => by simp_rw [map, map_map]
+  | star R => by simp_rw [map, map_map]
 
 /-- The language of the map is the map of the language. -/
 @[simp]
@@ -455,10 +430,8 @@ theorem matches_map (f : α → β) : ∀ P : RegularExpression α, (P.map f).Ma
   | Charₓ a => by
     rw [eq_comm]
     exact image_singleton
-  | R + S => by
-    simp only [matches_map, map, matches_add, map_add]
-  | R * S => by
-    simp only [matches_map, map, matches_mul, map_mul]
+  | R + S => by simp only [matches_map, map, matches_add, map_add]
+  | R * S => by simp only [matches_map, map, matches_mul, map_mul]
   | star R => by
     simp_rw [map, matches, matches_map]
     rw [Language.star_eq_supr_pow, Language.star_eq_supr_pow]

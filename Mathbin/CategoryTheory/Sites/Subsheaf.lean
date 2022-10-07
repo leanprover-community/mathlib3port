@@ -64,12 +64,12 @@ def Subpresheaf.toPresheaf : Cᵒᵖ ⥤ Type w where
   map := fun U V i x => ⟨F.map i x, G.map i x.Prop⟩
   map_id' := fun X => by
     ext ⟨x, _⟩
-    dsimp'
+    dsimp
     rw [F.map_id]
     rfl
   map_comp' := fun X Y Z i j => by
     ext ⟨x, _⟩
-    dsimp'
+    dsimp
     rw [F.map_comp]
     rfl
 
@@ -148,7 +148,7 @@ def Subpresheaf.sheafify : Subpresheaf F where
     rintro U V i s hs
     refine' J.superset_covering _ (J.pullback_stable i.unop hs)
     intro _ _ h
-    dsimp'  at h⊢
+    dsimp at h⊢
     rwa [← functor_to_types.map_comp_apply]
 
 theorem Subpresheaf.le_sheafify : G ≤ G.sheafify J := by
@@ -177,13 +177,13 @@ theorem Subpresheaf.sheafify_is_sheaf (hF : Presieve.IsSheaf J F) : Presieve.IsS
   let S' := sieve.bind S fun Y f hf => G.sieve_of_section (x f hf).1
   have := fun {V} {i : V ⟶ U} (hi : S' i) => hi
   choose W i₁ i₂ hi₂ h₁ h₂
-  dsimp' [-sieve.bind_apply]  at *
+  dsimp [-sieve.bind_apply] at *
   let x'' : presieve.family_of_elements F S' := fun V i hi => F.map (i₁ hi).op (x _ (hi₂ hi))
   have H : ∀ s, x.is_amalgamation s ↔ x''.is_amalgamation s.1 := by
     intro s
     constructor
     · intro H V i hi
-      dsimp' only [x'']
+      dsimp only [x'']
       conv_lhs => rw [← h₂ hi]
       rw [← H _ (hi₂ hi)]
       exact functor_to_types.map_comp_apply F (i₂ hi).op (i₁ hi).op _
@@ -200,17 +200,13 @@ theorem Subpresheaf.sheafify_is_sheaf (hF : Presieve.IsSheaf J F) : Presieve.IsS
   have : x''.compatible := by
     intro V₁ V₂ V₃ g₁ g₂ g₃ g₄ S₁ S₂ e
     rw [← functor_to_types.map_comp_apply, ← functor_to_types.map_comp_apply]
-    exact
-      congr_arg Subtype.val
-        (hx (g₁ ≫ i₁ S₁) (g₂ ≫ i₁ S₂) (hi₂ S₁) (hi₂ S₂)
-          (by
-            simp only [category.assoc, h₂, e]))
+    exact congr_arg Subtype.val (hx (g₁ ≫ i₁ S₁) (g₂ ≫ i₁ S₂) (hi₂ S₁) (hi₂ S₂) (by simp only [category.assoc, h₂, e]))
   obtain ⟨t, ht, ht'⟩ := hF _ (J.bind_covering hS fun V i hi => (x i hi).2) _ this
   refine' ⟨⟨t, _⟩, (H ⟨t, _⟩).mpr ht, fun y hy => Subtype.ext (ht' _ ((H _).mp hy))⟩
   show G.sieve_of_section t ∈ J _
   refine' J.superset_covering _ (J.bind_covering hS fun V i hi => (x i hi).2)
   intro V i hi
-  dsimp'
+  dsimp
   rw [ht _ hi]
   exact h₁ hi
 
@@ -236,14 +232,14 @@ noncomputable def Subpresheaf.sheafifyLift (f : G.toPresheaf ⟶ F') (h : Presie
     apply (h _ ((subpresheaf.sheafify J G).toPresheaf.map i s).Prop).IsSeparatedFor.ext
     intro W j hj
     refine' (presieve.is_sheaf_for.valid_glue _ _ _ hj).trans _
-    dsimp'
+    dsimp
     conv_rhs => rw [← functor_to_types.map_comp_apply]
     change _ = F'.map (j ≫ i.unop).op _
     refine' Eq.trans _ (presieve.is_sheaf_for.valid_glue _ _ _ _).symm
-    · dsimp'  at hj⊢
+    · dsimp at hj⊢
       rwa [functor_to_types.map_comp_apply]
       
-    · dsimp' [presieve.family_of_elements.comp_presheaf_map]
+    · dsimp [presieve.family_of_elements.comp_presheaf_map]
       congr 1
       ext1
       exact (functor_to_types.map_comp_apply _ _ _ _).symm
@@ -262,7 +258,7 @@ theorem Subpresheaf.to_sheafify_lift_unique (h : Presieve.IsSheaf J F') (l₁ l�
   ext U ⟨s, hs⟩
   apply (h _ hs).IsSeparatedFor.ext
   rintro V i hi
-  dsimp'  at hi
+  dsimp at hi
   erw [← functor_to_types.naturality, ← functor_to_types.naturality]
   exact (congr_fun (congr_app e <| op V) ⟨_, hi⟩ : _)
 
@@ -355,7 +351,7 @@ theorem to_image_sheaf_ι {F F' : Sheaf J (Type w)} (f : F ⟶ F') : toImageShea
 instance {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Mono (imageSheafι f) :=
   (sheafToPresheaf J _).mono_of_mono_map
     (by
-      dsimp'
+      dsimp
       infer_instance)
 
 instance {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Epi (toImageSheaf f) := by
@@ -367,7 +363,7 @@ instance {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Epi (toImageSheaf f) := by
   rw [← nat_trans.naturality, ← nat_trans.naturality]
   have E : (to_image_sheaf f).val.app (op V) y = (image_sheaf f).val.map i.op ⟨s, hx⟩ := Subtype.ext e'
   have := congr_arg (fun f : F ⟶ G' => (Sheaf.hom.val f).app _ y) e
-  dsimp'  at this⊢
+  dsimp at this⊢
   convert this <;> exact E.symm
 
 /-- The mono factorization given by `image_sheaf` for a morphism. -/
@@ -396,7 +392,7 @@ noncomputable def imageFactorization {F F' : Sheaf J (Type max v u)} (f : F ⟶ 
           ,
       lift_fac' := fun I => by
         ext1
-        dsimp' [image_mono_factorization]
+        dsimp [image_mono_factorization]
         generalize_proofs h
         rw [← subpresheaf.hom_of_le_ι h, category.assoc]
         congr 1

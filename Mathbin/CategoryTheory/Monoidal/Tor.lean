@@ -40,10 +40,8 @@ variable (C)
 def tor (n : ℕ) : C ⥤ C ⥤ C where
   obj := fun X => Functor.leftDerived ((tensoringLeft C).obj X) n
   map := fun X Y f => NatTrans.leftDerived ((tensoringLeft C).map f) n
-  map_id' := fun X => by
-    rw [(tensoring_left C).map_id, nat_trans.left_derived_id]
-  map_comp' := fun X Y Z f g => by
-    rw [(tensoring_left C).map_comp, nat_trans.left_derived_comp]
+  map_id' := fun X => by rw [(tensoring_left C).map_id, nat_trans.left_derived_id]
+  map_comp' := fun X Y Z f g => by rw [(tensoring_left C).map_comp, nat_trans.left_derived_comp]
 
 /-- An alternative definition of `Tor`, where we left-derive in the first factor instead. -/
 @[simps]
@@ -51,10 +49,8 @@ def tor' (n : ℕ) : C ⥤ C ⥤ C :=
   Functor.flip
     { obj := fun X => Functor.leftDerived ((tensoringRight C).obj X) n,
       map := fun X Y f => NatTrans.leftDerived ((tensoringRight C).map f) n,
-      map_id' := fun X => by
-        rw [(tensoring_right C).map_id, nat_trans.left_derived_id],
-      map_comp' := fun X Y Z f g => by
-        rw [(tensoring_right C).map_comp, nat_trans.left_derived_comp] }
+      map_id' := fun X => by rw [(tensoring_right C).map_id, nat_trans.left_derived_id],
+      map_comp' := fun X Y Z f g => by rw [(tensoring_right C).map_comp, nat_trans.left_derived_comp] }
 
 open ZeroObject
 
@@ -65,7 +61,7 @@ def torSuccOfProjective (X Y : C) [Projective Y] (n : ℕ) : ((tor C (n + 1)).ob
 /-- The higher `Tor'` groups for `X` and `Y` are zero if `X` is projective. -/
 def tor'SuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((tor' C (n + 1)).obj X).obj Y ≅ 0 := by
   -- This unfortunately needs a manual `dsimp`, to avoid a slow unification problem.
-  dsimp' only [Tor', functor.flip]
+  dsimp only [Tor', functor.flip]
   exact ((tensoring_right C).obj Y).leftDerivedObjProjectiveSucc n X
 
 end CategoryTheory

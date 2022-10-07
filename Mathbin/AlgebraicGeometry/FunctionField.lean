@@ -35,10 +35,7 @@ noncomputable abbrev Scheme.functionField [IrreducibleSpace X.Carrier] : CommRin
 noncomputable abbrev Scheme.germToFunctionField [IrreducibleSpace X.Carrier] (U : Opens X.Carrier) [h : Nonempty U] :
     X.Presheaf.obj (op U) ⟶ X.functionField :=
   X.Presheaf.germ
-    ⟨genericPoint X.Carrier,
-      ((generic_point_spec X.Carrier).mem_open_set_iff U.Prop).mpr
-        (by
-          simpa using h)⟩
+    ⟨genericPoint X.Carrier, ((generic_point_spec X.Carrier).mem_open_set_iff U.Prop).mpr (by simpa using h)⟩
 
 noncomputable instance [IrreducibleSpace X.Carrier] (U : Opens X.Carrier) [Nonempty U] :
     Algebra (X.Presheaf.obj (op U)) X.functionField :=
@@ -80,10 +77,7 @@ theorem generic_point_eq_of_is_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : 
   show T0Space Y.carrier
   · infer_instance
     
-  convert
-    (generic_point_spec X.carrier).Image
-      (show Continuous f.1.base by
-        continuity)
+  convert (generic_point_spec X.carrier).Image (show Continuous f.1.base by continuity)
   symm
   rw [eq_top_iff, Set.top_eq_univ, Set.top_eq_univ]
   convert subset_closure_inter_of_is_preirreducible_of_is_open _ H.base_open.open_range _
@@ -121,31 +115,28 @@ theorem generic_point_eq_bot_of_affine (R : CommRingₓₓ) [IsDomain R] :
 instance function_field_is_fraction_ring_of_affine (R : CommRingₓₓ.{u}) [IsDomain R] :
     IsFractionRing R (Scheme.spec.obj <| op R).functionField := by
   convert structure_sheaf.is_localization.to_stalk R _
-  delta' IsFractionRing IsLocalization.AtPrime
+  delta IsFractionRing IsLocalization.AtPrime
   congr 1
   rw [generic_point_eq_bot_of_affine]
   ext
   exact mem_non_zero_divisors_iff_ne_zero
 
 instance {X : Scheme} [IsIntegral X] {U : Opens X.Carrier} [hU : Nonempty U] :
-    IsIntegral (X.restrict U.OpenEmbedding) := by
+    IsIntegral (X.restrict U.OpenEmbedding) :=
   haveI : Nonempty (X.restrict U.open_embedding).Carrier := hU
-  exact is_integral_of_open_immersion (X.of_restrict U.open_embedding)
+  is_integral_of_open_immersion (X.of_restrict U.open_embedding)
 
 theorem IsAffineOpen.prime_ideal_of_generic_point {X : Scheme} [IsIntegral X] {U : Opens X.Carrier}
     (hU : IsAffineOpen U) [h : Nonempty U] :
     hU.primeIdealOf
-        ⟨genericPoint X.Carrier,
-          ((generic_point_spec X.Carrier).mem_open_set_iff U.Prop).mpr
-            (by
-              simpa using h)⟩ =
+        ⟨genericPoint X.Carrier, ((generic_point_spec X.Carrier).mem_open_set_iff U.Prop).mpr (by simpa using h)⟩ =
       genericPoint (Scheme.spec.obj <| op <| X.Presheaf.obj <| op U).Carrier :=
   by
   haveI : is_affine _ := hU
   have e : U.open_embedding.is_open_map.functor.obj ⊤ = U := by
     ext1
     exact set.image_univ.trans Subtype.range_coe
-  delta' is_affine_open.prime_ideal_of
+  delta is_affine_open.prime_ideal_of
   rw [← Scheme.comp_val_base_apply]
   convert
     generic_point_eq_of_is_open_immersion
@@ -160,13 +151,13 @@ theorem function_field_is_fraction_ring_of_is_affine_open [IsIntegral X] (U : Op
   haveI : IsIntegral (X.restrict U.open_embedding) :=
     @is_integral_of_is_affine_is_domain _ _ _
       (by
-        dsimp'
+        dsimp
         rw [opens.open_embedding_obj_top]
         infer_instance)
   have e : U.open_embedding.is_open_map.functor.obj ⊤ = U := by
     ext1
     exact set.image_univ.trans Subtype.range_coe
-  delta' IsFractionRing Scheme.function_field
+  delta IsFractionRing Scheme.function_field
   convert hU.is_localization_stalk ⟨genericPoint X.carrier, _⟩ using 1
   rw [hU.prime_ideal_of_generic_point, generic_point_eq_bot_of_affine]
   ext

@@ -28,9 +28,7 @@ variable (R : Type _) [Semiringₓ R]
 /-- An additive functor `F` is `R`-linear provided `F.map` is an `R`-module morphism. -/
 class Functor.Linear {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] [Linear R C] [Linear R D]
   (F : C ⥤ D) [F.Additive] : Prop where
-  map_smul' : ∀ {X Y : C} {f : X ⟶ Y} {r : R}, F.map (r • f) = r • F.map f := by
-    run_tac
-      obviously
+  map_smul' : ∀ {X Y : C} {f : X ⟶ Y} {r : R}, F.map (r • f) = r • F.map f := by obviously
 
 section Linear
 

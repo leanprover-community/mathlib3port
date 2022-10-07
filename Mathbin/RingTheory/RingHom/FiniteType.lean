@@ -69,20 +69,20 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
   apply Subalgebra.mem_of_span_eq_top_of_smul_pow_mem _ (s : Set S) l hl _ _ x _
   · intro x hx
     apply Algebra.subset_adjoin
-    rw [Finset.coe_union, Finset.coe_union]
+    rw [Finsetₓ.coe_union, Finsetₓ.coe_union]
     exact Or.inl (Or.inr hx)
     
   · intro i
-    by_cases' h : l i = 0
+    by_cases h:l i = 0
     · rw [h]
       exact zero_mem _
       
     apply Algebra.subset_adjoin
-    rw [Finset.coe_union, Finset.coe_image]
+    rw [Finsetₓ.coe_union, Finsetₓ.coe_image]
     exact Or.inr (Set.mem_image_of_mem _ (finsupp.mem_support_iff.mpr h))
     
   · intro r
-    rw [Finset.coe_union, Finset.coe_union, Finset.coe_bUnion]
+    rw [Finsetₓ.coe_union, Finsetₓ.coe_union, Finsetₓ.coe_bUnion]
     -- Since all `sᵢ` and numerators of `t r` are in the algebra, it suffices to show that the
     -- image of `x` in `Sᵣ` falls in the `R`-adjoin of `t r`, which is of course true.
     obtain ⟨⟨_, n₂, rfl⟩, hn₂⟩ :=

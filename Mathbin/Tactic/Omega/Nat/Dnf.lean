@@ -116,8 +116,7 @@ def dnf (p : Preform) : List Clause :=
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
     ∀ m bs, ∀ t ∈ nonnegConstsCore m bs, 0 ≤ Term.val v t
-  | _, [] => fun _ h2 => by
-    cases h2
+  | _, [] => fun _ h2 => by cases h2
   | k, ff::bs => holds_nonneg_consts_core (k + 1) bs
   | k, tt::bs => by
     simp only [nonneg_consts_core]
@@ -130,8 +129,7 @@ theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
       
 
 theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} : (∀ x, 0 ≤ v x) → ∀ t ∈ nonnegConsts bs, 0 ≤ Term.val v t
-  | h1 => by
-    apply holds_nonneg_consts_core h1
+  | h1 => by apply holds_nonneg_consts_core h1
 
 theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
     p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnf p, Clause.Holds (fun x => ↑(v x)) c := by

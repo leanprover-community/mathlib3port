@@ -41,8 +41,7 @@ def binaryProductLimitCone (G H : AddCommGroupₓₓ.{u}) : Limits.LimitCone (pa
       π :=
         { app := fun j =>
             Discrete.casesOn j fun j => WalkingPair.casesOn j (AddMonoidHom.fst G H) (AddMonoidHom.snd G H),
-          naturality' := by
-            rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟨⟩⟩⟩ <;> rfl } }
+          naturality' := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟨⟩⟩⟩ <;> rfl } }
   IsLimit :=
     { lift := fun s => AddMonoidHom.prod (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩),
       fac' := by
@@ -50,8 +49,7 @@ def binaryProductLimitCone (G H : AddCommGroupₓₓ.{u}) : Limits.LimitCone (pa
           · ext x
             simp
             ,
-      uniq' := fun s m w => by
-        ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
+      uniq' := fun s m w => by ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 
 @[simp]
 theorem binary_product_limit_cone_cone_π_app_left (G H : AddCommGroupₓₓ.{u}) :
@@ -107,10 +105,10 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f) where
       fac' := fun s j => by
         cases j
         ext
-        simp ,
+        simp,
       uniq' := fun s m w => by
         ext x j
-        dsimp' only [has_limit.lift]
+        dsimp only [has_limit.lift]
         simp only [AddMonoidHom.coe_mk]
         exact congr_arg (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }
 
@@ -118,7 +116,7 @@ end HasLimit
 
 open HasLimit
 
-variable {J : Type} [Fintype J]
+variable {J : Type} [Fintypeₓ J]
 
 /-- We verify that the biproduct we've just defined is isomorphic to the AddCommGroup structure
 on the dependent function type

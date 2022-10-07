@@ -188,10 +188,8 @@ instance : Inhabited (Homotopy (ContinuousMap.id X) (ContinuousMap.id X)) :=
 @[simps]
 def symm {f₀ f₁ : C(X, Y)} (F : Homotopy f₀ f₁) : Homotopy f₁ f₀ where
   toFun := fun x => F (σ x.1, x.2)
-  map_zero_left' := by
-    norm_num
-  map_one_left' := by
-    norm_num
+  map_zero_left' := by norm_num
+  map_one_left' := by norm_num
 
 @[simp]
 theorem symm_symm {f₀ f₁ : C(X, Y)} (F : Homotopy f₀ f₁) : F.symm.symm = F := by
@@ -206,19 +204,11 @@ def trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homotopy f₁
   continuous_to_fun := by
     refine'
       continuous_if_le (continuous_induced_dom.comp continuous_fst) continuous_const
-        (F.continuous.comp
-            (by
-              continuity)).ContinuousOn
-        (G.continuous.comp
-            (by
-              continuity)).ContinuousOn
-        _
+        (F.continuous.comp (by continuity)).ContinuousOn (G.continuous.comp (by continuity)).ContinuousOn _
     rintro x hx
-    norm_num[hx]
-  map_zero_left' := fun x => by
-    norm_num
-  map_one_left' := fun x => by
-    norm_num
+    norm_num [hx]
+  map_zero_left' := fun x => by norm_num
+  map_one_left' := fun x => by norm_num
 
 theorem trans_apply {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homotopy f₁ f₂) (x : I × X) :
     (F.trans G) x =
@@ -237,9 +227,8 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homo
   split_ifs with h₁ h₂
   · change (x.1 : ℝ) ≤ _ at h₂
     change (1 : ℝ) - x.1 ≤ _ at h₁
-    have ht : (x.1 : ℝ) = 1 / 2 := by
-      linarith
-    norm_num[ht]
+    have ht : (x.1 : ℝ) = 1 / 2 := by linarith
+    norm_num [ht]
     
   · congr 2
     apply Subtype.ext
@@ -262,10 +251,8 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homo
 @[simps]
 def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : Homotopy f₀ f₁) (h₀ : f₀ = g₀) (h₁ : f₁ = g₁) : Homotopy g₀ g₁ where
   toFun := F
-  map_zero_left' := by
-    simp [← h₀]
-  map_one_left' := by
-    simp [← h₁]
+  map_zero_left' := by simp [← h₀]
+  map_one_left' := by simp [← h₁]
 
 /-- If we have a `homotopy f₀ f₁` and a `homotopy g₀ g₁`, then we can compose them and get a
 `homotopy (g₀.comp f₀) (g₁.comp f₁)`.
@@ -274,10 +261,8 @@ def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : Homotopy f₀ f₁) (h₀ : f₀ =
 def hcomp {f₀ f₁ : C(X, Y)} {g₀ g₁ : C(Y, Z)} (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) :
     Homotopy (g₀.comp f₀) (g₁.comp f₁) where
   toFun := fun x => G (x.1, F x)
-  map_zero_left' := by
-    simp
-  map_one_left' := by
-    simp
+  map_zero_left' := by simp
+  map_one_left' := by simp
 
 end Homotopy
 
@@ -364,8 +349,8 @@ theorem prop (F : HomotopyWith f₀ f₁ P) (t : I) : P (F.toHomotopy.curry t) :
   F.prop' t
 
 theorem extend_prop (F : HomotopyWith f₀ f₁ P) (t : ℝ) : P (F.toHomotopy.extend t) := by
-  by_cases' ht₀ : 0 ≤ t
-  · by_cases' ht₁ : t ≤ 1
+  by_cases ht₀:0 ≤ t
+  · by_cases ht₁:t ≤ 1
     · convert F.prop ⟨t, ht₀, ht₁⟩
       ext
       rw [F.to_homotopy.extend_apply_of_mem_I ⟨ht₀, ht₁⟩, F.to_homotopy.curry_apply]
@@ -402,9 +387,7 @@ instance : Inhabited (HomotopyWith (ContinuousMap.id X) (ContinuousMap.id X) fun
 -/
 @[simps]
 def symm {f₀ f₁ : C(X, Y)} (F : HomotopyWith f₀ f₁ P) : HomotopyWith f₁ f₀ P :=
-  { F.toHomotopy.symm with
-    prop' := fun t => by
-      simpa using F.prop (σ t) }
+  { F.toHomotopy.symm with prop' := fun t => by simpa using F.prop (σ t) }
 
 @[simp]
 theorem symm_symm {f₀ f₁ : C(X, Y)} (F : HomotopyWith f₀ f₁ P) : F.symm.symm = F :=
@@ -502,9 +485,7 @@ def refl (f : C(X, Y)) (S : Set X) : HomotopyRel f f S :=
 -/
 @[simps]
 def symm (F : HomotopyRel f₀ f₁ S) : HomotopyRel f₁ f₀ S :=
-  { HomotopyWith.symm F with
-    prop' := fun t x hx => by
-      simp [F.eq_snd _ hx, F.fst_eq_snd hx] }
+  { HomotopyWith.symm F with prop' := fun t x hx => by simp [F.eq_snd _ hx, F.fst_eq_snd hx] }
 
 @[simp]
 theorem symm_symm (F : HomotopyRel f₀ f₁ S) : F.symm.symm = F :=
@@ -538,9 +519,7 @@ theorem symm_trans (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel f₁ f₂ S) :
 -/
 @[simps]
 def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : HomotopyRel f₀ f₁ S) (h₀ : f₀ = g₀) (h₁ : f₁ = g₁) : HomotopyRel g₀ g₁ S :=
-  { Homotopy.cast F.toHomotopy h₀ h₁ with
-    prop' := fun t x hx => by
-      simpa [← h₀, ← h₁] using F.prop t x hx }
+  { Homotopy.cast F.toHomotopy h₀ h₁ with prop' := fun t x hx => by simpa [← h₀, ← h₁] using F.prop t x hx }
 
 end HomotopyRel
 

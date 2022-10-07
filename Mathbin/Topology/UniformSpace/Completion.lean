@@ -72,13 +72,13 @@ variable [UniformSpace β] [UniformSpace γ]
 def Gen (s : Set (α × α)) : Set (Cauchyₓ α × Cauchyₓ α) :=
   { p | s ∈ p.1.val ×ᶠ p.2.val }
 
-theorem monotone_gen : Monotone gen :=
+theorem monotone_gen : Monotoneₓ gen :=
   monotone_set_of fun p => @monotone_mem (α × α) (p.1.val ×ᶠ p.2.val)
 
 private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lift' gen :=
   calc
     map Prod.swap ((𝓤 α).lift' gen) = (𝓤 α).lift' fun s : Set (α × α) => { p | s ∈ p.2.val ×ᶠ p.1.val } := by
-      delta' gen
+      delta gen
       simp [map_lift'_eq, monotone_set_of, monotone_mem, Function.comp, image_swap_eq_preimage_swap,
         -Subtype.val_eq_coe]
     _ ≤ (𝓤 α).lift' gen :=
@@ -108,11 +108,11 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => CompRel s s) �
     (((𝓤 α).lift' gen).lift' fun s => CompRel s s) = (𝓤 α).lift' fun s => CompRel (gen s) (gen s) := by
       rw [lift'_lift'_assoc]
       exact monotone_gen
-      exact monotone_comp_rel monotone_id monotone_id
+      exact monotone_comp_rel monotone_idₓ monotone_idₓ
     _ ≤ (𝓤 α).lift' fun s => gen <| CompRel s s := lift'_mono' fun s hs => comp_rel_gen_gen_subset_gen_comp_rel
     _ = ((𝓤 α).lift' fun s : Set (α × α) => CompRel s s).lift' gen := by
       rw [lift'_lift'_assoc]
-      exact monotone_comp_rel monotone_id monotone_id
+      exact monotone_comp_rel monotone_idₓ monotone_idₓ
       exact monotone_gen
     _ ≤ (𝓤 α).lift' gen := lift'_mono comp_le_uniformity le_rflₓ
     
@@ -120,7 +120,7 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => CompRel s s) �
 instance : UniformSpace (Cauchyₓ α) :=
   UniformSpace.ofCore
     { uniformity := (𝓤 α).lift' gen,
-      refl := principal_le_lift' fun s hs ⟨a, b⟩ (a_eq_b : a = b) => a_eq_b ▸ a.property.right hs, symm := symm_gen,
+      refl := principal_le_lift'.2 fun s hs ⟨a, b⟩ (a_eq_b : a = b) => a_eq_b ▸ a.property.right hs, symm := symm_gen,
       comp := comp_gen }
 
 theorem mem_uniformity {s : Set (Cauchyₓ α × Cauchyₓ α)} : s ∈ 𝓤 (Cauchyₓ α) ↔ ∃ t ∈ 𝓤 α, gen t ⊆ s :=
@@ -136,15 +136,12 @@ def pureCauchy (a : α) : Cauchyₓ α :=
 
 theorem uniform_inducing_pure_cauchy : UniformInducing (pure_cauchy : α → Cauchyₓ α) :=
   ⟨have : (Preimage fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ∘ gen = id :=
-      funext fun s =>
-        Set.ext fun ⟨a₁, a₂⟩ => by
-          simp [preimage, gen, pure_cauchy, prod_principal_principal]
+      funext fun s => Set.ext fun ⟨a₁, a₂⟩ => by simp [preimage, gen, pure_cauchy, prod_principal_principal]
     calc
       comap (fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ((𝓤 α).lift' gen) =
           (𝓤 α).lift' ((Preimage fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ∘ gen) :=
         comap_lift'_eq
-      _ = 𝓤 α := by
-        simp [this]
+      _ = 𝓤 α := by simp [this]
       ⟩
 
 theorem uniform_embedding_pure_cauchy : UniformEmbedding (pure_cauchy : α → Cauchyₓ α) :=
@@ -162,9 +159,7 @@ theorem dense_range_pure_cauchy : DenseRange pure_cauchy := fun f => by
       mem_prod_iff.mpr
         ⟨t, ht, { y : α | (x, y) ∈ t' }, h <| mk_mem_prod hx hx, fun ⟨a, b⟩ ⟨(h₁ : a ∈ t), (h₂ : (x, b) ∈ t')⟩ =>
           ht'₂ <| prod_mk_mem_comp_rel (@h (a, x) ⟨h₁, hx⟩) h₂⟩
-    ⟨x,
-      ht''₂ <| by
-        dsimp' [gen] <;> exact this⟩
+    ⟨x, ht''₂ <| by dsimp [gen] <;> exact this⟩
   simp only [closure_eq_cluster_pts, ClusterPt, nhds_eq_uniformity, lift'_inf_principal_eq,
     Set.inter_comm _ (range pure_cauchy), mem_set_of_eq]
   exact
@@ -190,7 +185,7 @@ theorem nonempty_Cauchy_iff : Nonempty (Cauchyₓ α) ↔ Nonempty α := by
 
 section
 
--- ./././Mathport/Syntax/Translate/Basic.lean:335:40: warning: unsupported option eqn_compiler.zeta
+-- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -198,14 +193,13 @@ instance : CompleteSpace (Cauchyₓ α) :=
   (complete_space_extension uniform_inducing_pure_cauchy dense_range_pure_cauchy) fun f hf =>
     let f' : Cauchyₓ α := ⟨f, hf⟩
     have : map pure_cauchy f ≤ (𝓤 <| Cauchyₓ α).lift' (Preimage (Prod.mk f')) :=
-      le_lift' fun s hs =>
+      le_lift'.2 fun s hs =>
         let ⟨t, ht₁, (ht₂ : gen t ⊆ s)⟩ := (mem_lift'_sets monotone_gen).mp hs
         let ⟨t', ht', (h : t' ×ˢ t' ⊆ t)⟩ := mem_prod_same_iff.mp (hf.right ht₁)
         have : t' ⊆ { y : α | (f', pure_cauchy y) ∈ gen t } := fun x hx =>
           (f ×ᶠ pure x).sets_of_superset (prod_mem_prod ht' hx) h
         f.sets_of_superset ht' <| Subset.trans this (preimage_mono ht₂)
-    ⟨f', by
-      simp [nhds_eq_uniformity] <;> assumption⟩
+    ⟨f', by simp [nhds_eq_uniformity] <;> assumption⟩
 
 end
 
@@ -235,14 +229,12 @@ end SeparatedSpace
 variable [CompleteSpace β]
 
 theorem uniform_continuous_extend {f : α → β} : UniformContinuous (extend f) := by
-  by_cases' hf : UniformContinuous f
+  by_cases hf:UniformContinuous f
   · rw [extend, if_pos hf]
     exact uniform_continuous_uniformly_extend uniform_inducing_pure_cauchy dense_range_pure_cauchy hf
     
   · rw [extend, if_neg hf]
-    exact
-      uniform_continuous_of_const fun a b => by
-        congr
+    exact uniform_continuous_of_const fun a b => by congr
     
 
 end Extend
@@ -266,11 +258,7 @@ theorem Cauchy_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace 
     exact dt ⟨_, h₁, h₂⟩
     
   · intro H
-    refine'
-      separated_def.1
-        (by
-          infer_instance)
-        _ _ fun t tu => _
+    refine' separated_def.1 (by infer_instance) _ _ fun t tu => _
     rcases mem_uniformity_is_closed tu with ⟨d, du, dc, dt⟩
     refine' H { p | (lim p.1.1, lim p.2.1) ∈ t } (Cauchyₓ.mem_uniformity'.2 ⟨d, du, fun f g h => _⟩)
     rcases mem_prod_iff.1 h with ⟨x, xf, y, yg, h⟩
@@ -280,7 +268,7 @@ theorem Cauchy_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace 
       exact f.2.1.mono (le_inf f.2.le_nhds_Lim (le_principal_iff.2 xf))
     have := dc.closure_subset_iff.2 h
     rw [closure_prod_eq] at this
-    refine' dt (this ⟨_, _⟩) <;> dsimp' <;> apply limc <;> assumption
+    refine' dt (this ⟨_, _⟩) <;> dsimp <;> apply limc <;> assumption
     
 
 section
@@ -317,10 +305,7 @@ instance complete_space_separation [h : CompleteSpace α] : CompleteSpace (Quoti
     have : Cauchy (f.comap fun x => ⟦x⟧) :=
       hf.comap' comap_quotient_le_uniformity <| hf.left.comap_of_surj (surjective_quotient_mk _)
     let ⟨x, (hx : (f fun x => ⟦x⟧) ≤ 𝓝 x)⟩ := CompleteSpace.complete this
-    ⟨⟦x⟧,
-      (comap_le_comap_iff <| by
-            simp ).1
-        (hx.trans <| map_le_iff_le_comap.1 continuous_quotient_mk.ContinuousAt)⟩⟩
+    ⟨⟦x⟧, (comap_le_comap_iff <| by simp).1 (hx.trans <| map_le_iff_le_comap.1 continuous_quotient_mk.ContinuousAt)⟩⟩
 
 /-- Hausdorff completion of `α` -/
 def Completion :=
@@ -356,8 +341,7 @@ theorem comap_coe_eq_uniformity : ((𝓤 _).comap fun p : α × α => ((p.1 : Co
   have :
     (fun x : α × α => ((x.1 : completion α), (x.2 : completion α))) =
       (fun x : Cauchyₓ α × Cauchyₓ α => (⟦x.1⟧, ⟦x.2⟧)) ∘ fun x : α × α => (pure_cauchy x.1, pure_cauchy x.2) :=
-    by
-    ext ⟨a, b⟩ <;> simp <;> rfl
+    by ext ⟨a, b⟩ <;> simp <;> rfl
   rw [this, ← Filter.comap_comap]
   change Filter.comap _ (Filter.comap _ (𝓤 <| Quotientₓ <| separation_setoid <| Cauchyₓ α)) = 𝓤 α
   rw [comap_quotient_eq_uniformity, uniform_embedding_pure_cauchy.comap_uniformity]
@@ -376,12 +360,9 @@ variable (α)
 def cpkg {α : Type _} [UniformSpace α] : AbstractCompletion α where
   Space := Completion α
   coe := coe
-  uniformStruct := by
-    infer_instance
-  complete := by
-    infer_instance
-  separation := by
-    infer_instance
+  uniformStruct := by infer_instance
+  complete := by infer_instance
+  separation := by infer_instance
   UniformInducing := Completion.uniform_inducing_coe α
   dense := Completion.dense_range_coe
 
@@ -409,6 +390,10 @@ variable {α}
 
 theorem dense_inducing_coe : DenseInducing (coe : α → Completion α) :=
   { (uniform_inducing_coe α).Inducing with dense := dense_range_coe }
+
+/-- The uniform bijection between a complete space and its uniform completion. -/
+def UniformCompletion.completeEquivSelf [CompleteSpace α] [SeparatedSpace α] : Completion α ≃ᵤ α :=
+  AbstractCompletion.compareEquiv Completion.cpkg AbstractCompletion.ofComplete
 
 open TopologicalSpace
 

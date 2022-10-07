@@ -80,7 +80,7 @@ theorem exists_integer_multiple (a : S) : ∃ b : M, IsInteger R ((b : R) • a)
   apply exists_integer_multiple'
 
 /-- We can clear the denominators of a `finset`-indexed family of fractions. -/
-theorem exist_integer_multiples {ι : Type _} (s : Finset ι) (f : ι → S) :
+theorem exist_integer_multiples {ι : Type _} (s : Finsetₓ ι) (f : ι → S) :
     ∃ b : M, ∀ i ∈ s, IsLocalization.IsInteger R ((b : R) • f i) := by
   haveI := Classical.propDecidable
   refine' ⟨∏ i in s, (sec M (f i)).2, fun i hi => ⟨_, _⟩⟩
@@ -89,48 +89,48 @@ theorem exist_integer_multiples {ι : Type _} (s : Finset ι) (f : ι → S) :
   rw [RingHom.map_mul, sec_spec', ← mul_assoc, ← (algebraMap R S).map_mul, ← Algebra.smul_def]
   congr 2
   refine' trans _ ((Submonoid.subtype M).map_prod _ _).symm
-  rw [mul_comm, ← Finset.prod_insert (s.not_mem_erase i), Finset.insert_erase hi]
+  rw [mul_comm, ← Finsetₓ.prod_insert (s.not_mem_erase i), Finsetₓ.insert_erase hi]
   rfl
 
 /-- We can clear the denominators of a finite indexed family of fractions. -/
 theorem exist_integer_multiples_of_finite {ι : Type _} [Finite ι] (f : ι → S) :
     ∃ b : M, ∀ i, IsLocalization.IsInteger R ((b : R) • f i) := by
   cases nonempty_fintype ι
-  obtain ⟨b, hb⟩ := exist_integer_multiples M Finset.univ f
-  exact ⟨b, fun i => hb i (Finset.mem_univ _)⟩
+  obtain ⟨b, hb⟩ := exist_integer_multiples M Finsetₓ.univ f
+  exact ⟨b, fun i => hb i (Finsetₓ.mem_univ _)⟩
 
 /-- We can clear the denominators of a finite set of fractions. -/
-theorem exist_integer_multiples_of_finset (s : Finset S) : ∃ b : M, ∀ a ∈ s, IsInteger R ((b : R) • a) :=
+theorem exist_integer_multiples_of_finset (s : Finsetₓ S) : ∃ b : M, ∀ a ∈ s, IsInteger R ((b : R) • a) :=
   exist_integer_multiples M s id
 
 /-- A choice of a common multiple of the denominators of a `finset`-indexed family of fractions. -/
-noncomputable def commonDenom {ι : Type _} (s : Finset ι) (f : ι → S) : M :=
+noncomputable def commonDenom {ι : Type _} (s : Finsetₓ ι) (f : ι → S) : M :=
   (exist_integer_multiples M s f).some
 
 /-- The numerator of a fraction after clearing the denominators
 of a `finset`-indexed family of fractions. -/
-noncomputable def integerMultiple {ι : Type _} (s : Finset ι) (f : ι → S) (i : s) : R :=
+noncomputable def integerMultiple {ι : Type _} (s : Finsetₓ ι) (f : ι → S) (i : s) : R :=
   ((exist_integer_multiples M s f).some_spec i i.Prop).some
 
 @[simp]
-theorem map_integer_multiple {ι : Type _} (s : Finset ι) (f : ι → S) (i : s) :
+theorem map_integer_multiple {ι : Type _} (s : Finsetₓ ι) (f : ι → S) (i : s) :
     algebraMap R S (integerMultiple M s f i) = commonDenom M s f • f i :=
   ((exist_integer_multiples M s f).some_spec _ i.Prop).some_spec
 
 /-- A choice of a common multiple of the denominators of a finite set of fractions. -/
-noncomputable def commonDenomOfFinset (s : Finset S) : M :=
+noncomputable def commonDenomOfFinset (s : Finsetₓ S) : M :=
   commonDenom M s id
 
 /-- The finset of numerators after clearing the denominators of a finite set of fractions. -/
-noncomputable def finsetIntegerMultiple [DecidableEq R] (s : Finset S) : Finset R :=
+noncomputable def finsetIntegerMultiple [DecidableEq R] (s : Finsetₓ S) : Finsetₓ R :=
   s.attach.Image fun t => integerMultiple M s id t
 
 open Pointwise
 
-theorem finset_integer_multiple_image [DecidableEq R] (s : Finset S) :
+theorem finset_integer_multiple_image [DecidableEq R] (s : Finsetₓ S) :
     algebraMap R S '' finsetIntegerMultiple M s = commonDenomOfFinset M s • s := by
-  delta' finset_integer_multiple common_denom
-  rw [Finset.coe_image]
+  delta finset_integer_multiple common_denom
+  rw [Finsetₓ.coe_image]
   ext
   constructor
   · rintro ⟨_, ⟨x, -, rfl⟩, rfl⟩

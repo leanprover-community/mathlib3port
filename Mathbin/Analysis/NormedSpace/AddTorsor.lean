@@ -104,9 +104,7 @@ theorem dist_right_midpoint (p₁ p₂ : P) : dist p₂ (midpoint 𝕜 p₁ p₂
 
 theorem dist_midpoint_midpoint_le' (p₁ p₂ p₃ p₄ : P) :
     dist (midpoint 𝕜 p₁ p₂) (midpoint 𝕜 p₃ p₄) ≤ (dist p₁ p₃ + dist p₂ p₄) / ∥(2 : 𝕜)∥ := by
-  rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, midpoint_vsub_midpoint] <;>
-    try
-      infer_instance
+  rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, midpoint_vsub_midpoint] <;> try infer_instance
   rw [midpoint_eq_smul_add, norm_smul, inv_of_eq_inv, norm_inv, ← div_eq_inv_mul]
   exact div_le_div_of_le_of_nonneg (norm_add_le _ _) (norm_nonneg _)
 
@@ -131,8 +129,7 @@ theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy
   · use 1
     simp [h.symm, interior_subset hy]
     
-  have hxy : 0 < ∥y -ᵥ x∥ := by
-    rwa [norm_pos_iff, vsub_ne_zero]
+  have hxy : 0 < ∥y -ᵥ x∥ := by rwa [norm_pos_iff, vsub_ne_zero]
   obtain ⟨u, hu₁, hu₂, hu₃⟩ := mem_interior.mp hy
   obtain ⟨ε, hε, hyε⟩ := metric.is_open_iff.mp hu₂ y hu₃
   refine' ⟨ε / ∥y -ᵥ x∥, div_pos hε hxy, fun δ (hδ : ∥δ - 1∥ < ε / ∥y -ᵥ x∥) => hu₁ (hyε _)⟩
@@ -166,12 +163,7 @@ def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = m
     (↑((AddMonoidHom.ofMapMidpoint ℝ ℝ
             ((AffineEquiv.vaddConst ℝ (f <| Classical.arbitrary P)).symm ∘
               f ∘ AffineEquiv.vaddConst ℝ (Classical.arbitrary P))
-            (by
-              simp )
-            fun x y => by
-            simp [h]).toRealLinearMap <|
-        by
-        apply_rules [Continuous.vadd, Continuous.vsub, continuous_const, hfc.comp, continuous_id]))
-    (Classical.arbitrary P) fun p => by
-    simp
+            (by simp) fun x y => by simp [h]).toRealLinearMap <|
+        by apply_rules [Continuous.vadd, Continuous.vsub, continuous_const, hfc.comp, continuous_id]))
+    (Classical.arbitrary P) fun p => by simp
 

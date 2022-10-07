@@ -94,8 +94,7 @@ variable {L} {M}
 namespace Substructure
 
 instance : SetLike (L.Substructure M) M :=
-  ⟨Substructure.Carrier, fun p q h => by
-    cases p <;> cases q <;> congr⟩
+  ⟨Substructure.Carrier, fun p q h => by cases p <;> cases q <;> congr⟩
 
 /-- See Note [custom simps projection] -/
 def Simps.Coe (S : L.Substructure M) : Set M :=
@@ -174,7 +173,7 @@ instance : HasInfₓ (L.Substructure M) :=
         ClosedUnder.Inf
           (by
             rintro _ ⟨t, rfl⟩
-            by_cases' h : t ∈ s
+            by_cases h:t ∈ s
             · simpa [h] using t.fun_mem f
               
             · simp [h]
@@ -275,11 +274,11 @@ theorem lift_card_closure_le :
 
 variable (L)
 
-theorem _root_.set.countable.substructure_closure [L.CountableFunctions] (h : s.Countable) : Countable (closure L s) :=
-  by
+theorem _root_.set.countable.substructure_closure [Countable (Σl, L.Functions l)] (h : s.Countable) :
+    Countable.{w + 1} (closure L s) := by
   haveI : Countable s := h.to_subtype
   rw [← mk_le_aleph_0_iff, ← lift_le_aleph_0]
-  exact lift_card_closure_le_card_term.trans term.card_le_aleph_0
+  exact lift_card_closure_le_card_term.trans mk_le_aleph_0
 
 variable {L} (S)
 
@@ -355,9 +354,7 @@ theorem comap_comap (S : L.Substructure P) (g : N →[L] P) (f : M →[L] N) : (
 
 @[simp]
 theorem comap_id (S : L.Substructure P) : S.comap (Hom.id _ _) = S :=
-  ext
-    (by
-      simp )
+  ext (by simp)
 
 /-- The image of a substructure along a homomorphism is a substructure. -/
 @[simps]
@@ -400,10 +397,10 @@ theorem le_comap_map {f : M →[L] N} : S ≤ (S.map f).comap f :=
 theorem map_comap_le {S : L.Substructure N} {f : M →[L] N} : (S.comap f).map f ≤ S :=
   (gc_map_comap f).l_u_le _
 
-theorem monotone_map {f : M →[L] N} : Monotone (map f) :=
+theorem monotone_map {f : M →[L] N} : Monotoneₓ (map f) :=
   (gc_map_comap f).monotone_l
 
-theorem monotone_comap {f : M →[L] N} : Monotone (comap f) :=
+theorem monotone_comap {f : M →[L] N} : Monotoneₓ (comap f) :=
   (gc_map_comap f).monotone_u
 
 @[simp]
@@ -455,8 +452,7 @@ include hf
 
 /-- `map f` and `comap f` form a `galois_coinsertion` when `f` is injective. -/
 def gciMapComap : GaloisCoinsertion (map f) (comap f) :=
-  (gc_map_comap f).toGaloisCoinsertion fun S x => by
-    simp [mem_comap, mem_map, hf.eq_iff]
+  (gc_map_comap f).toGaloisCoinsertion fun S x => by simp [mem_comap, mem_map, hf.eq_iff]
 
 theorem comap_map_eq_of_injective (S : L.Substructure M) : (S.map f).comap f = S :=
   (gciMapComap hf).u_l_eq _
@@ -482,7 +478,7 @@ theorem comap_supr_map_of_injective (S : ι → L.Substructure M) : (⨆ i, (S i
 theorem map_le_map_iff_of_injective {S T : L.Substructure M} : S.map f ≤ T.map f ↔ S ≤ T :=
   (gciMapComap hf).l_le_l_iff
 
-theorem map_strict_mono_of_injective : StrictMono (map f) :=
+theorem map_strict_mono_of_injective : StrictMonoₓ (map f) :=
   (gciMapComap hf).strict_mono_l
 
 end GaloisCoinsertion
@@ -497,9 +493,7 @@ include hf
 def giMapComap : GaloisInsertion (map f) (comap f) :=
   (gc_map_comap f).toGaloisInsertion fun S x h =>
     let ⟨y, hy⟩ := hf x
-    mem_map.2
-      ⟨y, by
-        simp [hy, h]⟩
+    mem_map.2 ⟨y, by simp [hy, h]⟩
 
 theorem map_comap_eq_of_surjective (S : L.Substructure N) : (S.comap f).map f = S :=
   (giMapComap hf).l_u_eq _
@@ -525,7 +519,7 @@ theorem map_supr_comap_of_surjective (S : ι → L.Substructure N) : (⨆ i, (S 
 theorem comap_le_comap_iff_of_surjective {S T : L.Substructure N} : S.comap f ≤ T.comap f ↔ S ≤ T :=
   (giMapComap hf).u_le_u_iff
 
-theorem comap_strict_mono_of_surjective : StrictMono (comap f) :=
+theorem comap_strict_mono_of_surjective : StrictMonoₓ (comap f) :=
   (giMapComap hf).strict_mono_u
 
 end GaloisInsertion
@@ -547,8 +541,7 @@ theorem coe_subtype : ⇑S.Subtype = coe :=
 def topEquiv : (⊤ : L.Substructure M) ≃[L] M where
   toFun := subtype ⊤
   invFun := fun m => ⟨m, mem_top m⟩
-  left_inv := fun m => by
-    simp
+  left_inv := fun m => by simp
   right_inv := fun m => rfl
 
 @[simp]
@@ -718,8 +711,7 @@ def eqLocus (f g : M →[L] N) : Substructure L M where
   fun_mem := fun n fn x hx => by
     have h : f ∘ x = g ∘ x := by
       ext
-      repeat'
-        rw [Function.comp_applyₓ]
+      repeat' rw [Function.comp_applyₓ]
       apply hx
     simp [h]
 

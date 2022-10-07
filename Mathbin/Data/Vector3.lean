@@ -87,14 +87,12 @@ theorem cons_head_tail (v : Vector3 α (succ n)) : (head v::tail v) = v :=
   funext fun i => Fin2.cases' rfl (fun _ => rfl) i
 
 /-- Eliminator for an empty vector. -/
-def nilElim {C : Vector3 α 0 → Sort u} (H : C []) (v : Vector3 α 0) : C v := by
-  rw [eq_nil v] <;> apply H
+def nilElim {C : Vector3 α 0 → Sort u} (H : C []) (v : Vector3 α 0) : C v := by rw [eq_nil v] <;> apply H
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Recursion principle for a nonempty vector. -/
 def consElim {C : Vector3 α (succ n) → Sort u} (H : ∀ (a : α) (t : Vector3 α n), C (a::t)) (v : Vector3 α (succ n)) :
-    C v := by
-  rw [← cons_head_tail v] <;> apply H
+    C v := by rw [← cons_head_tail v] <;> apply H
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
@@ -137,19 +135,13 @@ theorem append_cons (a : α) (v : Vector3 α m) (w : Vector3 α n) : (a::v) +-+ 
 
 @[simp]
 theorem append_left : ∀ {m} (i : Fin2 m) (v : Vector3 α m) {n} (w : Vector3 α n), (v +-+ w) (left n i) = v i
-  | _, @fz m, v, n, w =>
-    v.consElim fun a t => by
-      simp [*, left]
-  | _, @fs m i, v, n, w =>
-    v.consElim fun a t => by
-      simp [*, left]
+  | _, @fz m, v, n, w => v.consElim fun a t => by simp [*, left]
+  | _, @fs m i, v, n, w => v.consElim fun a t => by simp [*, left]
 
 @[simp]
 theorem append_add : ∀ {m} (v : Vector3 α m) {n} (w : Vector3 α n) (i : Fin2 n), (v +-+ w) (add i m) = w i
   | 0, v, n, w, i => rfl
-  | succ m, v, n, w, i =>
-    v.consElim fun a t => by
-      simp [*, add]
+  | succ m, v, n, w, i => v.consElim fun a t => by simp [*, add]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Insert `a` into `v` at index `i`. -/
@@ -206,15 +198,11 @@ def VectorAll : ∀ k, (Vector3 α k → Prop) → Prop
   | succ k, f => ∀ x : α, VectorAll k fun v => f (x::v)
 
 theorem exists_vector_zero (f : Vector3 α 0 → Prop) : Exists f ↔ f [] :=
-  ⟨fun ⟨v, fv⟩ => by
-    rw [← eq_nil v] <;> exact fv, fun f0 => ⟨[], f0⟩⟩
+  ⟨fun ⟨v, fv⟩ => by rw [← eq_nil v] <;> exact fv, fun f0 => ⟨[], f0⟩⟩
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem exists_vector_succ (f : Vector3 α (succ n) → Prop) : Exists f ↔ ∃ x v, f (x::v) :=
-  ⟨fun ⟨v, fv⟩ =>
-    ⟨_, _, by
-      rw [cons_head_tail v] <;> exact fv⟩,
-    fun ⟨x, v, fxv⟩ => ⟨_, fxv⟩⟩
+  ⟨fun ⟨v, fv⟩ => ⟨_, _, by rw [cons_head_tail v] <;> exact fv⟩, fun ⟨x, v, fxv⟩ => ⟨_, fxv⟩⟩
 
 theorem vector_ex_iff_exists : ∀ {n} (f : Vector3 α n → Prop), VectorEx n f ↔ Exists f
   | 0, f => (exists_vector_zero f).symm

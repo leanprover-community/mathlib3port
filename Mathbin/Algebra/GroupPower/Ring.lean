@@ -22,8 +22,7 @@ section MonoidWithZeroₓ
 variable [MonoidWithZeroₓ M]
 
 theorem zero_pow : ∀ {n : ℕ}, 0 < n → (0 : M) ^ n = 0
-  | n + 1, _ => by
-    rw [pow_succₓ, zero_mul]
+  | n + 1, _ => by rw [pow_succₓ, zero_mul]
 
 @[simp]
 theorem zero_pow' : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
@@ -86,10 +85,8 @@ theorem zero_pow_eq_zero [Nontrivial M] {n : ℕ} : (0 : M) ^ n = 0 ↔ 0 < n :=
     
 
 theorem Ringₓ.inverse_pow (r : M) : ∀ n : ℕ, Ring.inverse r ^ n = Ring.inverse (r ^ n)
-  | 0 => by
-    rw [pow_zeroₓ, pow_zeroₓ, Ring.inverse_one]
-  | n + 1 => by
-    rw [pow_succₓ, pow_succ'ₓ, Ring.mul_inverse_rev' ((Commute.refl r).pow_left n), Ringₓ.inverse_pow]
+  | 0 => by rw [pow_zeroₓ, pow_zeroₓ, Ring.inverse_one]
+  | n + 1 => by rw [pow_succₓ, pow_succ'ₓ, Ring.mul_inverse_rev' ((Commute.refl r).pow_left n), Ringₓ.inverse_pow]
 
 end MonoidWithZeroₓ
 
@@ -147,8 +144,7 @@ section CommSemiringₓ
 
 variable [CommSemiringₓ R]
 
-theorem add_sq (a b : R) : (a + b) ^ 2 = a ^ 2 + 2 * a * b + b ^ 2 := by
-  simp only [sq, add_mul_self_eq]
+theorem add_sq (a b : R) : (a + b) ^ 2 = a ^ 2 + 2 * a * b + b ^ 2 := by simp only [sq, add_mul_self_eq]
 
 theorem add_sq' (a b : R) : (a + b) ^ 2 = a ^ 2 + b ^ 2 + 2 * a * b := by
   rw [add_sq, add_assocₓ, add_commₓ _ (b ^ 2), add_assocₓ]
@@ -166,10 +162,7 @@ variable (R)
 theorem neg_one_pow_eq_or : ∀ n : ℕ, (-1 : R) ^ n = 1 ∨ (-1 : R) ^ n = -1
   | 0 => Or.inl (pow_zeroₓ _)
   | n + 1 =>
-    (neg_one_pow_eq_or n).swap.imp
-      (fun h => by
-        rw [pow_succₓ, h, neg_one_mul, neg_negₓ])
-      fun h => by
+    (neg_one_pow_eq_or n).swap.imp (fun h => by rw [pow_succₓ, h, neg_one_mul, neg_negₓ]) fun h => by
       rw [pow_succₓ, h, mul_oneₓ]
 
 variable {R}
@@ -178,20 +171,17 @@ theorem neg_pow (a : R) (n : ℕ) : -a ^ n = -1 ^ n * a ^ n :=
   neg_one_mul a ▸ (Commute.neg_one_left a).mul_pow n
 
 @[simp]
-theorem neg_pow_bit0 (a : R) (n : ℕ) : -a ^ bit0 n = a ^ bit0 n := by
-  rw [pow_bit0', neg_mul_neg, pow_bit0']
+theorem neg_pow_bit0 (a : R) (n : ℕ) : -a ^ bit0 n = a ^ bit0 n := by rw [pow_bit0', neg_mul_neg, pow_bit0']
 
 @[simp]
 theorem neg_pow_bit1 (a : R) (n : ℕ) : -a ^ bit1 n = -(a ^ bit1 n) := by
   simp only [bit1, pow_succₓ, neg_pow_bit0, neg_mul_eq_neg_mulₓ]
 
 @[simp]
-theorem neg_sq (a : R) : -a ^ 2 = a ^ 2 := by
-  simp [sq]
+theorem neg_sq (a : R) : -a ^ 2 = a ^ 2 := by simp [sq]
 
 @[simp]
-theorem neg_one_sq : (-1 : R) ^ 2 = 1 := by
-  rw [neg_sq, one_pow]
+theorem neg_one_sq : (-1 : R) ^ 2 = 1 := by rw [neg_sq, one_pow]
 
 alias neg_sq ← neg_pow_two
 
@@ -220,8 +210,7 @@ protected theorem Commute.sq_eq_sq_iff_eq_or_eq_neg (h : Commute a b) : a ^ 2 = 
   rw [← sub_eq_zero, h.sq_sub_sq, mul_eq_zero, add_eq_zero_iff_eq_neg, sub_eq_zero, or_comm]
 
 @[simp]
-theorem sq_eq_one_iff : a ^ 2 = 1 ↔ a = 1 ∨ a = -1 := by
-  rw [← (Commute.one_right a).sq_eq_sq_iff_eq_or_eq_neg, one_pow]
+theorem sq_eq_one_iff : a ^ 2 = 1 ↔ a = 1 ∨ a = -1 := by rw [← (Commute.one_right a).sq_eq_sq_iff_eq_or_eq_neg, one_pow]
 
 theorem sq_ne_one_iff : a ^ 2 ≠ 1 ↔ a ≠ 1 ∧ a ≠ -1 :=
   sq_eq_one_iff.Not.trans not_or_distrib

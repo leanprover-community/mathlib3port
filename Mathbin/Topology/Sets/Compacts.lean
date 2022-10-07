@@ -53,10 +53,7 @@ theorem compact (s : Compacts α) : IsCompact (s : Set α) :=
 instance (K : Compacts α) : CompactSpace K :=
   is_compact_iff_compact_space.1 K.compact
 
-instance : CanLift (Set α) (Compacts α) where
-  coe := coe
-  cond := IsCompact
-  prf := fun K hK => ⟨⟨K, hK⟩, rfl⟩
+instance : CanLift (Set α) (Compacts α) coe IsCompact where prf := fun K hK => ⟨⟨K, hK⟩, rfl⟩
 
 @[ext]
 protected theorem ext {s t : Compacts α} (h : (s : Set α) = t) : s = t :=
@@ -115,11 +112,11 @@ theorem coe_bot : (↑(⊥ : Compacts α) : Set α) = ∅ :=
   rfl
 
 @[simp]
-theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} : (↑(s.sup f) : Set α) = s.sup fun i => f i :=
+theorem coe_finset_sup {ι : Type _} {s : Finsetₓ ι} {f : ι → Compacts α} : (↑(s.sup f) : Set α) = s.sup fun i => f i :=
   by
   classical
-  refine' Finset.induction_on s rfl fun a s _ h => _
-  simp_rw [Finset.sup_insert, coe_sup, sup_eq_union]
+  refine' Finsetₓ.induction_on s rfl fun a s _ h => _
+  simp_rw [Finsetₓ.sup_insert, coe_sup, sup_eq_union]
   congr
 
 /-- The image of a compact set under a continuous function. -/

@@ -34,7 +34,7 @@ homogeneous, radical
 -/
 
 
-open GradedRing DirectSum SetLike Finset
+open GradedRing DirectSum SetLike Finsetₓ
 
 open BigOperators
 

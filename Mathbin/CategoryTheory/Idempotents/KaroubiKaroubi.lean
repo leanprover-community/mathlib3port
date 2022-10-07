@@ -29,12 +29,8 @@ variable (C : Type _) [Category C]
 /-- The canonical functor `karoubi (karoubi C) ⥤ karoubi C` -/
 @[simps]
 def inverse : Karoubi (Karoubi C) ⥤ Karoubi C where
-  obj := fun P =>
-    ⟨P.x.x, P.p.f, by
-      simpa only [hom_ext] using P.idem⟩
-  map := fun P Q f =>
-    ⟨f.f.f, by
-      simpa only [hom_ext] using f.comm⟩
+  obj := fun P => ⟨P.x.x, P.p.f, by simpa only [hom_ext] using P.idem⟩
+  map := fun P Q f => ⟨f.f.f, by simpa only [hom_ext] using f.comm⟩
 
 instance [Preadditive C] : Functor.Additive (inverse C) where
 
@@ -48,7 +44,7 @@ def unitIso : 𝟭 (Karoubi C) ≅ toKaroubi (Karoubi C) ⋙ inverse C :=
         ext
         simp only [functor.id_map, inverse_map_f, to_karoubi_map_f, eq_to_hom_f, eq_to_hom_refl, comp_id, p_comp_assoc,
           functor.comp_map, comp]
-        dsimp'
+        dsimp
         simp only [id_eq, comp_p]
         
       · intro P
@@ -74,8 +70,7 @@ def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C
             have h := P.idem
             simp only [hom_ext, comp] at h⊢
             erw [h, h] },
-      naturality' := fun P Q f => by
-        simpa only [hom_ext] using (p_comm f).symm }
+      naturality' := fun P Q f => by simpa only [hom_ext] using (p_comm f).symm }
   inv :=
     { app := fun P =>
         { f :=
@@ -88,8 +83,7 @@ def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C
             have h := P.idem
             simp only [hom_ext, comp] at h⊢
             erw [h, h] },
-      naturality' := fun P Q f => by
-        simpa [hom_ext] using (p_comm f).symm }
+      naturality' := fun P Q f => by simpa [hom_ext] using (p_comm f).symm }
   hom_inv_id' := by
     ext P
     simpa only [hom_ext, id_eq] using P.idem
@@ -111,11 +105,11 @@ def equivalence : Karoubi C ≌ Karoubi (Karoubi C) where
     erw [P.idem, P.idem]
 
 instance equivalence.additive_functor [Preadditive C] : Functor.Additive (equivalence C).Functor := by
-  dsimp'
+  dsimp
   infer_instance
 
 instance equivalence.additive_inverse [Preadditive C] : Functor.Additive (equivalence C).inverse := by
-  dsimp'
+  dsimp
   infer_instance
 
 end KaroubiKaroubi

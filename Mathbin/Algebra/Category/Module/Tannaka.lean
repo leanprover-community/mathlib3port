@@ -25,8 +25,7 @@ the endomorphisms of the additive forgetful functor `Module R ⥤ AddCommGroup`.
 def ringEquivEndForget₂ (R : Type u) [Ringₓ R] :
     R ≃+* End (AdditiveFunctor.of (forget₂ (ModuleCat.{u} R) AddCommGroupₓₓ.{u})) where
   toFun := fun r =>
-    { app := fun M => by
-        apply DistribMulAction.toAddMonoidHom M r,
+    { app := fun M => by apply DistribMulAction.toAddMonoidHom M r,
       naturality' := fun M N f => by
         ext
         exact (f.map_smul _ _).symm }

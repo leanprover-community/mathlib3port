@@ -27,9 +27,7 @@ the type class is exposed as a parameter. -/
 @[nolint has_nonempty_instance]
 structure Bundled (c : Type u → Type v) : Type max (u + 1) v where
   α : Type u
-  str : c α := by
-    run_tac
-      tactic.apply_instance
+  str : c α := by infer_instance
 
 namespace Bundled
 

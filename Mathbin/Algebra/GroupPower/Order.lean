@@ -33,8 +33,7 @@ variable [CovariantClass M M (· * ·) (· ≤ ·)] {x : M}
 @[to_additive nsmul_le_nsmul_of_le_right, mono]
 theorem pow_le_pow_of_le_left' [CovariantClass M M (swap (· * ·)) (· ≤ ·)] {a b : M} (hab : a ≤ b) :
     ∀ i : ℕ, a ^ i ≤ b ^ i
-  | 0 => by
-    simp
+  | 0 => by simp
   | k + 1 => by
     rw [pow_succₓ, pow_succₓ]
     exact mul_le_mul' hab (pow_le_pow_of_le_left' k)
@@ -43,8 +42,7 @@ attribute [mono] nsmul_le_nsmul_of_le_right
 
 @[to_additive nsmul_nonneg]
 theorem one_le_pow_of_one_le' {a : M} (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
-  | 0 => by
-    simp
+  | 0 => by simp
   | k + 1 => by
     rw [pow_succₓ]
     exact one_le_mul H (one_le_pow_of_one_le' k)
@@ -58,8 +56,7 @@ theorem pow_le_pow' {a : M} {n m : ℕ} (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤
   let ⟨k, hk⟩ := Nat.Le.dest h
   calc
     a ^ n ≤ a ^ n * a ^ k := le_mul_of_one_le_right' (one_le_pow_of_one_le' ha _)
-    _ = a ^ m := by
-      rw [← hk, pow_addₓ]
+    _ = a ^ m := by rw [← hk, pow_addₓ]
     
 
 @[to_additive nsmul_le_nsmul_of_nonpos]
@@ -91,7 +88,7 @@ theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ}
 
 @[to_additive nsmul_strict_mono_right]
 theorem pow_strict_mono_left [CovariantClass M M (· * ·) (· < ·)] {a : M} (ha : 1 < a) :
-    StrictMono ((· ^ ·) a : ℕ → M) := fun m n => pow_lt_pow' ha
+    StrictMonoₓ ((· ^ ·) a : ℕ → M) := fun m n => pow_lt_pow' ha
 
 @[to_additive Left.pow_nonneg]
 theorem Left.one_le_pow_of_le (hx : 1 ≤ x) : ∀ {n : ℕ}, 1 ≤ x ^ n
@@ -190,18 +187,18 @@ theorem pow_lt_pow_iff' (ha : 1 < a) : a ^ m < a ^ n ↔ m < n :=
 end CovariantLe
 
 @[to_additive Left.nsmul_neg_iff]
-theorem Left.pow_lt_one_iff [CovariantClass M M (· * ·) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) : x ^ n < 1 ↔ x < 1 := by
+theorem Left.pow_lt_one_iff [CovariantClass M M (· * ·) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) : x ^ n < 1 ↔ x < 1 :=
   haveI := Mul.to_covariant_class_left M
-  exact pow_lt_one_iff hn.ne'
+  pow_lt_one_iff hn.ne'
 
 @[to_additive Right.nsmul_neg_iff]
 theorem Right.pow_lt_one_iff [CovariantClass M M (swap (· * ·)) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) :
     x ^ n < 1 ↔ x < 1 :=
   ⟨fun H =>
     not_leₓ.mp fun k =>
-      H.not_le <| by
+      H.not_le <|
         haveI := Mul.to_covariant_class_right M
-        exact Right.one_le_pow_of_le k,
+        Right.one_le_pow_of_le k,
     Right.pow_lt_one_of_lt hn⟩
 
 end LinearOrderₓ
@@ -259,36 +256,13 @@ theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : x ^ n + y 
       exact mul_le_mul_of_nonneg_left (ih (Nat.succ_ne_zero k)) h2
     
 
-theorem pow_lt_pow_of_lt_left (Hxy : x < y) (Hxpos : 0 ≤ x) (Hnpos : 0 < n) : x ^ n < y ^ n := by
-  cases lt_or_eq_of_leₓ Hxpos
-  · rw [← tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ Hnpos)]
-    induction n - 1
-    · simpa only [pow_oneₓ]
-      
-    rw [pow_addₓ, pow_addₓ, Nat.succ_eq_add_one, pow_oneₓ, pow_oneₓ]
-    apply mul_lt_mul ih (le_of_ltₓ Hxy) h (le_of_ltₓ (pow_pos (lt_transₓ h Hxy) _))
-    
-  · rw [← h, zero_pow Hnpos]
-    apply
-      pow_pos
-        (by
-          rwa [← h] at Hxy : 0 < y)
-    
-
-theorem pow_lt_one (h₀ : 0 ≤ a) (h₁ : a < 1) {n : ℕ} (hn : n ≠ 0) : a ^ n < 1 :=
-  (one_pow n).subst (pow_lt_pow_of_lt_left h₁ h₀ (Nat.pos_of_ne_zeroₓ hn))
-
-theorem strict_mono_on_pow (hn : 0 < n) : StrictMonoOn (fun x : R => x ^ n) (Set.Ici 0) := fun x hx y hy h =>
-  pow_lt_pow_of_lt_left h hx hn
-
 theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
-  | 0 => by
-    rw [pow_zeroₓ]
+  | 0 => by rw [pow_zeroₓ]
   | n + 1 => by
     rw [pow_succₓ]
     simpa only [mul_oneₓ] using mul_le_mul H (one_le_pow_of_one_le n) zero_le_one (le_transₓ zero_le_one H)
 
-theorem pow_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
+theorem pow_mono (h : 1 ≤ a) : Monotoneₓ fun n : ℕ => a ^ n :=
   monotone_nat_of_le_succ fun n => by
     rw [pow_succₓ]
     exact le_mul_of_one_le_left (pow_nonneg (zero_le_one.trans h) _) h
@@ -299,7 +273,7 @@ theorem pow_le_pow (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
 theorem le_self_pow (ha : 1 ≤ a) (h : m ≠ 0) : a ≤ a ^ m :=
   (pow_oneₓ a).symm.trans_le (pow_le_pow ha <| pos_iff_ne_zero.mpr h)
 
-theorem strict_mono_pow (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
+theorem strict_mono_pow (h : 1 < a) : StrictMonoₓ fun n : ℕ => a ^ n :=
   have : 0 < a := zero_le_one.trans_lt h
   strict_mono_nat_of_lt_succ fun n => by
     simpa only [one_mulₓ, pow_succₓ] using mul_lt_mul h (le_reflₓ (a ^ n)) (pow_pos this _) this.le
@@ -313,7 +287,7 @@ theorem pow_lt_pow_iff (h : 1 < a) : a ^ n < a ^ m ↔ n < m :=
 theorem pow_le_pow_iff (h : 1 < a) : a ^ n ≤ a ^ m ↔ n ≤ m :=
   (strict_mono_pow h).le_iff_le
 
-theorem strict_anti_pow (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti fun n : ℕ => a ^ n :=
+theorem strict_anti_pow (h₀ : 0 < a) (h₁ : a < 1) : StrictAntiₓ fun n : ℕ => a ^ n :=
   strict_anti_nat_of_succ_lt fun n => by
     simpa only [pow_succₓ, one_mulₓ] using mul_lt_mul h₁ le_rflₓ (pow_pos h₀ n) zero_le_one
 
@@ -325,11 +299,18 @@ theorem pow_lt_pow_of_lt_one (h : 0 < a) (ha : a < 1) {i j : ℕ} (hij : i < j) 
 
 @[mono]
 theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i : ℕ, a ^ i ≤ b ^ i
-  | 0 => by
-    simp
+  | 0 => by simp
   | k + 1 => by
     rw [pow_succₓ, pow_succₓ]
     exact mul_le_mul hab (pow_le_pow_of_le_left _) (pow_nonneg ha _) (le_transₓ ha hab)
+
+theorem pow_lt_pow_of_lt_left (h : x < y) (hx : 0 ≤ x) : ∀ {n : ℕ}, 0 < n → x ^ n < y ^ n
+  | 0, hn => hn.False.elim
+  | n + 1, _ => by
+    simpa only [pow_succ'ₓ] using mul_lt_mul' (pow_le_pow_of_le_left hx h.le _) h hx (pow_pos (hx.trans_lt h) _)
+
+theorem pow_lt_one (h₀ : 0 ≤ a) (h₁ : a < 1) {n : ℕ} (hn : n ≠ 0) : a ^ n < 1 :=
+  (one_pow n).subst (pow_lt_pow_of_lt_left h₁ h₀ (Nat.pos_of_ne_zeroₓ hn))
 
 theorem one_lt_pow (ha : 1 < a) {n : ℕ} (hn : n ≠ 0) : 1 < a ^ n :=
   pow_zeroₓ a ▸ pow_lt_pow ha (pos_iff_ne_zero.2 hn)
@@ -337,6 +318,9 @@ theorem one_lt_pow (ha : 1 < a) {n : ℕ} (hn : n ≠ 0) : 1 < a ^ n :=
 theorem pow_le_one : ∀ (n : ℕ) (h₀ : 0 ≤ a) (h₁ : a ≤ 1), a ^ n ≤ 1
   | 0, h₀, h₁ => (pow_zeroₓ a).le
   | n + 1, h₀, h₁ => (pow_succ'ₓ a n).le.trans (mul_le_one (pow_le_one n h₀ h₁) h₀ h₁)
+
+theorem strict_mono_on_pow (hn : 0 < n) : StrictMonoOnₓ (fun x : R => x ^ n) (Set.Ici 0) := fun x hx y hy h =>
+  pow_lt_pow_of_lt_left h hx hn
 
 theorem sq_pos_of_pos (ha : 0 < a) : 0 < a ^ 2 := by
   rw [sq]
@@ -406,9 +390,7 @@ theorem le_of_pow_le_pow {a b : R} (n : ℕ) (hb : 0 ≤ b) (hn : 0 < n) (h : a 
 
 @[simp]
 theorem sq_eq_sq {a b : R} (ha : 0 ≤ a) (hb : 0 ≤ b) : a ^ 2 = b ^ 2 ↔ a = b :=
-  pow_left_inj ha hb
-    (by
-      decide)
+  pow_left_inj ha hb (by decide)
 
 theorem lt_of_mul_self_lt_mul_self (hb : 0 ≤ b) : a * a < b * b → a < b := by
   simp_rw [← sq]
@@ -423,8 +405,7 @@ variable [LinearOrderedRing R]
 theorem pow_abs (a : R) (n : ℕ) : abs a ^ n = abs (a ^ n) :=
   ((absHom.toMonoidHom : R →* R).map_pow a n).symm
 
-theorem abs_neg_one_pow (n : ℕ) : abs ((-1 : R) ^ n) = 1 := by
-  rw [← pow_abs, abs_neg, abs_one, one_pow]
+theorem abs_neg_one_pow (n : ℕ) : abs ((-1 : R) ^ n) = 1 := by rw [← pow_abs, abs_neg, abs_one, one_pow]
 
 theorem pow_bit0_nonneg (a : R) (n : ℕ) : 0 ≤ a ^ bit0 n := by
   rw [pow_bit0]
@@ -454,11 +435,9 @@ theorem sq_pos_iff (a : R) : 0 < a ^ 2 ↔ a ≠ 0 :=
 
 variable {x y : R}
 
-theorem sq_abs (x : R) : abs x ^ 2 = x ^ 2 := by
-  simpa only [sq] using abs_mul_abs_self x
+theorem sq_abs (x : R) : abs x ^ 2 = x ^ 2 := by simpa only [sq] using abs_mul_abs_self x
 
-theorem abs_sq (x : R) : abs (x ^ 2) = x ^ 2 := by
-  simpa only [sq] using abs_mul_self x
+theorem abs_sq (x : R) : abs (x ^ 2) = x ^ 2 := by simpa only [sq] using abs_mul_self x
 
 theorem sq_lt_sq : x ^ 2 < y ^ 2 ↔ abs x < abs y := by
   simpa only [sq_abs] using (@strict_mono_on_pow R _ _ two_pos).lt_iff_lt (abs_nonneg x) (abs_nonneg y)
@@ -472,20 +451,17 @@ theorem sq_le_sq : x ^ 2 ≤ y ^ 2 ↔ abs x ≤ abs y := by
 theorem sq_le_sq' (h1 : -y ≤ x) (h2 : x ≤ y) : x ^ 2 ≤ y ^ 2 :=
   sq_le_sq.2 (le_transₓ (abs_le.mpr ⟨h1, h2⟩) (le_abs_self _))
 
-theorem abs_lt_of_sq_lt_sq (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : abs x < y := by
-  rwa [← abs_of_nonneg hy, ← sq_lt_sq]
+theorem abs_lt_of_sq_lt_sq (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : abs x < y := by rwa [← abs_of_nonneg hy, ← sq_lt_sq]
 
 theorem abs_lt_of_sq_lt_sq' (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : -y < x ∧ x < y :=
   abs_lt.mp <| abs_lt_of_sq_lt_sq h hy
 
-theorem abs_le_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : abs x ≤ y := by
-  rwa [← abs_of_nonneg hy, ← sq_le_sq]
+theorem abs_le_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : abs x ≤ y := by rwa [← abs_of_nonneg hy, ← sq_le_sq]
 
 theorem abs_le_of_sq_le_sq' (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : -y ≤ x ∧ x ≤ y :=
   abs_le.mp <| abs_le_of_sq_le_sq h hy
 
-theorem sq_eq_sq_iff_abs_eq_abs (x y : R) : x ^ 2 = y ^ 2 ↔ abs x = abs y := by
-  simp only [le_antisymm_iffₓ, sq_le_sq]
+theorem sq_eq_sq_iff_abs_eq_abs (x y : R) : x ^ 2 = y ^ 2 ↔ abs x = abs y := by simp only [le_antisymm_iffₓ, sq_le_sq]
 
 @[simp]
 theorem sq_le_one_iff_abs_le_one (x : R) : x ^ 2 ≤ 1 ↔ abs x ≤ 1 := by
@@ -524,8 +500,7 @@ section LinearOrderedCommMonoidWithZero
 
 variable [LinearOrderedCommMonoidWithZero M] [NoZeroDivisors M] {a : M} {n : ℕ}
 
-theorem pow_pos_iff (hn : 0 < n) : 0 < a ^ n ↔ 0 < a := by
-  simp_rw [zero_lt_iff, pow_ne_zero_iff hn]
+theorem pow_pos_iff (hn : 0 < n) : 0 < a ^ n ↔ 0 < a := by simp_rw [zero_lt_iff, pow_ne_zero_iff hn]
 
 end LinearOrderedCommMonoidWithZero
 
@@ -548,15 +523,12 @@ namespace MonoidHom
 variable [Ringₓ R] [Monoidₓ M] [LinearOrderₓ M] [CovariantClass M M (· * ·) (· ≤ ·)] (f : R →* M)
 
 theorem map_neg_one : f (-1) = 1 :=
-  (pow_eq_one_iff (Nat.succ_ne_zero 1)).1 <| by
-    rw [← map_pow, neg_one_sq, map_one]
+  (pow_eq_one_iff (Nat.succ_ne_zero 1)).1 <| by rw [← map_pow, neg_one_sq, map_one]
 
 @[simp]
-theorem map_neg (x : R) : f (-x) = f x := by
-  rw [← neg_one_mul, map_mul, map_neg_one, one_mulₓ]
+theorem map_neg (x : R) : f (-x) = f x := by rw [← neg_one_mul, map_mul, map_neg_one, one_mulₓ]
 
-theorem map_sub_swap (x y : R) : f (x - y) = f (y - x) := by
-  rw [← map_neg, neg_sub]
+theorem map_sub_swap (x y : R) : f (x - y) = f (y - x) := by rw [← map_neg, neg_sub]
 
 end MonoidHom
 

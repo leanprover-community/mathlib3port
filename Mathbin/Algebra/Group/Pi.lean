@@ -205,8 +205,7 @@ homomorphism `f` between `α` and `β`. -/
   simps]
 protected def MulHom.compLeft {α β : Type _} [Mul α] [Mul β] (f : α →ₙ* β) (I : Type _) : (I → α) →ₙ* I → β where
   toFun := fun h => f ∘ h
-  map_mul' := fun _ _ => by
-    ext <;> simp
+  map_mul' := fun _ _ => by ext <;> simp
 
 end MulHom
 
@@ -251,10 +250,8 @@ homomorphism `f` between `α` and `β`. -/
 protected def MonoidHom.compLeft {α β : Type _} [MulOneClassₓ α] [MulOneClassₓ β] (f : α →* β) (I : Type _) :
     (I → α) →* I → β where
   toFun := fun h => f ∘ h
-  map_one' := by
-    ext <;> simp
-  map_mul' := fun _ _ => by
-    ext <;> simp
+  map_one' := by ext <;> simp
+  map_mul' := fun _ _ => by ext <;> simp
 
 end MonoidHom
 
@@ -329,11 +326,11 @@ theorem Pi.mul_single_commute [∀ i, MulOneClassₓ <| f i] :
     Pairwise fun i j => ∀ (x : f i) (y : f j), Commute (mulSingle i x) (mulSingle j y) := by
   intro i j hij x y
   ext k
-  by_cases' h1 : i = k
+  by_cases h1:i = k
   · subst h1
     simp [hij]
     
-  by_cases' h2 : j = k
+  by_cases h2:j = k
   · subst h2
     simp [hij]
     
@@ -457,8 +454,7 @@ variable {ι : Type u} {η : Type v} (R : Type w) (s : ι → η)
 noncomputable def Function.ExtendByOne.hom [MulOneClassₓ R] : (ι → R) →* η → R where
   toFun := fun f => Function.extendₓ s f 1
   map_one' := Function.extend_one s
-  map_mul' := fun f g => by
-    simpa using Function.extend_mul s f g 1 1
+  map_mul' := fun f g => by simpa using Function.extend_mul s f g 1 1
 
 end Extend
 

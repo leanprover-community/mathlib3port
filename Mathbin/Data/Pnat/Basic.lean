@@ -48,10 +48,10 @@ theorem nat_pred_eq_pred {n : ℕ} (h : 0 < n) : natPred (⟨n, h⟩ : ℕ+) = n
   rfl
 
 @[mono]
-theorem nat_pred_strict_mono : StrictMono natPred := fun m n h => Nat.pred_lt_predₓ m.2.ne' h
+theorem nat_pred_strict_mono : StrictMonoₓ natPred := fun m n h => Nat.pred_lt_predₓ m.2.ne' h
 
 @[mono]
-theorem nat_pred_monotone : Monotone natPred :=
+theorem nat_pred_monotone : Monotoneₓ natPred :=
   nat_pred_strict_mono.Monotone
 
 theorem nat_pred_injective : Function.Injective natPred :=
@@ -75,11 +75,7 @@ namespace Nat
 
 /-- Convert a natural number to a positive natural number. The
   positivity assumption is inferred by `dec_trivial`. -/
-def toPnat (n : ℕ)
-    (h : 0 < n := by
-      run_tac
-        tactic.exact_dec_trivial) :
-    ℕ+ :=
+def toPnat (n : ℕ) (h : 0 < n := by decide) : ℕ+ :=
   ⟨n, h⟩
 
 /-- Write a successor as an element of `ℕ+`. -/
@@ -91,10 +87,10 @@ theorem succ_pnat_coe (n : ℕ) : (succPnat n : ℕ) = succ n :=
   rfl
 
 @[mono]
-theorem succ_pnat_strict_mono : StrictMono succPnat := fun m n => Nat.succ_lt_succₓ
+theorem succ_pnat_strict_mono : StrictMonoₓ succPnat := fun m n => Nat.succ_lt_succₓ
 
 @[mono]
-theorem succ_pnat_mono : Monotone succPnat :=
+theorem succ_pnat_mono : Monotoneₓ succPnat :=
   succ_pnat_strict_mono.Monotone
 
 @[simp]
@@ -360,10 +356,7 @@ def strongInductionOn {p : ℕ+ → Sort _} : ∀ (n : ℕ+) (h : ∀ k, (∀ m,
 /-- If `n : ℕ+` is different from `1`, then it is the successor of some `k : ℕ+`. -/
 theorem exists_eq_succ_of_ne_one : ∀ {n : ℕ+} (h1 : n ≠ 1), ∃ k : ℕ+, n = k + 1
   | ⟨1, _⟩, h1 => False.elim <| h1 rfl
-  | ⟨n + 2, _⟩, _ =>
-    ⟨⟨n + 1, by
-        simp ⟩,
-      rfl⟩
+  | ⟨n + 2, _⟩, _ => ⟨⟨n + 1, by simp⟩, rfl⟩
 
 /-- Strong induction on `ℕ+`, with `n = 1` treated separately. -/
 def caseStrongInductionOn {p : ℕ+ → Sort _} (a : ℕ+) (hz : p 1) (hi : ∀ n, (∀ m, m ≤ n → p m) → p (n + 1)) : p a := by
@@ -383,10 +376,7 @@ not only to `Prop`. -/
 def recOn (n : ℕ+) {p : ℕ+ → Sort _} (p1 : p 1) (hp : ∀ n, p n → p (n + 1)) : p n := by
   rcases n with ⟨n, h⟩
   induction' n with n IH
-  · exact
-      absurd h
-        (by
-          decide)
+  · exact absurd h (by decide)
     
   · cases' n with n
     · exact p1
@@ -403,12 +393,7 @@ theorem rec_on_one {p} (p1 hp) : @Pnat.recOn 1 p p1 hp = p1 :=
 theorem rec_on_succ (n : ℕ+) {p : ℕ+ → Sort _} (p1 hp) : @Pnat.recOn (n + 1) p p1 hp = hp n (@Pnat.recOn n p p1 hp) :=
   by
   cases' n with n h
-  cases n <;>
-    [exact
-      absurd h
-        (by
-          decide),
-    rfl]
+  cases n <;> [exact absurd h (by decide), rfl]
 
 /-- We define `m % k` and `m / k` in the same way as for `ℕ`
   except that when `m = n * k` we take `m % k = k` and
@@ -474,7 +459,7 @@ theorem div_add_mod' (m k : ℕ+) : (div m k * k + mod m k : ℕ) = m := by
   exact div_add_mod _ _
 
 theorem mod_coe (m k : ℕ+) : (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) (k : ℕ) ((m : ℕ) % (k : ℕ)) := by
-  dsimp' [mod, mod_div]
+  dsimp [mod, mod_div]
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl
@@ -485,7 +470,7 @@ theorem mod_coe (m k : ℕ+) : (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0)
 
 theorem div_coe (m k : ℕ+) : (div m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) ((m : ℕ) / (k : ℕ)).pred ((m : ℕ) / (k : ℕ)) :=
   by
-  dsimp' [div, mod_div]
+  dsimp [div, mod_div]
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl
@@ -500,7 +485,7 @@ theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k := by
   split_ifs
   · have hm : (m : ℕ) > 0 := m.pos
     rw [← Nat.mod_add_divₓ (m : ℕ) (k : ℕ), h, zero_addₓ] at hm⊢
-    by_cases' h' : (m : ℕ) / (k : ℕ) = 0
+    by_cases h':(m : ℕ) / (k : ℕ) = 0
     · rw [h', mul_zero] at hm
       exact (lt_irreflₓ _ hm).elim
       
@@ -534,7 +519,7 @@ theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k := by
     rw [mod_coe, if_pos h]
     
   · intro h
-    by_cases' h' : (m : ℕ) % (k : ℕ) = 0
+    by_cases h':(m : ℕ) % (k : ℕ) = 0
     · exact h'
       
     · replace h : (mod m k : ℕ) = (k : ℕ) := congr_arg _ h
@@ -574,11 +559,11 @@ end Pnat
 
 section CanLift
 
-instance Nat.canLiftPnat : CanLift ℕ ℕ+ :=
-  ⟨coe, fun n => 0 < n, fun n hn => ⟨Nat.toPnat' n, Pnat.to_pnat'_coe hn⟩⟩
+instance Nat.canLiftPnat : CanLift ℕ ℕ+ coe ((· < ·) 0) :=
+  ⟨fun n hn => ⟨Nat.toPnat' n, Pnat.to_pnat'_coe hn⟩⟩
 
-instance Int.canLiftPnat : CanLift ℤ ℕ+ :=
-  ⟨coe, fun n => 0 < n, fun n hn =>
+instance Int.canLiftPnat : CanLift ℤ ℕ+ coe ((· < ·) 0) :=
+  ⟨fun n hn =>
     ⟨Nat.toPnat' (Int.natAbs n), by
       rw [coe_coe, Nat.to_pnat'_coe, if_pos (Int.nat_abs_pos_of_ne_zero hn.ne'), Int.nat_abs_of_nonneg hn.le]⟩⟩
 

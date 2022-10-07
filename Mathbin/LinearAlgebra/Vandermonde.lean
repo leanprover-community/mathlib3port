@@ -27,7 +27,7 @@ This file defines the `vandermonde` matrix and gives its determinant.
 
 variable {R : Type _} [CommRingₓ R]
 
-open Equivₓ Finset
+open Equivₓ Finsetₓ
 
 open BigOperators Matrix
 
@@ -47,16 +47,8 @@ theorem vandermonde_cons {n : ℕ} (v0 : R) (v : Finₓ n → R) :
       Finₓ.cons (fun j => v0 ^ (j : ℕ)) fun i => Finₓ.cons 1 fun j => v i * vandermonde v i j :=
   by
   ext i j
-  refine'
-    Finₓ.cases
-      (by
-        simp )
-      (fun i => _) i
-  refine'
-    Finₓ.cases
-      (by
-        simp )
-      (fun j => _) j
+  refine' Finₓ.cases (by simp) (fun i => _) i
+  refine' Finₓ.cases (by simp) (fun j => _) j
   simp [pow_succₓ]
 
 theorem vandermonde_succ {n : ℕ} (v : Finₓ n.succ → R) :
@@ -77,7 +69,7 @@ theorem vandermonde_transpose_mul_vandermonde {n : ℕ} (v : Finₓ n → R) (i 
 theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = ∏ i : Finₓ n, ∏ j in ioi i, v j - v i := by
   unfold vandermonde
   induction' n with n ih
-  · exact det_eq_one_of_card_eq_zero (Fintype.card_fin 0)
+  · exact det_eq_one_of_card_eq_zero (Fintypeₓ.card_fin 0)
     
   calc
     det (of fun i j : Finₓ n.succ => v i ^ (j : ℕ)) =
@@ -92,12 +84,12 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = �
               (Finₓ.succAbove 0 i)) :=
       by
       simp_rw [det_succ_column_zero, Finₓ.sum_univ_succ, of_apply, Matrix.cons_val_zero, submatrix, of_apply,
-        Matrix.cons_val_succ, Finₓ.coe_zero, pow_zeroₓ, one_mulₓ, sub_self, mul_zero, zero_mul, Finset.sum_const_zero,
+        Matrix.cons_val_succ, Finₓ.coe_zero, pow_zeroₓ, one_mulₓ, sub_self, mul_zero, zero_mul, Finsetₓ.sum_const_zero,
         add_zeroₓ]
     _ =
         det
           (of fun i j : Finₓ n =>
-            (v (Finₓ.succ i) - v 0) * ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :
+            (v (Finₓ.succ i) - v 0) * ∑ k in Finsetₓ.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :
             Matrix _ _ R) :=
       by
       congr
@@ -106,7 +98,7 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = �
       exact (geom_sum₂_mul (v i.succ) (v 0) (j + 1 : ℕ)).symm
     _ =
         (∏ i : Finₓ n, v (Finₓ.succ i) - v 0) *
-          det fun i j : Finₓ n => ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :=
+          det fun i j : Finₓ n => ∑ k in Finsetₓ.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :=
       det_mul_column (fun i => v (Finₓ.succ i) - v 0) _
     _ = (∏ i : Finₓ n, v (Finₓ.succ i) - v 0) * det fun i j : Finₓ n => v (Finₓ.succ i) ^ (j : ℕ) :=
       congr_arg ((· * ·) _) _
@@ -123,7 +115,7 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = �
     ring
     
   · cases n
-    · simp only [det_eq_one_of_card_eq_zero (Fintype.card_fin 0)]
+    · simp only [det_eq_one_of_card_eq_zero (Fintypeₓ.card_fin 0)]
       
     apply det_eq_of_forall_col_eq_smul_add_pred fun i => v 0
     · intro j
@@ -131,9 +123,9 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = �
       
     · intro i j
       simp only [smul_eq_mul, Pi.add_apply, Finₓ.coe_succ, Finₓ.coe_cast_succ, Pi.smul_apply]
-      rw [Finset.sum_range_succ, add_commₓ, tsub_self, pow_zeroₓ, mul_oneₓ, Finset.mul_sum]
+      rw [Finsetₓ.sum_range_succ, add_commₓ, tsub_self, pow_zeroₓ, mul_oneₓ, Finsetₓ.mul_sum]
       congr 1
-      refine' Finset.sum_congr rfl fun i' hi' => _
+      refine' Finsetₓ.sum_congr rfl fun i' hi' => _
       rw [mul_left_commₓ (v 0), Nat.succ_subₓ, pow_succₓ]
       exact nat.lt_succ_iff.mp (finset.mem_range.mp hi')
       
@@ -142,7 +134,7 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = �
 theorem det_vandermonde_eq_zero_iff [IsDomain R] {n : ℕ} {v : Finₓ n → R} :
     det (vandermonde v) = 0 ↔ ∃ i j : Finₓ n, v i = v j ∧ i ≠ j := by
   constructor
-  · simp only [det_vandermonde v, Finset.prod_eq_zero_iff, sub_eq_zero, forall_exists_index]
+  · simp only [det_vandermonde v, Finsetₓ.prod_eq_zero_iff, sub_eq_zero, forall_exists_index]
     exact fun i _ j h₁ h₂ => ⟨j, i, h₂, (mem_Ioi.mp h₁).ne'⟩
     
   · simp only [Ne.def, forall_exists_index, and_imp]

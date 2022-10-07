@@ -86,11 +86,7 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) := by
   · refine' @List.chain_pmap_of_chain _ _ _ f (fun x y _ _ h => _) hl₁ h₁₂ _
     exact zag_of_zag_obj (component.ι _) h
     
-  · erw
-      [List.last_pmap _ f (j₁ :: l)
-        (by
-          simpa [h₁₂] using hf)
-        (List.cons_ne_nil _ _)]
+  · erw [List.last_pmap _ f (j₁ :: l) (by simpa [h₁₂] using hf) (List.cons_ne_nil _ _)]
     exact full_subcategory.ext _ _ hl₂
     
 
@@ -120,7 +116,7 @@ theorem inclusion_comp_decomposed_to (j : ConnectedComponents J) : inclusion j �
 instance : Full (decomposedTo J) where
   Preimage := by
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
-    dsimp'  at f
+    dsimp at f
     have : j' = k'
     rw [← hX, ← hY, Quotientₓ.eq']
     exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)

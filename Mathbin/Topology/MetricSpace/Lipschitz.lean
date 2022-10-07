@@ -78,8 +78,7 @@ alias lipschitz_on_with_iff_dist_le_mul ↔ LipschitzOnWith.dist_le_mul Lipschit
 
 @[simp]
 theorem lipschitz_on_univ [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0} {f : α → β} :
-    LipschitzOnWith K f Univ ↔ LipschitzWith K f := by
-  simp [LipschitzOnWith, LipschitzWith]
+    LipschitzOnWith K f Univ ↔ LipschitzWith K f := by simp [LipschitzOnWith, LipschitzWith]
 
 theorem lipschitz_on_with_iff_restrict [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0} {f : α → β} {s : Set α} :
     LipschitzOnWith K f s ↔ LipschitzWith K (s.restrict f) := by
@@ -155,8 +154,7 @@ protected theorem uniform_continuous (hf : LipschitzWith K f) : UniformContinuou
 protected theorem continuous (hf : LipschitzWith K f) : Continuous f :=
   hf.UniformContinuous.Continuous
 
-protected theorem const (b : β) : LipschitzWith 0 fun a : α => b := fun x y => by
-  simp only [edist_self, zero_le]
+protected theorem const (b : β) : LipschitzWith 0 fun a : α => b := fun x y => by simp only [edist_self, zero_le]
 
 protected theorem id : LipschitzWith 1 (@id α) :=
   LipschitzWith.of_edist_le fun x y => le_rflₓ
@@ -171,10 +169,9 @@ theorem subtype_mk (hf : LipschitzWith K f) {p : β → Prop} (hp : ∀ x, p (f 
     LipschitzWith K (fun x => ⟨f x, hp x⟩ : α → { y // p y }) :=
   hf
 
-protected theorem eval {α : ι → Type u} [∀ i, PseudoEmetricSpace (α i)] [Fintype ι] (i : ι) :
+protected theorem eval {α : ι → Type u} [∀ i, PseudoEmetricSpace (α i)] [Fintypeₓ ι] (i : ι) :
     LipschitzWith 1 (Function.eval i : (∀ i, α i) → α i) :=
-  LipschitzWith.of_edist_le fun f g => by
-    convert edist_le_pi_edist f g i
+  LipschitzWith.of_edist_le fun f g => by convert edist_le_pi_edist f g i
 
 protected theorem restrict (hf : LipschitzWith K f) (s : Set α) : LipschitzWith K (s.restrict f) := fun x y => hf x y
 
@@ -183,8 +180,7 @@ protected theorem comp {Kf Kg : ℝ≥0} {f : β → γ} {g : α → β} (hf : L
   calc
     edist (f (g x)) (f (g y)) ≤ Kf * edist (g x) (g y) := hf _ _
     _ ≤ Kf * (Kg * edist x y) := Ennreal.mul_left_mono (hg _ _)
-    _ = (Kf * Kg : ℝ≥0) * edist x y := by
-      rw [← mul_assoc, Ennreal.coe_mul]
+    _ = (Kf * Kg : ℝ≥0) * edist x y := by rw [← mul_assoc, Ennreal.coe_mul]
     
 
 theorem comp_lipschitz_on_with {Kf Kg : ℝ≥0} {f : β → γ} {g : α → β} {s : Set α} (hf : LipschitzWith Kf f)
@@ -220,8 +216,7 @@ protected theorem uncurry {f : α → β → γ} {Kα Kβ : ℝ≥0} (hα : ∀ 
 
 protected theorem iterate {f : α → α} (hf : LipschitzWith K f) : ∀ n, LipschitzWith (K ^ n) (f^[n])
   | 0 => LipschitzWith.id
-  | n + 1 => by
-    rw [pow_succ'ₓ] <;> exact (iterate n).comp hf
+  | n + 1 => by rw [pow_succ'ₓ] <;> exact (iterate n).comp hf
 
 theorem edist_iterate_succ_le_geometric {f : α → α} (hf : LipschitzWith K f) (x n) :
     edist ((f^[n]) x) ((f^[n + 1]) x) ≤ edist x (f x) * K ^ n := by
@@ -237,8 +232,7 @@ protected theorem mul {f g : Function.End α} {Kf Kg} (hf : LipschitzWith Kf f) 
 endomorphism. -/
 protected theorem list_prod (f : ι → Function.End α) (K : ι → ℝ≥0) (h : ∀ i, LipschitzWith (K i) (f i)) :
     ∀ l : List ι, LipschitzWith (l.map K).Prod (l.map f).Prod
-  | [] => by
-    simpa using LipschitzWith.id
+  | [] => by simpa using LipschitzWith.id
   | i::l => by
     simp only [List.map_consₓ, List.prod_cons]
     exact (h i).mul (list_prod l)
@@ -261,8 +255,7 @@ protected theorem of_dist_le' {K : ℝ} (h : ∀ x y, dist (f x) (f y) ≤ K * d
   of_dist_le_mul fun x y => le_transₓ (h x y) <| mul_le_mul_of_nonneg_right (Real.le_coe_to_nnreal K) dist_nonneg
 
 protected theorem mk_one (h : ∀ x y, dist (f x) (f y) ≤ dist x y) : LipschitzWith 1 f :=
-  of_dist_le_mul <| by
-    simpa only [Nnreal.coe_one, one_mulₓ] using h
+  of_dist_le_mul <| by simpa only [Nnreal.coe_one, one_mulₓ] using h
 
 /-- For functions to `ℝ`, it suffices to prove `f x ≤ f y + K * dist x y`; this version
 doesn't assume `0≤K`. -/
@@ -277,8 +270,7 @@ protected theorem of_le_add_mul {f : α → ℝ} (K : ℝ≥0) (h : ∀ x y, f x
   simpa only [Real.to_nnreal_coe] using LipschitzWith.of_le_add_mul' K h
 
 protected theorem of_le_add {f : α → ℝ} (h : ∀ x y, f x ≤ f y + dist x y) : LipschitzWith 1 f :=
-  LipschitzWith.of_le_add_mul 1 <| by
-    simpa only [Nnreal.coe_one, one_mulₓ]
+  LipschitzWith.of_le_add_mul 1 <| by simpa only [Nnreal.coe_one, one_mulₓ]
 
 protected theorem le_add_mul {f : α → ℝ} {K : ℝ≥0} (h : LipschitzWith K f) (x y) : f x ≤ f y + K * dist x y :=
   sub_le_iff_le_add'.1 <| le_transₓ (le_abs_self _) <| h.dist_le_mul x y
@@ -444,8 +436,7 @@ protected theorem of_dist_le' {K : ℝ} (h : ∀ x ∈ s, ∀ y ∈ s, dist (f x
     le_transₓ (h x hx y hy) <| mul_le_mul_of_nonneg_right (Real.le_coe_to_nnreal K) dist_nonneg
 
 protected theorem mk_one (h : ∀ x ∈ s, ∀ y ∈ s, dist (f x) (f y) ≤ dist x y) : LipschitzOnWith 1 f s :=
-  of_dist_le_mul <| by
-    simpa only [Nnreal.coe_one, one_mulₓ] using h
+  of_dist_le_mul <| by simpa only [Nnreal.coe_one, one_mulₓ] using h
 
 /-- For functions to `ℝ`, it suffices to prove `f x ≤ f y + K * dist x y`; this version
 doesn't assume `0≤K`. -/
@@ -457,12 +448,10 @@ protected theorem of_le_add_mul' {f : α → ℝ} (K : ℝ) (h : ∀ x ∈ s, �
 /-- For functions to `ℝ`, it suffices to prove `f x ≤ f y + K * dist x y`; this version
 assumes `0≤K`. -/
 protected theorem of_le_add_mul {f : α → ℝ} (K : ℝ≥0) (h : ∀ x ∈ s, ∀ y ∈ s, f x ≤ f y + K * dist x y) :
-    LipschitzOnWith K f s := by
-  simpa only [Real.to_nnreal_coe] using LipschitzOnWith.of_le_add_mul' K h
+    LipschitzOnWith K f s := by simpa only [Real.to_nnreal_coe] using LipschitzOnWith.of_le_add_mul' K h
 
 protected theorem of_le_add {f : α → ℝ} (h : ∀ x ∈ s, ∀ y ∈ s, f x ≤ f y + dist x y) : LipschitzOnWith 1 f s :=
-  LipschitzOnWith.of_le_add_mul 1 <| by
-    simpa only [Nnreal.coe_one, one_mulₓ]
+  LipschitzOnWith.of_le_add_mul 1 <| by simpa only [Nnreal.coe_one, one_mulₓ]
 
 protected theorem le_add_mul {f : α → ℝ} {K : ℝ≥0} (h : LipschitzOnWith K f s) {x : α} (hx : x ∈ s) {y : α}
     (hy : y ∈ s) : f x ≤ f y + K * dist x y :=
@@ -538,15 +527,14 @@ theorem LipschitzOnWith.extend_real [PseudoMetricSpace α] {f : α → ℝ} {s :
   rcases eq_empty_or_nonempty s with (rfl | hs)
   · exact ⟨fun x => 0, (LipschitzWith.const _).weaken (zero_le _), eq_on_empty _ _⟩
     
-  have : Nonempty s := by
-    simp only [hs, nonempty_coe_sort]
+  have : Nonempty s := by simp only [hs, nonempty_coe_sort]
   let g := fun y : α => infi fun x : s => f x + K * dist y x
   have B : ∀ y : α, BddBelow (range fun x : s => f x + K * dist y x) := by
     intro y
     rcases hs with ⟨z, hz⟩
     refine' ⟨f z - K * dist y z, _⟩
     rintro w ⟨t, rfl⟩
-    dsimp'
+    dsimp
     rw [sub_le_iff_le_add, add_assocₓ, ← mul_addₓ, add_commₓ (dist y t)]
     calc
       f z ≤ f t + K * dist z t := hf.le_add_mul hz t.2
@@ -572,7 +560,7 @@ theorem LipschitzOnWith.extend_real [PseudoMetricSpace α] {f : α → ℝ} {s :
 extension to the whole space.
 TODO: state the same result (with the same proof) for the space `ℓ^∞ (ι, ℝ)` over a possibly
 infinite type `ι`. -/
-theorem LipschitzOnWith.extend_pi [PseudoMetricSpace α] [Fintype ι] {f : α → ι → ℝ} {s : Set α} {K : ℝ≥0}
+theorem LipschitzOnWith.extend_pi [PseudoMetricSpace α] [Fintypeₓ ι] {f : α → ι → ℝ} {s : Set α} {K : ℝ≥0}
     (hf : LipschitzOnWith K f s) : ∃ g : α → ι → ℝ, LipschitzWith K g ∧ EqOn f g s := by
   have : ∀ i, ∃ g : α → ℝ, LipschitzWith K g ∧ eq_on (fun x => f x i) g s := by
     intro i

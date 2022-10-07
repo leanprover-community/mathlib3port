@@ -43,15 +43,9 @@ namespace CategoryTheory
 /-- A category is called `R`-linear if `P ⟶ Q` is an `R`-module such that composition is
     `R`-linear in both variables. -/
 class Linear (R : Type w) [Semiringₓ R] (C : Type u) [Category.{v} C] [Preadditive C] where
-  homModule : ∀ X Y : C, Module R (X ⟶ Y) := by
-    run_tac
-      tactic.apply_instance
-  smul_comp' : ∀ (X Y Z : C) (r : R) (f : X ⟶ Y) (g : Y ⟶ Z), (r • f) ≫ g = r • f ≫ g := by
-    run_tac
-      obviously
-  comp_smul' : ∀ (X Y Z : C) (f : X ⟶ Y) (r : R) (g : Y ⟶ Z), f ≫ (r • g) = r • f ≫ g := by
-    run_tac
-      obviously
+  homModule : ∀ X Y : C, Module R (X ⟶ Y) := by infer_instance
+  smul_comp' : ∀ (X Y Z : C) (r : R) (f : X ⟶ Y) (g : Y ⟶ Z), (r • f) ≫ g = r • f ≫ g := by obviously
+  comp_smul' : ∀ (X Y Z : C) (f : X ⟶ Y) (r : R) (g : Y ⟶ Z), f ≫ (r • g) = r • f ≫ g := by obviously
 
 attribute [instance] linear.hom_module
 
@@ -85,7 +79,7 @@ section End
 variable {R : Type w}
 
 instance [Semiringₓ R] [Linear R C] (X : C) : Module R (End X) := by
-  dsimp' [End]
+  dsimp [End]
   infer_instance
 
 instance [CommSemiringₓ R] [Linear R C] (X : C) : Algebra R (End X) :=
@@ -116,19 +110,15 @@ variable (R)
 @[simps]
 def leftComp {X Y : C} (Z : C) (f : X ⟶ Y) : (Y ⟶ Z) →ₗ[R] X ⟶ Z where
   toFun := fun g => f ≫ g
-  map_add' := by
-    simp
-  map_smul' := by
-    simp
+  map_add' := by simp
+  map_smul' := by simp
 
 /-- Composition by a fixed right argument as an `R`-linear map. -/
 @[simps]
 def rightComp (X : C) {Y Z : C} (g : Y ⟶ Z) : (X ⟶ Y) →ₗ[R] X ⟶ Z where
   toFun := fun f => f ≫ g
-  map_add' := by
-    simp
-  map_smul' := by
-    simp
+  map_add' := by simp
+  map_smul' := by simp
 
 instance {X Y : C} (f : X ⟶ Y) [Epi f] (r : R) [Invertible r] : Epi (r • f) :=
   ⟨fun R g g' H => by

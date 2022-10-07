@@ -127,8 +127,7 @@ theorem Wcovby.Icc_eq (h : a ⩿ b) : Icc a b = {a, b} := by
 theorem Wcovby.Ico_subset (h : a ⩿ b) : Ico a b ⊆ {a} := by
   rw [← Icc_diff_right, h.Icc_eq, diff_singleton_subset_iff, pair_comm]
 
-theorem Wcovby.Ioc_subset (h : a ⩿ b) : Ioc a b ⊆ {b} := by
-  rw [← Icc_diff_left, h.Icc_eq, diff_singleton_subset_iff]
+theorem Wcovby.Ioc_subset (h : a ⩿ b) : Ioc a b ⊆ {b} := by rw [← Icc_diff_left, h.Icc_eq, diff_singleton_subset_iff]
 
 end PartialOrderₓ
 
@@ -244,14 +243,11 @@ theorem Wcovby.covby_of_ne (h : a ⩿ b) (h2 : a ≠ b) : a ⋖ b :=
 theorem covby_iff_wcovby_and_ne : a ⋖ b ↔ a ⩿ b ∧ a ≠ b :=
   ⟨fun h => ⟨h.Wcovby, h.Ne⟩, fun h => h.1.covby_of_ne h.2⟩
 
-theorem wcovby_iff_covby_or_eq : a ⩿ b ↔ a ⋖ b ∨ a = b := by
-  rw [le_antisymm_iffₓ, wcovby_iff_covby_or_le_and_le]
+theorem wcovby_iff_covby_or_eq : a ⩿ b ↔ a ⋖ b ∨ a = b := by rw [le_antisymm_iffₓ, wcovby_iff_covby_or_le_and_le]
 
-theorem Covby.Ico_eq (h : a ⋖ b) : Ico a b = {a} := by
-  rw [← Ioo_union_left h.lt, h.Ioo_eq, empty_union]
+theorem Covby.Ico_eq (h : a ⋖ b) : Ico a b = {a} := by rw [← Ioo_union_left h.lt, h.Ioo_eq, empty_union]
 
-theorem Covby.Ioc_eq (h : a ⋖ b) : Ioc a b = {b} := by
-  rw [← Ioo_union_right h.lt, h.Ioo_eq, empty_union]
+theorem Covby.Ioc_eq (h : a ⋖ b) : Ioc a b = {b} := by rw [← Ioo_union_right h.lt, h.Ioo_eq, empty_union]
 
 theorem Covby.Icc_eq (h : a ⋖ b) : Icc a b = {a, b} :=
   h.Wcovby.Icc_eq
@@ -262,11 +258,9 @@ section LinearOrderₓ
 
 variable [LinearOrderₓ α] {a b c : α}
 
-theorem Covby.Ioi_eq (h : a ⋖ b) : Ioi a = Ici b := by
-  rw [← Ioo_union_Ici_eq_Ioi h.lt, h.Ioo_eq, empty_union]
+theorem Covby.Ioi_eq (h : a ⋖ b) : Ioi a = Ici b := by rw [← Ioo_union_Ici_eq_Ioi h.lt, h.Ioo_eq, empty_union]
 
-theorem Covby.Iio_eq (h : a ⋖ b) : Iio b = Iic a := by
-  rw [← Iic_union_Ioo_eq_Iio h.lt, h.Ioo_eq, union_empty]
+theorem Covby.Iio_eq (h : a ⋖ b) : Iio b = Iic a := by rw [← Iic_union_Ioo_eq_Iio h.lt, h.Ioo_eq, union_empty]
 
 theorem Wcovby.le_of_lt (hab : a ⩿ b) (hcb : c < b) : c ≤ a :=
   not_ltₓ.1 fun hac => hab.2 hac hcb
@@ -292,7 +286,7 @@ namespace Set
 
 theorem wcovby_insert (x : α) (s : Set α) : s ⩿ insert x s := by
   refine' wcovby_of_eq_or_eq (subset_insert x s) fun t hst h2t => _
-  by_cases' h : x ∈ t
+  by_cases h:x ∈ t
   · exact Or.inr (subset_antisymm h2t <| insert_subset.mpr ⟨h, hst⟩)
     
   · refine' Or.inl (subset_antisymm _ hst)

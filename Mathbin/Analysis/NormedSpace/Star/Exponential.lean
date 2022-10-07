@@ -48,8 +48,7 @@ theorem Commute.exp_unitary_add {a b : selfAdjoint A} (h : Commute (a : A) (b : 
   ext
   have hcomm : Commute (I • (a : A)) (I • (b : A))
   calc
-    _ = _ := by
-      simp only [h.eq, Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
+    _ = _ := by simp only [h.eq, Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
     
   simpa only [exp_unitary_coe, AddSubgroup.coe_add, smul_add] using exp_add_of_commute hcomm
 

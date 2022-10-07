@@ -38,9 +38,7 @@ theorem mem_derangements_iff_fixed_points_eq_empty {f : Perm α} : f ∈ Derange
 
 /-- If `α` is equivalent to `β`, then `derangements α` is equivalent to `derangements β`. -/
 def Equivₓ.derangementsCongr (e : α ≃ β) : Derangements α ≃ Derangements β :=
-  e.permCongr.subtypeEquiv fun f =>
-    e.forall_congr <| by
-      simp
+  e.permCongr.subtypeEquiv fun f => e.forall_congr <| by simp
 
 namespace Derangements
 
@@ -64,8 +62,7 @@ protected def subtypeEquiv (p : α → Prop) [DecidablePred p] :
     _ ≃ { f : Perm α // ∃ h : ∀ a, ¬p a → a ∈ FixedPoints f, ∀ a, a ∈ FixedPoints f → ¬p a } :=
       subtypeSubtypeEquivSubtypeExists _ _
     _ ≃ { f : Perm α // ∀ a, ¬p a ↔ a ∈ FixedPoints f } :=
-      subtypeEquivRight fun f => by
-        simp_rw [exists_propₓ, ← forall_and_distrib, ← iff_iff_implies_and_implies]
+      subtypeEquivRight fun f => by simp_rw [exists_propₓ, ← forall_and_distrib, ← iff_iff_implies_and_implies]
     
 
 /-- The set of permutations that fix either `a` or nothing is equivalent to the sum of:
@@ -149,8 +146,8 @@ theorem RemoveNone.fiber_some (a : α) : RemoveNone.Fiber (some a) = { f : Perm 
       cases x
       · simp
         
-      simp only [Equivₓ.option_congr_apply, Option.map_some']
-      by_cases' x_vs_a : x = a
+      simp only [Equivₓ.option_congr_apply, Option.map_some'ₓ]
+      by_cases x_vs_a:x = a
       · rw [x_vs_a, swap_apply_right]
         apply Option.some_ne_none
         
@@ -181,8 +178,7 @@ def derangementsOptionEquivSigmaAtMostOneFixedPoint :
     Derangements (Option α) ≃ Equivₓ.Perm.decomposeOption '' Derangements (Option α) := Equivₓ.image _ _
     _ ≃ Σa : Option α, ↥(equiv.remove_none.fiber a) := set_prod_equiv_sigma _
     _ ≃ Σa : α, ↥(equiv.remove_none.fiber (some a)) := sigma_option_equiv_of_some _ fiber_none_is_false
-    _ ≃ Σa : α, { f : perm α | fixed_points f ⊆ {a} } := by
-      simp_rw [equiv.remove_none.fiber_some]
+    _ ≃ Σa : α, { f : perm α | fixed_points f ⊆ {a} } := by simp_rw [equiv.remove_none.fiber_some]
     
 
 /-- The set of derangements on `option α` is equivalent to the union over all `a : α` of

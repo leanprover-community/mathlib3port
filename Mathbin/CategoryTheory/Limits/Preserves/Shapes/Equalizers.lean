@@ -40,34 +40,18 @@ essentially lets us commute `fork.of_ι` with `functor.map_cone`.
 -/
 def isLimitMapConeForkEquiv :
     IsLimit (G.mapCone (Fork.ofι h w)) ≃
-      IsLimit
-        (Fork.ofι (G.map h)
-          (by
-            simp only [← G.map_comp, w]) :
-          Fork (G.map f) (G.map g)) :=
+      IsLimit (Fork.ofι (G.map h) (by simp only [← G.map_comp, w]) : Fork (G.map f) (G.map g)) :=
   (IsLimit.postcomposeHomEquiv (diagramIsoParallelPair _) _).symm.trans
-    (IsLimit.equivIsoLimit
-      (Fork.ext (Iso.refl _)
-        (by
-          simp [fork.ι])))
+    (IsLimit.equivIsoLimit (Fork.ext (Iso.refl _) (by simp [fork.ι])))
 
 /-- The property of preserving equalizers expressed in terms of forks. -/
 def isLimitForkMapOfIsLimit [PreservesLimit (parallelPair f g) G] (l : IsLimit (Fork.ofι h w)) :
-    IsLimit
-      (Fork.ofι (G.map h)
-        (by
-          simp only [← G.map_comp, w]) :
-        Fork (G.map f) (G.map g)) :=
+    IsLimit (Fork.ofι (G.map h) (by simp only [← G.map_comp, w]) : Fork (G.map f) (G.map g)) :=
   isLimitMapConeForkEquiv G w (PreservesLimit.preserves l)
 
 /-- The property of reflecting equalizers expressed in terms of forks. -/
 def isLimitOfIsLimitForkMap [ReflectsLimit (parallelPair f g) G]
-    (l :
-      IsLimit
-        (Fork.ofι (G.map h)
-          (by
-            simp only [← G.map_comp, w]) :
-          Fork (G.map f) (G.map g))) :
+    (l : IsLimit (Fork.ofι (G.map h) (by simp only [← G.map_comp, w]) : Fork (G.map f) (G.map g))) :
     IsLimit (Fork.ofι h w) :=
   ReflectsLimit.reflects ((isLimitMapConeForkEquiv G w).symm l)
 
@@ -77,10 +61,7 @@ variable (f g) [HasEqualizer f g]
 a fork is a limit.
 -/
 def isLimitOfHasEqualizerOfPreservesLimit [PreservesLimit (parallelPair f g) G] :
-    IsLimit
-      (Fork.ofι (G.map (equalizer.ι f g))
-        (by
-          simp only [← G.map_comp, equalizer.condition])) :=
+    IsLimit (Fork.ofι (G.map (equalizer.ι f g)) (by simp only [← G.map_comp, equalizer.condition])) :=
   isLimitForkMapOfIsLimit G _ (equalizerIsEqualizer f g)
 
 variable [HasEqualizer (G.map f) (G.map g)]
@@ -122,35 +103,22 @@ This essentially lets us commute `cofork.of_π` with `functor.map_cocone`.
 -/
 def isColimitMapCoconeCoforkEquiv :
     IsColimit (G.mapCocone (Cofork.ofπ h w)) ≃
-      IsColimit
-        (Cofork.ofπ (G.map h)
-          (by
-            simp only [← G.map_comp, w]) :
-          Cofork (G.map f) (G.map g)) :=
+      IsColimit (Cofork.ofπ (G.map h) (by simp only [← G.map_comp, w]) : Cofork (G.map f) (G.map g)) :=
   (IsColimit.precomposeInvEquiv (diagramIsoParallelPair _) _).symm.trans <|
     is_colimit.equiv_iso_colimit <|
       Cofork.ext (Iso.refl _) <| by
-        dsimp' only [cofork.π, cofork.of_π_ι_app]
-        dsimp'
+        dsimp only [cofork.π, cofork.of_π_ι_app]
+        dsimp
         rw [category.comp_id, category.id_comp]
 
 /-- The property of preserving coequalizers expressed in terms of coforks. -/
 def isColimitCoforkMapOfIsColimit [PreservesColimit (parallelPair f g) G] (l : IsColimit (Cofork.ofπ h w)) :
-    IsColimit
-      (Cofork.ofπ (G.map h)
-        (by
-          simp only [← G.map_comp, w]) :
-        Cofork (G.map f) (G.map g)) :=
+    IsColimit (Cofork.ofπ (G.map h) (by simp only [← G.map_comp, w]) : Cofork (G.map f) (G.map g)) :=
   isColimitMapCoconeCoforkEquiv G w (PreservesColimit.preserves l)
 
 /-- The property of reflecting coequalizers expressed in terms of coforks. -/
 def isColimitOfIsColimitCoforkMap [ReflectsColimit (parallelPair f g) G]
-    (l :
-      IsColimit
-        (Cofork.ofπ (G.map h)
-          (by
-            simp only [← G.map_comp, w]) :
-          Cofork (G.map f) (G.map g))) :
+    (l : IsColimit (Cofork.ofπ (G.map h) (by simp only [← G.map_comp, w]) : Cofork (G.map f) (G.map g))) :
     IsColimit (Cofork.ofπ h w) :=
   ReflectsColimit.reflects ((isColimitMapCoconeCoforkEquiv G w).symm l)
 

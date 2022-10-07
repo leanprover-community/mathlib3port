@@ -3,6 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 -/
+import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Data.Polynomial.FieldDivision
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.RingTheory.Adjoin.Basic
@@ -139,10 +140,7 @@ theorem mk_eq_mk {g h : R[X]} : mk f g = mk f h ↔ f ∣ g - h :=
 
 @[simp]
 theorem mk_self : mk f f = 0 :=
-  Quotientₓ.sound' <|
-    QuotientAddGroup.left_rel_apply.mpr
-      (mem_span_singleton.2 <| by
-        simp )
+  Quotientₓ.sound' <| QuotientAddGroup.left_rel_apply.mpr (mem_span_singleton.2 <| by simp)
 
 @[simp]
 theorem mk_C (x : R) : mk f (c x) = x :=
@@ -158,9 +156,7 @@ theorem aeval_eq (p : R[X]) : aeval (root f) p = mk f p :=
     (fun x => by
       rw [aeval_C]
       rfl)
-    (fun p q ihp ihq => by
-      rw [AlgHom.map_add, RingHom.map_add, ihp, ihq])
-    fun n x ih => by
+    (fun p q ihp ihq => by rw [AlgHom.map_add, RingHom.map_add, ihp, ihq]) fun n x ih => by
     rw [AlgHom.map_mul, aeval_C, AlgHom.map_pow, aeval_X, RingHom.map_mul, mk_C, RingHom.map_pow, mk_X]
     rfl
 
@@ -169,11 +165,9 @@ theorem adjoin_root_eq_top : Algebra.adjoin R ({root f} : Set (AdjoinRoot f)) = 
     (induction_on f x) fun p => (Algebra.adjoin_singleton_eq_range_aeval R (root f)).symm ▸ ⟨p, aeval_eq p⟩
 
 @[simp]
-theorem eval₂_root (f : R[X]) : f.eval₂ (of f) (root f) = 0 := by
-  rw [← algebra_map_eq, ← aeval_def, aeval_eq, mk_self]
+theorem eval₂_root (f : R[X]) : f.eval₂ (of f) (root f) = 0 := by rw [← algebra_map_eq, ← aeval_def, aeval_eq, mk_self]
 
-theorem is_root_root (f : R[X]) : IsRoot (f.map (of f)) (root f) := by
-  rw [is_root, eval_map, eval₂_root]
+theorem is_root_root (f : R[X]) : IsRoot (f.map (of f)) (root f) := by rw [is_root, eval_map, eval₂_root]
 
 theorem is_algebraic_root (hf : f ≠ 0) : IsAlgebraic R (root f) :=
   ⟨f, hf, eval₂_root f⟩
@@ -194,12 +188,10 @@ theorem lift_mk (g : R[X]) : lift i a h (mk f g) = g.eval₂ i a :=
   Ideal.Quotient.lift_mk _ _ _
 
 @[simp]
-theorem lift_root : lift i a h (root f) = a := by
-  rw [root, lift_mk, eval₂_X]
+theorem lift_root : lift i a h (root f) = a := by rw [root, lift_mk, eval₂_X]
 
 @[simp]
-theorem lift_of {x : R} : lift i a h x = i x := by
-  rw [← mk_C x, lift_mk, eval₂_C]
+theorem lift_of {x : R} : lift i a h x = i x := by rw [← mk_C x, lift_mk, eval₂_C]
 
 @[simp]
 theorem lift_comp_of : (lift i a h).comp (of f) = i :=
@@ -256,11 +248,8 @@ theorem alg_hom_subsingleton {S : Type _} [CommRingₓ S] [Algebra R S] {r : R} 
     Subsingleton (AdjoinRoot (c r * X - 1) →ₐ[R] S) :=
   ⟨fun f g =>
     alg_hom_ext
-      (@inv_unique _ _ (algebraMap R S r) _ _
-        (by
-          rw [← f.commutes, ← f.map_mul, algebra_map_eq, root_is_inv, map_one])
-        (by
-          rw [← g.commutes, ← g.map_mul, algebra_map_eq, root_is_inv, map_one]))⟩
+      (@inv_unique _ _ (algebraMap R S r) _ _ (by rw [← f.commutes, ← f.map_mul, algebra_map_eq, root_is_inv, map_one])
+        (by rw [← g.commutes, ← g.map_mul, algebra_map_eq, root_is_inv, map_one]))⟩
 
 end AdjoinInv
 
@@ -332,12 +321,9 @@ def powerBasisAux' (hg : g.Monic) : Basis (Finₓ g.natDegree) R (AdjoinRoot g) 
   Basis.ofEquivFun
     { toFun := fun f i => (modByMonicHom hg f).coeff i,
       invFun := fun c => mk g <| ∑ i : Finₓ g.natDegree, monomial i (c i),
-      map_add' := fun f₁ f₂ =>
-        funext fun i => by
-          simp only [(mod_by_monic_hom hg).map_add, coeff_add, Pi.add_apply],
+      map_add' := fun f₁ f₂ => funext fun i => by simp only [(mod_by_monic_hom hg).map_add, coeff_add, Pi.add_apply],
       map_smul' := fun f₁ f₂ =>
-        funext fun i => by
-          simp only [(mod_by_monic_hom hg).map_smul, coeff_smul, Pi.smul_apply, RingHom.id_apply],
+        funext fun i => by simp only [(mod_by_monic_hom hg).map_smul, coeff_smul, Pi.smul_apply, RingHom.id_apply],
       left_inv := fun f =>
         induction_on g f fun f =>
           Eq.symm <|
@@ -349,17 +335,16 @@ def powerBasisAux' (hg : g.Monic) : Basis (Finₓ g.natDegree) R (AdjoinRoot g) 
         funext fun i => by
           nontriviality R
           simp only [mod_by_monic_hom_mk]
-          rw [(mod_by_monic_eq_self_iff hg).mpr, finset_sum_coeff, Finset.sum_eq_single i] <;>
-            try
-              simp only [coeff_monomial, eq_self_iff_true, if_true]
+          rw [(mod_by_monic_eq_self_iff hg).mpr, finset_sum_coeff, Finsetₓ.sum_eq_single i] <;>
+            try simp only [coeff_monomial, eq_self_iff_true, if_true]
           · intro j _ hj
             exact if_neg (fin.coe_injective.ne hj)
             
           · intros
-            have := Finset.mem_univ i
+            have := Finsetₓ.mem_univ i
             contradiction
             
-          · refine' (degree_sum_le _ _).trans_lt ((Finset.sup_lt_iff _).mpr fun j _ => _)
+          · refine' (degree_sum_le _ _).trans_lt ((Finsetₓ.sup_lt_iff _).mpr fun j _ => _)
             · exact bot_lt_iff_ne_bot.mpr (mt degree_eq_bot.mp hg.ne_zero)
               
             · refine' (degree_monomial_le _ _).trans_lt _
@@ -377,7 +362,7 @@ def powerBasis' (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
   Basis := powerBasisAux' hg
   basis_eq_pow := fun i => by
     simp only [power_basis_aux', Basis.coe_of_equiv_fun, LinearEquiv.coe_symm_mk]
-    rw [Finset.sum_eq_single i]
+    rw [Finsetₓ.sum_eq_single i]
     · rw [Function.update_same, monomial_one_right_eq_X_pow, (mk g).map_pow, mk_X]
       
     · intro j _ hj
@@ -386,7 +371,7 @@ def powerBasis' (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
       
     -- Fix `decidable_eq` mismatch
     · intros
-      have := Finset.mem_univ i
+      have := Finsetₓ.mem_univ i
       contradiction
       
 
@@ -411,8 +396,7 @@ theorem minpoly_root (hf : f ≠ 0) : minpoly K (root f) = f * c f.leadingCoeff�
   rw [degree_eq_nat_degree f'_monic.ne_zero, degree_eq_nat_degree q_monic.ne_zero, WithBot.coe_le_coe,
     nat_degree_mul hf, nat_degree_C, add_zeroₓ]
   apply nat_degree_le_of_dvd
-  · have : mk f q = 0 := by
-      rw [← commutes, RingHom.comp_apply, mk_self, RingHom.map_zero]
+  · have : mk f q = 0 := by rw [← commutes, RingHom.comp_apply, mk_self, RingHom.map_zero]
     rwa [← Ideal.mem_span_singleton, ← Ideal.Quotient.eq_zero_iff_mem]
     
   · exact q_monic.ne_zero
@@ -472,18 +456,14 @@ If `R` is a GCD domain and `x` is integral, this is an isomorphism,
 see `adjoin_root.minpoly.equiv_adjoin`. -/
 @[simps]
 def Minpoly.toAdjoin : AdjoinRoot (minpoly R x) →ₐ[R] adjoin R ({x} : Set S) :=
-  liftHom _ ⟨x, self_mem_adjoin_singleton R x⟩
-    (by
-      simp [← Subalgebra.coe_eq_zero, aeval_subalgebra_coe])
+  liftHom _ ⟨x, self_mem_adjoin_singleton R x⟩ (by simp [← Subalgebra.coe_eq_zero, aeval_subalgebra_coe])
 
 variable {R x}
 
 theorem Minpoly.to_adjoin_apply' (a : AdjoinRoot (minpoly R x)) :
     Minpoly.toAdjoin R x a =
       liftHom (minpoly R x) (⟨x, self_mem_adjoin_singleton R x⟩ : adjoin R ({x} : Set S))
-        (by
-          simp [← Subalgebra.coe_eq_zero, aeval_subalgebra_coe])
-        a :=
+        (by simp [← Subalgebra.coe_eq_zero, aeval_subalgebra_coe]) a :=
   rfl
 
 theorem Minpoly.toAdjoin.apply_X : Minpoly.toAdjoin R x (mk (minpoly R x) x) = ⟨x, self_mem_adjoin_singleton R x⟩ := by
@@ -496,16 +476,14 @@ theorem Minpoly.toAdjoin.surjective : Function.Surjective (Minpoly.toAdjoin R x)
   refine' adjoin_le _
   simp only [AlgHom.coe_range, Set.mem_range]
   rintro ⟨y₁, y₂⟩ h
-  refine'
-    ⟨mk (minpoly R x) X, by
-      simpa using h.symm⟩
+  refine' ⟨mk (minpoly R x) X, by simpa using h.symm⟩
 
 variable {R} {x} [IsDomain R] [NormalizedGcdMonoid R] [IsDomain S] [NoZeroSmulDivisors R S]
 
 theorem Minpoly.toAdjoin.injective (hx : IsIntegral R x) : Function.Injective (Minpoly.toAdjoin R x) := by
   refine' (injective_iff_map_eq_zero _).2 fun P₁ hP₁ => _
   obtain ⟨P, hP⟩ := mk_surjective (minpoly.monic hx) P₁
-  by_cases' hPzero : P = 0
+  by_cases hPzero:P = 0
   · simpa [hPzero] using hP.symm
     
   have hPcont : P.content ≠ 0 := fun h => hPzero (content_eq_zero_iff.1 h)
@@ -555,9 +533,7 @@ guaranteed to be identical to `g`. -/
 @[simps (config := { fullyApplied := false })]
 def equiv' (h₁ : aeval (root g) (minpoly R pb.gen) = 0) (h₂ : aeval pb.gen g = 0) : AdjoinRoot g ≃ₐ[R] S :=
   { AdjoinRoot.liftHom g pb.gen h₂ with toFun := AdjoinRoot.liftHom g pb.gen h₂, invFun := pb.lift (root g) h₁,
-    left_inv := fun x =>
-      (induction_on g x) fun f => by
-        rw [lift_hom_mk, pb.lift_aeval, aeval_eq],
+    left_inv := fun x => (induction_on g x) fun f => by rw [lift_hom_mk, pb.lift_aeval, aeval_eq],
     right_inv := fun x => by
       obtain ⟨f, hf, rfl⟩ := pb.exists_eq_aeval x
       rw [pb.lift_aeval, aeval_eq, lift_hom_mk] }
@@ -607,9 +583,7 @@ variable [CommRingₓ R] (I : Ideal R) (f : Polynomial R)
 See `adjoin_root.quot_map_of_equiv` for the isomorphism with `(R/I)[X] / (f mod I)`. -/
 def quotMapOfEquivQuotMapCMapSpanMk :
     AdjoinRoot f ⧸ I.map (of f) ≃+* AdjoinRoot f ⧸ (I.map (c : R →+* R[X])).map (span {f}) :=
-  Ideal.quotEquivOfEq
-    (by
-      rw [of, AdjoinRoot.mk, Ideal.map_map])
+  Ideal.quotEquivOfEq (by rw [of, AdjoinRoot.mk, Ideal.map_map])
 
 @[simp]
 theorem quot_map_of_equiv_quot_map_C_map_span_mk_mk (x : AdjoinRoot f) :
@@ -620,8 +594,7 @@ theorem quot_map_of_equiv_quot_map_C_map_span_mk_mk (x : AdjoinRoot f) :
 theorem quot_map_of_equiv_quot_map_C_map_span_mk_symm_mk (x : AdjoinRoot f) :
     (quotMapOfEquivQuotMapCMapSpanMk I f).symm (Ideal.Quotient.mk ((I.map (c : R →+* R[X])).map (span {f})) x) =
       Ideal.Quotient.mk (I.map (of f)) x :=
-  by
-  rw [quot_map_of_equiv_quot_map_C_map_span_mk, Ideal.quot_equiv_of_eq_symm, quot_equiv_of_eq_mk]
+  by rw [quot_map_of_equiv_quot_map_C_map_span_mk, Ideal.quot_equiv_of_eq_symm, quot_equiv_of_eq_mk]
 
 /-- The natural isomorphism `R[α]/((I[x] ⊔ (f)) / (f)) ≅ (R[x]/I[x])/((f) ⊔ I[x] / I[x])`
   for `α` a root of `f : polynomial R` and `I : ideal R`-/
@@ -668,7 +641,7 @@ theorem Polynomial.quot_quot_equiv_comm_symm_mk_mk (p : R[X]) :
     polynomial_quotient_equiv_quotient_polynomial_symm_mk]
 
 /-- The natural isomorphism `R[α]/I[α] ≅ (R/I)[X]/(f mod I)` for `α` a root of `f : polynomial R`
-  and `I : ideal R`-/
+  and `I : ideal R`.-/
 def quotAdjoinRootEquivQuotPolynomialQuot :
     AdjoinRoot f ⧸ I.map (of f) ≃+* Polynomial (R ⧸ I) ⧸ span ({f.map I} : Set (Polynomial (R ⧸ I))) :=
   (quotMapOfEquivQuotMapCMapSpanMk I f).trans
@@ -677,8 +650,7 @@ def quotAdjoinRootEquivQuotPolynomialQuot :
             (show
               (span ({f} : Set (Polynomial R))).map (I.map (c : R →+* Polynomial R)) =
                 span ({(Ideal.Quotient.mk (I Polynomial.c)) f} : Set (Polynomial R ⧸ map c I))
-              by
-              rw [map_span, Set.image_singleton])).trans
+              by rw [map_span, Set.image_singleton])).trans
         (Polynomial.quotQuotEquivComm I f).symm))
 
 @[simp]
@@ -702,7 +674,77 @@ theorem quot_adjoin_root_equiv_quot_polynomial_quot_symm_mk_mk (p : R[X]) :
     quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_symm_quot_quot_mk,
     quot_map_of_equiv_quot_map_C_map_span_mk_symm_mk]
 
+/-- Promote `adjoin_root.quot_adjoin_root_equiv_quot_polynomial_quot` to an alg_equiv.  -/
+@[simps apply symmApply]
+noncomputable def quotEquivQuotMap (f : R[X]) (I : Ideal R) :
+    (AdjoinRoot f ⧸ Ideal.map (of f) I) ≃ₐ[R] (R ⧸ I)[X] ⧸ Ideal.span ({Polynomial.map I f} : Set (R ⧸ I)[X]) :=
+  AlgEquiv.ofRingEquiv
+    (show ∀ x, (quotAdjoinRootEquivQuotPolynomialQuot I f) (algebraMap R _ x) = algebraMap R _ x from fun x => by
+      have :
+        algebraMap R (AdjoinRoot f ⧸ Ideal.map (of f) I) x =
+          Ideal.Quotient.mk (Ideal.map (AdjoinRoot.of f) I) ((mk f) (C x)) :=
+        rfl
+      simpa only [this, quot_adjoin_root_equiv_quot_polynomial_quot_mk_of, map_C] )
+
+@[simp]
+theorem quot_equiv_quot_map_apply_mk (f g : Polynomial R) (I : Ideal R) :
+    AdjoinRoot.quotEquivQuotMap f I (Ideal.Quotient.mk _ (AdjoinRoot.mk f g)) = Ideal.Quotient.mk _ (g.map I) := by
+  rw [AdjoinRoot.quot_equiv_quot_map_apply, AdjoinRoot.quot_adjoin_root_equiv_quot_polynomial_quot_mk_of]
+
+@[simp]
+theorem quot_equiv_quot_map_symm_apply_mk (f g : Polynomial R) (I : Ideal R) :
+    (AdjoinRoot.quotEquivQuotMap f I).symm (Ideal.Quotient.mk _ (map (Ideal.Quotient.mk I) g)) =
+      Ideal.Quotient.mk _ (AdjoinRoot.mk f g) :=
+  by rw [AdjoinRoot.quot_equiv_quot_map_symm_apply, AdjoinRoot.quot_adjoin_root_equiv_quot_polynomial_quot_symm_mk_mk]
+
 end
 
 end AdjoinRoot
+
+namespace PowerBasis
+
+open AdjoinRoot AlgEquiv
+
+variable [CommRingₓ R] [IsDomain R] [CommRingₓ S] [IsDomain S] [Algebra R S]
+
+/-- Let `α` have minimal polynomial `f` over `R` and `I` be an ideal of `R`,
+then `R[α] / (I) = (R[x] / (f)) / pS = (R/p)[x] / (f mod p)`. -/
+@[simps apply symmApply]
+noncomputable def quotientEquivQuotientMinpolyMap (pb : PowerBasis R S) (I : Ideal R) :
+    (S ⧸ I.map (algebraMap R S)) ≃ₐ[R]
+      Polynomial (R ⧸ I) ⧸ Ideal.span ({(minpoly R pb).map I} : Set (Polynomial (R ⧸ I))) :=
+  (ofRingEquiv
+        (show
+          ∀ x,
+            (Ideal.quotientEquiv _ (Ideal.map (AdjoinRoot.of (minpoly R pb.gen)) I)
+                  (AdjoinRoot.equiv' (minpoly R pb.gen) pb (by rw [AdjoinRoot.aeval_eq, AdjoinRoot.mk_self])
+                        (minpoly.aeval _ _)).symm.toRingEquiv
+                  (by
+                    rw [Ideal.map_map, AlgEquiv.to_ring_equiv_eq_coe, ← AlgEquiv.coe_ring_hom_commutes, ←
+                      AdjoinRoot.algebra_map_eq, AlgHom.comp_algebra_map]))
+                (algebraMap R (S ⧸ I.map (algebraMap R S)) x) =
+              algebraMap R _ x
+          from fun x => by
+          rw [← Ideal.Quotient.mk_algebra_map, Ideal.quotient_equiv_apply, RingHom.to_fun_eq_coe, Ideal.quotient_map_mk,
+            AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.coe_to_ring_hom, AlgEquiv.coe_ring_equiv, AlgEquiv.commutes,
+            quotient.mk_algebra_map])).trans
+    (AdjoinRoot.quotEquivQuotMap _ _)
+
+@[simp]
+theorem quotient_equiv_quotient_minpoly_map_apply_mk (pb : PowerBasis R S) (I : Ideal R) (g : Polynomial R) :
+    pb.quotientEquivQuotientMinpolyMap I (Ideal.Quotient.mk _ (aeval pb.gen g)) = Ideal.Quotient.mk _ (g.map I) := by
+  rw [PowerBasis.quotientEquivQuotientMinpolyMap, AlgEquiv.trans_apply, AlgEquiv.of_ring_equiv_apply, quotient_equiv_mk,
+    AlgEquiv.coe_ring_equiv', AdjoinRoot.equiv'_symm_apply, PowerBasis.lift_aeval, AdjoinRoot.aeval_eq,
+    AdjoinRoot.quot_equiv_quot_map_apply_mk]
+
+@[simp]
+theorem quotient_equiv_quotient_minpoly_map_symm_apply_mk (pb : PowerBasis R S) (I : Ideal R) (g : Polynomial R) :
+    (pb.quotientEquivQuotientMinpolyMap I).symm (Ideal.Quotient.mk _ (g.map I)) =
+      Ideal.Quotient.mk _ (aeval pb.gen g) :=
+  by
+  simp only [quotient_equiv_quotient_minpoly_map, to_ring_equiv_eq_coe, symm_trans_apply,
+    quot_equiv_quot_map_symm_apply_mk, of_ring_equiv_symm_apply, quotient_equiv_symm_mk, to_ring_equiv_symm,
+    RingEquiv.symm_symm, AdjoinRoot.equiv'_apply, coe_ring_equiv, lift_hom_mk, symm_to_ring_equiv]
+
+end PowerBasis
 

@@ -41,8 +41,7 @@ theorem Real.uniform_continuous_add : UniformContinuous fun p : ℝ × ℝ => p.
 
 theorem Real.uniform_continuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
-    ⟨_, ε0, fun a b h => by
-      rw [dist_comm] at h <;> simpa [Real.dist_eq] using h⟩
+    ⟨_, ε0, fun a b h => by rw [dist_comm] at h <;> simpa [Real.dist_eq] using h⟩
 
 instance : HasContinuousStar ℝ :=
   ⟨continuous_id⟩
@@ -51,8 +50,7 @@ instance : UniformAddGroup ℝ :=
   UniformAddGroup.mk' Real.uniform_continuous_add Real.uniform_continuous_neg
 
 -- short-circuit type class inference
-instance : TopologicalAddGroup ℝ := by
-  infer_instance
+instance : TopologicalAddGroup ℝ := by infer_instance
 
 instance :
     ProperSpace ℝ where is_compact_closed_ball := fun x r => by
@@ -64,10 +62,7 @@ instance : SecondCountableTopology ℝ :=
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b)
 theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
-  is_topological_basis_of_open_of_nhds
-    (by
-      simp (config := { contextual := true })[is_open_Ioo])
-    fun a v hav hv =>
+  is_topological_basis_of_open_of_nhds (by simp (config := { contextual := true }) [is_open_Ioo]) fun a v hav hv =>
     let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_Ioo_subset.mp (IsOpen.mem_nhds hv hav)
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
@@ -159,11 +154,8 @@ theorem closure_of_rat_image_lt {q : ℚ} : Closure ((coe : ℚ → ℝ) '' { x 
     mem_closure_iff_nhds.2 fun t ht =>
       let ⟨ε, ε0, hε⟩ := Metric.mem_nhds_iff.1 ht
       let ⟨p, h₁, h₂⟩ := exists_rat_btwn ((lt_add_iff_pos_right x).2 ε0)
-      ⟨_,
-        hε
-          (show abs _ < _ by
-            rwa [abs_of_nonneg (le_of_ltₓ <| sub_pos.2 h₁), sub_lt_iff_lt_add']),
-        p, Ratₓ.cast_lt.1 (@lt_of_le_of_ltₓ ℝ _ _ _ _ hx h₁), rfl⟩
+      ⟨_, hε (show abs _ < _ by rwa [abs_of_nonneg (le_of_ltₓ <| sub_pos.2 h₁), sub_lt_iff_lt_add']), p,
+        Ratₓ.cast_lt.1 (@lt_of_le_of_ltₓ ℝ _ _ _ _ hx h₁), rfl⟩
 
 /- TODO(Mario): Put these back only if needed later
 lemma closure_of_rat_image_le_eq {q : ℚ} : closure ((coe:ℚ → ℝ) '' {x | q ≤ x}) = {r | ↑q ≤ r} :=
@@ -217,14 +209,53 @@ end Periodic
 
 section Subgroups
 
+namespace Int
+
+open Metric
+
+/-- Under the coercion from `ℤ` to `ℝ`, inverse images of compact sets are finite. -/
+theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact ℝ) := by
+  refine' tendsto_cocompact_of_tendsto_dist_comp_at_top (0 : ℝ) _
+  simp only [Filter.tendsto_at_top, eventually_cofinite, not_leₓ, ← mem_ball]
+  change ∀ r : ℝ, (coe ⁻¹' ball (0 : ℝ) r).Finite
+  simp [Real.ball_eq_Ioo, Set.finite_Ioo]
+
+/-- For nonzero `a`, the "multiples of `a`" map `zmultiples_hom` from `ℤ` to `ℝ` is discrete, i.e.
+inverse images of compact sets are finite. -/
+theorem tendsto_zmultiples_hom_cofinite {a : ℝ} (ha : a ≠ 0) : Tendsto (zmultiplesHom ℝ a) cofinite (cocompact ℝ) := by
+  convert (tendsto_cocompact_mul_right₀ ha).comp Int.tendsto_coe_cofinite
+  ext n
+  simp
+
+end Int
+
+namespace AddSubgroup
+
+/-- The subgroup "multiples of `a`" (`zmultiples a`) is a discrete subgroup of `ℝ`, i.e. its
+intersection with compact sets is finite. -/
+theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) : Tendsto (zmultiples a).Subtype cofinite (cocompact ℝ) := by
+  rcases eq_or_ne a 0 with (rfl | ha)
+  · rw [AddSubgroup.zmultiples_zero_eq_bot]
+    intro K hK
+    rw [Filter.mem_map, mem_cofinite]
+    apply Set.to_finite
+    
+  intro K hK
+  have H := Int.tendsto_zmultiples_hom_cofinite ha hK
+  simp only [Filter.mem_map, mem_cofinite, ← preimage_compl] at H⊢
+  rw [← (zmultiplesHom ℝ a).range_restrict_surjective.image_preimage ((zmultiples a).Subtype ⁻¹' Kᶜ), ← preimage_comp, ←
+    AddMonoidHom.coe_comp_range_restrict]
+  exact finite.image _ H
+
+end AddSubgroup
+
 /-- Given a nontrivial subgroup `G ⊆ ℝ`, if `G ∩ ℝ_{>0}` has no minimum then `G` is dense. -/
 theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_in : g₀ ∈ G) (g₀_ne : g₀ ≠ 0)
     (H' : ¬∃ a : ℝ, IsLeast { g : ℝ | g ∈ G ∧ 0 < g } a) : Dense (G : Set ℝ) := by
   let G_pos := { g : ℝ | g ∈ G ∧ 0 < g }
   push_neg  at H'
   intro x
-  suffices ∀ ε > (0 : ℝ), ∃ g ∈ G, abs (x - g) < ε by
-    simpa only [Real.mem_closure_iff, abs_sub_comm]
+  suffices ∀ ε > (0 : ℝ), ∃ g ∈ G, abs (x - g) < ε by simpa only [Real.mem_closure_iff, abs_sub_comm]
   intro ε ε_pos
   obtain ⟨g₁, g₁_in, g₁_pos⟩ : ∃ g₁ : ℝ, g₁ ∈ G ∧ 0 < g₁ := by
     cases' lt_or_gt_of_neₓ g₀_ne with Hg₀ Hg₀
@@ -257,7 +288,7 @@ theorem Real.subgroup_dense_or_cyclic (G : AddSubgroup ℝ) : Dense (G : Set ℝ
     rw [H, AddSubgroup.closure_singleton_zero]
     
   · let G_pos := { g : ℝ | g ∈ G ∧ 0 < g }
-    by_cases' H' : ∃ a, IsLeast G_pos a
+    by_cases H':∃ a, IsLeast G_pos a
     · right
       rcases H' with ⟨a, ha⟩
       exact ⟨a, AddSubgroup.cyclic_of_min ha⟩

@@ -41,13 +41,13 @@ in order to avoid using real exponents. For real exponents we prove both this an
 
 universe u v
 
-open Finset
+open Finsetₓ
 
 open Classical BigOperators Nnreal Ennreal
 
 noncomputable section
 
-variable {ι : Type u} (s : Finset ι)
+variable {ι : Type u} (s : Finsetₓ ι)
 
 namespace Real
 
@@ -67,19 +67,19 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ) (hw : ∀ i ∈ s,
     (hz : ∀ i ∈ s, 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) : (∑ i in s, w i * z i) ^ p ≤ ∑ i in s, w i * z i ^ p :=
   (convex_on_rpow hp).map_sum_le hw hw' hz
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 theorem arith_mean_le_rpow_mean (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i) (hw' : (∑ i in s, w i) = 1)
     (hz : ∀ i ∈ s, 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) : (∑ i in s, w i * z i) ≤ (∑ i in s, w i * z i ^ p) ^ (1 / p) := by
   have : 0 < p := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]"
+    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
   rw [← rpow_le_rpow_iff _ _ this, ← rpow_mul, one_div_mul_cancel (ne_of_gtₓ this), rpow_one]
   exact rpow_arith_mean_le_arith_mean_rpow s w z hw hw' hz hp
   all_goals
-    apply_rules [sum_nonneg, rpow_nonneg_of_nonneg]
-    intro i hi
-    apply_rules [mul_nonneg, rpow_nonneg_of_nonneg, hw i hi, hz i hi]
+  apply_rules [sum_nonneg, rpow_nonneg_of_nonneg]
+  intro i hi
+  apply_rules [mul_nonneg, rpow_nonneg_of_nonneg, hw i hi, hz i hi]
 
 end Real
 
@@ -90,9 +90,7 @@ functions and natural exponent. -/
 theorem pow_arith_mean_le_arith_mean_pow (w z : ι → ℝ≥0) (hw' : (∑ i in s, w i) = 1) (n : ℕ) :
     (∑ i in s, w i * z i) ^ n ≤ ∑ i in s, w i * z i ^ n := by
   exact_mod_cast
-    Real.pow_arith_mean_le_arith_mean_pow s _ _ (fun i _ => (w i).coe_nonneg)
-      (by
-        exact_mod_cast hw')
+    Real.pow_arith_mean_le_arith_mean_pow s _ _ (fun i _ => (w i).coe_nonneg) (by exact_mod_cast hw')
       (fun i _ => (z i).coe_nonneg) n
 
 /-- Weighted generalized mean inequality, version for sums over finite sets, with `ℝ≥0`-valued
@@ -100,9 +98,7 @@ functions and real exponents. -/
 theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0) (hw' : (∑ i in s, w i) = 1) {p : ℝ} (hp : 1 ≤ p) :
     (∑ i in s, w i * z i) ^ p ≤ ∑ i in s, w i * z i ^ p := by
   exact_mod_cast
-    Real.rpow_arith_mean_le_arith_mean_rpow s _ _ (fun i _ => (w i).coe_nonneg)
-      (by
-        exact_mod_cast hw')
+    Real.rpow_arith_mean_le_arith_mean_rpow s _ _ (fun i _ => (w i).coe_nonneg) (by exact_mod_cast hw')
       (fun i _ => (z i).coe_nonneg) hp
 
 /-- Weighted generalized mean inequality, version for two elements of `ℝ≥0` and real exponents. -/
@@ -119,9 +115,7 @@ functions and real exponents. -/
 theorem arith_mean_le_rpow_mean (w z : ι → ℝ≥0) (hw' : (∑ i in s, w i) = 1) {p : ℝ} (hp : 1 ≤ p) :
     (∑ i in s, w i * z i) ≤ (∑ i in s, w i * z i ^ p) ^ (1 / p) := by
   exact_mod_cast
-    Real.arith_mean_le_rpow_mean s _ _ (fun i _ => (w i).coe_nonneg)
-      (by
-        exact_mod_cast hw')
+    Real.arith_mean_le_rpow_mean s _ _ (fun i _ => (w i).coe_nonneg) (by exact_mod_cast hw')
       (fun i _ => (z i).coe_nonneg) hp
 
 end Nnreal
@@ -135,33 +129,27 @@ private theorem add_rpow_le_one_of_add_le_one {p : ℝ} (a b : ℝ≥0) (hab : a
   have hb : b ≤ 1 := (self_le_add_left b a).trans hab
   exact (add_le_add (h_le_one a ha) (h_le_one b hb)).trans hab
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0) (hp1 : 1 ≤ p) : a ^ p + b ^ p ≤ (a + b) ^ p := by
   have hp_pos : 0 < p := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]"
-  by_cases' h_zero : a + b = 0
+    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  by_cases h_zero:a + b = 0
   · simp [add_eq_zero_iff.mp h_zero, hp_pos.ne']
     
-  have h_nonzero : ¬(a = 0 ∧ b = 0) := by
-    rwa [add_eq_zero_iff] at h_zero
-  have h_add : a / (a + b) + b / (a + b) = 1 := by
-    rw [div_add_div_same, div_self h_zero]
+  have h_nonzero : ¬(a = 0 ∧ b = 0) := by rwa [add_eq_zero_iff] at h_zero
+  have h_add : a / (a + b) + b / (a + b) = 1 := by rw [div_add_div_same, div_self h_zero]
   have h := add_rpow_le_one_of_add_le_one (a / (a + b)) (b / (a + b)) h_add.le hp1
   rw [div_rpow a (a + b), div_rpow b (a + b)] at h
-  have hab_0 : (a + b) ^ p ≠ 0 := by
-    simp [hp_pos, h_nonzero]
+  have hab_0 : (a + b) ^ p ≠ 0 := by simp [hp_pos, h_nonzero]
   have hab_0' : 0 < (a + b) ^ p := zero_lt_iff.mpr hab_0
   have h_mul : (a + b) ^ p * (a ^ p / (a + b) ^ p + b ^ p / (a + b) ^ p) ≤ (a + b) ^ p := by
-    nth_rw 3[← mul_oneₓ ((a + b) ^ p)]
+    nth_rw 3 [← mul_oneₓ ((a + b) ^ p)]
     exact (mul_le_mul_left hab_0').mpr h
   rwa [div_eq_mul_inv, div_eq_mul_inv, mul_addₓ, mul_comm (a ^ p), mul_comm (b ^ p), ← mul_assoc, ← mul_assoc,
     mul_inv_cancel hab_0, one_mulₓ, one_mulₓ] at h_mul
 
 theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0) (hp1 : 1 ≤ p) : (a ^ p + b ^ p) ^ (1 / p) ≤ a + b := by
-  rw [←
-    @Nnreal.le_rpow_one_div_iff _ _ (1 / p)
-      (by
-        simp [lt_of_lt_of_leₓ zero_lt_one hp1])]
+  rw [← @Nnreal.le_rpow_one_div_iff _ _ (1 / p) (by simp [lt_of_lt_of_leₓ zero_lt_one hp1])]
   rw [one_div_one_div]
   exact add_rpow_le_rpow_add _ _ hp1
 
@@ -181,28 +169,25 @@ theorem rpow_add_le_add_rpow {p : ℝ} (a b : ℝ≥0) (hp : 0 ≤ p) (hp1 : p �
     
   have h := rpow_add_rpow_le a b hp_pos hp1
   rw [one_div_one] at h
-  repeat'
-    rw [Nnreal.rpow_one] at h
+  repeat' rw [Nnreal.rpow_one] at h
   exact (Nnreal.le_rpow_one_div_iff hp_pos).mp h
 
 end Nnreal
 
 namespace Ennreal
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 /-- Weighted generalized mean inequality, version for sums over finite sets, with `ℝ≥0∞`-valued
 functions and real exponents. -/
 theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑ i in s, w i) = 1) {p : ℝ} (hp : 1 ≤ p) :
     (∑ i in s, w i * z i) ^ p ≤ ∑ i in s, w i * z i ^ p := by
   have hp_pos : 0 < p
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
   have hp_nonneg : 0 ≤ p
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]"
-  have hp_not_nonpos : ¬p ≤ 0 := by
-    simp [hp_pos]
-  have hp_not_neg : ¬p < 0 := by
-    simp [hp_nonneg]
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  have hp_not_nonpos : ¬p ≤ 0 := by simp [hp_pos]
+  have hp_not_neg : ¬p < 0 := by simp [hp_nonneg]
   have h_top_iff_rpow_top : ∀ (i : ι) (hi : i ∈ s), w i * z i = ⊤ ↔ w i * z i ^ p = ⊤ := by
     simp [hp_pos, hp_nonneg, hp_not_nonpos, hp_not_neg]
   refine' le_of_top_imp_top_of_to_nnreal_le _ _
@@ -219,12 +204,12 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
     -- by using `nnreal.rpow_arith_mean_le_arith_mean_rpow`.
     intro h_top_rpow_sum _
     -- show hypotheses needed to put the `.to_nnreal` inside the sums.
-    have h_top : ∀ a : ι, a ∈ s → w a * z a ≠ ⊤ := by
-      have h_top_sum : (∑ i : ι in s, w i * z i) ≠ ⊤ := by
+    have h_top : ∀ a : ι, a ∈ s → w a * z a ≠ ⊤ :=
+      haveI h_top_sum : (∑ i : ι in s, w i * z i) ≠ ⊤ := by
         intro h
         rw [h, top_rpow_of_pos hp_pos] at h_top_rpow_sum
         exact h_top_rpow_sum rfl
-      exact fun a ha => (lt_top_of_sum_ne_top h_top_sum ha).Ne
+      fun a ha => (lt_top_of_sum_ne_top h_top_sum ha).Ne
     have h_top_rpow : ∀ a : ι, a ∈ s → w a * z a ^ p ≠ ⊤ := by
       intro i hi
       specialize h_top i hi
@@ -256,11 +241,11 @@ end Ennreal
 
 namespace Ennreal
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : a ^ p + b ^ p ≤ (a + b) ^ p := by
   have hp_pos : 0 < p := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]"
-  by_cases' h_top : a + b = ⊤
+    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+  by_cases h_top:a + b = ⊤
   · rw [← @Ennreal.rpow_eq_top_iff_of_pos (a + b) p hp_pos] at h_top
     rw [h_top]
     exact le_top
@@ -271,10 +256,7 @@ theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : a ^ 
   simpa [← Ennreal.coe_rpow_of_nonneg _ hp_pos.le] using Ennreal.coe_le_coe.2 (Nnreal.add_rpow_le_rpow_add a b hp1)
 
 theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : (a ^ p + b ^ p) ^ (1 / p) ≤ a + b := by
-  rw [←
-    @Ennreal.le_rpow_one_div_iff _ _ (1 / p)
-      (by
-        simp [lt_of_lt_of_leₓ zero_lt_one hp1])]
+  rw [← @Ennreal.le_rpow_one_div_iff _ _ (1 / p) (by simp [lt_of_lt_of_leₓ zero_lt_one hp1])]
   rw [one_div_one_div]
   exact add_rpow_le_rpow_add _ _ hp1
 
@@ -290,15 +272,13 @@ theorem rpow_add_rpow_le {p q : ℝ} (a b : ℝ≥0∞) (hp_pos : 0 < p) (hpq : 
 
 theorem rpow_add_le_add_rpow {p : ℝ} (a b : ℝ≥0∞) (hp : 0 ≤ p) (hp1 : p ≤ 1) : (a + b) ^ p ≤ a ^ p + b ^ p := by
   rcases hp.eq_or_lt with (rfl | hp_pos)
-  · suffices (1 : ℝ≥0∞) ≤ 1 + 1 by
-      simpa using this
+  · suffices (1 : ℝ≥0∞) ≤ 1 + 1 by simpa using this
     norm_cast
     norm_num
     
   have h := rpow_add_rpow_le a b hp_pos hp1
   rw [one_div_one] at h
-  repeat'
-    rw [Ennreal.rpow_one] at h
+  repeat' rw [Ennreal.rpow_one] at h
   exact (Ennreal.le_rpow_one_div_iff hp_pos).mp h
 
 end Ennreal

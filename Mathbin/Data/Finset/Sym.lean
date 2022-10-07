@@ -25,9 +25,9 @@ This file defines the symmetric powers of a finset as `finset (sym α n)` and `f
 -/
 
 
-namespace Finset
+namespace Finsetₓ
 
-variable {α : Type _} [DecidableEq α] {s t : Finset α} {a b : α}
+variable {α : Type _} [DecidableEq α] {s t : Finsetₓ α} {a b : α}
 
 theorem is_diag_mk_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag ⟦a⟧ :=
   (Sym2.is_diag_iff_proj_eq _).2 ((mem_diag _ _).1 h).2
@@ -42,7 +42,7 @@ variable {m : Sym2 α}
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Lifts a finset to `sym2 α`. `s.sym2` is the finset of all pairs with elements in `s`. -/
-protected def sym2 (s : Finset α) : Finset (Sym2 α) :=
+protected def sym2 (s : Finsetₓ α) : Finsetₓ (Sym2 α) :=
   (s ×ˢ s).Image Quotientₓ.mk
 
 @[simp]
@@ -52,32 +52,30 @@ theorem mem_sym2_iff : m ∈ s.Sym2 ↔ ∀ a ∈ m, a ∈ s := by
   rw [Sym2.ball]
   rwa [mem_product] at h
 
-theorem mk_mem_sym2_iff : ⟦(a, b)⟧ ∈ s.Sym2 ↔ a ∈ s ∧ b ∈ s := by
-  rw [mem_sym2_iff, Sym2.ball]
+theorem mk_mem_sym2_iff : ⟦(a, b)⟧ ∈ s.Sym2 ↔ a ∈ s ∧ b ∈ s := by rw [mem_sym2_iff, Sym2.ball]
 
 @[simp]
-theorem sym2_empty : (∅ : Finset α).Sym2 = ∅ :=
+theorem sym2_empty : (∅ : Finsetₓ α).Sym2 = ∅ :=
   rfl
 
 @[simp]
-theorem sym2_eq_empty : s.Sym2 = ∅ ↔ s = ∅ := by
-  rw [Finset.sym2, image_eq_empty, product_eq_empty, or_selfₓ]
+theorem sym2_eq_empty : s.Sym2 = ∅ ↔ s = ∅ := by rw [Finsetₓ.sym2, image_eq_empty, product_eq_empty, or_selfₓ]
 
 @[simp]
 theorem sym2_nonempty : s.Sym2.Nonempty ↔ s.Nonempty := by
-  rw [Finset.sym2, nonempty.image_iff, nonempty_product, and_selfₓ]
+  rw [Finsetₓ.sym2, nonempty.image_iff, nonempty_product, and_selfₓ]
 
 alias sym2_nonempty ↔ _ nonempty.sym2
 
 attribute [protected] nonempty.sym2
 
 @[simp]
-theorem sym2_univ [Fintype α] : (univ : Finset α).Sym2 = univ :=
+theorem sym2_univ [Fintypeₓ α] : (univ : Finsetₓ α).Sym2 = univ :=
   rfl
 
 @[simp]
-theorem sym2_singleton (a : α) : ({a} : Finset α).Sym2 = {Sym2.diag a} := by
-  rw [Finset.sym2, singleton_product_singleton, image_singleton, Sym2.diag]
+theorem sym2_singleton (a : α) : ({a} : Finsetₓ α).Sym2 = {Sym2.diag a} := by
+  rw [Finsetₓ.sym2, singleton_product_singleton, image_singleton, Sym2.diag]
 
 @[simp]
 theorem diag_mem_sym2_iff : Sym2.diag a ∈ s.Sym2 ↔ a ∈ s :=
@@ -98,7 +96,7 @@ variable {n : ℕ} {m : Sym α n}
 
 /-- Lifts a finset to `sym α n`. `s.sym n` is the finset of all unordered tuples of cardinality `n`
 with elements in `s`. -/
-protected def sym (s : Finset α) : ∀ n, Finset (Sym α n)
+protected def sym (s : Finsetₓ α) : ∀ n, Finsetₓ (Sym α n)
   | 0 => {∅}
   | n + 1 => s.sup fun a => (Sym n).Image <| Sym.cons a
 
@@ -133,19 +131,18 @@ theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s := by
     
 
 @[simp]
-theorem sym_empty (n : ℕ) : (∅ : Finset α).Sym (n + 1) = ∅ :=
+theorem sym_empty (n : ℕ) : (∅ : Finsetₓ α).Sym (n + 1) = ∅ :=
   rfl
 
 theorem repeat_mem_sym (ha : a ∈ s) (n : ℕ) : Sym.repeat a n ∈ s.Sym n :=
-  mem_sym_iff.2 fun b hb => by
-    rwa [(Sym.mem_repeat.1 hb).2]
+  mem_sym_iff.2 fun b hb => by rwa [(Sym.mem_repeat.1 hb).2]
 
 protected theorem Nonempty.sym (h : s.Nonempty) (n : ℕ) : (s.Sym n).Nonempty :=
   let ⟨a, ha⟩ := h
   ⟨_, repeat_mem_sym ha n⟩
 
 @[simp]
-theorem sym_singleton (a : α) (n : ℕ) : ({a} : Finset α).Sym n = {Sym.repeat a n} :=
+theorem sym_singleton (a : α) (n : ℕ) : ({a} : Finsetₓ α).Sym n = {Sym.repeat a n} :=
   eq_singleton_iff_nonempty_unique_mem.2
     ⟨(singleton_nonempty _).Sym n, fun s hs =>
       Sym.eq_repeat_iff.2 fun b hb => eq_of_mem_singleton <| mem_sym_iff.1 hs _ hb⟩
@@ -173,7 +170,7 @@ alias sym2_nonempty ↔ _ nonempty.sym2
 attribute [protected] nonempty.sym2
 
 @[simp]
-theorem sym_univ [Fintype α] (n : ℕ) : (univ : Finset α).Sym n = univ :=
+theorem sym_univ [Fintypeₓ α] (n : ℕ) : (univ : Finsetₓ α).Sym n = univ :=
   eq_univ_iff_forall.2 fun s => mem_sym_iff.2 fun a _ => mem_univ _
 
 @[simp]
@@ -181,15 +178,15 @@ theorem sym_mono (h : s ⊆ t) (n : ℕ) : s.Sym n ⊆ t.Sym n := fun m hm =>
   mem_sym_iff.2 fun a ha => h <| mem_sym_iff.1 hm _ ha
 
 @[simp]
-theorem sym_inter (s t : Finset α) (n : ℕ) : (s ∩ t).Sym n = s.Sym n ∩ t.Sym n := by
+theorem sym_inter (s t : Finsetₓ α) (n : ℕ) : (s ∩ t).Sym n = s.Sym n ∩ t.Sym n := by
   ext m
   simp only [mem_inter, mem_sym_iff, imp_and_distrib, forall_and_distrib]
 
 @[simp]
-theorem sym_union (s t : Finset α) (n : ℕ) : s.Sym n ∪ t.Sym n ⊆ (s ∪ t).Sym n :=
+theorem sym_union (s t : Finsetₓ α) (n : ℕ) : s.Sym n ∪ t.Sym n ⊆ (s ∪ t).Sym n :=
   union_subset (sym_mono (subset_union_left s t) n) (sym_mono (subset_union_right s t) n)
 
 end Sym
 
-end Finset
+end Finsetₓ
 

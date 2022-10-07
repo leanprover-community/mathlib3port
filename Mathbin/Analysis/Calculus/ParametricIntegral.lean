@@ -87,12 +87,12 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
       rw [mem_ball, dist_eq_norm] at x_in
       exact mul_le_mul_of_nonneg_left x_in.le (b_nonneg _)
     exact integrable_of_norm_sub_le (hF_meas x x_in) hF_int (integrable.const_mul bound_integrable.norm ε) this
-  have hF'_int : integrable F' μ := by
-    have : ∀ᵐ a ∂μ, ∥F' a∥ ≤ b a := by
+  have hF'_int : integrable F' μ :=
+    haveI : ∀ᵐ a ∂μ, ∥F' a∥ ≤ b a := by
       apply (h_diff.and h_lipsch).mono
       rintro a ⟨ha_diff, ha_lip⟩
       refine' ha_diff.le_of_lip' (b_nonneg a) (mem_of_superset (ball_mem_nhds _ ε_pos) <| ha_lip)
-    exact b_int.mono' hF'_meas this
+    b_int.mono' hF'_meas this
   refine' ⟨hF'_int, _⟩
   have h_ball : ball x₀ ε ∈ 𝓝 x₀ := ball_mem_nhds x₀ ε_pos
   have :
@@ -106,8 +106,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
       ContinuousLinearMap.integral_apply hF'_int]
     exacts[hF_int' x x_in, hF_int, (hF_int' x x_in).sub hF_int, hF'_int.apply_continuous_linear_map _]
   rw [has_fderiv_at_iff_tendsto, tendsto_congr' this, ← tendsto_zero_iff_norm_tendsto_zero, ←
-    show (∫ a : α, ∥x₀ - x₀∥⁻¹ • (F x₀ a - F x₀ a - (F' a) (x₀ - x₀)) ∂μ) = 0 by
-      simp ]
+    show (∫ a : α, ∥x₀ - x₀∥⁻¹ • (F x₀ a - F x₀ a - (F' a) (x₀ - x₀)) ∂μ) = 0 by simp]
   apply tendsto_integral_filter_of_dominated_convergence
   · filter_upwards [h_ball] with _ x_in
     apply ae_strongly_measurable.const_smul
@@ -121,8 +120,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     replace ha_bound : ∥F x a - F x₀ a∥ ≤ b a * ∥x - x₀∥ := ha_bound x hx
     calc
       ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a - F' a (x - x₀))∥ = ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a) - ∥x - x₀∥⁻¹ • F' a (x - x₀)∥ :=
-        by
-        rw [smul_sub]
+        by rw [smul_sub]
       _ ≤ ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a)∥ + ∥∥x - x₀∥⁻¹ • F' a (x - x₀)∥ := norm_sub_le _ _
       _ = ∥x - x₀∥⁻¹ * ∥F x a - F x₀ a∥ + ∥x - x₀∥⁻¹ * ∥F' a (x - x₀)∥ := by
         rw [norm_smul_of_nonneg, norm_smul_of_nonneg] <;> exact nneg _
@@ -131,7 +129,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
       
     exact mul_le_mul_of_nonneg_left ha_bound (nneg _)
     apply mul_le_mul_of_nonneg_left ((F' a).le_op_norm _) (nneg _)
-    by_cases' h : ∥x - x₀∥ = 0
+    by_cases h:∥x - x₀∥ = 0
     · simpa [h] using add_nonneg (b_nonneg a) (norm_nonneg (F' a))
       
     · field_simp [h]
@@ -141,8 +139,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     
   · apply h_diff.mono
     intro a ha
-    suffices tendsto (fun x => ∥x - x₀∥⁻¹ • (F x a - F x₀ a - F' a (x - x₀))) (𝓝 x₀) (𝓝 0) by
-      simpa
+    suffices tendsto (fun x => ∥x - x₀∥⁻¹ • (F x a - F x₀ a - F' a (x - x₀))) (𝓝 x₀) (𝓝 0) by simpa
     rw [tendsto_zero_iff_norm_tendsto_zero]
     have :
       (fun x => ∥x - x₀∥⁻¹ * ∥F x a - F x₀ a - F' a (x - x₀)∥) = fun x =>
@@ -218,8 +215,7 @@ theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F
   refine' ⟨hF'_int, _⟩
   simp_rw [has_deriv_at_iff_has_fderiv_at] at h_diff⊢
   rwa [ContinuousLinearMap.integral_comp_comm _ hF'_int] at key
-  all_goals
-    infer_instance
+  all_goals infer_instance
 
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : ℝ`, assuming
 `F x₀` is integrable, `x ↦ F x a` is differentiable on an interval around `x₀` for ae `a`

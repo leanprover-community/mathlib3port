@@ -91,12 +91,10 @@ instance ids : RingHomInvPair (RingHom.id R₁) (RingHom.id R₁) :=
   ⟨rfl, rfl⟩
 
 instance triples {σ₂₁ : R₂ →+* R₁} [RingHomInvPair σ₁₂ σ₂₁] : RingHomCompTriple σ₁₂ σ₂₁ (RingHom.id R₁) :=
-  ⟨by
-    simp only [comp_eq]⟩
+  ⟨by simp only [comp_eq]⟩
 
 instance triples₂ {σ₂₁ : R₂ →+* R₁} [RingHomInvPair σ₁₂ σ₂₁] : RingHomCompTriple σ₂₁ σ₁₂ (RingHom.id R₂) :=
-  ⟨by
-    simp only [comp_eq₂]⟩
+  ⟨by simp only [comp_eq₂]⟩
 
 /-- Construct a `ring_hom_inv_pair` from both directions of a ring equiv.
 
@@ -126,12 +124,12 @@ namespace RingHomCompTriple
 instance ids : RingHomCompTriple (RingHom.id R₁) σ₁₂ σ₁₂ :=
   ⟨by
     ext
-    simp ⟩
+    simp⟩
 
 instance right_ids : RingHomCompTriple σ₁₂ (RingHom.id R₂) σ₁₂ :=
   ⟨by
     ext
-    simp ⟩
+    simp⟩
 
 end RingHomCompTriple
 

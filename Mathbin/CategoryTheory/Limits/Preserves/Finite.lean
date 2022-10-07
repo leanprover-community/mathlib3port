@@ -42,8 +42,7 @@ where `J : Type` is a finite category.
 -/
 class PreservesFiniteLimits (F : C ⥤ D) where
   PreservesFiniteLimits : ∀ (J : Type) [SmallCategory J] [FinCategory J], PreservesLimitsOfShape J F := by
-    run_tac
-      tactic.apply_instance
+    infer_instance
 
 attribute [instance] preserves_finite_limits.preserves_finite_limits
 
@@ -55,9 +54,9 @@ noncomputable instance (priority := 100) preservesLimitsOfShapeOfPreservesFinite
 
 noncomputable instance (priority := 100) PreservesLimits.preservesFiniteLimitsOfSize (F : C ⥤ D)
     [PreservesLimitsOfSize.{w, w₂} F] : PreservesFiniteLimits F :=
-  ⟨fun J sJ fJ => by
+  ⟨fun J sJ fJ =>
     haveI := preserves_smallest_limits_of_preserves_limits F
-    exact preserves_limits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
+    preserves_limits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
 
 noncomputable instance (priority := 120) PreservesLimits.preservesFiniteLimits (F : C ⥤ D) [PreservesLimits F] :
     PreservesFiniteLimits F :=
@@ -93,8 +92,7 @@ shape `J`, where `J : Type` is a finite category.
 -/
 class PreservesFiniteColimits (F : C ⥤ D) where
   PreservesFiniteColimits : ∀ (J : Type) [SmallCategory J] [FinCategory J], PreservesColimitsOfShape J F := by
-    run_tac
-      tactic.apply_instance
+    infer_instance
 
 attribute [instance] preserves_finite_colimits.preserves_finite_colimits
 
@@ -106,9 +104,9 @@ noncomputable instance (priority := 100) preservesColimitsOfShapeOfPreservesFini
 
 noncomputable instance (priority := 100) PreservesColimits.preservesFiniteColimits (F : C ⥤ D)
     [PreservesColimitsOfSize.{w, w₂} F] : PreservesFiniteColimits F :=
-  ⟨fun J sJ fJ => by
+  ⟨fun J sJ fJ =>
     haveI := preserves_smallest_colimits_of_preserves_colimits F
-    exact preserves_colimits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
+    preserves_colimits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
 
 /-- We can always derive `preserves_finite_limits C` by showing that we are preserving limits at an
 arbitrary universe. -/

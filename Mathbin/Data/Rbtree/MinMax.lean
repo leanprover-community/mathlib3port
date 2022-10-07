@@ -17,13 +17,13 @@ theorem mem_of_min_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : R
     contradiction
     
   all_goals
-    cases t_lchild <;> simp [Rbnode.min] <;> intro h
-    · subst t_val
-      simp [mem, irrefl_of lt a]
-      
-    all_goals
-      rw [mem]
-      simp [t_ih_lchild h]
+  cases t_lchild <;> simp [Rbnode.min] <;> intro h
+  · subst t_val
+    simp [mem, irrefl_of lt a]
+    
+  all_goals
+  rw [mem]
+  simp [t_ih_lchild h]
 
 theorem mem_of_max_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : Rbnode α} : t.max = some a → Mem lt a t := by
   induction t
@@ -31,13 +31,13 @@ theorem mem_of_max_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : R
     contradiction
     
   all_goals
-    cases t_rchild <;> simp [Rbnode.max] <;> intro h
-    · subst t_val
-      simp [mem, irrefl_of lt a]
-      
-    all_goals
-      rw [mem]
-      simp [t_ih_rchild h]
+  cases t_rchild <;> simp [Rbnode.max] <;> intro h
+  · subst t_val
+    simp [mem, irrefl_of lt a]
+    
+  all_goals
+  rw [mem]
+  simp [t_ih_rchild h]
 
 variable [IsStrictWeakOrder α lt]
 
@@ -47,10 +47,10 @@ theorem eq_leaf_of_min_eq_none {t : Rbnode α} : t.min = none → t = leaf := by
     rfl
     
   all_goals
-    cases t_lchild <;> simp [Rbnode.min, false_implies_iff] <;> intro h
-    all_goals
-      have := t_ih_lchild h
-      contradiction
+  cases t_lchild <;> simp [Rbnode.min, false_implies_iff] <;> intro h
+  all_goals
+  have := t_ih_lchild h
+  contradiction
 
 theorem eq_leaf_of_max_eq_none {t : Rbnode α} : t.max = none → t = leaf := by
   induction t
@@ -58,10 +58,10 @@ theorem eq_leaf_of_max_eq_none {t : Rbnode α} : t.max = none → t = leaf := by
     rfl
     
   all_goals
-    cases t_rchild <;> simp [Rbnode.max, false_implies_iff] <;> intro h
-    all_goals
-      have := t_ih_rchild h
-      contradiction
+  cases t_rchild <;> simp [Rbnode.max, false_implies_iff] <;> intro h
+  all_goals
+  have := t_ih_rchild h
+  contradiction
 
 theorem min_is_minimal {a : α} {t : Rbnode α} :
     ∀ {lo hi}, IsSearchable lt t lo hi → t.min = some a → ∀ {b}, Mem lt b t → a ≈[lt]b ∨ lt a b := by
@@ -72,50 +72,38 @@ theorem min_is_minimal {a : α} {t : Rbnode α} :
     contradiction
     
   all_goals
-    cases t_lchild <;> intro lo hi hs hmin b hmem
-    · simp [Rbnode.min] at hmin
-      subst t_val
-      simp [mem] at hmem
-      cases' hmem with heqv hmem
-      · left
-        exact heqv.swap
-        
-      · have :=
-          lt_of_mem_right hs
-            (by
-              constructor)
-            hmem
-        right
-        assumption
-        
+  cases t_lchild <;> intro lo hi hs hmin b hmem
+  · simp [Rbnode.min] at hmin
+    subst t_val
+    simp [mem] at hmem
+    cases' hmem with heqv hmem
+    · left
+      exact heqv.swap
       
-    all_goals
-      have hs' := hs
-      cases hs
-      simp [Rbnode.min] at hmin
-      rw [mem] at hmem
-      cases_type* or.1
-      · exact t_ih_lchild hs_hs₁ hmin hmem
-        
-      · have hmm := mem_of_min_eq lt hmin
-        have a_lt_val :=
-          lt_of_mem_left hs'
-            (by
-              constructor)
-            hmm
-        have a_lt_b := lt_of_lt_of_incomp a_lt_val hmem.swap
-        right
-        assumption
-        
-      · have hmm := mem_of_min_eq lt hmin
-        have a_lt_b :=
-          lt_of_mem_left_right hs'
-            (by
-              constructor)
-            hmm hmem
-        right
-        assumption
-        
+    · have := lt_of_mem_right hs (by constructor) hmem
+      right
+      assumption
+      
+    
+  all_goals
+  have hs' := hs
+  cases hs
+  simp [Rbnode.min] at hmin
+  rw [mem] at hmem
+  cases_type*or.1
+  · exact t_ih_lchild hs_hs₁ hmin hmem
+    
+  · have hmm := mem_of_min_eq lt hmin
+    have a_lt_val := lt_of_mem_left hs' (by constructor) hmm
+    have a_lt_b := lt_of_lt_of_incomp a_lt_val hmem.swap
+    right
+    assumption
+    
+  · have hmm := mem_of_min_eq lt hmin
+    have a_lt_b := lt_of_mem_left_right hs' (by constructor) hmm hmem
+    right
+    assumption
+    
 
 theorem max_is_maximal {a : α} {t : Rbnode α} :
     ∀ {lo hi}, IsSearchable lt t lo hi → t.max = some a → ∀ {b}, Mem lt b t → a ≈[lt]b ∨ lt b a := by
@@ -126,50 +114,38 @@ theorem max_is_maximal {a : α} {t : Rbnode α} :
     contradiction
     
   all_goals
-    cases t_rchild <;> intro lo hi hs hmax b hmem
-    · simp [Rbnode.max] at hmax
-      subst t_val
-      simp [mem] at hmem
-      cases' hmem with hmem heqv
-      · have :=
-          lt_of_mem_left hs
-            (by
-              constructor)
-            hmem
-        right
-        assumption
-        
-      · left
-        exact heqv.swap
-        
+  cases t_rchild <;> intro lo hi hs hmax b hmem
+  · simp [Rbnode.max] at hmax
+    subst t_val
+    simp [mem] at hmem
+    cases' hmem with hmem heqv
+    · have := lt_of_mem_left hs (by constructor) hmem
+      right
+      assumption
       
-    all_goals
-      have hs' := hs
-      cases hs
-      simp [Rbnode.max] at hmax
-      rw [mem] at hmem
-      cases_type* or.1
-      · have hmm := mem_of_max_eq lt hmax
-        have a_lt_b :=
-          lt_of_mem_left_right hs'
-            (by
-              constructor)
-            hmem hmm
-        right
-        assumption
-        
-      · have hmm := mem_of_max_eq lt hmax
-        have val_lt_a :=
-          lt_of_mem_right hs'
-            (by
-              constructor)
-            hmm
-        have a_lt_b := lt_of_incomp_of_lt hmem val_lt_a
-        right
-        assumption
-        
-      · exact t_ih_rchild hs_hs₂ hmax hmem
-        
+    · left
+      exact heqv.swap
+      
+    
+  all_goals
+  have hs' := hs
+  cases hs
+  simp [Rbnode.max] at hmax
+  rw [mem] at hmem
+  cases_type*or.1
+  · have hmm := mem_of_max_eq lt hmax
+    have a_lt_b := lt_of_mem_left_right hs' (by constructor) hmem hmm
+    right
+    assumption
+    
+  · have hmm := mem_of_max_eq lt hmax
+    have val_lt_a := lt_of_mem_right hs' (by constructor) hmm
+    have a_lt_b := lt_of_incomp_of_lt hmem val_lt_a
+    right
+    assumption
+    
+  · exact t_ih_rchild hs_hs₂ hmax hmem
+    
 
 end Rbnode
 

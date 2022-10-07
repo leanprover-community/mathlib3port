@@ -92,13 +92,10 @@ theorem cut_expand_singleton {s x} (h : ∀ x' ∈ s, r x' x) : CutExpand r s {x
   ⟨s, x, h, add_commₓ s _⟩
 
 theorem cut_expand_singleton_singleton {x' x} (h : r x' x) : CutExpand r {x'} {x} :=
-  cut_expand_singleton fun a h => by
-    rwa [mem_singleton.1 h]
+  cut_expand_singleton fun a h => by rwa [mem_singleton.1 h]
 
 theorem cut_expand_add_left {t u} (s) : CutExpand r (s + t) (s + u) ↔ CutExpand r t u :=
-  exists₂_congrₓ fun _ _ =>
-    and_congrₓ Iff.rfl <| by
-      rw [add_assocₓ, add_assocₓ, add_left_cancel_iffₓ]
+  exists₂_congrₓ fun _ _ => and_congrₓ Iff.rfl <| by rw [add_assocₓ, add_assocₓ, add_left_cancel_iffₓ]
 
 theorem cut_expand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
     CutExpand r s' s ↔ ∃ (t : Multiset α)(a : _), (∀ a' ∈ t, r a' a) ∧ a ∈ s ∧ s' = s.erase a + t := by
@@ -122,7 +119,7 @@ theorem not_cut_expand_zero [IsIrrefl α r] (s) : ¬CutExpand r s 0 := by
 theorem cut_expand_fibration (r : α → α → Prop) :
     Fibration (GameAdd (CutExpand r) (CutExpand r)) (CutExpand r) fun s => s.1 + s.2 := by
   rintro ⟨s₁, s₂⟩ s ⟨t, a, hr, he⟩
-  dsimp'  at he⊢
+  dsimp at he⊢
   classical
   obtain ⟨ha, rfl⟩ := add_singleton_eq_iff.1 he
   rw [add_assocₓ, mem_add] at ha
@@ -167,9 +164,8 @@ theorem _root_.acc.cut_expand [IsIrrefl α r] {a : α} (hacc : Acc r a) : Acc (C
 
 /-- `cut_expand r` is well-founded when `r` is. -/
 theorem _root_.well_founded.cut_expand (hr : WellFounded r) : WellFounded (CutExpand r) :=
-  ⟨by
-    letI h := hr.is_irrefl
-    exact fun s => acc_of_singleton fun a _ => (hr.apply a).CutExpand⟩
+  ⟨letI h := hr.is_irrefl
+    fun s => acc_of_singleton fun a _ => (hr.apply a).CutExpand⟩
 
 end Hydra
 

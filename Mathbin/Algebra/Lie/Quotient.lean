@@ -104,8 +104,7 @@ instance lieQuotientHasBracket : HasBracket (L ⧸ I) (L ⧸ I) :=
     intro x₁ x₂ y₁ y₂ h₁ h₂
     apply (Submodule.Quotient.eq I.to_submodule).2
     rw [Submodule.quotient_rel_r_def] at h₁ h₂
-    have h : ⁅x₁, x₂⁆ - ⁅y₁, y₂⁆ = ⁅x₁, x₂ - y₂⁆ + ⁅x₁ - y₁, y₂⁆ := by
-      simp [-lie_skew, sub_eq_add_neg, add_assocₓ]
+    have h : ⁅x₁, x₂⁆ - ⁅y₁, y₂⁆ = ⁅x₁, x₂ - y₂⁆ + ⁅x₁ - y₁, y₂⁆ := by simp [-lie_skew, sub_eq_add_neg, add_assocₓ]
     rw [h]
     apply Submodule.add_mem
     · apply lie_mem_right R L I x₁ (x₂ - y₂) h₂
@@ -122,22 +121,14 @@ instance lieQuotientLieRing : LieRing (L ⧸ I) where
     intro x' y' z'
     apply Quotientₓ.induction_on₃' x' y' z'
     intro x y z
-    repeat'
-      first |
-        rw [is_quotient_mk]|
-        rw [← mk_bracket]|
-        rw [← Submodule.Quotient.mk_add]
+    repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
     apply congr_arg
     apply add_lie
   lie_add := by
     intro x' y' z'
     apply Quotientₓ.induction_on₃' x' y' z'
     intro x y z
-    repeat'
-      first |
-        rw [is_quotient_mk]|
-        rw [← mk_bracket]|
-        rw [← Submodule.Quotient.mk_add]
+    repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
     apply congr_arg
     apply lie_add
   lie_self := by
@@ -151,11 +142,7 @@ instance lieQuotientLieRing : LieRing (L ⧸ I) where
     intro x' y' z'
     apply Quotientₓ.induction_on₃' x' y' z'
     intro x y z
-    repeat'
-      first |
-        rw [is_quotient_mk]|
-        rw [← mk_bracket]|
-        rw [← Submodule.Quotient.mk_add]
+    repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
     apply congr_arg
     apply leibniz_lie
 
@@ -164,11 +151,7 @@ instance lieQuotientLieAlgebra :
     intro t x' y'
     apply Quotientₓ.induction_on₂' x' y'
     intro x y
-    repeat'
-      first |
-        rw [is_quotient_mk]|
-        rw [← mk_bracket]|
-        rw [← Submodule.Quotient.mk_smul]
+    repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_smul]
     apply congr_arg
     apply lie_smul
 
@@ -187,8 +170,7 @@ theorem mk'_ker : (mk' N).ker = N := by
   simp
 
 @[simp]
-theorem map_mk'_eq_bot_le : map (mk' N) N' = ⊥ ↔ N' ≤ N := by
-  rw [← LieModuleHom.le_ker_iff_map, mk'_ker]
+theorem map_mk'_eq_bot_le : map (mk' N) N' = ⊥ ↔ N' ≤ N := by rw [← LieModuleHom.le_ker_iff_map, mk'_ker]
 
 /-- Two `lie_module_hom`s from a quotient lie module are equal if their compositions with
 `lie_submodule.quotient.mk'` are equal.

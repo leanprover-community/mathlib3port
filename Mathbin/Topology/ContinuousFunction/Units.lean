@@ -67,10 +67,9 @@ noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) : 
   toFun := fun x => (h x).Unit
   continuous_to_fun := NormedRing.is_unit_unit_continuous h
 
-instance : CanLift C(X, R) C(X, Rˣ) where
-  coe := fun f => ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩
-  cond := fun f => ∀ x, IsUnit (f x)
-  prf := fun f h =>
+instance canLift :
+    CanLift C(X, R) C(X, Rˣ) (fun f => ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩) fun f =>
+      ∀ x, IsUnit (f x) where prf := fun f h =>
     ⟨unitsOfForallIsUnit h, by
       ext
       rfl⟩

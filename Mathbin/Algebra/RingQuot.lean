@@ -50,12 +50,10 @@ theorem Rel.neg {R : Type u₁} [Ringₓ R] {r : R → R → Prop} ⦃a b : R⦄
   simp only [neg_eq_neg_one_mul a, neg_eq_neg_one_mul b, rel.mul_right h]
 
 theorem Rel.sub_left {R : Type u₁} [Ringₓ R] {r : R → R → Prop} ⦃a b c : R⦄ (h : Rel r a b) : Rel r (a - c) (b - c) :=
-  by
-  simp only [sub_eq_add_neg, h.add_left]
+  by simp only [sub_eq_add_neg, h.add_left]
 
 theorem Rel.sub_right {R : Type u₁} [Ringₓ R] {r : R → R → Prop} ⦃a b c : R⦄ (h : Rel r b c) : Rel r (a - b) (a - c) :=
-  by
-  simp only [sub_eq_add_neg, h.neg.add_right]
+  by simp only [sub_eq_add_neg, h.neg.add_right]
 
 theorem Rel.smul {r : A → A → Prop} (k : S) ⦃a b : A⦄ (h : Rel r a b) : Rel r (k • a) (k • b) := by
   simp only [Algebra.smul_def, rel.mul_right h]
@@ -96,7 +94,7 @@ private irreducible_def npow (n : ℕ) : RingQuot r → RingQuot r
     ⟨Quot.lift (fun a => Quot.mk (RingQuot.Rel r) (a ^ n))
         (fun a b (h : Rel r a b) => by
           -- note we can't define a `rel.pow` as `rel` isn't reflexive so `rel r 1 1` isn't true
-          dsimp' only
+          dsimp only
           induction n
           · rw [pow_zeroₓ, pow_zeroₓ]
             
@@ -133,12 +131,10 @@ instance [Algebra S R] : HasSmul S (RingQuot r) :=
   ⟨smul r⟩
 
 theorem zero_quot : (⟨Quot.mk _ 0⟩ : RingQuot r) = 0 :=
-  show _ = zero r by
-    rw [zero]
+  show _ = zero r by rw [zero]
 
 theorem one_quot : (⟨Quot.mk _ 1⟩ : RingQuot r) = 1 :=
-  show _ = one r by
-    rw [one]
+  show _ = one r by rw [one]
 
 theorem add_quot {a b} : (⟨Quot.mk _ a⟩ + ⟨Quot.mk _ b⟩ : RingQuot r) = ⟨Quot.mk _ (a + b)⟩ := by
   show add r _ _ = _
@@ -176,10 +172,8 @@ instance (r : R → R → Prop) : Semiringₓ (RingQuot r) where
   zero := 0
   one := 1
   natCast := natCast r
-  nat_cast_zero := by
-    simp [Nat.castₓ, nat_cast, ← zero_quot]
-  nat_cast_succ := by
-    simp [Nat.castₓ, nat_cast, ← one_quot, add_quot]
+  nat_cast_zero := by simp [Nat.castₓ, nat_cast, ← zero_quot]
+  nat_cast_succ := by simp [Nat.castₓ, nat_cast, ← one_quot, add_quot]
   add_assoc := by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
     simp [add_quot, add_assocₓ]
@@ -263,14 +257,10 @@ instance (r : R → R → Prop) : Inhabited (RingQuot r) :=
 instance [Algebra S R] (r : R → R → Prop) : Algebra S (RingQuot r) where
   smul := (· • ·)
   toFun := fun r => ⟨Quot.mk _ (algebraMap S R r)⟩
-  map_one' := by
-    simp [← one_quot]
-  map_mul' := by
-    simp [mul_quot]
-  map_zero' := by
-    simp [← zero_quot]
-  map_add' := by
-    simp [add_quot]
+  map_one' := by simp [← one_quot]
+  map_mul' := by simp [mul_quot]
+  map_zero' := by simp [← zero_quot]
+  map_add' := by simp [add_quot]
   commutes' := fun r => by
     rintro ⟨⟨a⟩⟩
     simp [Algebra.commutes, mul_quot]
@@ -282,20 +272,16 @@ instance [Algebra S R] (r : R → R → Prop) : Algebra S (RingQuot r) where
 -/
 def mkRingHom (r : R → R → Prop) : R →+* RingQuot r where
   toFun := fun x => ⟨Quot.mk _ x⟩
-  map_one' := by
-    simp [← one_quot]
-  map_mul' := by
-    simp [mul_quot]
-  map_zero' := by
-    simp [← zero_quot]
-  map_add' := by
-    simp [add_quot]
+  map_one' := by simp [← one_quot]
+  map_mul' := by simp [mul_quot]
+  map_zero' := by simp [← zero_quot]
+  map_add' := by simp [add_quot]
 
 theorem mk_ring_hom_rel {r : R → R → Prop} {x y : R} (w : r x y) : mkRingHom r x = mkRingHom r y := by
   simp [mk_ring_hom, Quot.sound (rel.of w)]
 
 theorem mk_ring_hom_surjective (r : R → R → Prop) : Function.Surjective (mkRingHom r) := by
-  dsimp' [mk_ring_hom]
+  dsimp [mk_ring_hom]
   rintro ⟨⟨⟩⟩
   simp
 
@@ -319,28 +305,22 @@ def lift {r : R → R → Prop} : { f : R →+* T // ∀ ⦃x y⦄, r x y → f 
           (by
             rintro _ _ r
             induction r
-            case of _ _ r =>
-              exact f'.prop r
-            case add_left _ _ _ _ r' =>
-              simp [r']
-            case mul_left _ _ _ _ r' =>
-              simp [r']
-            case mul_right _ _ _ _ r' =>
-              simp [r'])
+            case of _ _ r => exact f'.prop r
+            case add_left _ _ _ _ r' => simp [r']
+            case mul_left _ _ _ _ r' => simp [r']
+            case mul_right _ _ _ _ r' => simp [r'])
           x.toQuot,
-      map_zero' := by
-        simp [← zero_quot, f.map_zero],
+      map_zero' := by simp [← zero_quot, f.map_zero],
       map_add' := by
         rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
         simp [add_quot, f.map_add x y],
-      map_one' := by
-        simp [← one_quot, f.map_one],
+      map_one' := by simp [← one_quot, f.map_one],
       map_mul' := by
         rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
         simp [mul_quot, f.map_mul x y] }
   invFun := fun F =>
     ⟨F.comp (mkRingHom r), fun x y h => by
-      dsimp'
+      dsimp
       rw [mk_ring_hom_rel h]⟩
   left_inv := fun f => by
     ext
@@ -366,7 +346,7 @@ theorem eq_lift_comp_mk_ring_hom {r : R → R → Prop} (f : RingQuot r →+* T)
     f =
       lift
         ⟨f.comp (mkRingHom r), fun x y h => by
-          dsimp'
+          dsimp
           rw [mk_ring_hom_rel h]⟩ :=
   (lift.apply_symm_apply f).symm
 
@@ -490,7 +470,7 @@ theorem mk_alg_hom_rel {s : A → A → Prop} {x y : A} (w : s x y) : mkAlgHom S
   simp [mk_alg_hom, mk_ring_hom, Quot.sound (rel.of w)]
 
 theorem mk_alg_hom_surjective (s : A → A → Prop) : Function.Surjective (mkAlgHom S s) := by
-  dsimp' [mk_alg_hom]
+  dsimp [mk_alg_hom]
   rintro ⟨⟨a⟩⟩
   use a
   rfl
@@ -515,22 +495,16 @@ def liftAlgHom {s : A → A → Prop} : { f : A →ₐ[S] B // ∀ ⦃x y⦄, s 
           (by
             rintro _ _ r
             induction r
-            case of _ _ r =>
-              exact f'.prop r
-            case add_left _ _ _ _ r' =>
-              simp [r']
-            case mul_left _ _ _ _ r' =>
-              simp [r']
-            case mul_right _ _ _ _ r' =>
-              simp [r'])
+            case of _ _ r => exact f'.prop r
+            case add_left _ _ _ _ r' => simp [r']
+            case mul_left _ _ _ _ r' => simp [r']
+            case mul_right _ _ _ _ r' => simp [r'])
           x.toQuot,
-      map_zero' := by
-        simp [← zero_quot, f.map_zero],
+      map_zero' := by simp [← zero_quot, f.map_zero],
       map_add' := by
         rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
         simp [add_quot, f.map_add x y],
-      map_one' := by
-        simp [← one_quot, f.map_one],
+      map_one' := by simp [← one_quot, f.map_one],
       map_mul' := by
         rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
         simp [mul_quot, f.map_mul x y],
@@ -539,7 +513,7 @@ def liftAlgHom {s : A → A → Prop} : { f : A →ₐ[S] B // ∀ ⦃x y⦄, s 
         simp [← one_quot, smul_quot, Algebra.algebra_map_eq_smul_one] }
   invFun := fun F =>
     ⟨F.comp (mkAlgHom S s), fun _ _ h => by
-      dsimp'
+      dsimp
       erw [mk_alg_hom_rel S h]⟩
   left_inv := fun f => by
     ext
@@ -565,7 +539,7 @@ theorem eq_lift_alg_hom_comp_mk_alg_hom {s : A → A → Prop} (f : RingQuot s �
     f =
       liftAlgHom S
         ⟨f.comp (mkAlgHom S s), fun x y h => by
-          dsimp'
+          dsimp
           erw [mk_alg_hom_rel S h]⟩ :=
   ((liftAlgHom S).apply_symm_apply f).symm
 

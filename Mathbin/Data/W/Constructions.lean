@@ -66,8 +66,7 @@ theorem left_inv_nat : Function.LeftInverse ofNat toNat
 
 theorem right_inv_nat : Function.RightInverse ofNat toNat
   | Nat.zero => rfl
-  | Nat.succ n => by
-    rw [of_nat, to_nat, right_inv_nat n]
+  | Nat.succ n => by rw [of_nat, to_nat, right_inv_nat n]
 
 /-- The naturals are equivalent to their associated `W_type` -/
 def equivNat : WType Natβ ≃ ℕ where
@@ -154,8 +153,7 @@ theorem left_inv_list : Function.LeftInverse (ofList γ) (toList _)
 
 theorem right_inv_list : Function.RightInverse (ofList γ) (toList _)
   | List.nil => rfl
-  | List.cons hd tl => by
-    simp [right_inv_list tl]
+  | List.cons hd tl => by simp [right_inv_list tl]
 
 /-- Lists are equivalent to their associated `W_type` -/
 def equivList : WType (Listβ γ) ≃ List γ where

@@ -24,11 +24,7 @@ variable (C : Type u) [Category.{v} C]
 /-- Equivalence between two empty categories. -/
 def emptyEquivalence : Discrete.{w} Pempty ≌ Discrete.{v} Pempty :=
   Equivalence.mk { obj := Pempty.elimₓ ∘ discrete.as, map := fun x => x.as.elim }
-    { obj := Pempty.elimₓ ∘ discrete.as, map := fun x => x.as.elim }
-    (by
-      tidy)
-    (by
-      tidy)
+    { obj := Pempty.elimₓ ∘ discrete.as, map := fun x => x.as.elim } (by tidy) (by tidy)
 
 /-- The canonical functor out of the empty category. -/
 def empty : Discrete.{w} Pempty ⥤ C :=

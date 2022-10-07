@@ -20,7 +20,7 @@ import Mathbin.LinearAlgebra.Matrix.Adjugate
 
 namespace Matrix
 
-variable {m R A : Type _} [Fintype m] [CommRingₓ R]
+variable {m R A : Type _} [Fintypeₓ m] [CommRingₓ R]
 
 /-- A matrix `M` is nondegenerate if for all `v ≠ 0`, there is a `w ≠ 0` with `w ⬝ M ⬝ v ≠ 0`. -/
 def Nondegenerate (M : Matrix m m R) :=
@@ -49,26 +49,22 @@ theorem nondegenerate_of_det_ne_zero [DecidableEq m] {M : Matrix m m A} (hM : M.
   refine' (mul_eq_zero.mp _).resolve_right hM
   convert hv
   simp only [mul_vec_cramer M (Pi.single i 1), dot_product, Pi.smul_apply, smul_eq_mul]
-  rw [Finset.sum_eq_single i, Pi.single_eq_same, mul_oneₓ]
+  rw [Finsetₓ.sum_eq_single i, Pi.single_eq_same, mul_oneₓ]
   · intro j _ hj
     simp [hj]
     
   · intros
-    have := Finset.mem_univ i
+    have := Finsetₓ.mem_univ i
     contradiction
     
 
 theorem eq_zero_of_vec_mul_eq_zero [DecidableEq m] {M : Matrix m m A} (hM : M.det ≠ 0) {v : m → A}
     (hv : M.vecMul v = 0) : v = 0 :=
-  (nondegenerate_of_det_ne_zero hM).eq_zero_of_ortho fun w => by
-    rw [dot_product_mul_vec, hv, zero_dot_product]
+  (nondegenerate_of_det_ne_zero hM).eq_zero_of_ortho fun w => by rw [dot_product_mul_vec, hv, zero_dot_product]
 
 theorem eq_zero_of_mul_vec_eq_zero [DecidableEq m] {M : Matrix m m A} (hM : M.det ≠ 0) {v : m → A}
     (hv : M.mulVec v = 0) : v = 0 :=
-  eq_zero_of_vec_mul_eq_zero
-    (by
-      rwa [det_transpose])
-    ((vec_mul_transpose M v).trans hv)
+  eq_zero_of_vec_mul_eq_zero (by rwa [det_transpose]) ((vec_mul_transpose M v).trans hv)
 
 end Matrix
 

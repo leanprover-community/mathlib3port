@@ -27,7 +27,7 @@ open Conv.Interactive
 unsafe def guard_mem_fin (e : expr) : tactic expr := do
   let t ← infer_type e
   let α ← mk_mvar
-  to_expr (pquote.1 (_ ∈ (_ : Finset (%%ₓα)))) tt ff >>= unify t <|>
+  to_expr (pquote.1 (_ ∈ (_ : Finsetₓ (%%ₓα)))) tt ff >>= unify t <|>
       to_expr (pquote.1 (_ ∈ (_ : Multiset (%%ₓα)))) tt ff >>= unify t <|>
         to_expr (pquote.1 (_ ∈ (_ : List (%%ₓα)))) tt ff >>= unify t
   instantiate_mvars α
@@ -88,9 +88,9 @@ unsafe def fin_cases_at (nm : Option Name) : ∀ (with_list : Option pexpr) (e :
       | none =>-- Deal with `x : A`, where `[fintype A]` is available:
       do
         let ty ← infer_type e
-        let i ← to_expr (pquote.1 (Fintype (%%ₓty))) >>= mk_instance <|> fail "Failed to find `fintype` instance."
-        let t ← to_expr (pquote.1 ((%%ₓe) ∈ @Fintype.elems (%%ₓty) (%%ₓi)))
-        let v ← to_expr (pquote.1 (@Fintype.complete (%%ₓty) (%%ₓi) (%%ₓe)))
+        let i ← to_expr (pquote.1 (Fintypeₓ (%%ₓty))) >>= mk_instance <|> fail "Failed to find `fintype` instance."
+        let t ← to_expr (pquote.1 ((%%ₓe) ∈ @Fintypeₓ.elems (%%ₓty) (%%ₓi)))
+        let v ← to_expr (pquote.1 (@Fintypeₓ.complete (%%ₓty) (%%ₓi) (%%ₓe)))
         let h ← assertv (nm `this) t v
         fin_cases_at with_list h
       | some ty =>-- Deal with `x ∈ A` hypotheses:

@@ -3,6 +3,7 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
+import Mathbin.Algebra.AddTorsor
 import Mathbin.Topology.Algebra.Constructions
 import Mathbin.GroupTheory.GroupAction.Prod
 import Mathbin.GroupTheory.GroupAction.Basic
@@ -163,4 +164,24 @@ theorem has_continuous_smul_inf {t₁ t₂ : TopologicalSpace X} [@HasContinuous
   cases b <;> assumption
 
 end LatticeOps
+
+section AddTorsor
+
+variable (G : Type _) (P : Type _) [AddGroupₓ G] [AddTorsor G P] [TopologicalSpace G]
+
+variable [PreconnectedSpace G] [TopologicalSpace P] [HasContinuousVadd G P]
+
+include G
+
+/-- An `add_torsor` for a connected space is a connected space. This is not an instance because
+it loops for a group as a torsor over itself. -/
+protected theorem AddTorsor.connected_space : ConnectedSpace P :=
+  { is_preconnected_univ := by
+      convert
+        is_preconnected_univ.image (Equivₓ.vaddConst (Classical.arbitrary P) : G → P)
+          (continuous_id.vadd continuous_const).ContinuousOn
+      rw [Set.image_univ, Equivₓ.range_eq_univ],
+    to_nonempty := inferInstance }
+
+end AddTorsor
 

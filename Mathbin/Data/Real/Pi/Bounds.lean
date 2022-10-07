@@ -27,8 +27,8 @@ theorem pi_gt_sqrt_two_add_series (n : ℕ) : 2 ^ (n + 1) * sqrt (2 - sqrtTwoAdd
     apply sin_lt
     apply div_pos pi_pos
     all_goals
-      apply pow_pos
-      norm_num
+    apply pow_pos
+    norm_num
   apply lt_of_le_of_ltₓ (le_of_eqₓ _) this
   rw [pow_succₓ _ (n + 1), ← mul_assoc, div_mul_cancel, mul_comm]
   norm_num
@@ -43,10 +43,7 @@ theorem pi_lt_sqrt_two_add_series (n : ℕ) : π < 2 ^ (n + 1) * sqrt (2 - sqrtT
       
     · rw [div_le_iff']
       · refine' le_transₓ pi_le_four _
-        simp only
-          [show (4 : ℝ) = 2 ^ 2 by
-            norm_num,
-          mul_oneₓ]
+        simp only [show (4 : ℝ) = 2 ^ 2 by norm_num, mul_oneₓ]
         apply pow_le_pow
         norm_num
         apply le_add_of_nonneg_left
@@ -76,22 +73,17 @@ theorem pi_lt_sqrt_two_add_series (n : ℕ) : π < 2 ^ (n + 1) * sqrt (2 - sqrtT
     rw [pow_succₓ, pow_succₓ, ← mul_assoc, ← div_div]
     convert le_rflₓ
     all_goals
-      repeat'
-        apply pow_pos
-      norm_num
+    repeat' apply pow_pos
+    norm_num
   apply lt_of_lt_of_leₓ this (le_of_eqₓ _)
   rw [add_mulₓ]
   congr 1
   · rw [pow_succₓ _ (n + 1), ← mul_assoc, div_mul_cancel, mul_comm]
     norm_num
     
-  rw [pow_succₓ, ← pow_mulₓ, mul_comm n 2, pow_mulₓ,
-    show (2 : ℝ) ^ 2 = 4 by
-      norm_num,
-    pow_succₓ, pow_succₓ, ← mul_assoc (2 : ℝ),
-    show (2 : ℝ) * 2 = 4 by
-      norm_num,
-    ← mul_assoc, div_mul_cancel, mul_comm ((2 : ℝ) ^ n), ← div_div, div_mul_cancel]
+  rw [pow_succₓ, ← pow_mulₓ, mul_comm n 2, pow_mulₓ, show (2 : ℝ) ^ 2 = 4 by norm_num, pow_succₓ, pow_succₓ, ←
+    mul_assoc (2 : ℝ), show (2 : ℝ) * 2 = 4 by norm_num, ← mul_assoc, div_mul_cancel, mul_comm ((2 : ℝ) ^ n), ← div_div,
+    div_mul_cancel]
   apply pow_ne_zero
   norm_num
   norm_num
@@ -103,17 +95,8 @@ theorem pi_lower_bound_start (n : ℕ) {a} (h : sqrtTwoAddSeries ((0 : ℕ) / (1
     a < π := by
   refine' lt_of_le_of_ltₓ _ (pi_gt_sqrt_two_add_series n)
   rw [mul_comm]
-  refine'
-    (div_le_iff
-          (pow_pos
-            (by
-              norm_num)
-            _ :
-            (0 : ℝ) < _)).mp
-      (le_sqrt_of_sq_le _)
-  rwa [le_sub,
-    show (0 : ℝ) = (0 : ℕ) / (1 : ℕ) by
-      rw [Nat.cast_zeroₓ, zero_div]]
+  refine' (div_le_iff (pow_pos (by norm_num) _ : (0 : ℝ) < _)).mp (le_sqrt_of_sq_le _)
+  rwa [le_sub, show (0 : ℝ) = (0 : ℕ) / (1 : ℕ) by rw [Nat.cast_zeroₓ, zero_div]]
 
 theorem sqrt_two_add_series_step_up (c d : ℕ) {a b n : ℕ} {z : ℝ} (hz : sqrtTwoAddSeries (c / d) n ≤ z) (hb : 0 < b)
     (hd : 0 < d) (h : (2 * b + a) * d ^ 2 ≤ c ^ 2 * b) : sqrtTwoAddSeries (a / b) (n + 1) ≤ z := by

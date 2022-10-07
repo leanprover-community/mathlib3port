@@ -5,6 +5,7 @@ Authors: Frédéric Dupuis
 -/
 import Mathbin.Topology.Algebra.Module.WeakDual
 import Mathbin.Algebra.Algebra.Spectrum
+import Mathbin.Topology.ContinuousFunction.Algebra
 
 /-!
 # Character space of a topological algebra
@@ -62,6 +63,10 @@ instance : ContinuousLinearMapClass (CharacterSpace 𝕜 A) 𝕜 A 𝕜 where
   map_add := fun φ => (φ : WeakDual 𝕜 A).map_add
   map_continuous := fun φ => (φ : WeakDual 𝕜 A).cont
 
+@[ext]
+theorem ext {φ ψ : CharacterSpace 𝕜 A} (h : ∀ x, φ x = ψ x) : φ = ψ :=
+  FunLike.ext _ _ h
+
 /-- An element of the character space, as a continuous linear map. -/
 def toClm (φ : CharacterSpace 𝕜 A) : A →L[𝕜] 𝕜 :=
   (φ : WeakDual 𝕜 A)
@@ -95,8 +100,7 @@ theorem union_zero : CharacterSpace 𝕜 A ∪ {0} = { φ : WeakDual 𝕜 A | �
       rintro φ (hφ | h₀)
       · exact hφ.2
         
-      · exact fun x y => by
-          simp [Set.eq_of_mem_singleton h₀]
+      · exact fun x y => by simp [Set.eq_of_mem_singleton h₀]
         )
     fun φ hφ => Or.elim (em <| φ = 0) (fun h₀ => Or.inr h₀) fun h₀ => Or.inl ⟨h₀, hφ⟩
 
@@ -117,16 +121,10 @@ variable [CommRingₓ 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasCo
 /-- In a unital algebra, elements of the character space are algebra homomorphisms. -/
 instance : AlgHomClass (CharacterSpace 𝕜 A) 𝕜 A 𝕜 :=
   have map_one' : ∀ φ : CharacterSpace 𝕜 A, φ 1 = 1 := fun φ => by
-    have h₁ : φ 1 * (1 - φ 1) = 0 := by
-      rw [mul_sub, sub_eq_zero, mul_oneₓ, ← map_mul φ, one_mulₓ]
+    have h₁ : φ 1 * (1 - φ 1) = 0 := by rw [mul_sub, sub_eq_zero, mul_oneₓ, ← map_mul φ, one_mulₓ]
     rcases mul_eq_zero.mp h₁ with (h₂ | h₂)
-    · have : ∀ a, φ (a * 1) = 0 := fun a => by
-        simp only [map_mul φ, h₂, mul_zero]
-      exact
-        False.elim
-          (φ.prop.1 <|
-            ContinuousLinearMap.ext <| by
-              simpa only [mul_oneₓ] using this)
+    · have : ∀ a, φ (a * 1) = 0 := fun a => by simp only [map_mul φ, h₂, mul_zero]
+      exact False.elim (φ.prop.1 <| ContinuousLinearMap.ext <| by simpa only [mul_oneₓ] using this)
       
     · exact (sub_eq_zero.mp h₂).symm
       
@@ -150,7 +148,7 @@ theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
 
 /-- under suitable mild assumptions on `𝕜`, the character space is a closed set in
 `weak_dual 𝕜 A`. -/
-theorem is_closed [Nontrivial 𝕜] [T2Space 𝕜] [HasContinuousMul 𝕜] : IsClosed (CharacterSpace 𝕜 A) := by
+protected theorem is_closed [Nontrivial 𝕜] [T2Space 𝕜] [HasContinuousMul 𝕜] : IsClosed (CharacterSpace 𝕜 A) := by
   rw [eq_set_map_one_map_mul, Set.set_of_and]
   refine' IsClosed.inter (is_closed_eq (eval_continuous _) continuous_const) _
   simpa only [(union_zero 𝕜 A).symm] using union_zero_is_closed _ _
@@ -165,9 +163,61 @@ variable [CommRingₓ 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasCo
 theorem apply_mem_spectrum [Nontrivial 𝕜] (φ : CharacterSpace 𝕜 A) (a : A) : φ a ∈ Spectrum 𝕜 a :=
   AlgHom.apply_mem_spectrum φ a
 
+theorem ext_ker {φ ψ : CharacterSpace 𝕜 A} (h : RingHom.ker φ = RingHom.ker ψ) : φ = ψ := by
+  ext
+  have : x - algebraMap 𝕜 A (ψ x) ∈ RingHom.ker φ := by
+    simpa only [h, RingHom.mem_ker, map_sub, AlgHomClass.commutes] using sub_self (ψ x)
+  · rwa [RingHom.mem_ker, map_sub, AlgHomClass.commutes, sub_eq_zero] at this
+    
+
 end Ringₓ
 
 end CharacterSpace
+
+section Kernel
+
+variable [Field 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
+
+variable [Ringₓ A] [TopologicalSpace A] [Algebra 𝕜 A]
+
+/-- The `ring_hom.ker` of `φ : character_space 𝕜 A` is maximal. -/
+instance ker_is_maximal (φ : CharacterSpace 𝕜 A) : (RingHom.ker φ).IsMaximal :=
+  (RingHom.ker_is_maximal_of_surjective φ) fun z =>
+    ⟨algebraMap 𝕜 A z, by simp only [AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply]⟩
+
+end Kernel
+
+section GelfandTransform
+
+open ContinuousMap
+
+variable (𝕜 A) [CommRingₓ 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [TopologicalRing 𝕜] [TopologicalSpace A]
+  [Semiringₓ A] [Algebra 𝕜 A]
+
+/-- The **Gelfand transform** is an algebra homomorphism (over `𝕜`) from a topological `𝕜`-algebra
+`A` into the `𝕜`-algebra of continuous `𝕜`-valued functions on the `character_space 𝕜 A`.
+The character space itself consists of all algebra homomorphisms from `A` to `𝕜`.  -/
+@[simps]
+def gelfandTransform : A →ₐ[𝕜] C(CharacterSpace 𝕜 A, 𝕜) where
+  toFun := fun a => { toFun := fun φ => φ a, continuous_to_fun := (eval_continuous a).comp continuous_induced_dom }
+  map_one' := by
+    ext
+    simp only [coe_mk, coe_one, Pi.one_apply, map_one a]
+  map_mul' := fun a b => by
+    ext
+    simp only [map_mul, coe_mk, coe_mul, Pi.mul_apply]
+  map_zero' := by
+    ext
+    simp only [map_zero, coe_mk, coe_mul, coe_zero, Pi.zero_apply]
+  map_add' := fun a b => by
+    ext
+    simp only [map_add, coe_mk, coe_add, Pi.add_apply]
+  commutes' := fun k => by
+    ext
+    simp only [AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply, coe_mk, algebra_map_apply,
+      Algebra.id.smul_eq_mul, mul_oneₓ]
+
+end GelfandTransform
 
 end WeakDual
 

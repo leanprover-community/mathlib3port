@@ -250,13 +250,13 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
   convert h using 1
   all_goals
-    funext i
-    simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
-    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
-    ext1
-    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
-    simp only [coeff_mk]
-    rfl
+  funext i
+  simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
+  apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+  ext1
+  apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+  simp only [coeff_mk]
+  rfl
 
 omit hp
 
@@ -478,14 +478,14 @@ include hp
 
 @[simp]
 theorem bind₁_one_poly_witt_polynomial (n : ℕ) : bind₁ onePoly (wittPolynomial p ℤ n) = 1 := by
-  rw [witt_polynomial_eq_sum_C_mul_X_pow, AlgHom.map_sum, Finset.sum_eq_single 0]
+  rw [witt_polynomial_eq_sum_C_mul_X_pow, AlgHom.map_sum, Finsetₓ.sum_eq_single 0]
   · simp only [one_poly, one_pow, one_mulₓ, AlgHom.map_pow, C_1, pow_zeroₓ, bind₁_X_right, if_true, eq_self_iff_true]
     
   · intro i hi hi0
     simp only [one_poly, if_neg hi0, zero_pow (pow_pos hp.1.Pos _), mul_zero, AlgHom.map_pow, bind₁_X_right,
       AlgHom.map_mul]
     
-  · rw [Finset.mem_range]
+  · rw [Finsetₓ.mem_range]
     decide
     
 
@@ -509,7 +509,7 @@ omit hp
 theorem add_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
   ⟨⟨wittAdd p, by
       intros
-      dunfold WittVector.hasAdd
+      dsimp only [WittVector.hasAdd]
       simp [eval]⟩⟩
 
 /-- Multiplication of Witt vectors is a polynomial function. -/
@@ -517,7 +517,7 @@ theorem add_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
 theorem mul_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
   ⟨⟨wittMul p, by
       intros
-      dunfold WittVector.hasMul
+      dsimp only [WittVector.hasMul]
       simp [eval]⟩⟩
 
 include hp
@@ -575,13 +575,13 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
   convert h using 1
   all_goals
-    funext i
-    simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
-    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
-    ext1
-    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
-    ext ⟨b, _⟩
-    fin_cases b <;> simp only [coeff_mk, uncurry] <;> rfl
+  funext i
+  simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
+  apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+  ext1
+  apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+  ext ⟨b, _⟩
+  fin_cases b <;> simp only [coeff_mk, uncurry] <;> rfl
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- unfortunately this is not universe polymorphic, merely because `f` isn't
@@ -593,10 +593,9 @@ theorem map {f} (hf : IsPoly₂ p f) (g : R →+* S) (x y : 𝕎 R) : map g (f x
   simp only [map_coeff, hf, map_aeval, peval, uncurry]
   apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
   try
-    ext ⟨i, k⟩
-    fin_cases i
-  all_goals
-    simp only [map_coeff, Matrix.cons_val_zero, Matrix.head_cons, Matrix.cons_val_one]
+  ext ⟨i, k⟩
+  fin_cases i
+  all_goals simp only [map_coeff, Matrix.cons_val_zero, Matrix.head_cons, Matrix.cons_val_one]
 
 end IsPoly₂
 

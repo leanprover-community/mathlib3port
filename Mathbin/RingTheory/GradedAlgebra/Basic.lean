@@ -116,59 +116,33 @@ end GradedRing
 
 section AddCancelMonoid
 
-open DirectSum Dfinsupp Finset Function
+open DirectSum
 
-theorem DirectSum.coe_decompose_mul_add_of_left_mem {ι σ A} [DecidableEq ι] [AddLeftCancelMonoid ι] [Semiringₓ A]
-    [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜] {a b : A} {i j : ι} (a_mem : a ∈ 𝒜 i) :
+variable [DecidableEq ι] [Semiringₓ A] [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ)
+
+variable {i j : ι}
+
+namespace DirectSum
+
+theorem coe_decompose_mul_add_of_left_mem [AddLeftCancelMonoid ι] [GradedRing 𝒜] {a b : A} (a_mem : a ∈ 𝒜 i) :
     (decompose 𝒜 (a * b) (i + j) : A) = a * decompose 𝒜 b j := by
-  obtain rfl | ha := eq_or_ne a 0
-  · simp
-    
-  classical
   lift a to 𝒜 i using a_mem
-  erw [decompose_mul, coe_mul_apply, decompose_coe,
-    support_of _ i a fun r => by
-      subst r <;> exact ha rfl,
-    singleton_product, map_filter, sum_map]
-  simp_rw [comp, embedding.coe_fn_mk, add_left_cancel_iffₓ, filter_eq']
-  refine'
-    dite (decompose 𝒜 b j = 0)
-      (fun h => by
-        simp [if_neg (not_mem_support_iff.mpr h), h])
-      fun h => _
-  erw [if_pos (mem_support_iff.mpr h), Finset.sum_singleton, of_eq_same]
-  rfl
+  rw [decompose_mul, decompose_coe, coe_of_mul_apply_add]
 
-theorem DirectSum.coe_decompose_mul_add_of_right_mem {ι σ A} [DecidableEq ι] [AddRightCancelMonoid ι] [Semiringₓ A]
-    [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜] {a b : A} {i j : ι} (b_mem : b ∈ 𝒜 j) :
+theorem coe_decompose_mul_add_of_right_mem [AddRightCancelMonoid ι] [GradedRing 𝒜] {a b : A} (b_mem : b ∈ 𝒜 j) :
     (decompose 𝒜 (a * b) (i + j) : A) = decompose 𝒜 a i * b := by
-  obtain rfl | hb := eq_or_ne b 0
-  · simp
-    
-  classical
   lift b to 𝒜 j using b_mem
-  erw [decompose_mul, coe_mul_apply, decompose_coe,
-    support_of _ j b fun r => by
-      subst r <;> exact hb rfl,
-    product_singleton, map_filter, sum_map]
-  simp_rw [comp, embedding.coe_fn_mk, add_right_cancel_iffₓ, filter_eq']
-  refine'
-    dite (decompose 𝒜 a i = 0)
-      (fun h => by
-        simp [if_neg (not_mem_support_iff.mpr h), h])
-      fun h => _
-  erw [if_pos (mem_support_iff.mpr h), Finset.sum_singleton, of_eq_same]
-  rfl
+  rw [decompose_mul, decompose_coe, coe_mul_of_apply_add]
 
-theorem DirectSum.decompose_mul_add_left {ι σ A} [DecidableEq ι] [AddLeftCancelMonoid ι] [Semiringₓ A] [SetLike σ A]
-    [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜] {i j : ι} (a : 𝒜 i) {b : A} :
+theorem decompose_mul_add_left [AddLeftCancelMonoid ι] [GradedRing 𝒜] (a : 𝒜 i) {b : A} :
     decompose 𝒜 (↑a * b) (i + j) = @GradedMonoid.GhasMul.mul ι (fun i => 𝒜 i) _ _ _ _ a (decompose 𝒜 b j) :=
-  Subtype.ext <| DirectSum.coe_decompose_mul_add_of_left_mem 𝒜 a.2
+  Subtype.ext <| coe_decompose_mul_add_of_left_mem 𝒜 a.2
 
-theorem DirectSum.decompose_mul_add_right {ι σ A} [DecidableEq ι] [AddRightCancelMonoid ι] [Semiringₓ A] [SetLike σ A]
-    [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜] {i j : ι} {a : A} (b : 𝒜 j) :
+theorem decompose_mul_add_right [AddRightCancelMonoid ι] [GradedRing 𝒜] {a : A} (b : 𝒜 j) :
     decompose 𝒜 (a * ↑b) (i + j) = @GradedMonoid.GhasMul.mul ι (fun i => 𝒜 i) _ _ _ _ (decompose 𝒜 a i) b :=
-  Subtype.ext <| DirectSum.coe_decompose_mul_add_of_right_mem 𝒜 b.2
+  Subtype.ext <| coe_decompose_mul_add_of_right_mem 𝒜 b.2
+
+end DirectSum
 
 end AddCancelMonoid
 
@@ -237,7 +211,7 @@ end GradedAlgebra
 
 section CanonicalOrder
 
-open GradedRing SetLike.GradedMonoid DirectSum
+open SetLike.GradedMonoid DirectSum
 
 variable [Semiringₓ A] [DecidableEq ι]
 
@@ -268,16 +242,13 @@ def GradedRing.projZeroRingHom : A →+* A where
         
       · rintro j ⟨c', hc'⟩
         · simp only [Subtype.coe_mk]
-          by_cases' h : i + j = 0
+          by_cases h:i + j = 0
           · rw [decompose_of_mem_same 𝒜 (show c * c' ∈ 𝒜 0 from h ▸ mul_mem hc hc'),
               decompose_of_mem_same 𝒜 (show c ∈ 𝒜 0 from (add_eq_zero_iff.mp h).1 ▸ hc),
               decompose_of_mem_same 𝒜 (show c' ∈ 𝒜 0 from (add_eq_zero_iff.mp h).2 ▸ hc')]
             
           · rw [decompose_of_mem_ne 𝒜 (mul_mem hc hc') h]
-            cases'
-              show i ≠ 0 ∨ j ≠ 0 by
-                rwa [add_eq_zero_iff, not_and_distrib] at h with
-              h' h'
+            cases' show i ≠ 0 ∨ j ≠ 0 by rwa [add_eq_zero_iff, not_and_distrib] at h with h' h'
             · simp only [decompose_of_mem_ne 𝒜 hc h', zero_mul]
               
             · simp only [decompose_of_mem_ne 𝒜 hc' h', mul_zero]
@@ -292,6 +263,42 @@ def GradedRing.projZeroRingHom : A →+* A where
     · rintro _ _ ha hb _
       simp only [add_mulₓ, decompose_add, add_apply, AddMemClass.coe_add, ha, hb]
       
+
+variable {a b : A} {n i : ι}
+
+namespace DirectSum
+
+theorem coe_decompose_mul_of_left_mem_of_not_le (a_mem : a ∈ 𝒜 i) (h : ¬i ≤ n) : (decompose 𝒜 (a * b) n : A) = 0 := by
+  lift a to 𝒜 i using a_mem
+  rwa [decompose_mul, decompose_coe, coe_of_mul_apply_of_not_le]
+
+theorem coe_decompose_mul_of_right_mem_of_not_le (b_mem : b ∈ 𝒜 i) (h : ¬i ≤ n) : (decompose 𝒜 (a * b) n : A) = 0 := by
+  lift b to 𝒜 i using b_mem
+  rwa [decompose_mul, decompose_coe, coe_mul_of_apply_of_not_le]
+
+variable [Sub ι] [HasOrderedSub ι] [ContravariantClass ι ι (· + ·) (· ≤ ·)]
+
+theorem coe_decompose_mul_of_left_mem_of_le (a_mem : a ∈ 𝒜 i) (h : i ≤ n) :
+    (decompose 𝒜 (a * b) n : A) = a * decompose 𝒜 b (n - i) := by
+  lift a to 𝒜 i using a_mem
+  rwa [decompose_mul, decompose_coe, coe_of_mul_apply_of_le]
+
+theorem coe_decompose_mul_of_right_mem_of_le (b_mem : b ∈ 𝒜 i) (h : i ≤ n) :
+    (decompose 𝒜 (a * b) n : A) = decompose 𝒜 a (n - i) * b := by
+  lift b to 𝒜 i using b_mem
+  rwa [decompose_mul, decompose_coe, coe_mul_of_apply_of_le]
+
+theorem coe_decompose_mul_of_left_mem (n) [Decidable (i ≤ n)] (a_mem : a ∈ 𝒜 i) :
+    (decompose 𝒜 (a * b) n : A) = if i ≤ n then a * decompose 𝒜 b (n - i) else 0 := by
+  lift a to 𝒜 i using a_mem
+  rwa [decompose_mul, decompose_coe, coe_of_mul_apply]
+
+theorem coe_decompose_mul_of_right_mem (n) [Decidable (i ≤ n)] (b_mem : b ∈ 𝒜 i) :
+    (decompose 𝒜 (a * b) n : A) = if i ≤ n then decompose 𝒜 a (n - i) * b else 0 := by
+  lift b to 𝒜 i using b_mem
+  rwa [decompose_mul, decompose_coe, coe_mul_of_apply]
+
+end DirectSum
 
 end CanonicalOrder
 

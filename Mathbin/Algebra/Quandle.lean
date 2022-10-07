@@ -169,8 +169,7 @@ theorem left_cancel_inv (x : R) {y y' : R} : x ◃⁻¹ y = x ◃⁻¹ y' ↔ y 
 
 theorem self_distrib_inv {x y z : R} : x ◃⁻¹ y ◃⁻¹ z = (x ◃⁻¹ y) ◃⁻¹ x ◃⁻¹ z := by
   rw [← left_cancel (x ◃⁻¹ y), right_inv, ← left_cancel x, right_inv, self_distrib]
-  repeat'
-    rw [right_inv]
+  repeat' rw [right_inv]
 
 /-- The *adjoint action* of a rack on itself is `op'`, and the adjoint
 action of `x ◃ y` is the conjugate of the action of `y` by the action
@@ -196,14 +195,8 @@ instance oppositeRack : Rack Rᵐᵒᵖ where
           simp only [unop_op, op_inj]
           exact self_distrib_inv
   invAct := fun x y => op (Shelf.act (unop x) (unop y))
-  left_inv :=
-    MulOpposite.rec fun x =>
-      MulOpposite.rec fun y => by
-        simp
-  right_inv :=
-    MulOpposite.rec fun x =>
-      MulOpposite.rec fun y => by
-        simp
+  left_inv := MulOpposite.rec fun x => MulOpposite.rec fun y => by simp
+  right_inv := MulOpposite.rec fun x => MulOpposite.rec fun y => by simp
 
 @[simp]
 theorem op_act_op_eq {x y : R} : op x ◃ op y = op (x ◃⁻¹ y) :=
@@ -214,8 +207,7 @@ theorem op_inv_act_op_eq {x y : R} : op x ◃⁻¹ op y = op (x ◃ y) :=
   rfl
 
 @[simp]
-theorem self_act_act_eq {x y : R} : (x ◃ x) ◃ y = x ◃ y := by
-  rw [← right_inv x y, ← self_distrib]
+theorem self_act_act_eq {x y : R} : (x ◃ x) ◃ y = x ◃ y := by rw [← right_inv x y, ← self_distrib]
 
 @[simp]
 theorem self_inv_act_inv_act_eq {x y : R} : (x ◃⁻¹ x) ◃⁻¹ y = x ◃⁻¹ y := by
@@ -254,10 +246,8 @@ regular isotopy version of the Reidemeister I move for knot diagrams.)
 def selfApplyEquiv (R : Type _) [Rack R] : R ≃ R where
   toFun := fun x => x ◃ x
   invFun := fun x => x ◃⁻¹ x
-  left_inv := fun x => by
-    simp
-  right_inv := fun x => by
-    simp
+  left_inv := fun x => by simp
+  right_inv := fun x => by simp
 
 /-- An involutory rack is one for which `rack.op R x` is an involution for every x.
 -/
@@ -299,8 +289,7 @@ theorem map_act (f : S₁ →◃ S₂) {x y : S₁} : f (x ◃ y) = f x ◃ f y 
 /-- The identity homomorphism -/
 def id (S : Type _) [Shelf S] : S →◃ S where
   toFun := id
-  map_act' := by
-    simp
+  map_act' := by simp
 
 instance inhabited (S : Type _) [Shelf S] : Inhabited (S →◃ S) :=
   ⟨id S⟩
@@ -308,8 +297,7 @@ instance inhabited (S : Type _) [Shelf S] : Inhabited (S →◃ S) :=
 /-- The composition of shelf homomorphisms -/
 def comp (g : S₂ →◃ S₃) (f : S₁ →◃ S₂) : S₁ →◃ S₃ where
   toFun := g.toFun ∘ f.toFun
-  map_act' := by
-    simp
+  map_act' := by simp
 
 @[simp]
 theorem comp_apply (g : S₂ →◃ S₃) (f : S₁ →◃ S₂) (x : S₁) : (g.comp f) x = g (f x) :=
@@ -350,36 +338,34 @@ def Conj (G : Type _) :=
 instance Conj.quandle (G : Type _) [Groupₓ G] : Quandle (Conj G) where
   act := fun x => @MulAut.conj G _ x
   self_distrib := fun x y z => by
-    dsimp' only [MulEquiv.coe_to_equiv, MulAut.conj_apply, conj]
+    dsimp only [MulEquiv.coe_to_equiv, MulAut.conj_apply, conj]
     group
   invAct := fun x => (@MulAut.conj G _ x).symm
   left_inv := fun x y => by
-    dsimp' [act, conj]
+    dsimp [act, conj]
     group
   right_inv := fun x y => by
-    dsimp' [act, conj]
+    dsimp [act, conj]
     group
-  fix := fun x => by
-    simp
+  fix := fun x => by simp
 
 @[simp]
 theorem conj_act_eq_conj {G : Type _} [Groupₓ G] (x y : Conj G) : x ◃ y = ((x : G) * (y : G) * (x : G)⁻¹ : G) :=
   rfl
 
 theorem conj_swap {G : Type _} [Groupₓ G] (x y : Conj G) : x ◃ y = y ↔ y ◃ x = x := by
-  dsimp' [conj]  at *
+  dsimp [conj] at *
   constructor
   repeat'
-    intro h
-    conv_rhs => rw [eq_mul_inv_of_mul_eq (eq_mul_inv_of_mul_eq h)]
-    simp
+  intro h
+  conv_rhs => rw [eq_mul_inv_of_mul_eq (eq_mul_inv_of_mul_eq h)]
+  simp
 
 /-- `conj` is functorial
 -/
 def Conj.map {G : Type _} {H : Type _} [Groupₓ G] [Groupₓ H] (f : G →* H) : Conj G →◃ Conj H where
   toFun := f
-  map_act' := by
-    simp
+  map_act' := by simp
 
 instance {G : Type _} {H : Type _} [Groupₓ G] [Groupₓ H] : HasLift (G →* H) (Conj G →◃ Conj H) where lift := Conj.map
 
@@ -398,19 +384,19 @@ def dihedralAct (n : ℕ) (a : Zmod n) : Zmod n → Zmod n := fun b => 2 * a - b
 
 theorem dihedralAct.inv (n : ℕ) (a : Zmod n) : Function.Involutive (dihedralAct n a) := by
   intro b
-  dsimp' [dihedral_act]
+  dsimp [dihedral_act]
   ring
 
 instance (n : ℕ) : Quandle (Dihedral n) where
   act := dihedralAct n
   self_distrib := fun x y z => by
-    dsimp' [dihedral_act]
+    dsimp [dihedral_act]
     ring
   invAct := dihedralAct n
   left_inv := fun x => (dihedralAct.inv n x).LeftInverse
   right_inv := fun x => (dihedralAct.inv n x).RightInverse
   fix := fun x => by
-    dsimp' [dihedral_act]
+    dsimp [dihedral_act]
     ring
 
 end Quandle
@@ -506,9 +492,11 @@ which is used to define `envel_group` itself.
 inductive PreEnvelGroupRel' (R : Type u) [Rack R] : PreEnvelGroup R → PreEnvelGroup R → Type u
   | refl {a : PreEnvelGroup R} : pre_envel_group_rel' a a
   | symm {a b : PreEnvelGroup R} (hab : pre_envel_group_rel' a b) : pre_envel_group_rel' b a
-  | trans {a b c : PreEnvelGroup R} (hab : pre_envel_group_rel' a b) (hbc : pre_envel_group_rel' b c) :
+  |
+  trans {a b c : PreEnvelGroup R} (hab : pre_envel_group_rel' a b) (hbc : pre_envel_group_rel' b c) :
     pre_envel_group_rel' a c
-  | congr_mul {a b a' b' : PreEnvelGroup R} (ha : pre_envel_group_rel' a a') (hb : pre_envel_group_rel' b b') :
+  |
+  congr_mul {a b a' b' : PreEnvelGroup R} (ha : pre_envel_group_rel' a a') (hb : pre_envel_group_rel' b b') :
     pre_envel_group_rel' (mul a b) (mul a' b')
   | congr_inv {a a' : PreEnvelGroup R} (ha : pre_envel_group_rel' a a') : pre_envel_group_rel' (inv a) (inv a')
   | assoc (a b c : PreEnvelGroup R) : pre_envel_group_rel' (mul (mul a b) c) (mul a (mul b c))
@@ -608,20 +596,13 @@ theorem well_def {R : Type _} [Rack R] {G : Type _} [Groupₓ G] (f : R →◃ Q
   | a, b, refl => rfl
   | a, b, symm h => (well_def h).symm
   | a, b, trans hac hcb => Eq.trans (well_def hac) (well_def hcb)
-  | _, _, congr_mul ha hb => by
-    simp [to_envel_group.map_aux, well_def ha, well_def hb]
-  | _, _, congr_inv ha => by
-    simp [to_envel_group.map_aux, well_def ha]
-  | _, _, assoc a b c => by
-    apply mul_assoc
-  | _, _, one_mulₓ a => by
-    simp [to_envel_group.map_aux]
-  | _, _, mul_oneₓ a => by
-    simp [to_envel_group.map_aux]
-  | _, _, mul_left_invₓ a => by
-    simp [to_envel_group.map_aux]
-  | _, _, act_incl x y => by
-    simp [to_envel_group.map_aux]
+  | _, _, congr_mul ha hb => by simp [to_envel_group.map_aux, well_def ha, well_def hb]
+  | _, _, congr_inv ha => by simp [to_envel_group.map_aux, well_def ha]
+  | _, _, assoc a b c => by apply mul_assoc
+  | _, _, one_mulₓ a => by simp [to_envel_group.map_aux]
+  | _, _, mul_oneₓ a => by simp [to_envel_group.map_aux]
+  | _, _, mul_left_invₓ a => by simp [to_envel_group.map_aux]
+  | _, _, act_incl x y => by simp [to_envel_group.map_aux]
 
 end ToEnvelGroup.MapAux
 

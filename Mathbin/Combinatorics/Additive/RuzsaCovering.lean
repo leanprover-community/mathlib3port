@@ -19,13 +19,13 @@ Merge this file with other prerequisites to Freiman's theorem once we have them.
 
 open Pointwise
 
-namespace Finset
+namespace Finsetₓ
 
-variable {α : Type _} [DecidableEq α] [CommGroupₓ α] (s : Finset α) {t : Finset α}
+variable {α : Type _} [DecidableEq α] [CommGroupₓ α] (s : Finsetₓ α) {t : Finsetₓ α}
 
 /-- **Ruzsa's covering lemma**. -/
 @[to_additive "**Ruzsa's covering lemma**"]
-theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finset α, u.card * t.card ≤ (s * t).card ∧ s ⊆ u * t / t := by
+theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finsetₓ α, u.card * t.card ≤ (s * t).card ∧ s ⊆ u * t / t := by
   haveI : ∀ u, Decidable ((u : Set α).PairwiseDisjoint (· • t)) := fun u => Classical.dec _
   set C := s.powerset.filter fun u => (u : Set α).PairwiseDisjoint (· • t)
   obtain ⟨u, hu, hCmax⟩ :=
@@ -35,10 +35,10 @@ theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finset α, u.card * t.
     ⟨u, (card_mul_iff.2 <| pairwise_disjoint_smul_iff.1 hu.2).Ge.trans (card_le_of_subset <| mul_subset_mul_right hu.1),
       fun a ha => _⟩
   rw [mul_div_assoc]
-  by_cases' hau : a ∈ u
+  by_cases hau:a ∈ u
   · exact subset_mul_left _ ht.one_mem_div hau
     
-  by_cases' H : ∀ b ∈ u, Disjoint (a • t) (b • t)
+  by_cases H:∀ b ∈ u, Disjoint (a • t) (b • t)
   · refine' (hCmax _ _ <| ssubset_insert hau).elim
     rw [mem_filter, mem_powerset, insert_subset, coe_insert]
     exact ⟨⟨ha, hu.1⟩, hu.2.insert fun b hb _ => H _ hb⟩
@@ -46,14 +46,7 @@ theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finset α, u.card * t.
   push_neg  at H
   simp_rw [not_disjoint_iff, ← inv_smul_mem_iff] at H
   obtain ⟨b, hb, c, hc₁, hc₂⟩ := H
-  exact
-    mem_mul.2
-      ⟨_, _, hb,
-        mem_div.2
-          ⟨_, _, hc₂, hc₁, by
-            simp [div_eq_mul_inv a b]⟩,
-        by
-        simp ⟩
+  exact mem_mul.2 ⟨_, _, hb, mem_div.2 ⟨_, _, hc₂, hc₁, by simp [div_eq_mul_inv a b]⟩, by simp⟩
 
-end Finset
+end Finsetₓ
 

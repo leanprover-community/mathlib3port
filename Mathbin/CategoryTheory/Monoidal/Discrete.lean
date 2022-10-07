@@ -29,10 +29,7 @@ namespace CategoryTheory
 instance Discrete.monoidal : MonoidalCategory (Discrete M) where
   tensorUnit := Discrete.mk 1
   tensorObj := fun X Y => Discrete.mk (X.as * Y.as)
-  tensorHom := fun W X Y Z f g =>
-    eqToHom
-      (by
-        rw [eq_of_hom f, eq_of_hom g])
+  tensorHom := fun W X Y Z f g => eqToHom (by rw [eq_of_hom f, eq_of_hom g])
   leftUnitor := fun X => Discrete.eqToIso (one_mulₓ X.as)
   rightUnitor := fun X => Discrete.eqToIso (mul_oneₓ X.as)
   associator := fun X Y Z => Discrete.eqToIso (mul_assoc _ _ _)

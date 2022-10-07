@@ -85,7 +85,7 @@ theorem single_order_mul_power_series_part (x : LaurentSeries R) :
     (single x.order 1 : LaurentSeries R) * x.powerSeriesPart = x := by
   ext n
   rw [← sub_add_cancel n x.order, single_mul_coeff_add, sub_add_cancel, one_mulₓ]
-  by_cases' h : x.order ≤ n
+  by_cases h:x.order ≤ n
   · rw [Int.eq_nat_abs_of_zero_le (sub_nonneg_of_le h), coeff_coe_power_series, power_series_part_coeff, ←
       Int.eq_nat_abs_of_zero_le (sub_nonneg_of_le h), add_sub_cancel'_right]
     
@@ -133,7 +133,7 @@ instance of_power_series_localization [CommRingₓ R] :
       
   surj := by
     intro z
-    by_cases' h : 0 ≤ z.order
+    by_cases h:0 ≤ z.order
     · refine' ⟨⟨PowerSeries.x ^ Int.natAbs z.order * power_series_part z, 1⟩, _⟩
       simp only [RingHom.map_one, mul_oneₓ, RingHom.map_mul, coe_algebra_map, of_power_series_X_pow, Submonoid.coe_one]
       rw [Int.nat_abs_of_nonneg h, ← coe_power_series, single_order_mul_power_series_part]

@@ -45,6 +45,9 @@ theorem nhds_set_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (Diagonal 
 theorem mem_nhds_set_iff_forall : s ∈ 𝓝ˢ t ↔ ∀ x : α, x ∈ t → s ∈ 𝓝 x := by
   simp_rw [nhdsSet, Filter.mem_Sup, ball_image_iff]
 
+theorem bUnion_mem_nhds_set {t : α → Set α} (h : ∀ x ∈ s, t x ∈ 𝓝 x) : (⋃ x ∈ s, t x) ∈ 𝓝ˢ s :=
+  mem_nhds_set_iff_forall.2 fun x hx => mem_of_superset (h x hx) (subset_Union₂ x hx)
+
 theorem subset_interior_iff_mem_nhds_set : s ⊆ Interior t ↔ t ∈ 𝓝ˢ s := by
   simp_rw [mem_nhds_set_iff_forall, subset_interior_iff_nhds]
 
@@ -52,11 +55,10 @@ theorem mem_nhds_set_iff_exists : s ∈ 𝓝ˢ t ↔ ∃ U : Set α, IsOpen U �
   rw [← subset_interior_iff_mem_nhds_set, subset_interior_iff]
 
 theorem has_basis_nhds_set (s : Set α) : (𝓝ˢ s).HasBasis (fun U => IsOpen U ∧ s ⊆ U) fun U => U :=
-  ⟨fun t => by
-    simp [mem_nhds_set_iff_exists, and_assocₓ]⟩
+  ⟨fun t => by simp [mem_nhds_set_iff_exists, and_assocₓ]⟩
 
 theorem IsOpen.mem_nhds_set (hU : IsOpen s) : s ∈ 𝓝ˢ t ↔ t ⊆ s := by
-  rw [← subset_interior_iff_mem_nhds_set, interior_eq_iff_open.mpr hU]
+  rw [← subset_interior_iff_mem_nhds_set, interior_eq_iff_is_open.mpr hU]
 
 theorem principal_le_nhds_set : 𝓟 s ≤ 𝓝ˢ s := fun s hs =>
   (subset_interior_iff_mem_nhds_set.mpr hs).trans interior_subset
@@ -80,21 +82,24 @@ theorem mem_nhds_set_interior : s ∈ 𝓝ˢ (Interior s) :=
   subset_interior_iff_mem_nhds_set.mp Subset.rfl
 
 @[simp]
-theorem nhds_set_empty : 𝓝ˢ (∅ : Set α) = ⊥ := by
-  rw [is_open_empty.nhds_set_eq, principal_empty]
+theorem nhds_set_empty : 𝓝ˢ (∅ : Set α) = ⊥ := by rw [is_open_empty.nhds_set_eq, principal_empty]
 
-theorem mem_nhds_set_empty : s ∈ 𝓝ˢ (∅ : Set α) := by
-  simp
+theorem mem_nhds_set_empty : s ∈ 𝓝ˢ (∅ : Set α) := by simp
 
 @[simp]
-theorem nhds_set_univ : 𝓝ˢ (Univ : Set α) = ⊤ := by
-  rw [is_open_univ.nhds_set_eq, principal_univ]
+theorem nhds_set_univ : 𝓝ˢ (Univ : Set α) = ⊤ := by rw [is_open_univ.nhds_set_eq, principal_univ]
 
-theorem monotone_nhds_set : Monotone (𝓝ˢ : Set α → Filter α) := fun s t hst => Sup_le_Sup <| image_subset _ hst
+@[mono]
+theorem nhds_set_mono (h : s ⊆ t) : 𝓝ˢ s ≤ 𝓝ˢ t :=
+  Sup_le_Sup <| image_subset _ h
+
+theorem monotone_nhds_set : Monotoneₓ (𝓝ˢ : Set α → Filter α) := fun s t => nhds_set_mono
+
+theorem nhds_le_nhds_set (h : x ∈ s) : 𝓝 x ≤ 𝓝ˢ s :=
+  le_Sup <| mem_image_of_mem _ h
 
 @[simp]
-theorem nhds_set_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s ⊔ 𝓝ˢ t := by
-  simp only [nhdsSet, image_union, Sup_union]
+theorem nhds_set_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s ⊔ 𝓝ˢ t := by simp only [nhdsSet, image_union, Sup_union]
 
 theorem union_mem_nhds_set (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) := by
   rw [nhds_set_union]

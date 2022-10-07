@@ -25,18 +25,15 @@ structure StarSubalgebra (R : Type u) (A : Type v) [CommSemiringₓ R] [StarRing
 namespace StarSubalgebra
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident star_subalgebra.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident star_subalgebra.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable (R : Type u) (A : Type v) [CommSemiringₓ R] [StarRing R] [Semiringₓ A] [StarRing A] [Algebra R A]
   [StarModule R A]
 
 instance : SetLike (StarSubalgebra R A) A :=
-  ⟨StarSubalgebra.Carrier, fun p q h => by
-    cases p <;> cases q <;> congr⟩
+  ⟨StarSubalgebra.Carrier, fun p q h => by cases p <;> cases q <;> congr⟩
 
 instance : HasTop (StarSubalgebra R A) :=
-  ⟨{ (⊤ : Subalgebra R A) with
-      star_mem' := by
-        tidy }⟩
+  ⟨{ (⊤ : Subalgebra R A) with star_mem' := by tidy }⟩
 
 instance : Inhabited (StarSubalgebra R A) :=
   ⟨⊤⟩
@@ -47,9 +44,7 @@ variable {A}
 
 /-- The centralizer, or commutant, of a *-closed set as star subalgebra. -/
 def centralizer (s : Set A) (w : ∀ a : A, a ∈ s → star a ∈ s) : StarSubalgebra R A :=
-  { Subalgebra.centralizer R s with
-    star_mem' := fun x xm y hy => by
-      simpa using congr_arg star (xm _ (w _ hy)).symm }
+  { Subalgebra.centralizer R s with star_mem' := fun x xm y hy => by simpa using congr_arg star (xm _ (w _ hy)).symm }
 
 @[simp]
 theorem coe_centralizer (s : Set A) (w : ∀ a : A, a ∈ s → star a ∈ s) : (centralizer R s w : Set A) = s.Centralizer :=

@@ -90,7 +90,7 @@ def selectPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   if P n then x n else 0
 
 theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coeff (selectPoly P n) := by
-  dsimp' [select, select_poly]
+  dsimp [select, select_poly]
   split_ifs with hi
   · rw [aeval_X]
     
@@ -117,11 +117,11 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
     apply_fun aeval x.coeff  at this
     simpa only [AlgHom.map_add, aeval_bind₁, ← coeff_select]
   simp only [witt_polynomial_eq_sum_C_mul_X_pow, select_poly, AlgHom.map_sum, AlgHom.map_pow, AlgHom.map_mul,
-    bind₁_X_right, bind₁_C_right, ← Finset.sum_add_distrib, ← mul_addₓ]
-  apply Finset.sum_congr rfl
+    bind₁_X_right, bind₁_C_right, ← Finsetₓ.sum_add_distrib, ← mul_addₓ]
+  apply Finsetₓ.sum_congr rfl
   refine' fun m hm => mul_eq_mul_left_iff.mpr (Or.inl _)
   rw [ite_pow, ite_pow, zero_pow (pow_pos hp.out.pos _)]
-  by_cases' Pm : P m
+  by_cases Pm:P m
   · rw [if_pos Pm, if_neg _, add_zeroₓ]
     exact not_not.mpr Pm
     
@@ -150,13 +150,12 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
     · rfl
       
   calc
-    (x + y).coeff n = z.coeff n := by
-      rw [← hx, ← hy, select_add_select_not P z]
+    (x + y).coeff n = z.coeff n := by rw [← hx, ← hy, select_add_select_not P z]
     _ = x.coeff n + y.coeff n := _
     
-  dsimp' [z]
+  dsimp [z]
   split_ifs with hn
-  · dsimp' [P]  at hn
+  · dsimp [P] at hn
     rw [hn, add_zeroₓ]
     
   · rw [(h n).resolve_right hn, zero_addₓ]
@@ -186,22 +185,17 @@ theorem init_add_tail (x : 𝕎 R) (n : ℕ) : init n x + tail n x = x := by
 end
 
 @[simp]
-theorem init_init (x : 𝕎 R) (n : ℕ) : init n (init n x) = init n x := by
-  init_ring
+theorem init_init (x : 𝕎 R) (n : ℕ) : init n (init n x) = init n x := by init_ring
 
 include hp
 
-theorem init_add (x y : 𝕎 R) (n : ℕ) : init n (x + y) = init n (init n x + init n y) := by
-  init_ring using witt_add_vars
+theorem init_add (x y : 𝕎 R) (n : ℕ) : init n (x + y) = init n (init n x + init n y) := by init_ring using witt_add_vars
 
-theorem init_mul (x y : 𝕎 R) (n : ℕ) : init n (x * y) = init n (init n x * init n y) := by
-  init_ring using witt_mul_vars
+theorem init_mul (x y : 𝕎 R) (n : ℕ) : init n (x * y) = init n (init n x * init n y) := by init_ring using witt_mul_vars
 
-theorem init_neg (x : 𝕎 R) (n : ℕ) : init n (-x) = init n (-init n x) := by
-  init_ring using witt_neg_vars
+theorem init_neg (x : 𝕎 R) (n : ℕ) : init n (-x) = init n (-init n x) := by init_ring using witt_neg_vars
 
-theorem init_sub (x y : 𝕎 R) (n : ℕ) : init n (x - y) = init n (init n x - init n y) := by
-  init_ring using witt_sub_vars
+theorem init_sub (x y : 𝕎 R) (n : ℕ) : init n (x - y) = init n (init n x - init n y) := by init_ring using witt_sub_vars
 
 theorem init_nsmul (m : ℕ) (x : 𝕎 R) (n : ℕ) : init n (m • x) = init n (m • init n x) := by
   init_ring using fun p [Fact (Nat.Prime p)] n => witt_nsmul_vars p m n

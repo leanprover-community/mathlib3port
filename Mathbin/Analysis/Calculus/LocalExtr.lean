@@ -81,7 +81,7 @@ def PosTangentConeAt (s : Set E) (x : E) : Set E :=
     ∃ (c : ℕ → ℝ)(d : ℕ → E),
       (∀ᶠ n in at_top, x + d n ∈ s) ∧ Tendsto c atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y) }
 
-theorem pos_tangent_cone_at_mono : Monotone fun s => PosTangentConeAt s a := by
+theorem pos_tangent_cone_at_mono : Monotoneₓ fun s => PosTangentConeAt s a := by
   rintro s t hst y ⟨c, d, hd, hc, hcd⟩
   exact ⟨c, d, (mem_of_superset hd) fun h hn => hst hn, hc, hcd⟩
 
@@ -104,8 +104,7 @@ theorem mem_pos_tangent_cone_at_of_segment_subset {s : Set E} {x y : E} (h : Seg
     
 
 theorem mem_pos_tangent_cone_at_of_segment_subset' {s : Set E} {x y : E} (h : Segment ℝ x (x + y) ⊆ s) :
-    y ∈ PosTangentConeAt s x := by
-  simpa only [add_sub_cancel'] using mem_pos_tangent_cone_at_of_segment_subset h
+    y ∈ PosTangentConeAt s x := by simpa only [add_sub_cancel'] using mem_pos_tangent_cone_at_of_segment_subset h
 
 theorem pos_tangent_cone_at_univ : PosTangentConeAt Univ a = univ :=
   eq_univ_of_forall fun x => mem_pos_tangent_cone_at_of_segment_subset' (subset_univ _)
@@ -118,10 +117,7 @@ theorem IsLocalMaxOn.has_fderiv_within_at_nonpos {s : Set E} (h : IsLocalMaxOn f
   have hc' : tendsto (fun n => ∥c n∥) at_top at_top := tendsto_at_top_mono (fun n => le_abs_self _) hc
   refine' le_of_tendsto (hf.lim at_top hd hc' hcd) _
   replace hd : tendsto (fun n => a + d n) at_top (𝓝[s] (a + 0))
-  exact
-    tendsto_inf.2
-      ⟨tendsto_const_nhds.add (TangentConeAt.lim_zero _ hc' hcd), by
-        rwa [tendsto_principal]⟩
+  exact tendsto_inf.2 ⟨tendsto_const_nhds.add (TangentConeAt.lim_zero _ hc' hcd), by rwa [tendsto_principal]⟩
   rw [add_zeroₓ] at hd
   replace h : ∀ᶠ n in at_top, f (a + d n) ≤ f a
   exact mem_map.1 (hd h)
@@ -145,8 +141,7 @@ theorem IsLocalMaxOn.fderiv_within_nonpos {s : Set E} (h : IsLocalMaxOn f s a) {
 both `y` and `-y` belong to the positive tangent cone of `s` at `a`, then `f' y ≤ 0`. -/
 theorem IsLocalMaxOn.has_fderiv_within_at_eq_zero {s : Set E} (h : IsLocalMaxOn f s a) (hf : HasFderivWithinAt f f' s a)
     {y} (hy : y ∈ PosTangentConeAt s a) (hy' : -y ∈ PosTangentConeAt s a) : f' y = 0 :=
-  le_antisymmₓ (h.has_fderiv_within_at_nonpos hf hy) <| by
-    simpa using h.has_fderiv_within_at_nonpos hf hy'
+  le_antisymmₓ (h.has_fderiv_within_at_nonpos hf hy) <| by simpa using h.has_fderiv_within_at_nonpos hf hy'
 
 /-- If `f` has a local max on `s` at `a` and both `y` and `-y` belong to the positive tangent cone
 of `s` at `a`, then `f' y = 0`. -/
@@ -160,8 +155,7 @@ theorem IsLocalMaxOn.fderiv_within_eq_zero {s : Set E} (h : IsLocalMaxOn f s a) 
 /-- If `f` has a local min on `s` at `a`, `f'` is the derivative of `f` at `a` within `s`, and
 `y` belongs to the positive tangent cone of `s` at `a`, then `0 ≤ f' y`. -/
 theorem IsLocalMinOn.has_fderiv_within_at_nonneg {s : Set E} (h : IsLocalMinOn f s a) (hf : HasFderivWithinAt f f' s a)
-    {y} (hy : y ∈ PosTangentConeAt s a) : 0 ≤ f' y := by
-  simpa using h.neg.has_fderiv_within_at_nonpos hf.neg hy
+    {y} (hy : y ∈ PosTangentConeAt s a) : 0 ≤ f' y := by simpa using h.neg.has_fderiv_within_at_nonpos hf.neg hy
 
 /-- If `f` has a local min on `s` at `a` and `y` belongs to the positive tangent cone
 of `s` at `a`, then `0 ≤ f' y`. -/
@@ -261,8 +255,8 @@ theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (h
   exact is_compact_Icc.exists_forall_le Ne hfc
   obtain ⟨C, Cmem, Cge⟩ : ∃ C ∈ Icc a b, ∀ x ∈ Icc a b, f x ≤ f C
   exact is_compact_Icc.exists_forall_ge Ne hfc
-  by_cases' hc : f c = f a
-  · by_cases' hC : f C = f a
+  by_cases hc:f c = f a
+  · by_cases hC:f C = f a
     · have : ∀ x ∈ Icc a b, f x = f a := fun x hx => le_antisymmₓ (hC ▸ Cge x hx) (hc ▸ cle x hx)
       -- `f` is a constant, so we can take any point in `Ioo a b`
       rcases exists_between hab with ⟨c', hc'⟩
@@ -272,15 +266,11 @@ theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (h
       exact Cge c' ⟨le_of_ltₓ hc'.1, le_of_ltₓ hc'.2⟩
       
     · refine' ⟨C, ⟨lt_of_le_of_neₓ Cmem.1 <| mt _ hC, lt_of_le_of_neₓ Cmem.2 <| mt _ hC⟩, Or.inr Cge⟩
-      exacts[fun h => by
-        rw [h], fun h => by
-        rw [h, hfI]]
+      exacts[fun h => by rw [h], fun h => by rw [h, hfI]]
       
     
   · refine' ⟨c, ⟨lt_of_le_of_neₓ cmem.1 <| mt _ hc, lt_of_le_of_neₓ cmem.2 <| mt _ hc⟩, Or.inl cle⟩
-    exacts[fun h => by
-      rw [h], fun h => by
-      rw [h, hfI]]
+    exacts[fun h => by rw [h], fun h => by rw [h, hfI]]
     
 
 /-- A continuous function on a closed interval with `f a = f b` has a local extremum at some
@@ -341,25 +331,22 @@ end Rolle
 namespace Polynomial
 
 theorem card_root_set_le_derivative {F : Type _} [Field F] [Algebra F ℝ] (p : F[X]) :
-    Fintype.card (p.RootSet ℝ) ≤ Fintype.card (p.derivative.RootSet ℝ) + 1 := by
-  haveI : CharZero F :=
-    (RingHom.char_zero_iff (algebraMap F ℝ).Injective).mpr
-      (by
-        infer_instance)
-  by_cases' hp : p = 0
+    Fintypeₓ.card (p.RootSet ℝ) ≤ Fintypeₓ.card (p.derivative.RootSet ℝ) + 1 := by
+  haveI : CharZero F := (RingHom.char_zero_iff (algebraMap F ℝ).Injective).mpr (by infer_instance)
+  by_cases hp:p = 0
   · simp_rw [hp, derivative_zero, root_set_zero, Set.empty_card', zero_le_one]
     
-  by_cases' hp' : p.derivative = 0
+  by_cases hp':p.derivative = 0
   · rw [eq_C_of_nat_degree_eq_zero (nat_degree_eq_zero_of_derivative_eq_zero hp')]
     simp_rw [root_set_C, Set.empty_card', zero_le]
     
-  simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
-  refine' Finset.card_le_of_interleaved fun x hx y hy hxy => _
-  rw [← Finset.mem_coe, ← root_set_def, mem_root_set hp] at hx hy
+  simp_rw [root_set_def, Finsetₓ.coe_sort_coe, Fintypeₓ.card_coe]
+  refine' Finsetₓ.card_le_of_interleaved fun x hx y hy hxy => _
+  rw [← Finsetₓ.mem_coe, ← root_set_def, mem_root_set hp] at hx hy
   obtain ⟨z, hz1, hz2⟩ :=
     exists_deriv_eq_zero (fun x : ℝ => aeval x p) hxy p.continuous_aeval.continuous_on (hx.trans hy.symm)
   refine' ⟨z, _, hz1⟩
-  rw [← Finset.mem_coe, ← root_set_def, mem_root_set hp', ← hz2]
+  rw [← Finsetₓ.mem_coe, ← root_set_def, mem_root_set hp', ← hz2]
   simp_rw [aeval_def, ← eval_map, Polynomial.deriv, derivative_map]
 
 end Polynomial

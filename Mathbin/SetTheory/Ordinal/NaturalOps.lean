@@ -168,8 +168,7 @@ noncomputable def nadd : Ordinal → Ordinal → Ordinal
 localized [NaturalOps] infixl:65 " ♯ " => Ordinal.nadd
 
 theorem nadd_def (a b : Ordinal) :
-    a ♯ b = max ((blsub.{u, u} a) fun a' h => a' ♯ b) ((blsub.{u, u} b) fun b' h => a ♯ b') := by
-  rw [nadd]
+    a ♯ b = max ((blsub.{u, u} a) fun a' h => a' ♯ b) ((blsub.{u, u} b) fun b' h => a ♯ b') := by rw [nadd]
 
 theorem lt_nadd_iff : a < b ♯ c ↔ (∃ b' < b, a ≤ b' ♯ c) ∨ ∃ c' < c, a ≤ b ♯ c' := by
   rw [nadd_def]
@@ -219,9 +218,9 @@ theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}} (hf : ∀ {i
       
     
   all_goals
-    apply blsub_le_of_brange_subset.{u, u, v}
-    rintro c ⟨d, hd, rfl⟩
-    apply mem_brange_self
+  apply blsub_le_of_brange_subset.{u, u, v}
+  rintro c ⟨d, hd, rfl⟩
+  apply mem_brange_self
 
 theorem nadd_assoc : ∀ a b c, a ♯ b ♯ c = a ♯ (b ♯ c)
   | a, b, c => by
@@ -242,8 +241,7 @@ theorem nadd_zero : a ♯ 0 = a := by
   exact IH _ hb
 
 @[simp]
-theorem zero_nadd : 0 ♯ a = a := by
-  rw [nadd_comm, nadd_zero]
+theorem zero_nadd : 0 ♯ a = a := by rw [nadd_comm, nadd_zero]
 
 @[simp]
 theorem nadd_one : a ♯ 1 = succ a := by
@@ -253,14 +251,11 @@ theorem nadd_one : a ♯ 1 = succ a := by
   rwa [IH i hi, succ_lt_succ_iff]
 
 @[simp]
-theorem one_nadd : 1 ♯ a = succ a := by
-  rw [nadd_comm, nadd_one]
+theorem one_nadd : 1 ♯ a = succ a := by rw [nadd_comm, nadd_one]
 
-theorem nadd_succ : a ♯ succ b = succ (a ♯ b) := by
-  rw [← nadd_one (a ♯ b), nadd_assoc, nadd_one]
+theorem nadd_succ : a ♯ succ b = succ (a ♯ b) := by rw [← nadd_one (a ♯ b), nadd_assoc, nadd_one]
 
-theorem succ_nadd : succ a ♯ b = succ (a ♯ b) := by
-  rw [← one_nadd (a ♯ b), ← nadd_assoc, one_nadd]
+theorem succ_nadd : succ a ♯ b = succ (a ♯ b) := by rw [← one_nadd (a ♯ b), ← nadd_assoc, one_nadd]
 
 @[simp]
 theorem nadd_nat (n : ℕ) : a ♯ n = a + n := by
@@ -271,8 +266,7 @@ theorem nadd_nat (n : ℕ) : a ♯ n = a + n := by
     
 
 @[simp]
-theorem nat_nadd (n : ℕ) : ↑n ♯ a = a + n := by
-  rw [nadd_comm, nadd_nat]
+theorem nat_nadd (n : ℕ) : ↑n ♯ a = a + n := by rw [nadd_comm, nadd_nat]
 
 theorem add_le_nadd : a + b ≤ a ♯ b := by
   apply b.limit_rec_on

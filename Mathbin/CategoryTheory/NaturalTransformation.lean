@@ -46,9 +46,7 @@ Naturality is expressed by `α.naturality_lemma`.
 @[ext]
 structure NatTrans (F G : C ⥤ D) : Type max u₁ v₂ where
   app : ∀ X : C, F.obj X ⟶ G.obj X
-  naturality' : ∀ ⦃X Y : C⦄ (f : X ⟶ Y), F.map f ≫ app Y = app X ≫ G.map f := by
-    run_tac
-      obviously
+  naturality' : ∀ ⦃X Y : C⦄ (f : X ⟶ Y), F.map f ≫ app Y = app X ≫ G.map f := by obviously
 
 restate_axiom nat_trans.naturality'
 
@@ -100,8 +98,7 @@ G X ----> G Y ----> G U ----> G V
 commutes.
 -/
 example {F G : C ⥤ D} (α : NatTrans F G) {X Y U V : C} (f : X ⟶ Y) (g : Y ⟶ U) (h : U ⟶ V) :
-    α.app X ≫ G.map f ≫ G.map g ≫ G.map h = F.map f ≫ F.map g ≫ F.map h ≫ α.app V := by
-  simp
+    α.app X ≫ G.map f ≫ G.map g ≫ G.map h = F.map f ≫ F.map g ≫ F.map h ≫ α.app V := by simp
 
 end NatTrans
 

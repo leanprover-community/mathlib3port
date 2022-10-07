@@ -65,9 +65,7 @@ end IsSimpleModule
 
 theorem is_semisimple_of_Sup_simples_eq_top (h : sup { m : Submodule R M | IsSimpleModule R m } = ⊤) :
     IsSemisimpleModule R M :=
-  complemented_lattice_of_Sup_atoms_eq_top
-    (by
-      simp_rw [← h, is_simple_module_iff_is_atom])
+  complemented_lattice_of_Sup_atoms_eq_top (by simp_rw [← h, is_simple_module_iff_is_atom])
 
 namespace IsSemisimpleModule
 
@@ -77,9 +75,9 @@ theorem Sup_simples_eq_top : sup { m : Submodule R M | IsSimpleModule R m } = �
   simp_rw [is_simple_module_iff_is_atom]
   exact Sup_atoms_eq_top
 
-instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m := by
-  have f : Submodule R m ≃o Set.Iic m := Submodule.MapSubtype.relIso m
-  exact f.complemented_lattice_iff.2 IsModularLattice.complemented_lattice_Iic
+instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
+  haveI f : Submodule R m ≃o Set.Iic m := Submodule.MapSubtype.relIso m
+  f.complemented_lattice_iff.2 IsModularLattice.complemented_lattice_Iic
 
 end IsSemisimpleModule
 
@@ -108,7 +106,7 @@ theorem surjective_of_ne_zero [IsSimpleModule R N] {f : M →ₗ[R] N} (h : f �
 /-- **Schur's Lemma** for linear maps between (possibly distinct) simple modules -/
 theorem bijective_or_eq_zero [IsSimpleModule R M] [IsSimpleModule R N] (f : M →ₗ[R] N) : Function.Bijective f ∨ f = 0 :=
   by
-  by_cases' h : f = 0
+  by_cases h:f = 0
   · right
     exact h
     

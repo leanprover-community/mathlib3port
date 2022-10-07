@@ -45,10 +45,10 @@ theorem IsSymm.ext {A : Matrix n n α} : (∀ i j, A j i = A i j) → A.IsSymm :
 theorem IsSymm.apply {A : Matrix n n α} (h : A.IsSymm) (i j : n) : A j i = A i j :=
   IsSymm.ext_iff.1 h i j
 
-theorem is_symm_mul_transpose_self [Fintype n] [CommSemiringₓ α] (A : Matrix n n α) : (A ⬝ Aᵀ).IsSymm :=
+theorem is_symm_mul_transpose_self [Fintypeₓ n] [CommSemiringₓ α] (A : Matrix n n α) : (A ⬝ Aᵀ).IsSymm :=
   transpose_mul _ _
 
-theorem is_symm_transpose_mul_self [Fintype n] [CommSemiringₓ α] (A : Matrix n n α) : (Aᵀ ⬝ A).IsSymm :=
+theorem is_symm_transpose_mul_self [Fintypeₓ n] [CommSemiringₓ α] (A : Matrix n n α) : (Aᵀ ⬝ A).IsSymm :=
   transpose_mul _ _
 
 theorem is_symm_add_transpose_self [AddCommSemigroupₓ α] (A : Matrix n n α) : (A + Aᵀ).IsSymm :=

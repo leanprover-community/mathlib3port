@@ -36,23 +36,18 @@ theorem mul_subst {α} [CommRingₓ α] {n1 n2 k e1 e2 t1 t2 : α} (h1 : n1 * e1
   rw [← h3, mul_comm n1, mul_assoc n2, ← mul_assoc n1, h1, ← mul_assoc n2, mul_comm n2, mul_assoc, h2]
 
 theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : n1 * e1 = t1) (h2 : n2 / e2 = 1) (h3 : n1 * n2 = k) :
-    k * (e1 / e2) = t1 := by
-  rw [← h3, mul_assoc, mul_div_left_comm, h2, ← mul_assoc, h1, mul_comm, one_mulₓ]
+    k * (e1 / e2) = t1 := by rw [← h3, mul_assoc, mul_div_left_comm, h2, ← mul_assoc, h1, mul_comm, one_mulₓ]
 
 theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : n * e = e') (h2 : n ≠ 0) : e = e' / n :=
-  eq_div_of_mul_eq h2 <| by
-    rwa [mul_comm] at h
+  eq_div_of_mul_eq h2 <| by rwa [mul_comm] at h
 
 theorem add_subst {α} [Ringₓ α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) : n * (e1 + e2) = t1 + t2 :=
-  by
-  simp [left_distrib, *]
+  by simp [left_distrib, *]
 
 theorem sub_subst {α} [Ringₓ α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) : n * (e1 - e2) = t1 - t2 :=
-  by
-  simp [left_distrib, *, sub_eq_add_neg]
+  by simp [left_distrib, *, sub_eq_add_neg]
 
-theorem neg_subst {α} [Ringₓ α] {n e t : α} (h1 : n * e = t) : n * -e = -t := by
-  simp [*]
+theorem neg_subst {α} [Ringₓ α] {n e t : α} (h1 : n * e = t) : n * -e = -t := by simp [*]
 
 theorem cancel_factors_lt {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
     (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a < b) = (1 / gcd * (bd * a') < 1 / gcd * (ad * b')) := by
@@ -79,11 +74,7 @@ theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α
     refine' mul_left_cancel₀ (mul_ne_zero _ _) h
     apply mul_ne_zero
     apply div_ne_zero
-    all_goals
-      apply ne_of_gtₓ <;>
-        first |
-          assumption|
-          exact zero_lt_one
+    all_goals apply ne_of_gtₓ <;> first |assumption|exact zero_lt_one
     
 
 open Tactic Expr

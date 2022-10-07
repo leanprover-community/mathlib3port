@@ -50,33 +50,18 @@ local infixr:65 " +ₗ " => leftAdd X Y
 local infixr:65 " +ᵣ " => rightAdd X Y
 
 theorem is_unital_left_add : EckmannHilton.IsUnital (· +ₗ ·) 0 :=
-  ⟨⟨fun f => by
-      simp
-        [show biprod.lift (0 : X ⟶ Y) f = f ≫ biprod.inr by
-          ext <;> simp ]⟩,
-    ⟨fun f => by
-      simp
-        [show biprod.lift f (0 : X ⟶ Y) = f ≫ biprod.inl by
-          ext <;> simp ]⟩⟩
+  ⟨⟨fun f => by simp [show biprod.lift (0 : X ⟶ Y) f = f ≫ biprod.inr by ext <;> simp]⟩,
+    ⟨fun f => by simp [show biprod.lift f (0 : X ⟶ Y) = f ≫ biprod.inl by ext <;> simp]⟩⟩
 
 theorem is_unital_right_add : EckmannHilton.IsUnital (· +ᵣ ·) 0 :=
-  ⟨⟨fun f => by
-      simp
-        [show biprod.desc (0 : X ⟶ Y) f = biprod.snd ≫ f by
-          ext <;> simp ]⟩,
-    ⟨fun f => by
-      simp
-        [show biprod.desc f (0 : X ⟶ Y) = biprod.fst ≫ f by
-          ext <;> simp ]⟩⟩
+  ⟨⟨fun f => by simp [show biprod.desc (0 : X ⟶ Y) f = biprod.snd ≫ f by ext <;> simp]⟩,
+    ⟨fun f => by simp [show biprod.desc f (0 : X ⟶ Y) = biprod.fst ≫ f by ext <;> simp]⟩⟩
 
 theorem distrib (f g h k : X ⟶ Y) : (f +ᵣ g) +ₗ h +ᵣ k = (f +ₗ h) +ᵣ g +ₗ k := by
   let diag : X ⊞ X ⟶ Y ⊞ Y := biprod.lift (biprod.desc f g) (biprod.desc h k)
-  have hd₁ : biprod.inl ≫ diag = biprod.lift f h := by
-    ext <;> simp
-  have hd₂ : biprod.inr ≫ diag = biprod.lift g k := by
-    ext <;> simp
-  have h₁ : biprod.lift (f +ᵣ g) (h +ᵣ k) = biprod.lift (𝟙 X) (𝟙 X) ≫ diag := by
-    ext <;> simp
+  have hd₁ : biprod.inl ≫ diag = biprod.lift f h := by ext <;> simp
+  have hd₂ : biprod.inr ≫ diag = biprod.lift g k := by ext <;> simp
+  have h₁ : biprod.lift (f +ᵣ g) (h +ᵣ k) = biprod.lift (𝟙 X) (𝟙 X) ≫ diag := by ext <;> simp
   have h₂ : diag ≫ biprod.desc (𝟙 Y) (𝟙 Y) = biprod.desc (f +ₗ h) (g +ₗ k) := by
     ext <;> simp [reassoc_of hd₁, reassoc_of hd₂]
   rw [leftAdd, h₁, category.assoc, h₂, rightAdd]

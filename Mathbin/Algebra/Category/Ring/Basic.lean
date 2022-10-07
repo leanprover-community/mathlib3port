@@ -164,9 +164,7 @@ instance hasForgetToSemiRing : HasForget₂ CommSemiRing SemiRing :=
 
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
 instance hasForgetToCommMon : HasForget₂ CommSemiRing CommMon :=
-  HasForget₂.mk' (fun R : CommSemiRing => CommMon.of R) (fun R => rfl) (fun R₁ R₂ f => f.toMonoidHom)
-    (by
-      tidy)
+  HasForget₂.mk' (fun R : CommSemiRing => CommMon.of R) (fun R => rfl) (fun R₁ R₂ f => f.toMonoidHom) (by tidy)
 
 end CommSemiRing
 
@@ -211,9 +209,7 @@ instance hasForgetToRing : HasForget₂ CommRingₓₓ Ringₓₓ :=
 
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
 instance hasForgetToCommSemiRing : HasForget₂ CommRingₓₓ CommSemiRing :=
-  HasForget₂.mk' (fun R : CommRingₓₓ => CommSemiRing.of R) (fun R => rfl) (fun R₁ R₂ f => f)
-    (by
-      tidy)
+  HasForget₂.mk' (fun R : CommRingₓₓ => CommSemiRing.of R) (fun R => rfl) (fun R₁ R₂ f => f) (by tidy)
 
 instance : Full (forget₂ CommRingₓₓ CommSemiRing) where preimage := fun X Y f => f
 
@@ -223,8 +219,7 @@ end CommRingₓₓ
 -- Before that, to have `add_ring_hom.map_zero` usable by `simp` here,
 -- we had to mark all the concrete category `has_coe_to_sort` instances reducible.
 -- Now, it just works.
-example {R S : CommRingₓₓ} (i : R ⟶ S) (r : R) (h : r = 0) : i r = 0 := by
-  simp [h]
+example {R S : CommRingₓₓ} (i : R ⟶ S) (r : R) (h : r = 0) : i r = 0 := by simp [h]
 
 namespace RingEquiv
 
@@ -250,27 +245,19 @@ namespace CategoryTheory.Iso
 def ringIsoToRingEquiv {X Y : Ringₓₓ} (i : X ≅ Y) : X ≃+* Y where
   toFun := i.Hom
   invFun := i.inv
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
-  map_add' := by
-    tidy
-  map_mul' := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
+  map_add' := by tidy
+  map_mul' := by tidy
 
 /-- Build a `ring_equiv` from an isomorphism in the category `CommRing`. -/
 def commRingIsoToRingEquiv {X Y : CommRingₓₓ} (i : X ≅ Y) : X ≃+* Y where
   toFun := i.Hom
   invFun := i.inv
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
-  map_add' := by
-    tidy
-  map_mul' := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
+  map_add' := by tidy
+  map_mul' := by tidy
 
 @[simp]
 theorem CommRing_iso_to_ring_equiv_to_ring_hom {X Y : CommRingₓₓ} (i : X ≅ Y) :
@@ -324,6 +311,5 @@ theorem CommRingₓₓ.ring_hom_comp_eq_comp {R S T : Type _} [CommRingₓ R] [C
 -- which can cause typeclass loops:
 attribute [local instance] reflects_isomorphisms_forget₂
 
-example : ReflectsIsomorphisms (forget₂ Ringₓₓ AddCommGroupₓₓ) := by
-  infer_instance
+example : ReflectsIsomorphisms (forget₂ Ringₓₓ AddCommGroupₓₓ) := by infer_instance
 

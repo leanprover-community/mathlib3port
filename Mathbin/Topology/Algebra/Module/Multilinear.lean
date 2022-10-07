@@ -178,7 +178,7 @@ def applyAddHom (m : ∀ i, M₁ i) : ContinuousMultilinearMap R M₁ M₂ →+ 
   ⟨fun f => f m, rfl, fun _ _ => rfl⟩
 
 @[simp]
-theorem sum_apply {α : Type _} (f : α → ContinuousMultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) {s : Finset α} :
+theorem sum_apply {α : Type _} (f : α → ContinuousMultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) {s : Finsetₓ α} :
     (∑ a in s, f a) m = ∑ a in s, f a m :=
   (applyAddHom m).map_sum f s
 
@@ -272,20 +272,20 @@ theorem cons_smul (f : ContinuousMultilinearMap R M M₂) (m : ∀ i : Finₓ n,
     f (cons (c • x) m) = c • f (cons x m) :=
   f.toMultilinearMap.cons_smul m c x
 
-theorem map_piecewise_add (m m' : ∀ i, M₁ i) (t : Finset ι) :
+theorem map_piecewise_add (m m' : ∀ i, M₁ i) (t : Finsetₓ ι) :
     f (t.piecewise (m + m') m') = ∑ s in t.Powerset, f (s.piecewise m m') :=
   f.toMultilinearMap.map_piecewise_add _ _ _
 
 /-- Additivity of a continuous multilinear map along all coordinates at the same time,
 writing `f (m + m')` as the sum  of `f (s.piecewise m m')` over all sets `s`. -/
-theorem map_add_univ [Fintype ι] (m m' : ∀ i, M₁ i) : f (m + m') = ∑ s : Finset ι, f (s.piecewise m m') :=
+theorem map_add_univ [Fintypeₓ ι] (m m' : ∀ i, M₁ i) : f (m + m') = ∑ s : Finsetₓ ι, f (s.piecewise m m') :=
   f.toMultilinearMap.map_add_univ _ _
 
 section ApplySum
 
-open Fintype Finset
+open Fintypeₓ Finsetₓ
 
-variable {α : ι → Type _} [Fintype ι] (g : ∀ i, α i → M₁ i) (A : ∀ i, Finset (α i))
+variable {α : ι → Type _} [Fintypeₓ ι] (g : ∀ i, α i → M₁ i) (A : ∀ i, Finsetₓ (α i))
 
 /-- If `f` is continuous multilinear, then `f (Σ_{j₁ ∈ A₁} g₁ j₁, ..., Σ_{jₙ ∈ Aₙ} gₙ jₙ)` is the
 sum of `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions with `r 1 ∈ A₁`, ...,
@@ -297,7 +297,7 @@ theorem map_sum_finset : (f fun i => ∑ j in A i, g i j) = ∑ r in piFinset A,
 /-- If `f` is continuous multilinear, then `f (Σ_{j₁} g₁ j₁, ..., Σ_{jₙ} gₙ jₙ)` is the sum of
 `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions `r`. This follows from
 multilinearity by expanding successively with respect to each coordinate. -/
-theorem map_sum [∀ i, Fintype (α i)] : (f fun i => ∑ j, g i j) = ∑ r : ∀ i, α i, f fun i => g i (r i) :=
+theorem map_sum [∀ i, Fintypeₓ (α i)] : (f fun i => ∑ j, g i j) = ∑ r : ∀ i, α i, f fun i => g i (r i) :=
   f.toMultilinearMap.map_sum _
 
 end ApplySum
@@ -361,13 +361,13 @@ section CommSemiringₓ
 variable [CommSemiringₓ R] [∀ i, AddCommMonoidₓ (M₁ i)] [AddCommMonoidₓ M₂] [∀ i, Module R (M₁ i)] [Module R M₂]
   [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] (f : ContinuousMultilinearMap R M₁ M₂)
 
-theorem map_piecewise_smul (c : ι → R) (m : ∀ i, M₁ i) (s : Finset ι) :
+theorem map_piecewise_smul (c : ι → R) (m : ∀ i, M₁ i) (s : Finsetₓ ι) :
     f (s.piecewise (fun i => c i • m i) m) = (∏ i in s, c i) • f m :=
   f.toMultilinearMap.map_piecewise_smul _ _ _
 
 /-- Multiplicativity of a continuous multilinear map along all coordinates at the same time,
 writing `f (λ i, c i • m i)` as `(∏ i, c i) • f m`. -/
-theorem map_smul_univ [Fintype ι] (c : ι → R) (m : ∀ i, M₁ i) : (f fun i => c i • m i) = (∏ i, c i) • f m :=
+theorem map_smul_univ [Fintypeₓ ι] (c : ι → R) (m : ∀ i, M₁ i) : (f fun i => c i • m i) = (∏ i, c i) • f m :=
   f.toMultilinearMap.map_smul_univ _ _
 
 end CommSemiringₓ
@@ -417,7 +417,7 @@ end Module
 
 section CommAlgebra
 
-variable (R ι) (A : Type _) [Fintype ι] [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A] [TopologicalSpace A]
+variable (R ι) (A : Type _) [Fintypeₓ ι] [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A] [TopologicalSpace A]
   [HasContinuousMul A]
 
 /-- The continuous multilinear map on `A^ι`, where `A` is a normed commutative algebra

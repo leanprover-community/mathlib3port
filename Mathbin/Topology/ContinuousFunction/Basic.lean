@@ -27,9 +27,7 @@ When you extend this structure, make sure to extend `continuous_map_class`. -/
 @[protect_proj]
 structure ContinuousMap (α β : Type _) [TopologicalSpace α] [TopologicalSpace β] where
   toFun : α → β
-  continuous_to_fun : Continuous to_fun := by
-    run_tac
-      tactic.interactive.continuity'
+  continuous_to_fun : Continuous to_fun := by continuity
 
 -- mathport name: «exprC( , )»
 notation "C(" α ", " β ")" => ContinuousMap α β
@@ -75,8 +73,7 @@ variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [Top
 
 instance : ContinuousMapClass C(α, β) α β where
   coe := ContinuousMap.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_continuous := ContinuousMap.continuous_to_fun
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -90,6 +87,10 @@ theorem to_fun_eq_coe {f : C(α, β)} : f.toFun = (f : α → β) :=
 
 -- this must come after the coe_to_fun definition
 initialize_simps_projections ContinuousMap (toFun → apply)
+
+@[protected, simp, norm_cast]
+theorem coe_coe {F : Type _} [ContinuousMapClass F α β] (f : F) : ⇑(f : C(α, β)) = f :=
+  rfl
 
 @[ext]
 theorem ext {f g : C(α, β)} (h : ∀ a, f a = g a) : f = g :=
@@ -123,8 +124,7 @@ protected theorem congr_fun {f g : C(α, β)} (H : f = g) (x : α) : f x = g x :
 protected theorem congr_arg (f : C(α, β)) {x y : α} (h : x = y) : f x = f y :=
   h ▸ rfl
 
-theorem coe_injective : @Function.Injective C(α, β) (α → β) coeFn := fun f g h => by
-  cases f <;> cases g <;> congr
+theorem coe_injective : @Function.Injective C(α, β) (α → β) coeFn := fun f g h => by cases f <;> cases g <;> congr
 
 @[simp]
 theorem coe_mk (f : α → β) (h : Continuous f) : ⇑(⟨f, h⟩ : C(α, β)) = f :=
@@ -216,11 +216,7 @@ theorem cancel_right {f₁ f₂ : C(β, γ)} {g : C(α, β)} (hg : Surjective g)
   ⟨fun h => ext <| hg.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {f : C(β, γ)} {g₁ g₂ : C(α, β)} (hf : Injective f) : f.comp g₁ = f.comp g₂ ↔ g₁ = g₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hf <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hf <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 instance [Nonempty α] [Nontrivial β] : Nontrivial C(α, β) :=
   ⟨let ⟨b₁, b₂, hb⟩ := exists_pair_ne β

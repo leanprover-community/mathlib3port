@@ -82,16 +82,15 @@ theorem IsMatching.support_eq_verts {M : Subgraph G} (h : M.IsMatching) : M.Supp
   obtain ⟨w, hvw, -⟩ := h hv
   exact ⟨_, hvw⟩
 
-theorem is_matching_iff_forall_degree {M : Subgraph G} [∀ v : V, Fintype (M.NeighborSet v)] :
-    M.IsMatching ↔ ∀ v : V, v ∈ M.Verts → M.degree v = 1 := by
-  simpa [degree_eq_one_iff_unique_adj]
+theorem is_matching_iff_forall_degree {M : Subgraph G} [∀ v : V, Fintypeₓ (M.NeighborSet v)] :
+    M.IsMatching ↔ ∀ v : V, v ∈ M.Verts → M.degree v = 1 := by simpa [degree_eq_one_iff_unique_adj]
 
-theorem IsMatching.even_card {M : Subgraph G} [Fintype M.Verts] (h : M.IsMatching) : Even M.Verts.toFinset.card := by
+theorem IsMatching.even_card {M : Subgraph G} [Fintypeₓ M.Verts] (h : M.IsMatching) : Even M.Verts.toFinset.card := by
   classical
   rw [is_matching_iff_forall_degree] at h
   use M.coe.edge_finset.card
   rw [← two_mul, ← M.coe.sum_degrees_eq_twice_card_edges]
-  simp [h, Finset.card_univ]
+  simp [h, Finsetₓ.card_univ]
 
 theorem is_perfect_matching_iff : M.IsPerfectMatching ↔ ∀ v, ∃! w, M.Adj v w := by
   refine' ⟨_, fun hm => ⟨fun v hv => hm v, fun v => _⟩⟩
@@ -102,11 +101,11 @@ theorem is_perfect_matching_iff : M.IsPerfectMatching ↔ ∀ v, ∃! w, M.Adj v
     exact M.edge_vert hw
     
 
-theorem is_perfect_matching_iff_forall_degree {M : Subgraph G} [∀ v, Fintype (M.NeighborSet v)] :
-    M.IsPerfectMatching ↔ ∀ v, M.degree v = 1 := by
-  simp [degree_eq_one_iff_unique_adj, is_perfect_matching_iff]
+theorem is_perfect_matching_iff_forall_degree {M : Subgraph G} [∀ v, Fintypeₓ (M.NeighborSet v)] :
+    M.IsPerfectMatching ↔ ∀ v, M.degree v = 1 := by simp [degree_eq_one_iff_unique_adj, is_perfect_matching_iff]
 
-theorem IsPerfectMatching.even_card {M : Subgraph G} [Fintype V] (h : M.IsPerfectMatching) : Even (Fintype.card V) := by
+theorem IsPerfectMatching.even_card {M : Subgraph G} [Fintypeₓ V] (h : M.IsPerfectMatching) : Even (Fintypeₓ.card V) :=
+  by
   classical
   simpa [h.2.card_verts] using is_matching.even_card h.1
 

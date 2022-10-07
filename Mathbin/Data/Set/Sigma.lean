@@ -157,13 +157,11 @@ theorem mk_preimage_sigma_eq_if [DecidablePred (· ∈ s)] : Sigma.mk i ⁻¹' s
 
 theorem mk_preimage_sigma_fn_eq_if {β : Type _} [DecidablePred (· ∈ s)] (g : β → α i) :
     (fun b => Sigma.mk i (g b)) ⁻¹' s.Sigma t = if i ∈ s then g ⁻¹' t i else ∅ :=
-  ext fun _ => by
-    split_ifs <;> simp [h]
+  ext fun _ => by split_ifs <;> simp [h]
 
 theorem sigma_univ_range_eq {f : ∀ i, α i → β i} :
     ((Univ : Set ι).Sigma fun i => Range (f i)) = Range fun x : Σi, α i => ⟨x.1, f _ x.2⟩ :=
-  ext <| by
-    simp [range]
+  ext <| by simp [range]
 
 protected theorem Nonempty.sigma : s.Nonempty → (∀ i, (t i).Nonempty) → (s.Sigma t : Set _).Nonempty := fun ⟨i, hi⟩ h =>
   let ⟨a, ha⟩ := h i
@@ -179,8 +177,7 @@ theorem sigma_nonempty_iff : (s.Sigma t : Set _).Nonempty ↔ ∃ i ∈ s, (t i)
 
 theorem sigma_eq_empty_iff : s.Sigma t = ∅ ↔ ∀ i ∈ s, t i = ∅ :=
   not_nonempty_iff_eq_empty.symm.trans <|
-    sigma_nonempty_iff.Not.trans <| by
-      simp only [not_nonempty_iff_eq_empty, not_exists]
+    sigma_nonempty_iff.Not.trans <| by simp only [not_nonempty_iff_eq_empty, not_exists]
 
 theorem image_sigma_mk_subset_sigma_left {a : ∀ i, α i} (ha : ∀ i, a i ∈ t i) :
     (fun i => Sigma.mk i (a i)) '' s ⊆ s.Sigma t :=
@@ -200,8 +197,7 @@ theorem fst_image_sigma (s : Set ι) (ht : ∀ i, (t i).Nonempty) : Sigma.fst ''
     ⟨⟨i, a⟩, ⟨hi, ha⟩, rfl⟩
 
 theorem sigma_diff_sigma : s₁.Sigma t₁ \ s₂.Sigma t₂ = s₁.Sigma (t₁ \ t₂) ∪ (s₁ \ s₂).Sigma t₁ :=
-  ext fun x => by
-    by_cases' h₁ : x.1 ∈ s₁ <;> by_cases' h₂ : x.2 ∈ t₁ x.1 <;> simp [*, ← imp_iff_or_not]
+  ext fun x => by by_cases h₁:x.1 ∈ s₁ <;> by_cases h₂:x.2 ∈ t₁ x.1 <;> simp [*, ← imp_iff_or_not]
 
 end Set
 

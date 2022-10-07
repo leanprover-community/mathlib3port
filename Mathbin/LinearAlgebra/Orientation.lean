@@ -98,7 +98,7 @@ theorem map_orientation_eq_det_inv_smul [Finite ι] (e : Basis ι R M) (x : Orie
     AlternatingMap.smul_apply, Basis.det_comp, Basis.det_self, mul_oneₓ, smul_eq_mul, mul_comm, mul_smul,
     LinearEquiv.coe_inv_det]
 
-variable [Fintype ι]
+variable [Fintypeₓ ι]
 
 /-- The orientation given by a basis. -/
 protected def orientation [Nontrivial R] (e : Basis ι R M) : Orientation R M ι :=
@@ -113,7 +113,7 @@ units. -/
 theorem orientation_units_smul [Nontrivial R] (e : Basis ι R M) (w : ι → Units R) :
     (e.units_smul w).Orientation = (∏ i, w i)⁻¹ • e.Orientation := by
   rw [Basis.orientation, Basis.orientation, smul_ray_of_ne_zero, ray_eq_iff, e.det.eq_smul_basis_det (e.units_smul w),
-    det_units_smul, Units.smul_def, smul_smul]
+    det_units_smul_self, Units.smul_def, smul_smul]
   norm_cast
   simp
 
@@ -131,15 +131,14 @@ variable {ι : Type _} [DecidableEq ι]
 
 namespace Basis
 
-variable [Fintype ι]
+variable [Fintypeₓ ι]
 
 /-- The orientations given by two bases are equal if and only if the determinant of one basis
 with respect to the other is positive. -/
 theorem orientation_eq_iff_det_pos (e₁ e₂ : Basis ι R M) : e₁.Orientation = e₂.Orientation ↔ 0 < e₁.det e₂ :=
   calc
     e₁.Orientation = e₂.Orientation ↔ SameRay R e₁.det e₂.det := ray_eq_iff _ _
-    _ ↔ SameRay R (e₁.det e₂ • e₂.det) e₂.det := by
-      rw [← e₁.det.eq_smul_basis_det e₂]
+    _ ↔ SameRay R (e₁.det e₂ • e₂.det) e₂.det := by rw [← e₁.det.eq_smul_basis_det e₂]
     _ ↔ 0 < e₁.det e₂ := same_ray_smul_left_iff_of_ne e₂.det_ne_zero (e₁.is_unit_det e₂).ne_zero
     
 
@@ -175,7 +174,7 @@ orientation. -/
 @[simp]
 theorem orientation_neg_single [Nontrivial R] (e : Basis ι R M) (i : ι) :
     (e.units_smul (Function.update 1 i (-1))).Orientation = -e.Orientation := by
-  rw [orientation_units_smul, Finset.prod_update_of_mem (Finset.mem_univ _)]
+  rw [orientation_units_smul, Finsetₓ.prod_update_of_mem (Finsetₓ.mem_univ _)]
   simp
 
 /-- Given a basis and an orientation, return a basis giving that orientation: either the original
@@ -204,8 +203,24 @@ theorem adjust_to_orientation_apply_eq_or_eq_neg [Nontrivial R] [Nonempty ι] (e
   split_ifs with h
   · simp
     
-  · by_cases' hi : i = Classical.arbitrary ι <;> simp [units_smul_apply, hi]
+  · by_cases hi:i = Classical.arbitrary ι <;> simp [units_smul_apply, hi]
     
+
+theorem det_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : Orientation R M ι) :
+    (e.adjustToOrientation x).det = e.det ∨ (e.adjustToOrientation x).det = -e.det := by
+  dsimp [Basis.adjustToOrientation]
+  split_ifs
+  · left
+    rfl
+    
+  · right
+    simp [e.det_units_smul, ← Units.coe_prod, Finsetₓ.prod_update_of_mem]
+    
+
+@[simp]
+theorem abs_det_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : Orientation R M ι)
+    (v : ι → M) : abs ((e.adjustToOrientation x).det v) = abs (e.det v) := by
+  cases' e.det_adjust_to_orientation x with h h <;> simp [h]
 
 end Basis
 
@@ -221,51 +236,51 @@ variable {ι : Type _} [DecidableEq ι]
 
 namespace Orientation
 
-variable [Fintype ι] [FiniteDimensional R M]
+variable [Fintypeₓ ι] [FiniteDimensional R M]
 
 open FiniteDimensional
 
 /-- If the index type has cardinality equal to the finite dimension, any two orientations are
 equal or negations. -/
-theorem eq_or_eq_neg (x₁ x₂ : Orientation R M ι) (h : Fintype.card ι = finrank R M) : x₁ = x₂ ∨ x₁ = -x₂ := by
-  have e := (fin_basis R M).reindex (Fintype.equivFinOfCardEq h).symm
+theorem eq_or_eq_neg (x₁ x₂ : Orientation R M ι) (h : Fintypeₓ.card ι = finrank R M) : x₁ = x₂ ∨ x₁ = -x₂ := by
+  have e := (fin_basis R M).reindex (Fintypeₓ.equivFinOfCardEq h).symm
   rcases e.orientation_eq_or_eq_neg x₁ with (h₁ | h₁) <;>
     rcases e.orientation_eq_or_eq_neg x₂ with (h₂ | h₂) <;> simp [h₁, h₂]
 
 /-- If the index type has cardinality equal to the finite dimension, an orientation equals the
 negation of another orientation if and only if they are not equal. -/
-theorem ne_iff_eq_neg (x₁ x₂ : Orientation R M ι) (h : Fintype.card ι = finrank R M) : x₁ ≠ x₂ ↔ x₁ = -x₂ :=
+theorem ne_iff_eq_neg (x₁ x₂ : Orientation R M ι) (h : Fintypeₓ.card ι = finrank R M) : x₁ ≠ x₂ ↔ x₁ = -x₂ :=
   ⟨fun hn => (eq_or_eq_neg x₁ x₂ h).resolve_left hn, fun he => he.symm ▸ (Module.Ray.ne_neg_self x₂).symm⟩
 
 /-- The value of `orientation.map` when the index type has cardinality equal to the finite
 dimension, in terms of `f.det`. -/
-theorem map_eq_det_inv_smul (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h : Fintype.card ι = finrank R M) :
-    Orientation.map ι f x = f.det⁻¹ • x := by
-  have e := (fin_basis R M).reindex (Fintype.equivFinOfCardEq h).symm
-  exact e.map_orientation_eq_det_inv_smul x f
+theorem map_eq_det_inv_smul (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h : Fintypeₓ.card ι = finrank R M) :
+    Orientation.map ι f x = f.det⁻¹ • x :=
+  haveI e := (fin_basis R M).reindex (Fintypeₓ.equivFinOfCardEq h).symm
+  e.map_orientation_eq_det_inv_smul x f
 
 /-- If the index type has cardinality equal to the finite dimension, composing an alternating
 map with the same linear equiv on each argument gives the same orientation if and only if the
 determinant is positive. -/
-theorem map_eq_iff_det_pos (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h : Fintype.card ι = finrank R M) :
+theorem map_eq_iff_det_pos (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h : Fintypeₓ.card ι = finrank R M) :
     Orientation.map ι f x = x ↔ 0 < (f : M →ₗ[R] M).det := by
   rw [map_eq_det_inv_smul _ _ h, units_inv_smul, units_smul_eq_self_iff, LinearEquiv.coe_det]
 
 /-- If the index type has cardinality equal to the finite dimension, composing an alternating
 map with the same linear equiv on each argument gives the negation of that orientation if and
 only if the determinant is negative. -/
-theorem map_eq_neg_iff_det_neg (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h : Fintype.card ι = finrank R M) :
+theorem map_eq_neg_iff_det_neg (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h : Fintypeₓ.card ι = finrank R M) :
     Orientation.map ι f x = -x ↔ (f : M →ₗ[R] M).det < 0 := by
   rw [map_eq_det_inv_smul _ _ h, units_inv_smul, units_smul_eq_neg_iff, LinearEquiv.coe_det]
 
 /-- If the index type has cardinality equal to the finite dimension, a basis with the given
 orientation. -/
-def someBasis [Nonempty ι] (x : Orientation R M ι) (h : Fintype.card ι = finrank R M) : Basis ι R M :=
-  ((finBasis R M).reindex (Fintype.equivFinOfCardEq h).symm).adjustToOrientation x
+def someBasis [Nonempty ι] (x : Orientation R M ι) (h : Fintypeₓ.card ι = finrank R M) : Basis ι R M :=
+  ((finBasis R M).reindex (Fintypeₓ.equivFinOfCardEq h).symm).adjustToOrientation x
 
 /-- `some_basis` gives a basis with the required orientation. -/
 @[simp]
-theorem some_basis_orientation [Nonempty ι] (x : Orientation R M ι) (h : Fintype.card ι = finrank R M) :
+theorem some_basis_orientation [Nonempty ι] (x : Orientation R M ι) (h : Fintypeₓ.card ι = finrank R M) :
     (x.someBasis h).Orientation = x :=
   Basis.orientation_adjust_to_orientation _ _
 

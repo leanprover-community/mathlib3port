@@ -45,14 +45,12 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace �
 
 theorem is_conformal_map_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
     IsConformalMap (map.restrictScalars ℝ) := by
-  have minor₁ : ∥map 1∥ ≠ 0 := by
-    simpa [ext_ring_iff] using nonzero
+  have minor₁ : ∥map 1∥ ≠ 0 := by simpa [ext_ring_iff] using nonzero
   refine' ⟨∥map 1∥, minor₁, ⟨∥map 1∥⁻¹ • map, _⟩, _⟩
   · intro x
     simp only [LinearMap.smul_apply]
-    have : x = x • 1 := by
-      rw [smul_eq_mul, mul_oneₓ]
-    nth_rw 0[this]
+    have : x = x • 1 := by rw [smul_eq_mul, mul_oneₓ]
+    nth_rw 0 [this]
     rw [_root_.coe_coe map, LinearMap.coe_coe_is_scalar_tower]
     simp only [map.coe_coe, map.map_smul, norm_smul, norm_inv, norm_norm]
     field_simp [minor₁]

@@ -18,7 +18,7 @@ This file defines `finsupp.indicator` to help create finsupps from finsets.
 
 noncomputable section
 
-open Finset Function
+open Finsetₓ Function
 
 open Classical
 
@@ -26,10 +26,10 @@ variable {ι α : Type _}
 
 namespace Finsupp
 
-variable [Zero α] {s : Finset ι} (f : ∀ i ∈ s, α) {i : ι}
+variable [Zero α] {s : Finsetₓ ι} (f : ∀ i ∈ s, α) {i : ι}
 
 /-- Create an element of `ι →₀ α` from a finset `s` and a function `f` defined on this finset. -/
-def indicator (s : Finset ι) (f : ∀ i ∈ s, α) : ι →₀ α where
+def indicator (s : Finsetₓ ι) (f : ∀ i ∈ s, α) : ι →₀ α where
   toFun := fun i => if H : i ∈ s then f i H else 0
   Support := (s.attach.filter fun i : s => f i.1 i.2 ≠ 0).map <| Embedding.subtype _
   mem_support_to_fun := fun i => by

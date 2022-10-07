@@ -43,7 +43,7 @@ def sectionsSubgroup (F : J ⥤ Groupₓₓ) : Subgroup (∀ j, F.obj j) :=
   { Mon.sectionsSubmonoid (F ⋙ forget₂ Groupₓₓ Mon) with Carrier := (F ⋙ forget Groupₓₓ).sections,
     inv_mem' := fun a ah j j' f => by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.inv_apply, MonoidHom.map_inv, inv_inj]
-      dsimp' [functor.sections]  at ah
+      dsimp [functor.sections] at ah
       rw [ah f] }
 
 @[to_additive]
@@ -64,8 +64,7 @@ instance Forget₂.createsLimit (F : J ⥤ Groupₓₓ.{max v u}) : CreatesLimit
           π :=
             { app := Mon.limitπMonoidHom (F ⋙ forget₂ Groupₓₓ Mon.{max v u}),
               naturality' := (Mon.HasLimits.limitCone (F ⋙ forget₂ Groupₓₓ Mon.{max v u})).π.naturality } },
-      validLift := by
-        apply is_limit.unique_up_to_iso (Mon.HasLimits.limitConeIsLimit _) t,
+      validLift := by apply is_limit.unique_up_to_iso (Mon.HasLimits.limitConeIsLimit _) t,
       makesLimit :=
         IsLimit.ofFaithful (forget₂ Groupₓₓ Mon.{max v u}) (Mon.HasLimits.limitConeIsLimit _) (fun s => _) fun s =>
           rfl }
@@ -104,9 +103,8 @@ This means the underlying monoid of a limit can be computed as a limit in the ca
       "The forgetful functor from additive groups\nto additive monoids preserves all limits.\n\nThis means the underlying additive monoid of a limit can be computed as a limit in the category of\nadditive monoids."]
 instance forget₂MonPreservesLimitsOfSize :
     PreservesLimitsOfSize.{v, v}
-      (forget₂ Groupₓₓ Mon.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
-    { PreservesLimit := fun F => by
-        infer_instance }
+      (forget₂ Groupₓₓ
+        Mon.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 => { PreservesLimit := fun F => by infer_instance }
 
 @[to_additive]
 instance forget₂MonPreservesLimits : PreservesLimits (forget₂ Groupₓₓ Mon.{u}) :=
@@ -157,13 +155,10 @@ instance Forget₂.createsLimit (F : J ⥤ CommGroupₓₓ.{max v u}) :
           π :=
             { app := Mon.limitπMonoidHom (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{max v u} ⋙ forget₂ Groupₓₓ Mon.{max v u}),
               naturality' := (Mon.HasLimits.limitCone _).π.naturality } },
-      validLift := by
-        apply is_limit.unique_up_to_iso (Groupₓₓ.limitConeIsLimit _) t,
+      validLift := by apply is_limit.unique_up_to_iso (Groupₓₓ.limitConeIsLimit _) t,
       makesLimit :=
         IsLimit.ofFaithful (forget₂ _ Groupₓₓ.{max v u} ⋙ forget₂ _ Mon.{max v u})
-          (by
-            apply Mon.HasLimits.limitConeIsLimit _)
-          (fun s => _) fun s => rfl }
+          (by apply Mon.HasLimits.limitConeIsLimit _) (fun s => _) fun s => rfl }
 
 /-- A choice of limit cone for a functor into `CommGroup`.
 (Generally, you'll just want to use `limit F`.)
@@ -199,9 +194,8 @@ of groups.)
       "The forgetful functor from additive commutative groups to groups preserves all limits.\n(That is, the underlying group could have been computed instead as limits in the category\nof additive groups.)"]
 instance forget₂GroupPreservesLimitsOfSize :
     PreservesLimitsOfSize.{v, v}
-      (forget₂ CommGroupₓₓ Groupₓₓ.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
-    { PreservesLimit := fun F => by
-        infer_instance }
+      (forget₂ CommGroupₓₓ
+        Groupₓₓ.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 => { PreservesLimit := fun F => by infer_instance }
 
 @[to_additive]
 instance forget₂GroupPreservesLimits : PreservesLimits (forget₂ CommGroupₓₓ Groupₓₓ.{u}) :=
@@ -241,8 +235,7 @@ instance forgetPreservesLimitsOfSize :
     { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommGroupₓₓ Groupₓₓ) (forget Groupₓₓ) }
 
 -- Verify we can form limits indexed over smaller categories.
-example (f : ℕ → AddCommGroupₓₓ) : HasProduct f := by
-  infer_instance
+example (f : ℕ → AddCommGroupₓₓ) : HasProduct f := by infer_instance
 
 end CommGroupₓₓ
 
@@ -260,14 +253,11 @@ def kernelIsoKer {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) : kernel f ≅ Add
           simp [AddMonoidHom.mem_ker]⟩,
       map_zero' := by
         ext
-        simp ,
+        simp,
       map_add' := fun g g' => by
         ext
         simp }
-  inv :=
-    kernel.lift f (AddSubgroup.subtype f.ker)
-      (by
-        tidy)
+  inv := kernel.lift f (AddSubgroup.subtype f.ker) (by tidy)
   hom_inv_id' := by
     apply equalizer.hom_ext _
     ext
@@ -280,8 +270,7 @@ def kernelIsoKer {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) : kernel f ≅ Add
 
 @[simp]
 theorem kernel_iso_ker_hom_comp_subtype {G H : AddCommGroupₓₓ} (f : G ⟶ H) :
-    (kernelIsoKer f).Hom ≫ AddSubgroup.subtype f.ker = kernel.ι f := by
-  ext <;> rfl
+    (kernelIsoKer f).Hom ≫ AddSubgroup.subtype f.ker = kernel.ι f := by ext <;> rfl
 
 @[simp]
 theorem kernel_iso_ker_inv_comp_ι {G H : AddCommGroupₓₓ} (f : G ⟶ H) :
@@ -295,9 +284,7 @@ agrees with the `subtype` map.
 @[simps]
 def kernelIsoKerOver {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) :
     Over.mk (kernel.ι f) ≅ @Over.mk _ _ G (AddCommGroupₓₓ.of f.ker) (AddSubgroup.subtype f.ker) :=
-  Over.isoMk (kernelIsoKer f)
-    (by
-      simp )
+  Over.isoMk (kernelIsoKer f) (by simp)
 
 end AddCommGroupₓₓ
 

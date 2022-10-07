@@ -41,7 +41,7 @@ local notation "|" x "|" => abs x
   subintervals. Finally, we (6) apply the Mean Value Theorem twice, obtaining bounds on `f 1 - f u`
   and `f u - f 0` from the bounds on `f'` (note that `f 0 = 0`). -/
 theorem tendsto_sum_pi_div_four :
-    Tendsto (fun k => ∑ i in Finset.range k, -(1 : ℝ) ^ i / (2 * i + 1)) atTop (𝓝 (π / 4)) := by
+    Tendsto (fun k => ∑ i in Finsetₓ.range k, -(1 : ℝ) ^ i / (2 * i + 1)) atTop (𝓝 (π / 4)) := by
   rw [tendsto_iff_norm_tendsto_zero, ← tendsto_zero_iff_norm_tendsto_zero]
   -- (1) We introduce a useful sequence `u` of values in [0,1], then prove that another sequence
   --     constructed from `u` tends to `0` at `+∞`
@@ -68,7 +68,7 @@ theorem tendsto_sum_pi_div_four :
   let U := u k
   -- (3) We introduce an auxiliary function `f`
   let b := fun (i : ℕ) x => -(1 : ℝ) ^ i * x ^ (2 * i + 1) / (2 * i + 1)
-  let f := fun x => arctan x - ∑ i in Finset.range k, b i x
+  let f := fun x => arctan x - ∑ i in Finsetₓ.range k, b i x
   suffices f_bound : |f 1 - f 0| ≤ (1 : ℝ) - U + U ^ (2 * (k : ℝ) + 1)
   · rw [← norm_neg]
     convert f_bound
@@ -77,7 +77,7 @@ theorem tendsto_sum_pi_div_four :
     
   -- We show that `U` is indeed in [0,1]
   have hU1 : (U : ℝ) ≤ 1 := by
-    by_cases' hk : k = 0
+    by_cases hk:k = 0
     · simp [u, U, hk]
       
     · exact
@@ -96,7 +96,7 @@ theorem tendsto_sum_pi_div_four :
   let f' := fun x : ℝ => -(x ^ 2) ^ k / (1 + x ^ 2)
   have has_deriv_at_f : ∀ x, HasDerivAt f (f' x) x := by
     intro x
-    have has_deriv_at_b : ∀ i ∈ Finset.range k, HasDerivAt (b i) (-(x ^ 2) ^ i) x := by
+    have has_deriv_at_b : ∀ i ∈ Finsetₓ.range k, HasDerivAt (b i) (-(x ^ 2) ^ i) x := by
       intro i hi
       convert
         HasDerivAt.const_mul ((-1 : ℝ) ^ i / (2 * i + 1)) (@HasDerivAt.pow _ _ _ _ _ (2 * i + 1) (has_deriv_at_id x))
@@ -148,11 +148,9 @@ theorem tendsto_sum_pi_div_four :
   have mvt2 := norm_image_sub_le_of_norm_deriv_le_segment' hderiv2 hbound2 _ (right_mem_Icc.mpr hU2)
   -- The following algebra is enough to complete the proof
   calc
-    |f 1 - f 0| = |f 1 - f U + (f U - f 0)| := by
-      ring_nf
+    |f 1 - f 0| = |f 1 - f U + (f U - f 0)| := by ring_nf
     _ ≤ 1 * (1 - U) + U ^ (2 * k) * (U - 0) := le_transₓ (abs_add (f 1 - f U) (f U - f 0)) (add_le_add mvt1 mvt2)
-    _ = 1 - U + U ^ (2 * k) * U := by
-      ring
+    _ = 1 - U + U ^ (2 * k) * U := by ring
     _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) := by
       rw [← pow_succ'ₓ (U : ℝ) (2 * k)]
       norm_cast

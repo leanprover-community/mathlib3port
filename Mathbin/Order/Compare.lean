@@ -29,12 +29,12 @@ def cmpLe {α} [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : Ordering :=
 
 theorem cmp_le_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x y : α) : (cmpLe x y).swap = cmpLe y x :=
   by
-  by_cases' xy : x ≤ y <;> by_cases' yx : y ≤ x <;> simp [cmpLe, *, Ordering.swap]
+  by_cases xy:x ≤ y <;> by_cases yx:y ≤ x <;> simp [cmpLe, *, Ordering.swap]
   cases not_orₓ xy yx (total_of _ _ _)
 
 theorem cmp_le_eq_cmp {α} [Preorderₓ α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)]
     (x y : α) : cmpLe x y = cmp x y := by
-  by_cases' xy : x ≤ y <;> by_cases' yx : y ≤ x <;> simp [cmpLe, lt_iff_le_not_leₓ, *, cmp, cmpUsing]
+  by_cases xy:x ≤ y <;> by_cases yx:y ≤ x <;> simp [cmpLe, lt_iff_le_not_leₓ, *, cmp, cmpUsing]
   cases not_orₓ xy yx (total_of _ _ _)
 
 namespace Ordering
@@ -54,38 +54,24 @@ theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.Compares a b �
 alias compares_swap ↔ compares.of_swap compares.swap
 
 @[simp]
-theorem swap_inj (o₁ o₂ : Ordering) : o₁.swap = o₂.swap ↔ o₁ = o₂ := by
-  cases o₁ <;> cases o₂ <;> decide
+theorem swap_inj (o₁ o₂ : Ordering) : o₁.swap = o₂.swap ↔ o₁ = o₂ := by cases o₁ <;> cases o₂ <;> decide
 
-theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap := by
-  rw [← swap_inj, swap_swap]
+theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap := by rw [← swap_inj, swap_swap]
 
 theorem Compares.eq_lt [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o = lt ↔ a < b)
   | lt, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
-  | Eq, a, b, h =>
-    ⟨fun h => by
-      injection h, fun h' => (ne_of_ltₓ h' h).elim⟩
-  | Gt, a, b, h =>
-    ⟨fun h => by
-      injection h, fun h' => (lt_asymmₓ h h').elim⟩
+  | Eq, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_ltₓ h' h).elim⟩
+  | Gt, a, b, h => ⟨fun h => by injection h, fun h' => (lt_asymmₓ h h').elim⟩
 
 theorem Compares.ne_lt [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o ≠ lt ↔ b ≤ a)
   | lt, a, b, h => ⟨absurd rfl, fun h' => (not_le_of_ltₓ h h').elim⟩
-  | Eq, a, b, h =>
-    ⟨fun _ => ge_of_eqₓ h, fun _ h => by
-      injection h⟩
-  | Gt, a, b, h =>
-    ⟨fun _ => le_of_ltₓ h, fun _ h => by
-      injection h⟩
+  | Eq, a, b, h => ⟨fun _ => ge_of_eqₓ h, fun _ h => by injection h⟩
+  | Gt, a, b, h => ⟨fun _ => le_of_ltₓ h, fun _ h => by injection h⟩
 
 theorem Compares.eq_eq [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o = Eq ↔ a = b)
-  | lt, a, b, h =>
-    ⟨fun h => by
-      injection h, fun h' => (ne_of_ltₓ h h').elim⟩
+  | lt, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_ltₓ h h').elim⟩
   | Eq, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
-  | Gt, a, b, h =>
-    ⟨fun h => by
-      injection h, fun h' => (ne_of_gtₓ h h').elim⟩
+  | Gt, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_gtₓ h h').elim⟩
 
 theorem Compares.eq_gt [Preorderₓ α] {o} {a b : α} (h : Compares o a b) : o = Gt ↔ b < a :=
   swap_eq_iff_eq_swap.symm.trans h.swap.eq_lt
@@ -125,16 +111,10 @@ theorem compares_iff_of_compares_impl {β : Type _} [LinearOrderₓ α] [Preorde
     
 
 theorem swap_or_else (o₁ o₂) : (orElse o₁ o₂).swap = orElse o₁.swap o₂.swap := by
-  cases o₁ <;>
-    try
-        rfl <;>
-      cases o₂ <;> rfl
+  cases o₁ <;> try rfl <;> cases o₂ <;> rfl
 
 theorem or_else_eq_lt (o₁ o₂) : orElse o₁ o₂ = lt ↔ o₁ = lt ∨ o₁ = Eq ∧ o₂ = lt := by
-  cases o₁ <;>
-    cases o₂ <;>
-      exact by
-        decide
+  cases o₁ <;> cases o₂ <;> exact by decide
 
 end Ordering
 
@@ -161,7 +141,7 @@ theorem Ordering.Compares.cmp_eq [LinearOrderₓ α] {a b : α} {o : Ordering} (
 @[simp]
 theorem cmp_swap [Preorderₓ α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).swap = cmp b a := by
   unfold cmp cmpUsing
-  by_cases' a < b <;> by_cases' h₂ : b < a <;> simp [h, h₂, Ordering.swap]
+  by_cases a < b <;> by_cases h₂:b < a <;> simp [h, h₂, Ordering.swap]
   exact lt_asymmₓ h h₂
 
 @[simp]
@@ -201,15 +181,12 @@ theorem cmp_eq_gt_iff : cmp x y = Ordering.gt ↔ y < x :=
   Ordering.Compares.eq_gt (cmp_compares x y)
 
 @[simp]
-theorem cmp_self_eq_eq : cmp x x = Ordering.eq := by
-  rw [cmp_eq_eq_iff]
+theorem cmp_self_eq_eq : cmp x x = Ordering.eq := by rw [cmp_eq_eq_iff]
 
 variable {x y} {β : Type _} [LinearOrderₓ β] {x' y' : β}
 
 theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' :=
-  ⟨fun h => by
-    rwa [← cmp_swap x', ← cmp_swap, swap_inj], fun h => by
-    rwa [← cmp_swap y', ← cmp_swap, swap_inj]⟩
+  ⟨fun h => by rwa [← cmp_swap x', ← cmp_swap, swap_inj], fun h => by rwa [← cmp_swap y', ← cmp_swap, swap_inj]⟩
 
 theorem lt_iff_lt_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x < y ↔ x' < y' := by
   rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff, h]

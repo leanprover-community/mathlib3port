@@ -27,8 +27,7 @@ theorem sqrt_eq (q : ℚ) : Ratₓ.sqrt (q * q) = abs q := by
   rw [sqrt, mul_self_num, mul_self_denom, Int.sqrt_eq, Nat.sqrt_eq, abs_def]
 
 theorem exists_mul_self (x : ℚ) : (∃ q, q * q = x) ↔ Ratₓ.sqrt x * Ratₓ.sqrt x = x :=
-  ⟨fun ⟨n, hn⟩ => by
-    rw [← hn, sqrt_eq, abs_mul_abs_self], fun h => ⟨Ratₓ.sqrt x, h⟩⟩
+  ⟨fun ⟨n, hn⟩ => by rw [← hn, sqrt_eq, abs_mul_abs_self], fun h => ⟨Ratₓ.sqrt x, h⟩⟩
 
 theorem sqrt_nonneg (q : ℚ) : 0 ≤ Ratₓ.sqrt q :=
   nonneg_iff_zero_le.1 <|

@@ -32,11 +32,7 @@ theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx
     field_simp
     rw [div_eq_iff] <;> [ring, linarith]
   have key :=
-    hf.2 hx hz
-      (show 0 ≤ a by
-        apply div_nonneg <;> linarith)
-      (show 0 ≤ b by
-        apply div_nonneg <;> linarith)
+    hf.2 hx hz (show 0 ≤ a by apply div_nonneg <;> linarith) (show 0 ≤ b by apply div_nonneg <;> linarith)
       (show a + b = 1 by
         field_simp
         rw [div_eq_iff] <;> [ring, linarith])

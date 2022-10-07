@@ -31,12 +31,8 @@ def finOneEquiv : Finₓ 1 ≃ Unit :=
 def finTwoEquiv : Finₓ 2 ≃ Bool where
   toFun := ![false, true]
   invFun := fun b => cond b 1 0
-  left_inv :=
-    Finₓ.forall_fin_two.2 <| by
-      simp
-  right_inv :=
-    Bool.forall_bool.2 <| by
-      simp
+  left_inv := Finₓ.forall_fin_two.2 <| by simp
+  right_inv := Bool.forall_bool.2 <| by simp
 
 /-- `Π i : fin 2, α i` is equivalent to `α 0 × α 1`. See also `fin_two_arrow_equiv` for a
 non-dependent version and `prod_equiv_pi_fin_two` for a version with inputs `α β : Type u`. -/
@@ -114,31 +110,21 @@ mapping both `i.cast_succ` and `i.succ` to `i`. -/
 def finSuccEquiv' {n : ℕ} (i : Finₓ (n + 1)) : Finₓ (n + 1) ≃ Option (Finₓ n) where
   toFun := i.insertNth none some
   invFun := fun x => x.casesOn' i (Finₓ.succAbove i)
-  left_inv := fun x =>
-    Finₓ.succAboveCases i
-      (by
-        simp )
-      (fun j => by
-        simp )
-      x
-  right_inv := fun x => by
-    cases x <;> dsimp' <;> simp
+  left_inv := fun x => Finₓ.succAboveCases i (by simp) (fun j => by simp) x
+  right_inv := fun x => by cases x <;> dsimp <;> simp
 
 @[simp]
-theorem fin_succ_equiv'_at {n : ℕ} (i : Finₓ (n + 1)) : (finSuccEquiv' i) i = none := by
-  simp [finSuccEquiv']
+theorem fin_succ_equiv'_at {n : ℕ} (i : Finₓ (n + 1)) : (finSuccEquiv' i) i = none := by simp [finSuccEquiv']
 
 @[simp]
 theorem fin_succ_equiv'_succ_above {n : ℕ} (i : Finₓ (n + 1)) (j : Finₓ n) : finSuccEquiv' i (i.succAbove j) = some j :=
   @Finₓ.insert_nth_apply_succ_above n (fun _ => Option (Finₓ n)) i _ _ _
 
 theorem fin_succ_equiv'_below {n : ℕ} {i : Finₓ (n + 1)} {m : Finₓ n} (h : m.cast_succ < i) :
-    (finSuccEquiv' i) m.cast_succ = some m := by
-  rw [← Finₓ.succ_above_below _ _ h, fin_succ_equiv'_succ_above]
+    (finSuccEquiv' i) m.cast_succ = some m := by rw [← Finₓ.succ_above_below _ _ h, fin_succ_equiv'_succ_above]
 
 theorem fin_succ_equiv'_above {n : ℕ} {i : Finₓ (n + 1)} {m : Finₓ n} (h : i ≤ m.cast_succ) :
-    (finSuccEquiv' i) m.succ = some m := by
-  rw [← Finₓ.succ_above_above _ _ h, fin_succ_equiv'_succ_above]
+    (finSuccEquiv' i) m.succ = some m := by rw [← Finₓ.succ_above_above _ _ h, fin_succ_equiv'_succ_above]
 
 @[simp]
 theorem fin_succ_equiv'_symm_none {n : ℕ} (i : Finₓ (n + 1)) : (finSuccEquiv' i).symm none = i :=
@@ -204,8 +190,7 @@ theorem fin_succ_equiv_last_cast_succ {n : ℕ} (i : Finₓ n) : finSuccEquivLas
   fin_succ_equiv'_below i.2
 
 @[simp]
-theorem fin_succ_equiv_last_last {n : ℕ} : finSuccEquivLast (Finₓ.last n) = none := by
-  simp [finSuccEquivLast]
+theorem fin_succ_equiv_last_last {n : ℕ} : finSuccEquivLast (Finₓ.last n) = none := by simp [finSuccEquivLast]
 
 @[simp]
 theorem fin_succ_equiv_last_symm_some {n : ℕ} (i : Finₓ n) : finSuccEquivLast.symm (some i) = i.cast_succ :=
@@ -225,10 +210,8 @@ def Equivₓ.piFinSuccAboveEquiv {n : ℕ} (α : Finₓ (n + 1) → Type u) (i :
     (∀ j, α j) ≃ α i × ∀ j, α (i.succAbove j) where
   toFun := fun f => (f i, fun j => f (i.succAbove j))
   invFun := fun f => i.insertNth f.1 f.2
-  left_inv := fun f => by
-    simp [Finₓ.insert_nth_eq_iff]
-  right_inv := fun f => by
-    simp
+  left_inv := fun f => by simp [Finₓ.insert_nth_eq_iff]
+  right_inv := fun f => by simp
 
 /-- Order isomorphism between `Π j : fin (n + 1), α j` and
 `α i × Π j : fin n, α (fin.succ_above i j)`. -/
@@ -246,10 +229,8 @@ def Equivₓ.piFinSucc (n : ℕ) (β : Type u) : (Finₓ (n + 1) → β) ≃ β 
 def finSumFinEquiv : Sum (Finₓ m) (Finₓ n) ≃ Finₓ (m + n) where
   toFun := Sum.elim (Finₓ.castAdd n) (Finₓ.natAdd m)
   invFun := fun i => @Finₓ.addCases m n (fun _ => Sum (Finₓ m) (Finₓ n)) Sum.inl Sum.inr i
-  left_inv := fun x => by
-    cases' x with y y <;> dsimp' <;> simp
-  right_inv := fun x => by
-    refine' Finₓ.addCases (fun i => _) (fun i => _) x <;> simp
+  left_inv := fun x => by cases' x with y y <;> dsimp <;> simp
+  right_inv := fun x => by refine' Finₓ.addCases (fun i => _) (fun i => _) x <;> simp
 
 @[simp]
 theorem fin_sum_fin_equiv_apply_left (i : Finₓ m) : (finSumFinEquiv (Sum.inl i) : Finₓ (m + n)) = Finₓ.castAdd n i :=
@@ -304,11 +285,11 @@ def finRotate : ∀ n, Equivₓ.Perm (Finₓ n)
 
 theorem fin_rotate_of_lt {k : ℕ} (h : k < n) :
     finRotate (n + 1) ⟨k, lt_of_lt_of_leₓ h (Nat.le_succₓ _)⟩ = ⟨k + 1, Nat.succ_lt_succₓ h⟩ := by
-  dsimp' [finRotate]
+  dsimp [finRotate]
   simp [h, add_commₓ]
 
 theorem fin_rotate_last' : finRotate (n + 1) ⟨n, lt_add_one _⟩ = ⟨0, Nat.zero_lt_succₓ _⟩ := by
-  dsimp' [finRotate]
+  dsimp [finRotate]
   rw [fin_add_flip_apply_mk_right]
   simp
 
@@ -318,7 +299,7 @@ theorem fin_rotate_last : finRotate (n + 1) (Finₓ.last _) = 0 :=
 theorem Finₓ.snoc_eq_cons_rotate {α : Type _} (v : Finₓ n → α) (a : α) :
     @Finₓ.snoc _ (fun _ => α) v a = fun i => @Finₓ.cons _ (fun _ => α) a v (finRotate _ i) := by
   ext ⟨i, h⟩
-  by_cases' h' : i < n
+  by_cases h':i < n
   · rw [fin_rotate_of_lt h', Finₓ.snoc, Finₓ.cons, dif_pos h']
     rfl
     
@@ -352,8 +333,7 @@ theorem fin_rotate_succ_apply {n : ℕ} (i : Finₓ n.succ) : finRotate n.succ i
     
 
 @[simp]
-theorem fin_rotate_apply_zero {n : ℕ} : finRotate n.succ 0 = 1 := by
-  rw [fin_rotate_succ_apply, zero_addₓ]
+theorem fin_rotate_apply_zero {n : ℕ} : finRotate n.succ 0 = 1 := by rw [fin_rotate_succ_apply, zero_addₓ]
 
 theorem coe_fin_rotate_of_ne_last {n : ℕ} {i : Finₓ n.succ} (h : i ≠ Finₓ.last n) : (finRotate n.succ i : ℕ) = i + 1 :=
   by
@@ -370,8 +350,7 @@ def finProdFinEquiv : Finₓ m × Finₓ n ≃ Finₓ (m * n) where
   toFun := fun x =>
     ⟨x.2 + n * x.1,
       calc
-        x.2.1 + n * x.1.1 + 1 = x.1.1 * n + x.2.1 + 1 := by
-          ac_rfl
+        x.2.1 + n * x.1.1 + 1 = x.1.1 * n + x.2.1 + 1 := by ac_rfl
         _ ≤ x.1.1 * n + n := Nat.add_le_add_leftₓ x.2.2 _
         _ = (x.1.1 + 1) * n := Eq.symm <| Nat.succ_mul _ _
         _ ≤ m * n := Nat.mul_le_mul_rightₓ _ x.1.2
@@ -383,8 +362,7 @@ def finProdFinEquiv : Finₓ m × Finₓ n ≃ Finₓ (m * n) where
       (Finₓ.eq_of_veq <|
         calc
           (y.1 + n * x.1) / n = y.1 / n + x.1 := Nat.add_mul_div_leftₓ _ _ H
-          _ = 0 + x.1 := by
-            rw [Nat.div_eq_of_ltₓ y.2]
+          _ = 0 + x.1 := by rw [Nat.div_eq_of_ltₓ y.2]
           _ = x.1 := Nat.zero_add x.1
           )
       (Finₓ.eq_of_veq <|
@@ -398,16 +376,11 @@ def finProdFinEquiv : Finₓ m × Finₓ n ≃ Finₓ (m * n) where
 values are retained. This is the `order_iso` version of `fin.cast_le`. -/
 @[simps apply symmApply]
 def Finₓ.castLeOrderIso {n m : ℕ} (h : n ≤ m) : Finₓ n ≃o { i : Finₓ m // (i : ℕ) < n } where
-  toFun := fun i =>
-    ⟨Finₓ.castLe h i, by
-      simp ⟩
+  toFun := fun i => ⟨Finₓ.castLe h i, by simp⟩
   invFun := fun i => ⟨i, i.Prop⟩
-  left_inv := fun _ => by
-    simp
-  right_inv := fun _ => by
-    simp
-  map_rel_iff' := fun _ _ => by
-    simp
+  left_inv := fun _ => by simp
+  right_inv := fun _ => by simp
+  map_rel_iff' := fun _ _ => by simp
 
 /-- `fin 0` is a subsingleton. -/
 instance subsingleton_fin_zero : Subsingleton (Finₓ 0) :=

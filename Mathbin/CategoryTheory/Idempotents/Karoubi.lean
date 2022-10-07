@@ -58,7 +58,7 @@ variable {C}
 theorem ext {P Q : Karoubi C} (h_X : P.x = Q.x) (h_p : P.p ≫ eqToHom h_X = eqToHom h_X ≫ Q.p) : P = Q := by
   cases P
   cases Q
-  dsimp'  at h_X h_p
+  dsimp at h_X h_p
   subst h_X
   simpa only [true_andₓ, eq_self_iff_true, id_comp, eq_to_hom_refl, heq_iff_eq, comp_id] using h_p
 
@@ -72,8 +72,7 @@ structure Hom (P Q : Karoubi C) where
   comm : f = P.p ≫ f ≫ Q.p
 
 instance [Preadditive C] (P Q : Karoubi C) : Inhabited (Hom P Q) :=
-  ⟨⟨0, by
-      rw [zero_comp, comp_zero]⟩⟩
+  ⟨⟨0, by rw [zero_comp, comp_zero]⟩⟩
 
 @[simp]
 theorem hom_ext {P Q : Karoubi C} {f g : Hom P Q} : f = g ↔ f.f = g.f := by
@@ -85,15 +84,12 @@ theorem hom_ext {P Q : Karoubi C} {f g : Hom P Q} : f = g ↔ f.f = g.f := by
     
 
 @[simp, reassoc]
-theorem p_comp {P Q : Karoubi C} (f : Hom P Q) : P.p ≫ f.f = f.f := by
-  rw [f.comm, ← assoc, P.idem]
+theorem p_comp {P Q : Karoubi C} (f : Hom P Q) : P.p ≫ f.f = f.f := by rw [f.comm, ← assoc, P.idem]
 
 @[simp, reassoc]
-theorem comp_p {P Q : Karoubi C} (f : Hom P Q) : f.f ≫ Q.p = f.f := by
-  rw [f.comm, assoc, assoc, Q.idem]
+theorem comp_p {P Q : Karoubi C} (f : Hom P Q) : f.f ≫ Q.p = f.f := by rw [f.comm, assoc, assoc, Q.idem]
 
-theorem p_comm {P Q : Karoubi C} (f : Hom P Q) : P.p ≫ f.f = f.f ≫ Q.p := by
-  rw [p_comp, comp_p]
+theorem p_comm {P Q : Karoubi C} (f : Hom P Q) : P.p ≫ f.f = f.f ≫ Q.p := by rw [p_comp, comp_p]
 
 theorem comp_proof {P Q R : Karoubi C} (g : Hom Q R) (f : Hom P Q) : f.f ≫ g.f = P.p ≫ (f.f ≫ g.f) ≫ R.p := by
   rw [assoc, comp_p, ← assoc, p_comp]
@@ -101,39 +97,25 @@ theorem comp_proof {P Q R : Karoubi C} (g : Hom Q R) (f : Hom P Q) : f.f ≫ g.f
 /-- The category structure on the karoubi envelope of a category. -/
 instance : Category (Karoubi C) where
   Hom := Karoubi.Hom
-  id := fun P =>
-    ⟨P.p, by
-      repeat'
-        rw [P.idem]⟩
+  id := fun P => ⟨P.p, by repeat' rw [P.idem]⟩
   comp := fun P Q R f g => ⟨f.f ≫ g.f, Karoubi.comp_proof g f⟩
 
 @[simp]
-theorem comp {P Q R : Karoubi C} (f : P ⟶ Q) (g : Q ⟶ R) : f ≫ g = ⟨f.f ≫ g.f, comp_proof g f⟩ := by
-  rfl
+theorem comp {P Q R : Karoubi C} (f : P ⟶ Q) (g : Q ⟶ R) : f ≫ g = ⟨f.f ≫ g.f, comp_proof g f⟩ := by rfl
 
 @[simp]
-theorem id_eq {P : Karoubi C} :
-    𝟙 P =
-      ⟨P.p, by
-        repeat'
-          rw [P.idem]⟩ :=
-  by
-  rfl
+theorem id_eq {P : Karoubi C} : 𝟙 P = ⟨P.p, by repeat' rw [P.idem]⟩ := by rfl
 
 /-- It is possible to coerce an object of `C` into an object of `karoubi C`.
 See also the functor `to_karoubi`. -/
 instance coe : CoeTₓ C (Karoubi C) :=
-  ⟨fun X =>
-    ⟨X, 𝟙 X, by
-      rw [comp_id]⟩⟩
+  ⟨fun X => ⟨X, 𝟙 X, by rw [comp_id]⟩⟩
 
 @[simp]
-theorem coe_X (X : C) : (X : Karoubi C).x = X := by
-  rfl
+theorem coe_X (X : C) : (X : Karoubi C).x = X := by rfl
 
 @[simp]
-theorem coe_p (X : C) : (X : Karoubi C).p = 𝟙 X := by
-  rfl
+theorem coe_p (X : C) : (X : Karoubi C).p = 𝟙 X := by rfl
 
 @[simp]
 theorem eq_to_hom_f {P Q : Karoubi C} (h : P = Q) : Karoubi.Hom.f (eqToHom h) = P.p ≫ eqToHom (congr_arg Karoubi.x h) :=
@@ -147,12 +129,8 @@ end Karoubi
 formal direct factor of `X` given by `𝟙 X`. -/
 @[simps]
 def toKaroubi : C ⥤ Karoubi C where
-  obj := fun X =>
-    ⟨X, 𝟙 X, by
-      rw [comp_id]⟩
-  map := fun X Y f =>
-    ⟨f, by
-      simp only [comp_id, id_comp]⟩
+  obj := fun X => ⟨X, 𝟙 X, by rw [comp_id]⟩
+  map := fun X Y f => ⟨f, by simp only [comp_id, id_comp]⟩
 
 instance : Full (toKaroubi C) where preimage := fun X Y f => f.f
 
@@ -169,23 +147,18 @@ instance [Preadditive C] {P Q : Karoubi C} : AddCommGroupₓ (P ⟶ Q) where
       rw [add_comp, comp_add]
       congr
       exacts[f.comm, g.comm]⟩
-  zero :=
-    ⟨0, by
-      simp only [comp_zero, zero_comp]⟩
+  zero := ⟨0, by simp only [comp_zero, zero_comp]⟩
   zero_add := fun f => by
     ext
     simp only [zero_addₓ]
   add_zero := fun f => by
     ext
     simp only [add_zeroₓ]
-  add_assoc := fun f g h' => by
-    simp only [add_assocₓ]
+  add_assoc := fun f g h' => by simp only [add_assocₓ]
   add_comm := fun f g => by
     ext
     apply_rules [add_commₓ]
-  neg := fun f =>
-    ⟨-f.f, by
-      simpa only [neg_comp, comp_neg, neg_inj] using f.comm⟩
+  neg := fun f => ⟨-f.f, by simpa only [neg_comp, comp_neg, neg_inj] using f.comm⟩
   add_left_neg := fun f => by
     ext
     apply_rules [add_left_negₓ]
@@ -203,7 +176,7 @@ def inclusionHom [Preadditive C] (P Q : Karoubi C) : AddMonoidHom (P ⟶ Q) (P.x
   map_add' := fun f g => rfl
 
 @[simp]
-theorem sum_hom [Preadditive C] {P Q : Karoubi C} {α : Type _} (s : Finset α) (f : α → (P ⟶ Q)) :
+theorem sum_hom [Preadditive C] {P Q : Karoubi C} {α : Type _} (s : Finsetₓ α) (f : α → (P ⟶ Q)) :
     (∑ x in s, f x).f = ∑ x in s, (f x).f :=
   AddMonoidHom.map_sum (inclusionHom P Q) f s
 
@@ -211,8 +184,7 @@ end Karoubi
 
 /-- The category `karoubi C` is preadditive if `C` is. -/
 instance [Preadditive C] : Preadditive (Karoubi C) where
-  homGroup := fun P Q => by
-    infer_instance
+  homGroup := fun P Q => by infer_instance
   add_comp' := fun P Q R f g h => by
     ext
     simp only [add_comp, quiver.hom.add_comm_group_add_f, karoubi.comp]
@@ -232,12 +204,8 @@ instance : IsIdempotentComplete (Karoubi C) := by
   have hp' := hom_ext.mp hp
   simp only [comp] at hp'
   use ⟨P.X, p.f, hp'⟩
-  use
-    ⟨p.f, by
-      rw [comp_p p, hp']⟩
-  use
-    ⟨p.f, by
-      rw [hp', p_comp p]⟩
+  use ⟨p.f, by rw [comp_p p, hp']⟩
+  use ⟨p.f, by rw [hp', p_comp p]⟩
   constructor <;> simpa only [hom_ext] using hp'
 
 instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
@@ -247,12 +215,8 @@ instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
     use Y
     exact
       Nonempty.intro
-        { Hom :=
-            ⟨i, by
-              erw [id_comp, ← h₂, ← assoc, h₁, id_comp]⟩,
-          inv :=
-            ⟨e, by
-              erw [comp_id, ← h₂, assoc, h₁, comp_id]⟩ }⟩
+        { Hom := ⟨i, by erw [id_comp, ← h₂, ← assoc, h₁, id_comp]⟩,
+          inv := ⟨e, by erw [comp_id, ← h₂, assoc, h₁, comp_id]⟩ }⟩
 
 /-- If `C` is idempotent complete, the functor `to_karoubi : C ⥤ karoubi C` is an equivalence. -/
 def toKaroubiIsEquivalence [IsIdempotentComplete C] : IsEquivalence (toKaroubi C) :=
@@ -265,14 +229,12 @@ variable {C}
 /-- The split mono which appears in the factorisation `decomp_id P`. -/
 @[simps]
 def decompIdI (P : Karoubi C) : P ⟶ P.x :=
-  ⟨P.p, by
-    erw [coe_p, comp_id, P.idem]⟩
+  ⟨P.p, by erw [coe_p, comp_id, P.idem]⟩
 
 /-- The split epi which appears in the factorisation `decomp_id P`. -/
 @[simps]
 def decompIdP (P : Karoubi C) : (P.x : Karoubi C) ⟶ P :=
-  ⟨P.p, by
-    erw [coe_p, id_comp, P.idem]⟩
+  ⟨P.p, by erw [coe_p, id_comp, P.idem]⟩
 
 /-- The formal direct factor of `P.X` given by the idempotent `P.p` in the category `C`
 is actually a direct factor in the category `karoubi C`. -/
@@ -293,21 +255,12 @@ theorem decomp_id_p_to_karoubi (X : C) : decompIdP ((toKaroubi C).obj X) = 𝟙 
   rfl
 
 theorem decomp_id_i_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
-    f ≫ decompIdI _ =
-      decompIdI _ ≫
-        ⟨f.f, by
-          erw [comp_id, id_comp]⟩ :=
-  by
+    f ≫ decompIdI _ = decompIdI _ ≫ ⟨f.f, by erw [comp_id, id_comp]⟩ := by
   ext
   simp only [comp, decomp_id_i_f, karoubi.comp_p, karoubi.p_comp]
 
 theorem decomp_id_p_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
-    decompIdP P ≫ f =
-      (⟨f.f, by
-          erw [comp_id, id_comp]⟩ :
-          (P.x : Karoubi C) ⟶ Q.x) ≫
-        decompIdP Q :=
-  by
+    decompIdP P ≫ f = (⟨f.f, by erw [comp_id, id_comp]⟩ : (P.x : Karoubi C) ⟶ Q.x) ≫ decompIdP Q := by
   ext
   simp only [comp, decomp_id_p_f, karoubi.comp_p, karoubi.p_comp]
 

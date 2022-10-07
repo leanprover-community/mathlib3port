@@ -109,8 +109,7 @@ theorem conjugate' {x : R} (hx : IsSelfAdjoint x) (z : R) : IsSelfAdjoint (star 
   simp only [is_self_adjoint_iff, star_mul, star_star, mul_assoc, hx.star_eq]
 
 theorem is_star_normal {x : R} (hx : IsSelfAdjoint x) : IsStarNormal x :=
-  ⟨by
-    simp only [hx.star_eq]⟩
+  ⟨by simp only [hx.star_eq]⟩
 
 end NonUnitalSemiringₓ
 
@@ -180,15 +179,10 @@ def selfAdjoint [AddGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
 /-- The skew-adjoint elements of a star additive group, as an additive subgroup. -/
 def skewAdjoint [AddCommGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
   Carrier := { x | star x = -x }
-  zero_mem' :=
-    show star (0 : R) = -0 by
-      simp only [star_zero, neg_zero]
+  zero_mem' := show star (0 : R) = -0 by simp only [star_zero, neg_zero]
   add_mem' := fun x y (hx : star x = -x) (hy : star y = -y) =>
-    show star (x + y) = -(x + y) by
-      rw [star_add x y, hx, hy, neg_add]
-  neg_mem' := fun x (hx : star x = -x) =>
-    show star (-x) = - -x by
-      simp only [hx, star_neg]
+    show star (x + y) = -(x + y) by rw [star_add x y, hx, hy, neg_add]
+  neg_mem' := fun x (hx : star x = -x) => show star (-x) = - -x by simp only [hx, star_neg]
 
 variable {R}
 
@@ -227,11 +221,7 @@ instance [Nontrivial R] : Nontrivial (selfAdjoint R) :=
 
 instance : HasNatCast (selfAdjoint R) :=
   ⟨fun n =>
-    ⟨n,
-      Nat.recOn n
-        (by
-          simp [zero_mem])
-        fun k hk => (@Nat.cast_succₓ R _ k).symm ▸ add_mem hk (is_self_adjoint_one R)⟩⟩
+    ⟨n, Nat.recOn n (by simp [zero_mem]) fun k hk => (@Nat.cast_succₓ R _ k).symm ▸ add_mem hk (is_self_adjoint_one R)⟩⟩
 
 instance : HasIntCast (selfAdjoint R) :=
   ⟨fun n =>
@@ -295,8 +285,7 @@ theorem coe_zpow (x : selfAdjoint R) (z : ℤ) : ↑(x ^ z) = (x : R) ^ z :=
   rfl
 
 theorem rat_cast_mem : ∀ x : ℚ, IsSelfAdjoint (x : R)
-  | ⟨a, b, h1, h2⟩ => by
-    rw [IsSelfAdjoint, Ratₓ.cast_mk', star_mul', star_inv', star_nat_cast, star_int_cast]
+  | ⟨a, b, h1, h2⟩ => by rw [IsSelfAdjoint, Ratₓ.cast_mk', star_mul', star_inv', star_nat_cast, star_int_cast]
 
 instance : HasRatCast (selfAdjoint R) :=
   ⟨fun n => ⟨n, rat_cast_mem n⟩⟩
@@ -306,9 +295,7 @@ theorem coe_rat_cast (x : ℚ) : ↑(x : selfAdjoint R) = (x : R) :=
   rfl
 
 instance hasQsmul : HasSmul ℚ (selfAdjoint R) :=
-  ⟨fun a x =>
-    ⟨a • x, by
-      rw [Ratₓ.smul_def] <;> exact (rat_cast_mem a).mul x.prop⟩⟩
+  ⟨fun a x => ⟨a • x, by rw [Ratₓ.smul_def] <;> exact (rat_cast_mem a).mul x.prop⟩⟩
 
 @[simp, norm_cast]
 theorem coe_rat_smul (x : selfAdjoint R) (a : ℚ) : ↑(a • x) = a • (x : R) :=
@@ -398,8 +385,7 @@ section HasSmul
 variable [HasStar R] [HasTrivialStar R] [AddCommGroupₓ A] [StarAddMonoid A]
 
 theorem smul_mem [Monoidₓ R] [DistribMulAction R A] [StarModule R A] (r : R) {x : A} (h : x ∈ skewAdjoint A) :
-    r • x ∈ skewAdjoint A := by
-  rw [mem_iff, star_smul, star_trivial, mem_iff.mp h, smul_neg r]
+    r • x ∈ skewAdjoint A := by rw [mem_iff, star_smul, star_trivial, mem_iff.mp h, smul_neg r]
 
 instance [Monoidₓ R] [DistribMulAction R A] [StarModule R A] : HasSmul R (skewAdjoint A) :=
   ⟨fun r x => ⟨r • x, smul_mem r x.Prop⟩⟩
@@ -420,22 +406,18 @@ end HasSmul
 end skewAdjoint
 
 instance is_star_normal_zero [Semiringₓ R] [StarRing R] : IsStarNormal (0 : R) :=
-  ⟨by
-    simp only [star_comm_self, star_zero]⟩
+  ⟨by simp only [star_comm_self, star_zero]⟩
 
 instance is_star_normal_one [Monoidₓ R] [StarSemigroup R] : IsStarNormal (1 : R) :=
-  ⟨by
-    simp only [star_comm_self, star_one]⟩
+  ⟨by simp only [star_comm_self, star_one]⟩
 
 instance is_star_normal_star_self [Monoidₓ R] [StarSemigroup R] {x : R} [IsStarNormal x] : IsStarNormal (star x) :=
-  ⟨show star (star x) * star x = star x * star (star x) by
-      rw [star_star, star_comm_self']⟩
+  ⟨show star (star x) * star x = star x * star (star x) by rw [star_star, star_comm_self']⟩
 
 -- see Note [lower instance priority]
 instance (priority := 100) HasTrivialStar.is_star_normal [Monoidₓ R] [StarSemigroup R] [HasTrivialStar R] {x : R} :
     IsStarNormal x :=
-  ⟨by
-    rw [star_trivial]⟩
+  ⟨by rw [star_trivial]⟩
 
 -- see Note [lower instance priority]
 instance (priority := 100) CommMonoidₓ.is_star_normal [CommMonoidₓ R] [StarSemigroup R] {x : R} : IsStarNormal x :=

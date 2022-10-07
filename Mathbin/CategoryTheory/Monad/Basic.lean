@@ -29,8 +29,8 @@ universe v₁ u₁
 -- morphism levels before object levels. See note [category_theory universes].
 variable (C : Type u₁) [Category.{v₁} C]
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`η'] []
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`μ'] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`η'] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`μ'] []
 /-- The data of a monad on C consists of an endofunctor T together with natural transformations
 η : 𝟭 C ⟶ T and μ : T ⋙ T ⟶ T satisfying three equations:
 - T μ_X ≫ μ_X = μ_(TX) ≫ μ_X (associativity)
@@ -40,18 +40,12 @@ variable (C : Type u₁) [Category.{v₁} C]
 structure Monad extends C ⥤ C where
   η' : 𝟭 _ ⟶ to_functor
   μ' : to_functor ⋙ to_functor ⟶ to_functor
-  assoc' : ∀ X, to_functor.map (NatTrans.app μ' X) ≫ μ'.app _ = μ'.app _ ≫ μ'.app _ := by
-    run_tac
-      obviously
-  left_unit' : ∀ X : C, η'.app (to_functor.obj X) ≫ μ'.app _ = 𝟙 _ := by
-    run_tac
-      obviously
-  right_unit' : ∀ X : C, to_functor.map (η'.app X) ≫ μ'.app _ = 𝟙 _ := by
-    run_tac
-      obviously
+  assoc' : ∀ X, to_functor.map (NatTrans.app μ' X) ≫ μ'.app _ = μ'.app _ ≫ μ'.app _ := by obviously
+  left_unit' : ∀ X : C, η'.app (to_functor.obj X) ≫ μ'.app _ = 𝟙 _ := by obviously
+  right_unit' : ∀ X : C, to_functor.map (η'.app X) ≫ μ'.app _ = 𝟙 _ := by obviously
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`ε'] []
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`δ'] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`ε'] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`δ'] []
 /-- The data of a comonad on C consists of an endofunctor G together with natural transformations
 ε : G ⟶ 𝟭 C and δ : G ⟶ G ⋙ G satisfying three equations:
 - δ_X ≫ G δ_X = δ_X ≫ δ_(GX) (coassociativity)
@@ -61,15 +55,9 @@ structure Monad extends C ⥤ C where
 structure Comonad extends C ⥤ C where
   ε' : to_functor ⟶ 𝟭 _
   δ' : to_functor ⟶ to_functor ⋙ to_functor
-  coassoc' : ∀ X, NatTrans.app δ' _ ≫ to_functor.map (δ'.app X) = δ'.app _ ≫ δ'.app _ := by
-    run_tac
-      obviously
-  left_counit' : ∀ X : C, δ'.app X ≫ ε'.app (to_functor.obj X) = 𝟙 _ := by
-    run_tac
-      obviously
-  right_counit' : ∀ X : C, δ'.app X ≫ to_functor.map (ε'.app X) = 𝟙 _ := by
-    run_tac
-      obviously
+  coassoc' : ∀ X, NatTrans.app δ' _ ≫ to_functor.map (δ'.app X) = δ'.app _ ≫ δ'.app _ := by obviously
+  left_counit' : ∀ X : C, δ'.app X ≫ ε'.app (to_functor.obj X) = 𝟙 _ := by obviously
+  right_counit' : ∀ X : C, δ'.app X ≫ to_functor.map (ε'.app X) = 𝟙 _ := by obviously
 
 variable {C} (T : Monad C) (G : Comonad C)
 
@@ -159,22 +147,14 @@ theorem Comonad.right_counit (G : Comonad C) (X : C) :
 /-- A morphism of monads is a natural transformation compatible with η and μ. -/
 @[ext]
 structure MonadHom (T₁ T₂ : Monad C) extends NatTrans (T₁ : C ⥤ C) T₂ where
-  app_η' : ∀ X, T₁.η.app X ≫ app X = T₂.η.app X := by
-    run_tac
-      obviously
-  app_μ' : ∀ X, T₁.μ.app X ≫ app X = ((T₁ : C ⥤ C).map (app X) ≫ app _) ≫ T₂.μ.app X := by
-    run_tac
-      obviously
+  app_η' : ∀ X, T₁.η.app X ≫ app X = T₂.η.app X := by obviously
+  app_μ' : ∀ X, T₁.μ.app X ≫ app X = ((T₁ : C ⥤ C).map (app X) ≫ app _) ≫ T₂.μ.app X := by obviously
 
 /-- A morphism of comonads is a natural transformation compatible with ε and δ. -/
 @[ext]
 structure ComonadHom (M N : Comonad C) extends NatTrans (M : C ⥤ C) N where
-  app_ε' : ∀ X, app X ≫ N.ε.app X = M.ε.app X := by
-    run_tac
-      obviously
-  app_δ' : ∀ X, app X ≫ N.δ.app X = M.δ.app X ≫ app _ ≫ (N : C ⥤ C).map (app X) := by
-    run_tac
-      obviously
+  app_ε' : ∀ X, app X ≫ N.ε.app X = M.ε.app X := by obviously
+  app_δ' : ∀ X, app X ≫ N.δ.app X = M.δ.app X ≫ app _ ≫ (N : C ⥤ C).map (app X) := by obviously
 
 restate_axiom monad_hom.app_η'
 
@@ -194,8 +174,7 @@ instance : Category (Monad C) where
   comp := fun _ _ _ f g =>
     { toNatTrans :=
         { app := fun X => f.app X ≫ g.app X,
-          naturality' := fun X Y h => by
-            rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
+          naturality' := fun X Y h => by rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
   id_comp' := fun _ _ _ => by
     ext
     apply id_comp
@@ -212,8 +191,7 @@ instance : Category (Comonad C) where
   comp := fun _ _ _ f g =>
     { toNatTrans :=
         { app := fun X => f.app X ≫ g.app X,
-          naturality' := fun X Y h => by
-            rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
+          naturality' := fun X Y h => by rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
   id_comp' := fun _ _ _ => by
     ext
     apply id_comp
@@ -254,9 +232,7 @@ direction is a monad morphism. -/
 def MonadIso.mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) : M ≅ N where
   Hom := { toNatTrans := f.Hom, app_η' := f_η, app_μ' := f_μ }
   inv :=
-    { toNatTrans := f.inv,
-      app_η' := fun X => by
-        simp [← f_η],
+    { toNatTrans := f.inv, app_η' := fun X => by simp [← f_η],
       app_μ' := fun X => by
         rw [← nat_iso.cancel_nat_iso_hom_right f]
         simp only [nat_trans.naturality, iso.inv_hom_id_app, assoc, comp_id, f_μ, nat_trans.naturality_assoc,
@@ -269,9 +245,7 @@ direction is a comonad morphism. -/
 def ComonadIso.mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) : M ≅ N where
   Hom := { toNatTrans := f.Hom, app_ε' := f_ε, app_δ' := f_δ }
   inv :=
-    { toNatTrans := f.inv,
-      app_ε' := fun X => by
-        simp [← f_ε],
+    { toNatTrans := f.inv, app_ε' := fun X => by simp [← f_ε],
       app_δ' := fun X => by
         rw [← nat_iso.cancel_nat_iso_hom_left f]
         simp only [reassoc_of (f_δ X), iso.hom_inv_id_app_assoc, nat_trans.naturality_assoc]

@@ -3,12 +3,10 @@ Copyright (c) 2018 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Algebra.BigOperators.Ring
-import Mathbin.Data.Real.Pointwise
-import Mathbin.Algebra.IndicatorFunction
 import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.Order.Module
 import Mathbin.Algebra.Order.Nonneg
+import Mathbin.Data.Real.Pointwise
+import Mathbin.Tactic.Positivity
 
 /-!
 # Nonnegative real numbers
@@ -55,9 +53,9 @@ open Classical BigOperators
 /-- Nonnegative real numbers. -/
 def Nnreal :=
   { r : ℝ // 0 ≤ r }deriving OrderedSemiring, CommMonoidWithZero, FloorSemiring, CommSemiringₓ, Semiringₓ,
-  SemilatticeInf, DenselyOrdered, OrderBot, CanonicallyLinearOrderedSemifield, LinearOrderedCommGroupWithZero,
-  Archimedean, LinearOrderedSemiring, OrderedCommSemiring, CanonicallyOrderedCommSemiring, Sub, HasOrderedSub, Div,
-  Inhabited
+  SemilatticeInf, SemilatticeSup, DistribLattice, DenselyOrdered, OrderBot, CanonicallyLinearOrderedSemifield,
+  LinearOrderedCommGroupWithZero, Archimedean, LinearOrderedSemiring, OrderedCommSemiring,
+  CanonicallyOrderedCommSemiring, Sub, HasOrderedSub, Div, Inhabited
 
 -- mathport name: nnreal
 localized [Nnreal] notation "ℝ≥0" => Nnreal
@@ -72,7 +70,7 @@ instance : Coe ℝ≥0 ℝ :=
 theorem val_eq_coe (n : ℝ≥0) : n.val = n :=
   rfl
 
-instance : CanLift ℝ ℝ≥0 :=
+instance canLift : CanLift ℝ ℝ≥0 coe fun r => 0 ≤ r :=
   Subtype.canLift _
 
 protected theorem eq {n m : ℝ≥0} : (n : ℝ) = (m : ℝ) → n = m :=
@@ -107,38 +105,27 @@ theorem coe_nonneg (r : ℝ≥0) : (0 : ℝ) ≤ r :=
 theorem coe_mk (a : ℝ) (ha) : ((⟨a, ha⟩ : ℝ≥0) : ℝ) = a :=
   rfl
 
-example : Zero ℝ≥0 := by
-  infer_instance
+example : Zero ℝ≥0 := by infer_instance
 
-example : One ℝ≥0 := by
-  infer_instance
+example : One ℝ≥0 := by infer_instance
 
-example : Add ℝ≥0 := by
-  infer_instance
+example : Add ℝ≥0 := by infer_instance
 
-noncomputable example : Sub ℝ≥0 := by
-  infer_instance
+noncomputable example : Sub ℝ≥0 := by infer_instance
 
-example : Mul ℝ≥0 := by
-  infer_instance
+example : Mul ℝ≥0 := by infer_instance
 
-noncomputable example : Inv ℝ≥0 := by
-  infer_instance
+noncomputable example : Inv ℝ≥0 := by infer_instance
 
-noncomputable example : Div ℝ≥0 := by
-  infer_instance
+noncomputable example : Div ℝ≥0 := by infer_instance
 
-example : LE ℝ≥0 := by
-  infer_instance
+example : LE ℝ≥0 := by infer_instance
 
-example : HasBot ℝ≥0 := by
-  infer_instance
+example : HasBot ℝ≥0 := by infer_instance
 
-example : Inhabited ℝ≥0 := by
-  infer_instance
+example : Inhabited ℝ≥0 := by infer_instance
 
-example : Nontrivial ℝ≥0 := by
-  infer_instance
+example : Nontrivial ℝ≥0 := by infer_instance
 
 protected theorem coe_injective : Function.Injective (coe : ℝ≥0 → ℝ) :=
   Subtype.coe_injective
@@ -178,23 +165,17 @@ protected theorem coe_two : ((2 : ℝ≥0) : ℝ) = 2 :=
 
 @[simp, norm_cast]
 protected theorem coe_sub {r₁ r₂ : ℝ≥0} (h : r₂ ≤ r₁) : ((r₁ - r₂ : ℝ≥0) : ℝ) = r₁ - r₂ :=
-  max_eq_leftₓ <|
-    le_sub.2 <| by
-      simp [show (r₂ : ℝ) ≤ r₁ from h]
+  max_eq_leftₓ <| le_sub.2 <| by simp [show (r₂ : ℝ) ≤ r₁ from h]
 
 @[simp, norm_cast]
-protected theorem coe_eq_zero (r : ℝ≥0) : ↑r = (0 : ℝ) ↔ r = 0 := by
-  rw [← Nnreal.coe_zero, Nnreal.coe_eq]
+protected theorem coe_eq_zero (r : ℝ≥0) : ↑r = (0 : ℝ) ↔ r = 0 := by rw [← Nnreal.coe_zero, Nnreal.coe_eq]
 
 @[simp, norm_cast]
-protected theorem coe_eq_one (r : ℝ≥0) : ↑r = (1 : ℝ) ↔ r = 1 := by
-  rw [← Nnreal.coe_one, Nnreal.coe_eq]
+protected theorem coe_eq_one (r : ℝ≥0) : ↑r = (1 : ℝ) ↔ r = 1 := by rw [← Nnreal.coe_one, Nnreal.coe_eq]
 
-theorem coe_ne_zero {r : ℝ≥0} : (r : ℝ) ≠ 0 ↔ r ≠ 0 := by
-  norm_cast
+theorem coe_ne_zero {r : ℝ≥0} : (r : ℝ) ≠ 0 ↔ r ≠ 0 := by norm_cast
 
-example : CommSemiringₓ ℝ≥0 := by
-  infer_instance
+example : CommSemiringₓ ℝ≥0 := by infer_instance
 
 /-- Coercion `ℝ≥0 → ℝ` as a `ring_hom`. -/
 def toRealHom : ℝ≥0 →+* ℝ :=
@@ -233,29 +214,22 @@ instance {M : Type _} [AddCommMonoidₓ M] [Module ℝ M] : Module ℝ≥0 M :=
 /-- An `algebra` over `ℝ` restricts to an `algebra` over `ℝ≥0`. -/
 instance {A : Type _} [Semiringₓ A] [Algebra ℝ A] : Algebra ℝ≥0 A where
   smul := (· • ·)
-  commutes' := fun r x => by
-    simp [Algebra.commutes]
-  smul_def' := fun r x => by
-    simp [← Algebra.smul_def (r : ℝ) x, smul_def]
+  commutes' := fun r x => by simp [Algebra.commutes]
+  smul_def' := fun r x => by simp [← Algebra.smul_def (r : ℝ) x, smul_def]
   toRingHom := (algebraMap ℝ A).comp (toRealHom : ℝ≥0 →+* ℝ)
 
 -- verify that the above produces instances we might care about
-example : Algebra ℝ≥0 ℝ := by
-  infer_instance
+example : Algebra ℝ≥0 ℝ := by infer_instance
 
-example : DistribMulAction ℝ≥0ˣ ℝ := by
-  infer_instance
+example : DistribMulAction ℝ≥0ˣ ℝ := by infer_instance
 
 end Actions
 
-example : MonoidWithZeroₓ ℝ≥0 := by
-  infer_instance
+example : MonoidWithZeroₓ ℝ≥0 := by infer_instance
 
-example : CommMonoidWithZero ℝ≥0 := by
-  infer_instance
+example : CommMonoidWithZero ℝ≥0 := by infer_instance
 
-noncomputable example : CommGroupWithZero ℝ≥0 := by
-  infer_instance
+noncomputable example : CommGroupWithZero ℝ≥0 := by infer_instance
 
 @[simp, norm_cast]
 theorem coe_indicator {α} (s : Set α) (f : α → ℝ≥0) (a : α) :
@@ -267,8 +241,7 @@ theorem coe_pow (r : ℝ≥0) (n : ℕ) : ((r ^ n : ℝ≥0) : ℝ) = r ^ n :=
   toRealHom.map_pow r n
 
 @[simp, norm_cast]
-theorem coe_zpow (r : ℝ≥0) (n : ℤ) : ((r ^ n : ℝ≥0) : ℝ) = r ^ n := by
-  cases n <;> simp
+theorem coe_zpow (r : ℝ≥0) (n : ℤ) : ((r ^ n : ℝ≥0) : ℝ) = r ^ n := by cases n <;> simp
 
 @[norm_cast]
 theorem coe_list_sum (l : List ℝ≥0) : ((l.Sum : ℝ≥0) : ℝ) = (l.map coe).Sum :=
@@ -287,36 +260,30 @@ theorem coe_multiset_prod (s : Multiset ℝ≥0) : ((s.Prod : ℝ≥0) : ℝ) = 
   toRealHom.map_multiset_prod s
 
 @[norm_cast]
-theorem coe_sum {α} {s : Finset α} {f : α → ℝ≥0} : ↑(∑ a in s, f a) = ∑ a in s, (f a : ℝ) :=
+theorem coe_sum {α} {s : Finsetₓ α} {f : α → ℝ≥0} : ↑(∑ a in s, f a) = ∑ a in s, (f a : ℝ) :=
   toRealHom.map_sum _ _
 
-theorem _root_.real.to_nnreal_sum_of_nonneg {α} {s : Finset α} {f : α → ℝ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
+theorem _root_.real.to_nnreal_sum_of_nonneg {α} {s : Finsetₓ α} {f : α → ℝ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
     Real.toNnreal (∑ a in s, f a) = ∑ a in s, Real.toNnreal (f a) := by
-  rw [← Nnreal.coe_eq, Nnreal.coe_sum, Real.coe_to_nnreal _ (Finset.sum_nonneg hf)]
-  exact
-    Finset.sum_congr rfl fun x hxs => by
-      rw [Real.coe_to_nnreal _ (hf x hxs)]
+  rw [← Nnreal.coe_eq, Nnreal.coe_sum, Real.coe_to_nnreal _ (Finsetₓ.sum_nonneg hf)]
+  exact Finsetₓ.sum_congr rfl fun x hxs => by rw [Real.coe_to_nnreal _ (hf x hxs)]
 
 @[norm_cast]
-theorem coe_prod {α} {s : Finset α} {f : α → ℝ≥0} : ↑(∏ a in s, f a) = ∏ a in s, (f a : ℝ) :=
+theorem coe_prod {α} {s : Finsetₓ α} {f : α → ℝ≥0} : ↑(∏ a in s, f a) = ∏ a in s, (f a : ℝ) :=
   toRealHom.map_prod _ _
 
-theorem _root_.real.to_nnreal_prod_of_nonneg {α} {s : Finset α} {f : α → ℝ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
+theorem _root_.real.to_nnreal_prod_of_nonneg {α} {s : Finsetₓ α} {f : α → ℝ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
     Real.toNnreal (∏ a in s, f a) = ∏ a in s, Real.toNnreal (f a) := by
-  rw [← Nnreal.coe_eq, Nnreal.coe_prod, Real.coe_to_nnreal _ (Finset.prod_nonneg hf)]
-  exact
-    Finset.prod_congr rfl fun x hxs => by
-      rw [Real.coe_to_nnreal _ (hf x hxs)]
+  rw [← Nnreal.coe_eq, Nnreal.coe_prod, Real.coe_to_nnreal _ (Finsetₓ.prod_nonneg hf)]
+  exact Finsetₓ.prod_congr rfl fun x hxs => by rw [Real.coe_to_nnreal _ (hf x hxs)]
 
-theorem nsmul_coe (r : ℝ≥0) (n : ℕ) : ↑(n • r) = n • (r : ℝ) := by
-  norm_cast
+theorem nsmul_coe (r : ℝ≥0) (n : ℕ) : ↑(n • r) = n • (r : ℝ) := by norm_cast
 
 @[simp, norm_cast]
 protected theorem coe_nat_cast (n : ℕ) : (↑(↑n : ℝ≥0) : ℝ) = n :=
   map_nat_cast toRealHom n
 
-noncomputable example : LinearOrderₓ ℝ≥0 := by
-  infer_instance
+noncomputable example : LinearOrderₓ ℝ≥0 := by infer_instance
 
 @[simp, norm_cast]
 protected theorem coe_le_coe {r₁ r₂ : ℝ≥0} : (r₁ : ℝ) ≤ r₂ ↔ r₁ ≤ r₂ :=
@@ -330,9 +297,9 @@ protected theorem coe_lt_coe {r₁ r₂ : ℝ≥0} : (r₁ : ℝ) < r₂ ↔ r�
 protected theorem coe_pos {r : ℝ≥0} : (0 : ℝ) < r ↔ 0 < r :=
   Iff.rfl
 
-protected theorem coe_mono : Monotone (coe : ℝ≥0 → ℝ) := fun _ _ => Nnreal.coe_le_coe.2
+protected theorem coe_mono : Monotoneₓ (coe : ℝ≥0 → ℝ) := fun _ _ => Nnreal.coe_le_coe.2
 
-protected theorem _root_.real.to_nnreal_mono : Monotone Real.toNnreal := fun x y h => max_le_max h (le_reflₓ 0)
+protected theorem _root_.real.to_nnreal_mono : Monotoneₓ Real.toNnreal := fun x y h => max_le_max h (le_reflₓ 0)
 
 @[simp]
 theorem _root_.real.to_nnreal_coe {r : ℝ≥0} : Real.toNnreal r = r :=
@@ -344,59 +311,43 @@ theorem mk_coe_nat (n : ℕ) : @Eq ℝ≥0 (⟨(n : ℝ), n.cast_nonneg⟩ : ℝ
 
 @[simp]
 theorem to_nnreal_coe_nat (n : ℕ) : Real.toNnreal n = n :=
-  Nnreal.eq <| by
-    simp [Real.coe_to_nnreal]
+  Nnreal.eq <| by simp [Real.coe_to_nnreal]
 
 /-- `real.to_nnreal` and `coe : ℝ≥0 → ℝ` form a Galois insertion. -/
 noncomputable def gi : GaloisInsertion Real.toNnreal coe :=
   GaloisInsertion.monotoneIntro Nnreal.coe_mono Real.to_nnreal_mono Real.le_coe_to_nnreal fun _ => Real.to_nnreal_coe
 
--- note that anything involving the (decidability of the) linear order, including `⊔`/`⊓` (min, max)
+-- note that anything involving the (decidability of the) linear order,
 -- will be noncomputable, everything else should not be.
-example : OrderBot ℝ≥0 := by
-  infer_instance
+example : OrderBot ℝ≥0 := by infer_instance
 
-example : PartialOrderₓ ℝ≥0 := by
-  infer_instance
+example : PartialOrderₓ ℝ≥0 := by infer_instance
 
-noncomputable example : CanonicallyLinearOrderedAddMonoid ℝ≥0 := by
-  infer_instance
+noncomputable example : CanonicallyLinearOrderedAddMonoid ℝ≥0 := by infer_instance
 
-noncomputable example : LinearOrderedAddCommMonoid ℝ≥0 := by
-  infer_instance
+noncomputable example : LinearOrderedAddCommMonoid ℝ≥0 := by infer_instance
 
-noncomputable example : DistribLattice ℝ≥0 := by
-  infer_instance
+example : DistribLattice ℝ≥0 := by infer_instance
 
-noncomputable example : SemilatticeInf ℝ≥0 := by
-  infer_instance
+example : SemilatticeInf ℝ≥0 := by infer_instance
 
-noncomputable example : SemilatticeSup ℝ≥0 := by
-  infer_instance
+example : SemilatticeSup ℝ≥0 := by infer_instance
 
-noncomputable example : LinearOrderedSemiring ℝ≥0 := by
-  infer_instance
+noncomputable example : LinearOrderedSemiring ℝ≥0 := by infer_instance
 
-example : OrderedCommSemiring ℝ≥0 := by
-  infer_instance
+example : OrderedCommSemiring ℝ≥0 := by infer_instance
 
-noncomputable example : LinearOrderedCommMonoid ℝ≥0 := by
-  infer_instance
+noncomputable example : LinearOrderedCommMonoid ℝ≥0 := by infer_instance
 
-noncomputable example : LinearOrderedCommMonoidWithZero ℝ≥0 := by
-  infer_instance
+noncomputable example : LinearOrderedCommMonoidWithZero ℝ≥0 := by infer_instance
 
-noncomputable example : LinearOrderedCommGroupWithZero ℝ≥0 := by
-  infer_instance
+noncomputable example : LinearOrderedCommGroupWithZero ℝ≥0 := by infer_instance
 
-example : CanonicallyOrderedCommSemiring ℝ≥0 := by
-  infer_instance
+example : CanonicallyOrderedCommSemiring ℝ≥0 := by infer_instance
 
-example : DenselyOrdered ℝ≥0 := by
-  infer_instance
+example : DenselyOrdered ℝ≥0 := by infer_instance
 
-example : NoMaxOrder ℝ≥0 := by
-  infer_instance
+example : NoMaxOrder ℝ≥0 := by infer_instance
 
 /-- If `a` is a nonnegative real number, then the closed interval `[0, a]` in `ℝ` is order
 isomorphic to the interval `set.Iic a`. -/
@@ -438,8 +389,7 @@ theorem coe_Inf (s : Set ℝ≥0) : (↑(inf s) : ℝ) = inf ((coe : ℝ≥0 →
   Eq.symm <| @subset_Inf_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0)⟩ s <| (Real.Inf_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
 
 @[simp]
-theorem Inf_empty : inf (∅ : Set ℝ≥0) = 0 := by
-  rw [← Nnreal.coe_eq_zero, coe_Inf, Set.image_empty, Real.Inf_empty]
+theorem Inf_empty : inf (∅ : Set ℝ≥0) = 0 := by rw [← Nnreal.coe_eq_zero, coe_Inf, Set.image_empty, Real.Inf_empty]
 
 @[norm_cast]
 theorem coe_infi {ι : Sort _} (s : ι → ℝ≥0) : (↑(⨅ i, s i) : ℝ) = ⨅ i, s i := by
@@ -450,8 +400,7 @@ theorem le_infi_add_infi {ι ι' : Sort _} [Nonempty ι] [Nonempty ι'] {f : ι 
   rw [← Nnreal.coe_le_coe, Nnreal.coe_add, coe_infi, coe_infi]
   exact le_cinfi_add_cinfi h
 
-example : Archimedean ℝ≥0 := by
-  infer_instance
+example : Archimedean ℝ≥0 := by infer_instance
 
 -- TODO: why are these three instances necessary? why aren't they inferred?
 instance covariant_add : CovariantClass ℝ≥0 ℝ≥0 (· + ·) (· ≤ ·) :=
@@ -472,8 +421,7 @@ theorem lt_iff_exists_rat_btwn (a b : ℝ≥0) : a < b ↔ ∃ q : ℚ, 0 ≤ q 
     (fun h : (↑a : ℝ) < (↑b : ℝ) =>
       let ⟨q, haq, hqb⟩ := exists_rat_btwn h
       have : 0 ≤ (q : ℝ) := le_transₓ a.2 <| le_of_ltₓ haq
-      ⟨q, Ratₓ.cast_nonneg.1 this, by
-        simp [Real.coe_to_nnreal _ this, nnreal.coe_lt_coe.symm, haq, hqb]⟩)
+      ⟨q, Ratₓ.cast_nonneg.1 this, by simp [Real.coe_to_nnreal _ this, nnreal.coe_lt_coe.symm, haq, hqb]⟩)
     fun ⟨q, _, haq, hqb⟩ => lt_transₓ haq hqb
 
 theorem bot_eq_zero : (⊥ : ℝ≥0) = 0 :=
@@ -485,13 +433,13 @@ theorem mul_sup (a b c : ℝ≥0) : a * (b ⊔ c) = a * b ⊔ a * c :=
 theorem sup_mul (a b c : ℝ≥0) : (a ⊔ b) * c = a * c ⊔ b * c :=
   max_mul_of_nonneg _ _ <| zero_le c
 
-theorem mul_finset_sup {α} (r : ℝ≥0) (s : Finset α) (f : α → ℝ≥0) : r * s.sup f = s.sup fun a => r * f a :=
-  Finset.comp_sup_eq_sup_comp _ (Nnreal.mul_sup r) (mul_zero r)
+theorem mul_finset_sup {α} (r : ℝ≥0) (s : Finsetₓ α) (f : α → ℝ≥0) : r * s.sup f = s.sup fun a => r * f a :=
+  Finsetₓ.comp_sup_eq_sup_comp _ (Nnreal.mul_sup r) (mul_zero r)
 
-theorem finset_sup_mul {α} (s : Finset α) (f : α → ℝ≥0) (r : ℝ≥0) : s.sup f * r = s.sup fun a => f a * r :=
-  Finset.comp_sup_eq_sup_comp (· * r) (fun x y => Nnreal.sup_mul x y r) (zero_mul r)
+theorem finset_sup_mul {α} (s : Finsetₓ α) (f : α → ℝ≥0) (r : ℝ≥0) : s.sup f * r = s.sup fun a => f a * r :=
+  Finsetₓ.comp_sup_eq_sup_comp (· * r) (fun x y => Nnreal.sup_mul x y r) (zero_mul r)
 
-theorem finset_sup_div {α} {f : α → ℝ≥0} {s : Finset α} (r : ℝ≥0) : s.sup f / r = s.sup fun a => f a / r := by
+theorem finset_sup_div {α} {f : α → ℝ≥0} {s : Finsetₓ α} (r : ℝ≥0) : s.sup f / r = s.sup fun a => f a / r := by
   simp only [div_eq_inv_mul, mul_finset_sup]
 
 @[simp, norm_cast]
@@ -513,12 +461,10 @@ namespace Real
 section ToNnreal
 
 @[simp]
-theorem to_nnreal_zero : Real.toNnreal 0 = 0 := by
-  simp [Real.toNnreal] <;> rfl
+theorem to_nnreal_zero : Real.toNnreal 0 = 0 := by simp [Real.toNnreal] <;> rfl
 
 @[simp]
-theorem to_nnreal_one : Real.toNnreal 1 = 1 := by
-  simp [Real.toNnreal, max_eq_leftₓ (zero_le_one : (0 : ℝ) ≤ 1)] <;> rfl
+theorem to_nnreal_one : Real.toNnreal 1 = 1 := by simp [Real.toNnreal, max_eq_leftₓ (zero_le_one : (0 : ℝ) ≤ 1)] <;> rfl
 
 @[simp]
 theorem to_nnreal_pos {r : ℝ} : 0 < Real.toNnreal r ↔ 0 < r := by
@@ -551,8 +497,7 @@ theorem to_nnreal_lt_to_nnreal_iff_of_nonneg {r p : ℝ} (hr : 0 ≤ r) : Real.t
 
 @[simp]
 theorem to_nnreal_add {r p : ℝ} (hr : 0 ≤ r) (hp : 0 ≤ p) : Real.toNnreal (r + p) = Real.toNnreal r + Real.toNnreal p :=
-  Nnreal.eq <| by
-    simp [Real.toNnreal, hr, hp, add_nonneg]
+  Nnreal.eq <| by simp [Real.toNnreal, hr, hp, add_nonneg]
 
 theorem to_nnreal_add_to_nnreal {r p : ℝ} (hr : 0 ≤ r) (hp : 0 ≤ p) :
     Real.toNnreal r + Real.toNnreal p = Real.toNnreal (r + p) :=
@@ -604,12 +549,7 @@ theorem to_nnreal_bit0 (r : ℝ) : Real.toNnreal (bit0 r) = bit0 (Real.toNnreal 
 
 @[simp]
 theorem to_nnreal_bit1 {r : ℝ} (hr : 0 ≤ r) : Real.toNnreal (bit1 r) = bit1 (Real.toNnreal r) :=
-  (Real.to_nnreal_add
-        (by
-          simp [hr])
-        zero_le_one).trans
-    (by
-      simp [bit1])
+  (Real.to_nnreal_add (by simp [hr]) zero_le_one).trans (by simp [bit1])
 
 end ToNnreal
 
@@ -621,8 +561,7 @@ namespace Nnreal
 
 section Mul
 
-theorem mul_eq_mul_left {a b c : ℝ≥0} (h : a ≠ 0) : a * b = a * c ↔ b = c := by
-  rw [mul_eq_mul_left_iff, or_iff_leftₓ h]
+theorem mul_eq_mul_left {a b c : ℝ≥0} (h : a ≠ 0) : a * b = a * c ↔ b = c := by rw [mul_eq_mul_left_iff, or_iff_leftₓ h]
 
 theorem _root_.real.to_nnreal_mul {p q : ℝ} (hp : 0 ≤ p) : Real.toNnreal (p * q) = Real.toNnreal p * Real.toNnreal q :=
   by
@@ -676,8 +615,7 @@ theorem sub_def {r p : ℝ≥0} : r - p = Real.toNnreal (r - p) :=
 theorem coe_sub_def {r p : ℝ≥0} : ↑(r - p) = max (r - p : ℝ) 0 :=
   rfl
 
-noncomputable example : HasOrderedSub ℝ≥0 := by
-  infer_instance
+noncomputable example : HasOrderedSub ℝ≥0 := by infer_instance
 
 theorem sub_div (a b c : ℝ≥0) : (a - b) / c = a / c - b / c :=
   tsub_div _ _ _
@@ -686,8 +624,8 @@ end Sub
 
 section Inv
 
-theorem sum_div {ι} (s : Finset ι) (f : ι → ℝ≥0) (b : ℝ≥0) : (∑ i in s, f i) / b = ∑ i in s, f i / b :=
-  Finset.sum_div
+theorem sum_div {ι} (s : Finsetₓ ι) (f : ι → ℝ≥0) (b : ℝ≥0) : (∑ i in s, f i) / b = ∑ i in s, f i / b :=
+  Finsetₓ.sum_div
 
 @[simp]
 theorem inv_pos {r : ℝ≥0} : 0 < r⁻¹ ↔ 0 < r :=
@@ -703,8 +641,7 @@ theorem div_self_le (r : ℝ≥0) : r / r ≤ 1 :=
 theorem inv_le {r p : ℝ≥0} (h : r ≠ 0) : r⁻¹ ≤ p ↔ 1 ≤ r * p := by
   rw [← mul_le_mul_left (pos_iff_ne_zero.2 h), mul_inv_cancel h]
 
-theorem inv_le_of_le_mul {r p : ℝ≥0} (h : 1 ≤ r * p) : r⁻¹ ≤ p := by
-  by_cases' r = 0 <;> simp [*, inv_le]
+theorem inv_le_of_le_mul {r p : ℝ≥0} (h : 1 ≤ r * p) : r⁻¹ ≤ p := by by_cases r = 0 <;> simp [*, inv_le]
 
 @[simp]
 theorem le_inv_iff_mul_le {r p : ℝ≥0} (h : p ≠ 0) : r ≤ p⁻¹ ↔ r * p ≤ 1 := by
@@ -728,9 +665,7 @@ theorem div_le_iff' {a b r : ℝ≥0} (hr : r ≠ 0) : a / r ≤ b ↔ a ≤ r *
   @div_le_iff' ℝ _ a r b <| pos_iff_ne_zero.2 hr
 
 theorem div_le_of_le_mul {a b c : ℝ≥0} (h : a ≤ b * c) : a / c ≤ b :=
-  if h0 : c = 0 then by
-    simp [h0]
-  else (div_le_iff h0).2 h
+  if h0 : c = 0 then by simp [h0] else (div_le_iff h0).2 h
 
 theorem div_le_of_le_mul' {a b c : ℝ≥0} (h : a ≤ b * c) : a / b ≤ c :=
   div_le_of_le_mul <| mul_comm b c ▸ h
@@ -759,7 +694,7 @@ theorem mul_lt_of_lt_div {a b r : ℝ≥0} (h : a < b / r) : a * r < b := by
   simpa using h
 
 theorem div_le_div_left_of_le {a b c : ℝ≥0} (b0 : 0 < b) (c0 : 0 < c) (cb : c ≤ b) : a / b ≤ a / c := by
-  by_cases' a0 : a = 0
+  by_cases a0:a = 0
   · rw [a0, zero_div, zero_div]
     
   · cases' a with a ha
@@ -773,10 +708,8 @@ theorem div_le_div_left {a b c : ℝ≥0} (a0 : 0 < a) (b0 : 0 < b) (c0 : 0 < c)
 theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0} (h : ∀ a < 1, a * x ≤ y) : x ≤ y :=
   le_of_forall_ge_of_denseₓ fun a ha => by
     have hx : x ≠ 0 := pos_iff_ne_zero.1 (lt_of_le_of_ltₓ (zero_le _) ha)
-    have hx' : x⁻¹ ≠ 0 := by
-      rwa [(· ≠ ·), inv_eq_zero]
-    have : a * x⁻¹ < 1 := by
-      rwa [← lt_inv_iff_mul_lt hx', inv_invₓ]
+    have hx' : x⁻¹ ≠ 0 := by rwa [(· ≠ ·), inv_eq_zero]
+    have : a * x⁻¹ < 1 := by rwa [← lt_inv_iff_mul_lt hx', inv_invₓ]
     have : a * x⁻¹ * x ≤ y := h _ this
     rwa [mul_assoc, inv_mul_cancel hx, mul_oneₓ] at this
 
@@ -816,8 +749,8 @@ theorem div_add' (a b c : ℝ≥0) (hc : c ≠ 0) : a / c + b = (a + b * c) / c 
   div_add' _ _ _ hc
 
 theorem _root_.real.to_nnreal_inv {x : ℝ} : Real.toNnreal x⁻¹ = (Real.toNnreal x)⁻¹ := by
-  by_cases' hx : 0 ≤ x
-  · nth_rw 0[← Real.coe_to_nnreal x hx]
+  by_cases hx:0 ≤ x
+  · nth_rw 0 [← Real.coe_to_nnreal x hx]
     rw [← Nnreal.coe_inv, Real.to_nnreal_coe]
     
   · have hx' := le_of_not_geₓ hx
@@ -825,15 +758,12 @@ theorem _root_.real.to_nnreal_inv {x : ℝ} : Real.toNnreal x⁻¹ = (Real.toNnr
     
 
 theorem _root_.real.to_nnreal_div {x y : ℝ} (hx : 0 ≤ x) : Real.toNnreal (x / y) = Real.toNnreal x / Real.toNnreal y :=
-  by
-  rw [div_eq_mul_inv, div_eq_mul_inv, ← Real.to_nnreal_inv, ← Real.to_nnreal_mul hx]
+  by rw [div_eq_mul_inv, div_eq_mul_inv, ← Real.to_nnreal_inv, ← Real.to_nnreal_mul hx]
 
 theorem _root_.real.to_nnreal_div' {x y : ℝ} (hy : 0 ≤ y) : Real.toNnreal (x / y) = Real.toNnreal x / Real.toNnreal y :=
-  by
-  rw [div_eq_inv_mul, div_eq_inv_mul, Real.to_nnreal_mul (inv_nonneg.2 hy), Real.to_nnreal_inv]
+  by rw [div_eq_inv_mul, div_eq_inv_mul, Real.to_nnreal_mul (inv_nonneg.2 hy), Real.to_nnreal_inv]
 
-theorem inv_lt_one_iff {x : ℝ≥0} (hx : x ≠ 0) : x⁻¹ < 1 ↔ 1 < x := by
-  rwa [← one_div, div_lt_iff hx, one_mulₓ]
+theorem inv_lt_one_iff {x : ℝ≥0} (hx : x ≠ 0) : x⁻¹ < 1 ↔ 1 < x := by rwa [← one_div, div_lt_iff hx, one_mulₓ]
 
 theorem inv_lt_one {x : ℝ≥0} (hx : 1 < x) : x⁻¹ < 1 :=
   inv_lt_one hx
@@ -887,8 +817,7 @@ theorem infi_mul (f : ι → ℝ≥0) (a : ℝ≥0) : infi f * a = ⨅ i, f i * 
   rw [← Nnreal.coe_eq, Nnreal.coe_mul, coe_infi, coe_infi]
   exact Real.infi_mul_of_nonneg (Nnreal.coe_nonneg _) _
 
-theorem mul_infi (f : ι → ℝ≥0) (a : ℝ≥0) : a * infi f = ⨅ i, a * f i := by
-  simpa only [mul_comm] using infi_mul f a
+theorem mul_infi (f : ι → ℝ≥0) (a : ℝ≥0) : a * infi f = ⨅ i, a * f i := by simpa only [mul_comm] using infi_mul f a
 
 theorem mul_supr (f : ι → ℝ≥0) (a : ℝ≥0) : (a * ⨆ i, f i) = ⨆ i, a * f i := by
   rw [← Nnreal.coe_eq, Nnreal.coe_mul, Nnreal.coe_supr, Nnreal.coe_supr]
@@ -898,8 +827,7 @@ theorem supr_mul (f : ι → ℝ≥0) (a : ℝ≥0) : (⨆ i, f i) * a = ⨆ i, 
   rw [mul_comm, mul_supr]
   simp_rw [mul_comm]
 
-theorem supr_div (f : ι → ℝ≥0) (a : ℝ≥0) : (⨆ i, f i) / a = ⨆ i, f i / a := by
-  simp only [div_eq_mul_inv, supr_mul]
+theorem supr_div (f : ι → ℝ≥0) (a : ℝ≥0) : (⨆ i, f i) / a = ⨆ i, f i / a := by simp only [div_eq_mul_inv, supr_mul]
 
 variable [Nonempty ι]
 
@@ -963,7 +891,7 @@ namespace Real
 
 /-- The absolute value on `ℝ` as a map to `ℝ≥0`. -/
 @[pp_nodot]
-noncomputable def nnabs : ℝ →*₀ ℝ≥0 where
+def nnabs : ℝ →*₀ ℝ≥0 where
   toFun := fun x => ⟨abs x, abs_nonneg x⟩
   map_zero' := by
     ext
@@ -992,4 +920,24 @@ theorem cast_nat_abs_eq_nnabs_cast (n : ℤ) : (n.natAbs : ℝ≥0) = nnabs n :=
   rw [Nnreal.coe_nat_cast, Int.cast_nat_abs, Real.coe_nnabs]
 
 end Real
+
+namespace Tactic
+
+open Positivity
+
+private theorem nnreal_coe_pos {r : ℝ≥0} : 0 < r → 0 < (r : ℝ) :=
+  Nnreal.coe_pos.2
+
+/-- Extension for the `positivity` tactic: cast from `ℝ≥0` to `ℝ`. -/
+@[positivity]
+unsafe def positivity_coe_nnreal_real : expr → tactic strictness
+  | quote.1 (@coe _ _ (%%ₓinst) (%%ₓa)) => do
+    unify inst (quote.1 (@coeToLift _ _ <| @coeBaseₓ _ _ Nnreal.Real.hasCoe))
+    let strictness_a ← core a
+    match strictness_a with
+      | positive p => positive <$> mk_app `` nnreal_coe_pos [p]
+      | nonnegative _ => nonnegative <$> mk_app `` Nnreal.coe_nonneg [a]
+  | e => pp e >>= fail ∘ format.bracket "The expression " " is not of the form `(r : ℝ)` for `r : ℝ≥0`"
+
+end Tactic
 

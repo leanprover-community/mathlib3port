@@ -167,20 +167,18 @@ theorem continuous_at_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseIn
     (hf : ∀ᶠ x in 𝓝 b, ∃ c, Tendsto f (comap i <| 𝓝 x) (𝓝 c)) : ContinuousAt (di.extend f) b := by
   set φ := di.extend f
   haveI := di.comap_nhds_ne_bot
-  suffices ∀ V' ∈ 𝓝 (φ b), IsClosed V' → φ ⁻¹' V' ∈ 𝓝 b by
-    simpa [ContinuousAt, (closed_nhds_basis _).tendsto_right_iff]
+  suffices ∀ V' ∈ 𝓝 (φ b), IsClosed V' → φ ⁻¹' V' ∈ 𝓝 b by simpa [ContinuousAt, (closed_nhds_basis _).tendsto_right_iff]
   intro V' V'_in V'_closed
   set V₁ := { x | tendsto f (comap i <| 𝓝 x) (𝓝 <| φ x) }
   have V₁_in : V₁ ∈ 𝓝 b := by
     filter_upwards [hf]
     rintro x ⟨c, hc⟩
-    dsimp' [V₁, φ]
+    dsimp [V₁, φ]
     rwa [di.extend_eq_of_tendsto hc]
   obtain ⟨V₂, V₂_in, V₂_op, hV₂⟩ : ∃ V₂ ∈ 𝓝 b, IsOpen V₂ ∧ ∀ x ∈ i ⁻¹' V₂, f x ∈ V' := by
     simpa [and_assocₓ] using
       ((nhds_basis_opens' b).comap i).tendsto_left_iff.mp (mem_of_mem_nhds V₁_in : b ∈ V₁) V' V'_in
-  suffices ∀ x ∈ V₁ ∩ V₂, φ x ∈ V' by
-    filter_upwards [inter_mem V₁_in V₂_in] using this
+  suffices ∀ x ∈ V₁ ∩ V₂, φ x ∈ V' by filter_upwards [inter_mem V₁_in V₂_in] using this
   rintro x ⟨x_in₁, x_in₂⟩
   have hV₂x : V₂ ∈ 𝓝 x := IsOpen.mem_nhds V₂_op x_in₂
   apply V'_closed.mem_of_tendsto x_in₁
@@ -195,9 +193,7 @@ theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ Closure (Ra
     (H : ∀ (a : α), ∀ s ∈ 𝓝 a, ∃ t ∈ 𝓝 (i a), ∀ b, i b ∈ t → b ∈ s) : DenseInducing i :=
   { induced :=
       (induced_iff_nhds_eq i).2 fun a =>
-        le_antisymmₓ (tendsto_iff_comap.1 <| c.Tendsto _)
-          (by
-            simpa [Filter.le_def] using H a),
+        le_antisymmₓ (tendsto_iff_comap.1 <| c.Tendsto _) (by simpa [Filter.le_def] using H a),
     dense }
 
 end DenseInducing
@@ -233,8 +229,7 @@ protected theorem separable_space [SeparableSpace α] : SeparableSpace β :=
 protected theorem prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbedding e₁) (de₂ : DenseEmbedding e₂) :
     DenseEmbedding fun p : α × γ => (e₁ p.1, e₂ p.2) :=
   { DenseInducing.prod de₁.to_dense_inducing de₂.to_dense_inducing with
-    inj := fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ => by
-      simp <;> exact fun h₁ h₂ => ⟨de₁.inj h₁, de₂.inj h₂⟩ }
+    inj := fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ => by simp <;> exact fun h₁ h₂ => ⟨de₁.inj h₁, de₂.inj h₂⟩ }
 
 /-- The dense embedding of a subtype inside its closure. -/
 @[simps]
@@ -317,7 +312,7 @@ theorem Filter.HasBasis.has_basis_of_dense_inducing [TopologicalSpace α] [Topol
   rw [Filter.has_basis_iff] at h⊢
   intro T
   refine' ⟨fun hT => _, fun hT => _⟩
-  · obtain ⟨T', hT₁, hT₂, hT₃⟩ := nhds_is_closed hT
+  · obtain ⟨T', hT₁, hT₂, hT₃⟩ := exists_mem_nhds_is_closed_subset hT
     have hT₄ : f ⁻¹' T' ∈ 𝓝 x := by
       rw [hf.to_inducing.nhds_eq_comap x]
       exact ⟨T', hT₁, subset.rfl⟩
@@ -325,11 +320,10 @@ theorem Filter.HasBasis.has_basis_of_dense_inducing [TopologicalSpace α] [Topol
     exact
       ⟨i, hi,
         (closure_mono (image_subset f hi')).trans
-          (subset.trans (closure_minimal (image_subset_iff.mpr subset.rfl) hT₃) hT₂)⟩
+          (subset.trans (closure_minimal (image_subset_iff.mpr subset.rfl) hT₂) hT₃)⟩
     
   · obtain ⟨i, hi, hi'⟩ := hT
-    suffices Closure (f '' s i) ∈ 𝓝 (f x) by
-      filter_upwards [this] using hi'
+    suffices Closure (f '' s i) ∈ 𝓝 (f x) by filter_upwards [this] using hi'
     replace h := (h (s i)).mpr ⟨i, hi, subset.rfl⟩
     exact hf.closure_image_mem_nhds h
     

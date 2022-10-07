@@ -62,7 +62,7 @@ infixr:25 " →. " => Pfun
 
 namespace Pfun
 
-variable {α β γ δ : Type _}
+variable {α β γ δ ε ι : Type _}
 
 instance : Inhabited (α →. β) :=
   ⟨fun a => Part.none⟩
@@ -72,8 +72,7 @@ def Dom (f : α →. β) : Set α :=
   { a | (f a).Dom }
 
 @[simp]
-theorem mem_dom (f : α →. β) (x : α) : x ∈ Dom f ↔ ∃ y, y ∈ f x := by
-  simp [dom, Part.dom_iff_mem]
+theorem mem_dom (f : α →. β) (x : α) : x ∈ Dom f ↔ ∃ y, y ∈ f x := by simp [dom, Part.dom_iff_mem]
 
 @[simp]
 theorem dom_mk (p : α → Prop) (f : ∀ a, p a → β) : (Pfun.Dom fun x => ⟨p x, f x⟩) = { x | p x } :=
@@ -109,8 +108,7 @@ def asSubtype (f : α →. β) (s : f.Dom) : β :=
 the type of pairs `(p : α → Prop, f : subtype p → β)`. -/
 def equivSubtype : (α →. β) ≃ Σp : α → Prop, Subtype p → β :=
   ⟨fun f => ⟨fun a => (f a).Dom, asSubtype f⟩, fun f x => ⟨f.1 x, fun h => f.2 ⟨x, h⟩⟩, fun f =>
-    funext fun a => Part.eta _, fun ⟨p, f⟩ => by
-    dsimp' <;> congr <;> funext a <;> cases a <;> rfl⟩
+    funext fun a => Part.eta _, fun ⟨p, f⟩ => by dsimp <;> congr <;> funext a <;> cases a <;> rfl⟩
 
 theorem as_subtype_eq_of_mem {f : α →. β} {x : α} {y : β} (fxy : y ∈ f x) (domx : x ∈ f.Dom) :
     f.asSubtype ⟨x, domx⟩ = y :=
@@ -156,15 +154,13 @@ def restrict (f : α →. β) {p : Set α} (H : p ⊆ f.Dom) : α →. β := fun
 
 @[simp]
 theorem mem_restrict {f : α →. β} {s : Set α} (h : s ⊆ f.Dom) (a : α) (b : β) : b ∈ f.restrict h a ↔ a ∈ s ∧ b ∈ f a :=
-  by
-  simp [restrict]
+  by simp [restrict]
 
 /-- Turns a function into a partial function with a prescribed domain. -/
 def res (f : α → β) (s : Set α) : α →. β :=
   (Pfun.lift f).restrict s.subset_univ
 
-theorem mem_res (f : α → β) (s : Set α) (a : α) (b : β) : b ∈ res f s a ↔ a ∈ s ∧ f a = b := by
-  simp [res, @eq_comm _ b]
+theorem mem_res (f : α → β) (s : Set α) (a : α) (b : β) : b ∈ res f s a ↔ a ∈ s ∧ f a = b := by simp [res, @eq_comm _ b]
 
 theorem res_univ (f : α → β) : Pfun.res f Set.Univ = f :=
   rfl
@@ -173,8 +169,7 @@ theorem dom_iff_graph (f : α →. β) (x : α) : x ∈ f.Dom ↔ ∃ y, (x, y) 
   Part.dom_iff_mem
 
 theorem lift_graph {f : α → β} {a b} : (a, b) ∈ (f : α →. β).Graph ↔ f a = b :=
-  show (∃ h : True, f a = b) ↔ f a = b by
-    simp
+  show (∃ h : True, f a = b) ↔ f a = b by simp
 
 /-- The monad `pure` function, the total constant `x` function -/
 protected def pure (x : β) : α →. β := fun _ => Part.some x
@@ -196,8 +191,7 @@ instance : Monadₓ (Pfun α) where
 
 instance : IsLawfulMonad (Pfun α) where
   bind_pure_comp_eq_map := fun β γ f x => funext fun a => Part.bind_some_eq_map _ _
-  id_map := fun β f => by
-    funext a <;> dsimp' [Functor.map, Pfun.map] <;> cases f a <;> rfl
+  id_map := fun β f => by funext a <;> dsimp [Functor.map, Pfun.map] <;> cases f a <;> rfl
   pure_bind := fun β γ x f => funext fun a => Part.bind_some.{u_1, u_2} _ (f x)
   bind_assoc := fun β γ δ f g k => funext fun a => (f a).bind_assoc (fun b => g b a) fun b => k b a
 
@@ -291,8 +285,7 @@ def fixInduction {f : α →. Sum β α} {b : β} {C : α → Sort _} {a : α} (
   intro h₂
   have fb : b ∈ f.fix a := Part.mem_assert_iff.2 ⟨⟨_, ha⟩, h₂⟩
   refine' H a fb fun a'' fa'' => _
-  have ha'' : b ∈ f.fix a'' := by
-    rwa [fix_fwd _ _ fa''] at fb
+  have ha'' : b ∈ f.fix a'' := by rwa [fix_fwd _ _ fa''] at fb
   have := (Part.mem_assert_iff.1 ha'').snd
   exact IH _ fa'' ⟨ha _ fa'', this⟩ this
 
@@ -356,11 +349,9 @@ theorem preimage_inter (s t : Set β) : f.Preimage (s ∩ t) ⊆ f.Preimage s �
 theorem preimage_union (s t : Set β) : f.Preimage (s ∪ t) = f.Preimage s ∪ f.Preimage t :=
   Rel.preimage_union _ s t
 
-theorem preimage_univ : f.Preimage Set.Univ = f.Dom := by
-  ext <;> simp [mem_preimage, mem_dom]
+theorem preimage_univ : f.Preimage Set.Univ = f.Dom := by ext <;> simp [mem_preimage, mem_dom]
 
-theorem coe_preimage (f : α → β) (s : Set β) : (f : α →. β).Preimage s = f ⁻¹' s := by
-  ext <;> simp
+theorem coe_preimage (f : α → β) (s : Set β) : (f : α →. β).Preimage s = f ⁻¹' s := by ext <;> simp
 
 /-- Core of a set `s : set β` with respect to a partial function `f : α →. β`. Set of all `a : α`
 such that `f a ∈ s`, if `f a` is defined. -/
@@ -393,12 +384,11 @@ open Classical
 theorem core_res (f : α → β) (s : Set α) (t : Set β) : (res f s).Core t = sᶜ ∪ f ⁻¹' t := by
   ext
   rw [mem_core_res]
-  by_cases' h : x ∈ s <;> simp [h]
+  by_cases h:x ∈ s <;> simp [h]
 
 end
 
-theorem core_restrict (f : α → β) (s : Set β) : (f : α →. β).Core s = s.Preimage f := by
-  ext x <;> simp [core_def]
+theorem core_restrict (f : α → β) (s : Set β) : (f : α →. β).Core s = s.Preimage f := by ext x <;> simp [core_def]
 
 theorem preimage_subset_core (f : α →. β) (s : Set β) : f.Preimage s ⊆ f.Core s := fun x ⟨y, ys, fxy⟩ y' fxy' =>
   have : y = y' := Part.mem_unique fxy fxy'
@@ -462,13 +452,11 @@ theorem comp_apply (f : β →. γ) (g : α →. β) (a : α) : f.comp g a = (g 
 
 @[simp]
 theorem id_comp (f : α →. β) : (Pfun.id β).comp f = f :=
-  ext fun _ _ => by
-    simp
+  ext fun _ _ => by simp
 
 @[simp]
 theorem comp_id (f : α →. β) : f.comp (Pfun.id α) = f :=
-  ext fun _ _ => by
-    simp
+  ext fun _ _ => by simp
 
 @[simp]
 theorem dom_comp (f : β →. γ) (g : α →. β) : (f.comp g).Dom = g.Preimage f.Dom := by
@@ -495,13 +483,74 @@ theorem _root_.part.bind_comp (f : β →. γ) (g : α →. β) (a : Part α) : 
 
 @[simp]
 theorem comp_assoc (f : γ →. δ) (g : β →. γ) (h : α →. β) : (f.comp g).comp h = f.comp (g.comp h) :=
-  ext fun _ _ => by
-    simp only [comp_apply, Part.bind_comp]
+  ext fun _ _ => by simp only [comp_apply, Part.bind_comp]
 
 -- This can't be `simp`
 theorem coe_comp (g : β → γ) (f : α → β) : ((g ∘ f : α → γ) : α →. γ) = (g : β →. γ).comp f :=
-  ext fun _ _ => by
-    simp only [coe_val, comp_apply, Part.bind_some]
+  ext fun _ _ => by simp only [coe_val, comp_apply, Part.bind_some]
+
+/-- Product of partial functions. -/
+def prodLift (f : α →. β) (g : α →. γ) : α →. β × γ := fun x =>
+  ⟨(f x).Dom ∧ (g x).Dom, fun h => ((f x).get h.1, (g x).get h.2)⟩
+
+@[simp]
+theorem dom_prod_lift (f : α →. β) (g : α →. γ) : (f.prodLift g).Dom = { x | (f x).Dom ∧ (g x).Dom } :=
+  rfl
+
+theorem get_prod_lift (f : α →. β) (g : α →. γ) (x : α) (h) : (f.prodLift g x).get h = ((f x).get h.1, (g x).get h.2) :=
+  rfl
+
+@[simp]
+theorem prod_lift_apply (f : α →. β) (g : α →. γ) (x : α) :
+    f.prodLift g x = ⟨(f x).Dom ∧ (g x).Dom, fun h => ((f x).get h.1, (g x).get h.2)⟩ :=
+  rfl
+
+theorem mem_prod_lift {f : α →. β} {g : α →. γ} {x : α} {y : β × γ} : y ∈ f.prodLift g x ↔ y.1 ∈ f x ∧ y.2 ∈ g x := by
+  trans ∃ hp hq, (f x).get hp = y.1 ∧ (g x).get hq = y.2
+  · simp only [prod_lift, Part.mem_mk_iff, And.exists, Prod.ext_iffₓ]
+    
+  · simpa only [exists_and_distrib_leftₓ, exists_and_distrib_rightₓ]
+    
+
+/-- Product of partial functions. -/
+def prodMap (f : α →. γ) (g : β →. δ) : α × β →. γ × δ := fun x =>
+  ⟨(f x.1).Dom ∧ (g x.2).Dom, fun h => ((f x.1).get h.1, (g x.2).get h.2)⟩
+
+@[simp]
+theorem dom_prod_map (f : α →. γ) (g : β →. δ) : (f.prod_map g).Dom = { x | (f x.1).Dom ∧ (g x.2).Dom } :=
+  rfl
+
+theorem get_prod_map (f : α →. γ) (g : β →. δ) (x : α × β) (h) :
+    (f.prod_map g x).get h = ((f x.1).get h.1, (g x.2).get h.2) :=
+  rfl
+
+@[simp]
+theorem prod_map_apply (f : α →. γ) (g : β →. δ) (x : α × β) :
+    f.prod_map g x = ⟨(f x.1).Dom ∧ (g x.2).Dom, fun h => ((f x.1).get h.1, (g x.2).get h.2)⟩ :=
+  rfl
+
+theorem mem_prod_map {f : α →. γ} {g : β →. δ} {x : α × β} {y : γ × δ} :
+    y ∈ f.prod_map g x ↔ y.1 ∈ f x.1 ∧ y.2 ∈ g x.2 := by
+  trans ∃ hp hq, (f x.1).get hp = y.1 ∧ (g x.2).get hq = y.2
+  · simp only [prod_mapₓ, Part.mem_mk_iff, And.exists, Prod.ext_iffₓ]
+    
+  · simpa only [exists_and_distrib_leftₓ, exists_and_distrib_rightₓ]
+    
+
+@[simp]
+theorem prod_lift_fst_comp_snd_comp (f : α →. γ) (g : β →. δ) :
+    prodLift (f.comp ((Prod.fst : α × β → α) : α × β →. α)) (g.comp ((Prod.snd : α × β → β) : α × β →. β)) =
+      prodMap f g :=
+  ext fun a => by simp
+
+@[simp]
+theorem prod_map_id_id : (Pfun.id α).prod_map (Pfun.id β) = Pfun.id _ :=
+  ext fun _ _ => by simp [eq_comm]
+
+@[simp]
+theorem prod_map_comp_comp (f₁ : α →. β) (f₂ : β →. γ) (g₁ : δ →. ε) (g₂ : ε →. ι) :
+    (f₂.comp f₁).prod_map (g₂.comp g₁) = (f₂.prod_map g₂).comp (f₁.prod_map g₁) :=
+  ext fun _ _ => by tidy
 
 end Pfun
 

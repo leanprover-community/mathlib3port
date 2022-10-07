@@ -43,22 +43,17 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
     HEq (Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f)) (Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f)) := by
   apply hfunext rfl
   rintro a'' _ rfl
-  refine'
-    hfunext
-      (by
-        rw [cons_swap])
-      fun ha₁ ha₂ _ => _
+  refine' hfunext (by rw [cons_swap]) fun ha₁ ha₂ _ => _
   rcases ne_or_eq a'' a with (h₁ | rfl)
   rcases eq_or_ne a'' a' with (rfl | h₂)
-  all_goals
-    simp [*, pi.cons_same, pi.cons_ne]
+  all_goals simp [*, pi.cons_same, pi.cons_ne]
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, δ a) :=
   m.recOn {Pi.emptyₓ δ} (fun a m (p : Multiset (∀ a ∈ m, δ a)) => (t a).bind fun b => p.map <| Pi.cons m a b)
     (by
       intro a a' m n
-      by_cases' eq : a = a'
+      by_cases eq:a = a'
       · subst Eq
         
       · simp [map_bind, bind_bind (t a') (t a)]
@@ -93,46 +88,34 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
       have ne : a ≠ a' := fun h => hs <| h.symm ▸ h'
       have : a' ∈ a ::ₘ s := mem_cons_of_mem h'
       calc
-        f₁ a' h' = Pi.cons s a b f₁ a' this := by
-          rw [pi.cons_ne this Ne.symm]
-        _ = Pi.cons s a b f₂ a' this := by
-          rw [Eq]
-        _ = f₂ a' h' := by
-          rw [pi.cons_ne this Ne.symm]
+        f₁ a' h' = Pi.cons s a b f₁ a' this := by rw [pi.cons_ne this Ne.symm]
+        _ = Pi.cons s a b f₂ a' this := by rw [Eq]
+        _ = f₂ a' h' := by rw [pi.cons_ne this Ne.symm]
         
 
 theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) = prod (m.map fun a => card (t a)) :=
-  Multiset.induction_on m
-    (by
-      simp )
-    (by
-      simp (config := { contextual := true })[mul_comm])
+  Multiset.induction_on m (by simp) (by simp (config := { contextual := true }) [mul_comm])
 
-protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
-    Nodup s → (∀ a ∈ s, Nodup (t a)) → Nodup (pi s t) :=
+protected theorem Nodupₓ.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
+    Nodupₓ s → (∀ a ∈ s, Nodupₓ (t a)) → Nodupₓ (pi s t) :=
   Multiset.induction_on s (fun _ _ => nodup_singleton _)
     (by
       intro a s ih hs ht
-      have has : a ∉ s := by
-        simp at hs <;> exact hs.1
-      have hs : nodup s := by
-        simp at hs <;> exact hs.2
+      have has : a ∉ s := by simp at hs <;> exact hs.1
+      have hs : nodup s := by simp at hs <;> exact hs.2
       simp
       refine' ⟨fun b hb => ((ih hs) fun a' h' => ht a' <| mem_cons_of_mem h').map (pi_cons_injective has), _⟩
       refine' (ht a <| mem_cons_self _ _).Pairwise _
       exact fun b₁ hb₁ b₂ hb₂ neb =>
         disjoint_map_map.2 fun f hf g hg eq =>
-          have : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) := by
-            rw [Eq]
-          neb <|
-            show b₁ = b₂ by
-              rwa [pi.cons_same, pi.cons_same] at this)
+          have : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) := by rw [Eq]
+          neb <| show b₁ = b₂ by rwa [pi.cons_same, pi.cons_same] at this)
 
 @[simp]
 theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a') :
     (Pi.cons m a (f _ (mem_cons_self _ _)) fun a' ha' => f a' (mem_cons_of_mem ha')) = f := by
   ext a' h'
-  by_cases' a' = a
+  by_cases a' = a
   · subst h
     rw [pi.cons_same]
     
@@ -143,14 +126,12 @@ theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
     ∀ f : ∀ a ∈ m, δ a, f ∈ pi m t ↔ ∀ (a) (h : a ∈ m), f a h ∈ t a := by
   intro f
   induction' m using Multiset.induction_on with a m ih
-  · simpa using
-      show f = pi.empty δ by
-        funext a ha <;> exact ha.elim
+  · simpa using show f = pi.empty δ by funext a ha <;> exact ha.elim
     
   simp_rw [pi_cons, mem_bind, mem_map, ih]
   constructor
   · rintro ⟨b, hb, f', hf', rfl⟩ a' ha'
-    by_cases' a' = a
+    by_cases a' = a
     · subst h
       rwa [pi.cons_same]
       

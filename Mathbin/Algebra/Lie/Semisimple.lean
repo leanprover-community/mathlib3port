@@ -112,8 +112,7 @@ theorem abelian_radical_iff_solvable_is_abelian [IsNoetherian R L] :
     infer_instance
     
 
-theorem ad_ker_eq_bot_of_semisimple [IsSemisimple R L] : (ad R L).ker = ⊥ := by
-  simp
+theorem ad_ker_eq_bot_of_semisimple [IsSemisimple R L] : (ad R L).ker = ⊥ := by simp
 
 end LieAlgebra
 

@@ -48,7 +48,7 @@ In this section we prove a version of the Whitney embedding theorem: for any com
 -/
 
 
-variable [T2Space M] [Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
+variable [T2Space M] [Fintypeₓ ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
 
 /-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
 def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ where
@@ -90,7 +90,7 @@ theorem comp_embedding_pi_tangent_mfderiv (x : M) (hx : x ∈ s) :
   rw [hy, Pi.one_apply, one_smul]
 
 theorem embedding_pi_tangent_ker_mfderiv (x : M) (hx : x ∈ s) :
-    (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x).ker = ⊥ := by
+    LinearMap.ker (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) = ⊥ := by
   apply bot_unique
   rw [← (mdifferentiable_chart I (f.c (f.ind x hx))).ker_mfderiv_eq_bot (f.mem_chart_at_ind_source x hx), ←
     comp_embedding_pi_tangent_mfderiv]

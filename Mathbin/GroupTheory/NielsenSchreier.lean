@@ -54,7 +54,7 @@ open Classical
 
 universe v u
 
--- ./././Mathport/Syntax/Translate/Command.lean:224:11: unsupported: unusual advanced open style
+-- ./././Mathport/Syntax/Translate/Command.lean:226:11: unsupported: unusual advanced open style
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver
 
 /-- `is_free_groupoid.generators G` is a type synonym for `G`. We think of this as
@@ -107,8 +107,7 @@ instance actionGroupoidIsFree {G A : Type u} [Groupₓ G] [IsFreeGroup G] [MulAc
       ⟨fun b => @f ⟨(), _⟩ ⟨(), b⟩ ⟨e, smul_inv_smul _ b⟩, fgp.of e⟩
     rcases fgp.unique_lift f' with ⟨F', hF', uF'⟩
     refine' ⟨uncurry F' _, _, _⟩
-    · suffices semidirect_product.right_hom.comp F' = MonoidHom.id _ by
-        exact monoid_hom.ext_iff.mp this
+    · suffices semidirect_product.right_hom.comp F' = MonoidHom.id _ by exact monoid_hom.ext_iff.mp this
       ext
       rw [MonoidHom.comp_apply, hF']
       rfl
@@ -164,8 +163,7 @@ def treeHom (a : G) : root' T ⟶ a :=
   homOfPath T default
 
 /-- Any path to `a` gives `tree_hom T a`, since paths in the tree are unique. -/
-theorem tree_hom_eq {a : G} (p : Path (root T) a) : treeHom T a = homOfPath T p := by
-  rw [tree_hom, Unique.default_eq]
+theorem tree_hom_eq {a : G} (p : Path (root T) a) : treeHom T a = homOfPath T p := by rw [tree_hom, Unique.default_eq]
 
 @[simp]
 theorem tree_hom_root : treeHom T (root' T) = 𝟙 _ :=
@@ -177,7 +175,7 @@ theorem tree_hom_root : treeHom T (root' T) = 𝟙 _ :=
 def loopOfHom {a b : G} (p : a ⟶ b) : End (root' T) :=
   treeHom T a ≫ p ≫ inv (treeHom T b)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify[quiver.wide_subquiver_symmetrify] T a b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify[quiver.wide_subquiver_symmetrify] T a b)
 /-- Turning an edge in the spanning tree into a loop gives the indentity loop. -/
 theorem loop_of_hom_eq_id {a b : Generators G} (e) (_ : e ∈ WideSubquiverSymmetrify T a b) :
     loopOfHom T (of e) = 𝟙 (root' T) := by

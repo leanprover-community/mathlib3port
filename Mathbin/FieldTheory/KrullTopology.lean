@@ -163,7 +163,7 @@ def galGroupBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : GroupFilter
     change σ (g (σ⁻¹ x)) = x
     have h_in_F : σ⁻¹ x ∈ F :=
       ⟨x, hx, by
-        dsimp'
+        dsimp
         rw [← AlgEquiv.inv_fun_eq_symm]
         rfl⟩
     have h_g_fix : g (σ⁻¹ x) = σ⁻¹ x := by
@@ -246,8 +246,7 @@ theorem krull_topology_totally_disconnected {K L : Type _} [Field K] [Field L] [
     (h_int : Algebra.IsIntegral K L) : IsTotallyDisconnected (Set.Univ : Set (L ≃ₐ[K] L)) := by
   apply is_totally_disconnected_of_clopen_set
   intro σ τ h_diff
-  have hστ : σ⁻¹ * τ ≠ 1 := by
-    rwa [Ne.def, inv_mul_eq_one]
+  have hστ : σ⁻¹ * τ ≠ 1 := by rwa [Ne.def, inv_mul_eq_one]
   rcases FunLike.exists_ne hστ with ⟨x, hx : (σ⁻¹ * τ) x ≠ x⟩
   let E := IntermediateField.adjoin K ({x} : Set L)
   haveI := IntermediateField.adjoin.finite_dimensional (h_int x)

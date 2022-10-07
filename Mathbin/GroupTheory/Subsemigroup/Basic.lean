@@ -86,8 +86,7 @@ namespace Subsemigroup
 
 @[to_additive]
 instance : SetLike (Subsemigroup M) M :=
-  ⟨Subsemigroup.Carrier, fun p q h => by
-    cases p <;> cases q <;> congr⟩
+  ⟨Subsemigroup.Carrier, fun p q h => by cases p <;> cases q <;> congr⟩
 
 @[to_additive]
 instance : MulMemClass (Subsemigroup M) M where mul_mem := Subsemigroup.mul_mem'
@@ -153,9 +152,7 @@ instance : HasTop (Subsemigroup M) :=
 /-- The trivial subsemigroup `∅` of a magma `M`. -/
 @[to_additive "The trivial `add_subsemigroup` `∅` of an additive magma `M`."]
 instance : HasBot (Subsemigroup M) :=
-  ⟨{ Carrier := ∅,
-      mul_mem' := fun a b => by
-        simp }⟩
+  ⟨{ Carrier := ∅, mul_mem' := fun a b => by simp }⟩
 
 @[to_additive]
 instance : Inhabited (Subsemigroup M) :=
@@ -196,12 +193,7 @@ instance : HasInfₓ (Subsemigroup M) :=
   ⟨fun s =>
     { Carrier := ⋂ t ∈ s, ↑t,
       mul_mem' := fun x y hx hy =>
-        Set.mem_bInter fun i h =>
-          i.mul_mem
-            (by
-              apply Set.mem_Inter₂.1 hx i h)
-            (by
-              apply Set.mem_Inter₂.1 hy i h) }⟩
+        Set.mem_bInter fun i h => i.mul_mem (by apply Set.mem_Inter₂.1 hx i h) (by apply Set.mem_Inter₂.1 hy i h) }⟩
 
 @[simp, norm_cast, to_additive]
 theorem coe_Inf (S : Set (Subsemigroup M)) : ((inf S : Subsemigroup M) : Set M) = ⋂ s ∈ S, ↑s :=
@@ -232,8 +224,7 @@ instance : CompleteLattice (Subsemigroup M) :=
 @[simp, to_additive]
 theorem subsingleton_of_subsingleton [Subsingleton (Subsemigroup M)] : Subsingleton M := by
   constructor <;> intro x y
-  have : ∀ a : M, a ∈ (⊥ : Subsemigroup M) := by
-    simp [Subsingleton.elim (⊥ : Subsemigroup M) ⊤]
+  have : ∀ a : M, a ∈ (⊥ : Subsemigroup M) := by simp [Subsingleton.elim (⊥ : Subsemigroup M) ⊤]
   exact absurd (this x) not_mem_bot
 
 @[to_additive]
@@ -375,8 +366,7 @@ open Subsemigroup
 @[to_additive "The additive subsemigroup of elements `x : M` such that `f x = g x`"]
 def eqMlocus (f g : M →ₙ* N) : Subsemigroup M where
   Carrier := { x | f x = g x }
-  mul_mem' := fun x y (hx : _ = _) (hy : _ = _) => by
-    simp [*]
+  mul_mem' := fun x y (hx : _ = _) (hy : _ = _) => by simp [*]
 
 /-- If two mul homomorphisms are equal on a set, then they are equal on its subsemigroup closure. -/
 @[to_additive "If two add homomorphisms are equal on a set,\nthen they are equal on its additive subsemigroup closure."]
@@ -409,13 +399,10 @@ def ofMdense {M N} [Semigroupₓ M] [Semigroupₓ N] {s : Set M} (f : M → N) (
     (hmul : ∀ (x), ∀ y ∈ s, f (x * y) = f x * f y) : M →ₙ* N where
   toFun := f
   map_mul' := fun x y =>
-    dense_induction y hs (fun y hy x => hmul x y hy)
-      (fun y₁ y₂ h₁ h₂ x => by
-        simp only [← mul_assoc, h₁, h₂])
-      x
+    dense_induction y hs (fun y hy x => hmul x y hy) (fun y₁ y₂ h₁ h₂ x => by simp only [← mul_assoc, h₁, h₂]) x
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_hom.of_mdense]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_hom.of_mdense]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, norm_cast, to_additive]
 theorem coe_of_mdense [Semigroupₓ M] [Semigroupₓ N] {s : Set M} (f : M → N) (hs : closure s = ⊤) (hmul) :
     (ofMdense f hs hmul : M → N) = f :=

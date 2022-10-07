@@ -182,7 +182,7 @@ variable (f : Type → Prop)
 
 namespace SlimCheck
 
--- ./././Mathport/Syntax/Translate/Command.lean:306:30: infer kinds are unsupported in Lean 4: gave_up {}
+-- ./././Mathport/Syntax/Translate/Command.lean:308:30: infer kinds are unsupported in Lean 4: gave_up {}
 /-- Result of trying to disprove `p`
 
 The constructors are:
@@ -250,7 +250,7 @@ class PrintablePropₓ (p : Prop) where
 instance (priority := 100) defaultPrintableProp {p} : PrintablePropₓ p :=
   ⟨none⟩
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`run] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`run] []
 /-- `testable p` uses random examples to try to disprove `p`. -/
 class Testableₓ (p : Prop) where
   run (cfg : SlimCheckCfg) (minimize : Bool) : Genₓ (TestResultₓ p)
@@ -350,11 +350,7 @@ instance orTestable (p q : Prop) [Testableₓ p] [Testableₓ q] : Testableₓ (
 instance iffTestable (p q : Prop) [Testableₓ (p ∧ q ∨ ¬p ∧ ¬q)] : Testableₓ (p ↔ q) :=
   ⟨fun cfg min => do
     let xp ← Testableₓ.run (p ∧ q ∨ ¬p ∧ ¬q) cfg min
-    return <|
-        convert_counter_example'
-          (by
-            tauto!)
-          xp⟩
+    return <| convert_counter_example' (by tauto!) xp⟩
 
 open PrintableProp
 
@@ -750,6 +746,7 @@ unsafe def mk_decorations : tactic Unit := do
 
 end Tactic
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic tactic.mk_decorations
 /-- Run a test suite for `p` and return true or false: should we believe that `p` holds? -/
 def Testableₓ.check (p : Prop) (cfg : SlimCheckCfg := {  })
     (p' : Tactic.DecorationsOf p := by

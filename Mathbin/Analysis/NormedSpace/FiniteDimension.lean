@@ -91,8 +91,7 @@ variable [FiniteDimensional 𝕜 V₁] [FiniteDimensional 𝕜 V₂]
 /-- An affine isometry between finite dimensional spaces of equal dimension can be upgraded
     to an affine isometry equivalence. -/
 def toAffineIsometryEquiv [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂) (h : finrank 𝕜 V₁ = finrank 𝕜 V₂) : P₁ ≃ᵃⁱ[𝕜] P₂ :=
-  AffineIsometryEquiv.mk' li (li.LinearIsometry.toLinearIsometryEquiv h) (arbitrary P₁) fun p => by
-    simp
+  AffineIsometryEquiv.mk' li (li.LinearIsometry.toLinearIsometryEquiv h) (arbitrary P₁) fun p => by simp
 
 @[simp]
 theorem coe_to_affine_isometry_equiv [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂) (h : finrank 𝕜 V₁ = finrank 𝕜 V₂) :
@@ -129,9 +128,9 @@ theorem AffineEquiv.continuous_of_finite_dimensional (f : PE ≃ᵃ[𝕜] PF) : 
 def AffineEquiv.toHomeomorphOfFiniteDimensional (f : PE ≃ᵃ[𝕜] PF) : PE ≃ₜ PF where
   toEquiv := f.toEquiv
   continuous_to_fun := f.continuous_of_finite_dimensional
-  continuous_inv_fun := by
-    have : FiniteDimensional 𝕜 F := f.linear.finite_dimensional
-    exact f.symm.continuous_of_finite_dimensional
+  continuous_inv_fun :=
+    haveI : FiniteDimensional 𝕜 F := f.linear.finite_dimensional
+    f.symm.continuous_of_finite_dimensional
 
 @[simp]
 theorem AffineEquiv.coe_to_homeomorph_of_finite_dimensional (f : PE ≃ᵃ[𝕜] PF) :
@@ -147,7 +146,7 @@ end Affine
 
 theorem ContinuousLinearMap.continuous_det : Continuous fun f : E →L[𝕜] E => f.det := by
   change Continuous fun f : E →L[𝕜] E => (f : E →ₗ[𝕜] E).det
-  by_cases' h : ∃ s : Finset E, Nonempty (Basis (↥s) 𝕜 E)
+  by_cases h:∃ s : Finsetₓ E, Nonempty (Basis (↥s) 𝕜 E)
   · rcases h with ⟨s, ⟨b⟩⟩
     haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis b
     simp_rw [LinearMap.det_eq_det_to_matrix_of_finset b]
@@ -182,14 +181,12 @@ theorem LipschitzOnWith.extend_finite_dimension {α : Type _} [PseudoMetricSpace
     `E'` and such a space to transfer the result to `E'`. -/
   let ι : Type _ := Basis.OfVectorSpaceIndex ℝ E'
   let A := (Basis.ofVectorSpace ℝ E').equivFun.toContinuousLinearEquiv
-  have LA : LipschitzWith ∥A.to_continuous_linear_map∥₊ A := by
-    apply A.lipschitz
+  have LA : LipschitzWith ∥A.to_continuous_linear_map∥₊ A := by apply A.lipschitz
   have L : LipschitzOnWith (∥A.to_continuous_linear_map∥₊ * K) (A ∘ f) s := LA.comp_lipschitz_on_with hf
   obtain ⟨g, hg, gs⟩ : ∃ g : α → ι → ℝ, LipschitzWith (∥A.to_continuous_linear_map∥₊ * K) g ∧ eq_on (A ∘ f) g s :=
     L.extend_pi
   refine' ⟨A.symm ∘ g, _, _⟩
-  · have LAsymm : LipschitzWith ∥A.symm.to_continuous_linear_map∥₊ A.symm := by
-      apply A.symm.lipschitz
+  · have LAsymm : LipschitzWith ∥A.symm.to_continuous_linear_map∥₊ A.symm := by apply A.symm.lipschitz
     apply (LAsymm.comp hg).weaken
     rw [lipschitzExtensionConstant, ← mul_assoc]
     refine' mul_le_mul' (le_max_leftₓ _ _) le_rflₓ
@@ -212,11 +209,11 @@ theorem LinearMap.exists_antilipschitz_with [FiniteDimensional 𝕜 E] (f : E �
 protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E} (hf : LinearIndependent 𝕜 f) :
     ∀ᶠ g in 𝓝 f, LinearIndependent 𝕜 g := by
   cases nonempty_fintype ι
-  simp only [Fintype.linear_independent_iff'] at hf⊢
+  simp only [Fintypeₓ.linear_independent_iff'] at hf⊢
   rcases LinearMap.exists_antilipschitz_with _ hf with ⟨K, K0, hK⟩
   have : tendsto (fun g : ι → E => ∑ i, ∥g i - f i∥) (𝓝 f) (𝓝 <| ∑ i, ∥f i - f i∥) :=
     tendsto_finset_sum _ fun i hi => tendsto.norm <| ((continuous_apply i).Tendsto _).sub tendsto_const_nhds
-  simp only [sub_self, norm_zero, Finset.sum_const_zero] at this
+  simp only [sub_self, norm_zero, Finsetₓ.sum_const_zero] at this
   refine' (this.eventually (gt_mem_nhds <| inv_pos.2 K0)).mono fun g hg => _
   replace hg : (∑ i, ∥g i - f i∥₊) < K⁻¹
   · rw [← Nnreal.coe_lt_coe]
@@ -226,8 +223,8 @@ protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E} (
   rw [LinearMap.ker_eq_bot]
   refine' (hK.add_sub_lipschitz_with (LipschitzWith.of_dist_le_mul fun v u => _) hg).Injective
   simp only [dist_eq_norm, LinearMap.lsum_apply, Pi.sub_apply, LinearMap.sum_apply, LinearMap.comp_apply,
-    LinearMap.proj_apply, LinearMap.smul_right_apply, LinearMap.id_apply, ← Finset.sum_sub_distrib, ← smul_sub, ←
-    sub_smul, Nnreal.coe_sum, coe_nnnorm, Finset.sum_mul]
+    LinearMap.proj_apply, LinearMap.smul_right_apply, LinearMap.id_apply, ← Finsetₓ.sum_sub_distrib, ← smul_sub, ←
+    sub_smul, Nnreal.coe_sum, coe_nnnorm, Finsetₓ.sum_mul]
   refine' norm_sum_le_of_le _ fun i _ => _
   rw [norm_smul, mul_comm]
   exact mul_le_mul_of_nonneg_left (norm_le_pi_norm (v - u) i) (norm_nonneg _)
@@ -260,7 +257,7 @@ def ContinuousLinearEquiv.ofFinrankEq [FiniteDimensional 𝕜 E] [FiniteDimensio
     (cond : finrank 𝕜 E = finrank 𝕜 F) : E ≃L[𝕜] F :=
   (LinearEquiv.ofFinrankEq E F cond).toContinuousLinearEquiv
 
-variable {ι : Type _} [Fintype ι]
+variable {ι : Type _} [Fintypeₓ ι]
 
 /-- Construct a continuous linear map given the value at a finite basis. -/
 def Basis.constrL (v : Basis ι 𝕜 E) (f : ι → F) : E →L[𝕜] F :=
@@ -275,9 +272,9 @@ theorem Basis.coe_constrL (v : Basis ι 𝕜 E) (f : ι → F) : (v.constrL f : 
 functions from its basis indexing type to `𝕜`. -/
 def Basis.equivFunL (v : Basis ι 𝕜 E) : E ≃L[𝕜] ι → 𝕜 :=
   { v.equivFun with
-    continuous_to_fun := by
+    continuous_to_fun :=
       haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis v
-      exact v.equiv_fun.to_linear_map.continuous_of_finite_dimensional,
+      v.equiv_fun.to_linear_map.continuous_of_finite_dimensional,
     continuous_inv_fun := by
       change Continuous v.equiv_fun.symm.to_fun
       exact v.equiv_fun.symm.to_linear_map.continuous_of_finite_dimensional }
@@ -290,32 +287,28 @@ theorem Basis.constrL_apply (v : Basis ι 𝕜 E) (f : ι → F) (e : E) : (v.co
 theorem Basis.constrL_basis (v : Basis ι 𝕜 E) (f : ι → F) (i : ι) : (v.constrL f) (v i) = f i :=
   v.constr_basis 𝕜 _ _
 
-theorem Basis.op_nnnorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} (M : ℝ≥0)
-    (hu : ∀ i, ∥u (v i)∥₊ ≤ M) : ∥u∥₊ ≤ Fintype.card ι • ∥v.equivFunL.toContinuousLinearMap∥₊ * M :=
+theorem Basis.op_nnnorm_le {ι : Type _} [Fintypeₓ ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} (M : ℝ≥0)
+    (hu : ∀ i, ∥u (v i)∥₊ ≤ M) : ∥u∥₊ ≤ Fintypeₓ.card ι • ∥v.equivFunL.toContinuousLinearMap∥₊ * M :=
   (u.op_nnnorm_le_bound _) fun e => by
     set φ := v.equiv_funL.to_continuous_linear_map
     calc
-      ∥u e∥₊ = ∥u (∑ i, v.equiv_fun e i • v i)∥₊ := by
-        rw [v.sum_equiv_fun]
-      _ = ∥∑ i, v.equiv_fun e i • (u <| v i)∥₊ := by
-        simp [u.map_sum, LinearMap.map_smul]
+      ∥u e∥₊ = ∥u (∑ i, v.equiv_fun e i • v i)∥₊ := by rw [v.sum_equiv_fun]
+      _ = ∥∑ i, v.equiv_fun e i • (u <| v i)∥₊ := by simp [u.map_sum, LinearMap.map_smul]
       _ ≤ ∑ i, ∥v.equiv_fun e i • (u <| v i)∥₊ := nnnorm_sum_le _ _
-      _ = ∑ i, ∥v.equiv_fun e i∥₊ * ∥u (v i)∥₊ := by
-        simp only [nnnorm_smul]
-      _ ≤ ∑ i, ∥v.equiv_fun e i∥₊ * M := Finset.sum_le_sum fun i hi => mul_le_mul_of_nonneg_left (hu i) (zero_le _)
+      _ = ∑ i, ∥v.equiv_fun e i∥₊ * ∥u (v i)∥₊ := by simp only [nnnorm_smul]
+      _ ≤ ∑ i, ∥v.equiv_fun e i∥₊ * M := Finsetₓ.sum_le_sum fun i hi => mul_le_mul_of_nonneg_left (hu i) (zero_le _)
       _ = (∑ i, ∥v.equiv_fun e i∥₊) * M := finset.sum_mul.symm
-      _ ≤ Fintype.card ι • (∥φ∥₊ * ∥e∥₊) * M :=
+      _ ≤ Fintypeₓ.card ι • (∥φ∥₊ * ∥e∥₊) * M :=
         suffices _ from mul_le_mul_of_nonneg_right this (zero_le M)
         calc
-          (∑ i, ∥v.equiv_fun e i∥₊) ≤ Fintype.card ι • ∥φ e∥₊ := Pi.sum_nnnorm_apply_le_nnnorm _
-          _ ≤ Fintype.card ι • (∥φ∥₊ * ∥e∥₊) := nsmul_le_nsmul_of_le_right (φ.le_op_nnnorm e) _
+          (∑ i, ∥v.equiv_fun e i∥₊) ≤ Fintypeₓ.card ι • ∥φ e∥₊ := Pi.sum_nnnorm_apply_le_nnnorm _
+          _ ≤ Fintypeₓ.card ι • (∥φ∥₊ * ∥e∥₊) := nsmul_le_nsmul_of_le_right (φ.le_op_nnnorm e) _
           
-      _ = Fintype.card ι • ∥φ∥₊ * M * ∥e∥₊ := by
-        simp only [smul_mul_assoc, mul_right_commₓ]
+      _ = Fintypeₓ.card ι • ∥φ∥₊ * M * ∥e∥₊ := by simp only [smul_mul_assoc, mul_right_commₓ]
       
 
-theorem Basis.op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} {M : ℝ} (hM : 0 ≤ M)
-    (hu : ∀ i, ∥u (v i)∥ ≤ M) : ∥u∥ ≤ Fintype.card ι • ∥v.equivFunL.toContinuousLinearMap∥ * M := by
+theorem Basis.op_norm_le {ι : Type _} [Fintypeₓ ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} {M : ℝ} (hM : 0 ≤ M)
+    (hu : ∀ i, ∥u (v i)∥ ≤ M) : ∥u∥ ≤ Fintypeₓ.card ι • ∥v.equivFunL.toContinuousLinearMap∥ * M := by
   simpa using nnreal.coe_le_coe.mpr (v.op_nnnorm_le ⟨M, hM⟩ hu)
 
 /-- A weaker version of `basis.op_nnnorm_le` that abstracts away the value of `C`. -/
@@ -323,7 +316,7 @@ theorem Basis.exists_op_nnnorm_le {ι : Type _} [Finite ι] (v : Basis ι 𝕜 E
     ∃ C > (0 : ℝ≥0), ∀ {u : E →L[𝕜] F} (M : ℝ≥0), (∀ i, ∥u (v i)∥₊ ≤ M) → ∥u∥₊ ≤ C * M := by
   cases nonempty_fintype ι <;>
     exact
-      ⟨max (Fintype.card ι • ∥v.equiv_funL.to_continuous_linear_map∥₊) 1, zero_lt_one.trans_le (le_max_rightₓ _ _),
+      ⟨max (Fintypeₓ.card ι • ∥v.equiv_funL.to_continuous_linear_map∥₊) 1, zero_lt_one.trans_le (le_max_rightₓ _ _),
         fun u M hu => (v.op_nnnorm_le M hu).trans <| mul_le_mul_of_nonneg_right (le_max_leftₓ _ _) (zero_le M)⟩
 
 /-- A weaker version of `basis.op_norm_le` that abstracts away the value of `C`. -/
@@ -335,10 +328,7 @@ theorem Basis.exists_op_norm_le {ι : Type _} [Finite ι] (v : Basis ι 𝕜 E) 
 instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] : SecondCountableTopology (E →L[𝕜] F) := by
   set d := FiniteDimensional.finrank 𝕜 E
   suffices : ∀ ε > (0 : ℝ), ∃ n : (E →L[𝕜] F) → Finₓ d → ℕ, ∀ f g : E →L[𝕜] F, n f = n g → dist f g ≤ ε
-  exact
-    Metric.second_countable_of_countable_discretization fun ε ε_pos =>
-      ⟨Finₓ d → ℕ, by
-        infer_instance, this ε ε_pos⟩
+  exact Metric.second_countable_of_countable_discretization fun ε ε_pos => ⟨Finₓ d → ℕ, by infer_instance, this ε ε_pos⟩
   intro ε ε_pos
   obtain ⟨u : ℕ → F, hu : DenseRange u⟩ := exists_dense_seq F
   let v := FiniteDimensional.finBasis 𝕜 E
@@ -373,10 +363,8 @@ instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] : SecondCountabl
   intro x y hxy
   calc
     dist x y ≤ dist x (Φ x) + dist (Φ x) y := dist_triangle _ _ _
-    _ = dist x (Φ x) + dist y (Φ y) := by
-      simp [Φ, hxy, dist_comm]
-    _ ≤ ε := by
-      linarith [hn x, hn y]
+    _ = dist x (Φ x) + dist y (Φ y) := by simp [Φ, hxy, dist_comm]
+    _ ≤ ε := by linarith [hn x, hn y]
     
 
 variable (𝕜 E)
@@ -384,10 +372,7 @@ variable (𝕜 E)
 theorem FiniteDimensional.complete [FiniteDimensional 𝕜 E] : CompleteSpace E := by
   set e := ContinuousLinearEquiv.ofFinrankEq (@finrank_fin_fun 𝕜 _ (finrank 𝕜 E)).symm
   have : UniformEmbedding e.to_linear_equiv.to_equiv.symm := e.symm.uniform_embedding
-  exact
-    (complete_space_congr this).1
-      (by
-        infer_instance)
+  exact (complete_space_congr this).1 (by infer_instance)
 
 variable {𝕜 E}
 
@@ -408,18 +393,17 @@ section Riesz
 /-- In an infinite dimensional space, given a finite number of points, one may find a point
 with norm at most `R` which is at distance at least `1` of all these points. -/
 theorem exists_norm_le_le_norm_sub_of_finset {c : 𝕜} (hc : 1 < ∥c∥) {R : ℝ} (hR : ∥c∥ < R) (h : ¬FiniteDimensional 𝕜 E)
-    (s : Finset E) : ∃ x : E, ∥x∥ ≤ R ∧ ∀ y ∈ s, 1 ≤ ∥y - x∥ := by
+    (s : Finsetₓ E) : ∃ x : E, ∥x∥ ≤ R ∧ ∀ y ∈ s, 1 ≤ ∥y - x∥ := by
   let F := Submodule.span 𝕜 (s : Set E)
   haveI : FiniteDimensional 𝕜 F :=
-    Module.finite_def.2 ((Submodule.fg_top _).2 (Submodule.fg_def.2 ⟨s, Finset.finite_to_set _, rfl⟩))
+    Module.finite_def.2 ((Submodule.fg_top _).2 (Submodule.fg_def.2 ⟨s, Finsetₓ.finite_to_set _, rfl⟩))
   have Fclosed : IsClosed (F : Set E) := Submodule.closed_of_finite_dimensional _
   have : ∃ x, x ∉ F := by
     contrapose! h
     have : (⊤ : Submodule 𝕜 E) = F := by
       ext x
       simp [h]
-    have : FiniteDimensional 𝕜 (⊤ : Submodule 𝕜 E) := by
-      rwa [this]
+    have : FiniteDimensional 𝕜 (⊤ : Submodule 𝕜 E) := by rwa [this]
     refine' Module.finite_def.2 ((Submodule.fg_top _).1 (Module.finite_def.1 this))
   obtain ⟨x, xR, hx⟩ : ∃ x : E, ∥x∥ ≤ R ∧ ∀ y : E, y ∈ F → 1 ≤ ∥x - y∥ := riesz_lemma_of_norm_lt hc hR Fclosed this
   have hx' : ∀ y : E, y ∈ F → 1 ≤ ∥y - x∥ := by
@@ -445,8 +429,7 @@ theorem exists_seq_norm_le_one_le_norm_sub' {c : 𝕜} (hc : 1 < ∥c∥) {R : �
 theorem exists_seq_norm_le_one_le_norm_sub (h : ¬FiniteDimensional 𝕜 E) :
     ∃ (R : ℝ)(f : ℕ → E), 1 < R ∧ (∀ n, ∥f n∥ ≤ R) ∧ ∀ m n, m ≠ n → 1 ≤ ∥f m - f n∥ := by
   obtain ⟨c, hc⟩ : ∃ c : 𝕜, 1 < ∥c∥ := NormedField.exists_one_lt_norm 𝕜
-  have A : ∥c∥ < ∥c∥ + 1 := by
-    linarith
+  have A : ∥c∥ < ∥c∥ + 1 := by linarith
   rcases exists_seq_norm_le_one_le_norm_sub' hc A h with ⟨f, hf⟩
   exact ⟨∥c∥ + 1, f, hc.trans A, hf.1, hf.2⟩
 
@@ -467,11 +450,10 @@ theorem finite_dimensional_of_is_compact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
     simp only [norm_smul, dist_zero_right, Metric.mem_closed_ball]
     calc
       ∥c∥ * ∥f n∥ ≤ r / R * R := mul_le_mul hc.2.le (fle n) (norm_nonneg _) rRpos.le
-      _ = r := by
-        field_simp [(zero_lt_one.trans Rgt).ne']
+      _ = r := by field_simp [(zero_lt_one.trans Rgt).ne']
       
   obtain ⟨x, hx, φ, φmono, φlim⟩ :
-    ∃ (x : E)(H : x ∈ Metric.ClosedBall (0 : E) r)(φ : ℕ → ℕ), StrictMono φ ∧ tendsto (g ∘ φ) at_top (𝓝 x) :=
+    ∃ (x : E)(H : x ∈ Metric.ClosedBall (0 : E) r)(φ : ℕ → ℕ), StrictMonoₓ φ ∧ tendsto (g ∘ φ) at_top (𝓝 x) :=
     h.tendsto_subseq A
   have B : CauchySeq (g ∘ φ) := φlim.cauchy_seq
   obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ n : ℕ, N ≤ n → dist ((g ∘ φ) n) ((g ∘ φ) N) < ∥c∥ := Metric.cauchy_seq_iff'.1 B ∥c∥ hc.1
@@ -505,7 +487,7 @@ theorem LinearEquiv.closed_embedding_of_injective {f : E →ₗ[𝕜] F} (hf : f
       simpa [f.range_coe] using f.range.closed_of_finite_dimensional }
 
 theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensional 𝕜 F] (f : E →L[𝕜] F)
-    (hf : f.range = ⊤) : ∃ g : F →L[𝕜] E, f.comp g = ContinuousLinearMap.id 𝕜 F :=
+    (hf : LinearMap.range f = ⊤) : ∃ g : F →L[𝕜] E, f.comp g = ContinuousLinearMap.id 𝕜 F :=
   let ⟨g, hg⟩ := (f : E →ₗ[𝕜] F).exists_right_inverse_of_surjective hf
   ⟨g.toContinuousLinearMap, ContinuousLinearMap.ext <| LinearMap.ext_iff.1 hg⟩
 
@@ -514,7 +496,7 @@ theorem closed_embedding_smul_left {c : E} (hc : c ≠ 0) : ClosedEmbedding fun 
 
 -- `smul` is a closed map in the first argument.
 theorem is_closed_map_smul_left (c : E) : IsClosedMap fun x : 𝕜 => x • c := by
-  by_cases' hc : c = 0
+  by_cases hc:c = 0
   · simp_rw [hc, smul_zero]
     exact is_closed_map_const
     
@@ -526,7 +508,7 @@ open ContinuousLinearMap
 /-- Continuous linear equivalence between continuous linear functions `𝕜ⁿ → E` and `Eⁿ`.
 The spaces `𝕜ⁿ` and `Eⁿ` are represented as `ι → 𝕜` and `ι → E`, respectively,
 where `ι` is a finite type. -/
-def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] : ((ι → 𝕜) →L[𝕜] E) ≃L[𝕜] ι → E :=
+def ContinuousLinearEquiv.piRing (ι : Type _) [Fintypeₓ ι] [DecidableEq ι] : ((ι → 𝕜) →L[𝕜] E) ≃L[𝕜] ι → E :=
   { LinearMap.toContinuousLinearMap.symm.trans (LinearEquiv.piRing 𝕜 E ι 𝕜) with
     continuous_to_fun := by
       refine' continuous_pi fun i => _
@@ -536,14 +518,14 @@ def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] : (
       change
         Continuous
           (linear_map.to_continuous_linear_map.to_linear_map.comp (LinearEquiv.piRing 𝕜 E ι 𝕜).symm.toLinearMap)
-      apply AddMonoidHomClass.continuous_of_bound _ (Fintype.card ι : ℝ) fun g => _
+      apply AddMonoidHomClass.continuous_of_bound _ (Fintypeₓ.card ι : ℝ) fun g => _
       rw [← nsmul_eq_mul]
-      apply op_norm_le_bound _ (nsmul_nonneg (norm_nonneg g) (Fintype.card ι)) fun t => _
+      apply op_norm_le_bound _ (nsmul_nonneg (norm_nonneg g) (Fintypeₓ.card ι)) fun t => _
       simp_rw [LinearMap.coe_comp, LinearEquiv.coe_to_linear_map, Function.comp_app,
         LinearMap.coe_to_continuous_linear_map', LinearEquiv.pi_ring_symm_apply]
       apply le_transₓ (norm_sum_le _ _)
       rw [smul_mul_assoc]
-      refine' Finset.sum_le_card_nsmul _ _ _ fun i hi => _
+      refine' Finsetₓ.sum_le_card_nsmul _ _ _ fun i hi => _
       rw [norm_smul, mul_comm]
       exact mul_le_mul (norm_le_pi_norm g i) (norm_le_pi_norm t i) (norm_nonneg _) (norm_nonneg g) }
 
@@ -635,12 +617,12 @@ theorem summable_norm_iff {α E : Type _} [NormedAddCommGroup E] [NormedSpace �
   -- Now we deal with `g : α → fin N → ℝ`
   intro N g hg
   have : ∀ i, Summable fun x => ∥g x i∥ := fun i => (Pi.summable.1 hg i).abs
-  refine' summable_of_norm_bounded _ (summable_sum fun i (hi : i ∈ Finset.univ) => this i) fun x => _
+  refine' summable_of_norm_bounded _ (summable_sum fun i (hi : i ∈ Finsetₓ.univ) => this i) fun x => _
   rw [norm_norm, pi_norm_le_iff]
-  · refine' fun i => Finset.single_le_sum (fun i hi => _) (Finset.mem_univ i)
+  · refine' fun i => Finsetₓ.single_le_sum (fun i hi => _) (Finsetₓ.mem_univ i)
     exact norm_nonneg (g x i)
     
-  · exact Finset.sum_nonneg fun _ _ => norm_nonneg _
+  · exact Finsetₓ.sum_nonneg fun _ _ => norm_nonneg _
     
 
 theorem summable_of_is_O' {ι E F : Type _} [NormedAddCommGroup E] [CompleteSpace E] [NormedAddCommGroup F]

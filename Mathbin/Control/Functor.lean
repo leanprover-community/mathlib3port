@@ -37,8 +37,7 @@ variable {α β γ : Type u}
 
 variable [Functor F] [IsLawfulFunctor F]
 
-theorem Functor.map_id : (· <$> ·) id = (id : F α → F α) := by
-  apply funext <;> apply id_map
+theorem Functor.map_id : (· <$> ·) id = (id : F α → F α) := by apply funext <;> apply id_map
 
 theorem Functor.map_comp_map (f : α → β) (g : β → γ) : ((· <$> ·) g ∘ (· <$> ·) f : F α → F γ) = (· <$> ·) (g ∘ f) := by
   apply funext <;> intro <;> rw [comp_map]
@@ -47,9 +46,7 @@ theorem Functor.ext {F} :
     ∀ {F1 : Functor F} {F2 : Functor F} [@IsLawfulFunctor F F1] [@IsLawfulFunctor F F2]
       (H : ∀ (α β) (f : α → β) (x : F α), @Functor.map _ F1 _ _ f x = @Functor.map _ F2 _ _ f x), F1 = F2
   | ⟨m, mc⟩, ⟨m', mc'⟩, H1, H2, H => by
-    cases
-      show @m = @m' by
-        funext α β f x <;> apply H
+    cases show @m = @m' by funext α β f x <;> apply H
     congr
     funext α β
     have E1 := @map_const_eq _ ⟨@m, @mc⟩ H1
@@ -99,8 +96,7 @@ protected def map {γ α β} (f : α → β) (x : Const γ β) : Const γ α :=
 
 instance {γ} : Functor (Const γ) where map := @Const.map γ
 
-instance {γ} : IsLawfulFunctor (Const γ) := by
-  constructor <;> intros <;> rfl
+instance {γ} : IsLawfulFunctor (Const γ) := by constructor <;> intros <;> rfl
 
 instance {α β} [Inhabited α] : Inhabited (Const α β) :=
   ⟨(default : α)⟩
@@ -180,12 +176,10 @@ variable [IsLawfulFunctor F] [IsLawfulFunctor G]
 variable {α β γ : Type v}
 
 protected theorem id_map : ∀ x : Comp F G α, Comp.map id x = x
-  | comp.mk x => by
-    simp [comp.map, Functor.map_id]
+  | comp.mk x => by simp [comp.map, Functor.map_id]
 
 protected theorem comp_map (g' : α → β) (h : β → γ) : ∀ x : Comp F G α, Comp.map (h ∘ g') x = Comp.map h (Comp.map g' x)
-  | comp.mk x => by
-    simp' [comp.map, Functor.map_comp_map g' h] with functor_norm
+  | comp.mk x => by simp [comp.map, Functor.map_comp_map g' h, functor_norm]
 
 instance : IsLawfulFunctor (Comp F G) where
   id_map := @Comp.id_map F G _ _ _ _

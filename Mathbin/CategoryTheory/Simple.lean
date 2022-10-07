@@ -99,17 +99,14 @@ theorem mono_to_simple_zero_of_not_iso {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono 
   exact w (is_iso_of_mono_of_nonzero h)
 
 theorem id_nonzero (X : C) [Simple.{v} X] : 𝟙 X ≠ 0 :=
-  (Simple.mono_is_iso_iff_nonzero (𝟙 X)).mp
-    (by
-      infer_instance)
+  (Simple.mono_is_iso_iff_nonzero (𝟙 X)).mp (by infer_instance)
 
 instance (X : C) [Simple.{v} X] : Nontrivial (End X) :=
   nontrivial_of_ne 1 0 (id_nonzero X)
 
 section
 
-theorem Simple.not_is_zero (X : C) [Simple X] : ¬IsZero X := by
-  simpa [limits.is_zero.iff_id_eq_zero] using id_nonzero X
+theorem Simple.not_is_zero (X : C) [Simple X] : ¬IsZero X := by simpa [limits.is_zero.iff_id_eq_zero] using id_nonzero X
 
 variable [HasZeroObject C]
 
@@ -119,10 +116,7 @@ variable (C)
 
 /-- We don't want the definition of 'simple' to include the zero object, so we check that here. -/
 theorem zero_not_simple [Simple (0 : C)] : False :=
-  (Simple.mono_is_iso_iff_nonzero (0 : (0 : C) ⟶ (0 : C))).mp
-    ⟨⟨0, by
-        tidy⟩⟩
-    rfl
+  (Simple.mono_is_iso_iff_nonzero (0 : (0 : C) ⟶ (0 : C))).mp ⟨⟨0, by tidy⟩⟩ rfl
 
 end
 
@@ -146,18 +140,17 @@ theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} (f : X ⟶ Z) [Epi f], IsIso
       exact (h _).mp (cokernel.π_of_zero _ _) hx
       
     · intro hf
-      suffices epi f by
-        exact is_iso_of_mono_of_epi _
+      suffices epi f by exact is_iso_of_mono_of_epi _
       apply preadditive.epi_of_cokernel_zero
       by_contra h'
       exact cokernel_not_iso_of_nonzero hf ((h _).mpr h')
       ⟩
 
 /-- A nonzero epimorphism from a simple object is an isomorphism. -/
-theorem is_iso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : f ≠ 0) : IsIso f := by
-  -- `f ≠ 0` means that `kernel.ι f` is not an iso, and hence zero, and hence `f` is a mono.
-  haveI : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
-  exact is_iso_of_mono_of_epi f
+theorem is_iso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : f ≠ 0) : IsIso f :=
+  haveI-- `f ≠ 0` means that `kernel.ι f` is not an iso, and hence zero, and hence `f` is a mono.
+   : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
+  is_iso_of_mono_of_epi f
 
 theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : cokernel.π f = 0 := by
   classical
@@ -222,7 +215,7 @@ instance {X : C} [Simple X] :
     rintro ⟨⟨⟨Y : C, ⟨⟨⟩⟩, f : Y ⟶ X⟩, m : mono f⟩⟩
     skip
     change mk f = ⊥ ∨ mk f = ⊤
-    by_cases' h : f = 0
+    by_cases h:f = 0
     · exact Or.inl (mk_eq_bot_iff_zero.mpr h)
       
     · refine' Or.inr ((is_iso_iff_mk_eq_top _).mp ((simple.mono_is_iso_iff_nonzero f).mpr h))

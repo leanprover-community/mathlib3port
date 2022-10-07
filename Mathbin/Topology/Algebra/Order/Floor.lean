@@ -91,9 +91,7 @@ theorem tendsto_floor_left [OrderClosedTopology α] (n : ℤ) :
       (tendsto_nhds_within_congr fun x hx => (floor_eq_on_Ico' (n - 1) x hx).symm)
         (tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ tendsto_const_nhds
           (eventually_of_forall fun _ => mem_Iic.mpr <| le_rflₓ)) <;>
-    first |
-      norm_cast|
-      infer_instance
+    first |norm_cast|infer_instance
   ring
 
 theorem tendsto_ceil_right [OrderClosedTopology α] (n : ℤ) :
@@ -103,9 +101,7 @@ theorem tendsto_ceil_right [OrderClosedTopology α] (n : ℤ) :
       (tendsto_nhds_within_congr fun x hx => (ceil_eq_on_Ioc' (n + 1) x hx).symm)
         (tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ tendsto_const_nhds
           (eventually_of_forall fun _ => mem_Ici.mpr <| le_rflₓ)) <;>
-    first |
-      norm_cast|
-      infer_instance
+    first |norm_cast|infer_instance
   ring
 
 theorem tendsto_floor_left' [OrderClosedTopology α] (n : ℤ) : Tendsto (fun x => floor x : α → α) (𝓝[<] n) (𝓝 (n - 1)) :=
@@ -157,7 +153,7 @@ theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncur
   change Continuous (uncurry f ∘ Prod.map id fract)
   rw [continuous_iff_continuous_at]
   rintro ⟨s, t⟩
-  by_cases' ht : t = floor t
+  by_cases ht:t = floor t
   · rw [ht]
     rw [← continuous_within_at_univ]
     have : (univ : Set (β × α)) ⊆ univ ×ˢ Iio ↑⌊t⌋ ∪ univ ×ˢ Ici ↑⌊t⌋ := by
@@ -168,25 +164,16 @@ theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncur
     refine' ContinuousWithinAt.union _ _
     · simp only [ContinuousWithinAt, fract_int_cast, nhds_within_prod_eq, nhds_within_univ, id.def, comp_app,
         Prod.map_mkₓ]
-      have : (uncurry f) (s, 0) = (uncurry f) (s, (1 : α)) := by
-        simp [uncurry, hf]
+      have : (uncurry f) (s, 0) = (uncurry f) (s, (1 : α)) := by simp [uncurry, hf]
       rw [this]
-      refine'
-        (h _
-                ⟨⟨⟩, by
-                  exact_mod_cast right_mem_Icc.2 (zero_le_one' α)⟩).Tendsto.comp
-          _
+      refine' (h _ ⟨⟨⟩, by exact_mod_cast right_mem_Icc.2 (zero_le_one' α)⟩).Tendsto.comp _
       rw [nhds_within_prod_eq, nhds_within_univ]
       rw [nhds_within_Icc_eq_nhds_within_Iic (@zero_lt_one α _ _)]
       exact tendsto_id.prod_map (tendsto_nhds_within_mono_right Iio_subset_Iic_self <| tendsto_fract_left _)
       
     · simp only [ContinuousWithinAt, fract_int_cast, nhds_within_prod_eq, nhds_within_univ, id.def, comp_app,
         Prod.map_mkₓ]
-      refine'
-        (h _
-                ⟨⟨⟩, by
-                  exact_mod_cast left_mem_Icc.2 (zero_le_one' α)⟩).Tendsto.comp
-          _
+      refine' (h _ ⟨⟨⟩, by exact_mod_cast left_mem_Icc.2 (zero_le_one' α)⟩).Tendsto.comp _
       rw [nhds_within_prod_eq, nhds_within_univ, nhds_within_Icc_eq_nhds_within_Ici (@zero_lt_one α _ _)]
       exact tendsto_id.prod_map (tendsto_fract_right _)
       

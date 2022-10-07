@@ -75,8 +75,7 @@ attribute [zify] Int.coe_nat_le_coe_nat_iff Int.coe_nat_lt_coe_nat_iff Int.coe_n
 end Zify
 
 @[zify]
-theorem Int.coe_nat_ne_coe_nat_iff (a b : ℕ) : (a : ℤ) ≠ b ↔ a ≠ b := by
-  simp
+theorem Int.coe_nat_ne_coe_nat_iff (a b : ℕ) : (a : ℤ) ≠ b ↔ a ≠ b := by simp
 
 /-- `zify extra_lems e` is used to shift propositions in `e` from `ℕ` to `ℤ`.
 This is often useful since `ℤ` has well-behaved subtraction.

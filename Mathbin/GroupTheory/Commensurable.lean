@@ -39,8 +39,7 @@ namespace Commensurable
 open Pointwise
 
 @[refl]
-protected theorem refl (H : Subgroup G) : Commensurable H H := by
-  simp [Commensurable]
+protected theorem refl (H : Subgroup G) : Commensurable H H := by simp [Commensurable]
 
 theorem comm {H K : Subgroup G} : Commensurable H K ↔ Commensurable K H :=
   And.comm
@@ -74,13 +73,11 @@ theorem commensurable_inv (H : Subgroup G) (g : ConjAct G) : Commensurable (g �
 such that `commensurable (g • H) H` -/
 def commensurator' (H : Subgroup G) : Subgroup (ConjAct G) where
   Carrier := { g : ConjAct G | Commensurable (g • H) H }
-  one_mem' := by
-    rw [Set.mem_set_of_eq, one_smul]
+  one_mem' := by rw [Set.mem_set_of_eq, one_smul]
   mul_mem' := fun a b ha hb => by
     rw [Set.mem_set_of_eq, mul_smul]
     exact trans ((commensurable_conj a).mp hb) ha
-  inv_mem' := fun a ha => by
-    rwa [Set.mem_set_of_eq, comm, ← commensurable_inv]
+  inv_mem' := fun a ha => by rwa [Set.mem_set_of_eq, comm, ← commensurable_inv]
 
 /-- For `H` a subgroup of `G`, this is the subgroup of all elements `g : G`
 such that `commensurable (g H g⁻¹) H` -/

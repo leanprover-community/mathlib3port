@@ -18,8 +18,7 @@ variable (m n 𝕜 : Type _) [UniformSpace 𝕜]
 namespace Matrix
 
 instance : UniformSpace (Matrix m n 𝕜) :=
-  (by
-    infer_instance : UniformSpace (m → n → 𝕜))
+  (by infer_instance : UniformSpace (m → n → 𝕜))
 
 theorem uniformity : 𝓤 (Matrix m n 𝕜) = ⨅ (i : m) (j : n), (𝓤 𝕜).comap fun a => (a.1 i j, a.2 i j) := by
   erw [Pi.uniformity, Pi.uniformity]
@@ -31,12 +30,10 @@ theorem uniform_continuous {β : Type _} [UniformSpace β] {f : β → Matrix m 
   simp only [UniformContinuous, Matrix.uniformity, Filter.tendsto_infi, Filter.tendsto_comap_iff]
 
 instance [CompleteSpace 𝕜] : CompleteSpace (Matrix m n 𝕜) :=
-  (by
-    infer_instance : CompleteSpace (m → n → 𝕜))
+  (by infer_instance : CompleteSpace (m → n → 𝕜))
 
 instance [SeparatedSpace 𝕜] : SeparatedSpace (Matrix m n 𝕜) :=
-  (by
-    infer_instance : SeparatedSpace (m → n → 𝕜))
+  (by infer_instance : SeparatedSpace (m → n → 𝕜))
 
 end Matrix
 

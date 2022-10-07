@@ -92,12 +92,10 @@ def toContinuousLinearMap {f : E → F} (hf : IsBoundedLinearMap 𝕜 f) : E →
       AddMonoidHomClass.continuous_of_bound (toLinearMap f hf) C hC }
 
 theorem zero : IsBoundedLinearMap 𝕜 fun x : E => (0 : F) :=
-  (0 : E →ₗ[𝕜] F).is_linear.with_bound 0 <| by
-    simp [le_reflₓ]
+  (0 : E →ₗ[𝕜] F).is_linear.with_bound 0 <| by simp [le_reflₓ]
 
 theorem id : IsBoundedLinearMap 𝕜 fun x : E => x :=
-  LinearMap.id.is_linear.with_bound 1 <| by
-    simp [le_reflₓ]
+  LinearMap.id.is_linear.with_bound 1 <| by simp [le_reflₓ]
 
 theorem fst : IsBoundedLinearMap 𝕜 fun x : E × F => x.1 := by
   refine' (LinearMap.fst 𝕜 E F).is_linear.with_bound 1 fun x => _
@@ -121,10 +119,9 @@ theorem smul (c : 𝕜) (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap �
       
 
 theorem neg (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap 𝕜 fun e => -f e := by
-  rw
-    [show (fun e => -f e) = fun e => (-1 : 𝕜) • f e by
+  rw [show (fun e => -f e) = fun e => (-1 : 𝕜) • f e by
       funext
-      simp ]
+      simp]
   exact smul (-1) hf
 
 theorem add (hf : IsBoundedLinearMap 𝕜 f) (hg : IsBoundedLinearMap 𝕜 g) : IsBoundedLinearMap 𝕜 fun e => f e + g e :=
@@ -133,8 +130,7 @@ theorem add (hf : IsBoundedLinearMap 𝕜 f) (hg : IsBoundedLinearMap 𝕜 g) : 
   ((hlf.mk' _ + hlg.mk' _).is_linear.with_bound (Mf + Mg)) fun x =>
     calc
       ∥f x + g x∥ ≤ Mf * ∥x∥ + Mg * ∥x∥ := norm_add_le_of_le (hMf x) (hMg x)
-      _ ≤ (Mf + Mg) * ∥x∥ := by
-        rw [add_mulₓ]
+      _ ≤ (Mf + Mg) * ∥x∥ := by rw [add_mulₓ]
       
 
 theorem sub (hf : IsBoundedLinearMap 𝕜 f) (hg : IsBoundedLinearMap 𝕜 g) : IsBoundedLinearMap 𝕜 fun e => f e - g e := by
@@ -149,12 +145,10 @@ protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (
     squeeze_zero (fun e => norm_nonneg _)
       (fun e =>
         calc
-          ∥f e - f x∥ = ∥hf.mk' f (e - x)∥ := by
-            rw [(hf.mk' _).map_sub e x] <;> rfl
+          ∥f e - f x∥ = ∥hf.mk' f (e - x)∥ := by rw [(hf.mk' _).map_sub e x] <;> rfl
           _ ≤ M * ∥e - x∥ := hM (e - x)
           )
-      (suffices Tendsto (fun e : E => M * ∥e - x∥) (𝓝 x) (𝓝 (M * 0)) by
-        simpa
+      (suffices Tendsto (fun e : E => M * ∥e - x∥) (𝓝 x) (𝓝 (M * 0)) by simpa
       tendsto_const_nhds.mul (tendsto_norm_sub_self _))
 
 theorem continuous (hf : IsBoundedLinearMap 𝕜 f) : Continuous f :=
@@ -185,7 +179,7 @@ end IsBoundedLinearMap
 
 section
 
-variable {ι : Type _} [DecidableEq ι] [Fintype ι]
+variable {ι : Type _} [DecidableEq ι] [Fintypeₓ ι]
 
 /-- Taking the cartesian product of two continuous multilinear maps
 is a bounded linear operation. -/
@@ -206,11 +200,11 @@ theorem is_bounded_linear_map_prod_multilinear {E : ι → Type _} [∀ i, Norme
         constructor
         · exact
             (p.1.le_op_norm m).trans
-              (mul_le_mul_of_nonneg_right (norm_fst_le p) (Finset.prod_nonneg fun i hi => norm_nonneg _))
+              (mul_le_mul_of_nonneg_right (norm_fst_le p) (Finsetₓ.prod_nonneg fun i hi => norm_nonneg _))
           
         · exact
             (p.2.le_op_norm m).trans
-              (mul_le_mul_of_nonneg_right (norm_snd_le p) (Finset.prod_nonneg fun i hi => norm_nonneg _))
+              (mul_le_mul_of_nonneg_right (norm_snd_le p) (Finsetₓ.prod_nonneg fun i hi => norm_nonneg _))
           ⟩ }
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
@@ -227,7 +221,7 @@ theorem is_bounded_linear_map_continuous_multilinear_map_comp_linear (g : G →L
         rfl, fun c f => by
         ext m
         rfl⟩
-      (∥g∥ ^ Fintype.card ι) fun f => _
+      (∥g∥ ^ Fintypeₓ.card ι) fun f => _
   apply ContinuousMultilinearMap.op_norm_le_bound _ _ fun m => _
   · apply_rules [mul_nonneg, pow_nonneg, norm_nonneg]
     
@@ -235,9 +229,9 @@ theorem is_bounded_linear_map_continuous_multilinear_map_comp_linear (g : G →L
     ∥f (g ∘ m)∥ ≤ ∥f∥ * ∏ i, ∥g (m i)∥ := f.le_op_norm _
     _ ≤ ∥f∥ * ∏ i, ∥g∥ * ∥m i∥ := by
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-      exact Finset.prod_le_prod (fun i hi => norm_nonneg _) fun i hi => g.le_op_norm _
-    _ = ∥g∥ ^ Fintype.card ι * ∥f∥ * ∏ i, ∥m i∥ := by
-      simp [Finset.prod_mul_distrib, Finset.card_univ]
+      exact Finsetₓ.prod_le_prod (fun i hi => norm_nonneg _) fun i hi => g.le_op_norm _
+    _ = ∥g∥ ^ Fintypeₓ.card ι * ∥f∥ * ∏ i, ∥m i∥ := by
+      simp [Finsetₓ.prod_mul_distrib, Finsetₓ.card_univ]
       ring
     
 
@@ -276,8 +270,7 @@ variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] {ρ₁₂ : R →+* �
 theorem map_add₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (x x' : M) (y : F) : f (x + x') y = f x y + f x' y := by
   rw [f.map_add, add_apply]
 
-theorem map_zero₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (y : F) : f 0 y = 0 := by
-  rw [f.map_zero, zero_apply]
+theorem map_zero₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (y : F) : f 0 y = 0 := by rw [f.map_zero, zero_apply]
 
 theorem map_smulₛₗ₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (c : R) (x : M) (y : F) : f (c • x) y = ρ₁₂ c • f x y := by
   rw [f.map_smulₛₗ, smul_apply]
@@ -291,8 +284,7 @@ variable [Ringₓ R] [AddCommGroupₓ M] [Module R M] {ρ₁₂ : R →+* 𝕜'}
 theorem map_sub₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (x x' : M) (y : F) : f (x - x') y = f x y - f x' y := by
   rw [f.map_sub, sub_apply]
 
-theorem map_neg₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (x : M) (y : F) : f (-x) y = -f x y := by
-  rw [f.map_neg, neg_apply]
+theorem map_neg₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (x : M) (y : F) : f (-x) y = -f x y := by rw [f.map_neg, neg_apply]
 
 end Ringₓ
 
@@ -323,14 +315,11 @@ theorem ContinuousLinearMap.is_bounded_bilinear_map (f : E →L[𝕜] F →L[�
     smul_right := fun c x => (f x).map_smul c,
     bound :=
       ⟨max ∥f∥ 1, zero_lt_one.trans_le (le_max_rightₓ _ _), fun x y =>
-        (f.le_op_norm₂ x y).trans <| by
-          apply_rules [mul_le_mul_of_nonneg_right, norm_nonneg, le_max_leftₓ]⟩ }
+        (f.le_op_norm₂ x y).trans <| by apply_rules [mul_le_mul_of_nonneg_right, norm_nonneg, le_max_leftₓ]⟩ }
 
 protected theorem IsBoundedBilinearMap.is_O (h : IsBoundedBilinearMap 𝕜 f) : f =O[⊤] fun p : E × F => ∥p.1∥ * ∥p.2∥ :=
   let ⟨C, Cpos, hC⟩ := h.bound
-  Asymptotics.IsO.of_bound _ <|
-    Filter.eventually_of_forall fun ⟨x, y⟩ => by
-      simpa [mul_assoc] using hC x y
+  Asymptotics.IsO.of_bound _ <| Filter.eventually_of_forall fun ⟨x, y⟩ => by simpa [mul_assoc] using hC x y
 
 theorem IsBoundedBilinearMap.is_O_comp {α : Type _} (H : IsBoundedBilinearMap 𝕜 f) {g : α → E} {h : α → F}
     {l : Filter α} : (fun x => f (g x, h x)) =O[l] fun x => ∥g x∥ * ∥h x∥ :=
@@ -342,29 +331,22 @@ protected theorem IsBoundedBilinearMap.is_O' (h : IsBoundedBilinearMap 𝕜 f) :
 theorem IsBoundedBilinearMap.map_sub_left (h : IsBoundedBilinearMap 𝕜 f) {x y : E} {z : F} :
     f (x - y, z) = f (x, z) - f (y, z) :=
   calc
-    f (x - y, z) = f (x + (-1 : 𝕜) • y, z) := by
-      simp [sub_eq_add_neg]
-    _ = f (x, z) + (-1 : 𝕜) • f (y, z) := by
-      simp only [h.add_left, h.smul_left]
-    _ = f (x, z) - f (y, z) := by
-      simp [sub_eq_add_neg]
+    f (x - y, z) = f (x + (-1 : 𝕜) • y, z) := by simp [sub_eq_add_neg]
+    _ = f (x, z) + (-1 : 𝕜) • f (y, z) := by simp only [h.add_left, h.smul_left]
+    _ = f (x, z) - f (y, z) := by simp [sub_eq_add_neg]
     
 
 theorem IsBoundedBilinearMap.map_sub_right (h : IsBoundedBilinearMap 𝕜 f) {x : E} {y z : F} :
     f (x, y - z) = f (x, y) - f (x, z) :=
   calc
-    f (x, y - z) = f (x, y + (-1 : 𝕜) • z) := by
-      simp [sub_eq_add_neg]
-    _ = f (x, y) + (-1 : 𝕜) • f (x, z) := by
-      simp only [h.add_right, h.smul_right]
-    _ = f (x, y) - f (x, z) := by
-      simp [sub_eq_add_neg]
+    f (x, y - z) = f (x, y + (-1 : 𝕜) • z) := by simp [sub_eq_add_neg]
+    _ = f (x, y) + (-1 : 𝕜) • f (x, z) := by simp only [h.add_right, h.smul_right]
+    _ = f (x, y) - f (x, z) := by simp [sub_eq_add_neg]
     
 
 /-- Useful to use together with `continuous.comp₂`. -/
 theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Continuous f := by
-  have one_ne : (1 : ℝ) ≠ 0 := by
-    simp
+  have one_ne : (1 : ℝ) ≠ 0 := by simp
   obtain ⟨C, Cpos : 0 < C, hC⟩ := h.bound
   rw [continuous_iff_continuous_at]
   intro x
@@ -413,21 +395,12 @@ theorem IsBoundedBilinearMap.is_bounded_linear_map_left (h : IsBoundedBilinearMa
   { map_add := fun x x' => h.add_left _ _ _, map_smul := fun c x => h.smul_left _ _ _,
     bound := by
       rcases h.bound with ⟨C, C_pos, hC⟩
-      refine'
-        ⟨C * (∥y∥ + 1),
-          mul_pos C_pos
-            (lt_of_lt_of_leₓ zero_lt_one
-              (by
-                simp )),
-          fun x => _⟩
-      have : ∥y∥ ≤ ∥y∥ + 1 := by
-        simp [zero_le_one]
+      refine' ⟨C * (∥y∥ + 1), mul_pos C_pos (lt_of_lt_of_leₓ zero_lt_one (by simp)), fun x => _⟩
+      have : ∥y∥ ≤ ∥y∥ + 1 := by simp [zero_le_one]
       calc
         ∥f (x, y)∥ ≤ C * ∥x∥ * ∥y∥ := hC x y
-        _ ≤ C * ∥x∥ * (∥y∥ + 1) := by
-          apply_rules [norm_nonneg, mul_le_mul_of_nonneg_left, le_of_ltₓ C_pos, mul_nonneg]
-        _ = C * (∥y∥ + 1) * ∥x∥ := by
-          ring
+        _ ≤ C * ∥x∥ * (∥y∥ + 1) := by apply_rules [norm_nonneg, mul_le_mul_of_nonneg_left, le_of_ltₓ C_pos, mul_nonneg]
+        _ = C * (∥y∥ + 1) * ∥x∥ := by ring
          }
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
@@ -436,15 +409,8 @@ theorem IsBoundedBilinearMap.is_bounded_linear_map_right (h : IsBoundedBilinearM
   { map_add := fun y y' => h.add_right _ _ _, map_smul := fun c y => h.smul_right _ _ _,
     bound := by
       rcases h.bound with ⟨C, C_pos, hC⟩
-      refine'
-        ⟨C * (∥x∥ + 1),
-          mul_pos C_pos
-            (lt_of_lt_of_leₓ zero_lt_one
-              (by
-                simp )),
-          fun y => _⟩
-      have : ∥x∥ ≤ ∥x∥ + 1 := by
-        simp [zero_le_one]
+      refine' ⟨C * (∥x∥ + 1), mul_pos C_pos (lt_of_lt_of_leₓ zero_lt_one (by simp)), fun y => _⟩
+      have : ∥x∥ ≤ ∥x∥ + 1 := by simp [zero_le_one]
       calc
         ∥f (x, y)∥ ≤ C * ∥x∥ * ∥y∥ := hC x y
         _ ≤ C * (∥x∥ + 1) * ∥y∥ := by
@@ -482,7 +448,7 @@ theorem is_bounded_bilinear_map_smul_right :
 
 /-- The composition of a continuous linear map with a continuous multilinear map is a bounded
 bilinear operation. -/
-theorem is_bounded_bilinear_map_comp_multilinear {ι : Type _} {E : ι → Type _} [DecidableEq ι] [Fintype ι]
+theorem is_bounded_bilinear_map_comp_multilinear {ι : Type _} {E : ι → Type _} [DecidableEq ι] [Fintypeₓ ι]
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] :
     IsBoundedBilinearMap 𝕜 fun p : (F →L[𝕜] G) × ContinuousMultilinearMap 𝕜 E F =>
       p.1.compContinuousMultilinearMap p.2 :=
@@ -517,8 +483,7 @@ def IsBoundedBilinearMap.deriv (h : IsBoundedBilinearMap 𝕜 f) (p : E × F) : 
         exact mul_le_mul_of_nonneg_left (le_max_rightₓ _ _) (mul_nonneg (le_of_ltₓ Cpos) (norm_nonneg _))
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
         exact mul_le_mul_of_nonneg_left (le_max_leftₓ _ _) (le_of_ltₓ Cpos)
-      _ = (C * ∥p.1∥ + C * ∥p.2∥) * ∥q∥ := by
-        ring
+      _ = (C * ∥p.1∥ + C * ∥p.2∥) * ∥q∥ := by ring
       
 
 @[simp]
@@ -551,8 +516,7 @@ theorem IsBoundedBilinearMap.is_bounded_linear_map_deriv (h : IsBoundedBilinearM
       ∥f (p.1, q.2) + f (q.1, p.2)∥ ≤ C * ∥p.1∥ * ∥q.2∥ + C * ∥q.1∥ * ∥p.2∥ := norm_add_le_of_le (hC _ _) (hC _ _)
       _ ≤ C * ∥p∥ * ∥q∥ + C * ∥q∥ * ∥p∥ := by
         apply_rules [add_le_add, mul_le_mul, norm_nonneg, Cpos.le, le_reflₓ, le_max_leftₓ, le_max_rightₓ, mul_nonneg]
-      _ = (C + C) * ∥p∥ * ∥q∥ := by
-        ring
+      _ = (C + C) * ∥p∥ * ∥q∥ := by ring
       
     
 
@@ -596,9 +560,7 @@ protected theorem is_open [CompleteSpace E] : IsOpen (Range (coe : (E ≃L[𝕜]
     
 
 protected theorem nhds [CompleteSpace E] (e : E ≃L[𝕜] F) : Range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F) ∈ 𝓝 (e : E →L[𝕜] F) :=
-  IsOpen.mem_nhds ContinuousLinearEquiv.is_open
-    (by
-      simp )
+  IsOpen.mem_nhds ContinuousLinearEquiv.is_open (by simp)
 
 end ContinuousLinearEquiv
 

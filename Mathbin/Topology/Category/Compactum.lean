@@ -165,9 +165,7 @@ instance {X : Compactum} : CompactSpace X := by
   constructor
   rw [is_compact_iff_ultrafilter_le_nhds]
   intro F h
-  refine'
-    ⟨X.str F, by
-      tauto, _⟩
+  refine' ⟨X.str F, by tauto, _⟩
   rw [le_nhds_iff]
   intro S h1 h2
   exact h2 F h1
@@ -191,15 +189,13 @@ private theorem basic_inter {X : Compactum} (A B : Set X) : Basic (A ∩ B) = Ba
     exact inter_mem h1 h2
     
 
-private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ Cl A := fun a ha =>
-  ⟨X.incl a, ha, by
-    simp ⟩
+private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ Cl A := fun a ha => ⟨X.incl a, ha, by simp⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (B C «expr ∈ » C0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (B C «expr ∈ » C0)
 private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   rintro _ ⟨F, hF, rfl⟩
   -- Notation to be used in this proof.
-  let fsu := Finset (Set (Ultrafilter X))
+  let fsu := Finsetₓ (Set (Ultrafilter X))
   let ssu := Set (Set (Ultrafilter X))
   let ι : fsu → ssu := coe
   let C0 : ssu := { Z | ∃ B ∈ F, X.str ⁻¹' B = Z }
@@ -251,8 +247,7 @@ private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
     exact claim5.finite_inter_closure_insert _ hP
   intro T hT
   -- Suffices to show that the intersection of the T's is contained in C2.
-  suffices ⋂₀ ι T ∈ C2 by
-    exact claim6 _ this
+  suffices ⋂₀ ι T ∈ C2 by exact claim6 _ this
   -- Finish
   apply claim4.finite_inter_mem
   intro t ht
@@ -263,10 +258,10 @@ theorem is_closed_cl {X : Compactum} (A : Set X) : IsClosed (Cl A) := by
   intro F hF
   exact cl_cl _ ⟨F, hF, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0)
 theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x := by
   -- Notation to be used in this proof.
-  let fsu := Finset (Set (Ultrafilter X))
+  let fsu := Finsetₓ (Set (Ultrafilter X))
   let ssu := Set (Set (Ultrafilter X))
   let ι : fsu → ssu := coe
   let T0 : ssu := { S | ∃ A ∈ F, S = basic A }
@@ -289,9 +284,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   -- T0 is closed under intersections.
   have claim3 : ∀ (S1 S2) (_ : S1 ∈ T0) (_ : S2 ∈ T0), S1 ∩ S2 ∈ T0 := by
     rintro S1 ⟨S1, hS1, rfl⟩ S2 ⟨S2, hS2, rfl⟩
-    exact
-      ⟨S1 ∩ S2, inter_mem hS1 hS2, by
-        simp [basic_inter]⟩
+    exact ⟨S1 ∩ S2, inter_mem hS1 hS2, by simp [basic_inter]⟩
   -- For every S ∈ T0, the intersection AA ∩ S is nonempty.
   have claim4 : ∀ S ∈ T0, (AA ∩ S).Nonempty := by
     rintro S ⟨S, hS, rfl⟩
@@ -317,9 +310,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
       · use Set.Univ
         refine' ⟨Filter.univ_sets _, _⟩
         ext
-        refine'
-          ⟨_, by
-            tauto⟩
+        refine' ⟨_, by tauto⟩
         · intro
           apply Filter.univ_sets
           
@@ -346,9 +337,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   exact finite_inter_closure.basic (@hT t ht)
 
 theorem le_nhds_of_str_eq {X : Compactum} (F : Ultrafilter X) (x : X) : X.str F = x → ↑F ≤ 𝓝 x := fun h =>
-  le_nhds_iff.mpr fun s hx hs =>
-    hs _ <| by
-      rwa [h]
+  le_nhds_iff.mpr fun s hx hs => hs _ <| by rwa [h]
 
 -- All the hard work above boils down to this t2_space instance.
 instance {X : Compactum} : T2Space X := by
@@ -397,12 +386,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
     have c3 : ↑(Ultrafilter.map Ultrafilter.lim FF) ≤ 𝓝 x := by
       rw [le_nhds_iff]
       intro U hx hU
-      exact
-        mem_coe.2
-          (c2 _ _
-            (by
-              rwa [← c1])
-            hU)
+      exact mem_coe.2 (c2 _ _ (by rwa [← c1]) hU)
     have c4 : ∀ U : Set X, x ∈ U → IsOpen U → { G : Ultrafilter X | U ∈ G } ∈ FF := by
       intro U hx hU
       suffices Ultrafilter.lim ⁻¹' U ∈ FF by
@@ -474,7 +458,7 @@ end compactumToCompHaus
 def compactumToCompHausCompForget : compactumToCompHaus ⋙ CategoryTheory.forget CompHaus ≅ Compactum.forget :=
   (NatIso.ofComponents fun X => eqToIso rfl) <| by
     intro X Y f
-    dsimp'
+    dsimp
     simpa
 
 /-

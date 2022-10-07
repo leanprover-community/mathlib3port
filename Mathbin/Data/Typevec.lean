@@ -98,16 +98,14 @@ instance Last.inhabited (α : Typevec (n + 1)) [Inhabited (α Fin2.fz)] : Inhabi
 theorem drop_append1 {α : Typevec n} {β : Type _} {i : Fin2 n} : Drop (Append1 α β) i = α i :=
   rfl
 
-theorem drop_append1' {α : Typevec n} {β : Type _} : Drop (Append1 α β) = α := by
-  ext <;> apply drop_append1
+theorem drop_append1' {α : Typevec n} {β : Type _} : Drop (Append1 α β) = α := by ext <;> apply drop_append1
 
 theorem last_append1 {α : Typevec n} {β : Type _} : Last (Append1 α β) = β :=
   rfl
 
 @[simp]
 theorem append1_drop_last (α : Typevec (n + 1)) : Append1 (Drop α) (Last α) = α :=
-  funext fun i => by
-    cases i <;> rfl
+  funext fun i => by cases i <;> rfl
 
 /-- cases on `(n+1)-length` vectors -/
 @[elabAsElim]
@@ -145,8 +143,7 @@ def nilFun {α : Typevec 0} {β : Typevec 0} : α ⟹ β := fun i => Fin2.elim0 
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 theorem eq_of_drop_last_eq {α β : Typevec (n + 1)} {f g : α ⟹ β} (h₀ : dropFun f = dropFun g)
-    (h₁ : lastFun f = lastFun g) : f = g := by
-  replace h₀ := congr_fun h₀ <;> ext1 (ieq | ⟨j, ieq⟩) <;> apply_assumption
+    (h₁ : lastFun f = lastFun g) : f = g := by replace h₀ := congr_fun h₀ <;> ext1 (ieq | ⟨j, ieq⟩) <;> apply_assumption
 
 @[simp]
 theorem drop_fun_split_fun {α α' : Typevec (n + 1)} (f : Drop α ⟹ Drop α') (g : Last α → Last α') :
@@ -262,14 +259,7 @@ run_cmd
     tactic.add_doc_string `simp_attr.typevec "simp set for the manipulation of typevec and arrow expressions"
 
 -- mathport name: «expr♯ »
-local prefix:0 "♯" =>
-  cast
-    (by
-      try
-          simp <;>
-        congr 1 <;>
-          try
-            simp )
+local prefix:0 "♯" => cast (by try simp <;> congr 1 <;> try simp)
 
 /-- cases distinction for 0-length type vector -/
 protected def casesNil {β : Typevec 0 → Sort _} (f : β Fin2.elim0) : ∀ v, β v := fun v => ♯f
@@ -291,11 +281,7 @@ protected theorem cases_cons_append1 (n : ℕ) {β : Typevec (n + 1) → Sort _}
 /-- cases distinction for an arrow in the category of 0-length type vectors -/
 def typevecCasesNil₃ {β : ∀ v v' : Typevec 0, v ⟹ v' → Sort _} (f : β Fin2.elim0 Fin2.elim0 nilFun) :
     ∀ v v' fs, β v v' fs := fun v v' fs => by
-  refine' cast _ f <;>
-    congr 1 <;>
-      ext <;>
-        try
-          intros <;> casesm Fin2 0
+  refine' cast _ f <;> congr 1 <;> ext <;> try intros <;> casesm Fin2 0
   rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -387,17 +373,13 @@ def repeatEq : ∀ {n} (α : Typevec n), α ⊗ α ⟹ Repeat _ Prop
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem const_append1 {β γ} (x : γ) {n} (α : Typevec n) :
-    Typevec.constₓ x (α ::: β) = appendFun (Typevec.constₓ x α) fun _ => x := by
-  ext i : 1 <;> cases i <;> rfl
+    Typevec.constₓ x (α ::: β) = appendFun (Typevec.constₓ x α) fun _ => x := by ext i : 1 <;> cases i <;> rfl
 
-theorem eq_nil_fun {α β : Typevec 0} (f : α ⟹ β) : f = nil_fun := by
-  ext x <;> cases x
+theorem eq_nil_fun {α β : Typevec 0} (f : α ⟹ β) : f = nil_fun := by ext x <;> cases x
 
-theorem id_eq_nil_fun {α : Typevec 0} : @id _ α = nil_fun := by
-  ext x <;> cases x
+theorem id_eq_nil_fun {α : Typevec 0} : @id _ α = nil_fun := by ext x <;> cases x
 
-theorem const_nil {β} (x : β) (α : Typevec 0) : Typevec.constₓ x α = nil_fun := by
-  ext i : 1 <;> cases i <;> rfl
+theorem const_nil {β} (x : β) (α : Typevec 0) : Typevec.constₓ x α = nil_fun := by ext i : 1 <;> cases i <;> rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[typevec]
@@ -405,8 +387,7 @@ theorem repeat_eq_append1 {β} {n} (α : Typevec n) : repeatEq (α ::: β) = spl
   induction n <;> rfl
 
 @[typevec]
-theorem repeat_eq_nil (α : Typevec 0) : repeatEq α = nil_fun := by
-  ext i : 1 <;> cases i <;> rfl
+theorem repeat_eq_nil (α : Typevec 0) : repeatEq α = nil_fun := by ext i : 1 <;> cases i <;> rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- predicate on a type vector to constrain only the last object -/
@@ -486,12 +467,10 @@ protected def Prod.map : ∀ {n} {α α' β β' : Typevec.{u} n}, α ⟹ β → 
 localized [Mvfunctor] infixl:45 " ⊗' " => Typevec.Prod.map
 
 theorem fst_prod_mk {α α' β β' : Typevec n} (f : α ⟹ β) (g : α' ⟹ β') :
-    Typevec.Prod.fst ⊚ (f ⊗' g) = f ⊚ Typevec.Prod.fst := by
-  ext i <;> induction i <;> [rfl, apply i_ih]
+    Typevec.Prod.fst ⊚ (f ⊗' g) = f ⊚ Typevec.Prod.fst := by ext i <;> induction i <;> [rfl, apply i_ih]
 
 theorem snd_prod_mk {α α' β β' : Typevec n} (f : α ⟹ β) (g : α' ⟹ β') :
-    Typevec.Prod.snd ⊚ (f ⊗' g) = g ⊚ Typevec.Prod.snd := by
-  ext i <;> induction i <;> [rfl, apply i_ih]
+    Typevec.Prod.snd ⊚ (f ⊗' g) = g ⊚ Typevec.Prod.snd := by ext i <;> induction i <;> [rfl, apply i_ih]
 
 theorem fst_diag {α : Typevec n} : Typevec.Prod.fst ⊚ (Prod.diag : α ⟹ _) = id := by
   ext i <;> induction i <;> [rfl, apply i_ih]
@@ -532,24 +511,14 @@ def toSubtype' :
     ∀ {n} {α : Typevec.{u} n} (p : α ⊗ α ⟹ Repeat n Prop),
       (fun i : Fin2 n => { x : α i × α i // of_repeat <| p i (Prod.mk _ x.1 x.2) }) ⟹ Subtype_ p
   | succ n, α, p, Fin2.fs i, x => to_subtype' (dropFun p) i x
-  | succ n, α, p, Fin2.fz, x =>
-    ⟨x.val,
-      cast
-        (by
-          congr <;> simp [Prod.mk])
-        x.property⟩
+  | succ n, α, p, Fin2.fz, x => ⟨x.val, cast (by congr <;> simp [Prod.mk]) x.property⟩
 
 /-- similar to `of_subtype` adapted to relations (i.e. predicate on product) -/
 def ofSubtype' :
     ∀ {n} {α : Typevec.{u} n} (p : α ⊗ α ⟹ Repeat n Prop),
       Subtype_ p ⟹ fun i : Fin2 n => { x : α i × α i // of_repeat <| p i (Prod.mk _ x.1 x.2) }
   | _, α, p, Fin2.fs i, x => of_subtype' _ i x
-  | _, α, p, Fin2.fz, x =>
-    ⟨x.val,
-      cast
-        (by
-          congr <;> simp [Prod.mk])
-        x.property⟩
+  | _, α, p, Fin2.fz, x => ⟨x.val, cast (by congr <;> simp [Prod.mk]) x.property⟩
 
 /-- similar to `diag` but the target vector is a `subtype_`
 guaranteeing the equality of the components -/
@@ -558,8 +527,7 @@ def diagSub : ∀ {n} {α : Typevec.{u} n}, α ⟹ Subtype_ (repeatEq α)
   | succ n, α, Fin2.fz, x => ⟨(x, x), rfl⟩
 
 theorem subtype_val_nil {α : Typevec.{u} 0} (ps : α ⟹ Repeat 0 Prop) : Typevec.subtypeVal ps = nil_fun :=
-  funext <| by
-    rintro ⟨⟩ <;> rfl
+  funext <| by rintro ⟨⟩ <;> rfl
 
 theorem diag_sub_val {n} {α : Typevec.{u} n} : subtypeVal (repeatEq α) ⊚ diag_sub = prod.diag := by
   ext i <;> induction i <;> [rfl, apply i_ih]
@@ -664,25 +632,24 @@ theorem subtype_val_diag_sub {α : Typevec n} : subtypeVal (repeatEq α) ⊚ dia
 
 @[simp]
 theorem to_subtype_of_subtype {α : Typevec n} (p : α ⟹ Repeat n Prop) : toSubtype p ⊚ ofSubtype p = id := by
-  ext i x <;> induction i <;> dsimp' only [id, to_subtype, comp, of_subtype]  at * <;> simp [*]
+  ext i x <;> induction i <;> dsimp only [id, to_subtype, comp, of_subtype] at * <;> simp [*]
 
 @[simp]
 theorem subtype_val_to_subtype {α : Typevec n} (p : α ⟹ Repeat n Prop) :
     subtypeVal p ⊚ toSubtype p = fun _ => Subtype.val := by
-  ext i x <;> induction i <;> dsimp' only [to_subtype, comp, subtype_val]  at * <;> simp [*]
+  ext i x <;> induction i <;> dsimp only [to_subtype, comp, subtype_val] at * <;> simp [*]
 
 @[simp]
 theorem to_subtype_of_subtype_assoc {α β : Typevec n} (p : α ⟹ Repeat n Prop) (f : β ⟹ Subtype_ p) :
-    @toSubtype n _ p ⊚ ofSubtype _ ⊚ f = f := by
-  rw [← comp_assoc, to_subtype_of_subtype] <;> simp
+    @toSubtype n _ p ⊚ ofSubtype _ ⊚ f = f := by rw [← comp_assoc, to_subtype_of_subtype] <;> simp
 
 @[simp]
 theorem to_subtype'_of_subtype' {α : Typevec n} (r : α ⊗ α ⟹ Repeat n Prop) : toSubtype' r ⊚ ofSubtype' r = id := by
-  ext i x <;> induction i <;> dsimp' only [id, to_subtype', comp, of_subtype']  at * <;> simp [Subtype.eta, *]
+  ext i x <;> induction i <;> dsimp only [id, to_subtype', comp, of_subtype'] at * <;> simp [Subtype.eta, *]
 
 theorem subtype_val_to_subtype' {α : Typevec n} (r : α ⊗ α ⟹ Repeat n Prop) :
     subtypeVal r ⊚ toSubtype' r = fun i x => Prod.mk i x.1.fst x.1.snd := by
-  ext i x <;> induction i <;> dsimp' only [id, to_subtype', comp, subtype_val, Prod.mk]  at * <;> simp [*]
+  ext i x <;> induction i <;> dsimp only [id, to_subtype', comp, subtype_val, Prod.mk] at * <;> simp [*]
 
 end Typevec
 

@@ -101,39 +101,30 @@ theorem commute [HasFaithfulSmul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂
       calc
         ∥R • x∥ =
             ∥R • P • R • x∥ + ∥(1 - R) • P • R • x∥ + (∥(R * R) • x - R • P • R • x∥ + ∥(1 - R) • (1 - P) • R • x∥) :=
-          by
-          rw [h₁.Lnorm, h₃.Lnorm, h₃.Lnorm ((1 - P) • R • x), sub_smul 1 P, one_smul, smul_sub, mul_smul]
+          by rw [h₁.Lnorm, h₃.Lnorm, h₃.Lnorm ((1 - P) • R • x), sub_smul 1 P, one_smul, smul_sub, mul_smul]
         _ =
             ∥R • P • R • x∥ + ∥(1 - R) • P • R • x∥ +
               (∥R • x - R • P • R • x∥ + ∥((1 - R) * R) • x - (1 - R) • P • R • x∥) :=
-          by
-          rw [h₃.proj.eq, sub_smul 1 P, one_smul, smul_sub, mul_smul]
+          by rw [h₃.proj.eq, sub_smul 1 P, one_smul, smul_sub, mul_smul]
         _ = ∥R • P • R • x∥ + ∥(1 - R) • P • R • x∥ + (∥R • x - R • P • R • x∥ + ∥(1 - R) • P • R • x∥) := by
           rw [sub_mul, h₃.proj.eq, one_mulₓ, sub_self, zero_smul, zero_sub, norm_neg]
-        _ = ∥R • P • R • x∥ + ∥R • x - R • P • R • x∥ + 2 • ∥(1 - R) • P • R • x∥ := by
-          abel
+        _ = ∥R • P • R • x∥ + ∥R • x - R • P • R • x∥ + 2 • ∥(1 - R) • P • R • x∥ := by abel
         _ ≥ ∥R • x∥ + 2 • ∥(P * R) • x - (R * P * R) • x∥ := by
           rw [Ge]
           have := add_le_add_right (norm_le_insert' (R • x) (R • P • R • x)) (2 • ∥(1 - R) • P • R • x∥)
           simpa only [mul_smul, sub_smul, one_smul] using this
         
     rw [Ge] at e1
-    nth_rw_rhs 0[← add_zeroₓ ∥R • x∥]  at e1
+    nth_rw_rhs 0 [← add_zeroₓ ∥R • x∥]  at e1
     rw [add_le_add_iff_left, two_smul, ← two_mul] at e1
     rw [le_antisymm_iffₓ]
     refine' ⟨_, norm_nonneg _⟩
-    rwa [← mul_zero (2 : ℝ),
-      mul_le_mul_left
-        (show (0 : ℝ) < 2 by
-          norm_num)] at
-      e1
+    rwa [← mul_zero (2 : ℝ), mul_le_mul_left (show (0 : ℝ) < 2 by norm_num)] at e1
   have QP_eq_QPQ : Q * P = Q * P * Q := by
     have e1 : P * (1 - Q) = P * (1 - Q) - (Q * P - Q * P * Q) :=
       calc
-        P * (1 - Q) = (1 - Q) * P * (1 - Q) := by
-          rw [PR_eq_RPR (1 - Q) h₂.Lcomplement]
-        _ = P * (1 - Q) - (Q * P - Q * P * Q) := by
-          noncomm_ring
+        P * (1 - Q) = (1 - Q) * P * (1 - Q) := by rw [PR_eq_RPR (1 - Q) h₂.Lcomplement]
+        _ = P * (1 - Q) - (Q * P - Q * P * Q) := by noncomm_ring
         
     rwa [eq_sub_iff_add_eq, add_right_eq_selfₓ, sub_eq_zero] at e1
   show P * Q = Q * P
@@ -146,12 +137,9 @@ theorem mul [HasFaithfulSmul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : I
   intro x
   refine' le_antisymmₓ _ _
   · calc
-      ∥x∥ = ∥(P * Q) • x + (x - (P * Q) • x)∥ := by
-        rw [add_sub_cancel'_right ((P * Q) • x) x]
-      _ ≤ ∥(P * Q) • x∥ + ∥x - (P * Q) • x∥ := by
-        apply norm_add_le
-      _ = ∥(P * Q) • x∥ + ∥(1 - P * Q) • x∥ := by
-        rw [sub_smul, one_smul]
+      ∥x∥ = ∥(P * Q) • x + (x - (P * Q) • x)∥ := by rw [add_sub_cancel'_right ((P * Q) • x) x]
+      _ ≤ ∥(P * Q) • x∥ + ∥x - (P * Q) • x∥ := by apply norm_add_le
+      _ = ∥(P * Q) • x∥ + ∥(1 - P * Q) • x∥ := by rw [sub_smul, one_smul]
       
     
   · calc
@@ -159,8 +147,7 @@ theorem mul [HasFaithfulSmul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : I
         rw [h₂.Lnorm x, h₁.Lnorm (Q • x), sub_smul, one_smul, sub_smul, one_smul, add_assocₓ]
       _ ≥ ∥P • Q • x∥ + ∥Q • x - P • Q • x + (x - Q • x)∥ :=
         (add_le_add_iff_left ∥P • Q • x∥).mpr (norm_add_le (Q • x - P • Q • x) (x - Q • x))
-      _ = ∥(P * Q) • x∥ + ∥(1 - P * Q) • x∥ := by
-        rw [sub_add_sub_cancel', sub_smul, one_smul, mul_smul]
+      _ = ∥(P * Q) • x∥ + ∥(1 - P * Q) • x∥ := by rw [sub_add_sub_cancel', sub_smul, one_smul, mul_smul]
       
     
 
@@ -199,23 +186,18 @@ theorem coe_sdiff [HasFaithfulSmul M X] (P Q : { P : M // IsLprojection X P }) :
 
 instance [HasFaithfulSmul M X] : PartialOrderₓ { P : M // IsLprojection X P } where
   le := fun P Q => (↑P : M) = ↑(P ⊓ Q)
-  le_refl := fun P => by
-    simpa only [coe_inf, ← sq] using P.prop.proj.eq.symm
+  le_refl := fun P => by simpa only [coe_inf, ← sq] using P.prop.proj.eq.symm
   le_trans := fun P Q R h₁ h₂ => by
     simp only [coe_inf] at h₁ h₂⊢
     rw [h₁, mul_assoc, ← h₂]
-  le_antisymm := fun P Q h₁ h₂ =>
-    Subtype.eq
-      (by
-        convert (P.prop.commute Q.prop).Eq)
+  le_antisymm := fun P Q h₁ h₂ => Subtype.eq (by convert (P.prop.commute Q.prop).Eq)
 
 theorem le_def [HasFaithfulSmul M X] (P Q : { P : M // IsLprojection X P }) : P ≤ Q ↔ (P : M) = ↑(P ⊓ Q) :=
   Iff.rfl
 
 instance : Zero { P : M // IsLprojection X P } :=
   ⟨⟨0,
-      ⟨by
-        rw [IsIdempotentElem, zero_mul], fun x => by
+      ⟨by rw [IsIdempotentElem, zero_mul], fun x => by
         simp only [zero_smul, norm_zero, sub_zero, one_smul, zero_addₓ]⟩⟩⟩
 
 @[simp]
@@ -270,8 +252,7 @@ instance [HasFaithfulSmul M X] : DistribLattice { P : M // IsLprojection X P } :
       rw [← h₂, ← h₁],
     inf_le_left := fun P Q => by
       rw [le_def, coe_inf, coe_inf, coe_inf, mul_assoc, (Q.prop.commute P.prop).Eq, ← mul_assoc, P.prop.proj.eq],
-    inf_le_right := fun P Q => by
-      rw [le_def, coe_inf, coe_inf, coe_inf, mul_assoc, Q.prop.proj.eq],
+    inf_le_right := fun P Q => by rw [le_def, coe_inf, coe_inf, coe_inf, mul_assoc, Q.prop.proj.eq],
     le_inf := fun P Q R => by
       rw [le_def, le_def, le_def, coe_inf, coe_inf, coe_inf, coe_inf, ← mul_assoc]
       intro h₁ h₂
@@ -291,17 +272,11 @@ instance [HasFaithfulSmul M X] : DistribLattice { P : M // IsLprojection X P } :
 instance [HasFaithfulSmul M X] : BooleanAlgebra { P : M // IsLprojection X P } :=
   { IsLprojection.Subtype.hasCompl, IsLprojection.Subtype.hasSdiff, IsLprojection.Subtype.boundedOrder,
     IsLprojection.Subtype.distribLattice with
-    inf_compl_le_bot := fun P =>
-      (Subtype.ext
-          (by
-            rw [coe_inf, coe_compl, coe_bot, ← coe_compl, mul_compl_self])).le,
+    inf_compl_le_bot := fun P => (Subtype.ext (by rw [coe_inf, coe_compl, coe_bot, ← coe_compl, mul_compl_self])).le,
     top_le_sup_compl := fun P =>
       (Subtype.ext
-          (by
-            rw [coe_top, coe_sup, coe_compl, add_sub_cancel'_right, ← coe_compl, mul_compl_self, sub_zero])).le,
-    sdiff_eq := fun P Q =>
-      Subtype.ext <| by
-        rw [coe_sdiff, ← coe_compl, coe_inf] }
+          (by rw [coe_top, coe_sup, coe_compl, add_sub_cancel'_right, ← coe_compl, mul_compl_self, sub_zero])).le,
+    sdiff_eq := fun P Q => Subtype.ext <| by rw [coe_sdiff, ← coe_compl, coe_inf] }
 
 end IsLprojection
 

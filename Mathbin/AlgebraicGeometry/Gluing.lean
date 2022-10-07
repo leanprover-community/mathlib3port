@@ -107,7 +107,7 @@ def gluedScheme : Scheme := by
   swap
   exact (D.U i).affineCover.map y
   constructor
-  · dsimp' [-Set.mem_range]
+  · dsimp [-Set.mem_range]
     rw [coe_comp, Set.range_comp]
     refine' Set.mem_image_of_mem _ _
     exact (D.U i).affineCover.Covers y
@@ -120,7 +120,7 @@ instance : CreatesColimit 𝖣.diagram.multispan forgetToLocallyRingedSpace :=
     (HasColimit.isoOfNatIso (𝖣.diagramIso forgetToLocallyRingedSpace).symm)
 
 instance : PreservesColimit 𝖣.diagram.multispan forgetToTop := by
-  delta' forget_to_Top LocallyRingedSpace.forget_to_Top
+  delta forget_to_Top LocallyRingedSpace.forget_to_Top
   infer_instance
 
 instance : HasMulticoequalizer 𝖣.diagram :=
@@ -156,9 +156,7 @@ theorem glue_condition (i j : D.J) : D.t i j ≫ D.f j i ≫ D.ι j = D.f i j �
 /-- The pullback cone spanned by `V i j ⟶ U i` and `V i j ⟶ U j`.
 This is a pullback diagram (`V_pullback_cone_is_limit`). -/
 def vPullbackCone (i j : D.J) : PullbackCone (D.ι i) (D.ι j) :=
-  PullbackCone.mk (D.f i j) (D.t i j ≫ D.f j i)
-    (by
-      simp )
+  PullbackCone.mk (D.f i j) (D.t i j ≫ D.f j i) (by simp)
 
 /-- The following diagram is a pullback, i.e. `Vᵢⱼ` is the intersection of `Uᵢ` and `Uⱼ` in `X`.
 
@@ -187,11 +185,10 @@ theorem ι_iso_carrier_inv (i : D.J) :
         D.isoCarrier.inv =
       (D.ι i).1.base :=
   by
-  delta' iso_carrier
+  delta iso_carrier
   simp only [functor.map_iso_inv, iso.trans_inv, iso.trans_assoc, glue_data.ι_glued_iso_inv_assoc,
     functor.map_iso_trans, category.assoc]
-  iterate 3 
-    erw [← comp_base]
+  iterate 3 erw [← comp_base]
   simp_rw [← category.assoc]
   rw [D.to_LocallyRingedSpace_glue_data.to_SheafedSpace_glue_data.ι_iso_PresheafedSpace_inv i]
   erw [D.to_LocallyRingedSpace_glue_data.ι_iso_SheafedSpace_inv i]
@@ -250,25 +247,25 @@ def gluedCoverT' (x y z : 𝒰.J) :
 @[simp, reassoc]
 theorem glued_cover_t'_fst_fst (x y z : 𝒰.J) :
     𝒰.gluedCoverT' x y z ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
-  delta' glued_cover_t'
+  delta glued_cover_t'
   simp
 
 @[simp, reassoc]
 theorem glued_cover_t'_fst_snd (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ pullback.fst ≫ pullback.snd = pullback.snd ≫ pullback.snd := by
-  delta' glued_cover_t'
+  delta glued_cover_t'
   simp
 
 @[simp, reassoc]
 theorem glued_cover_t'_snd_fst (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
-  delta' glued_cover_t'
+  delta glued_cover_t'
   simp
 
 @[simp, reassoc]
 theorem glued_cover_t'_snd_snd (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.snd = pullback.fst ≫ pullback.fst := by
-  delta' glued_cover_t'
+  delta glued_cover_t'
   simp
 
 theorem glued_cover_cocycle_fst (x y z : 𝒰.J) :
@@ -295,11 +292,9 @@ def gluedCover : Scheme.GlueData.{u} where
   f := fun x y => pullback.fst
   f_id := fun x => inferInstance
   t := fun x y => (pullbackSymmetry _ _).Hom
-  t_id := fun x => by
-    simpa
+  t_id := fun x => by simpa
   t' := fun x y z => gluedCoverT' 𝒰 x y z
-  t_fac := fun x y z => by
-    apply pullback.hom_ext <;> simp
+  t_fac := fun x y z => by apply pullback.hom_ext <;> simp
   -- The `cocycle` field could have been `by tidy` but lean timeouts.
   cocycle := fun x y z => glued_cover_cocycle 𝒰 x y z
   f_open := fun x => inferInstance
@@ -356,9 +351,7 @@ theorem from_glued_open_map : IsOpenMap 𝒰.fromGlued.1.base := by
   use Set.inter_subset_left _ _
   constructor
   · rw [← Set.image_preimage_eq_inter_range]
-    apply
-      show is_open_immersion (𝒰.map (𝒰.f x)) by
-            infer_instance.base_open.IsOpenMap
+    apply show is_open_immersion (𝒰.map (𝒰.f x)) by infer_instance.base_open.IsOpenMap
     convert hU (𝒰.f x) using 1
     rw [← ι_from_glued]
     erw [coe_comp]
@@ -370,10 +363,7 @@ theorem from_glued_open_map : IsOpenMap 𝒰.fromGlued.1.base := by
     
 
 theorem from_glued_open_embedding : OpenEmbedding 𝒰.fromGlued.1.base :=
-  open_embedding_of_continuous_injective_open
-    (by
-      continuity)
-    𝒰.from_glued_injective 𝒰.from_glued_open_map
+  open_embedding_of_continuous_injective_open (by continuity) 𝒰.from_glued_injective 𝒰.from_glued_open_map
 
 instance : Epi 𝒰.fromGlued.val.base := by
   rw [Top.epi_iff_surjective]

@@ -43,7 +43,7 @@ open Classical BigOperators Nnreal Ennreal TopologicalSpace BoxIntegral
 
 open ContinuousLinearMap (lsmul)
 
-open Filter Set Finset Metric
+open Filter Set Finsetₓ Metric
 
 open BoxIntegral.IntegrationParams (gP GP_le)
 
@@ -102,8 +102,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
     set g := fun y => f y - a - f' (y - x) with hg
     change ∀ y ∈ I.Icc, ∥g y∥ ≤ ε * ∥y - x∥ at hε
     clear_value g
-    obtain rfl : f = fun y => a + f' (y - x) + g y := by
-      simp [hg]
+    obtain rfl : f = fun y => a + f' (y - x) + g y := by simp [hg]
     convert_to ∥g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)∥ ≤ _
     · congr 1
       have := Finₓ.insert_nth_sub_same i (I.upper i) (I.lower i) y
@@ -146,7 +145,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       ac_rfl
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc))
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral
 equal to the difference of integrals of `f` over the faces `x i = I.upper i` and `x i = I.lower i`.
@@ -169,7 +168,7 @@ theorem has_integral_GP_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝ
     box-additive function of `J ≤ I`. -/
   have Hc : ContinuousOn f I.Icc := by
     intro x hx
-    by_cases' hxs : x ∈ s
+    by_cases hxs:x ∈ s
     exacts[Hs x hxs, (Hd x ⟨hx, hxs⟩).ContinuousWithinAt]
   set fI : ℝ → box (Finₓ n) → E := fun y J =>
     integral.{0, u, u} J GP (fun x => f (i.insert_nth y x)) box_additive_map.volume
@@ -228,7 +227,7 @@ theorem has_integral_GP_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝ
     have Hmaps : ∀ z ∈ Icc (J.lower i) (J.upper i), maps_to (i.insert_nth z) (J.face i).Icc (closed_ball x δ ∩ I.Icc) :=
       fun z hz => (J.maps_to_insert_nth_face_Icc hz).mono subset.rfl hJδ'
     simp only [dist_eq_norm, F, fI]
-    dsimp'
+    dsimp
     rw [← integral_sub (Hi _ Hu) (Hi _ Hl)]
     refine' (norm_sub_le _ _).trans (add_le_add _ _)
     · simp_rw [box_additive_map.volume_apply, norm_smul, Real.norm_eq_abs, abs_prod]
@@ -244,8 +243,7 @@ theorem has_integral_GP_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝ
       calc
         (∏ j, abs (J.upper j - J.lower j)) ≤ ∏ j : Finₓ (n + 1), 2 * δ :=
           prod_le_prod (fun _ _ => abs_nonneg _) fun j hj => this j
-        _ = (2 * δ) ^ (n + 1) := by
-          simp
+        _ = (2 * δ) ^ (n + 1) := by simp
         
       
     · refine' (norm_integral_le_of_le_const (fun y hy => hdfδ _ (Hmaps _ Hu hy) _ (Hmaps _ Hl hy)) _).trans _

@@ -68,8 +68,7 @@ theorem cocompact_eq : cocompact ℤ = at_bot ⊔ at_top := by
     @comap_comap _ _ _ _ abs, Int.comap_coe_at_top, comap_abs_at_top]
 
 @[simp]
-theorem cofinite_eq : (cofinite : Filter ℤ) = at_bot ⊔ at_top := by
-  rw [← cocompact_eq_cofinite, cocompact_eq]
+theorem cofinite_eq : (cofinite : Filter ℤ) = at_bot ⊔ at_top := by rw [← cocompact_eq_cofinite, cocompact_eq]
 
 end Int
 

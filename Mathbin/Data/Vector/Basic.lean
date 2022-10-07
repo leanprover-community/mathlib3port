@@ -38,12 +38,7 @@ theorem to_list_injective : Function.Injective (@toList α n) :=
 /-- Two `v w : vector α n` are equal iff they are equal at every single index. -/
 @[ext]
 theorem ext : ∀ {v w : Vector α n} (h : ∀ m : Finₓ n, Vector.nth v m = Vector.nth w m), v = w
-  | ⟨v, hv⟩, ⟨w, hw⟩, h =>
-    Subtype.eq
-      (List.ext_le
-        (by
-          rw [hv, hw])
-        fun m hm hn => h ⟨m, hv ▸ hm⟩)
+  | ⟨v, hv⟩, ⟨w, hw⟩, h => Subtype.eq (List.ext_le (by rw [hv, hw]) fun m hm hn => h ⟨m, hv ▸ hm⟩)
 
 /-- The empty `vector` is a `subsingleton`. -/
 instance zero_subsingleton : Subsingleton (Vector α 0) :=
@@ -62,10 +57,7 @@ theorem cons_tail (a : α) : ∀ v : Vector α n, (a ::ᵥ v).tail = v
   | ⟨_, _⟩ => rfl
 
 theorem eq_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) : v = a ::ᵥ v' ↔ v.head = a ∧ v.tail = v' :=
-  ⟨fun h => h.symm ▸ ⟨head_cons a v', tail_cons a v'⟩, fun h =>
-    trans (cons_head_tail v).symm
-      (by
-        rw [h.1, h.2])⟩
+  ⟨fun h => h.symm ▸ ⟨head_cons a v', tail_cons a v'⟩, fun h => trans (cons_head_tail v).symm (by rw [h.1, h.2])⟩
 
 theorem ne_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) : v ≠ a ::ᵥ v' ↔ v.head ≠ a ∨ v.tail ≠ v' := by
   rw [Ne.def, eq_cons_iff a v v', not_and_distrib]
@@ -76,8 +68,7 @@ theorem exists_eq_cons (v : Vector α n.succ) : ∃ (a : α)(as : Vector α n), 
 @[simp]
 theorem to_list_of_fn : ∀ {n} (f : Finₓ n → α), toList (ofFn f) = List.ofFnₓ f
   | 0, f => rfl
-  | n + 1, f => by
-    rw [of_fn, List.of_fn_succ, to_list_cons, to_list_of_fn]
+  | n + 1, f => by rw [of_fn, List.of_fn_succ, to_list_cons, to_list_of_fn]
 
 @[simp]
 theorem mk_to_list : ∀ (v : Vector α n) (h), (⟨toList v, h⟩ : Vector α n) = v
@@ -88,8 +79,7 @@ theorem length_coe (v : Vector α n) : ((coe : { l : List α // l.length = n } �
   v.2
 
 @[simp]
-theorem to_list_map {β : Type _} (v : Vector α n) (f : α → β) : (v.map f).toList = v.toList.map f := by
-  cases v <;> rfl
+theorem to_list_map {β : Type _} (v : Vector α n) (f : α → β) : (v.map f).toList = v.toList.map f := by cases v <;> rfl
 
 @[simp]
 theorem head_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map f).head = f v.head := by
@@ -101,17 +91,11 @@ theorem tail_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map 
   obtain ⟨a, v', h⟩ := Vector.exists_eq_cons v
   rw [h, map_cons, tail_cons, tail_cons]
 
-theorem nth_eq_nth_le :
-    ∀ (v : Vector α n) (i),
-      nth v i =
-        v.toList.nthLe i.1
-          (by
-            rw [to_list_length] <;> exact i.2)
+theorem nth_eq_nth_le : ∀ (v : Vector α n) (i), nth v i = v.toList.nthLe i.1 (by rw [to_list_length] <;> exact i.2)
   | ⟨l, h⟩, i => rfl
 
 @[simp]
-theorem nth_repeat (a : α) (i : Finₓ n) : (Vector.repeat a n).nth i = a := by
-  apply List.nth_le_repeat
+theorem nth_repeat (a : α) (i : Finₓ n) : (Vector.repeat a n).nth i = a := by apply List.nth_le_repeat
 
 @[simp]
 theorem nth_map {β : Type _} (v : Vector α n) (f : α → β) (i : Finₓ n) : (v.map f).nth i = f (v.nth i) := by
@@ -137,8 +121,7 @@ theorem nth_tail (x : Vector α n) (i) : x.tail.nth i = x.nth ⟨i.1 + 1, lt_tsu
 
 @[simp]
 theorem nth_tail_succ : ∀ (v : Vector α n.succ) (i : Finₓ n), nth (tail v) i = nth v i.succ
-  | ⟨a :: l, e⟩, ⟨i, h⟩ => by
-    simp [nth_eq_nth_le] <;> rfl
+  | ⟨a :: l, e⟩, ⟨i, h⟩ => by simp [nth_eq_nth_le] <;> rfl
 
 @[simp]
 theorem tail_val : ∀ v : Vector α n.succ, v.tail.val = v.val.tail
@@ -184,9 +167,7 @@ theorem not_empty_to_list (v : Vector α (n + 1)) : ¬v.toList.Empty := by
 /-- Mapping under `id` does not change a vector. -/
 @[simp]
 theorem map_id {n : ℕ} (v : Vector α n) : Vector.map id v = v :=
-  Vector.eq _ _
-    (by
-      simp only [List.map_id, Vector.to_list_map])
+  Vector.eq _ _ (by simp only [List.map_id, Vector.to_list_map])
 
 theorem nodup_iff_nth_inj {v : Vector α n} : v.toList.Nodup ↔ Function.Injective v.nth := by
   cases' v with l hl
@@ -211,8 +192,7 @@ theorem head'_to_list : ∀ v : Vector α n.succ, (toList v).head' = some (head 
 
 /-- Reverse a vector. -/
 def reverse (v : Vector α n) : Vector α n :=
-  ⟨v.toList.reverse, by
-    simp ⟩
+  ⟨v.toList.reverse, by simp⟩
 
 /-- The `list` of a vector after a `reverse`, retrieved by `to_list` is equal
 to the `list.reverse` after retrieving a vector's `to_list`. -/
@@ -229,18 +209,15 @@ theorem nth_zero : ∀ v : Vector α n.succ, nth v 0 = head v
   | ⟨a :: l, e⟩ => rfl
 
 @[simp]
-theorem head_of_fn {n : ℕ} (f : Finₓ n.succ → α) : head (ofFn f) = f 0 := by
-  rw [← nth_zero, nth_of_fn]
+theorem head_of_fn {n : ℕ} (f : Finₓ n.succ → α) : head (ofFn f) = f 0 := by rw [← nth_zero, nth_of_fn]
 
 @[simp]
-theorem nth_cons_zero (a : α) (v : Vector α n) : nth (a ::ᵥ v) 0 = a := by
-  simp [nth_zero]
+theorem nth_cons_zero (a : α) (v : Vector α n) : nth (a ::ᵥ v) 0 = a := by simp [nth_zero]
 
 /-- Accessing the `nth` element of a vector made up
 of one element `x : α` is `x` itself. -/
 @[simp]
-theorem nth_cons_nil {ix : Finₓ 1} (x : α) : nth (x ::ᵥ nil) ix = x := by
-  convert nth_cons_zero x nil
+theorem nth_cons_nil {ix : Finₓ 1} (x : α) : nth (x ::ᵥ nil) ix = x := by convert nth_cons_zero x nil
 
 @[simp]
 theorem nth_cons_succ (a : α) (v : Vector α n) (i : Finₓ n) : nth (a ::ᵥ v) i.succ = nth v i := by
@@ -274,8 +251,7 @@ variable (v : Vector α n)
 from the "left", that is, from 0 to `fin.last n`, using `b : β` as the starting value.
 -/
 def scanl : Vector β (n + 1) :=
-  ⟨List.scanl f b v.toList, by
-    rw [List.length_scanl, to_list_length]⟩
+  ⟨List.scanl f b v.toList, by rw [List.length_scanl, to_list_length]⟩
 
 /-- Providing an empty vector to `scanl` gives the starting value `b : β`. -/
 @[simp]
@@ -289,8 +265,7 @@ into the provided starting value `b : β` and the recursed `scanl`
 This lemma is the `cons` version of `scanl_nth`.
 -/
 @[simp]
-theorem scanl_cons (x : α) : scanl f b (x ::ᵥ v) = b ::ᵥ scanl f (f b x) v := by
-  simpa only [scanl, to_list_cons]
+theorem scanl_cons (x : α) : scanl f b (x ::ᵥ v) = b ::ᵥ scanl f (f b x) v := by simpa only [scanl, to_list_cons]
 
 /-- The underlying `list` of a `vector` after a `scanl` is the `list.scanl`
 of the underlying `list` of the original `vector`.
@@ -321,8 +296,7 @@ retrieved via `head`, is the starting value `b : β`.
 @[simp]
 theorem scanl_head : (scanl f b v).head = b := by
   cases n
-  · have : v = nil := by
-      simp only [eq_iff_true_of_subsingleton]
+  · have : v = nil := by simp only [eq_iff_true_of_subsingleton]
     simp only [this, scanl_nil, cons_head]
     
   · rw [← cons_head_tail v]
@@ -342,8 +316,7 @@ theorem scanl_nth (i : Finₓ n) : (scanl f b v).nth i.succ = f ((scanl f b v).n
   · exact finZeroElim i
     
   induction' n with n hn generalizing b
-  · have i0 : i = 0 := by
-      simp only [eq_iff_true_of_subsingleton]
+  · have i0 : i = 0 := by simp only [eq_iff_true_of_subsingleton]
     simpa only [scanl_singleton, i0, nth_zero]
     
   · rw [← cons_head_tail v, scanl_cons, nth_cons_succ]
@@ -369,8 +342,7 @@ def mOfFnₓ {m} [Monadₓ m] {α : Type u} : ∀ {n}, (Finₓ n → m α) → m
 theorem m_of_fn_pure {m} [Monadₓ m] [IsLawfulMonad m] {α} :
     ∀ {n} (f : Finₓ n → α), (@mOfFnₓ m _ _ _ fun i => pure (f i)) = pure (ofFn f)
   | 0, f => rfl
-  | n + 1, f => by
-    simp [m_of_fn, @m_of_fn_pure n, of_fn]
+  | n + 1, f => by simp [m_of_fn, @m_of_fn_pure n, of_fn]
 
 /-- Apply a monadic function to each component of a vector,
 returning a vector inside the monad. -/
@@ -414,8 +386,7 @@ def inductionOn {C : ∀ {n : ℕ}, Vector α n → Sort _} {n : ℕ} (v : Vecto
     
 
 -- check that the above works with `induction ... using`
-example (v : Vector α n) : True := by
-  induction v using Vector.inductionOn <;> trivial
+example (v : Vector α n) : True := by induction v using Vector.inductionOn <;> trivial
 
 variable {β γ : Type _}
 
@@ -462,11 +433,7 @@ def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n →
 
 /-- Cast a vector to an array. -/
 def toArray : Vector α n → Arrayₓ n α
-  | ⟨xs, h⟩ =>
-    cast
-      (by
-        rw [h])
-      xs.toArray
+  | ⟨xs, h⟩ => cast (by rw [h]) xs.toArray
 
 section InsertNth
 
@@ -494,7 +461,7 @@ theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
     ∀ {i : Finₓ (n + 1)} {j : Finₓ (n + 2)},
       removeNth (j.succAbove i) (insertNth a j v) = insertNth a (i.predAbove j) (removeNth i v)
   | ⟨i, hi⟩, ⟨j, hj⟩ => by
-    dsimp' [insert_nth, remove_nth, Finₓ.succAbove, Finₓ.predAbove]
+    dsimp [insert_nth, remove_nth, Finₓ.succAbove, Finₓ.predAbove]
     simp only [Subtype.mk_eq_mk]
     split_ifs
     · convert (List.insert_nth_remove_nth_of_ge i (j - 1) _ _ _).symm
@@ -537,8 +504,7 @@ section UpdateNth
 
 /-- `update_nth v n a` replaces the `n`th element of `v` with `a` -/
 def updateNth (v : Vector α n) (i : Finₓ n) (a : α) : Vector α n :=
-  ⟨v.1.updateNth i.1 a, by
-    rw [List.update_nth_length, v.2]⟩
+  ⟨v.1.updateNth i.1 a, by rw [List.update_nth_length, v.2]⟩
 
 @[simp]
 theorem to_list_update_nth (v : Vector α n) (i : Finₓ n) (a : α) : (v.updateNth i a).toList = v.toList.updateNth i a :=
@@ -556,12 +522,7 @@ theorem nth_update_nth_of_ne {v : Vector α n} {i j : Finₓ n} (h : i ≠ j) (a
 
 theorem nth_update_nth_eq_if {v : Vector α n} {i j : Finₓ n} (a : α) :
     (v.updateNth i a).nth j = if i = j then a else v.nth j := by
-  split_ifs <;>
-    try
-        simp [*] <;>
-      try
-          rw [nth_update_nth_of_ne] <;>
-        assumption
+  split_ifs <;> try simp [*] <;> try rw [nth_update_nth_of_ne] <;> assumption
 
 @[to_additive]
 theorem prod_update_nth [Monoidₓ α] (v : Vector α n) (i : Finₓ n) (a : α) :
@@ -601,11 +562,7 @@ private def traverse_aux {α β : Type u} (f : α → F β) : ∀ x : List α, F
 
 /-- Apply an applicative function to each component of a vector. -/
 protected def traverse {α β : Type u} (f : α → F β) : Vector α n → F (Vector β n)
-  | ⟨v, Hv⟩ =>
-    cast
-        (by
-          rw [Hv]) <|
-      traverseAux f v
+  | ⟨v, Hv⟩ => cast (by rw [Hv]) <| traverseAux f v
 
 section
 
@@ -613,17 +570,15 @@ variable {α β : Type u}
 
 @[simp]
 protected theorem traverse_def (f : α → F β) (x : α) :
-    ∀ xs : Vector α n, (x ::ᵥ xs).traverse f = cons <$> f x <*> xs.traverse f := by
-  rintro ⟨xs, rfl⟩ <;> rfl
+    ∀ xs : Vector α n, (x ::ᵥ xs).traverse f = cons <$> f x <*> xs.traverse f := by rintro ⟨xs, rfl⟩ <;> rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 protected theorem id_traverse : ∀ x : Vector α n, x.traverse id.mk = x := by
   rintro ⟨x, rfl⟩
-  dsimp' [Vector.traverse, cast]
+  dsimp [Vector.traverse, cast]
   induction' x with x xs IH
   · rfl
     
-  simp [IH]
+  simp! [IH]
   rfl
 
 end
@@ -634,7 +589,6 @@ variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 
 variable {α β γ : Type u}
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 -- We need to turn off the linter here as
 -- the `is_lawful_traversable` instance below expects a particular signature.
 @[nolint unused_arguments]
@@ -643,22 +597,16 @@ protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
       Vector.traverse (comp.mk ∘ Functor.map f ∘ g) x = Comp.mk (Vector.traverse f <$> Vector.traverse g x) :=
   by
   rintro ⟨x, rfl⟩ <;>
-    dsimp' [Vector.traverse, cast] <;>
-      induction' x with x xs <;> simp' [cast, *] with functor_norm <;> [rfl, simp [(· ∘ ·)]]
+    dsimp [Vector.traverse, cast] <;> induction' x with x xs <;> simp! [cast, *, functor_norm] <;> [rfl, simp [(· ∘ ·)]]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 protected theorem traverse_eq_map_id {α β} (f : α → β) : ∀ x : Vector α n, x.traverse (id.mk ∘ f) = id.mk (map f x) :=
-  by
-  rintro ⟨x, rfl⟩ <;> simp <;> induction x <;> simp' [*] with functor_norm <;> rfl
+  by rintro ⟨x, rfl⟩ <;> simp! <;> induction x <;> simp! [*, functor_norm] <;> rfl
 
 variable (η : ApplicativeTransformation F G)
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 protected theorem naturality {α β : Type _} (f : α → F β) :
     ∀ x : Vector α n, η (x.traverse f) = x.traverse (@η _ ∘ f) := by
-  rintro ⟨x, rfl⟩ <;> simp [cast] <;> induction' x with x xs IH <;> simp' [*] with functor_norm
+  rintro ⟨x, rfl⟩ <;> simp! [cast] <;> induction' x with x xs IH <;> simp! [*, functor_norm]
 
 end Traverse
 
@@ -666,30 +614,24 @@ instance : Traversable.{u} (flip Vector n) where
   traverse := @Vector.traverse n
   map := fun α β => @Vector.map.{u, u} α β n
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 instance : IsLawfulTraversable.{u} (flip Vector n) where
   id_traverse := @Vector.id_traverse n
   comp_traverse := @Vector.comp_traverse n
   traverse_eq_map_id := @Vector.traverse_eq_map_id n
   naturality := @Vector.naturality n
-  id_map := by
-    intros <;> cases x <;> simp [(· <$> ·)]
-  comp_map := by
-    intros <;> cases x <;> simp [(· <$> ·)]
+  id_map := by intros <;> cases x <;> simp! [(· <$> ·)]
+  comp_map := by intros <;> cases x <;> simp! [(· <$> ·)]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
 unsafe instance reflect [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] {n : ℕ} :
     has_reflect (Vector α n) := fun v =>
   @Vector.inductionOn α (fun n => reflected _) n v
-    ((by
-          trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]" :
+    ((by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.nil.{u}).subst
       (quote.1 α))
     fun n x xs ih =>
-    (by
-          trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]" :
+    (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.cons.{u}).subst₄
       (quote.1 α) (quote.1 n) (quote.1 x) ih
 

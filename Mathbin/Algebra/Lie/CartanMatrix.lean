@@ -83,7 +83,7 @@ universe u v w
 
 noncomputable section
 
-variable (R : Type u) {B : Type v} [CommRingₓ R] [DecidableEq B] [Fintype B]
+variable (R : Type u) {B : Type v} [CommRingₓ R] [DecidableEq B] [Fintypeₓ B]
 
 variable (A : Matrix B B ℤ)
 
@@ -150,13 +150,11 @@ def adF : B × B → FreeLieAlgebra R (Generators B) :=
   uncurry fun i j => ad (F i) ^ (-A i j).toNat <| ⁅F i, F j⁆
 
 private theorem ad_E_of_eq_eq_zero (i : B) (h : A i i = 2) : adE R A ⟨i, i⟩ = 0 := by
-  have h' : (-2 : ℤ).toNat = 0 := by
-    rfl
+  have h' : (-2 : ℤ).toNat = 0 := by rfl
   simp [ad_E, h, h']
 
 private theorem ad_F_of_eq_eq_zero (i : B) (h : A i i = 2) : adF R A ⟨i, i⟩ = 0 := by
-  have h' : (-2 : ℤ).toNat = 0 := by
-    rfl
+  have h' : (-2 : ℤ).toNat = 0 := by rfl
   simp [ad_F, h, h']
 
 /-- The union of all the relations as a subset of the free Lie algebra. -/

@@ -27,10 +27,8 @@ variable {α : Type _}
 def boolProdNatEquivNat : Bool × ℕ ≃ ℕ where
   toFun := uncurry bit
   invFun := boddDiv2
-  left_inv := fun ⟨b, n⟩ => by
-    simp only [bodd_bit, div2_bit, uncurry_apply_pair, bodd_div2_eq]
-  right_inv := fun n => by
-    simp only [bit_decomp, bodd_div2_eq, uncurry_apply_pair]
+  left_inv := fun ⟨b, n⟩ => by simp only [bodd_bit, div2_bit, uncurry_apply_pair, bodd_div2_eq]
+  right_inv := fun n => by simp only [bit_decomp, bodd_div2_eq, uncurry_apply_pair]
 
 /-- An equivalence between `ℕ ⊕ ℕ` and `ℕ`, by mapping `(sum.inl x)` to `2 * x` and `(sum.inr x)` to
 `2 * x + 1`.
@@ -40,8 +38,7 @@ def natSumNatEquivNat : Sum ℕ ℕ ≃ ℕ :=
   (boolProdEquivSum ℕ).symm.trans boolProdNatEquivNat
 
 @[simp]
-theorem nat_sum_nat_equiv_nat_apply : ⇑nat_sum_nat_equiv_nat = Sum.elim bit0 bit1 := by
-  ext (x | x) <;> rfl
+theorem nat_sum_nat_equiv_nat_apply : ⇑nat_sum_nat_equiv_nat = Sum.elim bit0 bit1 := by ext (x | x) <;> rfl
 
 /-- An equivalence between `ℤ` and `ℕ`, through `ℤ ≃ ℕ ⊕ ℕ` and `ℕ ⊕ ℕ ≃ ℕ`.
 -/

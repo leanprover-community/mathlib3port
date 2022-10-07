@@ -53,9 +53,7 @@ theorem is_sheaf_yoneda' {α : Type u} : IsSheaf typesGrothendieckTopology (yone
       have := congr_fun (hx (𝟙 _) (fun _ => z) (hs <| f z) h rfl) PUnit.unit
       convert this
       exact rfl,
-    fun f hf =>
-    funext fun y => by
-      convert congr_fun (hf _ (hs y)) PUnit.unit⟩
+    fun f hf => funext fun y => by convert congr_fun (hf _ (hs y)) PUnit.unit⟩
 
 /-- The yoneda functor that sends a type to a sheaf over the category of types -/
 @[simps]

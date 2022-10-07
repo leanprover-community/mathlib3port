@@ -227,13 +227,11 @@ theorem le_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ⟶ (Y : C)) (w : f 
 
 theorem le_mk_of_comm {B A : C} {X : Subobject B} {f : A ⟶ B} [Mono f] (g : (X : C) ⟶ A) (w : g ≫ f = X.arrow) :
     X ≤ mk f :=
-  le_of_comm (g ≫ (underlyingIso f).inv) <| by
-    simp [w]
+  le_of_comm (g ≫ (underlyingIso f).inv) <| by simp [w]
 
 theorem mk_le_of_comm {B A : C} {X : Subobject B} {f : A ⟶ B} [Mono f] (g : A ⟶ (X : C)) (w : g ≫ X.arrow = f) :
     mk f ≤ X :=
-  le_of_comm ((underlyingIso f).Hom ≫ g) <| by
-    simp [w]
+  le_of_comm ((underlyingIso f).Hom ≫ g) <| by simp [w]
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
@@ -246,25 +244,21 @@ theorem eq_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ≅ (Y : C)) (w : f.
 @[ext]
 theorem eq_mk_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : (X : C) ≅ A) (w : i.Hom ≫ f = X.arrow) :
     X = mk f :=
-  eq_of_comm (i.trans (underlyingIso f).symm) <| by
-    simp [w]
+  eq_of_comm (i.trans (underlyingIso f).symm) <| by simp [w]
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
 @[ext]
 theorem mk_eq_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : A ≅ (X : C)) (w : i.Hom ≫ X.arrow = f) :
     mk f = X :=
-  Eq.symm <|
-    eq_mk_of_comm _ i.symm <| by
-      rw [iso.symm_hom, iso.inv_comp_eq, w]
+  Eq.symm <| eq_mk_of_comm _ i.symm <| by rw [iso.symm_hom, iso.inv_comp_eq, w]
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
 @[ext]
 theorem mk_eq_mk_of_comm {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono g] (i : A₁ ≅ A₂) (w : i.Hom ≫ g = f) :
     mk f = mk g :=
-  eq_mk_of_comm _ ((underlyingIso f).trans i) <| by
-    simp [w]
+  eq_mk_of_comm _ ((underlyingIso f).trans i) <| by simp [w]
 
 -- We make `X` and `Y` explicit arguments here so that when `of_le` appears in goal statements
 -- it is possible to see its source and target
@@ -303,8 +297,7 @@ def ofMkLe {B A : C} (f : A ⟶ B) [Mono f] (X : Subobject B) (h : mk f ≤ X) :
 
 @[simp]
 theorem of_mk_le_arrow {B A : C} {f : A ⟶ B} [Mono f] {X : Subobject B} (h : mk f ≤ X) : ofMkLe f X h ≫ X.arrow = f :=
-  by
-  simp [of_mk_le]
+  by simp [of_mk_le]
 
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def ofMkLeMk {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono g] (h : mk f ≤ mk g) : A₁ ⟶ A₂ :=
@@ -312,13 +305,11 @@ def ofMkLeMk {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono 
 
 @[simp]
 theorem of_mk_le_mk_comp {B A₁ A₂ : C} {f : A₁ ⟶ B} {g : A₂ ⟶ B} [Mono f] [Mono g] (h : mk f ≤ mk g) :
-    ofMkLeMk f g h ≫ g = f := by
-  simp [of_mk_le_mk]
+    ofMkLeMk f g h ≫ g = f := by simp [of_mk_le_mk]
 
 @[simp, reassoc]
 theorem of_le_comp_of_le {B : C} (X Y Z : Subobject B) (h₁ : X ≤ Y) (h₂ : Y ≤ Z) :
-    ofLe X Y h₁ ≫ ofLe Y Z h₂ = ofLe X Z (h₁.trans h₂) := by
-  simp [of_le, ← functor.map_comp underlying]
+    ofLe X Y h₁ ≫ ofLe Y Z h₂ = ofLe X Z (h₁.trans h₂) := by simp [of_le, ← functor.map_comp underlying]
 
 @[simp, reassoc]
 theorem of_le_comp_of_le_mk {B A : C} (X Y : Subobject B) (f : A ⟶ B) [Mono f] (h₁ : X ≤ Y) (h₂ : Y ≤ mk f) :
@@ -501,12 +492,10 @@ which preserves the order. -/
 def mapIsoToOrderIso (e : X ≅ Y) : Subobject X ≃o Subobject Y where
   toFun := (map e.Hom).obj
   invFun := (map e.inv).obj
-  left_inv := fun g => by
-    simp_rw [← map_comp, e.hom_inv_id, map_id]
-  right_inv := fun g => by
-    simp_rw [← map_comp, e.inv_hom_id, map_id]
+  left_inv := fun g => by simp_rw [← map_comp, e.hom_inv_id, map_id]
+  right_inv := fun g => by simp_rw [← map_comp, e.inv_hom_id, map_id]
   map_rel_iff' := fun A B => by
-    dsimp'
+    dsimp
     fconstructor
     · intro h
       apply_fun (map e.inv).obj  at h
@@ -561,7 +550,7 @@ theorem map_pullback [HasPullbacks C] {X Y Z W : C} {f : X ⟶ Y} {g : X ⟶ Z} 
     · rw [← pullback.condition, assoc]
       rfl
       
-    · dsimp'
+    · dsimp
       rw [pullback.lift_snd_assoc]
       apply (pullback_cone.is_limit.lift' _ _ _ _).2.2
       

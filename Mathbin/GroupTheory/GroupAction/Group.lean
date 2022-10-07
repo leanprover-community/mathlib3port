@@ -29,12 +29,10 @@ section Groupₓ
 variable [Groupₓ α] [MulAction α β]
 
 @[simp, to_additive]
-theorem inv_smul_smul (c : α) (x : β) : c⁻¹ • c • x = x := by
-  rw [smul_smul, mul_left_invₓ, one_smul]
+theorem inv_smul_smul (c : α) (x : β) : c⁻¹ • c • x = x := by rw [smul_smul, mul_left_invₓ, one_smul]
 
 @[simp, to_additive]
-theorem smul_inv_smul (c : α) (x : β) : c • c⁻¹ • x = x := by
-  rw [smul_smul, mul_right_invₓ, one_smul]
+theorem smul_inv_smul (c : α) (x : β) : c • c⁻¹ • x = x := by rw [smul_smul, mul_right_invₓ, one_smul]
 
 /-- Given an action of a group `α` on `β`, each `g : α` defines a permutation of `β`. -/
 @[to_additive, simps]
@@ -42,7 +40,7 @@ def MulAction.toPerm (a : α) : Equivₓ.Perm β :=
   ⟨fun x => a • x, fun x => a⁻¹ • x, inv_smul_smul a, smul_inv_smul a⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_action.to_perm]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_action.to_perm]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `mul_action.to_perm` is injective on faithful actions. -/
 @[to_additive "`add_action.to_perm` is injective on faithful actions."]
 theorem MulAction.to_perm_injective [HasFaithfulSmul α β] : Function.Injective (MulAction.toPerm : α → Equivₓ.Perm β) :=
@@ -95,8 +93,7 @@ theorem smul_inv [Groupₓ β] [SmulCommClass α β β] [IsScalarTower α β β]
   rw [inv_eq_iff_mul_eq_one, smul_mul_smul, mul_right_invₓ, mul_right_invₓ, one_smul]
 
 theorem smul_zpow [Groupₓ β] [SmulCommClass α β β] [IsScalarTower α β β] (c : α) (x : β) (p : ℤ) :
-    (c • x) ^ p = c ^ p • x ^ p := by
-  cases p <;> simp [smul_pow, smul_inv]
+    (c • x) ^ p = c ^ p • x ^ p := by cases p <;> simp [smul_pow, smul_inv]
 
 @[simp]
 theorem Commute.smul_right_iff [Mul β] [SmulCommClass α β β] [IsScalarTower α β β] {a b : β} (r : α) :
@@ -105,8 +102,7 @@ theorem Commute.smul_right_iff [Mul β] [SmulCommClass α β β] [IsScalarTower 
 
 @[simp]
 theorem Commute.smul_left_iff [Mul β] [SmulCommClass α β β] [IsScalarTower α β β] {a b : β} (r : α) :
-    Commute (r • a) b ↔ Commute a b := by
-  rw [Commute.symm_iff, Commute.smul_right_iff, Commute.symm_iff]
+    Commute (r • a) b ↔ Commute a b := by rw [Commute.symm_iff, Commute.smul_right_iff, Commute.symm_iff]
 
 @[to_additive]
 protected theorem MulAction.bijective (g : α) : Function.Bijective fun b : β => g • b :=
@@ -195,8 +191,7 @@ def DistribMulAction.toAddAut : α →* AddAut β where
 variable {α β}
 
 theorem smul_eq_zero_iff_eq (a : α) {x : β} : a • x = 0 ↔ x = 0 :=
-  ⟨fun h => by
-    rw [← inv_smul_smul a x, h, smul_zero], fun h => h.symm ▸ smul_zero _⟩
+  ⟨fun h => by rw [← inv_smul_smul a x, h, smul_zero], fun h => h.symm ▸ smul_zero _⟩
 
 theorem smul_ne_zero_iff_ne (a : α) {x : β} : a • x ≠ 0 ↔ x ≠ 0 :=
   not_congr <| smul_eq_zero_iff_eq a
@@ -208,10 +203,10 @@ section Gwz
 variable [GroupWithZeroₓ α] [AddMonoidₓ β] [DistribMulAction α β]
 
 theorem smul_eq_zero_iff_eq' {a : α} (ha : a ≠ 0) {x : β} : a • x = 0 ↔ x = 0 :=
-  smul_eq_zero_iff_eq (Units.mk0 a ha)
+  show Units.mk0 a ha • x = 0 ↔ x = 0 from smul_eq_zero_iff_eq _
 
 theorem smul_ne_zero_iff_ne' {a : α} (ha : a ≠ 0) {x : β} : a • x ≠ 0 ↔ x ≠ 0 :=
-  smul_ne_zero_iff_ne (Units.mk0 a ha)
+  show Units.mk0 a ha • x ≠ 0 ↔ x ≠ 0 from smul_ne_zero_iff_ne _
 
 end Gwz
 
@@ -295,7 +290,7 @@ variable [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β]
 
 @[simp]
 theorem smul_eq_zero {u : α} (hu : IsUnit u) {x : β} : u • x = 0 ↔ x = 0 :=
-  (Exists.elim hu) fun u hu => hu ▸ smul_eq_zero_iff_eq u
+  (Exists.elim hu) fun u hu => hu ▸ show u • x = 0 ↔ x = 0 from smul_eq_zero_iff_eq u
 
 end DistribMulAction
 

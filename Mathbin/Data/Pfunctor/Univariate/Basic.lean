@@ -88,12 +88,10 @@ def W.mk : P.Obj (W P) → W P
   | ⟨a, f⟩ => ⟨a, f⟩
 
 @[simp]
-theorem W.dest_mk (p : P.Obj (W P)) : W.dest (W.mk p) = p := by
-  cases p <;> rfl
+theorem W.dest_mk (p : P.Obj (W P)) : W.dest (W.mk p) = p := by cases p <;> rfl
 
 @[simp]
-theorem W.mk_dest (p : W P) : W.mk (W.dest p) = p := by
-  cases p <;> rfl
+theorem W.mk_dest (p : W P) : W.mk (W.dest p) = p := by cases p <;> rfl
 
 variable (P)
 
@@ -114,8 +112,7 @@ def Obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.Obj α) (i : P.Idx) : 
   if h : i.1 = x.1 then x.2 (cast (congr_arg _ h) i.2) else default
 
 @[simp]
-theorem fst_map {α β : Type u} (x : P.Obj α) (f : α → β) : (f <$> x).1 = x.1 := by
-  cases x <;> rfl
+theorem fst_map {α β : Type u} (x : P.Obj α) (f : α → β) : (f <$> x).1 = x.1 := by cases x <;> rfl
 
 @[simp]
 theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β] (x : P.Obj α) (f : α → β) (i : P.Idx)
@@ -169,14 +166,11 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.Obj α) : Liftp p x ↔
 theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) :
     @Liftp.{u} P.Obj _ α p ⟨a, f⟩ ↔ ∀ i, p (f i) := by
   simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
-  · casesm* Exists _, _ ∧ _
+  · casesm*Exists _, _ ∧ _
     subst_vars
     assumption
     
-  repeat'
-    first |
-      constructor|
-      assumption
+  repeat' first |constructor|assumption
 
 theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.Obj α) :
     Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) := by

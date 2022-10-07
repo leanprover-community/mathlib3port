@@ -48,7 +48,7 @@ theorem pow_smul_le_pow_smul (i j k : ℕ) : I ^ (i + k) • F.n j ≤ I ^ k •
   rw [add_commₓ, pow_addₓ, mul_smul]
   exact Submodule.smul_mono_right (F.pow_smul_le i j)
 
-protected theorem antitone : Antitone F.n :=
+protected theorem antitone : Antitoneₓ F.n :=
   antitone_nat_of_succ_le F.mono
 
 /-- The trivial `I`-filtration of `N`. -/
@@ -162,7 +162,7 @@ def _root_.ideal.stable_filtration (I : Ideal R) (N : Submodule R M) : I.Filtrat
 theorem _root_.ideal.stable_filtration_stable (I : Ideal R) (N : Submodule R M) : (I.stableFiltration N).Stable := by
   use 0
   intro n _
-  dsimp'
+  dsimp
   rw [add_commₓ, pow_addₓ, mul_smul, pow_oneₓ]
 
 variable {F F'} (h : F.Stable)
@@ -191,11 +191,7 @@ omit h
 
 theorem stable_iff_exists_pow_smul_eq_of_ge : F.Stable ↔ ∃ n₀, ∀ n ≥ n₀, F.n n = I ^ (n - n₀) • F.n n₀ := by
   refine' ⟨stable.exists_pow_smul_eq_of_ge, fun h => ⟨h.some, fun n hn => _⟩⟩
-  rw [h.some_spec n hn,
-    h.some_spec (n + 1)
-      (by
-        linarith),
-    smul_smul, ← pow_succₓ, tsub_add_eq_add_tsub hn]
+  rw [h.some_spec n hn, h.some_spec (n + 1) (by linarith), smul_smul, ← pow_succₓ, tsub_add_eq_add_tsub hn]
 
 theorem Stable.exists_forall_le (h : F.Stable) (e : F.n 0 ≤ F'.n 0) : ∃ n₀, ∀ n, F.n (n + n₀) ≤ F'.n n := by
   obtain ⟨n₀, hF⟩ := h

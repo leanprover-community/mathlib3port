@@ -114,13 +114,12 @@ such that `y i = x i` for all `i < n`.
 def Cylinder (x : ∀ n, E n) (n : ℕ) : Set (∀ n, E n) :=
   { y | ∀ i, i < n → y i = x i }
 
-theorem cylinder_eq_pi (x : ∀ n, E n) (n : ℕ) : Cylinder x n = Set.Pi (Finset.range n : Set ℕ) fun i : ℕ => {x i} := by
+theorem cylinder_eq_pi (x : ∀ n, E n) (n : ℕ) : Cylinder x n = Set.Pi (Finsetₓ.range n : Set ℕ) fun i : ℕ => {x i} := by
   ext y
   simp [cylinder]
 
 @[simp]
-theorem cylinder_zero (x : ∀ n, E n) : Cylinder x 0 = univ := by
-  simp [cylinder_eq_pi]
+theorem cylinder_zero (x : ∀ n, E n) : Cylinder x 0 = univ := by simp [cylinder_eq_pi]
 
 theorem cylinder_anti (x : ∀ n, E n) {m n : ℕ} (h : m ≤ n) : Cylinder x n ⊆ Cylinder x m := fun y hy i hi =>
   hy i (hi.trans_le h)
@@ -129,8 +128,7 @@ theorem cylinder_anti (x : ∀ n, E n) {m n : ℕ} (h : m ≤ n) : Cylinder x n 
 theorem mem_cylinder_iff {x y : ∀ n, E n} {n : ℕ} : y ∈ Cylinder x n ↔ ∀ i, i < n → y i = x i :=
   Iff.rfl
 
-theorem self_mem_cylinder (x : ∀ n, E n) (n : ℕ) : x ∈ Cylinder x n := by
-  simp
+theorem self_mem_cylinder (x : ∀ n, E n) (n : ℕ) : x ∈ Cylinder x n := by simp
 
 theorem mem_cylinder_iff_eq {x y : ∀ n, E n} {n : ℕ} : y ∈ Cylinder x n ↔ Cylinder y n = Cylinder x n := by
   constructor
@@ -190,8 +188,7 @@ theorem Union_cylinder_update (x : ∀ n, E n) (n : ℕ) : (⋃ k, Cylinder (upd
     
 
 theorem update_mem_cylinder (x : ∀ n, E n) (n : ℕ) (y : E n) : update x n y ∈ Cylinder x n :=
-  mem_cylinder_iff.2 fun i hi => by
-    simp [hi.ne]
+  mem_cylinder_iff.2 fun i hi => by simp [hi.ne]
 
 /-!
 ### A distance function on `Π n, E n`
@@ -211,14 +208,11 @@ protected def hasDist : HasDist (∀ n, E n) :=
 
 attribute [local instance] PiNat.hasDist
 
-theorem dist_eq_of_ne {x y : ∀ n, E n} (h : x ≠ y) : dist x y = (1 / 2 : ℝ) ^ firstDiff x y := by
-  simp [dist, h]
+theorem dist_eq_of_ne {x y : ∀ n, E n} (h : x ≠ y) : dist x y = (1 / 2 : ℝ) ^ firstDiff x y := by simp [dist, h]
 
-protected theorem dist_self (x : ∀ n, E n) : dist x x = 0 := by
-  simp [dist]
+protected theorem dist_self (x : ∀ n, E n) : dist x x = 0 := by simp [dist]
 
-protected theorem dist_comm (x y : ∀ n, E n) : dist x y = dist y x := by
-  simp [dist, @eq_comm _ x y, first_diff_comm]
+protected theorem dist_comm (x y : ∀ n, E n) : dist x y = dist y x := by simp [dist, @eq_comm _ x y, first_diff_comm]
 
 protected theorem dist_nonneg (x y : ∀ n, E n) : 0 ≤ dist x y := by
   rcases eq_or_ne x y with (rfl | h)
@@ -257,8 +251,7 @@ theorem mem_cylinder_iff_dist_le {x y : ∀ n, E n} {n : ℕ} : y ∈ Cylinder x
   rcases eq_or_ne y x with (rfl | hne)
   · simp [PiNat.dist_self]
     
-  suffices (∀ i : ℕ, i < n → y i = x i) ↔ n ≤ first_diff y x by
-    simpa [dist_eq_of_ne hne]
+  suffices (∀ i : ℕ, i < n → y i = x i) ↔ n ≤ first_diff y x by simpa [dist_eq_of_ne hne]
   constructor
   · intro hy
     by_contra' H
@@ -272,8 +265,7 @@ theorem apply_eq_of_dist_lt {x y : ∀ n, E n} {n : ℕ} (h : dist x y < (1 / 2)
   rcases eq_or_ne x y with (rfl | hne)
   · rfl
     
-  have : n < first_diff x y := by
-    simpa [dist_eq_of_ne hne, inv_lt_inv, pow_lt_pow_iff, one_lt_two] using h
+  have : n < first_diff x y := by simpa [dist_eq_of_ne hne, inv_lt_inv, pow_lt_pow_iff, one_lt_two] using h
   exact apply_eq_of_lt_first_diff (hi.trans_lt this)
 
 /-- A function to a pseudo-metric-space is `1`-Lipschitz if and only if points in the same cylinder
@@ -305,26 +297,25 @@ theorem is_topological_basis_cylinders :
   apply is_topological_basis_of_open_of_nhds
   · rintro u ⟨x, n, rfl⟩
     rw [cylinder_eq_pi]
-    exact is_open_set_pi (Finset.range n).finite_to_set fun a ha => is_open_discrete _
+    exact is_open_set_pi (Finsetₓ.range n).finite_to_set fun a ha => is_open_discrete _
     
   · intro x u hx u_open
     obtain ⟨v, ⟨U, F, hUF, rfl⟩, xU, Uu⟩ :
       ∃ (v : Set (∀ i : ℕ, E i))(H :
         v ∈
           { S : Set (∀ i : ℕ, E i) |
-            ∃ (U : ∀ i : ℕ, Set (E i))(F : Finset ℕ),
+            ∃ (U : ∀ i : ℕ, Set (E i))(F : Finsetₓ ℕ),
               (∀ i : ℕ, i ∈ F → U i ∈ { s : Set (E i) | IsOpen s }) ∧ S = (F : Set ℕ).pi U }),
         x ∈ v ∧ v ⊆ u :=
       (is_topological_basis_pi fun n : ℕ => is_topological_basis_opens).exists_subset_of_mem_open hx u_open
-    rcases Finset.bdd_above F with ⟨n, hn⟩
+    rcases Finsetₓ.bdd_above F with ⟨n, hn⟩
     refine' ⟨cylinder x (n + 1), ⟨x, n + 1, rfl⟩, self_mem_cylinder _ _, subset.trans _ Uu⟩
     intro y hy
-    suffices ∀ i : ℕ, i ∈ F → y i ∈ U i by
-      simpa
+    suffices ∀ i : ℕ, i ∈ F → y i ∈ U i by simpa
     intro i hi
     have : y i = x i := mem_cylinder_iff.1 hy i ((hn hi).trans_lt (lt_add_one n))
     rw [this]
-    simp only [Set.mem_pi, Finset.mem_coe] at xU
+    simp only [Set.mem_pi, Finsetₓ.mem_coe] at xU
     exact xU i hi
     
 
@@ -337,9 +328,7 @@ theorem is_open_iff_dist (s : Set (∀ n, E n)) : IsOpen s ↔ ∀ x ∈ s, ∃ 
       ∃ (v : Set (∀ n : ℕ, E n))(H : v ∈ { s | ∃ (x : ∀ n : ℕ, E n)(n : ℕ), s = cylinder x n }), x ∈ v ∧ v ⊆ s :=
       (is_topological_basis_cylinders E).exists_subset_of_mem_open hx hs
     rw [← mem_cylinder_iff_eq.1 h'x] at h's
-    exact
-      ⟨(1 / 2 : ℝ) ^ n, by
-        simp , fun y hy => h's fun i hi => (apply_eq_of_dist_lt hy hi.le).symm⟩
+    exact ⟨(1 / 2 : ℝ) ^ n, by simp, fun y hy => h's fun i hi => (apply_eq_of_dist_lt hy hi.le).symm⟩
     
   · intro h
     apply (is_topological_basis_cylinders E).is_open_iff.2 fun x hx => _
@@ -361,49 +350,44 @@ protected def metricSpace : MetricSpace (∀ n, E n) :=
   MetricSpace.ofMetrizable dist PiNat.dist_self PiNat.dist_comm PiNat.dist_triangle is_open_iff_dist
     PiNat.eq_of_dist_eq_zero
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 /-- Metric space structure on `Π (n : ℕ), E n` when the spaces `E n` have the discrete uniformity,
 where the distance is given by `dist x y = (1/2)^n`, where `n` is the smallest index where `x` and
 `y` differ. Not registered as a global instance by default. -/
 protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, UniformSpace (E n)]
-    (h : ∀ n, uniformity (E n) = 𝓟 IdRel) : MetricSpace (∀ n, E n) := by
+    (h : ∀ n, uniformity (E n) = 𝓟 IdRel) : MetricSpace (∀ n, E n) :=
   haveI : ∀ n, DiscreteTopology (E n) := fun n => discrete_topology_of_discrete_uniformity (h n)
-  exact
-    { dist_triangle := PiNat.dist_triangle, dist_comm := PiNat.dist_comm, dist_self := PiNat.dist_self,
-      eq_of_dist_eq_zero := PiNat.eq_of_dist_eq_zero, toUniformSpace := Pi.uniformSpace _,
-      uniformity_dist := by
-        simp [Pi.uniformity, comap_infi, gt_iff_ltₓ, preimage_set_of_eq, comap_principal,
-          PseudoMetricSpace.uniformity_dist, h, IdRel]
-        apply le_antisymmₓ
-        · simp only [le_infi_iff, le_principal_iff]
-          intro ε εpos
-          obtain ⟨n, hn⟩ : ∃ n, (1 / 2 : ℝ) ^ n < ε :=
-            exists_pow_lt_of_lt_one εpos
-              (by
-                norm_num)
-          apply
-            @mem_infi_of_Inter _ _ _ _ _ (Finset.range n).finite_to_set fun i =>
-              { p : (∀ n : ℕ, E n) × ∀ n : ℕ, E n | p.fst i = p.snd i }
-          · simp only [mem_principal, set_of_subset_set_of, imp_self, implies_true_iff]
-            
-          · rintro ⟨x, y⟩ hxy
-            simp only [Finset.mem_coe, Finset.mem_range, Inter_coe_set, mem_Inter, mem_set_of_eq] at hxy
-            apply lt_of_le_of_ltₓ _ hn
-            rw [← mem_cylinder_iff_dist_le, mem_cylinder_iff]
-            exact hxy
-            
+  { dist_triangle := PiNat.dist_triangle, dist_comm := PiNat.dist_comm, dist_self := PiNat.dist_self,
+    eq_of_dist_eq_zero := PiNat.eq_of_dist_eq_zero, toUniformSpace := Pi.uniformSpace _,
+    uniformity_dist := by
+      simp [Pi.uniformity, comap_infi, gt_iff_ltₓ, preimage_set_of_eq, comap_principal,
+        PseudoMetricSpace.uniformity_dist, h, IdRel]
+      apply le_antisymmₓ
+      · simp only [le_infi_iff, le_principal_iff]
+        intro ε εpos
+        obtain ⟨n, hn⟩ : ∃ n, (1 / 2 : ℝ) ^ n < ε := exists_pow_lt_of_lt_one εpos (by norm_num)
+        apply
+          @mem_infi_of_Inter _ _ _ _ _ (Finsetₓ.range n).finite_to_set fun i =>
+            { p : (∀ n : ℕ, E n) × ∀ n : ℕ, E n | p.fst i = p.snd i }
+        · simp only [mem_principal, set_of_subset_set_of, imp_self, implies_true_iff]
           
-        · simp only [le_infi_iff, le_principal_iff]
-          intro n
-          refine' mem_infi_of_mem ((1 / 2) ^ n) _
-          refine'
-            mem_infi_of_mem
-              (by
-                norm_num)
-              _
-          simp only [mem_principal, set_of_subset_set_of, Prod.forallₓ]
-          intro x y hxy
-          exact apply_eq_of_dist_lt hxy le_rflₓ
-           }
+        · rintro ⟨x, y⟩ hxy
+          simp only [Finsetₓ.mem_coe, Finsetₓ.mem_range, Inter_coe_set, mem_Inter, mem_set_of_eq] at hxy
+          apply lt_of_le_of_ltₓ _ hn
+          rw [← mem_cylinder_iff_dist_le, mem_cylinder_iff]
+          exact hxy
+          
+        
+      · simp only [le_infi_iff, le_principal_iff]
+        intro n
+        refine' mem_infi_of_mem ((1 / 2) ^ n) _
+        refine'
+          mem_infi_of_mem
+            (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]") _
+        simp only [mem_principal, set_of_subset_set_of, Prod.forallₓ]
+        intro x y hxy
+        exact apply_eq_of_dist_lt hxy le_rflₓ
+         }
 
 /-- Metric space structure on `ℕ → ℕ` where the distance is given by `dist x y = (1/2)^n`,
 where `n` is the smallest index where `x` and `y` differ.
@@ -414,11 +398,7 @@ def metricSpaceNatNat : MetricSpace (ℕ → ℕ) :=
 attribute [local instance] PiNat.metricSpace
 
 protected theorem complete_space : CompleteSpace (∀ n, E n) := by
-  refine'
-    Metric.complete_of_convergent_controlled_sequences (fun n => (1 / 2) ^ n)
-      (by
-        simp )
-      _
+  refine' Metric.complete_of_convergent_controlled_sequences (fun n => (1 / 2) ^ n) (by simp) _
   intro u hu
   refine' ⟨fun n => u n n, tendsto_pi_nhds.2 fun i => _⟩
   refine' tendsto_const_nhds.congr' _
@@ -439,9 +419,7 @@ where `z_w` is an element of `s` starting with `w`.
 theorem exists_disjoint_cylinder {s : Set (∀ n, E n)} (hs : IsClosed s) {x : ∀ n, E n} (hx : x ∉ s) :
     ∃ n, Disjoint s (Cylinder x n) := by
   rcases eq_empty_or_nonempty s with (rfl | hne)
-  · exact
-      ⟨0, by
-        simp ⟩
+  · exact ⟨0, by simp⟩
     
   have A : 0 < inf_dist x s := (hs.not_mem_iff_inf_dist_pos hne).1 hx
   obtain ⟨n, hn⟩ : ∃ n, (1 / 2 : ℝ) ^ n < inf_dist x s := exists_pow_lt_of_lt_one A one_half_lt_one
@@ -494,7 +472,7 @@ theorem first_diff_le_longest_prefix {s : Set (∀ n, E n)} (hs : IsClosed s) {x
 
 theorem inter_cylinder_longest_prefix_nonempty {s : Set (∀ n, E n)} (hs : IsClosed s) (hne : s.Nonempty)
     (x : ∀ n, E n) : (s ∩ Cylinder x (longestPrefix x s)).Nonempty := by
-  by_cases' hx : x ∈ s
+  by_cases hx:x ∈ s
   · exact ⟨x, hx, self_mem_cylinder _ _⟩
     
   have A := exists_disjoint_cylinder hs hx
@@ -564,13 +542,12 @@ theorem exists_lipschitz_retraction_of_is_closed {s : Set (∀ n, E n)} (hs : Is
     Otherwise, `f x` remains in the same `n`-cylinder as `x`. Similarly for `y`. Finally, `f x` and
     `f y` are again in the same `n`-cylinder, as desired. -/
   set f := fun x => if x ∈ s then x else (inter_cylinder_longest_prefix_nonempty hs hne x).some with hf
-  have fs : ∀ x ∈ s, f x = x := fun x xs => by
-    simp [xs]
+  have fs : ∀ x ∈ s, f x = x := fun x xs => by simp [xs]
   refine' ⟨f, fs, _, _⟩
   -- check that the range of `f` is `s`.
   · apply subset.antisymm
     · rintro x ⟨y, rfl⟩
-      by_cases' hy : y ∈ s
+      by_cases hy:y ∈ s
       · rwa [fs y hy]
         
       simpa [hf, if_neg hy] using (inter_cylinder_longest_prefix_nonempty hs hne y).some_spec.1
@@ -592,19 +569,17 @@ theorem exists_lipschitz_retraction_of_is_closed {s : Set (∀ n, E n)} (hs : Is
     have I2 : cylinder x (first_diff x y) = cylinder y (first_diff x y) := by
       rw [← mem_cylinder_iff_eq]
       apply mem_cylinder_first_diff
-    suffices first_diff x y ≤ first_diff (f x) (f y) by
-      simpa [dist_eq_of_ne hxy, dist_eq_of_ne hfxfy]
+    suffices first_diff x y ≤ first_diff (f x) (f y) by simpa [dist_eq_of_ne hxy, dist_eq_of_ne hfxfy]
     -- case where `x ∈ s`
-    by_cases' xs : x ∈ s
+    by_cases xs:x ∈ s
     · rw [fs x xs] at hfxfy⊢
       -- case where `y ∈ s`, trivial
-      by_cases' ys : y ∈ s
+      by_cases ys:y ∈ s
       · rw [fs y ys]
         
       -- case where `y ∉ s`
       have A : (s ∩ cylinder y (longest_prefix y s)).Nonempty := inter_cylinder_longest_prefix_nonempty hs hne y
-      have fy : f y = A.some := by
-        simp_rw [hf, if_neg ys]
+      have fy : f y = A.some := by simp_rw [hf, if_neg ys]
       have I : cylinder A.some (first_diff x y) = cylinder y (first_diff x y) := by
         rw [← mem_cylinder_iff_eq, first_diff_comm]
         apply cylinder_anti y _ A.some_spec.2
@@ -612,11 +587,10 @@ theorem exists_lipschitz_retraction_of_is_closed {s : Set (∀ n, E n)} (hs : Is
       rwa [← fy, ← I2, ← mem_cylinder_iff_eq, mem_cylinder_iff_le_first_diff hfxfy.symm, first_diff_comm _ x] at I
       
     -- case where `x ∉ s`
-    · by_cases' ys : y ∈ s
+    · by_cases ys:y ∈ s
       -- case where `y ∈ s` (similar to the above)
       · have A : (s ∩ cylinder x (longest_prefix x s)).Nonempty := inter_cylinder_longest_prefix_nonempty hs hne x
-        have fx : f x = A.some := by
-          simp_rw [hf, if_neg xs]
+        have fx : f x = A.some := by simp_rw [hf, if_neg xs]
         have I : cylinder A.some (first_diff x y) = cylinder x (first_diff x y) := by
           rw [← mem_cylinder_iff_eq]
           apply cylinder_anti x _ A.some_spec.2
@@ -626,14 +600,12 @@ theorem exists_lipschitz_retraction_of_is_closed {s : Set (∀ n, E n)} (hs : Is
         
       -- case where `y ∉ s`
       · have Ax : (s ∩ cylinder x (longest_prefix x s)).Nonempty := inter_cylinder_longest_prefix_nonempty hs hne x
-        have fx : f x = Ax.some := by
-          simp_rw [hf, if_neg xs]
+        have fx : f x = Ax.some := by simp_rw [hf, if_neg xs]
         have Ay : (s ∩ cylinder y (longest_prefix y s)).Nonempty := inter_cylinder_longest_prefix_nonempty hs hne y
-        have fy : f y = Ay.some := by
-          simp_rw [hf, if_neg ys]
+        have fy : f y = Ay.some := by simp_rw [hf, if_neg ys]
         -- case where the common prefix to `x` and `s`, or `y` and `s`, is shorter than the
         -- common part to `x` and `y` -- then `f x = f y`.
-        by_cases' H : longest_prefix x s < first_diff x y ∨ longest_prefix y s < first_diff x y
+        by_cases H:longest_prefix x s < first_diff x y ∨ longest_prefix y s < first_diff x y
         · have : cylinder x (longest_prefix x s) = cylinder y (longest_prefix y s) := by
             cases H
             · exact cylinder_longest_prefix_eq_of_longest_prefix_lt_first_diff hs hne H xs ys
@@ -655,8 +627,7 @@ theorem exists_lipschitz_retraction_of_is_closed {s : Set (∀ n, E n)} (hs : Is
           have I3 : cylinder y (first_diff x y) = cylinder Ay.some (first_diff x y) := by
             rw [eq_comm, ← mem_cylinder_iff_eq]
             exact cylinder_anti y H.2 Ay.some_spec.2
-          have : cylinder Ax.some (first_diff x y) = cylinder Ay.some (first_diff x y) := by
-            rw [I1, I2, I3]
+          have : cylinder Ax.some (first_diff x y) = cylinder Ay.some (first_diff x y) := by rw [I1, I2, I3]
           rw [← fx, ← fy, ← mem_cylinder_iff_eq, mem_cylinder_iff_le_first_diff hfxfy] at this
           exact this
           
@@ -675,8 +646,7 @@ theorem exists_retraction_subtype_of_is_closed {s : Set (∀ n, E n)} (hs : IsCl
     ∃ f : (∀ n, E n) → s, (∀ x : s, f x = x) ∧ Surjective f ∧ Continuous f := by
   obtain ⟨f, fs, f_range, f_cont⟩ : ∃ f : (∀ n, E n) → ∀ n, E n, (∀ x ∈ s, f x = x) ∧ range f = s ∧ Continuous f :=
     exists_retraction_of_is_closed hs hne
-  have A : ∀ x, f x ∈ s := by
-    simp [← f_range]
+  have A : ∀ x, f x ∈ s := by simp [← f_range]
   have B : ∀ x : s, cod_restrict f s A x = x := by
     intro x
     apply subtype.coe_injective.eq_iff.1
@@ -699,10 +669,8 @@ theorem exists_nat_nat_continuous_surjective_of_complete_space (α : Type _) [Me
     `f x` there to be the unique point in the intersection. This function is continuous and surjective
     by design. -/
   letI : MetricSpace (ℕ → ℕ) := PiNat.metricSpaceNatNat
-  have I0 : (0 : ℝ) < 1 / 2 := by
-    norm_num
-  have I1 : (1 / 2 : ℝ) < 1 := by
-    norm_num
+  have I0 : (0 : ℝ) < 1 / 2 := by norm_num
+  have I1 : (1 / 2 : ℝ) < 1 := by norm_num
   rcases exists_dense_seq α with ⟨u, hu⟩
   let s : Set (ℕ → ℕ) := { x | (⋂ n : ℕ, closed_ball (u (x n)) ((1 / 2) ^ n)).Nonempty }
   let g : s → α := fun x => x.2.some
@@ -728,20 +696,15 @@ theorem exists_nat_nat_continuous_surjective_of_complete_space (α : Type _) [Me
     have B : x.1 n = y.1 n := mem_cylinder_first_diff x.1 y.1 n (Nat.pred_ltₓ diff_pos.ne')
     calc
       dist (g x) (g y) ≤ dist (g x) (u (x.1 n)) + dist (g y) (u (x.1 n)) := dist_triangle_right _ _ _
-      _ = dist (g x) (u (x.1 n)) + dist (g y) (u (y.1 n)) := by
-        rw [← B]
+      _ = dist (g x) (u (x.1 n)) + dist (g y) (u (y.1 n)) := by rw [← B]
       _ ≤ (1 / 2) ^ n + (1 / 2) ^ n := add_le_add (A x n) (A y n)
-      _ = 4 * (1 / 2) ^ (n + 1) := by
-        ring_exp
+      _ = 4 * (1 / 2) ^ (n + 1) := by ring_exp
       
   have g_surj : surjective g := by
     intro y
     have : ∀ n : ℕ, ∃ j, y ∈ closed_ball (u j) ((1 / 2) ^ n) := by
       intro n
-      rcases hu.exists_dist_lt y
-          (by
-            simp : (0 : ℝ) < (1 / 2) ^ n) with
-        ⟨j, hj⟩
+      rcases hu.exists_dist_lt y (by simp : (0 : ℝ) < (1 / 2) ^ n) with ⟨j, hj⟩
       exact ⟨j, hj.le⟩
     choose x hx using this
     have I : (⋂ n : ℕ, closed_ball (u (x n)) ((1 / 2) ^ n)).Nonempty := ⟨y, mem_Inter.2 hx⟩
@@ -810,24 +773,13 @@ theorem dist_eq_tsum (x y : ∀ i, F i) : dist x y = ∑' i : ι, min ((1 / 2) ^
 
 theorem dist_summable (x y : ∀ i, F i) : Summable fun i : ι => min ((1 / 2) ^ encode i) (dist (x i) (y i)) := by
   refine' summable_of_nonneg_of_le (fun i => _) (fun i => min_le_leftₓ _ _) summable_geometric_two_encode
-  exact
-    le_minₓ
-      (pow_nonneg
-        (by
-          norm_num)
-        _)
-      dist_nonneg
+  exact le_minₓ (pow_nonneg (by norm_num) _) dist_nonneg
 
 theorem min_dist_le_dist_pi (x y : ∀ i, F i) (i : ι) : min ((1 / 2) ^ encode i) (dist (x i) (y i)) ≤ dist x y :=
-  le_tsum (dist_summable x y) i fun j hj =>
-    le_minₓ
-      (by
-        simp )
-      dist_nonneg
+  le_tsum (dist_summable x y) i fun j hj => le_minₓ (by simp) dist_nonneg
 
 theorem dist_le_dist_pi_of_dist_lt {x y : ∀ i, F i} {i : ι} (h : dist x y < (1 / 2) ^ encode i) :
-    dist (x i) (y i) ≤ dist x y := by
-  simpa only [not_leₓ.2 h, false_orₓ] using min_le_iff.1 (min_dist_le_dist_pi x y i)
+    dist (x i) (y i) ≤ dist x y := by simpa only [not_leₓ.2 h, false_orₓ] using min_le_iff.1 (min_dist_le_dist_pi x y i)
 
 open BigOperators TopologicalSpace
 
@@ -842,10 +794,8 @@ defining the right topology and uniform structure. It is highly non-canonical, t
 not registered as a global instance.
 The distance we use here is `dist x y = ∑' n, min (1/2)^(encode i) (dist (x n) (y n))`. -/
 protected def metricSpace : MetricSpace (∀ i, F i) where
-  dist_self := fun x => by
-    simp [dist_eq_tsum]
-  dist_comm := fun x y => by
-    simp [dist_eq_tsum, dist_comm]
+  dist_self := fun x => by simp [dist_eq_tsum]
+  dist_comm := fun x y => by simp [dist_eq_tsum, dist_comm]
   dist_triangle := fun x y z => by
     have I :
       ∀ i,
@@ -880,23 +830,19 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
     simp
   toUniformSpace := Pi.uniformSpace _
   uniformity_dist := by
-    have I0 : (0 : ℝ) ≤ 1 / 2 := by
-      norm_num
-    have I1 : (1 / 2 : ℝ) < 1 := by
-      norm_num
+    have I0 : (0 : ℝ) ≤ 1 / 2 := by norm_num
+    have I1 : (1 / 2 : ℝ) < 1 := by norm_num
     simp only [Pi.uniformity, comap_infi, gt_iff_ltₓ, preimage_set_of_eq, comap_principal,
       PseudoMetricSpace.uniformity_dist]
     apply le_antisymmₓ
     · simp only [le_infi_iff, le_principal_iff]
       intro ε εpos
-      obtain ⟨K, hK⟩ : ∃ K : Finset ι, (∑' i : { j // j ∉ K }, (1 / 2 : ℝ) ^ encode (i : ι)) < ε / 2 :=
+      obtain ⟨K, hK⟩ : ∃ K : Finsetₓ ι, (∑' i : { j // j ∉ K }, (1 / 2 : ℝ) ^ encode (i : ι)) < ε / 2 :=
         ((tendsto_order.1 (tendsto_tsum_compl_at_top_zero fun i : ι => (1 / 2 : ℝ) ^ encode i)).2 _
             (half_pos εpos)).exists
       obtain ⟨δ, δpos, hδ⟩ : ∃ (δ : ℝ)(δpos : 0 < δ), (K.card : ℝ) * δ ≤ ε / 2 := by
         rcases Nat.eq_zero_or_posₓ K.card with (hK | hK)
-        · exact
-            ⟨1, zero_lt_one, by
-              simpa only [hK, Nat.cast_zeroₓ, zero_mul] using (half_pos εpos).le⟩
+        · exact ⟨1, zero_lt_one, by simpa only [hK, Nat.cast_zeroₓ, zero_mul] using (half_pos εpos).le⟩
           
         · have Kpos : 0 < (K.card : ℝ) := Nat.cast_pos.2 hK
           refine' ⟨ε / 2 / (K.card : ℝ), div_pos (half_pos εpos) Kpos, le_of_eqₓ _⟩
@@ -911,7 +857,7 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
         simp only [Prod.forallₓ, imp_self, mem_principal]
         
       · rintro ⟨x, y⟩ hxy
-        simp only [mem_Inter, mem_set_of_eq, SetCoe.forall, Finset.mem_range, Finset.mem_coe] at hxy
+        simp only [mem_Inter, mem_set_of_eq, SetCoe.forall, Finsetₓ.mem_range, Finsetₓ.mem_coe] at hxy
         calc
           dist x y = ∑' i : ι, min ((1 / 2) ^ encode i) (dist (x i) (y i)) := rfl
           _ =
@@ -919,7 +865,7 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
                 ∑' i : (↑K : Set ι)ᶜ, min ((1 / 2) ^ encode (i : ι)) (dist (x i) (y i)) :=
             (sum_add_tsum_compl (dist_summable _ _)).symm
           _ ≤ (∑ i in K, dist (x i) (y i)) + ∑' i : (↑K : Set ι)ᶜ, (1 / 2) ^ encode (i : ι) := by
-            refine' add_le_add (Finset.sum_le_sum fun i hi => min_le_rightₓ _ _) _
+            refine' add_le_add (Finsetₓ.sum_le_sum fun i hi => min_le_rightₓ _ _) _
             refine' tsum_le_tsum (fun i => min_le_leftₓ _ _) _ _
             · apply Summable.subtype (dist_summable x y) ((↑K : Set ι)ᶜ)
               
@@ -927,14 +873,10 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
               
           _ < (∑ i in K, δ) + ε / 2 := by
             apply add_lt_add_of_le_of_lt _ hK
-            apply Finset.sum_le_sum fun i hi => _
+            apply Finsetₓ.sum_le_sum fun i hi => _
             apply (hxy i _).le
             simpa using hi
-          _ ≤ ε / 2 + ε / 2 :=
-            add_le_add_right
-              (by
-                simpa only [Finset.sum_const, nsmul_eq_mul] using hδ)
-              _
+          _ ≤ ε / 2 + ε / 2 := add_le_add_right (by simpa only [Finsetₓ.sum_const, nsmul_eq_mul] using hδ) _
           _ = ε := add_halves _
           
         
@@ -942,11 +884,7 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
     · simp only [le_infi_iff, le_principal_iff]
       intro i ε εpos
       refine' mem_infi_of_mem (min ((1 / 2) ^ encode i) ε) _
-      have : 0 < min ((1 / 2) ^ encode i) ε :=
-        lt_minₓ
-          (by
-            simp )
-          εpos
+      have : 0 < min ((1 / 2) ^ encode i) ε := lt_minₓ (by simp) εpos
       refine' mem_infi_of_mem this _
       simp only [and_imp, Prod.forallₓ, set_of_subset_set_of, lt_min_iff, mem_principal]
       intro x y hn hε

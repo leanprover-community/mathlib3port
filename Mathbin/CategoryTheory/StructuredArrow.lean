@@ -61,8 +61,7 @@ theorem mk_hom_eq_self (f : S ⟶ T.obj Y) : (mk f).Hom = f :=
   rfl
 
 @[simp, reassoc]
-theorem w {A B : StructuredArrow S T} (f : A ⟶ B) : A.Hom ≫ T.map f.right = B.Hom := by
-  have := f.w <;> tidy
+theorem w {A B : StructuredArrow S T} (f : A ⟶ B) : A.Hom ≫ T.map f.right = B.Hom := by have := f.w <;> tidy
 
 /-- To construct a morphism of structured arrows,
 we need a morphism of the objects underlying the target,
@@ -70,13 +69,10 @@ and to check that the triangle commutes.
 -/
 @[simps]
 def homMk {f f' : StructuredArrow S T} (g : f.right ⟶ f'.right) (w : f.Hom ≫ T.map g = f'.Hom) : f ⟶ f' where
-  left :=
-    eqToHom
-      (by
-        ext)
+  left := eqToHom (by ext)
   right := g
   w' := by
-    dsimp'
+    dsimp
     simpa using w.symm
 
 /-- Given a structured arrow `X ⟶ F(U)`, and an arrow `U ⟶ Y`, we can construct a morphism of
@@ -91,13 +87,7 @@ and to check that the triangle commutes.
 -/
 @[simps]
 def isoMk {f f' : StructuredArrow S T} (g : f.right ≅ f'.right) (w : f.Hom ≫ T.map g.Hom = f'.Hom) : f ≅ f' :=
-  Comma.isoMk
-    (eqToIso
-      (by
-        ext))
-    g
-    (by
-      simpa [eq_to_hom_map] using w.symm)
+  Comma.isoMk (eqToIso (by ext)) g (by simpa [eq_to_hom_map] using w.symm)
 
 theorem ext {A B : StructuredArrow S T} (f g : A ⟶ B) : f.right = g.right → f = g :=
   CommaMorphism.ext _ _ (Subsingleton.elim _ _)
@@ -130,9 +120,7 @@ theorem eq_mk (f : StructuredArrow S T) : f = mk f.Hom := by
 /-- Eta rule for structured arrows. -/
 @[simps]
 def eta (f : StructuredArrow S T) : f ≅ mk f.Hom :=
-  isoMk (Iso.refl _)
-    (by
-      tidy)
+  isoMk (Iso.refl _) (by tidy)
 
 /-- A morphism between source objects `S ⟶ S'`
 contravariantly induces a functor between structured arrows,
@@ -163,12 +151,8 @@ theorem map_comp {f : S ⟶ S'} {f' : S' ⟶ S''} {h : StructuredArrow S'' T} :
 
 instance proj_reflects_iso :
     ReflectsIsomorphisms
-      (proj S T) where reflects := fun Y Z f t =>
-    ⟨⟨structured_arrow.hom_mk (inv ((proj S T).map f))
-          (by
-            simp ),
-        by
-        tidy⟩⟩
+      (proj S
+        T) where reflects := fun Y Z f t => ⟨⟨structured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
 
 open CategoryTheory.Limits
 
@@ -179,8 +163,8 @@ def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y))) where
   desc := fun c =>
     homMk (T.preimage c.x.Hom)
       (by
-        dsimp'
-        simp )
+        dsimp
+        simp)
   uniq' := fun c m _ => by
     ext
     apply T.map_injective
@@ -197,20 +181,14 @@ def pre (S : D) (F : B ⥤ C) (G : C ⥤ D) : StructuredArrow S (F ⋙ G) ⥤ St
 @[simps]
 def post (S : C) (F : B ⥤ C) (G : C ⥤ D) : StructuredArrow S F ⥤ StructuredArrow (G.obj S) (F ⋙ G) where
   obj := fun X => { right := X.right, Hom := G.map X.Hom }
-  map := fun X Y f =>
-    { right := f.right,
-      w' := by
-        simp [functor.comp_map, ← G.map_comp, ← f.w] }
+  map := fun X Y f => { right := f.right, w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
 
 instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) := by
   suffices (proj S T).obj ⁻¹' 𝒢 = Set.Range fun f : ΣG : 𝒢, S ⟶ T.obj G => mk f.2 by
     rw [this]
     infer_instance
-  exact
-    Set.ext fun X =>
-      ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by
-        tidy⟩
+  exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩
 
 end StructuredArrow
 
@@ -248,8 +226,7 @@ theorem mk_hom_eq_self (f : S.obj Y ⟶ T) : (mk f).Hom = f :=
   rfl
 
 @[simp, reassoc]
-theorem w {A B : CostructuredArrow S T} (f : A ⟶ B) : S.map f.left ≫ B.Hom = A.Hom := by
-  tidy
+theorem w {A B : CostructuredArrow S T} (f : A ⟶ B) : S.map f.left ≫ B.Hom = A.Hom := by tidy
 
 /-- To construct a morphism of costructured arrows,
 we need a morphism of the objects underlying the source,
@@ -258,12 +235,8 @@ and to check that the triangle commutes.
 @[simps]
 def homMk {f f' : CostructuredArrow S T} (g : f.left ⟶ f'.left) (w : S.map g ≫ f'.Hom = f.Hom) : f ⟶ f' where
   left := g
-  right :=
-    eqToHom
-      (by
-        ext)
-  w' := by
-    simpa [eq_to_hom_map] using w
+  right := eqToHom (by ext)
+  w' := by simpa [eq_to_hom_map] using w
 
 /-- To construct an isomorphism of costructured arrows,
 we need an isomorphism of the objects underlying the source,
@@ -271,12 +244,7 @@ and to check that the triangle commutes.
 -/
 @[simps]
 def isoMk {f f' : CostructuredArrow S T} (g : f.left ≅ f'.left) (w : S.map g.Hom ≫ f'.Hom = f.Hom) : f ≅ f' :=
-  Comma.isoMk g
-    (eqToIso
-      (by
-        ext))
-    (by
-      simpa [eq_to_hom_map] using w)
+  Comma.isoMk g (eqToIso (by ext)) (by simpa [eq_to_hom_map] using w)
 
 theorem ext {A B : CostructuredArrow S T} (f g : A ⟶ B) (h : f.left = g.left) : f = g :=
   CommaMorphism.ext _ _ h (Subsingleton.elim _ _)
@@ -309,9 +277,7 @@ theorem eq_mk (f : CostructuredArrow S T) : f = mk f.Hom := by
 /-- Eta rule for costructured arrows. -/
 @[simps]
 def eta (f : CostructuredArrow S T) : f ≅ mk f.Hom :=
-  isoMk (Iso.refl _)
-    (by
-      tidy)
+  isoMk (Iso.refl _) (by tidy)
 
 /-- A morphism between target objects `T ⟶ T'`
 covariantly induces a functor between costructured arrows,
@@ -342,12 +308,8 @@ theorem map_comp {f : T ⟶ T'} {f' : T' ⟶ T''} {h : CostructuredArrow S T} :
 
 instance proj_reflects_iso :
     ReflectsIsomorphisms
-      (proj S T) where reflects := fun Y Z f t =>
-    ⟨⟨costructured_arrow.hom_mk (inv ((proj S T).map f))
-          (by
-            simp ),
-        by
-        tidy⟩⟩
+      (proj S
+        T) where reflects := fun Y Z f t => ⟨⟨costructured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
 
 open CategoryTheory.Limits
 
@@ -358,8 +320,8 @@ def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y))) where
   lift := fun c =>
     homMk (S.preimage c.x.Hom)
       (by
-        dsimp'
-        simp )
+        dsimp
+        simp)
   uniq' := by
     rintro c m -
     ext
@@ -377,20 +339,14 @@ def pre (F : B ⥤ C) (G : C ⥤ D) (S : D) : CostructuredArrow (F ⋙ G) S ⥤ 
 @[simps]
 def post (F : B ⥤ C) (G : C ⥤ D) (S : C) : CostructuredArrow F S ⥤ CostructuredArrow (F ⋙ G) (G.obj S) where
   obj := fun X => { left := X.left, Hom := G.map X.Hom }
-  map := fun X Y f =>
-    { left := f.left,
-      w' := by
-        simp [functor.comp_map, ← G.map_comp, ← f.w] }
+  map := fun X Y f => { left := f.left, w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
 
 instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) := by
   suffices (proj S T).obj ⁻¹' 𝒢 = Set.Range fun f : ΣG : 𝒢, S.obj G ⟶ T => mk f.2 by
     rw [this]
     infer_instance
-  exact
-    Set.ext fun X =>
-      ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by
-        tidy⟩
+  exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩
 
 end CostructuredArrow
 
@@ -408,7 +364,7 @@ def toCostructuredArrow (F : C ⥤ D) (d : D) : (StructuredArrow d F)ᵒᵖ ⥤ 
   map := fun X Y f =>
     CostructuredArrow.homMk f.unop.right.op
       (by
-        dsimp'
+        dsimp
         rw [← op_comp, ← f.unop.w, functor.const_obj_map]
         erw [category.id_comp])
 
@@ -422,7 +378,7 @@ def toCostructuredArrow' (F : C ⥤ D) (d : D) : (StructuredArrow (op d) F.op)�
   map := fun X Y f =>
     CostructuredArrow.homMk f.unop.right.unop
       (by
-        dsimp'
+        dsimp
         rw [← Quiver.Hom.unop_op (F.map (Quiver.Hom.unop f.unop.right)), ← unop_comp, ← F.op_map, ← f.unop.w,
           functor.const_obj_map]
         erw [category.id_comp])
@@ -441,7 +397,7 @@ def toStructuredArrow (F : C ⥤ D) (d : D) : (CostructuredArrow F d)ᵒᵖ ⥤ 
   map := fun X Y f =>
     StructuredArrow.homMk f.unop.left.op
       (by
-        dsimp'
+        dsimp
         rw [← op_comp, f.unop.w, functor.const_obj_map]
         erw [category.comp_id])
 
@@ -455,7 +411,7 @@ def toStructuredArrow' (F : C ⥤ D) (d : D) : (CostructuredArrow F.op (op d))�
   map := fun X Y f =>
     StructuredArrow.homMk f.unop.left.unop
       (by
-        dsimp'
+        dsimp
         rw [← Quiver.Hom.unop_op (F.map f.unop.left.unop), ← unop_comp, ← F.op_map, f.unop.w, functor.const_obj_map]
         erw [category.comp_id])
 
@@ -468,23 +424,18 @@ def structuredArrowOpEquivalence (F : C ⥤ D) (d : D) : (StructuredArrow d F)�
   Equivalence.mk (StructuredArrow.toCostructuredArrow F d) (CostructuredArrow.toStructuredArrow' F d).rightOp
     (NatIso.ofComponents
       (fun X =>
-        (@StructuredArrow.isoMk _ _ _ _ _ _ (StructuredArrow.mk (unop X).Hom) (unop X) (Iso.refl _)
-            (by
-              tidy)).op)
+        (@StructuredArrow.isoMk _ _ _ _ _ _ (StructuredArrow.mk (unop X).Hom) (unop X) (Iso.refl _) (by tidy)).op)
       fun X Y f =>
       Quiver.Hom.unop_inj <| by
         ext
-        dsimp'
-        simp )
+        dsimp
+        simp)
     (NatIso.ofComponents
-      (fun X =>
-        @CostructuredArrow.isoMk _ _ _ _ _ _ (CostructuredArrow.mk X.Hom) X (Iso.refl _)
-          (by
-            tidy))
-      fun X Y f => by
+      (fun X => @CostructuredArrow.isoMk _ _ _ _ _ _ (CostructuredArrow.mk X.Hom) X (Iso.refl _) (by tidy)) fun X Y f =>
+      by
       ext
-      dsimp'
-      simp )
+      dsimp
+      simp)
 
 /-- For a functor `F : C ⥤ D` and an object `d : D`, the category of costructured arrows
 `F.obj c ⟶ d` is contravariantly equivalent to the category of structured arrows
@@ -494,23 +445,17 @@ def costructuredArrowOpEquivalence (F : C ⥤ D) (d : D) : (CostructuredArrow F 
   Equivalence.mk (CostructuredArrow.toStructuredArrow F d) (StructuredArrow.toCostructuredArrow' F d).rightOp
     (NatIso.ofComponents
       (fun X =>
-        (@CostructuredArrow.isoMk _ _ _ _ _ _ (CostructuredArrow.mk (unop X).Hom) (unop X) (Iso.refl _)
-            (by
-              tidy)).op)
+        (@CostructuredArrow.isoMk _ _ _ _ _ _ (CostructuredArrow.mk (unop X).Hom) (unop X) (Iso.refl _) (by tidy)).op)
       fun X Y f =>
       Quiver.Hom.unop_inj <| by
         ext
-        dsimp'
-        simp )
+        dsimp
+        simp)
     (NatIso.ofComponents
-      (fun X =>
-        @StructuredArrow.isoMk _ _ _ _ _ _ (StructuredArrow.mk X.Hom) X (Iso.refl _)
-          (by
-            tidy))
-      fun X Y f => by
+      (fun X => @StructuredArrow.isoMk _ _ _ _ _ _ (StructuredArrow.mk X.Hom) X (Iso.refl _) (by tidy)) fun X Y f => by
       ext
-      dsimp'
-      simp )
+      dsimp
+      simp)
 
 end CategoryTheory
 

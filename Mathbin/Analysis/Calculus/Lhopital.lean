@@ -86,12 +86,11 @@ theorem lhopital_zero_right_on_Ioo (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x
         _)
       _
   all_goals
-    apply eventually_nhds_within_of_forall
-    intro x hx
-    have := cmp x hx
-    try
-      simp
-    linarith [this]
+  apply eventually_nhds_within_of_forall
+  intro x hx
+  have := cmp x hx
+  try simp
+  linarith [this]
 
 theorem lhopital_zero_right_on_Ico (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
     (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ico a b)) (hcg : ContinuousOn g (Ico a b))
@@ -133,7 +132,7 @@ theorem lhopital_zero_left_on_Ioo (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x)
         simp only [neg_div_neg_eq, mul_oneₓ, mul_neg]
         exact (tendsto_congr fun x => rfl).mp (hdiv.comp tendsto_neg_nhds_within_Ioi_neg))
   have := this.comp tendsto_neg_nhds_within_Iio
-  unfold Function.comp  at this
+  unfold Function.comp at this
   simpa only [neg_negₓ]
 
 theorem lhopital_zero_left_on_Ioc (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
@@ -180,7 +179,7 @@ theorem lhopital_zero_at_top_on_Ioi (hff' : ∀ x ∈ Ioi a, HasDerivAt f (f' x)
         erw [mul_div_mul_right]
         refine' neg_ne_zero.mpr (inv_ne_zero <| pow_ne_zero _ <| ne_of_gtₓ hx))
   have := this.comp tendsto_inv_at_top_zero'
-  unfold Function.comp  at this
+  unfold Function.comp at this
   simpa only [inv_invₓ]
 
 theorem lhopital_zero_at_bot_on_Iio (hff' : ∀ x ∈ Iio a, HasDerivAt f (f' x) x)
@@ -209,7 +208,7 @@ theorem lhopital_zero_at_bot_on_Iio (hff' : ∀ x ∈ Iio a, HasDerivAt f (f' x)
         simp only [mul_oneₓ, mul_neg, neg_div_neg_eq]
         exact (tendsto_congr fun x => rfl).mp (hdiv.comp tendsto_neg_at_top_at_bot))
   have := this.comp tendsto_neg_at_bot_at_top
-  unfold Function.comp  at this
+  unfold Function.comp at this
   simpa only [neg_negₓ]
 
 end HasDerivAt
@@ -300,12 +299,7 @@ theorem lhopital_zero_nhds_right (hff' : ∀ᶠ x in 𝓝[>] a, HasDerivAt f (f'
   rw [mem_nhds_within_Ioi_iff_exists_Ioo_subset] at hs
   rcases hs with ⟨u, hau, hu⟩
   refine' lhopital_zero_right_on_Ioo hau _ _ _ hfa hga hdiv <;>
-    intro x hx <;>
-      apply_assumption <;>
-        first |
-          exact (hu hx).1.1|
-          exact (hu hx).1.2|
-          exact (hu hx).2
+    intro x hx <;> apply_assumption <;> first |exact (hu hx).1.1|exact (hu hx).1.2|exact (hu hx).2
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- L'Hôpital's rule for approaching a real from the left, `has_deriv_at` version -/
@@ -322,12 +316,7 @@ theorem lhopital_zero_nhds_left (hff' : ∀ᶠ x in 𝓝[<] a, HasDerivAt f (f' 
   rw [mem_nhds_within_Iio_iff_exists_Ioo_subset] at hs
   rcases hs with ⟨l, hal, hl⟩
   refine' lhopital_zero_left_on_Ioo hal _ _ _ hfa hga hdiv <;>
-    intro x hx <;>
-      apply_assumption <;>
-        first |
-          exact (hl hx).1.1|
-          exact (hl hx).1.2|
-          exact (hl hx).2
+    intro x hx <;> apply_assumption <;> first |exact (hl hx).1.1|exact (hl hx).1.2|exact (hl hx).2
 
 /-- L'Hôpital's rule for approaching a real, `has_deriv_at` version. This
   does not require anything about the situation at `a` -/
@@ -349,10 +338,7 @@ theorem lhopital_zero_nhds (hff' : ∀ᶠ x in 𝓝 a, HasDerivAt f (f' x) x) (h
     (hg' : ∀ᶠ x in 𝓝 a, g' x ≠ 0) (hfa : Tendsto f (𝓝 a) (𝓝 0)) (hga : Tendsto g (𝓝 a) (𝓝 0))
     (hdiv : Tendsto (fun x => f' x / g' x) (𝓝 a) l) : Tendsto (fun x => f x / g x) (𝓝[univ \ {a}] a) l := by
   apply @lhopital_zero_nhds' _ _ _ f' _ g' <;>
-    first |
-        apply eventually_nhds_within_of_eventually_nhds|
-        apply tendsto_nhds_within_of_tendsto_nhds <;>
-      assumption
+    first |apply eventually_nhds_within_of_eventually_nhds|apply tendsto_nhds_within_of_tendsto_nhds <;> assumption
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- L'Hôpital's rule for approaching +∞, `has_deriv_at` version -/
@@ -370,11 +356,7 @@ theorem lhopital_zero_at_top (hff' : ∀ᶠ x in at_top, HasDerivAt f (f' x) x)
   rcases hs with ⟨l, hl⟩
   have hl' : Ioi l ⊆ s := fun x hx => hl x (le_of_ltₓ hx)
   refine' lhopital_zero_at_top_on_Ioi _ _ (fun x hx => hg' x <| (hl' hx).2) hftop hgtop hdiv <;>
-    intro x hx <;>
-      apply_assumption <;>
-        first |
-          exact (hl' hx).1.1|
-          exact (hl' hx).1.2
+    intro x hx <;> apply_assumption <;> first |exact (hl' hx).1.1|exact (hl' hx).1.2
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- L'Hôpital's rule for approaching -∞, `has_deriv_at` version -/
@@ -392,11 +374,7 @@ theorem lhopital_zero_at_bot (hff' : ∀ᶠ x in at_bot, HasDerivAt f (f' x) x)
   rcases hs with ⟨l, hl⟩
   have hl' : Iio l ⊆ s := fun x hx => hl x (le_of_ltₓ hx)
   refine' lhopital_zero_at_bot_on_Iio _ _ (fun x hx => hg' x <| (hl' hx).2) hfbot hgbot hdiv <;>
-    intro x hx <;>
-      apply_assumption <;>
-        first |
-          exact (hl' hx).1.1|
-          exact (hl' hx).1.2
+    intro x hx <;> apply_assumption <;> first |exact (hl' hx).1.1|exact (hl' hx).1.2
 
 end HasDerivAt
 
@@ -451,10 +429,7 @@ theorem lhopital_zero_nhds (hdf : ∀ᶠ x in 𝓝 a, DifferentiableAt ℝ f x) 
     (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) (𝓝 a) l) : Tendsto (fun x => f x / g x) (𝓝[univ \ {a}] a) l :=
   by
   apply lhopital_zero_nhds' <;>
-    first |
-        apply eventually_nhds_within_of_eventually_nhds|
-        apply tendsto_nhds_within_of_tendsto_nhds <;>
-      assumption
+    first |apply eventually_nhds_within_of_eventually_nhds|apply tendsto_nhds_within_of_tendsto_nhds <;> assumption
 
 /-- **L'Hôpital's rule** for approaching +∞, `deriv` version -/
 theorem lhopital_zero_at_top (hdf : ∀ᶠ x : ℝ in at_top, DifferentiableAt ℝ f x)

@@ -66,14 +66,11 @@ theorem is_bounded_iff : f.IsBounded r ↔ ∃ s ∈ f.Sets, ∃ b, s ⊆ { x | 
 theorem is_bounded_under_of {f : Filter β} {u : β → α} : (∃ b, ∀ x, r (u x) b) → f.IsBoundedUnder r u
   | ⟨b, hb⟩ => ⟨b, show ∀ᶠ x in f, r (u x) b from eventually_of_forall hb⟩
 
-theorem is_bounded_bot : IsBounded r ⊥ ↔ Nonempty α := by
-  simp [is_bounded, exists_true_iff_nonempty]
+theorem is_bounded_bot : IsBounded r ⊥ ↔ Nonempty α := by simp [is_bounded, exists_true_iff_nonempty]
 
-theorem is_bounded_top : IsBounded r ⊤ ↔ ∃ t, ∀ x, r x t := by
-  simp [is_bounded, eq_univ_iff_forall]
+theorem is_bounded_top : IsBounded r ⊤ ↔ ∃ t, ∀ x, r x t := by simp [is_bounded, eq_univ_iff_forall]
 
-theorem is_bounded_principal (s : Set α) : IsBounded r (𝓟 s) ↔ ∃ t, ∀ x ∈ s, r x t := by
-  simp [is_bounded, subset_def]
+theorem is_bounded_principal (s : Set α) : IsBounded r (𝓟 s) ↔ ∃ t, ∀ x ∈ s, r x t := by simp [is_bounded, subset_def]
 
 theorem is_bounded_sup [IsTrans α r] (hr : ∀ b₁ b₂, ∃ b, r b₁ b ∧ r b₂ b) :
     IsBounded r f → IsBounded r g → IsBounded r (f ⊔ g)
@@ -94,6 +91,9 @@ theorem IsBoundedUnder.mono_le [Preorderₓ β] {l : Filter α} {u v : α → β
 theorem IsBoundedUnder.mono_ge [Preorderₓ β] {l : Filter α} {u v : α → β} (hu : IsBoundedUnder (· ≥ ·) l u)
     (hv : u ≤ᶠ[l] v) : IsBoundedUnder (· ≥ ·) l v :=
   @IsBoundedUnder.mono_le α βᵒᵈ _ _ _ _ hu hv
+
+theorem is_bounded_under_const [IsRefl α r] {l : Filter β} {a : α} : IsBoundedUnder r l fun _ => a :=
+  ⟨a, eventually_map.2 <| eventually_of_forall fun _ => refl _⟩
 
 theorem IsBounded.is_bounded_under {q : β → β → Prop} {u : α → β} (hf : ∀ a₀ a₁, r a₀ a₁ → q (u a₀) (u a₁)) :
     f.IsBounded r → f.IsBoundedUnder q u
@@ -175,11 +175,10 @@ theorem IsBounded.is_cobounded_ge [Preorderₓ α] [NeBot f] (h : f.IsBounded (�
 theorem IsBounded.is_cobounded_le [Preorderₓ α] [NeBot f] (h : f.IsBounded (· ≥ ·)) : f.IsCobounded (· ≤ ·) :=
   h.is_cobounded_flip
 
-theorem is_cobounded_bot : IsCobounded r ⊥ ↔ ∃ b, ∀ x, r b x := by
-  simp [is_cobounded]
+theorem is_cobounded_bot : IsCobounded r ⊥ ↔ ∃ b, ∀ x, r b x := by simp [is_cobounded]
 
 theorem is_cobounded_top : IsCobounded r ⊤ ↔ Nonempty α := by
-  simp (config := { contextual := true })[is_cobounded, eq_univ_iff_forall, exists_true_iff_nonempty]
+  simp (config := { contextual := true }) [is_cobounded, eq_univ_iff_forall, exists_true_iff_nonempty]
 
 theorem is_cobounded_principal (s : Set α) : (𝓟 s).IsCobounded r ↔ ∃ b, ∀ a, (∀ x ∈ s, r x a) → r b a := by
   simp [is_cobounded, subset_def]
@@ -204,9 +203,7 @@ theorem is_bounded_ge_of_bot [Preorderₓ α] [OrderBot α] {f : Filter α} : f.
 @[simp]
 theorem _root_.order_iso.is_bounded_under_le_comp [Preorderₓ α] [Preorderₓ β] (e : α ≃o β) {l : Filter γ} {u : γ → α} :
     (IsBoundedUnder (· ≤ ·) l fun x => e (u x)) ↔ IsBoundedUnder (· ≤ ·) l u :=
-  e.Surjective.exists.trans <|
-    exists_congr fun a => by
-      simp only [eventually_map, e.le_iff_le]
+  e.Surjective.exists.trans <| exists_congr fun a => by simp only [eventually_map, e.le_iff_le]
 
 @[simp]
 theorem _root_.order_iso.is_bounded_under_ge_comp [Preorderₓ α] [Preorderₓ β] (e : α ≃o β) {l : Filter γ} {u : γ → α} :
@@ -226,9 +223,7 @@ theorem is_bounded_under_ge_inv [OrderedCommGroup α] {l : Filter β} {u : β �
 theorem IsBoundedUnder.sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
     f.IsBoundedUnder (· ≤ ·) u → f.IsBoundedUnder (· ≤ ·) v → f.IsBoundedUnder (· ≤ ·) fun a => u a ⊔ v a
   | ⟨bu, (hu : ∀ᶠ x in f, u x ≤ bu)⟩, ⟨bv, (hv : ∀ᶠ x in f, v x ≤ bv)⟩ =>
-    ⟨bu ⊔ bv,
-      show ∀ᶠ x in f, u x ⊔ v x ≤ bu ⊔ bv by
-        filter_upwards [hu, hv] with _ using sup_le_sup⟩
+    ⟨bu ⊔ bv, show ∀ᶠ x in f, u x ⊔ v x ≤ bu ⊔ bv by filter_upwards [hu, hv] with _ using sup_le_sup⟩
 
 @[simp]
 theorem is_bounded_under_le_sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
@@ -295,6 +290,7 @@ theorem liminf_eq : f.liminf u = sup { a | ∀ᶠ n in f, a ≤ u n } :=
 
 end
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem Limsup_le_of_le {f : Filter α} {a}
     (hf : f.IsCobounded (· ≤ ·) := by
       run_tac
@@ -302,6 +298,7 @@ theorem Limsup_le_of_le {f : Filter α} {a}
     (h : ∀ᶠ n in f, n ≤ a) : f.limsup ≤ a :=
   cInf_le hf h
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem le_Liminf_of_le {f : Filter α} {a}
     (hf : f.IsCobounded (· ≥ ·) := by
       run_tac
@@ -309,6 +306,7 @@ theorem le_Liminf_of_le {f : Filter α} {a}
     (h : ∀ᶠ n in f, a ≤ n) : a ≤ f.liminf :=
   le_cSup hf h
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem le_Limsup_of_le {f : Filter α} {a}
     (hf : f.IsBounded (· ≤ ·) := by
       run_tac
@@ -316,6 +314,7 @@ theorem le_Limsup_of_le {f : Filter α} {a}
     (h : ∀ b, (∀ᶠ n in f, n ≤ b) → a ≤ b) : a ≤ f.limsup :=
   le_cInf hf h
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem Liminf_le_of_le {f : Filter α} {a}
     (hf : f.IsBounded (· ≥ ·) := by
       run_tac
@@ -323,6 +322,8 @@ theorem Liminf_le_of_le {f : Filter α} {a}
     (h : ∀ b, (∀ᶠ n in f, b ≤ n) → b ≤ a) : f.liminf ≤ a :=
   cSup_le hf h
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem Liminf_le_Limsup {f : Filter α} [NeBot f]
     (h₁ : f.IsBounded (· ≤ ·) := by
       run_tac
@@ -337,6 +338,8 @@ theorem Liminf_le_Limsup {f : Filter α} [NeBot f]
         let ⟨b, hb₀, hb₁⟩ := (ha₀.And ha₁).exists
         le_transₓ hb₀ hb₁
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem Liminf_le_Liminf {f g : Filter α}
     (hf : f.IsBounded (· ≥ ·) := by
       run_tac
@@ -347,6 +350,8 @@ theorem Liminf_le_Liminf {f g : Filter α}
     (h : ∀ a, (∀ᶠ n in f, a ≤ n) → ∀ᶠ n in g, a ≤ n) : f.liminf ≤ g.liminf :=
   cSup_le_cSup hg hf h
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem Limsup_le_Limsup {f g : Filter α}
     (hf : f.IsCobounded (· ≤ ·) := by
       run_tac
@@ -357,6 +362,8 @@ theorem Limsup_le_Limsup {f g : Filter α}
     (h : ∀ a, (∀ᶠ n in g, n ≤ a) → ∀ᶠ n in f, n ≤ a) : f.limsup ≤ g.limsup :=
   cInf_le_cInf hf hg h
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem Limsup_le_Limsup_of_le {f g : Filter α} (h : f ≤ g)
     (hf : f.IsCobounded (· ≤ ·) := by
       run_tac
@@ -367,6 +374,8 @@ theorem Limsup_le_Limsup_of_le {f g : Filter α} (h : f ≤ g)
     f.limsup ≤ g.limsup :=
   Limsup_le_Limsup hf hg fun a ha => h ha
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem Liminf_le_Liminf_of_le {f g : Filter α} (h : g ≤ f)
     (hf : f.IsBounded (· ≥ ·) := by
       run_tac
@@ -377,6 +386,8 @@ theorem Liminf_le_Liminf_of_le {f g : Filter α} (h : g ≤ f)
     f.liminf ≤ g.liminf :=
   Liminf_le_Liminf hf hg fun a ha => h ha
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem limsup_le_limsup {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β} (h : u ≤ᶠ[f] v)
     (hu : f.IsCoboundedUnder (· ≤ ·) u := by
       run_tac
@@ -387,6 +398,8 @@ theorem limsup_le_limsup {α : Type _} [ConditionallyCompleteLattice β] {f : Fi
     f.limsup u ≤ f.limsup v :=
   (Limsup_le_Limsup hu hv) fun b => h.trans
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem liminf_le_liminf {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
     (h : ∀ᶠ a in f, u a ≤ v a)
     (hu : f.IsBoundedUnder (· ≥ ·) u := by
@@ -398,6 +411,8 @@ theorem liminf_le_liminf {α : Type _} [ConditionallyCompleteLattice β] {f : Fi
     f.liminf u ≤ f.liminf v :=
   @limsup_le_limsup βᵒᵈ α _ _ _ _ h hv hu
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem limsup_le_limsup_of_le {α β} [ConditionallyCompleteLattice β] {f g : Filter α} (h : f ≤ g) {u : α → β}
     (hf : f.IsCoboundedUnder (· ≤ ·) u := by
       run_tac
@@ -408,6 +423,8 @@ theorem limsup_le_limsup_of_le {α β} [ConditionallyCompleteLattice β] {f g : 
     f.limsup u ≤ g.limsup u :=
   Limsup_le_Limsup_of_le (map_mono h) hf hg
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem liminf_le_liminf_of_le {α β} [ConditionallyCompleteLattice β] {f g : Filter α} (h : g ≤ f) {u : α → β}
     (hf : f.IsBoundedUnder (· ≥ ·) u := by
       run_tac
@@ -428,23 +445,21 @@ theorem limsup_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter
     (h : ∀ᶠ a in f, u a = v a) : limsupₓ f u = limsupₓ f v := by
   rw [limsup_eq]
   congr with b
-  exact
-    eventually_congr
-      (h.mono fun x hx => by
-        simp [hx])
+  exact eventually_congr (h.mono fun x hx => by simp [hx])
 
 theorem liminf_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
     (h : ∀ᶠ a in f, u a = v a) : liminfₓ f u = liminfₓ f v :=
   @limsup_congr βᵒᵈ _ _ _ _ _ h
 
 theorem limsup_const {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} [NeBot f] (b : β) :
-    (limsupₓ f fun x => b) = b := by
-  simpa only [limsup_eq, eventually_const] using cInf_Ici
+    (limsupₓ f fun x => b) = b := by simpa only [limsup_eq, eventually_const] using cInf_Ici
 
 theorem liminf_const {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} [NeBot f] (b : β) :
     (liminfₓ f fun x => b) = b :=
   @limsup_const βᵒᵈ α _ f _ b
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem liminf_le_limsup {f : Filter β} [NeBot f] {u : β → α}
     (h : f.IsBoundedUnder (· ≤ ·) u := by
       run_tac
@@ -463,27 +478,19 @@ variable [CompleteLattice α]
 
 @[simp]
 theorem Limsup_bot : (⊥ : Filter α).limsup = ⊥ :=
-  bot_unique <|
-    Inf_le <| by
-      simp
+  bot_unique <| Inf_le <| by simp
 
 @[simp]
 theorem Liminf_bot : (⊥ : Filter α).liminf = ⊤ :=
-  top_unique <|
-    le_Sup <| by
-      simp
+  top_unique <| le_Sup <| by simp
 
 @[simp]
 theorem Limsup_top : (⊤ : Filter α).limsup = ⊤ :=
-  top_unique <|
-    le_Inf <| by
-      simp [eq_univ_iff_forall] <;> exact fun b hb => top_unique <| hb _
+  top_unique <| le_Inf <| by simp [eq_univ_iff_forall] <;> exact fun b hb => top_unique <| hb _
 
 @[simp]
 theorem Liminf_top : (⊤ : Filter α).liminf = ⊥ :=
-  bot_unique <|
-    Sup_le <| by
-      simp [eq_univ_iff_forall] <;> exact fun b hb => bot_unique <| hb _
+  bot_unique <| Sup_le <| by simp [eq_univ_iff_forall] <;> exact fun b hb => bot_unique <| hb _
 
 /-- Same as limsup_const applied to `⊥` but without the `ne_bot f` assumption -/
 theorem limsup_const_bot {f : Filter β} : (limsupₓ f fun x : β => (⊥ : α)) = (⊥ : α) := by
@@ -514,20 +521,17 @@ theorem Liminf_eq_supr_Inf {f : Filter α} : f.liminf = ⨆ s ∈ f, inf s :=
 /-- In a complete lattice, the limsup of a function is the infimum over sets `s` in the filter
 of the supremum of the function over `s` -/
 theorem limsup_eq_infi_supr {f : Filter β} {u : β → α} : f.limsup u = ⨅ s ∈ f, ⨆ a ∈ s, u a :=
-  (f.basis_sets.map u).Limsup_eq_infi_Sup.trans <| by
-    simp only [Sup_image, id]
+  (f.basis_sets.map u).Limsup_eq_infi_Sup.trans <| by simp only [Sup_image, id]
 
 theorem limsup_eq_infi_supr_of_nat {u : ℕ → α} : limsupₓ atTop u = ⨅ n : ℕ, ⨆ i ≥ n, u i :=
-  (at_top_basis.map u).Limsup_eq_infi_Sup.trans <| by
-    simp only [Sup_image, infi_const] <;> rfl
+  (at_top_basis.map u).Limsup_eq_infi_Sup.trans <| by simp only [Sup_image, infi_const] <;> rfl
 
 theorem limsup_eq_infi_supr_of_nat' {u : ℕ → α} : limsupₓ atTop u = ⨅ n : ℕ, ⨆ i : ℕ, u (i + n) := by
   simp only [limsup_eq_infi_supr_of_nat, supr_ge_eq_supr_nat_add]
 
 theorem HasBasis.limsup_eq_infi_supr {p : ι → Prop} {s : ι → Set β} {f : Filter β} {u : β → α} (h : f.HasBasis p s) :
     f.limsup u = ⨅ (i) (hi : p i), ⨆ a ∈ s i, u a :=
-  (h.map u).Limsup_eq_infi_Sup.trans <| by
-    simp only [Sup_image, id]
+  (h.map u).Limsup_eq_infi_Sup.trans <| by simp only [Sup_image, id]
 
 /-- In a complete lattice, the liminf of a function is the infimum over sets `s` in the filter
 of the supremum of the function over `s` -/
@@ -589,6 +593,7 @@ end CompleteLattice
 
 section ConditionallyCompleteLinearOrder
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem frequently_lt_of_lt_Limsup {f : Filter α} [ConditionallyCompleteLinearOrder α] {a : α}
     (hf : f.IsCobounded (· ≤ ·) := by
       run_tac
@@ -598,6 +603,7 @@ theorem frequently_lt_of_lt_Limsup {f : Filter α} [ConditionallyCompleteLinearO
   simp only [not_frequently, not_ltₓ] at h
   exact Limsup_le_of_le hf h
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem frequently_lt_of_Liminf_lt {f : Filter α} [ConditionallyCompleteLinearOrder α] {a : α}
     (hf : f.IsCobounded (· ≥ ·) := by
       run_tac
@@ -605,6 +611,7 @@ theorem frequently_lt_of_Liminf_lt {f : Filter α} [ConditionallyCompleteLinearO
     (h : f.liminf < a) : ∃ᶠ n in f, n < a :=
   @frequently_lt_of_lt_Limsup (OrderDual α) f _ a hf h
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem eventually_lt_of_lt_liminf {f : Filter α} [ConditionallyCompleteLinearOrder β] {u : α → β} {b : β}
     (h : b < liminfₓ f u)
     (hu : f.IsBoundedUnder (· ≥ ·) u := by
@@ -614,6 +621,7 @@ theorem eventually_lt_of_lt_liminf {f : Filter α} [ConditionallyCompleteLinearO
   obtain ⟨c, hc, hbc⟩ : ∃ (c : β)(hc : c ∈ { c : β | ∀ᶠ n : α in f, c ≤ u n }), b < c := exists_lt_of_lt_cSup hu h
   exact hc.mono fun x hx => lt_of_lt_of_leₓ hbc hx
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem eventually_lt_of_limsup_lt {f : Filter α} [ConditionallyCompleteLinearOrder β] {u : α → β} {b : β}
     (h : limsupₓ f u < b)
     (hu : f.IsBoundedUnder (· ≤ ·) u := by
@@ -622,6 +630,7 @@ theorem eventually_lt_of_limsup_lt {f : Filter α} [ConditionallyCompleteLinearO
     ∀ᶠ a in f, u a < b :=
   @eventually_lt_of_lt_liminf _ βᵒᵈ _ _ _ _ h hu
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem le_limsup_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α} {u : α → β} {b : β}
     (hu_le : ∃ᶠ x in f, b ≤ u x)
     (hu : f.IsBoundedUnder (· ≤ ·) u := by
@@ -633,6 +642,7 @@ theorem le_limsup_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β]
   simp_rw [← lt_iff_not_geₓ]
   exact fun h => eventually_lt_of_limsup_lt h hu
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem liminf_le_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α} {u : α → β} {b : β}
     (hu_le : ∃ᶠ x in f, u x ≤ b)
     (hu : f.IsBoundedUnder (· ≥ ·) u := by
@@ -641,6 +651,7 @@ theorem liminf_le_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β]
     f.liminf u ≤ b :=
   @le_limsup_of_frequently_le _ βᵒᵈ _ f u b hu_le hu
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem frequently_lt_of_lt_limsup {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α} {u : α → β} {b : β}
     (hu : f.IsCoboundedUnder (· ≤ ·) u := by
       run_tac
@@ -650,6 +661,7 @@ theorem frequently_lt_of_lt_limsup {α β} [ConditionallyCompleteLinearOrder β]
   apply Limsup_le_of_le hu
   simpa using h
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem frequently_lt_of_liminf_lt {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α} {u : α → β} {b : β}
     (hu : f.IsCoboundedUnder (· ≥ ·) u := by
       run_tac
@@ -665,8 +677,8 @@ section Order
 
 open Filter
 
-theorem Monotone.is_bounded_under_le_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMaxOrder γ] {g : β → γ}
-    {f : α → β} {l : Filter α} (hg : Monotone g) (hg' : Tendsto g atTop atTop) :
+theorem Monotoneₓ.is_bounded_under_le_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMaxOrder γ] {g : β → γ}
+    {f : α → β} {l : Filter α} (hg : Monotoneₓ g) (hg' : Tendsto g atTop atTop) :
     IsBoundedUnder (· ≤ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≤ ·) l f := by
   refine' ⟨_, fun h => h.IsBoundedUnder hg⟩
   rintro ⟨c, hc⟩
@@ -674,21 +686,23 @@ theorem Monotone.is_bounded_under_le_comp [Nonempty β] [LinearOrderₓ β] [Pre
   obtain ⟨b, hb⟩ : ∃ b, ∀ a ≥ b, c < g a := eventually_at_top.1 (hg'.eventually_gt_at_top c)
   exact ⟨b, hc.mono fun x hx => not_ltₓ.1 fun h => (hb _ h.le).not_le hx⟩
 
-theorem Monotone.is_bounded_under_ge_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMinOrder γ] {g : β → γ}
-    {f : α → β} {l : Filter α} (hg : Monotone g) (hg' : Tendsto g atBot atBot) :
+theorem Monotoneₓ.is_bounded_under_ge_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMinOrder γ] {g : β → γ}
+    {f : α → β} {l : Filter α} (hg : Monotoneₓ g) (hg' : Tendsto g atBot atBot) :
     IsBoundedUnder (· ≥ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≥ ·) l f :=
   hg.dual.is_bounded_under_le_comp hg'
 
-theorem Antitone.is_bounded_under_le_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMaxOrder γ] {g : β → γ}
-    {f : α → β} {l : Filter α} (hg : Antitone g) (hg' : Tendsto g atBot atTop) :
+theorem Antitoneₓ.is_bounded_under_le_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMaxOrder γ] {g : β → γ}
+    {f : α → β} {l : Filter α} (hg : Antitoneₓ g) (hg' : Tendsto g atBot atTop) :
     IsBoundedUnder (· ≤ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≥ ·) l f :=
   hg.dual_right.is_bounded_under_ge_comp hg'
 
-theorem Antitone.is_bounded_under_ge_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMinOrder γ] {g : β → γ}
-    {f : α → β} {l : Filter α} (hg : Antitone g) (hg' : Tendsto g atTop atBot) :
+theorem Antitoneₓ.is_bounded_under_ge_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMinOrder γ] {g : β → γ}
+    {f : α → β} {l : Filter α} (hg : Antitoneₓ g) (hg' : Tendsto g atTop atBot) :
     IsBoundedUnder (· ≥ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≤ ·) l f :=
   hg.dual_right.is_bounded_under_le_comp hg'
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem GaloisConnection.l_limsup_le [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ] {f : Filter α}
     {v : α → β} {l : β → γ} {u : γ → β} (gc : GaloisConnection l u)
     (hlv : f.IsBoundedUnder (· ≤ ·) fun x => l (v x) := by
@@ -703,6 +717,10 @@ theorem GaloisConnection.l_limsup_le [ConditionallyCompleteLattice β] [Conditio
   simp_rw [gc _ _] at hc⊢
   exact Limsup_le_of_le hv_co hc
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem OrderIso.limsup_apply {γ} [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ] {f : Filter α}
     {u : α → β} (g : β ≃o γ)
     (hu : f.IsBoundedUnder (· ≤ ·) u := by
@@ -722,11 +740,15 @@ theorem OrderIso.limsup_apply {γ} [ConditionallyCompleteLattice β] [Conditiona
   rw [← g.symm.symm_apply_apply (f.limsup fun x : α => g (u x)), g.symm_symm]
   refine' g.monotone _
   have hf : u = fun i => g.symm (g (u i)) := funext fun i => (g.symm_apply_apply (u i)).symm
-  nth_rw 0[hf]
+  nth_rw 0 [hf]
   refine' g.symm.to_galois_connection.l_limsup_le _ hgu_co
   simp_rw [g.symm_apply_apply]
   exact hu
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default
 theorem OrderIso.liminf_apply {γ} [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ] {f : Filter α}
     {u : α → β} (g : β ≃o γ)
     (hu : f.IsBoundedUnder (· ≥ ·) u := by

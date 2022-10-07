@@ -74,7 +74,7 @@ variable {F α β γ δ : Type _}
 /-- Bundled monotone (aka, increasing) function -/
 structure OrderHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] where
   toFun : α → β
-  monotone' : Monotone to_fun
+  monotone' : Monotoneₓ to_fun
 
 -- mathport name: «expr →o »
 infixr:25 " →o " => OrderHom
@@ -120,9 +120,9 @@ namespace OrderHomClass
 
 variable [Preorderₓ α] [Preorderₓ β] [OrderHomClass F α β]
 
-protected theorem monotone (f : F) : Monotone (f : α → β) := fun _ _ => map_rel f
+protected theorem monotone (f : F) : Monotoneₓ (f : α → β) := fun _ _ => map_rel f
 
-protected theorem mono (f : F) : Monotone (f : α → β) := fun _ _ => map_rel f
+protected theorem mono (f : F) : Monotoneₓ (f : α → β) := fun _ _ => map_rel f
 
 instance : CoeTₓ F (α →o β) :=
   ⟨fun f => { toFun := f, monotone' := OrderHomClass.mono _ }⟩
@@ -177,10 +177,10 @@ instance : CoeFun (α →o β) fun _ => α → β :=
 
 initialize_simps_projections OrderHom (toFun → coe)
 
-protected theorem monotone (f : α →o β) : Monotone f :=
+protected theorem monotone (f : α →o β) : Monotoneₓ f :=
   f.monotone'
 
-protected theorem mono (f : α →o β) : Monotone f :=
+protected theorem mono (f : α →o β) : Monotoneₓ f :=
   f.Monotone
 
 instance : OrderHomClass (α →o β) α β where
@@ -196,7 +196,7 @@ theorem to_fun_eq_coe {f : α →o β} : f.toFun = f :=
   rfl
 
 @[simp]
-theorem coe_fun_mk {f : α → β} (hf : Monotone f) : (mk f hf : α → β) = f :=
+theorem coe_fun_mk {f : α → β} (hf : Monotoneₓ f) : (mk f hf : α → β) = f :=
   rfl
 
 -- See library note [partially-applied ext lemmas]
@@ -204,14 +204,10 @@ theorem coe_fun_mk {f : α → β} (hf : Monotone f) : (mk f hf : α → β) = f
 theorem ext (f g : α →o β) (h : (f : α → β) = g) : f = g :=
   FunLike.coe_injective h
 
-theorem coe_eq (f : α →o β) : coe f = f := by
-  ext <;> rfl
+theorem coe_eq (f : α →o β) : coe f = f := by ext <;> rfl
 
 /-- One can lift an unbundled monotone function to a bundled one. -/
-instance : CanLift (α → β) (α →o β) where
-  coe := coeFn
-  cond := Monotone
-  prf := fun f h => ⟨⟨f, h⟩, rfl⟩
+instance : CanLift (α → β) (α →o β) coeFn Monotoneₓ where prf := fun f h => ⟨⟨f, h⟩, rfl⟩
 
 /-- Copy of an `order_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
@@ -221,7 +217,7 @@ protected def copy (f : α →o β) (f' : α → β) (h : f' = f) : α →o β :
 /-- The identity function as bundled monotone function. -/
 @[simps (config := { fullyApplied := false })]
 def id : α →o α :=
-  ⟨id, monotone_id⟩
+  ⟨id, monotone_idₓ⟩
 
 instance : Inhabited (α →o α) :=
   ⟨id⟩
@@ -259,8 +255,7 @@ def curry : (α × β →o γ) ≃o (α →o β →o γ) where
   right_inv := fun f => by
     ext x y
     rfl
-  map_rel_iff' := fun f g => by
-    simp [le_def]
+  map_rel_iff' := fun f g => by simp [le_def]
 
 @[simp]
 theorem curry_apply (f : α × β →o γ) (x : α) (y : β) : curry f x y = f (x, y) :=
@@ -366,10 +361,8 @@ of monotone maps to `β` and `γ`. -/
 def prodIso : (α →o β × γ) ≃o (α →o β) × (α →o γ) where
   toFun := fun f => (fst.comp f, snd.comp f)
   invFun := fun f => f.1.Prod f.2
-  left_inv := fun f => by
-    ext <;> rfl
-  right_inv := fun f => by
-    ext <;> rfl
+  left_inv := fun f => by ext <;> rfl
+  right_inv := fun f => by ext <;> rfl
   map_rel_iff' := fun f g => forall_and_distrib.symm
 
 /-- `prod.map` of two `order_hom`s as a `order_hom`. -/
@@ -382,7 +375,7 @@ variable {ι : Type _} {π : ι → Type _} [∀ i, Preorderₓ (π i)]
 /-- Evaluation of an unbundled function at a point (`function.eval`) as a `order_hom`. -/
 @[simps (config := { fullyApplied := false })]
 def _root_.pi.eval_order_hom (i : ι) : (∀ j, π j) →o π i :=
-  ⟨Function.eval i, Function.monotone_eval i⟩
+  ⟨Function.eval i, Function.monotone_evalₓ i⟩
 
 /-- The "forgetful functor" from `α →o β` to `α → β` that takes the underlying function,
 is monotone. -/
@@ -492,9 +485,7 @@ variable [Preorderₓ α] [Preorderₓ β] (f : α ↪o β)
 
 /-- `<` is preserved by order embeddings of preorders. -/
 def ltEmbedding : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop) :=
-  { f with
-    map_rel_iff' := by
-      intros <;> simp [lt_iff_le_not_leₓ, f.map_rel_iff] }
+  { f with map_rel_iff' := by intros <;> simp [lt_iff_le_not_leₓ, f.map_rel_iff] }
 
 @[simp]
 theorem lt_embedding_apply (x : α) : f.ltEmbedding x = f x :=
@@ -512,10 +503,10 @@ theorem lt_iff_lt {a b} : f a < f b ↔ a < b :=
 theorem eq_iff_eq {a b} : f a = f b ↔ a = b :=
   f.Injective.eq_iff
 
-protected theorem monotone : Monotone f :=
+protected theorem monotone : Monotoneₓ f :=
   OrderHomClass.monotone f
 
-protected theorem strict_mono : StrictMono f := fun x y => f.lt_iff_lt.2
+protected theorem strict_mono : StrictMonoₓ f := fun x y => f.lt_iff_lt.2
 
 protected theorem acc (a : α) : Acc (· < ·) (f a) → Acc (· < ·) a :=
   f.ltEmbedding.Acc a
@@ -552,11 +543,11 @@ theorem coe_of_map_le_iff {α β} [PartialOrderₓ α] [Preorderₓ β] {f : α 
   rfl
 
 /-- A strictly monotone map from a linear order is an order embedding. --/
-def ofStrictMono {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β) (h : StrictMono f) : α ↪o β :=
+def ofStrictMono {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β) (h : StrictMonoₓ f) : α ↪o β :=
   ofMapLeIff f fun _ _ => h.le_iff_le
 
 @[simp]
-theorem coe_of_strict_mono {α β} [LinearOrderₓ α] [Preorderₓ β] {f : α → β} (h : StrictMono f) :
+theorem coe_of_strict_mono {α β} [LinearOrderₓ α] [Preorderₓ β] {f : α → β} (h : StrictMonoₓ f) :
     ⇑(ofStrictMono f h) = f :=
   rfl
 
@@ -586,7 +577,7 @@ is weakly monotone. -/
 @[simps (config := { fullyApplied := false })]
 def toOrderHom : α →o β where
   toFun := f
-  monotone' := StrictMono.monotone fun x y => f.map_rel
+  monotone' := StrictMonoₓ.monotone fun x y => f.map_rel
 
 end RelHom
 
@@ -806,10 +797,10 @@ end Le
 
 variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ]
 
-protected theorem monotone (e : α ≃o β) : Monotone e :=
+protected theorem monotone (e : α ≃o β) : Monotoneₓ e :=
   e.toOrderEmbedding.Monotone
 
-protected theorem strict_mono (e : α ≃o β) : StrictMono e :=
+protected theorem strict_mono (e : α ≃o β) : StrictMonoₓ e :=
   e.toOrderEmbedding.StrictMono
 
 @[simp]
@@ -831,8 +822,7 @@ theorem to_rel_iso_lt_symm (e : α ≃o β) : e.toRelIsoLt.symm = e.symm.toRelIs
 /-- Converts a `rel_iso (<) (<)` into an `order_iso`. -/
 def ofRelIsoLt {α β} [PartialOrderₓ α] [PartialOrderₓ β] (e : ((· < ·) : α → α → Prop) ≃r ((· < ·) : β → β → Prop)) :
     α ≃o β :=
-  ⟨e.toEquiv, fun x y => by
-    simp [le_iff_eq_or_ltₓ, e.map_rel_iff]⟩
+  ⟨e.toEquiv, fun x y => by simp [le_iff_eq_or_ltₓ, e.map_rel_iff]⟩
 
 @[simp]
 theorem of_rel_iso_lt_apply {α β} [PartialOrderₓ α] [PartialOrderₓ β]
@@ -903,8 +893,7 @@ def Set.univ : (Set.Univ : Set α) ≃o α where
 @[simps toEquiv apply]
 def funUnique (α β : Type _) [Unique α] [Preorderₓ β] : (α → β) ≃o β where
   toEquiv := Equivₓ.funUnique α β
-  map_rel_iff' := fun f g => by
-    simp [Pi.le_def, Unique.forall_iff]
+  map_rel_iff' := fun f g => by simp [Pi.le_def, Unique.forall_iff]
 
 @[simp]
 theorem fun_unique_symm_apply {α β : Type _} [Unique α] [Preorderₓ β] :
@@ -919,33 +908,32 @@ variable [Preorderₓ α] [Preorderₓ β]
 
 /-- If `e` is an equivalence with monotone forward and inverse maps, then `e` is an
 order isomorphism. -/
-def toOrderIso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : α ≃o β :=
-  ⟨e, fun x y =>
-    ⟨fun h => by
-      simpa only [e.symm_apply_apply] using h₂ h, fun h => h₁ h⟩⟩
+def toOrderIso (e : α ≃ β) (h₁ : Monotoneₓ e) (h₂ : Monotoneₓ e.symm) : α ≃o β :=
+  ⟨e, fun x y => ⟨fun h => by simpa only [e.symm_apply_apply] using h₂ h, fun h => h₁ h⟩⟩
 
 @[simp]
-theorem coe_to_order_iso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : ⇑(e.toOrderIso h₁ h₂) = e :=
+theorem coe_to_order_iso (e : α ≃ β) (h₁ : Monotoneₓ e) (h₂ : Monotoneₓ e.symm) : ⇑(e.toOrderIso h₁ h₂) = e :=
   rfl
 
 @[simp]
-theorem to_order_iso_to_equiv (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : (e.toOrderIso h₁ h₂).toEquiv = e :=
+theorem to_order_iso_to_equiv (e : α ≃ β) (h₁ : Monotoneₓ e) (h₂ : Monotoneₓ e.symm) :
+    (e.toOrderIso h₁ h₂).toEquiv = e :=
   rfl
 
 end Equivₓ
 
 /-- If a function `f` is strictly monotone on a set `s`, then it defines an order isomorphism
 between `s` and its image. -/
-protected noncomputable def StrictMonoOn.orderIso {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β) (s : Set α)
-    (hf : StrictMonoOn f s) : s ≃o f '' s where
+protected noncomputable def StrictMonoOnₓ.orderIso {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β) (s : Set α)
+    (hf : StrictMonoOnₓ f s) : s ≃o f '' s where
   toEquiv := hf.InjOn.bij_on_image.Equiv _
   map_rel_iff' := fun x y => hf.le_iff_le x.2 y.2
 
-namespace StrictMono
+namespace StrictMonoₓ
 
 variable {α β} [LinearOrderₓ α] [Preorderₓ β]
 
-variable (f : α → β) (h_mono : StrictMono f) (h_surj : Function.Surjective f)
+variable (f : α → β) (h_mono : StrictMonoₓ f) (h_surj : Function.Surjective f)
 
 /-- A strictly monotone function from a linear order is an order isomorphism between its domain and
 its range. -/
@@ -975,7 +963,7 @@ def orderIsoOfRightInverse (g : β → α) (hg : Function.RightInverse g f) : α
   { OrderEmbedding.ofStrictMono f h_mono with toFun := f, invFun := g, left_inv := fun x => h_mono.Injective <| hg _,
     right_inv := hg }
 
-end StrictMono
+end StrictMonoₓ
 
 /-- An order isomorphism is also an order isomorphism between dual orders. -/
 protected def OrderIso.dual [LE α] [LE β] (f : α ≃o β) : αᵒᵈ ≃o βᵒᵈ :=
@@ -1182,10 +1170,10 @@ def OrderIso.compl : α ≃o αᵒᵈ where
   right_inv := compl_compl
   map_rel_iff' := fun x y => compl_le_compl_iff_le
 
-theorem compl_strict_anti : StrictAnti (compl : α → α) :=
+theorem compl_strict_anti : StrictAntiₓ (compl : α → α) :=
   (OrderIso.compl α).StrictMono
 
-theorem compl_antitone : Antitone (compl : α → α) :=
+theorem compl_antitone : Antitoneₓ (compl : α → α) :=
   (OrderIso.compl α).Monotone
 
 end BooleanAlgebra

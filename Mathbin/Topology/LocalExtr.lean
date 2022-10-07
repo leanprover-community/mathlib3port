@@ -173,40 +173,42 @@ theorem is_local_extr_const {b : β} : IsLocalExtr (fun _ => b) a :=
 /-! ### Composition with (anti)monotone functions -/
 
 
-theorem IsLocalMin.comp_mono (hf : IsLocalMin f a) {g : β → γ} (hg : Monotone g) : IsLocalMin (g ∘ f) a :=
+theorem IsLocalMin.comp_mono (hf : IsLocalMin f a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalMin (g ∘ f) a :=
   hf.comp_mono hg
 
-theorem IsLocalMax.comp_mono (hf : IsLocalMax f a) {g : β → γ} (hg : Monotone g) : IsLocalMax (g ∘ f) a :=
+theorem IsLocalMax.comp_mono (hf : IsLocalMax f a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalMax (g ∘ f) a :=
   hf.comp_mono hg
 
-theorem IsLocalExtr.comp_mono (hf : IsLocalExtr f a) {g : β → γ} (hg : Monotone g) : IsLocalExtr (g ∘ f) a :=
+theorem IsLocalExtr.comp_mono (hf : IsLocalExtr f a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalExtr (g ∘ f) a :=
   hf.comp_mono hg
 
-theorem IsLocalMin.comp_antitone (hf : IsLocalMin f a) {g : β → γ} (hg : Antitone g) : IsLocalMax (g ∘ f) a :=
+theorem IsLocalMin.comp_antitone (hf : IsLocalMin f a) {g : β → γ} (hg : Antitoneₓ g) : IsLocalMax (g ∘ f) a :=
   hf.comp_antitone hg
 
-theorem IsLocalMax.comp_antitone (hf : IsLocalMax f a) {g : β → γ} (hg : Antitone g) : IsLocalMin (g ∘ f) a :=
+theorem IsLocalMax.comp_antitone (hf : IsLocalMax f a) {g : β → γ} (hg : Antitoneₓ g) : IsLocalMin (g ∘ f) a :=
   hf.comp_antitone hg
 
-theorem IsLocalExtr.comp_antitone (hf : IsLocalExtr f a) {g : β → γ} (hg : Antitone g) : IsLocalExtr (g ∘ f) a :=
+theorem IsLocalExtr.comp_antitone (hf : IsLocalExtr f a) {g : β → γ} (hg : Antitoneₓ g) : IsLocalExtr (g ∘ f) a :=
   hf.comp_antitone hg
 
-theorem IsLocalMinOn.comp_mono (hf : IsLocalMinOn f s a) {g : β → γ} (hg : Monotone g) : IsLocalMinOn (g ∘ f) s a :=
+theorem IsLocalMinOn.comp_mono (hf : IsLocalMinOn f s a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalMinOn (g ∘ f) s a :=
   hf.comp_mono hg
 
-theorem IsLocalMaxOn.comp_mono (hf : IsLocalMaxOn f s a) {g : β → γ} (hg : Monotone g) : IsLocalMaxOn (g ∘ f) s a :=
+theorem IsLocalMaxOn.comp_mono (hf : IsLocalMaxOn f s a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalMaxOn (g ∘ f) s a :=
   hf.comp_mono hg
 
-theorem IsLocalExtrOn.comp_mono (hf : IsLocalExtrOn f s a) {g : β → γ} (hg : Monotone g) : IsLocalExtrOn (g ∘ f) s a :=
+theorem IsLocalExtrOn.comp_mono (hf : IsLocalExtrOn f s a) {g : β → γ} (hg : Monotoneₓ g) : IsLocalExtrOn (g ∘ f) s a :=
   hf.comp_mono hg
 
-theorem IsLocalMinOn.comp_antitone (hf : IsLocalMinOn f s a) {g : β → γ} (hg : Antitone g) : IsLocalMaxOn (g ∘ f) s a :=
+theorem IsLocalMinOn.comp_antitone (hf : IsLocalMinOn f s a) {g : β → γ} (hg : Antitoneₓ g) :
+    IsLocalMaxOn (g ∘ f) s a :=
   hf.comp_antitone hg
 
-theorem IsLocalMaxOn.comp_antitone (hf : IsLocalMaxOn f s a) {g : β → γ} (hg : Antitone g) : IsLocalMinOn (g ∘ f) s a :=
+theorem IsLocalMaxOn.comp_antitone (hf : IsLocalMaxOn f s a) {g : β → γ} (hg : Antitoneₓ g) :
+    IsLocalMinOn (g ∘ f) s a :=
   hf.comp_antitone hg
 
-theorem IsLocalExtrOn.comp_antitone (hf : IsLocalExtrOn f s a) {g : β → γ} (hg : Antitone g) :
+theorem IsLocalExtrOn.comp_antitone (hf : IsLocalExtrOn f s a) {g : β → γ} (hg : Antitoneₓ g) :
     IsLocalExtrOn (g ∘ f) s a :=
   hf.comp_antitone hg
 

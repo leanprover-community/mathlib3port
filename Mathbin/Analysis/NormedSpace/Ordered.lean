@@ -41,7 +41,7 @@ instance (priority := 100) NormedLinearOrderedField.toNormedLinearOrderedGroup (
     [NormedLinearOrderedField α] : NormedLinearOrderedGroup α :=
   ⟨NormedLinearOrderedField.dist_eq⟩
 
-noncomputable instance : NormedLinearOrderedField ℚ :=
+instance : NormedLinearOrderedField ℚ :=
   ⟨dist_eq_norm, norm_mul⟩
 
 noncomputable instance : NormedLinearOrderedField ℝ :=

@@ -147,14 +147,14 @@ attribute
   [«./././Mathport/Syntax/Translate/Command.lean:96:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
   Zero One Add Mul Inv Neg Sub Div Dvd Mod LE LT Append HasAndthen Union Inter Sdiff HasEquivₓ Subset SSubset EmptyCollection Insert Singleton Sep Membership Pow
 
--- ./././Mathport/Syntax/Translate/Command.lean:96:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Command.lean:96:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
 attribute
-  [«./././Mathport/Syntax/Translate/Command.lean:96:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args»]
+  [«./././Mathport/Syntax/Translate/Command.lean:96:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args»]
   CoeSort
 
--- ./././Mathport/Syntax/Translate/Command.lean:96:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Command.lean:96:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
 attribute
-  [«./././Mathport/Syntax/Translate/Command.lean:96:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args»]
+  [«./././Mathport/Syntax/Translate/Command.lean:96:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args»]
   CoeFun
 
 /-- Returns the projection information of a structure. -/

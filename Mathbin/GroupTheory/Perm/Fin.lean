@@ -34,8 +34,7 @@ theorem Equivₓ.Perm.decompose_fin_symm_of_one {n : ℕ} (p : Finₓ (n + 1)) :
 
 @[simp]
 theorem Equivₓ.Perm.decompose_fin_symm_apply_zero {n : ℕ} (p : Finₓ (n + 1)) (e : Perm (Finₓ n)) :
-    Equivₓ.Perm.decomposeFin.symm (p, e) 0 = p := by
-  simp [Equivₓ.Perm.decomposeFin]
+    Equivₓ.Perm.decomposeFin.symm (p, e) 0 = p := by simp [Equivₓ.Perm.decomposeFin]
 
 @[simp]
 theorem Equivₓ.Perm.decompose_fin_symm_apply_succ {n : ℕ} (e : Perm (Finₓ n)) (p : Finₓ (n + 1)) (x : Finₓ n) :
@@ -44,7 +43,7 @@ theorem Equivₓ.Perm.decompose_fin_symm_apply_succ {n : ℕ} (e : Perm (Finₓ 
   · simp [Equivₓ.Perm.decomposeFin, EquivFunctor.map]
     
   · intro i
-    by_cases' h : i = e x
+    by_cases h:i = e x
     · simp [h, Equivₓ.Perm.decomposeFin, EquivFunctor.map]
       
     · have h' : some (e x) ≠ some i := fun H => h (Option.some_injective _ H).symm
@@ -66,10 +65,10 @@ theorem Equivₓ.Perm.decomposeFin.symm_sign {n : ℕ} (p : Finₓ (n + 1)) (e :
 
 /-- The set of all permutations of `fin (n + 1)` can be constructed by augmenting the set of
 permutations of `fin n` by each element of `fin (n + 1)` in turn. -/
-theorem Finset.univ_perm_fin_succ {n : ℕ} :
-    @Finset.univ (perm <| Finₓ n.succ) _ =
-      (Finset.univ : Finset <| Finₓ n.succ × Perm (Finₓ n)).map Equivₓ.Perm.decomposeFin.symm.toEmbedding :=
-  (Finset.univ_map_equiv_to_embedding _).symm
+theorem Finsetₓ.univ_perm_fin_succ {n : ℕ} :
+    @Finsetₓ.univ (perm <| Finₓ n.succ) _ =
+      (Finsetₓ.univ : Finsetₓ <| Finₓ n.succ × Perm (Finₓ n)).map Equivₓ.Perm.decomposeFin.symm.toEmbedding :=
+  (Finsetₓ.univ_map_equiv_to_embedding _).symm
 
 section CycleRange
 
@@ -107,18 +106,16 @@ theorem sign_fin_rotate (n : ℕ) : Perm.sign (finRotate (n + 1)) = -1 ^ n := by
     
 
 @[simp]
-theorem support_fin_rotate {n : ℕ} : support (finRotate (n + 2)) = Finset.univ := by
+theorem support_fin_rotate {n : ℕ} : support (finRotate (n + 2)) = Finsetₓ.univ := by
   ext
   simp
 
-theorem support_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : support (finRotate n) = Finset.univ := by
+theorem support_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : support (finRotate n) = Finsetₓ.univ := by
   obtain ⟨m, rfl⟩ := exists_add_of_le h
   rw [add_commₓ, support_fin_rotate]
 
 theorem is_cycle_fin_rotate {n : ℕ} : IsCycle (finRotate (n + 2)) := by
-  refine'
-    ⟨0, by
-      decide, fun x hx' => ⟨x, _⟩⟩
+  refine' ⟨0, by decide, fun x hx' => ⟨x, _⟩⟩
   clear hx'
   cases' x with x hx
   rw [coe_coe, zpow_coe_nat, Finₓ.ext_iff, Finₓ.coe_mk]
@@ -136,7 +133,7 @@ theorem is_cycle_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : IsCycle (finRotate n
 
 @[simp]
 theorem cycle_type_fin_rotate {n : ℕ} : cycleType (finRotate (n + 2)) = {n + 2} := by
-  rw [is_cycle_fin_rotate.cycle_type, support_fin_rotate, ← Fintype.card, Fintype.card_fin]
+  rw [is_cycle_fin_rotate.cycle_type, support_fin_rotate, ← Fintypeₓ.card, Fintypeₓ.card_fin]
   rfl
 
 theorem cycle_type_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : cycleType (finRotate n) = {n} := by
@@ -152,7 +149,7 @@ def cycleRange {n : ℕ} (i : Finₓ n) : Perm (Finₓ n) :=
       (by
         intro x
         ext
-        simp ))
+        simp))
 
 theorem cycle_range_of_gt {n : ℕ} {i j : Finₓ n.succ} (h : i < j) : cycleRange i j = j := by
   rw [cycle_range, of_left_inverse'_eq_of_injective, ← Function.Embedding.to_equiv_range_eq_of_injective, ←
@@ -235,8 +232,7 @@ theorem cycle_range_zero' {n : ℕ} (h : 0 < n) : cycleRange ⟨0, h⟩ = 1 := b
   exact cycle_range_zero n
 
 @[simp]
-theorem sign_cycle_range {n : ℕ} (i : Finₓ n) : Perm.sign (cycleRange i) = -1 ^ (i : ℕ) := by
-  simp [cycle_range]
+theorem sign_cycle_range {n : ℕ} (i : Finₓ n) : Perm.sign (cycleRange i) = -1 ^ (i : ℕ) := by simp [cycle_range]
 
 @[simp]
 theorem succ_above_cycle_range {n : ℕ} (i j : Finₓ n) : i.succ.succAbove (i.cycleRange j) = swap 0 i.succ j.succ := by
@@ -280,15 +276,11 @@ theorem cycle_range_succ_above {n : ℕ} (i : Finₓ (n + 1)) (j : Finₓ n) : i
 
 @[simp]
 theorem cycle_range_symm_zero {n : ℕ} (i : Finₓ (n + 1)) : i.cycleRange.symm 0 = i :=
-  i.cycleRange.Injective
-    (by
-      simp )
+  i.cycleRange.Injective (by simp)
 
 @[simp]
 theorem cycle_range_symm_succ {n : ℕ} (i : Finₓ (n + 1)) (j : Finₓ n) : i.cycleRange.symm j.succ = i.succAbove j :=
-  i.cycleRange.Injective
-    (by
-      simp )
+  i.cycleRange.Injective (by simp)
 
 theorem is_cycle_cycle_range {n : ℕ} {i : Finₓ (n + 1)} (h0 : i ≠ 0) : IsCycle (cycleRange i) := by
   cases' i with i hi

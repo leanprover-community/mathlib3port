@@ -70,7 +70,7 @@ def unopHom (X Y : Cᵒᵖ) : (X ⟶ Y) →+ (Opposite.unop Y ⟶ Opposite.unop 
   (AddMonoidHom.mk' fun f => f.unop) fun f g => unop_add _ f g
 
 @[simp]
-theorem unop_sum (X Y : Cᵒᵖ) {ι : Type _} (s : Finset ι) (f : ι → (X ⟶ Y)) :
+theorem unop_sum (X Y : Cᵒᵖ) {ι : Type _} (s : Finsetₓ ι) (f : ι → (X ⟶ Y)) :
     (s.Sum f).unop = s.Sum fun i => (f i).unop :=
   (unopHom X Y).map_sum _ _
 
@@ -80,7 +80,7 @@ def opHom (X Y : C) : (X ⟶ Y) →+ (Opposite.op Y ⟶ Opposite.op X) :=
   (AddMonoidHom.mk' fun f => f.op) fun f g => op_add _ f g
 
 @[simp]
-theorem op_sum (X Y : C) {ι : Type _} (s : Finset ι) (f : ι → (X ⟶ Y)) : (s.Sum f).op = s.Sum fun i => (f i).op :=
+theorem op_sum (X Y : C) {ι : Type _} (s : Finsetₓ ι) (f : ι → (X ⟶ Y)) : (s.Sum f).op = s.Sum fun i => (f i).op :=
   (opHom X Y).map_sum _ _
 
 variable {D : Type _} [Category D] [Preadditive D]

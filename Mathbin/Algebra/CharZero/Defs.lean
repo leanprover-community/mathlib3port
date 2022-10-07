@@ -63,19 +63,16 @@ theorem cast_inj {m n : ℕ} : (m : R) = n ↔ m = n :=
   cast_injective.eq_iff
 
 @[simp, norm_cast]
-theorem cast_eq_zero {n : ℕ} : (n : R) = 0 ↔ n = 0 := by
-  rw [← cast_zero, cast_inj]
+theorem cast_eq_zero {n : ℕ} : (n : R) = 0 ↔ n = 0 := by rw [← cast_zero, cast_inj]
 
 @[norm_cast]
 theorem cast_ne_zero {n : ℕ} : (n : R) ≠ 0 ↔ n ≠ 0 :=
   not_congr cast_eq_zero
 
-theorem cast_add_one_ne_zero (n : ℕ) : (n + 1 : R) ≠ 0 := by
-  exact_mod_cast n.succ_ne_zero
+theorem cast_add_one_ne_zero (n : ℕ) : (n + 1 : R) ≠ 0 := by exact_mod_cast n.succ_ne_zero
 
 @[simp, norm_cast]
-theorem cast_eq_one {n : ℕ} : (n : R) = 1 ↔ n = 1 := by
-  rw [← cast_one, cast_inj]
+theorem cast_eq_one {n : ℕ} : (n : R) = 1 ↔ n = 1 := by rw [← cast_one, cast_inj]
 
 @[norm_cast]
 theorem cast_ne_one {n : ℕ} : (n : R) ≠ 1 ↔ n ≠ 1 :=

@@ -90,9 +90,9 @@ variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [Semiringₓ B] [Alge
 /-- A subalgebra `S` is finitely generated if there exists `t : finset A` such that
 `algebra.adjoin R t = S`. -/
 def Fg (S : Subalgebra R A) : Prop :=
-  ∃ t : Finset A, Algebra.adjoin R ↑t = S
+  ∃ t : Finsetₓ A, Algebra.adjoin R ↑t = S
 
-theorem fg_adjoin_finset (s : Finset A) : (Algebra.adjoin R (↑s : Set A)).Fg :=
+theorem fg_adjoin_finset (s : Finsetₓ A) : (Algebra.adjoin R (↑s : Set A)).Fg :=
   ⟨s, rfl⟩
 
 theorem fg_def {S : Subalgebra R A} : S.Fg ↔ ∃ t : Set A, Set.Finite t ∧ Algebra.adjoin R t = S :=
@@ -137,8 +137,7 @@ open Classical
 
 theorem Fg.map {S : Subalgebra R A} (f : A →ₐ[R] B) (hs : S.Fg) : (S.map f).Fg :=
   let ⟨s, hs⟩ := hs
-  ⟨s.Image f, by
-    rw [Finset.coe_image, Algebra.adjoin_image, hs]⟩
+  ⟨s.Image f, by rw [Finsetₓ.coe_image, Algebra.adjoin_image, hs]⟩
 
 end
 
@@ -146,7 +145,7 @@ theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Inj
   let ⟨s, hs⟩ := hs
   ⟨(s.Preimage f) fun _ _ _ _ h => hf h,
     map_injective hf <| by
-      rw [← Algebra.adjoin_image, Finset.coe_preimage, Set.image_preimage_eq_of_subset, hs]
+      rw [← Algebra.adjoin_image, Finsetₓ.coe_preimage, Set.image_preimage_eq_of_subset, hs]
       rw [← AlgHom.coe_range, ← Algebra.adjoin_le_iff, hs, ← Algebra.map_top]
       exact map_mono le_top⟩
 
@@ -162,11 +161,11 @@ theorem induction_on_adjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (ba
     (ih : ∀ (S : Subalgebra R A) (x : A), P S → P (Algebra.adjoin R (insert x S))) (S : Subalgebra R A) : P S := by
   classical
   obtain ⟨t, rfl⟩ := S.fg_of_noetherian
-  refine' Finset.induction_on t _ _
+  refine' Finsetₓ.induction_on t _ _
   · simpa using base
     
   intro x t hxt h
-  rw [Finset.coe_insert]
+  rw [Finsetₓ.coe_insert]
   simpa only [Algebra.adjoin_insert_adjoin] using ih _ x h
 
 end Subalgebra

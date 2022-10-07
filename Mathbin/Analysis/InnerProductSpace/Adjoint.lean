@@ -93,7 +93,7 @@ theorem adjoint_aux_norm (A : E →L[𝕜] F) : ∥adjointAux A∥ = ∥A∥ := 
     rw [adjoint_aux_apply, LinearIsometryEquiv.norm_map]
     exact to_sesq_form_apply_norm_le
     
-  · nth_rw_lhs 0[← adjoint_aux_adjoint_aux A]
+  · nth_rw_lhs 0 [← adjoint_aux_adjoint_aux A]
     refine' ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg _) fun x => _
     rw [adjoint_aux_apply, LinearIsometryEquiv.norm_map]
     exact to_sesq_form_apply_norm_le
@@ -149,13 +149,9 @@ theorem apply_norm_eq_sqrt_inner_adjoint_right (A : E →L[𝕜] E) (x : E) : �
 /-- The adjoint is unique: a map `A` is the adjoint of `B` iff it satisfies `⟪A x, y⟫ = ⟪x, B y⟫`
 for all `x` and `y`. -/
 theorem eq_adjoint_iff (A : E →L[𝕜] F) (B : F →L[𝕜] E) : A = B† ↔ ∀ x y, ⟪A x, y⟫ = ⟪x, B y⟫ := by
-  refine'
-    ⟨fun h x y => by
-      rw [h, adjoint_inner_left], fun h => _⟩
+  refine' ⟨fun h x y => by rw [h, adjoint_inner_left], fun h => _⟩
   ext x
-  exact
-    ext_inner_right 𝕜 fun y => by
-      simp only [adjoint_inner_left, h x y]
+  exact ext_inner_right 𝕜 fun y => by simp only [adjoint_inner_left, h x y]
 
 @[simp]
 theorem adjoint_id : (ContinuousLinearMap.id 𝕜 E).adjoint = ContinuousLinearMap.id 𝕜 E := by
@@ -172,8 +168,7 @@ theorem _root_.submodule.adjoint_subtypeL (U : Submodule 𝕜 E) [CompleteSpace 
   rfl
 
 theorem _root_.submodule.adjoint_orthogonal_projection (U : Submodule 𝕜 E) [CompleteSpace U] :
-    (orthogonalProjection U : E →L[𝕜] U)† = U.subtypeL := by
-  rw [← U.adjoint_subtypeL, adjoint_adjoint]
+    (orthogonalProjection U : E →L[𝕜] U)† = U.subtypeL := by rw [← U.adjoint_subtypeL, adjoint_adjoint]
 
 /-- `E →L[𝕜] E` is a star algebra with the adjoint as the star operation. -/
 instance : HasStar (E →L[𝕜] E) :=
@@ -205,8 +200,7 @@ instance : CstarRing (E →L[𝕜] E) :=
     refine' le_antisymmₓ _ _
     · calc
         ∥A† * A∥ ≤ ∥A†∥ * ∥A∥ := op_norm_comp_le _ _
-        _ = ∥A∥ * ∥A∥ := by
-          rw [LinearIsometryEquiv.norm_map]
+        _ = ∥A∥ * ∥A∥ := by rw [LinearIsometryEquiv.norm_map]
         
       
     · rw [← sq, ← Real.sqrt_le_sqrt_iff (norm_nonneg _), Real.sqrt_sq (norm_nonneg _)]
@@ -217,8 +211,7 @@ instance : CstarRing (E →L[𝕜] E) :=
           _ ≤ ∥A† * A∥ * ∥x∥ * ∥x∥ := mul_le_mul_of_nonneg_right (le_op_norm _ _) (norm_nonneg _)
           
       calc
-        ∥A x∥ = Real.sqrt (re ⟪(A† * A) x, x⟫) := by
-          rw [apply_norm_eq_sqrt_inner_adjoint_left]
+        ∥A x∥ = Real.sqrt (re ⟪(A† * A) x, x⟫) := by rw [apply_norm_eq_sqrt_inner_adjoint_left]
         _ ≤ Real.sqrt (∥A† * A∥ * ∥x∥ * ∥x∥) := Real.sqrt_le_sqrt this
         _ = Real.sqrt ∥A† * A∥ * ∥x∥ := by
           rw [mul_assoc, Real.sqrt_mul (norm_nonneg _), Real.sqrt_mul_self (norm_nonneg _)]
@@ -234,8 +227,7 @@ variable [CompleteSpace E'] [CompleteSpace F']
 -- Todo: Generalize this to `is_R_or_C`.
 theorem is_adjoint_pair_inner (A : E' →L[ℝ] F') :
     LinearMap.IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ) (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A (A†) :=
-  fun x y => by
-  simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left, to_linear_map_eq_coe, coe_coe]
+  fun x y => by simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left, to_linear_map_eq_coe, coe_coe]
 
 end Real
 
@@ -255,7 +247,7 @@ theorem adjoint_eq {A : E →L[𝕜] E} (hA : IsSelfAdjoint A) : A.adjoint = A :
 
 /-- Every self-adjoint operator on an inner product space is symmetric. -/
 theorem is_symmetric {A : E →L[𝕜] E} (hA : IsSelfAdjoint A) : (A : E →ₗ[𝕜] E).IsSymmetric := fun x y => by
-  rw_mod_cast[← A.adjoint_inner_right, hA.adjoint_eq]
+  rw_mod_cast [← A.adjoint_inner_right, hA.adjoint_eq]
 
 /-- Conjugating preserves self-adjointness -/
 theorem conj_adjoint {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (S : E →L[𝕜] F) : IsSelfAdjoint (S ∘L T ∘L S.adjoint) := by
@@ -275,8 +267,7 @@ theorem _root_.continuous_linear_map.is_self_adjoint_iff_is_symmetric {A : E →
     ext fun x => (ext_inner_right 𝕜) fun y => (A.adjoint_inner_left y x).symm ▸ (hA x y).symm⟩
 
 theorem _root_.linear_map.is_symmetric.is_self_adjoint {A : E →L[𝕜] E} (hA : (A : E →ₗ[𝕜] E).IsSymmetric) :
-    IsSelfAdjoint A := by
-  rwa [← ContinuousLinearMap.is_self_adjoint_iff_is_symmetric] at hA
+    IsSelfAdjoint A := by rwa [← ContinuousLinearMap.is_self_adjoint_iff_is_symmetric] at hA
 
 /-- The orthogonal projection is self-adjoint. -/
 theorem _root_.orthogonal_projection_is_self_adjoint (U : Submodule 𝕜 E) [CompleteSpace U] :
@@ -286,7 +277,7 @@ theorem _root_.orthogonal_projection_is_self_adjoint (U : Submodule 𝕜 E) [Com
 theorem conj_orthogonal_projection {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (U : Submodule 𝕜 E) [CompleteSpace U] :
     IsSelfAdjoint (U.subtypeL ∘L orthogonalProjection U ∘L T ∘L U.subtypeL ∘L orthogonalProjection U) := by
   rw [← ContinuousLinearMap.comp_assoc]
-  nth_rw 0[← (orthogonal_projection_is_self_adjoint U).adjoint_eq]
+  nth_rw 0 [← (orthogonal_projection_is_self_adjoint U).adjoint_eq]
   refine' hT.adjoint_conj _
 
 end IsSelfAdjoint
@@ -358,44 +349,28 @@ theorem adjoint_comp (A : F →ₗ[𝕜] G) (B : E →ₗ[𝕜] F) : (A ∘ₗ B
 /-- The adjoint is unique: a map `A` is the adjoint of `B` iff it satisfies `⟪A x, y⟫ = ⟪x, B y⟫`
 for all `x` and `y`. -/
 theorem eq_adjoint_iff (A : E →ₗ[𝕜] F) (B : F →ₗ[𝕜] E) : A = B.adjoint ↔ ∀ x y, ⟪A x, y⟫ = ⟪x, B y⟫ := by
-  refine'
-    ⟨fun h x y => by
-      rw [h, adjoint_inner_left], fun h => _⟩
+  refine' ⟨fun h x y => by rw [h, adjoint_inner_left], fun h => _⟩
   ext x
-  exact
-    ext_inner_right 𝕜 fun y => by
-      simp only [adjoint_inner_left, h x y]
+  exact ext_inner_right 𝕜 fun y => by simp only [adjoint_inner_left, h x y]
 
 /-- The adjoint is unique: a map `A` is the adjoint of `B` iff it satisfies `⟪A x, y⟫ = ⟪x, B y⟫`
 for all basis vectors `x` and `y`. -/
 theorem eq_adjoint_iff_basis {ι₁ : Type _} {ι₂ : Type _} (b₁ : Basis ι₁ 𝕜 E) (b₂ : Basis ι₂ 𝕜 F) (A : E →ₗ[𝕜] F)
     (B : F →ₗ[𝕜] E) : A = B.adjoint ↔ ∀ (i₁ : ι₁) (i₂ : ι₂), ⟪A (b₁ i₁), b₂ i₂⟫ = ⟪b₁ i₁, B (b₂ i₂)⟫ := by
-  refine'
-    ⟨fun h x y => by
-      rw [h, adjoint_inner_left], fun h => _⟩
+  refine' ⟨fun h x y => by rw [h, adjoint_inner_left], fun h => _⟩
   refine' Basis.ext b₁ fun i₁ => _
-  exact
-    ext_inner_right_basis b₂ fun i₂ => by
-      simp only [adjoint_inner_left, h i₁ i₂]
+  exact ext_inner_right_basis b₂ fun i₂ => by simp only [adjoint_inner_left, h i₁ i₂]
 
 theorem eq_adjoint_iff_basis_left {ι : Type _} (b : Basis ι 𝕜 E) (A : E →ₗ[𝕜] F) (B : F →ₗ[𝕜] E) :
     A = B.adjoint ↔ ∀ i y, ⟪A (b i), y⟫ = ⟪b i, B y⟫ := by
-  refine'
-    ⟨fun h x y => by
-      rw [h, adjoint_inner_left], fun h => Basis.ext b fun i => _⟩
-  exact
-    ext_inner_right 𝕜 fun y => by
-      simp only [h i, adjoint_inner_left]
+  refine' ⟨fun h x y => by rw [h, adjoint_inner_left], fun h => Basis.ext b fun i => _⟩
+  exact ext_inner_right 𝕜 fun y => by simp only [h i, adjoint_inner_left]
 
 theorem eq_adjoint_iff_basis_right {ι : Type _} (b : Basis ι 𝕜 F) (A : E →ₗ[𝕜] F) (B : F →ₗ[𝕜] E) :
     A = B.adjoint ↔ ∀ i x, ⟪A x, b i⟫ = ⟪x, B (b i)⟫ := by
-  refine'
-    ⟨fun h x y => by
-      rw [h, adjoint_inner_left], fun h => _⟩
+  refine' ⟨fun h x y => by rw [h, adjoint_inner_left], fun h => _⟩
   ext x
-  refine'
-    ext_inner_right_basis b fun i => by
-      simp only [h i, adjoint_inner_left]
+  refine' ext_inner_right_basis b fun i => by simp only [h i, adjoint_inner_left]
 
 /-- `E →ₗ[𝕜] E` is a star algebra with the adjoint as the star operation. -/
 instance : HasStar (E →ₗ[𝕜] E) :=
@@ -433,8 +408,7 @@ variable [FiniteDimensional ℝ E'] [FiniteDimensional ℝ F']
 -- Todo: Generalize this to `is_R_or_C`.
 theorem is_adjoint_pair_inner (A : E' →ₗ[ℝ] F') :
     IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ) (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A A.adjoint :=
-  fun x y => by
-  simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left]
+  fun x y => by simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left]
 
 end Real
 
@@ -457,7 +431,7 @@ end LinearMap
 
 namespace Matrix
 
-variable {m n : Type _} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
+variable {m n : Type _} [Fintypeₓ m] [DecidableEq m] [Fintypeₓ n] [DecidableEq n]
 
 open ComplexConjugate
 

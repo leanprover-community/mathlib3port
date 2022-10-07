@@ -29,8 +29,7 @@ variable {α : Type _}
 `R = ℤ` and cause nontermination.)
 -/
 @[norm_cast]
-theorem cast_neg_nat_cast {R} [Field R] (n : ℕ) : ((-n : ℤ) : R) = -n := by
-  simp
+theorem cast_neg_nat_cast {R} [Field R] (n : ℕ) : ((-n : ℤ) : R) = -n := by simp
 
 @[simp]
 theorem cast_div [Field α] {m n : ℤ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) : ((m / n : ℤ) : α) = m / n := by

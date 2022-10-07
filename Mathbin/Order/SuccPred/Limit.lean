@@ -46,8 +46,7 @@ protected theorem _root_.is_min.is_succ_limit (h : IsMin a) : IsSuccLimit a := b
 
 theorem is_succ_limit_of_succ_ne (h : ∀ b, succ b ≠ a) : IsSuccLimit a := fun b hb => (h _ hb).elim
 
-theorem not_is_succ_limit_iff : ¬IsSuccLimit a ↔ ∃ b, ¬IsMax b ∧ succ b = a := by
-  simp [is_succ_limit, and_comm]
+theorem not_is_succ_limit_iff : ¬IsSuccLimit a ↔ ∃ b, ¬IsMax b ∧ succ b = a := by simp [is_succ_limit, and_comm]
 
 /-- See `order.not_is_succ_limit_iff` for a version that states that `a` is a successor of a value
 other than itself. -/
@@ -66,7 +65,7 @@ Note that you need a partial order for data built using this to behave nicely on
 @[elabAsElim]
 noncomputable def isSuccLimitRecOn {C : α → Sort _} (b) (hs : ∀ a, ¬IsMax a → C (succ a))
     (hl : ∀ a, IsSuccLimit a → C a) : C b := by
-  by_cases' hb : is_succ_limit b
+  by_cases hb:is_succ_limit b
   · exact hl b hb
     
   · have H := Classical.choose_spec (not_is_succ_limit_iff.1 hb)
@@ -122,8 +121,7 @@ theorem IsSuccLimit.is_min_of_no_max [NoMaxOrder α] (h : IsSuccLimit a) : IsMin
 theorem is_succ_limit_iff_of_no_max [NoMaxOrder α] : IsSuccLimit a ↔ IsMin a :=
   ⟨IsSuccLimit.is_min_of_no_max, IsMin.is_succ_limit⟩
 
-theorem not_is_succ_limit_of_no_max [NoMinOrder α] [NoMaxOrder α] : ¬IsSuccLimit a := by
-  simp
+theorem not_is_succ_limit_of_no_max [NoMinOrder α] [NoMaxOrder α] : ¬IsSuccLimit a := by simp
 
 end IsSuccArchimedean
 
@@ -134,7 +132,7 @@ section PartialOrderₓ
 variable [PartialOrderₓ α] [SuccOrder α]
 
 theorem IsSuccLimit.succ_lt (hb : IsSuccLimit b) (ha : a < b) : succ a < b := by
-  by_cases' h : IsMax a
+  by_cases h:IsMax a
   · rwa [h.succ_eq]
     
   · rw [lt_iff_le_and_neₓ, succ_le_iff_of_not_is_max h]
@@ -187,8 +185,7 @@ protected theorem IsSuccLimit.is_min (h : IsSuccLimit a) : IsMin a := fun b hb =
 theorem is_succ_limit_iff : IsSuccLimit a ↔ IsMin a :=
   ⟨IsSuccLimit.is_min, IsMin.is_succ_limit⟩
 
-theorem not_is_succ_limit [NoMinOrder α] : ¬IsSuccLimit a := by
-  simp
+theorem not_is_succ_limit [NoMinOrder α] : ¬IsSuccLimit a := by simp
 
 end IsSuccArchimedean
 
@@ -276,8 +273,7 @@ protected theorem IsPredLimit.is_max_of_no_min [NoMinOrder α] : IsPredLimit a �
 theorem is_pred_limit_iff_of_no_min [NoMinOrder α] : IsPredLimit a ↔ IsMax a :=
   @is_succ_limit_iff_of_no_max αᵒᵈ a _ _ _ _
 
-theorem not_is_pred_limit_of_no_min [NoMinOrder α] [NoMaxOrder α] : ¬IsPredLimit a := by
-  simp
+theorem not_is_pred_limit_of_no_min [NoMinOrder α] [NoMaxOrder α] : ¬IsPredLimit a := by simp
 
 end IsPredArchimedean
 
@@ -324,8 +320,7 @@ protected theorem IsPredLimit.is_max : IsPredLimit a → IsMax a :=
 theorem is_pred_limit_iff : IsPredLimit a ↔ IsMax a :=
   @is_succ_limit_iff αᵒᵈ a _ _ _
 
-theorem not_is_pred_limit [NoMaxOrder α] : ¬IsPredLimit a := by
-  simp
+theorem not_is_pred_limit [NoMaxOrder α] : ¬IsPredLimit a := by simp
 
 end IsPredArchimedean
 

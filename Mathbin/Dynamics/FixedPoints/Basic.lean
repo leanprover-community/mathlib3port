@@ -79,8 +79,7 @@ protected theorem map {x : α} (hx : IsFixedPt fa x) {g : α → β} (h : Semico
     _ = g x := congr_arg g hx
     
 
-protected theorem apply {x : α} (hx : IsFixedPt f x) : IsFixedPt f (f x) := by
-  convert hx
+protected theorem apply {x : α} (hx : IsFixedPt f x) : IsFixedPt f (f x) := by convert hx
 
 end IsFixedPt
 
@@ -99,13 +98,11 @@ instance FixedPoints.decidable [DecidableEq α] (f : α → α) (x : α) : Decid
 theorem mem_fixed_points : x ∈ FixedPoints f ↔ IsFixedPt f x :=
   Iff.rfl
 
-theorem mem_fixed_points_iff {α : Type _} {f : α → α} {x : α} : x ∈ FixedPoints f ↔ f x = x := by
-  rfl
+theorem mem_fixed_points_iff {α : Type _} {f : α → α} {x : α} : x ∈ FixedPoints f ↔ f x = x := by rfl
 
 @[simp]
 theorem fixed_points_id : FixedPoints (@id α) = Set.Univ :=
-  Set.ext fun _ => by
-    simpa using is_fixed_pt_id _
+  Set.ext fun _ => by simpa using is_fixed_pt_id _
 
 theorem fixed_points_subset_range : FixedPoints f ⊆ Set.Range f := fun x hx => ⟨x, hx⟩
 

@@ -37,9 +37,10 @@ topological space, separation setoid
 
 open Set Filter Function
 
-open TopologicalSpace
+open TopologicalSpace Filter
 
-variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {x y z : X} {s : Set X} {f : X → Y}
+variable {X Y Z α ι : Type _} {π : ι → Type _} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
+  [∀ i, TopologicalSpace (π i)] {x y z : X} {s : Set X} {f : X → Y}
 
 /-!
 ### `specializes` relation
@@ -130,6 +131,10 @@ theorem specializes_iff_closure_subset : x ⤳ y ↔ Closure ({y} : Set X) ⊆ C
 
 alias specializes_iff_closure_subset ↔ Specializes.closure_subset _
 
+theorem Filter.HasBasis.specializes_iff {ι} {p : ι → Prop} {s : ι → Set X} (h : (𝓝 y).HasBasis p s) :
+    x ⤳ y ↔ ∀ i, p i → x ∈ s i :=
+  specializes_iff_pure.trans h.ge_iff
+
 theorem specializes_rfl : x ⤳ x :=
   le_rflₓ
 
@@ -161,6 +166,26 @@ theorem Inducing.specializes_iff (hf : Inducing f) : f x ⤳ f y ↔ x ⤳ y := 
 theorem subtype_specializes_iff {p : X → Prop} (x y : Subtype p) : x ⤳ y ↔ (x : X) ⤳ y :=
   inducing_coe.specializes_iff.symm
 
+@[simp]
+theorem specializes_prod {x₁ x₂ : X} {y₁ y₂ : Y} : (x₁, y₁) ⤳ (x₂, y₂) ↔ x₁ ⤳ x₂ ∧ y₁ ⤳ y₂ := by
+  simp only [Specializes, nhds_prod_eq, prod_le_prod]
+
+theorem Specializes.prod {x₁ x₂ : X} {y₁ y₂ : Y} (hx : x₁ ⤳ x₂) (hy : y₁ ⤳ y₂) : (x₁, y₁) ⤳ (x₂, y₂) :=
+  specializes_prod.2 ⟨hx, hy⟩
+
+@[simp]
+theorem specializes_pi {f g : ∀ i, π i} : f ⤳ g ↔ ∀ i, f i ⤳ g i := by simp only [Specializes, nhds_pi, pi_le_pi]
+
+theorem not_specializes_iff_exists_open : ¬x ⤳ y ↔ ∃ S : Set X, IsOpen S ∧ y ∈ S ∧ x ∉ S := by
+  rw [specializes_iff_forall_open]
+  push_neg
+  rfl
+
+theorem not_specializes_iff_exists_closed : ¬x ⤳ y ↔ ∃ S : Set X, IsClosed S ∧ x ∈ S ∧ y ∉ S := by
+  rw [specializes_iff_forall_closed]
+  push_neg
+  rfl
+
 variable (X)
 
 /-- Specialization forms a preorder on the topological space. -/
@@ -172,7 +197,7 @@ variable {X}
 /-- A continuous function is monotone with respect to the specialization preorders on the domain and
 the codomain. -/
 theorem Continuous.specialization_monotone (hf : Continuous f) :
-    @Monotone _ _ (specializationPreorder X) (specializationPreorder Y) f := fun x y h => h.map hf
+    @Monotoneₓ _ _ (specializationPreorder X) (specializationPreorder Y) f := fun x y h => h.map hf
 
 /-!
 ### `inseparable` relation
@@ -219,8 +244,7 @@ theorem inseparable_iff_forall_closed : (x ~ y) ↔ ∀ s : Set X, IsClosed s �
   simp only [inseparable_iff_specializes_and, specializes_iff_forall_closed, ← forall_and_distrib, ← iff_def]
 
 theorem inseparable_iff_mem_closure : (x ~ y) ↔ x ∈ Closure ({y} : Set X) ∧ y ∈ Closure ({x} : Set X) :=
-  inseparable_iff_specializes_and.trans <| by
-    simp only [specializes_iff_mem_closure, and_comm]
+  inseparable_iff_specializes_and.trans <| by simp only [specializes_iff_mem_closure, and_comm]
 
 theorem inseparable_iff_closure_eq : (x ~ y) ↔ Closure ({x} : Set X) = Closure {y} := by
   simp only [inseparable_iff_specializes_and, specializes_iff_closure_subset, ← subset_antisymm_iff, eq_comm]
@@ -233,6 +257,17 @@ theorem Inducing.inseparable_iff (hf : Inducing f) : (f x ~ f y) ↔ (x ~ y) := 
 
 theorem subtype_inseparable_iff {p : X → Prop} (x y : Subtype p) : (x ~ y) ↔ ((x : X) ~ y) :=
   inducing_coe.inseparable_iff.symm
+
+@[simp]
+theorem inseparable_prod {x₁ x₂ : X} {y₁ y₂ : Y} : ((x₁, y₁) ~ (x₂, y₂)) ↔ (x₁ ~ x₂) ∧ (y₁ ~ y₂) := by
+  simp only [Inseparable, nhds_prod_eq, prod_inj]
+
+theorem Inseparable.prod {x₁ x₂ : X} {y₁ y₂ : Y} (hx : x₁ ~ x₂) (hy : y₁ ~ y₂) : (x₁, y₁) ~ (x₂, y₂) :=
+  inseparable_prod.2 ⟨hx, hy⟩
+
+@[simp]
+theorem inseparable_pi {f g : ∀ i, π i} : (f ~ g) ↔ ∀ i, f i ~ g i := by
+  simp only [Inseparable, nhds_pi, funext_iff, pi_inj]
 
 namespace Inseparable
 
@@ -332,8 +367,7 @@ theorem preimage_image_mk_open (hs : IsOpen s) : mk ⁻¹' (mk '' s) = s := by
   exact ((mk_eq_mk.1 hxy).mem_open_iff hs).1 hys
 
 theorem is_open_map_mk : IsOpenMap (mk : X → SeparationQuotient X) := fun s hs =>
-  quotient_map_mk.is_open_preimage.1 <| by
-    rwa [preimage_image_mk_open hs]
+  quotient_map_mk.is_open_preimage.1 <| by rwa [preimage_image_mk_open hs]
 
 theorem preimage_image_mk_closed (hs : IsClosed s) : mk ⁻¹' (mk '' s) = s := by
   refine' subset.antisymm _ (subset_preimage_image _ _)

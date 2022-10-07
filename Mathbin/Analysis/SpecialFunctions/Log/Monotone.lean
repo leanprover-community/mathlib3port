@@ -28,46 +28,40 @@ namespace Real
 
 variable {x y : ℝ}
 
-theorem log_mul_self_monotone_on : MonotoneOn (fun x : ℝ => log x * x) { x | 1 ≤ x } := by
+theorem log_mul_self_monotone_on : MonotoneOnₓ (fun x : ℝ => log x * x) { x | 1 ≤ x } := by
   -- TODO: can be strengthened to exp (-1) ≤ x
-  simp only [MonotoneOn, mem_set_of_eq]
+  simp only [MonotoneOnₓ, mem_set_of_eq]
   intro x hex y hey hxy
   have x_pos : 0 < x := lt_of_lt_of_leₓ zero_lt_one hex
   have y_pos : 0 < y := lt_of_lt_of_leₓ zero_lt_one hey
   refine' mul_le_mul ((log_le_log x_pos y_pos).mpr hxy) hxy (le_of_ltₓ x_pos) _
   rwa [le_log_iff_exp_le y_pos, Real.exp_zero]
 
-theorem log_div_self_antitone_on : AntitoneOn (fun x : ℝ => log x / x) { x | exp 1 ≤ x } := by
-  simp only [AntitoneOn, mem_set_of_eq]
+theorem log_div_self_antitone_on : AntitoneOnₓ (fun x : ℝ => log x / x) { x | exp 1 ≤ x } := by
+  simp only [AntitoneOnₓ, mem_set_of_eq]
   intro x hex y hey hxy
   have x_pos : 0 < x := (exp_pos 1).trans_le hex
   have y_pos : 0 < y := (exp_pos 1).trans_le hey
-  have hlogx : 1 ≤ log x := by
-    rwa [le_log_iff_exp_le x_pos]
-  have hyx : 0 ≤ y / x - 1 := by
-    rwa [le_sub_iff_add_le, le_div_iff x_pos, zero_addₓ, one_mulₓ]
+  have hlogx : 1 ≤ log x := by rwa [le_log_iff_exp_le x_pos]
+  have hyx : 0 ≤ y / x - 1 := by rwa [le_sub_iff_add_le, le_div_iff x_pos, zero_addₓ, one_mulₓ]
   rw [div_le_iff y_pos, ← sub_le_sub_iff_right (log x)]
   calc
-    log y - log x = log (y / x) := by
-      rw [log_div y_pos.ne' x_pos.ne']
+    log y - log x = log (y / x) := by rw [log_div y_pos.ne' x_pos.ne']
     _ ≤ y / x - 1 := log_le_sub_one_of_pos (div_pos y_pos x_pos)
     _ ≤ log x * (y / x - 1) := le_mul_of_one_le_left hyx hlogx
-    _ = log x / x * y - log x := by
-      ring
+    _ = log x / x * y - log x := by ring
     
 
 theorem log_div_self_rpow_antitone_on {a : ℝ} (ha : 0 < a) :
-    AntitoneOn (fun x : ℝ => log x / x ^ a) { x | exp (1 / a) ≤ x } := by
-  simp only [AntitoneOn, mem_set_of_eq]
+    AntitoneOnₓ (fun x : ℝ => log x / x ^ a) { x | exp (1 / a) ≤ x } := by
+  simp only [AntitoneOnₓ, mem_set_of_eq]
   intro x hex y hey hxy
   have x_pos : 0 < x := lt_of_lt_of_leₓ (exp_pos (1 / a)) hex
-  have y_pos : 0 < y := by
-    linarith
+  have y_pos : 0 < y := by linarith
   have x_nonneg : 0 ≤ x := le_transₓ (le_of_ltₓ (exp_pos (1 / a))) hex
-  have y_nonneg : 0 ≤ y := by
-    linarith
-  nth_rw 0[← rpow_one y]
-  nth_rw 0[← rpow_one x]
+  have y_nonneg : 0 ≤ y := by linarith
+  nth_rw 0 [← rpow_one y]
+  nth_rw 0 [← rpow_one x]
   rw [← div_self (ne_of_ltₓ ha).symm, div_eq_mul_one_div a a, rpow_mul y_nonneg, rpow_mul x_nonneg,
     log_rpow (rpow_pos_of_pos y_pos a), log_rpow (rpow_pos_of_pos x_pos a), mul_div_assoc, mul_div_assoc,
     mul_le_mul_left (one_div_pos.mpr ha)]
@@ -89,12 +83,9 @@ theorem log_div_self_rpow_antitone_on {a : ℝ} (ha : 0 < a) :
     exact rpow_le_rpow x_nonneg hxy (le_of_ltₓ ha)
     
 
-theorem log_div_sqrt_antitone_on : AntitoneOn (fun x : ℝ => log x / sqrt x) { x | exp 2 ≤ x } := by
+theorem log_div_sqrt_antitone_on : AntitoneOnₓ (fun x : ℝ => log x / sqrt x) { x | exp 2 ≤ x } := by
   simp_rw [sqrt_eq_rpow]
-  convert
-    @log_div_self_rpow_antitone_on (1 / 2)
-      (by
-        norm_num)
+  convert @log_div_self_rpow_antitone_on (1 / 2) (by norm_num)
   norm_num
 
 end Real

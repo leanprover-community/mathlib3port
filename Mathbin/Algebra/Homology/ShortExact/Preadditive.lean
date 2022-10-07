@@ -192,12 +192,10 @@ attribute [simp, reassoc] comp_iso_eq_inl iso_comp_snd_eq
 variable (h : Splitting f g)
 
 @[simp, reassoc]
-theorem inl_comp_iso_eq : biprod.inl ≫ h.Iso.inv = f := by
-  rw [iso.comp_inv_eq, h.comp_iso_eq_inl]
+theorem inl_comp_iso_eq : biprod.inl ≫ h.Iso.inv = f := by rw [iso.comp_inv_eq, h.comp_iso_eq_inl]
 
 @[simp, reassoc]
-theorem iso_comp_eq_snd : h.Iso.inv ≫ g = biprod.snd := by
-  rw [iso.inv_comp_eq, h.iso_comp_snd_eq]
+theorem iso_comp_eq_snd : h.Iso.inv ≫ g = biprod.snd := by rw [iso.inv_comp_eq, h.iso_comp_snd_eq]
 
 /-- If `h` is a splitting of `A -f⟶ B -g⟶ C`,
 then `h.section : C ⟶ B` is the morphism satisfying `h.section ≫ g = 𝟙 C`. -/
@@ -211,28 +209,26 @@ def retraction : B ⟶ A :=
 
 @[simp, reassoc]
 theorem section_π : h.section ≫ g = 𝟙 C := by
-  delta' splitting.section
+  delta splitting.section
   simp
 
 @[simp, reassoc]
 theorem ι_retraction : f ≫ h.retraction = 𝟙 A := by
-  delta' retraction
+  delta retraction
   simp
 
 @[simp, reassoc]
 theorem section_retraction : h.section ≫ h.retraction = 0 := by
-  delta' splitting.section retraction
+  delta splitting.section retraction
   simp
 
 /-- The retraction in a splitting is a split mono. -/
 protected def splitMono : SplitMono f :=
-  ⟨h.retraction, by
-    simp ⟩
+  ⟨h.retraction, by simp⟩
 
 /-- The section in a splitting is a split epi. -/
 protected def splitEpi : SplitEpi g :=
-  ⟨h.section, by
-    simp ⟩
+  ⟨h.section, by simp⟩
 
 @[simp, reassoc]
 theorem inr_iso_inv : biprod.inr ≫ h.Iso.inv = h.section :=
@@ -245,9 +241,7 @@ theorem iso_hom_fst : h.Iso.Hom ≫ biprod.fst = h.retraction :=
 /-- A short exact sequence of the form `X -f⟶ Y -0⟶ Z` where `f` is an iso and `Z` is zero
 has a splitting. -/
 def splittingOfIsIsoZero {X Y Z : 𝒜} (f : X ⟶ Y) [IsIso f] (hZ : IsZero Z) : Splitting f (0 : Y ⟶ Z) :=
-  ⟨(asIso f).symm ≪≫ isoBiprodZero hZ, by
-    simp [hZ.eq_of_tgt _ 0], by
-    simp ⟩
+  ⟨(asIso f).symm ≪≫ isoBiprodZero hZ, by simp [hZ.eq_of_tgt _ 0], by simp⟩
 
 include h
 
@@ -262,11 +256,11 @@ protected theorem epi : Epi g := by
   infer_instance
 
 instance : Mono h.section := by
-  delta' splitting.section
+  delta splitting.section
   infer_instance
 
 instance : Epi h.retraction := by
-  delta' retraction
+  delta retraction
   apply epi_comp
 
 end HasZeroMorphisms
@@ -278,7 +272,7 @@ variable [Preadditive 𝒜] [HasBinaryBiproducts 𝒜]
 variable (h : Splitting f g)
 
 theorem split_add : h.retraction ≫ f + g ≫ h.section = 𝟙 _ := by
-  delta' splitting.section retraction
+  delta splitting.section retraction
   rw [← cancel_mono h.iso.hom, ← cancel_epi h.iso.inv]
   simp only [category.comp_id, category.id_comp, category.assoc, iso.inv_hom_id_assoc, iso.inv_hom_id,
     limits.biprod.total, preadditive.comp_add, preadditive.add_comp, splitting.comp_iso_eq_inl,
@@ -319,7 +313,7 @@ protected theorem exact : Exact f g := by
     simp only [iso.refl_hom, arrow.mk_hom, category.id_comp, comp_iso_eq_inl]
     
   · refine' arrow.iso_mk h.iso (iso.refl _) _
-    dsimp'
+    dsimp
     simp
     
   · rfl

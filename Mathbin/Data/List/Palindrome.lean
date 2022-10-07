@@ -45,8 +45,7 @@ namespace Palindrome
 variable {l : List α}
 
 theorem reverse_eq {l : List α} (p : Palindrome l) : reverse l = l :=
-  Palindrome.rec_on p rfl (fun _ => rfl) fun x l p h => by
-    simp [h]
+  Palindrome.rec_on p rfl (fun _ => rfl) fun x l p h => by simp [h]
 
 theorem of_reverse_eq {l : List α} : reverse l = l → Palindrome l := by
   refine' bidirectional_rec_on l (fun _ => palindrome.nil) (fun a _ => palindrome.singleton a) _
@@ -64,8 +63,7 @@ theorem append_reverse (l : List α) : Palindrome (l ++ reverse l) := by
   rw [reverse_append, reverse_reverse]
 
 protected theorem map (f : α → β) (p : Palindrome l) : Palindrome (map f l) :=
-  of_reverse_eq <| by
-    rw [← map_reverse, p.reverse_eq]
+  of_reverse_eq <| by rw [← map_reverse, p.reverse_eq]
 
 instance [DecidableEq α] (l : List α) : Decidable (Palindrome l) :=
   decidableOfIff' _ iff_reverse_eq

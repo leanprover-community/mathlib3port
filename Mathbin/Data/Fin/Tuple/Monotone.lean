@@ -23,33 +23,32 @@ theorem lift_fun_vec_cons {n : ℕ} (r : α → α → Prop) [IsTrans α r] {f :
 variable [Preorderₓ α] {n : ℕ} {f : Finₓ (n + 1) → α} {a : α}
 
 @[simp]
-theorem strict_mono_vec_cons : StrictMono (vecCons a f) ↔ a < f 0 ∧ StrictMono f :=
+theorem strict_mono_vec_cons : StrictMonoₓ (vecCons a f) ↔ a < f 0 ∧ StrictMonoₓ f :=
   lift_fun_vec_cons (· < ·)
 
 @[simp]
-theorem monotone_vec_cons : Monotone (vecCons a f) ↔ a ≤ f 0 ∧ Monotone f := by
-  simpa only [monotone_iff_forall_lt] using @lift_fun_vec_cons α n (· ≤ ·) _ f a
+theorem monotone_vec_cons : Monotoneₓ (vecCons a f) ↔ a ≤ f 0 ∧ Monotoneₓ f := by
+  simpa only [monotone_iff_forall_ltₓ] using @lift_fun_vec_cons α n (· ≤ ·) _ f a
 
 @[simp]
-theorem strict_anti_vec_cons : StrictAnti (vecCons a f) ↔ f 0 < a ∧ StrictAnti f :=
+theorem strict_anti_vec_cons : StrictAntiₓ (vecCons a f) ↔ f 0 < a ∧ StrictAntiₓ f :=
   lift_fun_vec_cons (· > ·)
 
 @[simp]
-theorem antitone_vec_cons : Antitone (vecCons a f) ↔ f 0 ≤ a ∧ Antitone f :=
+theorem antitone_vec_cons : Antitoneₓ (vecCons a f) ↔ f 0 ≤ a ∧ Antitoneₓ f :=
   @monotone_vec_cons αᵒᵈ _ _ _ _
 
-theorem StrictMono.vec_cons (hf : StrictMono f) (ha : a < f 0) : StrictMono (vecCons a f) :=
+theorem StrictMonoₓ.vec_cons (hf : StrictMonoₓ f) (ha : a < f 0) : StrictMonoₓ (vecCons a f) :=
   strict_mono_vec_cons.2 ⟨ha, hf⟩
 
-theorem StrictAnti.vec_cons (hf : StrictAnti f) (ha : f 0 < a) : StrictAnti (vecCons a f) :=
+theorem StrictAntiₓ.vec_cons (hf : StrictAntiₓ f) (ha : f 0 < a) : StrictAntiₓ (vecCons a f) :=
   strict_anti_vec_cons.2 ⟨ha, hf⟩
 
-theorem Monotone.vec_cons (hf : Monotone f) (ha : a ≤ f 0) : Monotone (vecCons a f) :=
+theorem Monotoneₓ.vec_cons (hf : Monotoneₓ f) (ha : a ≤ f 0) : Monotoneₓ (vecCons a f) :=
   monotone_vec_cons.2 ⟨ha, hf⟩
 
-theorem Antitone.vec_cons (hf : Antitone f) (ha : f 0 ≤ a) : Antitone (vecCons a f) :=
+theorem Antitoneₓ.vec_cons (hf : Antitoneₓ f) (ha : f 0 ≤ a) : Antitoneₓ (vecCons a f) :=
   antitone_vec_cons.2 ⟨ha, hf⟩
 
-example : Monotone ![1, 2, 2, 3] := by
-  simp [Subsingleton.monotone]
+example : Monotoneₓ ![1, 2, 2, 3] := by simp [Subsingleton.monotoneₓ]
 

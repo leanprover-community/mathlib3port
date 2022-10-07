@@ -197,9 +197,7 @@ theorem IsMaximal.is_coatom' [IsMaximal I] : IsCoatom I :=
   IsMaximal.is_coatom ‹_›
 
 theorem _root_.is_coatom.is_maximal (hI : IsCoatom I) : IsMaximal I :=
-  { IsCoatom.is_proper ‹_› with
-    maximal_proper := fun _ _ => by
-      simp [hI.2 _ ‹_›] }
+  { IsCoatom.is_proper ‹_› with maximal_proper := fun _ _ => by simp [hI.2 _ ‹_›] }
 
 theorem is_maximal_iff_is_coatom : IsMaximal I ↔ IsCoatom I :=
   ⟨fun h => h.IsCoatom, fun h => h.IsMaximal⟩
@@ -265,8 +263,7 @@ variable [OrderBot P]
 /-- There is a bottom ideal when `P` has a bottom element. -/
 instance : OrderBot (Ideal P) where
   bot := principal ⊥
-  bot_le := by
-    simp
+  bot_le := by simp
 
 @[simp]
 theorem principal_bot : principal (⊥ : P) = ⊥ :=
@@ -309,9 +306,7 @@ variable [SemilatticeSup P] [IsDirected P (· ≥ ·)] {x : P} {I J K s t : Idea
 instance : HasInf (Ideal P) :=
   ⟨fun I J =>
     { toLowerSet := I.toLowerSet ⊓ J.toLowerSet, nonempty' := inter_nonempty I J,
-      directed' := fun x hx y hy =>
-        ⟨x ⊔ y, ⟨sup_mem hx.1 hy.1, sup_mem hx.2 hy.2⟩, by
-          simp ⟩ }⟩
+      directed' := fun x hx y hy => ⟨x ⊔ y, ⟨sup_mem hx.1 hy.1, sup_mem hx.2 hy.2⟩, by simp⟩ }⟩
 
 /-- The supremum of two ideals of a co-directed order is the union of the down sets of the pointwise
 supremum of `I` and `J`. -/
@@ -336,8 +331,8 @@ instance : HasSup (Ideal P) :=
           le_sup_left, le_sup_right⟩,
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∈ » I)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ∈ » J)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ∈ » J)
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with sup := (· ⊔ ·),
     le_sup_left := fun I J i (_ : i ∈ I) => by
@@ -368,9 +363,7 @@ theorem mem_sup : x ∈ I ⊔ J ↔ ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j :=
   Iff.rfl
 
 theorem lt_sup_principal_of_not_mem (hx : x ∉ I) : I < I ⊔ principal x :=
-  le_sup_left.lt_of_ne fun h =>
-    hx <| by
-      simpa only [left_eq_sup, principal_le_iff] using h
+  le_sup_left.lt_of_ne fun h => hx <| by simpa only [left_eq_sup, principal_le_iff] using h
 
 end SemilatticeSupDirected
 
@@ -398,15 +391,12 @@ theorem coe_Inf : (↑(inf S) : Set P) = ⋂ s ∈ S, ↑s :=
   LowerSet.coe_infi₂ _
 
 @[simp]
-theorem mem_Inf : x ∈ inf S ↔ ∀ s ∈ S, x ∈ s := by
-  simp_rw [← SetLike.mem_coe, coe_Inf, mem_Inter₂]
+theorem mem_Inf : x ∈ inf S ↔ ∀ s ∈ S, x ∈ s := by simp_rw [← SetLike.mem_coe, coe_Inf, mem_Inter₂]
 
 instance : CompleteLattice (Ideal P) :=
   { Ideal.lattice,
     completeLatticeOfInf (Ideal P) fun S => by
-      refine'
-        ⟨fun s hs => _, fun s hs => by
-          rwa [← coe_subset_coe, coe_Inf, subset_Inter₂_iff]⟩
+      refine' ⟨fun s hs => _, fun s hs => by rwa [← coe_subset_coe, coe_Inf, subset_Inter₂_iff]⟩
       rw [← coe_subset_coe, coe_Inf]
       exact bInter_subset_of_mem hs with }
 
@@ -493,10 +483,10 @@ noncomputable def sequenceOfCofinals : ℕ → P
     | none => sequence_of_cofinals n
     | some i => (𝒟 i).above (sequence_of_cofinals n)
 
-theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) := by
+theorem sequenceOfCofinals.monotone : Monotoneₓ (sequenceOfCofinals p 𝒟) := by
   apply monotone_nat_of_le_succ
   intro n
-  dunfold sequence_of_cofinals
+  dsimp only [sequence_of_cofinals]
   cases Encodable.decode ι n
   · rfl
     
@@ -504,7 +494,7 @@ theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) := by
     
 
 theorem sequenceOfCofinals.encode_mem (i : ι) : sequenceOfCofinals p 𝒟 (Encodable.encode i + 1) ∈ 𝒟 i := by
-  dunfold sequence_of_cofinals
+  dsimp only [sequence_of_cofinals]
   rw [Encodable.encodek]
   apply cofinal.above_mem
 

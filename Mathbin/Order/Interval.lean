@@ -231,7 +231,7 @@ variable [LE α] {s t : Interval α}
 instance : CoeTₓ (NonemptyInterval α) (Interval α) :=
   WithBot.hasCoeT
 
-instance : CanLift (Interval α) (NonemptyInterval α) :=
+instance canLift : CanLift (Interval α) (NonemptyInterval α) coe fun r => r ≠ ⊥ :=
   WithBot.canLift
 
 theorem coe_injective : Injective (coe : NonemptyInterval α → Interval α) :=
@@ -567,8 +567,7 @@ theorem coe_Inf (S : Set (Interval α)) : ↑(inf S) = ⋂ s ∈ S, (s : Set α)
     
 
 @[simp, norm_cast]
-theorem coe_infi (f : ι → Interval α) : ↑(⨅ i, f i) = ⋂ i, (f i : Set α) := by
-  simp [infi]
+theorem coe_infi (f : ι → Interval α) : ↑(⨅ i, f i) = ⋂ i, (f i : Set α) := by simp [infi]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)

@@ -51,20 +51,17 @@ namespace Ideal
 
 theorem adic_basis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n • ⊤ : Ideal R) :=
   { inter := by
-      suffices ∀ i j : ℕ, ∃ k, I ^ k ≤ I ^ i ∧ I ^ k ≤ I ^ j by
-        simpa
+      suffices ∀ i j : ℕ, ∃ k, I ^ k ≤ I ^ i ∧ I ^ k ≤ I ^ j by simpa
       intro i j
       exact ⟨max i j, pow_le_pow (le_max_leftₓ i j), pow_le_pow (le_max_rightₓ i j)⟩,
     leftMul := by
-      suffices ∀ (a : R) (i : ℕ), ∃ j : ℕ, a • I ^ j ≤ I ^ i by
-        simpa
+      suffices ∀ (a : R) (i : ℕ), ∃ j : ℕ, a • I ^ j ≤ I ^ i by simpa
       intro r n
       use n
       rintro a ⟨x, hx, rfl⟩
       exact (I ^ n).smul_mem r hx,
     mul := by
-      suffices ∀ i : ℕ, ∃ j : ℕ, ↑(I ^ j) * ↑(I ^ j) ⊆ ↑(I ^ i) by
-        simpa
+      suffices ∀ i : ℕ, ∃ j : ℕ, ↑(I ^ j) * ↑(I ^ j) ⊆ ↑(I ^ i) by simpa
       intro n
       use n
       rintro a ⟨x, b, hx, hb, rfl⟩
@@ -90,16 +87,11 @@ theorem has_basis_nhds_zero_adic (I : Ideal R) :
     rw [I.ring_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff]
     constructor
     · rintro ⟨-, ⟨i, rfl⟩, h⟩
-      replace h : ↑(I ^ i) ⊆ U := by
-        simpa using h
+      replace h : ↑(I ^ i) ⊆ U := by simpa using h
       use i, trivialₓ, h
       
     · rintro ⟨i, -, h⟩
-      exact
-        ⟨(I ^ i : Ideal R),
-          ⟨i, by
-            simp ⟩,
-          h⟩
+      exact ⟨(I ^ i : Ideal R), ⟨i, by simp⟩, h⟩
       ⟩
 
 theorem has_basis_nhds_adic (I : Ideal R) (x : R) :
@@ -117,8 +109,7 @@ theorem adic_module_basis : I.RingFilterBasis.SubmodulesBasis fun n : ℕ => I ^
           ⟨smul_mono_left <| pow_le_pow (le_max_leftₓ i j), smul_mono_left <| pow_le_pow (le_max_rightₓ i j)⟩⟩,
     smul := fun m i =>
       ⟨(I ^ i • ⊤ : Ideal R), ⟨i, rfl⟩, fun a a_in => by
-        replace a_in : a ∈ I ^ i := by
-          simpa [(I ^ i).mul_top] using a_in
+        replace a_in : a ∈ I ^ i := by simpa [(I ^ i).mul_top] using a_in
         exact smul_mem_smul a_in mem_top⟩ }
 
 /-- The topology on a `R`-module `M` associated to an ideal `M`. Submodules $I^n M$,
@@ -255,19 +246,15 @@ def topologicalSpaceModule (M : Type _) [AddCommGroupₓ M] [Module R M] : Topol
 The next examples are kept to make sure potential future refactors won't break the instance
 chaining.
 -/
-example : NonarchimedeanRing R := by
-  infer_instance
+example : NonarchimedeanRing R := by infer_instance
 
-example : TopologicalRing (UniformSpace.Completion R) := by
-  infer_instance
+example : TopologicalRing (UniformSpace.Completion R) := by infer_instance
 
 example (M : Type _) [AddCommGroupₓ M] [Module R M] : @TopologicalAddGroup M (WithIdeal.topologicalSpaceModule R M) _ :=
-  by
-  infer_instance
+  by infer_instance
 
 example (M : Type _) [AddCommGroupₓ M] [Module R M] :
-    @HasContinuousSmul R M _ _ (WithIdeal.topologicalSpaceModule R M) := by
-  infer_instance
+    @HasContinuousSmul R M _ _ (WithIdeal.topologicalSpaceModule R M) := by infer_instance
 
 example (M : Type _) [AddCommGroupₓ M] [Module R M] :
     @NonarchimedeanAddGroup M _ (WithIdeal.topologicalSpaceModule R M) :=

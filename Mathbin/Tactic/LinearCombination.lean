@@ -50,8 +50,7 @@ theorem left_minus_right {α} [h : AddGroupₓ α] {x y : α} (h1 : x = y) : x -
 theorem all_on_left_equiv {α} [h : AddGroupₓ α] (x y : α) : (x = y) = (x - y = 0) :=
   propext ⟨left_minus_right, sub_eq_zero.mp⟩
 
-theorem replace_eq_expr {α} [h : Zero α] {x y : α} (h1 : x = 0) (h2 : y = x) : y = 0 := by
-  rwa [h2]
+theorem replace_eq_expr {α} [h : Zero α] {x y : α} (h1 : x = 0) (h2 : y = x) : y = 0 := by rwa [h2]
 
 theorem eq_zero_of_sub_eq_zero {α} [AddGroupₓ α] {x y : α} (h : y = 0) (h2 : x - y = 0) : x = 0 := by
   rwa [h, sub_zero] at h2

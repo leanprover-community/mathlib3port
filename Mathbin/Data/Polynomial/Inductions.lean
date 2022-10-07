@@ -17,7 +17,7 @@ noncomputable section
 
 open Classical BigOperators Polynomial
 
-open Finset
+open Finsetₓ
 
 namespace Polynomial
 
@@ -36,52 +36,39 @@ def divX (p : R[X]) : R[X] :=
 
 @[simp]
 theorem coeff_div_X : (divX p).coeff n = p.coeff (n + 1) := by
-  simp only [div_X, coeff_monomial, true_andₓ, finset_sum_coeff, not_ltₓ, mem_Ico, zero_le, Finset.sum_ite_eq',
+  simp only [div_X, coeff_monomial, true_andₓ, finset_sum_coeff, not_ltₓ, mem_Ico, zero_le, Finsetₓ.sum_ite_eq',
     ite_eq_left_iff]
   intro h
   rw [coeff_eq_zero_of_nat_degree_lt (Nat.lt_succ_of_leₓ h)]
 
 theorem div_X_mul_X_add (p : R[X]) : divX p * X + c (p.coeff 0) = p :=
-  ext <| by
-    rintro ⟨_ | _⟩ <;> simp [coeff_C, Nat.succ_ne_zero, coeff_mul_X]
+  ext <| by rintro ⟨_ | _⟩ <;> simp [coeff_C, Nat.succ_ne_zero, coeff_mul_X]
 
 @[simp]
 theorem div_X_C (a : R) : divX (c a) = 0 :=
-  ext fun n => by
-    simp [div_X, coeff_C] <;> simp [coeff]
+  ext fun n => by simp [div_X, coeff_C] <;> simp [coeff]
 
 theorem div_X_eq_zero_iff : divX p = 0 ↔ p = c (p.coeff 0) :=
-  ⟨fun h => by
-    simpa [eq_comm, h] using div_X_mul_X_add p, fun h => by
-    rw [h, div_X_C]⟩
+  ⟨fun h => by simpa [eq_comm, h] using div_X_mul_X_add p, fun h => by rw [h, div_X_C]⟩
 
 theorem div_X_add : divX (p + q) = divX p + divX q :=
-  ext <| by
-    simp
+  ext <| by simp
 
 theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
   haveI := nontrivial.of_polynomial_ne hp0 <;>
     calc
       (div_X p).degree < (div_X p * X + C (p.coeff 0)).degree :=
         if h : degree p ≤ 0 then by
-          have h' : C (p.coeff 0) ≠ 0 := by
-            rwa [← eq_C_of_degree_le_zero h]
+          have h' : C (p.coeff 0) ≠ 0 := by rwa [← eq_C_of_degree_le_zero h]
           rw [eq_C_of_degree_le_zero h, div_X_C, degree_zero, zero_mul, zero_addₓ]
-          exact
-            lt_of_le_of_neₓ bot_le
-              (Ne.symm
-                (mt degree_eq_bot.1 <| by
-                  simp [h']))
+          exact lt_of_le_of_neₓ bot_le (Ne.symm (mt degree_eq_bot.1 <| by simp [h']))
         else by
-          have hXp0 : div_X p ≠ 0 := by
-            simpa [div_X_eq_zero_iff, -not_leₓ, degree_le_zero_iff] using h
-          have : leading_coeff (div_X p) * leading_coeff X ≠ 0 := by
-            simpa
+          have hXp0 : div_X p ≠ 0 := by simpa [div_X_eq_zero_iff, -not_leₓ, degree_le_zero_iff] using h
+          have : leading_coeff (div_X p) * leading_coeff X ≠ 0 := by simpa
           have : degree (C (p.coeff 0)) < degree (div_X p * X) :=
             calc
               degree (C (p.coeff 0)) ≤ 0 := degree_C_le
-              _ < 1 := by
-                decide
+              _ < 1 := by decide
               _ = degree (X : R[X]) := degree_X.symm
               _ ≤ degree (div_X p * X) := by
                 rw [← zero_addₓ (degree X), degree_mul' this] <;>
@@ -108,16 +95,10 @@ noncomputable def recOnHornerₓ {M : R[X] → Sort _} :
         exact
           if hcp0 : coeff p 0 = 0 then by
             rw [hcp0, C_0, add_zeroₓ] <;>
-              exact
-                MX _
-                  (fun h : div_X p = 0 => by
-                    simpa [h, hcp0] using hp)
-                  (rec_on_horner _ M0 MC MX)
+              exact MX _ (fun h : div_X p = 0 => by simpa [h, hcp0] using hp) (rec_on_horner _ M0 MC MX)
           else
             MC _ _ (coeff_mul_X_zero _) hcp0
-              (if hpX0 : div_X p = 0 then
-                show M (div_X p * X) by
-                  rw [hpX0, zero_mul] <;> exact M0
+              (if hpX0 : div_X p = 0 then show M (div_X p * X) by rw [hpX0, zero_mul] <;> exact M0
               else MX (div_X p) hpX0 (rec_on_horner _ M0 MC MX))
 
 /-- A property holds for all polynomials of positive `degree` with coefficients in a semiring `R`
@@ -132,26 +113,16 @@ See `nat_degree_ne_zero_induction_on` for a similar statement involving no expli
 @[elabAsElim]
 theorem degree_pos_induction_on {P : R[X] → Prop} (p : R[X]) (h0 : 0 < degree p) (hC : ∀ {a}, a ≠ 0 → P (c a * X))
     (hX : ∀ {p}, 0 < degree p → P p → P (p * X)) (hadd : ∀ {p} {a}, 0 < degree p → P p → P (p + c a)) : P p :=
-  recOnHornerₓ p
-    (fun h => by
-      rw [degree_zero] at h <;>
-        exact
-          absurd h
-            (by
-              decide))
+  recOnHornerₓ p (fun h => by rw [degree_zero] at h <;> exact absurd h (by decide))
     (fun p a _ _ ih h0 =>
       have : 0 < degree p :=
-        lt_of_not_geₓ fun h =>
-          not_lt_of_geₓ degree_C_le <| by
-            rwa [eq_C_of_degree_le_zero h, ← C_add] at h0
+        lt_of_not_geₓ fun h => not_lt_of_geₓ degree_C_le <| by rwa [eq_C_of_degree_le_zero h, ← C_add] at h0
       hadd this (ih this))
     (fun p _ ih h0' =>
       if h0 : 0 < degree p then hX h0 (ih h0)
       else by
         rw [eq_C_of_degree_le_zero (le_of_not_gtₓ h0)] at * <;>
-          exact
-            hC fun h : coeff p 0 = 0 => by
-              simpa [h, Nat.not_lt_zeroₓ] using h0')
+          exact hC fun h : coeff p 0 = 0 => by simpa [h, Nat.not_lt_zeroₓ] using h0')
     h0
 
 /-- A property holds for all polynomials of non-zero `nat_degree` with coefficients in a
@@ -188,11 +159,8 @@ theorem nat_degree_ne_zero_induction_on {M : R[X] → Prop} {f : R[X]} (f0 : f.n
       
     
   · intro n a hi
-    by_cases' a0 : a = 0
-    · exact
-        Or.inl
-          (by
-            rw [a0, C_0, zero_mul, nat_degree_zero])
+    by_cases a0:a = 0
+    · exact Or.inl (by rw [a0, C_0, zero_mul, nat_degree_zero])
       
     · refine' Or.inr _
       rw [C_mul_X_pow_eq_monomial]

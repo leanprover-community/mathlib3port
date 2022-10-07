@@ -50,8 +50,7 @@ theorem is_unit_iff : IsUnit a ↔ a = 1 := by
   rw [eq_comm, mul_eq_one_iff'] at ht
   · exact ht.1
     
-  all_goals
-    rwa [one_le_iff_ne_zero]
+  all_goals rwa [one_le_iff_ne_zero]
   · rintro rfl
     rw [mul_zero] at ht
     exact zero_ne_one ht
@@ -64,10 +63,7 @@ instance : Unique Cardinal.{u}ˣ where
 theorem le_of_dvd : ∀ {a b : Cardinal}, b ≠ 0 → a ∣ b → a ≤ b
   | a, _, b0, ⟨b, rfl⟩ => by
     simpa only [mul_oneₓ] using
-      mul_le_mul_left'
-        (one_le_iff_ne_zero.2 fun h : b = 0 => by
-          simpa only [h, mul_zero] using b0)
-        a
+      mul_le_mul_left' (one_le_iff_ne_zero.2 fun h : b = 0 => by simpa only [h, mul_zero] using b0) a
 
 theorem dvd_of_le_of_aleph_0_le (ha : a ≠ 0) (h : a ≤ b) (hb : ℵ₀ ≤ b) : a ∣ b :=
   ⟨b, (mul_eq_right hb h ha).symm⟩
@@ -93,37 +89,25 @@ theorem not_irreducible_of_aleph_0_le (ha : ℵ₀ ≤ a) : ¬Irreducible a := b
 
 @[simp, norm_cast]
 theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m := by
-  refine'
-    ⟨_, fun ⟨h, ht⟩ =>
-      ⟨h, by
-        exact_mod_cast ht⟩⟩
+  refine' ⟨_, fun ⟨h, ht⟩ => ⟨h, by exact_mod_cast ht⟩⟩
   rintro ⟨k, hk⟩
   have : ↑m < ℵ₀ := nat_lt_aleph_0 m
   rw [hk, mul_lt_aleph_0_iff] at this
   rcases this with (h | h | ⟨-, hk'⟩)
   iterate 2 
-    simp only [h, mul_zero, zero_mul, Nat.cast_eq_zero] at hk
-    simp [hk]
+  simp only [h, mul_zero, zero_mul, Nat.cast_eq_zero] at hk
+  simp [hk]
   lift k to ℕ using hk'
-  exact
-    ⟨k, by
-      exact_mod_cast hk⟩
+  exact ⟨k, by exact_mod_cast hk⟩
 
 @[simp]
 theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime := by
   simp only [Prime, Nat.prime_iff]
-  refine'
-    and_congrₓ
-      (by
-        simp )
-      (and_congrₓ _ ⟨fun h b c hbc => _, fun h b c hbc => _⟩)
+  refine' and_congrₓ (by simp) (and_congrₓ _ ⟨fun h b c hbc => _, fun h b c hbc => _⟩)
   · simp only [is_unit_iff, Nat.is_unit_iff]
     exact_mod_cast Iff.rfl
     
-  · exact_mod_cast
-      h b c
-        (by
-          exact_mod_cast hbc)
+  · exact_mod_cast h b c (by exact_mod_cast hbc)
     
   cases' lt_or_leₓ (b * c) ℵ₀ with h' h'
   · rcases mul_lt_aleph_0_iff.mp h' with (rfl | rfl | ⟨hb, hc⟩)
@@ -133,10 +117,7 @@ theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime := by
       
     lift b to ℕ using hb
     lift c to ℕ using hc
-    exact_mod_cast
-      h b c
-        (by
-          exact_mod_cast hbc)
+    exact_mod_cast h b c (by exact_mod_cast hbc)
     
   rcases aleph_0_le_mul_iff.mp h' with ⟨hb, hc, hℵ₀⟩
   have hn : (n : Cardinal) ≠ 0 := by
@@ -154,26 +135,18 @@ theorem is_prime_iff {a : Cardinal} : Prime a ↔ ℵ₀ ≤ a ∨ ∃ p : ℕ, 
   simp [not_le.mpr h]
 
 theorem is_prime_pow_iff {a : Cardinal} : IsPrimePow a ↔ ℵ₀ ≤ a ∨ ∃ n : ℕ, a = n ∧ IsPrimePow n := by
-  by_cases' h : ℵ₀ ≤ a
+  by_cases h:ℵ₀ ≤ a
   · simp [h, (prime_of_aleph_0_le h).IsPrimePow]
     
   lift a to ℕ using not_le.mp h
   simp only [h, Nat.cast_inj, exists_eq_left', false_orₓ, is_prime_pow_nat_iff]
   rw [is_prime_pow_def]
-  refine'
-    ⟨_, fun ⟨p, k, hp, hk, h⟩ =>
-      ⟨p, k, nat_is_prime_iff.2 hp, by
-        exact_mod_cast And.intro hk h⟩⟩
+  refine' ⟨_, fun ⟨p, k, hp, hk, h⟩ => ⟨p, k, nat_is_prime_iff.2 hp, by exact_mod_cast And.intro hk h⟩⟩
   rintro ⟨p, k, hp, hk, hpk⟩
-  have key : _ ≤ p ^ k :=
-    power_le_power_left hp.ne_zero
-      (show (1 : Cardinal) ≤ k by
-        exact_mod_cast hk)
+  have key : _ ≤ p ^ k := power_le_power_left hp.ne_zero (show (1 : Cardinal) ≤ k by exact_mod_cast hk)
   rw [power_one, hpk] at key
   lift p to ℕ using key.trans_lt (nat_lt_aleph_0 a)
-  exact
-    ⟨p, k, nat_is_prime_iff.mp hp, hk, by
-      exact_mod_cast hpk⟩
+  exact ⟨p, k, nat_is_prime_iff.mp hp, hk, by exact_mod_cast hpk⟩
 
 end Cardinal
 

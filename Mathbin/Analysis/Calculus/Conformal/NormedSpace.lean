@@ -72,7 +72,7 @@ theorem conformal_at_iff_is_conformal_map_fderiv {f : X → Y} {x : X} :
     rwa [hf.fderiv]
     
   · intro H
-    by_cases' h : DifferentiableAt ℝ f x
+    by_cases h:DifferentiableAt ℝ f x
     · exact ⟨fderiv ℝ f x, h.has_fderiv_at, H⟩
       
     · nontriviality X

@@ -40,7 +40,7 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
--- ./././Mathport/Syntax/Translate/Command.lean:337:24: unsupported: (notation) in structure
+-- ./././Mathport/Syntax/Translate/Command.lean:339:24: unsupported: (notation) in structure
 -- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
@@ -61,15 +61,9 @@ class EnrichedCategory (C : Type u₁) where
   Hom : C → C → V
   id : ∀ X, 𝟙_ V ⟶ «expr ⟶[] » X X
   comp : ∀ X Y Z, «expr ⟶[] » X Y ⊗ «expr ⟶[] » Y Z ⟶ «expr ⟶[] » X Z
-  id_comp : ∀ X Y, (λ_ («expr ⟶[] » X Y)).inv ≫ (id X ⊗ 𝟙 _) ≫ comp X X Y = 𝟙 _ := by
-    run_tac
-      obviously
-  comp_id : ∀ X Y, (ρ_ («expr ⟶[] » X Y)).inv ≫ (𝟙 _ ⊗ id Y) ≫ comp X Y Y = 𝟙 _ := by
-    run_tac
-      obviously
-  assoc : ∀ W X Y Z, (α_ _ _ _).inv ≫ (comp W X Y ⊗ 𝟙 _) ≫ comp W Y Z = (𝟙 _ ⊗ comp X Y Z) ≫ comp W X Z := by
-    run_tac
-      obviously
+  id_comp : ∀ X Y, (λ_ («expr ⟶[] » X Y)).inv ≫ (id X ⊗ 𝟙 _) ≫ comp X X Y = 𝟙 _ := by obviously
+  comp_id : ∀ X Y, (ρ_ («expr ⟶[] » X Y)).inv ≫ (𝟙 _ ⊗ id Y) ≫ comp X Y Y = 𝟙 _ := by obviously
+  assoc : ∀ W X Y Z, (α_ _ _ _).inv ≫ (comp W X Y ⊗ 𝟙 _) ≫ comp W Y Z = (𝟙 _ ⊗ comp X Y Z) ≫ comp W X Z := by obviously
 
 -- mathport name: enriched_category.hom
 notation X " ⟶[" V "] " Y:10 => (EnrichedCategory.hom X Y : V)
@@ -167,7 +161,7 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v
   invFun := fun 𝒞 => enriched_category_Type_of_category C
   left_inv := fun 𝒞 => by
     cases 𝒞
-    dsimp' [enriched_category_Type_of_category]
+    dsimp [enriched_category_Type_of_category]
     congr
     · ext X ⟨⟩
       rfl
@@ -177,7 +171,7 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v
       
   right_inv := fun 𝒞 => by
     rcases 𝒞 with ⟨⟨⟨⟩⟩⟩
-    dsimp'
+    dsimp
     congr
 
 section
@@ -279,12 +273,9 @@ satisfying the usual axioms.
 structure EnrichedFunctor (C : Type u₁) [EnrichedCategory V C] (D : Type u₂) [EnrichedCategory V D] where
   obj : C → D
   map : ∀ X Y : C, (X ⟶[V] Y) ⟶ obj X ⟶[V] obj Y
-  map_id' : ∀ X : C, eId V X ≫ map X X = eId V (obj X) := by
-    run_tac
-      obviously
+  map_id' : ∀ X : C, eId V X ≫ map X X = eId V (obj X) := by obviously
   map_comp' : ∀ X Y Z : C, eComp V X Y Z ≫ map X Z = (map X Y ⊗ map Y Z) ≫ eComp V (obj X) (obj Y) (obj Z) := by
-    run_tac
-      obviously
+    obviously
 
 restate_axiom enriched_functor.map_id'
 
@@ -323,7 +314,7 @@ def EnrichedFunctor.forget {C : Type u₁} {D : Type u₂} [EnrichedCategory W C
   map := fun X Y f =>
     ForgetEnrichment.homOf W (ForgetEnrichment.homTo W f ≫ F.map (ForgetEnrichment.to W X) (ForgetEnrichment.to W Y))
   map_comp' := fun X Y Z f g => by
-    dsimp'
+    dsimp
     apply_fun forget_enrichment.hom_to W
     · simp only [iso.cancel_iso_inv_left, category.assoc, tensor_comp, forget_enrichment.hom_to_hom_of,
         enriched_functor.map_comp, forget_enrichment_comp]
@@ -412,7 +403,7 @@ def enrichedNatTransYoneda (F G : EnrichedFunctor V C D) : Vᵒᵖ ⥤ Type max 
     { app := fun X => f.unop ≫ σ.app X,
       naturality := fun X Y => by
         have p := σ.naturality X Y
-        dsimp'  at p⊢
+        dsimp at p⊢
         rw [← id_tensor_comp_tensor_id (f.unop ≫ σ.app Y) _, id_tensor_comp, category.assoc, category.assoc, ←
           braiding_naturality_assoc, id_tensor_comp_tensor_id_assoc, p, ← tensor_comp_assoc, category.id_comp] }
 
@@ -464,8 +455,7 @@ def enrichedNatTransYonedaTypeIsoYonedaNatTrans {C : Type v} [EnrichedCategory (
             naturality := fun X Y => by
               ext ⟨x, f⟩
               exact (σ x).naturality f } })
-    (by
-      tidy)
+    (by tidy)
 
 end
 

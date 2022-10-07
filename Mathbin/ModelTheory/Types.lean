@@ -1,0 +1,148 @@
+/-
+Copyright (c) 2022 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
+import Mathbin.ModelTheory.Satisfiability
+
+/-!
+# Type Spaces
+This file defines the space of complete types over a first-order theory.
+(Note that types in model theory are different from types in type theory.)
+
+## Main Definitions
+* `first_order.language.Theory.complete_type`:
+  `T.complete_type α` consists of complete types over the theory `T` with variables `α`.
+
+## Main Results
+* `first_order.language.Theory.complete_type.nonempty_iff`:
+  The space `T.complete_type α` is nonempty exactly when `T` is satisfiable.
+
+## Implementation Notes
+* Complete types are implemented as maximal consistent theories in an expanded language.
+More frequently they are described as maximal consistent sets of formulas, but this is equivalent.
+
+## TODO
+* Connect `T.complete_type α` to sets of formulas `L.formula α`.
+
+-/
+
+
+universe u v w w'
+
+open Cardinal Set
+
+open Cardinal FirstOrder Classical
+
+namespace FirstOrder
+
+namespace Language
+
+namespace Theory
+
+variable {L : Language.{u, v}} (T : L.Theory) (α : Type w)
+
+/-- A complete type over a given theory in a certain type of variables is a maximally
+  consistent (with the theory) set of formulas in that type. -/
+structure CompleteType where
+  ToTheory : L[[α]].Theory
+  subset' : (L.lhomWithConstants α).OnTheory T ⊆ to_Theory
+  is_maximal' : to_Theory.IsMaximal
+
+variable {T α}
+
+namespace CompleteType
+
+instance : SetLike (T.CompleteType α) L[[α]].Sentence :=
+  ⟨fun p => p.ToTheory, fun p q h => by
+    cases p
+    cases q
+    congr⟩
+
+theorem is_maximal (p : T.CompleteType α) : IsMaximal (p : L[[α]].Theory) :=
+  p.is_maximal'
+
+theorem subset (p : T.CompleteType α) : (L.lhomWithConstants α).OnTheory T ⊆ (p : L[[α]].Theory) :=
+  p.subset'
+
+theorem mem_or_not_mem (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ ∈ p ∨ φ.Not ∈ p :=
+  p.IsMaximal.mem_or_not_mem φ
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem mem_of_models (p : T.CompleteType α) {φ : L[[α]].Sentence} (h : (L.lhomWithConstants α).OnTheory T ⊨ φ) :
+    φ ∈ p :=
+  (p.mem_or_not_mem φ).resolve_right fun con =>
+    ((models_iff_not_satisfiable _).1 h) (p.IsMaximal.1.mono (union_subset p.Subset (singleton_subset_iff.2 con)))
+
+theorem not_mem_iff (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ.Not ∈ p ↔ ¬φ ∈ p :=
+  ⟨fun hf ht => by
+    have h : ¬is_satisfiable ({φ, φ.not} : L[[α]].Theory) := by
+      rintro ⟨⟨_, _, h, _⟩⟩
+      simp only [model_iff, mem_insert_iff, mem_singleton_iff, forall_eq_or_imp, forall_eq] at h
+      exact h.2 h.1
+    refine' h (p.is_maximal.1.mono _)
+    rw [insert_subset, singleton_subset_iff]
+    exact ⟨ht, hf⟩, (p.mem_or_not_mem φ).resolve_left⟩
+
+@[simp]
+theorem compl_set_of_mem {φ : L[[α]].Sentence} :
+    { p : T.CompleteType α | φ ∈ p }ᶜ = { p : T.CompleteType α | φ.Not ∈ p } :=
+  ext fun _ => (not_mem_iff _ _).symm
+
+theorem set_of_subset_eq_empty_iff (S : L[[α]].Theory) :
+    { p : T.CompleteType α | S ⊆ ↑p } = ∅ ↔ ¬((L.lhomWithConstants α).OnTheory T ∪ S).IsSatisfiable := by
+  rw [iff_not_comm, ← not_nonempty_iff_eq_empty, not_not, Set.Nonempty]
+  refine'
+    ⟨fun h =>
+      ⟨⟨L[[α]].CompleteTheory h.some, (subset_union_left _ S).trans complete_theory.subset,
+          complete_theory.is_maximal _ _⟩,
+        (subset_union_right ((L.Lhom_with_constants α).OnTheory T) _).trans complete_theory.subset⟩,
+      _⟩
+  rintro ⟨p, hp⟩
+  exact p.is_maximal.1.mono (union_subset p.subset hp)
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem set_of_mem_eq_univ_iff (φ : L[[α]].Sentence) :
+    { p : T.CompleteType α | φ ∈ p } = univ ↔ (L.lhomWithConstants α).OnTheory T ⊨ φ := by
+  rw [models_iff_not_satisfiable, ← compl_empty_iff, compl_set_of_mem, ← set_of_subset_eq_empty_iff]
+  simp
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem set_of_subset_eq_univ_iff (S : L[[α]].Theory) :
+    { p : T.CompleteType α | S ⊆ ↑p } = univ ↔ ∀ φ, φ ∈ S → (L.lhomWithConstants α).OnTheory T ⊨ φ := by
+  have h : { p : T.complete_type α | S ⊆ ↑p } = ⋂₀ ((fun φ => { p | φ ∈ p }) '' S) := by
+    ext
+    simp [subset_def]
+  simp_rw [h, sInter_eq_univ, ← set_of_mem_eq_univ_iff]
+  refine' ⟨fun h φ φS => h _ ⟨_, φS, rfl⟩, _⟩
+  rintro h _ ⟨φ, h1, rfl⟩
+  exact h _ h1
+
+theorem nonempty_iff : Nonempty (T.CompleteType α) ↔ T.IsSatisfiable := by
+  rw [← is_satisfiable_on_Theory_iff (Lhom_with_constants_injective L α)]
+  rw [nonempty_iff_univ_nonempty, ← ne_empty_iff_nonempty, Ne.def, not_iff_comm, ←
+    union_empty ((L.Lhom_with_constants α).OnTheory T), ← set_of_subset_eq_empty_iff]
+  simp
+
+instance : Nonempty (CompleteType ∅ α) :=
+  nonempty_iff.2 (is_satisfiable_empty L)
+
+theorem Inter_set_of_subset {ι : Type _} (S : ι → L[[α]].Theory) :
+    (⋂ i : ι, { p : T.CompleteType α | S i ⊆ p }) = { p | (⋃ i : ι, S i) ⊆ p } := by
+  ext
+  simp only [mem_Inter, mem_set_of_eq, Union_subset_iff]
+
+theorem to_list_foldr_inf_mem {p : T.CompleteType α} {t : Finsetₓ L[[α]].Sentence} :
+    t.toList.foldr (· ⊓ ·) ⊤ ∈ p ↔ (t : L[[α]].Theory) ⊆ ↑p := by
+  simp_rw [subset_def, ← SetLike.mem_coe, p.is_maximal.mem_iff_models, models_sentence_iff, sentence.realize,
+    formula.realize, bounded_formula.realize_foldr_inf, Finsetₓ.mem_to_list]
+  exact ⟨fun h φ hφ M => h _ _ hφ, fun h M φ hφ => h _ hφ _⟩
+
+end CompleteType
+
+end Theory
+
+end Language
+
+end FirstOrder
+

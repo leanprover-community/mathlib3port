@@ -264,7 +264,7 @@ unsafe def orelse_step (s t : unification_step) : unification_step :=
 successful, stop and return its result. If none is successful, fail.
 -/
 unsafe def unify_homogeneous : unification_step :=
-  List.foldlₓ orelse_step (fun _ _ _ _ _ _ _ _ => pure not_simplified)
+  List.foldl orelse_step (fun _ _ _ _ _ _ _ _ => pure not_simplified)
     [unify_defeq, unify_var, unify_constructor_headed, unify_cyclic]
 
 end UnifyEquations

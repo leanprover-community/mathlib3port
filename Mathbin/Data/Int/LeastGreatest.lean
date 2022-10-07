@@ -75,13 +75,9 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
   have Hbdd' : ∀ z : ℤ, P (-z) → -b ≤ z := fun z h => neg_le.1 (Hb _ h)
   have Hinh' : ∃ z : ℤ, P (-z) :=
     let ⟨elt, Helt⟩ := Hinh
-    ⟨-elt, by
-      rw [neg_negₓ] <;> exact Helt⟩
+    ⟨-elt, by rw [neg_negₓ] <;> exact Helt⟩
   let ⟨lb, Plb, al⟩ := leastOfBdd (-b) Hbdd' Hinh'
-  ⟨-lb, Plb, fun z h =>
-    le_neg.1 <|
-      al _ <| by
-        rwa [neg_negₓ]⟩
+  ⟨-lb, Plb, fun z h => le_neg.1 <| al _ <| by rwa [neg_negₓ]⟩
 
 /-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded above and nonempty,
 then this set has the greatest element. This lemma uses classical logic to avoid assumption

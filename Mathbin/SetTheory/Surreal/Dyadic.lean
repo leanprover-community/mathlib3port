@@ -44,8 +44,7 @@ def powHalf : ℕ → Pgame
 theorem pow_half_zero : powHalf 0 = 1 :=
   rfl
 
-theorem pow_half_left_moves (n) : (powHalf n).LeftMoves = PUnit := by
-  cases n <;> rfl
+theorem pow_half_left_moves (n) : (powHalf n).LeftMoves = PUnit := by cases n <;> rfl
 
 theorem pow_half_zero_right_moves : (powHalf 0).RightMoves = Pempty :=
   rfl
@@ -54,15 +53,13 @@ theorem pow_half_succ_right_moves (n) : (powHalf (n + 1)).RightMoves = PUnit :=
   rfl
 
 @[simp]
-theorem pow_half_move_left (n i) : (powHalf n).moveLeft i = 0 := by
-  cases n <;> cases i <;> rfl
+theorem pow_half_move_left (n i) : (powHalf n).moveLeft i = 0 := by cases n <;> cases i <;> rfl
 
 @[simp]
 theorem pow_half_succ_move_right (n i) : (powHalf (n + 1)).moveRight i = powHalf n :=
   rfl
 
-instance uniquePowHalfLeftMoves (n) : Unique (powHalf n).LeftMoves := by
-  cases n <;> exact PUnit.unique
+instance uniquePowHalfLeftMoves (n) : Unique (powHalf n).LeftMoves := by cases n <;> exact PUnit.unique
 
 instance is_empty_pow_half_zero_right_moves : IsEmpty (powHalf 0).RightMoves :=
   Pempty.is_empty
@@ -73,7 +70,7 @@ instance uniquePowHalfSuccRightMoves (n) : Unique (powHalf (n + 1)).RightMoves :
 @[simp]
 theorem birthday_half : birthday (powHalf 1) = 2 := by
   rw [birthday_def]
-  dsimp'
+  dsimp
   simpa using Order.le_succ (1 : Ordinal)
 
 /-- For all natural numbers `n`, the pre-games `pow_half n` are numeric. -/
@@ -238,8 +235,7 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal where
         apply dyadic_aux
         rwa [ha₁, ha₂]
         
-      · have : (1 : ℤ) ≤ 2 ^ y₃ := by
-          exact_mod_cast Nat.one_le_pow y₃ 2 Nat.succ_pos'
+      · have : (1 : ℤ) ≤ 2 ^ y₃ := by exact_mod_cast Nat.one_le_pow y₃ 2 Nat.succ_pos'
         linarith
         
   map_zero' := Localization.lift_on_zero _ _
@@ -254,10 +250,8 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal where
       calc
         (2 ^ b' * c + 2 ^ d' * a) • pow_half (b' + d') =
             (c * 2 ^ b') • pow_half (b' + d') + (a * 2 ^ d') • pow_half (d' + b') :=
-          by
-          simp only [add_smul, mul_comm, add_commₓ]
-        _ = c • pow_half d' + a • pow_half b' := by
-          simp only [zsmul_pow_two_pow_half]
+          by simp only [add_smul, mul_comm, add_commₓ]
+        _ = c • pow_half d' + a • pow_half b' := by simp only [zsmul_pow_two_pow_half]
         _ = a • pow_half b' + c • pow_half d' := add_commₓ _ _
         
 

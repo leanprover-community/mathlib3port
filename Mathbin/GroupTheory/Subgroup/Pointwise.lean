@@ -130,7 +130,7 @@ theorem Normal.conj_act {G : Type _} [Groupₓ G] {H : Subgroup G} (hH : H.Norma
   · intro h
     have := hH.conj_mem (g⁻¹ • x) _ (ConjAct.ofConjAct g)
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at h
-    dsimp'  at *
+    dsimp at *
     rw [ConjAct.smul_def] at *
     simp only [ConjAct.of_conj_act_inv, ConjAct.of_conj_act_to_conj_act, inv_invₓ] at *
     convert this

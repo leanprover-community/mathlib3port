@@ -76,8 +76,7 @@ theorem injective_quotient_le_comap_map (P : Ideal R[X]) :
         (mapRingHom (Quotient.mk (P.comap (c : R →+* R[X])))) le_comap_map) :=
   by
   refine' quotient_map_injective' (le_of_eqₓ _)
-  rw
-    [comap_map_of_surjective (map_ring_hom (Quotientₓ.mk (P.comap (C : R →+* R[X]))))
+  rw [comap_map_of_surjective (map_ring_hom (Quotientₓ.mk (P.comap (C : R →+* R[X]))))
       (map_surjective (Quotientₓ.mk (P.comap (C : R →+* R[X]))) quotient.mk_surjective)]
   refine' le_antisymmₓ (sup_le le_rflₓ _) (le_sup_of_le_left le_rflₓ)
   refine' fun p hp => polynomial_mem_ideal_of_coeff_mem_ideal P p fun n => quotient.eq_zero_iff_mem.mp _
@@ -100,8 +99,7 @@ theorem quotient_mk_maps_eq (P : Ideal R[X]) :
         ((Quotient.mk P).comp c) :=
   by
   refine' RingHom.ext fun x => _
-  repeat'
-    rw [RingHom.coe_comp, Function.comp_app]
+  repeat' rw [RingHom.coe_comp, Function.comp_app]
   rw [quotient_map_mk, coe_map_ring_hom, map_C]
 
 /-- This technical lemma asserts the existence of a polynomial `p` in an ideal `P ⊂ R[x]`
@@ -185,8 +183,7 @@ theorem exists_coeff_mem_comap_sdiff_comap_of_root_mem_sdiff [IsPrime I] (hIJ : 
   obtain ⟨hrJ, hrI⟩ := hr
   have rbar_ne_zero : Quotientₓ.mk I r ≠ 0 := mt (quotient.mk_eq_zero I).mp hrI
   have rbar_mem_J : Quotientₓ.mk I r ∈ J.map (Quotientₓ.mk I) := mem_map_of_mem _ hrJ
-  have quotient_f : ∀ x ∈ I.comap f, (Quotientₓ.mk I).comp f x = 0 := by
-    simp [quotient.eq_zero_iff_mem]
+  have quotient_f : ∀ x ∈ I.comap f, (Quotientₓ.mk I).comp f x = 0 := by simp [quotient.eq_zero_iff_mem]
   have rbar_root :
     (p.map (Quotientₓ.mk (I.comap f))).eval₂ (Quotientₓ.lift (I.comap f) _ quotient_f) (Quotientₓ.mk I r) = 0 := by
     convert quotient.eq_zero_iff_mem.mpr hpI
@@ -247,7 +244,7 @@ theorem comap_ne_bot_of_integral_mem [Nontrivial R] [IsDomain S] {x : S} (x_ne_z
 theorem eq_bot_of_comap_eq_bot [Nontrivial R] [IsDomain S] (hRS : Algebra.IsIntegral R S)
     (hI : I.comap (algebraMap R S) = ⊥) : I = ⊥ := by
   refine' eq_bot_iff.2 fun x hx => _
-  by_cases' hx0 : x = 0
+  by_cases hx0:x = 0
   · exact hx0.symm ▸ Ideal.zero_mem ⊥
     
   · exact absurd hI (comap_ne_bot_of_integral_mem hx0 hx (hRS x))
@@ -259,8 +256,7 @@ theorem is_maximal_comap_of_is_integral_of_is_maximal (hRS : Algebra.IsIntegral 
   haveI : is_prime (I.comap (algebraMap R S)) := comap_is_prime _ _
   exact
     is_field_of_is_integral_of_is_field (is_integral_quotient_of_is_integral hRS) algebra_map_quotient_injective
-      (by
-        rwa [← quotient.maximal_ideal_iff_is_field_quotient])
+      (by rwa [← quotient.maximal_ideal_iff_is_field_quotient])
 
 theorem is_maximal_comap_of_is_integral_of_is_maximal' {R S : Type _} [CommRingₓ R] [CommRingₓ S] (f : R →+* S)
     (hf : f.IsIntegral) (I : Ideal S) (hI : I.IsMaximal) : IsMaximal (I.comap f) :=
@@ -343,9 +339,7 @@ theorem exists_ideal_over_prime_of_is_integral (H : Algebra.IsIntegral R S) (P :
   obtain ⟨Q' : Ideal (S ⧸ I), ⟨Q'_prime, hQ'⟩⟩ :=
     @exists_ideal_over_prime_of_is_integral' Quot _ (S ⧸ I) _ Ideal.quotientAlgebra _
       (is_integral_quotient_of_is_integral H) (map (Quotientₓ.mk (I.comap (algebraMap R S))) P)
-      (map_is_prime_of_surjective quotient.mk_surjective
-        (by
-          simp [hIP]))
+      (map_is_prime_of_surjective quotient.mk_surjective (by simp [hIP]))
       (le_transₓ (le_of_eqₓ ((RingHom.injective_iff_ker_eq_bot _).1 algebra_map_quotient_injective)) bot_le)
   haveI := Q'_prime
   refine' ⟨Q'.comap _, le_transₓ (le_of_eqₓ mk_ker.symm) (ker_le_comap _), ⟨comap_is_prime _ Q', _⟩⟩

@@ -108,7 +108,7 @@ theorem trans (h : Q₁.Equivalent Q₂) (h' : Q₂.Equivalent Q₃) : Q₁.Equi
 
 end Equivalent
 
-variable [Fintype ι] {v : Basis ι R M}
+variable [Fintypeₓ ι] {v : Basis ι R M}
 
 /-- A quadratic form composed with a `linear_equiv` is isometric to itself. -/
 def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) : Q.Isometry (Q.comp (f : M₁ →ₗ[R] M)) :=

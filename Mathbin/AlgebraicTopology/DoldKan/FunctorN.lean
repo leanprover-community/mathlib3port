@@ -59,7 +59,7 @@ def n₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ) where
         simp }
   map_id' := fun X => by
     ext
-    dsimp'
+    dsimp
     simp
   map_comp' := fun X Y Z f g => by
     ext

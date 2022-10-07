@@ -20,9 +20,9 @@ This file proves some basic results about `finset.gcd` on `ℕ`.
 instance : IsIdempotent ℕ GcdMonoid.gcd :=
   ⟨Nat.gcd_selfₓ⟩
 
-namespace Finset
+namespace Finsetₓ
 
-theorem coprime_of_div_gcd (s : Finset ℕ) {x : ℕ} (hx : x ∈ s) (hnz : x ≠ 0) : s.gcd (· / s.gcd id) = 1 := by
+theorem coprime_of_div_gcd (s : Finsetₓ ℕ) {x : ℕ} (hx : x ∈ s) (hnz : x ≠ 0) : s.gcd (· / s.gcd id) = 1 := by
   rw [Nat.eq_one_iff_not_exists_prime_dvd]
   intro p hp hdvd
   haveI : Fact p.prime := ⟨hp⟩
@@ -42,5 +42,5 @@ theorem coprime_of_div_gcd (s : Finset ℕ) {x : ℕ} (hx : x ∈ s) (hnz : x �
   apply dvd_mul_of_dvd_left
   exact pow_padic_val_nat_dvd
 
-end Finset
+end Finsetₓ
 

@@ -201,9 +201,9 @@ theorem Icc_eq_pi : I.Icc = pi Univ fun i => Icc (I.lower i) (I.upper i) :=
 theorem le_iff_Icc : I ≤ J ↔ I.Icc ⊆ J.Icc :=
   (le_tfae I J).out 0 2
 
-theorem antitone_lower : Antitone fun I : Box ι => I.lower := fun I J H => (le_iff_bounds.1 H).1
+theorem antitone_lower : Antitoneₓ fun I : Box ι => I.lower := fun I J H => (le_iff_bounds.1 H).1
 
-theorem monotone_upper : Monotone fun I : Box ι => I.upper := fun I J H => (le_iff_bounds.1 H).2
+theorem monotone_upper : Monotoneₓ fun I : Box ι => I.upper := fun I J H => (le_iff_bounds.1 H).2
 
 theorem coe_subset_Icc : ↑I ⊆ I.Icc := fun x hx => ⟨fun i => (hx i).1.le, fun i => (hx i).2⟩
 
@@ -286,8 +286,7 @@ theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.up
   split_ifs
   · simp [WithBot.coe_eq_coe]
     
-  · suffices l = lI → u ≠ uI by
-      simpa
+  · suffices l = lI → u ≠ uI by simpa
     rintro rfl rfl
     exact h hI
     
@@ -364,7 +363,7 @@ theorem face_mk {n} (l u : Finₓ (n + 1) → ℝ) (h : ∀ i, l i < u i) (i : F
 theorem face_mono {n} {I J : Box (Finₓ (n + 1))} (h : I ≤ J) (i : Finₓ (n + 1)) : face I i ≤ face J i := fun x hx i =>
   Ioc_subset_Ioc ((le_iff_bounds.1 h).1 _) ((le_iff_bounds.1 h).2 _) (hx _)
 
-theorem monotone_face {n} (i : Finₓ (n + 1)) : Monotone fun I => face I i := fun I J h => face_mono h i
+theorem monotone_face {n} (i : Finₓ (n + 1)) : Monotoneₓ fun I => face I i := fun I J h => face_mono h i
 
 theorem maps_to_insert_nth_face_Icc {n} (I : Box (Finₓ (n + 1))) {i : Finₓ (n + 1)} {x : ℝ}
     (hx : x ∈ Icc (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i).Icc I.Icc := fun y hy =>
@@ -395,12 +394,12 @@ theorem Ioo_subset_coe (I : Box ι) : I.Ioo ⊆ I := fun x hx i => Ioo_subset_Io
 protected theorem Ioo_subset_Icc (I : Box ι) : I.Ioo ⊆ I.Icc :=
   I.Ioo_subset_coe.trans coe_subset_Icc
 
-theorem Union_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ : Monotone J)
+theorem Union_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ : Monotoneₓ J)
     (hl : Tendsto (lower ∘ J) atTop (𝓝 I.lower)) (hu : Tendsto (upper ∘ J) atTop (𝓝 I.upper)) :
     (⋃ n, (J n).Ioo) = I.Ioo :=
-  have hl' : ∀ i, Antitone fun n => (J n).lower i := fun i =>
-    (monotone_eval i).comp_antitone (antitone_lower.comp_monotone hJ)
-  have hu' : ∀ i, Monotone fun n => (J n).upper i := fun i => (monotone_eval i).comp (monotone_upper.comp hJ)
+  have hl' : ∀ i, Antitoneₓ fun n => (J n).lower i := fun i =>
+    (monotone_evalₓ i).comp_antitone (antitone_lower.comp_monotone hJ)
+  have hu' : ∀ i, Monotoneₓ fun n => (J n).upper i := fun i => (monotone_evalₓ i).comp (monotone_upper.comp hJ)
   calc
     (⋃ n, (J n).Ioo) = pi Univ fun i => ⋃ n, Ioo ((J n).lower i) ((J n).upper i) :=
       Union_univ_pi_of_monotone fun i => (hl' i).Ioo (hu' i)
@@ -425,13 +424,13 @@ theorem exists_seq_mono_tendsto (I : Box ι) :
 
 section Distortion
 
-variable [Fintype ι]
+variable [Fintypeₓ ι]
 
 /-- The distortion of a box `I` is the maximum of the ratios of the lengths of its edges.
 It is defined as the maximum of the ratios
 `nndist I.lower I.upper / nndist (I.lower i) (I.upper i)`. -/
 def distortion (I : Box ι) : ℝ≥0 :=
-  Finset.univ.sup fun i : ι => nndist I.lower I.upper / nndist (I.lower i) (I.upper i)
+  Finsetₓ.univ.sup fun i : ι => nndist I.lower I.upper / nndist (I.lower i) (I.upper i)
 
 theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
     (h : ∀ i, I.upper i - I.lower i = (J.upper i - J.lower i) / r) : distortion I = distortion J := by
@@ -449,7 +448,7 @@ theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
   calc
     nndist I.lower I.upper = nndist I.lower I.upper / nndist (I.lower i) (I.upper i) * nndist (I.lower i) (I.upper i) :=
       (div_mul_cancel _ <| mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
-    _ ≤ I.distortion * nndist (I.lower i) (I.upper i) := mul_le_mul_right' (Finset.le_sup <| Finset.mem_univ i) _
+    _ ≤ I.distortion * nndist (I.lower i) (I.upper i) := mul_le_mul_right' (Finsetₓ.le_sup <| Finsetₓ.mem_univ i) _
     
 
 theorem dist_le_distortion_mul (I : Box ι) (i : ι) : dist I.lower I.upper ≤ I.distortion * (I.upper i - I.lower i) := by

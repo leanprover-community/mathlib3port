@@ -27,7 +27,7 @@ open CategoryTheory
 /-- The category of finite partial orders with monotone functions. -/
 structure FinPartialOrder where
   toPartialOrder : PartialOrderₓₓ
-  [isFintype : Fintype to_PartialOrder]
+  [isFintype : Fintypeₓ to_PartialOrder]
 
 namespace FinPartialOrder
 
@@ -44,11 +44,11 @@ theorem coe_to_PartialOrder (X : FinPartialOrder) : ↥X.toPartialOrder = ↥X :
   rfl
 
 /-- Construct a bundled `FinPartialOrder` from `fintype` + `partial_order`. -/
-def of (α : Type _) [PartialOrderₓ α] [Fintype α] : FinPartialOrder :=
+def of (α : Type _) [PartialOrderₓ α] [Fintypeₓ α] : FinPartialOrder :=
   ⟨⟨α⟩⟩
 
 @[simp]
-theorem coe_of (α : Type _) [PartialOrderₓ α] [Fintype α] : ↥(of α) = α :=
+theorem coe_of (α : Type _) [PartialOrderₓ α] [Fintypeₓ α] : ↥(of α) = α :=
   rfl
 
 instance : Inhabited FinPartialOrder :=
@@ -64,7 +64,7 @@ instance hasForgetToPartialOrder : HasForget₂ FinPartialOrder PartialOrderₓ�
   InducedCategory.hasForget₂ FinPartialOrder.toPartialOrder
 
 instance hasForgetToFintype :
-    HasForget₂ FinPartialOrder Fintypeₓ where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => coeFn }
+    HasForget₂ FinPartialOrder Fintypeₓₓ where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => coeFn }
 
 /-- Constructs an isomorphism of finite partial orders from an order isomorphism between them. -/
 @[simps]

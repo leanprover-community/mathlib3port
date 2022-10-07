@@ -18,7 +18,7 @@ open Set Filter Bornology Function
 
 open Filter
 
-variable {α β ι : Type _} {π : ι → Type _} [Fintype ι] [Bornology α] [Bornology β] [∀ i, Bornology (π i)]
+variable {α β ι : Type _} {π : ι → Type _} [Fintypeₓ ι] [Bornology α] [Bornology β] [∀ i, Bornology (π i)]
 
 instance : Bornology (α × β) where
   cobounded := (cobounded α).coprod (cobounded β)
@@ -105,7 +105,7 @@ theorem is_bounded_pi_of_nonempty (hne : (pi Univ S).Nonempty) : IsBounded (pi U
   ⟨fun H i => @eval_image_univ_pi _ _ _ i hne ▸ forall_is_bounded_image_eval_iff.2 H i, IsBounded.pi⟩
 
 theorem is_bounded_pi : IsBounded (pi Univ S) ↔ (∃ i, S i = ∅) ∨ ∀ i, IsBounded (S i) := by
-  by_cases' hne : ∃ i, S i = ∅
+  by_cases hne:∃ i, S i = ∅
   · simp [hne, univ_pi_eq_empty_iff.2 hne]
     
   · simp only [hne, false_orₓ]
@@ -135,11 +135,9 @@ end Bornology
 
 open Bornology
 
-instance [BoundedSpace α] [BoundedSpace β] : BoundedSpace (α × β) := by
-  simp [← cobounded_eq_bot_iff, cobounded_prod]
+instance [BoundedSpace α] [BoundedSpace β] : BoundedSpace (α × β) := by simp [← cobounded_eq_bot_iff, cobounded_prod]
 
-instance [∀ i, BoundedSpace (π i)] : BoundedSpace (∀ i, π i) := by
-  simp [← cobounded_eq_bot_iff, cobounded_pi]
+instance [∀ i, BoundedSpace (π i)] : BoundedSpace (∀ i, π i) := by simp [← cobounded_eq_bot_iff, cobounded_pi]
 
 theorem bounded_space_induced_iff {α β : Type _} [Bornology β] {f : α → β} :
     @BoundedSpace α (Bornology.induced f) ↔ IsBounded (Range f) := by

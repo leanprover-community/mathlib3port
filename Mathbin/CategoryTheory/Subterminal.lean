@@ -81,8 +81,7 @@ The converse of `is_subterminal_of_is_iso_diag`.
 -/
 theorem IsSubterminal.is_iso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] : IsIso (diag A) :=
   ⟨⟨Limits.prod.fst,
-      ⟨by
-        simp , by
+      ⟨by simp, by
         rw [is_subterminal.def] at hA
         tidy⟩⟩⟩
 
@@ -90,8 +89,7 @@ theorem IsSubterminal.is_iso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] 
 The converse of `is_subterminal.is_iso_diag`.
 -/
 theorem is_subterminal_of_is_iso_diag [HasBinaryProduct A A] [IsIso (diag A)] : IsSubterminal A := fun Z f g => by
-  have : (limits.prod.fst : A ⨯ A ⟶ _) = limits.prod.snd := by
-    simp [← cancel_epi (diag A)]
+  have : (limits.prod.fst : A ⨯ A ⟶ _) = limits.prod.snd := by simp [← cancel_epi (diag A)]
   rw [← prod.lift_fst f g, this, prod.lift_snd]
 
 /-- If `A` is subterminal, it is isomorphic to `A ⨯ A`. -/
@@ -128,10 +126,7 @@ object (which is in turn equivalent to the subobjects of the terminal object).
 def subterminalsEquivMonoOverTerminal [HasTerminal C] : Subterminals C ≌ MonoOver (⊤_ C) where
   Functor :=
     { obj := fun X => ⟨Over.mk (terminal.from X.1), X.2.mono_terminal_from⟩,
-      map := fun X Y f =>
-        MonoOver.homMk f
-          (by
-            ext1 ⟨⟨⟩⟩) }
+      map := fun X Y f => MonoOver.homMk f (by ext1 ⟨⟨⟩⟩) }
   inverse :=
     { obj := fun X =>
         ⟨X.obj.left, fun Z f g => by

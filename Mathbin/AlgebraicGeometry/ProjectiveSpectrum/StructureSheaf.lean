@@ -80,8 +80,7 @@ subset `V` of `U`.
 -/
 def isFractionPrelocal : PrelocalPredicate fun x : ProjectiveSpectrum.top 𝒜 => at x where
   pred := fun U f => IsFraction f
-  res := by
-    rintro V U i f ⟨j, r, s, w⟩ <;> exact ⟨j, r, s, fun y => w (i y)⟩
+  res := by rintro V U i f ⟨j, r, s, w⟩ <;> exact ⟨j, r, s, fun y => w (i y)⟩
 
 /-- We will define the structure sheaf as the subsheaf of all dependent functions in
 `Π x : U, homogeneous_localization 𝒜 x` consisting of those functions which can locally be expressed
@@ -122,7 +121,7 @@ theorem add_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x 
   · simp only [add_mulₓ, map_add, Pi.add_apply, RingHom.map_mul, ext_iff_val, add_val]
     obtain ⟨nin1, hy1⟩ := wa (opens.inf_le_left Va Vb y)
     obtain ⟨nin2, hy2⟩ := wb (opens.inf_le_right Va Vb y)
-    dsimp' only  at hy1 hy2
+    dsimp only at hy1 hy2
     erw [hy1, hy2]
     simpa only [val_mk', add_mk, ← Subtype.val_eq_coe, add_commₓ]
     
@@ -200,9 +199,7 @@ def structurePresheafInCommRing : Presheaf CommRingₓₓ (ProjectiveSpectrum.to
 /-- Some glue, verifying that that structure presheaf valued in `CommRing` agrees with the `Type`
 valued structure presheaf.-/
 def structurePresheafCompForget : structurePresheafInCommRing 𝒜 ⋙ forget CommRingₓₓ ≅ (structureSheafInType 𝒜).1 :=
-  NatIso.ofComponents (fun U => Iso.refl _)
-    (by
-      tidy)
+  NatIso.ofComponents (fun U => Iso.refl _) (by tidy)
 
 end ProjectiveSpectrum.StructureSheaf
 
@@ -308,7 +305,7 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) : (Proj.structureSheaf 𝒜
       obtain ⟨v2, memv2, i2, ⟨j2, ⟨a2, a2_mem⟩, ⟨b2, b2_mem⟩, hs2⟩⟩ := s2.2 ⟨x, memu2⟩
       obtain ⟨b1_nin_x, eq2⟩ := hs1 ⟨x, memv1⟩
       obtain ⟨b2_nin_x, eq3⟩ := hs2 ⟨x, memv2⟩
-      dsimp' only  at eq1 eq2 eq3
+      dsimp only at eq1 eq2 eq3
       erw [stalk_to_fiber_ring_hom_germ 𝒜 u1 ⟨x, memu1⟩ s1, stalk_to_fiber_ring_hom_germ 𝒜 u2 ⟨x, memu2⟩ s2] at eq1
       erw [eq1] at eq2
       erw [eq2, Quotientₓ.eq] at eq3
@@ -365,8 +362,7 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) : (Proj.structureSheaf 𝒜
       Function.surjective_iff_has_right_inverse.mpr
         ⟨homogeneousLocalizationToStalk 𝒜 x, fun f => by
           rw [homogeneous_localization_to_stalk]
-          erw
-            [stalk_to_fiber_ring_hom_germ 𝒜 (ProjectiveSpectrum.basicOpen 𝒜 f.denom) ⟨x, _⟩
+          erw [stalk_to_fiber_ring_hom_germ 𝒜 (ProjectiveSpectrum.basicOpen 𝒜 f.denom) ⟨x, _⟩
               (section_in_basic_open _ x f)]
           simp only [section_in_basic_open, Subtype.ext_iff_val, HomogeneousLocalization.ext_iff_val,
             HomogeneousLocalization.val_mk', f.eq_num_div_denom]

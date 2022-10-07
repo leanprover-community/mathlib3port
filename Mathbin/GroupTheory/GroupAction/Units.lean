@@ -49,9 +49,14 @@ instance [Monoidₓ M] [MulAction M α] : MulAction Mˣ α where
   one_smul := (one_smul M : _)
   mul_smul := fun m n => mul_smul (m : M) n
 
-instance [Monoidₓ M] [AddMonoidₓ α] [DistribMulAction M α] : DistribMulAction Mˣ α where
-  smul_add := fun m => smul_add (m : M)
+instance [Monoidₓ M] [Zero α] [SmulZeroClass M α] : SmulZeroClass Mˣ α where
+  smul := (· • ·)
   smul_zero := fun m => smul_zero m
+
+instance [Monoidₓ M] [AddZeroClassₓ α] [DistribSmul M α] : DistribSmul Mˣ α where smul_add := fun m => smul_add (m : M)
+
+instance [Monoidₓ M] [AddMonoidₓ α] [DistribMulAction M α] : DistribMulAction Mˣ α :=
+  { Units.distribSmul with }
 
 instance [Monoidₓ M] [Monoidₓ α] [MulDistribMulAction M α] : MulDistribMulAction Mˣ α where
   smul_mul := fun m => smul_mul' (m : M)
@@ -76,8 +81,7 @@ conditions.
 instance mulAction' [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] :
     MulAction G Mˣ where
   smul := fun g m =>
-    ⟨g • (m : M), g⁻¹ • ↑m⁻¹, by
-      rw [smul_mul_smul, Units.mul_inv, mul_right_invₓ, one_smul], by
+    ⟨g • (m : M), g⁻¹ • ↑m⁻¹, by rw [smul_mul_smul, Units.mul_inv, mul_right_invₓ, one_smul], by
       rw [smul_mul_smul, Units.inv_mul, mul_left_invₓ, one_smul]⟩
   one_smul := fun m => Units.ext <| one_smul _ _
   mul_smul := fun g₁ g₂ m => Units.ext <| mul_smul _ _ _

@@ -39,10 +39,10 @@ theorem sin_arg (x : ℂ) : Real.sin (arg x) = x.im / x.abs := by
         neg_div, Real.arcsin_neg, Real.sin_neg]
 
 theorem cos_arg {x : ℂ} (hx : x ≠ 0) : Real.cos (arg x) = x.re / x.abs := by
-  have habs : 0 < abs x := abs_pos.2 hx
+  have habs : 0 < abs x := abs.pos hx
   have him : abs (im x / abs x) ≤ 1 := by
     rw [_root_.abs_div, abs_abs]
-    exact div_le_one_of_le x.abs_im_le_abs x.abs_nonneg
+    exact div_le_one_of_le x.abs_im_le_abs (abs.nonneg x)
   rw [abs_le] at him
   rw [arg]
   split_ifs with h₁ h₂ h₂
@@ -70,7 +70,7 @@ theorem abs_mul_exp_arg_mul_I (x : ℂ) : ↑(abs x) * exp (arg x * I) = x := by
   rcases eq_or_ne x 0 with (rfl | hx)
   · simp
     
-  · have : abs x ≠ 0 := abs_ne_zero.2 hx
+  · have : abs x ≠ 0 := abs.ne_zero hx
     ext <;> field_simp [sin_arg, cos_arg hx, this, mul_comm (abs x)]
     
 
@@ -81,8 +81,7 @@ theorem abs_mul_cos_add_sin_mul_I (x : ℂ) : (abs x * (cos (arg x) + sin (arg x
 theorem abs_eq_one_iff (z : ℂ) : abs z = 1 ↔ ∃ θ : ℝ, exp (θ * I) = z := by
   refine' ⟨fun hz => ⟨arg z, _⟩, _⟩
   · calc
-      exp (arg z * I) = abs z * exp (arg z * I) := by
-        rw [hz, of_real_one, one_mulₓ]
+      exp (arg z * I) = abs z * exp (arg z * I) := by rw [hz, of_real_one, one_mulₓ]
       _ = z := abs_mul_exp_arg_mul_I z
       
     
@@ -97,11 +96,10 @@ theorem range_exp_mul_I : (Range fun x : ℝ => exp (x * I)) = Metric.Sphere 0 1
 
 theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ ∈ Ioc (-π) π) :
     arg (r * (cos θ + sin θ * I)) = θ := by
-  have hπ := Real.pi_pos
-  simp only [arg, abs_mul, abs_cos_add_sin_mul_I, abs_of_nonneg hr.le, mul_oneₓ]
+  simp only [arg, map_mul, abs_cos_add_sin_mul_I, abs_of_nonneg hr.le, mul_oneₓ]
   simp only [of_real_mul_re, of_real_mul_im, neg_im, ← of_real_cos, ← of_real_sin, ← mk_eq_add_mul_I, neg_div,
     mul_div_cancel_left _ hr.ne', mul_nonneg_iff_right_nonneg_of_pos hr]
-  by_cases' h₁ : θ ∈ Icc (-(π / 2)) (π / 2)
+  by_cases h₁:θ ∈ Icc (-(π / 2)) (π / 2)
   · rw [if_pos]
     exacts[Real.arcsin_sin' h₁, Real.cos_nonneg_of_mem_Icc h₁]
     
@@ -111,23 +109,13 @@ theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
       have hcos : Real.cos θ < 0 := by
         rw [← neg_pos, ← Real.cos_add_pi]
         refine' Real.cos_pos_of_mem_Ioo ⟨_, _⟩ <;> linarith
-      have hsin : Real.sin θ < 0 :=
-        Real.sin_neg_of_neg_of_neg_pi_lt
-          (by
-            linarith)
-          hθ
+      have hsin : Real.sin θ < 0 := Real.sin_neg_of_neg_of_neg_pi_lt (by linarith) hθ
       rw [if_neg, if_neg, ← Real.sin_add_pi, Real.arcsin_sin, add_sub_cancel] <;> [linarith, linarith,
         exact hsin.not_le, exact hcos.not_le]
       
     · replace hθ := hθ.2
-      have hcos : Real.cos θ < 0 :=
-        Real.cos_neg_of_pi_div_two_lt_of_lt h₁
-          (by
-            linarith)
-      have hsin : 0 ≤ Real.sin θ :=
-        Real.sin_nonneg_of_mem_Icc
-          ⟨by
-            linarith, hθ⟩
+      have hcos : Real.cos θ < 0 := Real.cos_neg_of_pi_div_two_lt_of_lt h₁ (by linarith)
+      have hsin : 0 ≤ Real.sin θ := Real.sin_nonneg_of_mem_Icc ⟨by linarith, hθ⟩
       rw [if_neg, if_pos, ← Real.sin_sub_pi, Real.arcsin_sin, sub_add_cancel] <;> [linarith, linarith, exact hsin,
         exact hcos.not_le]
       
@@ -137,8 +125,7 @@ theorem arg_cos_add_sin_mul_I {θ : ℝ} (hθ : θ ∈ Ioc (-π) π) : arg (cos 
   rw [← one_mulₓ (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I zero_lt_one hθ]
 
 @[simp]
-theorem arg_zero : arg 0 = 0 := by
-  simp [arg, le_reflₓ]
+theorem arg_zero : arg 0 = 0 := by simp [arg, le_reflₓ]
 
 theorem ext_abs_arg {x y : ℂ} (h₁ : x.abs = y.abs) (h₂ : x.arg = y.arg) : x = y := by
   rw [← abs_mul_exp_arg_mul_I x, ← abs_mul_exp_arg_mul_I y, h₁, h₂]
@@ -154,7 +141,7 @@ theorem arg_mem_Ioc (z : ℂ) : arg z ∈ Ioc (-π) π := by
   rw [two_mul, neg_add_cancel_leftₓ, ← two_mul, zsmul_eq_mul] at hN
   rw [← abs_mul_cos_add_sin_mul_I z, ← cos_add_int_mul_two_pi _ N, ← sin_add_int_mul_two_pi _ N]
   simp only [← of_real_one, ← of_real_bit0, ← of_real_mul, ← of_real_add, ← of_real_int_cast]
-  rwa [arg_mul_cos_add_sin_mul_I (abs_pos.2 hz) hN]
+  rwa [arg_mul_cos_add_sin_mul_I (abs.pos hz) hN]
 
 @[simp]
 theorem range_arg : Range arg = Ioc (-π) π :=
@@ -165,6 +152,9 @@ theorem arg_le_pi (x : ℂ) : arg x ≤ π :=
 
 theorem neg_pi_lt_arg (x : ℂ) : -π < arg x :=
   (arg_mem_Ioc x).1
+
+theorem abs_arg_le_pi (z : ℂ) : abs (arg z) ≤ π :=
+  abs_le.2 ⟨(neg_pi_lt_arg z).le, arg_le_pi z⟩
 
 @[simp]
 theorem arg_nonneg_iff {z : ℂ} : 0 ≤ arg z ↔ 0 ≤ z.im := by
@@ -177,8 +167,7 @@ theorem arg_nonneg_iff {z : ℂ} : 0 ≤ arg z ↔ 0 ≤ z.im := by
         contrapose!
         intro h
         exact Real.sin_neg_of_neg_of_neg_pi_lt h (neg_pi_lt_arg _)⟩
-    _ ↔ _ := by
-      rw [sin_arg, le_div_iff (abs_pos.2 h₀), zero_mul]
+    _ ↔ _ := by rw [sin_arg, le_div_iff (abs.pos h₀), zero_mul]
     
 
 @[simp]
@@ -191,44 +180,39 @@ theorem arg_real_mul (x : ℂ) {r : ℝ} (hr : 0 < r) : arg (r * x) = arg x := b
     
   conv_lhs =>
     rw [← abs_mul_cos_add_sin_mul_I x, ← mul_assoc, ← of_real_mul,
-      arg_mul_cos_add_sin_mul_I (mul_pos hr (abs_pos.2 hx)) x.arg_mem_Ioc]
+      arg_mul_cos_add_sin_mul_I (mul_pos hr (abs.pos hx)) x.arg_mem_Ioc]
 
 theorem arg_eq_arg_iff {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) : arg x = arg y ↔ (abs y / abs x : ℂ) * x = y := by
-  simp only [ext_abs_arg_iff, abs_mul, abs_div, abs_of_real, abs_abs, div_mul_cancel _ (abs_ne_zero.2 hx),
+  simp only [ext_abs_arg_iff, map_mul, map_div₀, abs_of_real, abs_abs, div_mul_cancel _ (abs.ne_zero hx),
     eq_self_iff_true, true_andₓ]
   rw [← of_real_div, arg_real_mul]
-  exact div_pos (abs_pos.2 hy) (abs_pos.2 hx)
+  exact div_pos (abs.pos hy) (abs.pos hx)
 
 @[simp]
-theorem arg_one : arg 1 = 0 := by
-  simp [arg, zero_le_one]
+theorem arg_one : arg 1 = 0 := by simp [arg, zero_le_one]
 
 @[simp]
-theorem arg_neg_one : arg (-1) = π := by
-  simp [arg, le_reflₓ, not_leₓ.2 (@zero_lt_one ℝ _ _)]
+theorem arg_neg_one : arg (-1) = π := by simp [arg, le_reflₓ, not_leₓ.2 (@zero_lt_one ℝ _ _)]
 
 @[simp]
-theorem arg_I : arg i = π / 2 := by
-  simp [arg, le_reflₓ]
+theorem arg_I : arg i = π / 2 := by simp [arg, le_reflₓ]
 
 @[simp]
-theorem arg_neg_I : arg (-I) = -(π / 2) := by
-  simp [arg, le_reflₓ]
+theorem arg_neg_I : arg (-I) = -(π / 2) := by simp [arg, le_reflₓ]
 
 @[simp]
 theorem tan_arg (x : ℂ) : Real.tan (arg x) = x.im / x.re := by
-  by_cases' h : x = 0
+  by_cases h:x = 0
   · simp only [h, zero_div, Complex.zero_im, Complex.arg_zero, Real.tan_zero, Complex.zero_re]
     
-  rw [Real.tan_eq_sin_div_cos, sin_arg, cos_arg h, div_div_div_cancel_right _ (abs_ne_zero.2 h)]
+  rw [Real.tan_eq_sin_div_cos, sin_arg, cos_arg h, div_div_div_cancel_right _ (abs.ne_zero h)]
 
-theorem arg_of_real_of_nonneg {x : ℝ} (hx : 0 ≤ x) : arg x = 0 := by
-  simp [arg, hx]
+theorem arg_of_real_of_nonneg {x : ℝ} (hx : 0 ≤ x) : arg x = 0 := by simp [arg, hx]
 
 theorem arg_eq_zero_iff {z : ℂ} : arg z = 0 ↔ 0 ≤ z.re ∧ z.im = 0 := by
   refine' ⟨fun h => _, _⟩
   · rw [← abs_mul_cos_add_sin_mul_I z, h]
-    simp [abs_nonneg]
+    simp [abs.nonneg]
     
   · cases' z with x y
     rintro ⟨h, rfl : y = 0⟩
@@ -236,7 +220,7 @@ theorem arg_eq_zero_iff {z : ℂ} : arg z = 0 ↔ 0 ≤ z.re ∧ z.im = 0 := by
     
 
 theorem arg_eq_pi_iff {z : ℂ} : arg z = π ↔ z.re < 0 ∧ z.im = 0 := by
-  by_cases' h₀ : z = 0
+  by_cases h₀:z = 0
   · simp [h₀, lt_irreflₓ, real.pi_ne_zero.symm]
     
   constructor
@@ -257,7 +241,7 @@ theorem arg_of_real_of_neg {x : ℝ} (hx : x < 0) : arg x = π :=
   arg_eq_pi_iff.2 ⟨hx, rfl⟩
 
 theorem arg_eq_pi_div_two_iff {z : ℂ} : arg z = π / 2 ↔ z.re = 0 ∧ 0 < z.im := by
-  by_cases' h₀ : z = 0
+  by_cases h₀:z = 0
   · simp [h₀, lt_irreflₓ, real.pi_div_two_pos.ne]
     
   constructor
@@ -271,7 +255,7 @@ theorem arg_eq_pi_div_two_iff {z : ℂ} : arg z = π / 2 ↔ z.re = 0 ∧ 0 < z.
     
 
 theorem arg_eq_neg_pi_div_two_iff {z : ℂ} : arg z = -(π / 2) ↔ z.re = 0 ∧ z.im < 0 := by
-  by_cases' h₀ : z = 0
+  by_cases h₀:z = 0
   · simp [h₀, lt_irreflₓ, Real.pi_ne_zero]
     
   constructor
@@ -289,12 +273,10 @@ theorem arg_of_re_nonneg {x : ℂ} (hx : 0 ≤ x.re) : arg x = Real.arcsin (x.im
   if_pos hx
 
 theorem arg_of_re_neg_of_im_nonneg {x : ℂ} (hx_re : x.re < 0) (hx_im : 0 ≤ x.im) :
-    arg x = Real.arcsin ((-x).im / x.abs) + π := by
-  simp only [arg, hx_re.not_le, hx_im, if_true, if_false]
+    arg x = Real.arcsin ((-x).im / x.abs) + π := by simp only [arg, hx_re.not_le, hx_im, if_true, if_false]
 
 theorem arg_of_re_neg_of_im_neg {x : ℂ} (hx_re : x.re < 0) (hx_im : x.im < 0) :
-    arg x = Real.arcsin ((-x).im / x.abs) - π := by
-  simp only [arg, hx_re.not_le, hx_im.not_le, if_false]
+    arg x = Real.arcsin ((-x).im / x.abs) - π := by simp only [arg, hx_re.not_le, hx_im.not_le, if_false]
 
 theorem arg_of_im_nonneg_of_ne_zero {z : ℂ} (h₁ : 0 ≤ z.im) (h₂ : z ≠ 0) : arg z = Real.arccos (z.re / abs z) := by
   rw [← cos_arg h₂, Real.arccos_cos (arg_nonneg_iff.2 h₁) (arg_le_pi _)]
@@ -332,13 +314,10 @@ theorem arg_conj (x : ℂ) : arg (conj x) = if arg x = π then π else -arg x :=
 
 theorem arg_inv (x : ℂ) : arg x⁻¹ = if arg x = π then π else -arg x := by
   rw [← arg_conj, inv_def, mul_comm]
-  by_cases' hx : x = 0
+  by_cases hx:x = 0
   · simp [hx]
     
-  · exact
-      arg_real_mul (conj x)
-        (by
-          simp [hx])
+  · exact arg_real_mul (conj x) (by simp [hx])
     
 
 theorem arg_le_pi_div_two_iff {z : ℂ} : arg z ≤ π / 2 ↔ 0 ≤ re z ∨ im z < 0 := by
@@ -351,7 +330,7 @@ theorem arg_le_pi_div_two_iff {z : ℂ} : arg z ≤ π / 2 ↔ 0 ≤ re z ∨ im
     rw [iff_falseₓ, not_leₓ, arg_of_re_neg_of_im_nonneg hre him, ← sub_lt_iff_lt_add, half_sub,
       Real.neg_pi_div_two_lt_arcsin, neg_im, neg_div, neg_lt_neg_iff, div_lt_one, ← _root_.abs_of_nonneg him,
       abs_im_lt_abs]
-    exacts[hre.ne, abs_pos.2 <| ne_of_apply_ne re hre.ne]
+    exacts[hre.ne, abs.pos <| ne_of_apply_ne re hre.ne]
     
   · simp only [him]
     rw [iff_trueₓ, arg_of_re_neg_of_im_neg hre him]
@@ -371,7 +350,7 @@ theorem neg_pi_div_two_le_arg_iff {z : ℂ} : -(π / 2) ≤ arg z ↔ 0 ≤ re z
   · simp only [him.not_le]
     rw [iff_falseₓ, not_leₓ, arg_of_re_neg_of_im_neg hre him, sub_lt_iff_lt_add', ← sub_eq_add_neg, sub_half,
       Real.arcsin_lt_pi_div_two, div_lt_one, neg_im, ← abs_of_neg him, abs_im_lt_abs]
-    exacts[hre.ne, abs_pos.2 <| ne_of_apply_ne re hre.ne]
+    exacts[hre.ne, abs.pos <| ne_of_apply_ne re hre.ne]
     
 
 @[simp]
@@ -381,11 +360,10 @@ theorem abs_arg_le_pi_div_two_iff {z : ℂ} : abs (arg z) ≤ π / 2 ↔ 0 ≤ r
 
 @[simp]
 theorem arg_conj_coe_angle (x : ℂ) : (arg (conj x) : Real.Angle) = -arg x := by
-  by_cases' h : arg x = π <;> simp [arg_conj, h]
+  by_cases h:arg x = π <;> simp [arg_conj, h]
 
 @[simp]
-theorem arg_inv_coe_angle (x : ℂ) : (arg x⁻¹ : Real.Angle) = -arg x := by
-  by_cases' h : arg x = π <;> simp [arg_inv, h]
+theorem arg_inv_coe_angle (x : ℂ) : (arg x⁻¹ : Real.Angle) = -arg x := by by_cases h:arg x = π <;> simp [arg_inv, h]
 
 theorem arg_neg_eq_arg_sub_pi_of_im_pos {x : ℂ} (hi : 0 < x.im) : arg (-x) = arg x - π := by
   rw [arg_of_im_pos hi, arg_of_im_neg (show (-x).im < 0 from Left.neg_neg_iff.2 hi)]
@@ -482,8 +460,7 @@ theorem arg_cos_add_sin_mul_I_coe_angle (θ : Real.Angle) :
   rw [← one_mulₓ (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I_coe_angle zero_lt_one]
 
 theorem arg_mul_coe_angle {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) : (arg (x * y) : Real.Angle) = arg x + arg y := by
-  convert arg_mul_cos_add_sin_mul_I_coe_angle (mul_pos (abs_pos.2 hx) (abs_pos.2 hy)) (arg x + arg y : Real.Angle) using
-    3
+  convert arg_mul_cos_add_sin_mul_I_coe_angle (mul_pos (abs.pos hx) (abs.pos hy)) (arg x + arg y : Real.Angle) using 3
   simp_rw [← Real.Angle.coe_add, Real.Angle.sin_coe, Real.Angle.cos_coe, of_real_cos, of_real_sin, cos_add_sin_I,
     of_real_add, add_mulₓ, exp_add, of_real_mul]
   rw [mul_assoc, mul_comm (exp _), ← mul_assoc (abs y : ℂ), abs_mul_exp_arg_mul_I, mul_comm y, ← mul_assoc,
@@ -533,7 +510,7 @@ theorem arg_eq_nhds_of_im_neg (hz : im z < 0) : arg =ᶠ[𝓝 z] fun x => -Real.
 
 theorem continuous_at_arg (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt arg x := by
   have h₀ : abs x ≠ 0 := by
-    rw [abs_ne_zero]
+    rw [abs.ne_zero_iff]
     rintro rfl
     simpa using h
   rw [← lt_or_lt_iff_ne] at h
@@ -588,7 +565,7 @@ theorem tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : 
   simpa only [arg_eq_pi_iff.2 ⟨hre, him⟩] using (continuous_within_at_arg_of_re_neg_of_im_zero hre him).Tendsto
 
 theorem continuous_at_arg_coe_angle (h : x ≠ 0) : ContinuousAt (coe ∘ arg : ℂ → Real.Angle) x := by
-  by_cases' hs : 0 < x.re ∨ x.im ≠ 0
+  by_cases hs:0 < x.re ∨ x.im ≠ 0
   · exact real.angle.continuous_coe.continuous_at.comp (continuous_at_arg hs)
     
   · rw [← Function.comp.right_id (coe ∘ arg),
@@ -598,9 +575,7 @@ theorem continuous_at_arg_coe_angle (h : x ≠ 0) : ContinuousAt (coe ∘ arg : 
       rwa [continuous_at_update_of_ne (neg_ne_zero.2 h)] at this
     have ha : Function.update ((coe ∘ arg) ∘ Neg.neg : ℂ → Real.Angle) 0 π = fun z => (arg z : Real.Angle) + π := by
       rw [Function.update_eq_iff]
-      exact
-        ⟨by
-          simp , fun z hz => arg_neg_coe_angle hz⟩
+      exact ⟨by simp, fun z hz => arg_neg_coe_angle hz⟩
     rw [ha]
     push_neg  at hs
     refine' (real.angle.continuous_coe.continuous_at.comp (continuous_at_arg (Or.inl _))).add continuous_at_const

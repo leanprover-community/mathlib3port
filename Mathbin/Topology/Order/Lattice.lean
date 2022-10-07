@@ -58,6 +58,12 @@ class TopologicalLattice (L : Type _) [TopologicalSpace L] [Lattice L] extends H
 instance (priority := 100) OrderDual.topologicalLattice (L : Type _) [TopologicalSpace L] [Lattice L]
     [TopologicalLattice L] : TopologicalLattice Lᵒᵈ where
 
+-- see Note [lower instance priority]
+instance (priority := 100) LinearOrderₓ.topologicalLattice {L : Type _} [TopologicalSpace L] [LinearOrderₓ L]
+    [OrderClosedTopology L] : TopologicalLattice L where
+  continuous_inf := continuous_min
+  continuous_sup := continuous_max
+
 variable {L : Type _} [TopologicalSpace L]
 
 variable {X : Type _} [TopologicalSpace X]

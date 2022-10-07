@@ -60,8 +60,7 @@ def boundedAtImInftySubalgebra (α : Type _) [NormedField α] : Subalgebra α (�
   boundedFilterSubalgebra atImInfty
 
 theorem prod_of_bounded_is_bounded {f g : ℍ → ℂ} (hf : IsBoundedAtImInfty f) (hg : IsBoundedAtImInfty g) :
-    IsBoundedAtImInfty (f * g) := by
-  simpa only [Pi.one_apply, mul_oneₓ, norm_eq_abs, Complex.abs_mul] using hf.mul hg
+    IsBoundedAtImInfty (f * g) := by simpa only [Pi.one_apply, mul_oneₓ, norm_eq_abs] using hf.mul hg
 
 @[simp]
 theorem bounded_mem (f : ℍ → ℂ) : IsBoundedAtImInfty f ↔ ∃ M A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ M := by
@@ -79,8 +78,7 @@ theorem zero_at_im_infty (f : ℍ → ℂ) :
     intro h s hs
     simp_rw [Filter.Eventually, at_im_infty_mem]
     obtain ⟨ε, h1, h2⟩ := hs
-    have h11 : 0 < ε / 2 := by
-      linarith
+    have h11 : 0 < ε / 2 := by linarith
     obtain ⟨A, hA⟩ := h (ε / 2) h11
     use A
     intro z hz

@@ -53,21 +53,18 @@ class BraidedCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] whe
   braiding : ∀ X Y : C, X ⊗ Y ≅ Y ⊗ X
   braiding_naturality' :
     ∀ {X X' Y Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y'), (f ⊗ g) ≫ (braiding Y Y').Hom = (braiding X X').Hom ≫ (g ⊗ f) := by
-    run_tac
-      obviously
+    obviously
   -- hexagon identities:
   hexagon_forward' :
     ∀ X Y Z : C,
       (α_ X Y Z).Hom ≫ (braiding X (Y ⊗ Z)).Hom ≫ (α_ Y Z X).Hom =
         ((braiding X Y).Hom ⊗ 𝟙 Z) ≫ (α_ Y X Z).Hom ≫ (𝟙 Y ⊗ (braiding X Z).Hom) := by
-    run_tac
-      obviously
+    obviously
   hexagon_reverse' :
     ∀ X Y Z : C,
       (α_ X Y Z).inv ≫ (braiding (X ⊗ Y) Z).Hom ≫ (α_ Z X Y).inv =
         (𝟙 X ⊗ (braiding Y Z).Hom) ≫ (α_ X Z Y).inv ≫ ((braiding X Z).Hom ⊗ 𝟙 Y) := by
-    run_tac
-      obviously
+    obviously
 
 restate_axiom braided_category.braiding_naturality'
 
@@ -131,9 +128,7 @@ noncomputable def braidedCategoryOfFullyFaithful {C D : Type _} [Category C] [Ca
     [MonoidalCategory D] (F : MonoidalFunctor C D) [Full F.toFunctor] [Faithful F.toFunctor] [BraidedCategory D] :
     BraidedCategory C :=
   braidedCategoryOfFaithful F
-    (fun X Y => F.toFunctor.preimageIso ((asIso (F.μ _ _)).symm ≪≫ β_ (F.obj X) (F.obj Y) ≪≫ asIso (F.μ _ _)))
-    (by
-      tidy)
+    (fun X Y => F.toFunctor.preimageIso ((asIso (F.μ _ _)).symm ≪≫ β_ (F.obj X) (F.obj Y) ≪≫ asIso (F.μ _ _))) (by tidy)
 
 section
 
@@ -167,7 +162,7 @@ theorem braiding_left_unitor_aux₁ (X : C) :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -186,8 +181,7 @@ theorem braiding_left_unitor_aux₂ (X : C) :
   calc
     ((β_ X (𝟙_ C)).Hom ⊗ 𝟙 (𝟙_ C)) ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) =
         ((β_ X (𝟙_ C)).Hom ⊗ 𝟙 (𝟙_ C)) ≫ (α_ _ _ _).Hom ≫ (α_ _ _ _).inv ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) :=
-      by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+      by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
     _ =
         ((β_ X (𝟙_ C)).Hom ⊗ 𝟙 (𝟙_ C)) ≫
           (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (β_ X _).Hom) ≫ (𝟙 _ ⊗ (β_ X _).inv) ≫ (α_ _ _ _).inv ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) :=
@@ -200,15 +194,12 @@ theorem braiding_left_unitor_aux₂ (X : C) :
       by
       slice_lhs 1 3 => rw [← hexagon_forward]
       simp only [assoc]
-    _ = (α_ _ _ _).Hom ≫ (β_ _ _).Hom ≫ ((λ_ _).Hom ⊗ 𝟙 X) ≫ (β_ X _).inv := by
-      rw [braiding_left_unitor_aux₁]
+    _ = (α_ _ _ _).Hom ≫ (β_ _ _).Hom ≫ ((λ_ _).Hom ⊗ 𝟙 X) ≫ (β_ X _).inv := by rw [braiding_left_unitor_aux₁]
     _ = (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (λ_ _).Hom) ≫ (β_ _ _).Hom ≫ (β_ X _).inv := by
       slice_lhs 2 3 => rw [← braiding_naturality]
       simp only [assoc]
-    _ = (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (λ_ _).Hom) := by
-      rw [iso.hom_inv_id, comp_id]
-    _ = (ρ_ X).Hom ⊗ 𝟙 (𝟙_ C) := by
-      rw [triangle]
+    _ = (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (λ_ _).Hom) := by rw [iso.hom_inv_id, comp_id]
+    _ = (ρ_ X).Hom ⊗ 𝟙 (𝟙_ C) := by rw [triangle]
     
 
 @[simp]
@@ -229,7 +220,7 @@ theorem braiding_right_unitor_aux₁ (X : C) :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -248,8 +239,7 @@ theorem braiding_right_unitor_aux₂ (X : C) :
   calc
     (𝟙 (𝟙_ C) ⊗ (β_ (𝟙_ C) X).Hom) ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) =
         (𝟙 (𝟙_ C) ⊗ (β_ (𝟙_ C) X).Hom) ≫ (α_ _ _ _).inv ≫ (α_ _ _ _).Hom ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) :=
-      by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+      by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
     _ =
         (𝟙 (𝟙_ C) ⊗ (β_ (𝟙_ C) X).Hom) ≫
           (α_ _ _ _).inv ≫ ((β_ _ X).Hom ⊗ 𝟙 _) ≫ ((β_ _ X).inv ⊗ 𝟙 _) ≫ (α_ _ _ _).Hom ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) :=
@@ -262,15 +252,12 @@ theorem braiding_right_unitor_aux₂ (X : C) :
       by
       slice_lhs 1 3 => rw [← hexagon_reverse]
       simp only [assoc]
-    _ = (α_ _ _ _).inv ≫ (β_ _ _).Hom ≫ (𝟙 X ⊗ (ρ_ _).Hom) ≫ (β_ _ X).inv := by
-      rw [braiding_right_unitor_aux₁]
+    _ = (α_ _ _ _).inv ≫ (β_ _ _).Hom ≫ (𝟙 X ⊗ (ρ_ _).Hom) ≫ (β_ _ X).inv := by rw [braiding_right_unitor_aux₁]
     _ = (α_ _ _ _).inv ≫ ((ρ_ _).Hom ⊗ 𝟙 _) ≫ (β_ _ X).Hom ≫ (β_ _ _).inv := by
       slice_lhs 2 3 => rw [← braiding_naturality]
       simp only [assoc]
-    _ = (α_ _ _ _).inv ≫ ((ρ_ _).Hom ⊗ 𝟙 _) := by
-      rw [iso.hom_inv_id, comp_id]
-    _ = 𝟙 (𝟙_ C) ⊗ (λ_ X).Hom := by
-      rw [triangle_assoc_comp_right]
+    _ = (α_ _ _ _).inv ≫ ((ρ_ _).Hom ⊗ 𝟙 _) := by rw [iso.hom_inv_id, comp_id]
+    _ = 𝟙 (𝟙_ C) ⊗ (λ_ X).Hom := by rw [triangle_assoc_comp_right]
     
 
 @[simp]
@@ -296,9 +283,7 @@ See <https://stacks.math.columbia.edu/tag/0FFW>.
 -/
 class SymmetricCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] extends BraidedCategory.{v} C where
   -- braiding symmetric:
-  symmetry' : ∀ X Y : C, (β_ X Y).Hom ≫ (β_ Y X).Hom = 𝟙 (X ⊗ Y) := by
-    run_tac
-      obviously
+  symmetry' : ∀ X Y : C, (β_ X Y).Hom ≫ (β_ Y X).Hom = 𝟙 (X ⊗ Y) := by obviously
 
 restate_axiom symmetric_category.symmetry'
 
@@ -314,9 +299,7 @@ variable (E : Type u₃) [Category.{v₃} E] [MonoidalCategory E] [BraidedCatego
 which preserves the braiding.
 -/
 structure LaxBraidedFunctor extends LaxMonoidalFunctor C D where
-  braided' : ∀ X Y : C, μ X Y ≫ map (β_ X Y).Hom = (β_ (obj X) (obj Y)).Hom ≫ μ Y X := by
-    run_tac
-      obviously
+  braided' : ∀ X Y : C, μ X Y ≫ map (β_ X Y).Hom = (β_ (obj X) (obj Y)).Hom ≫ μ Y X := by obviously
 
 restate_axiom lax_braided_functor.braided'
 
@@ -337,7 +320,7 @@ variable {C D E}
 def comp (F : LaxBraidedFunctor C D) (G : LaxBraidedFunctor D E) : LaxBraidedFunctor C E :=
   { LaxMonoidalFunctor.comp F.toLaxMonoidalFunctor G.toLaxMonoidalFunctor with
     braided' := fun X Y => by
-      dsimp'
+      dsimp
       slice_lhs 2 3 => rw [← CategoryTheory.Functor.map_comp, F.braided, CategoryTheory.Functor.map_comp]
       slice_lhs 1 2 => rw [G.braided]
       simp only [category.assoc] }
@@ -366,9 +349,7 @@ structure BraidedFunctor extends MonoidalFunctor C D where
   -- Note this is stated differently than for `lax_braided_functor`.
   -- We move the `μ X Y` to the right hand side,
   -- so that this makes a good `@[simp]` lemma.
-  braided' : ∀ X Y : C, map (β_ X Y).Hom = inv (μ X Y) ≫ (β_ (obj X) (obj Y)).Hom ≫ μ Y X := by
-    run_tac
-      obviously
+  braided' : ∀ X Y : C, map (β_ X Y).Hom = inv (μ X Y) ≫ (β_ (obj X) (obj Y)).Hom ≫ μ Y X := by obviously
 
 restate_axiom braided_functor.braided'
 
@@ -377,10 +358,7 @@ attribute [simp] braided_functor.braided
 /-- A braided category with a braided functor to a symmetric category is itself symmetric. -/
 def symmetricCategoryOfFaithful {C D : Type _} [Category C] [Category D] [MonoidalCategory C] [MonoidalCategory D]
     [BraidedCategory C] [SymmetricCategory D] (F : BraidedFunctor C D) [Faithful F.toFunctor] :
-    SymmetricCategory C where symmetry' := fun X Y =>
-    F.toFunctor.map_injective
-      (by
-        simp )
+    SymmetricCategory C where symmetry' := fun X Y => F.toFunctor.map_injective (by simp)
 
 namespace BraidedFunctor
 
@@ -467,7 +445,7 @@ theorem tensor_μ_def₁ (X₁ X₂ Y₁ Y₂ : C) :
     tensorμ C (X₁, X₂) (Y₁, Y₂) ≫ (α_ X₁ Y₁ (X₂ ⊗ Y₂)).Hom ≫ (𝟙 X₁ ⊗ (α_ Y₁ X₂ Y₂).inv) =
       (α_ X₁ X₂ (Y₁ ⊗ Y₂)).Hom ≫ (𝟙 X₁ ⊗ (α_ X₂ Y₁ Y₂).inv) ≫ (𝟙 X₁ ⊗ (β_ X₂ Y₁).Hom ⊗ 𝟙 Y₂) :=
   by
-  dsimp' [tensor_μ]
+  dsimp [tensor_μ]
   simp
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -480,7 +458,7 @@ theorem tensor_μ_def₂ (X₁ X₂ Y₁ Y₂ : C) :
     (𝟙 X₁ ⊗ (α_ X₂ Y₁ Y₂).Hom) ≫ (α_ X₁ X₂ (Y₁ ⊗ Y₂)).inv ≫ tensorμ C (X₁, X₂) (Y₁, Y₂) =
       (𝟙 X₁ ⊗ (β_ X₂ Y₁).Hom ⊗ 𝟙 Y₂) ≫ (𝟙 X₁ ⊗ (α_ Y₁ X₂ Y₂).Hom) ≫ (α_ X₁ Y₁ (X₂ ⊗ Y₂)).inv :=
   by
-  dsimp' [tensor_μ]
+  dsimp [tensor_μ]
   simp
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -491,7 +469,7 @@ theorem tensor_μ_def₂ (X₁ X₂ Y₁ Y₂ : C) :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tensor_μ_natural {X₁ X₂ Y₁ Y₂ U₁ U₂ V₁ V₂ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : U₁ ⟶ V₁) (g₂ : U₂ ⟶ V₂) :
     ((f₁ ⊗ f₂) ⊗ g₁ ⊗ g₂) ≫ tensorμ C (Y₁, Y₂) (V₁, V₂) = tensorμ C (X₁, X₂) (U₁, U₂) ≫ ((f₁ ⊗ g₁) ⊗ f₂ ⊗ g₂) := by
-  dsimp' [tensor_μ]
+  dsimp [tensor_μ]
   slice_lhs 1 2 => rw [associator_naturality]
   slice_lhs 2 3 => rw [← tensor_comp, comp_id f₁, ← id_comp f₁, associator_inv_naturality, tensor_comp]
   slice_lhs 3 4 =>
@@ -507,8 +485,8 @@ theorem tensor_μ_natural {X₁ X₂ Y₁ Y₂ U₁ U₂ V₁ V₂ : C} (f₁ : 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -517,17 +495,16 @@ theorem tensor_left_unitality (X₁ X₂ : C) :
     (λ_ (X₁ ⊗ X₂)).Hom =
       ((λ_ (𝟙_ C)).inv ⊗ 𝟙 (X₁ ⊗ X₂)) ≫ tensorμ C (𝟙_ C, 𝟙_ C) (X₁, X₂) ≫ ((λ_ X₁).Hom ⊗ (λ_ X₂).Hom) :=
   by
-  dsimp' [tensor_μ]
+  dsimp [tensor_μ]
   have :
     ((λ_ (𝟙_ C)).inv ⊗ 𝟙 (X₁ ⊗ X₂)) ≫ (α_ (𝟙_ C) (𝟙_ C) (X₁ ⊗ X₂)).Hom ≫ (𝟙 (𝟙_ C) ⊗ (α_ (𝟙_ C) X₁ X₂).inv) =
       𝟙 (𝟙_ C) ⊗ (λ_ X₁).inv ⊗ 𝟙 X₂ :=
-    by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]"
+    by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
   slice_rhs 1 3 => rw [this]
   clear this
   slice_rhs 1 2 => rw [← tensor_comp, ← tensor_comp, comp_id, comp_id, left_unitor_inv_braiding]
   simp only [assoc]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -535,8 +512,8 @@ theorem tensor_left_unitality (X₁ X₂ : C) :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -545,17 +522,16 @@ theorem tensor_right_unitality (X₁ X₂ : C) :
     (ρ_ (X₁ ⊗ X₂)).Hom =
       (𝟙 (X₁ ⊗ X₂) ⊗ (λ_ (𝟙_ C)).inv) ≫ tensorμ C (X₁, X₂) (𝟙_ C, 𝟙_ C) ≫ ((ρ_ X₁).Hom ⊗ (ρ_ X₂).Hom) :=
   by
-  dsimp' [tensor_μ]
+  dsimp [tensor_μ]
   have :
     (𝟙 (X₁ ⊗ X₂) ⊗ (λ_ (𝟙_ C)).inv) ≫ (α_ X₁ X₂ (𝟙_ C ⊗ 𝟙_ C)).Hom ≫ (𝟙 X₁ ⊗ (α_ X₂ (𝟙_ C) (𝟙_ C)).inv) =
       (α_ X₁ X₂ (𝟙_ C)).Hom ≫ (𝟙 X₁ ⊗ (ρ_ X₂).inv ⊗ 𝟙 (𝟙_ C)) :=
-    by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]"
+    by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
   slice_rhs 1 3 => rw [this]
   clear this
   slice_rhs 2 3 => rw [← tensor_comp, ← tensor_comp, comp_id, comp_id, right_unitor_inv_braiding]
   simp only [assoc]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -627,7 +603,7 @@ theorem tensor_associativity_aux (W X Y Z : C) :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -664,7 +640,7 @@ theorem tensor_associativity_aux (W X Y Z : C) :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -701,8 +677,8 @@ theorem tensor_associativity_aux (W X Y Z : C) :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -734,8 +710,7 @@ theorem tensor_associativity (X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C) :
                       (α_ X₁ (((Y₁ ⊗ Z₁) ⊗ X₂) ⊗ Y₂) Z₂).Hom ≫
                         (𝟙 X₁ ⊗ (α_ ((Y₁ ⊗ Z₁) ⊗ X₂) Y₂ Z₂).Hom) ≫
                           (𝟙 X₁ ⊗ (α_ (Y₁ ⊗ Z₁) X₂ (Y₂ ⊗ Z₂)).Hom) ≫ (α_ X₁ (Y₁ ⊗ Z₁) (X₂ ⊗ Y₂ ⊗ Z₂)).inv :=
-    by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]"
+    by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
   rw [this]
   clear this
   slice_lhs 2 4 => rw [tensor_μ_def₁]
@@ -753,8 +728,7 @@ theorem tensor_associativity (X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C) :
             ((α_ X₁ ((Y₁ ⊗ X₂) ⊗ Y₂) Z₁).Hom ⊗ 𝟙 Z₂) ≫
               ((𝟙 X₁ ⊗ (α_ (Y₁ ⊗ X₂) Y₂ Z₁).Hom) ⊗ 𝟙 Z₂) ≫
                 ((𝟙 X₁ ⊗ (α_ Y₁ X₂ (Y₂ ⊗ Z₁)).Hom) ⊗ 𝟙 Z₂) ≫ ((𝟙 X₁ ⊗ 𝟙 Y₁ ⊗ (α_ X₂ Y₂ Z₁).inv) ⊗ 𝟙 Z₂) :=
-    by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]"
+    by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
   slice_lhs 2 6 => rw [this]
   clear this
   slice_lhs 1 3 => rw [← tensor_comp, ← tensor_comp, tensor_μ_def₁, tensor_comp, tensor_comp]
@@ -766,9 +740,13 @@ theorem tensor_associativity (X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C) :
       tensor_comp, tensor_id, tensor_associativity_aux, ← tensor_id, ← id_comp (𝟙 X₁ ≫ 𝟙 X₁ ≫ 𝟙 X₁ ≫ 𝟙 X₁ ≫ 𝟙 X₁), ←
       id_comp (𝟙 Z₂ ≫ 𝟙 Z₂ ≫ 𝟙 Z₂ ≫ 𝟙 Z₂ ≫ 𝟙 Z₂), tensor_comp, tensor_comp, tensor_comp, tensor_comp, tensor_comp,
       tensor_comp, tensor_comp, tensor_comp, tensor_comp, tensor_comp]
-  slice_lhs 11 12 => rw [← tensor_comp, ← tensor_comp, iso.hom_inv_id]simp
+  slice_lhs 11 12 =>
+  rw [← tensor_comp, ← tensor_comp, iso.hom_inv_id]
+  simp
   simp only [assoc, id_comp]
-  slice_lhs 10 11 => rw [← tensor_comp, ← tensor_comp, ← tensor_comp, iso.hom_inv_id]simp
+  slice_lhs 10 11 =>
+  rw [← tensor_comp, ← tensor_comp, ← tensor_comp, iso.hom_inv_id]
+  simp
   simp only [assoc, id_comp]
   slice_lhs 9 10 => rw [associator_naturality]
   slice_lhs 10 11 => rw [← tensor_comp, associator_naturality, tensor_comp]
@@ -784,8 +762,7 @@ theorem tensor_associativity (X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C) :
           (𝟙 X₁ ⊗ (α_ X₂ Y₁ ((Z₁ ⊗ Y₂) ⊗ Z₂)).Hom) ≫
             (α_ X₁ X₂ (Y₁ ⊗ (Z₁ ⊗ Y₂) ⊗ Z₂)).inv ≫
               (𝟙 (X₁ ⊗ X₂) ⊗ 𝟙 Y₁ ⊗ (α_ Z₁ Y₂ Z₂).Hom) ≫ (𝟙 (X₁ ⊗ X₂) ⊗ (α_ Y₁ Z₁ (Y₂ ⊗ Z₂)).inv) :=
-    by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]"
+    by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
   slice_lhs 7 12 => rw [this]
   clear this
   slice_lhs 6 7 => rw [associator_naturality]
@@ -793,8 +770,8 @@ theorem tensor_associativity (X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C) :
   slice_lhs 8 9 => rw [← tensor_comp, associator_naturality, tensor_comp]
   slice_lhs 9 10 => rw [associator_inv_naturality]
   slice_lhs 10 12 => rw [← tensor_comp, ← tensor_comp, ← tensor_μ_def₂, tensor_comp, tensor_comp]
-  dsimp'
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+  dsimp
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
 /-- The tensor product functor from `C × C` to `C` as a monoidal functor. -/
 @[simps]
@@ -805,7 +782,7 @@ def tensorMonoidal : MonoidalFunctor (C × C) C :=
     left_unitality' := fun ⟨X₁, X₂⟩ => tensor_left_unitality C X₁ X₂,
     right_unitality' := fun ⟨X₁, X₂⟩ => tensor_right_unitality C X₁ X₂,
     μ_is_iso := by
-      dsimp' [tensor_μ]
+      dsimp [tensor_μ]
       infer_instance }
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -814,8 +791,8 @@ def tensorMonoidal : MonoidalFunctor (C × C) C :=
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -824,19 +801,18 @@ theorem left_unitor_monoidal (X₁ X₂ : C) :
     (λ_ X₁).Hom ⊗ (λ_ X₂).Hom =
       tensorμ C (𝟙_ C, X₁) (𝟙_ C, X₂) ≫ ((λ_ (𝟙_ C)).Hom ⊗ 𝟙 (X₁ ⊗ X₂)) ≫ (λ_ (X₁ ⊗ X₂)).Hom :=
   by
-  dsimp' [tensor_μ]
+  dsimp [tensor_μ]
   have :
     (λ_ X₁).Hom ⊗ (λ_ X₂).Hom =
       (α_ (𝟙_ C) X₁ (𝟙_ C ⊗ X₂)).Hom ≫
         (𝟙 (𝟙_ C) ⊗ (α_ X₁ (𝟙_ C) X₂).inv) ≫ (λ_ ((X₁ ⊗ 𝟙_ C) ⊗ X₂)).Hom ≫ ((ρ_ X₁).Hom ⊗ 𝟙 X₂) :=
-    by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]"
+    by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
   rw [this]
   clear this
   rw [← braiding_left_unitor]
   slice_lhs 3 4 => rw [← id_comp (𝟙 X₂), tensor_comp]
   slice_lhs 3 4 => rw [← left_unitor_naturality]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -844,8 +820,8 @@ theorem left_unitor_monoidal (X₁ X₂ : C) :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -854,19 +830,18 @@ theorem right_unitor_monoidal (X₁ X₂ : C) :
     (ρ_ X₁).Hom ⊗ (ρ_ X₂).Hom =
       tensorμ C (X₁, 𝟙_ C) (X₂, 𝟙_ C) ≫ (𝟙 (X₁ ⊗ X₂) ⊗ (λ_ (𝟙_ C)).Hom) ≫ (ρ_ (X₁ ⊗ X₂)).Hom :=
   by
-  dsimp' [tensor_μ]
+  dsimp [tensor_μ]
   have :
     (ρ_ X₁).Hom ⊗ (ρ_ X₂).Hom =
       (α_ X₁ (𝟙_ C) (X₂ ⊗ 𝟙_ C)).Hom ≫
         (𝟙 X₁ ⊗ (α_ (𝟙_ C) X₂ (𝟙_ C)).inv) ≫ (𝟙 X₁ ⊗ (ρ_ (𝟙_ C ⊗ X₂)).Hom) ≫ (𝟙 X₁ ⊗ (λ_ X₂).Hom) :=
-    by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]"
+    by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
   rw [this]
   clear this
   rw [← braiding_right_unitor]
   slice_lhs 3 4 => rw [← id_comp (𝟙 X₁), tensor_comp, id_comp]
   slice_lhs 3 4 => rw [← tensor_comp, ← right_unitor_naturality, tensor_comp]
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -934,7 +909,7 @@ theorem associator_monoidal_aux (W X Y Z : C) :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -971,7 +946,7 @@ theorem associator_monoidal_aux (W X Y Z : C) :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -1008,8 +983,8 @@ theorem associator_monoidal_aux (W X Y Z : C) :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -1040,8 +1015,7 @@ theorem associator_monoidal (X₁ X₂ X₃ Y₁ Y₂ Y₃ : C) :
                     (𝟙 X₁ ⊗ (α_ Y₁ X₂ ((Y₂ ⊗ X₃) ⊗ Y₃)).Hom) ≫
                       (α_ X₁ Y₁ (X₂ ⊗ (Y₂ ⊗ X₃) ⊗ Y₃)).inv ≫
                         (𝟙 (X₁ ⊗ Y₁) ⊗ 𝟙 X₂ ⊗ (α_ Y₂ X₃ Y₃).Hom) ≫ (𝟙 (X₁ ⊗ Y₁) ⊗ (α_ X₂ Y₂ (X₃ ⊗ Y₃)).inv) :=
-    by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]"
+    by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
   rw [this]
   clear this
   slice_lhs 2 4 => rw [← tensor_comp, ← tensor_comp, tensor_μ_def₁, tensor_comp, tensor_comp]
@@ -1059,8 +1033,7 @@ theorem associator_monoidal (X₁ X₂ X₃ Y₁ Y₂ Y₃ : C) :
             (𝟙 X₁ ⊗ (α_ X₂ ((Y₁ ⊗ Y₂) ⊗ X₃) Y₃).inv) ≫
               (α_ X₁ (X₂ ⊗ (Y₁ ⊗ Y₂) ⊗ X₃) Y₃).inv ≫
                 ((𝟙 X₁ ⊗ 𝟙 X₂ ⊗ (α_ Y₁ Y₂ X₃).Hom) ⊗ 𝟙 Y₃) ≫ ((𝟙 X₁ ⊗ (α_ X₂ Y₁ (Y₂ ⊗ X₃)).inv) ⊗ 𝟙 Y₃) :=
-    by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]"
+    by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
   slice_lhs 2 6 => rw [this]
   clear this
   slice_lhs 1 3 => rw [tensor_μ_def₁]
@@ -1088,15 +1061,14 @@ theorem associator_monoidal (X₁ X₂ X₃ Y₁ Y₂ Y₃ : C) :
       (α_ X₁ ((Y₁ ⊗ X₂ ⊗ X₃) ⊗ Y₂) Y₃).Hom ≫
         (𝟙 X₁ ⊗ (α_ (Y₁ ⊗ X₂ ⊗ X₃) Y₂ Y₃).Hom) ≫
           (𝟙 X₁ ⊗ (α_ Y₁ (X₂ ⊗ X₃) (Y₂ ⊗ Y₃)).Hom) ≫ (α_ X₁ Y₁ ((X₂ ⊗ X₃) ⊗ Y₂ ⊗ Y₃)).inv :=
-    by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `pure_coherence #[]"
+    by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `pure_coherence #[]"
   slice_lhs 9 16 => rw [this]
   clear this
   slice_lhs 8 9 => rw [associator_naturality]
   slice_lhs 9 10 => rw [← tensor_comp, associator_naturality, tensor_comp]
   slice_lhs 10 12 => rw [tensor_id, ← tensor_μ_def₂]
-  dsimp'
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+  dsimp
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
 end Tensor
 

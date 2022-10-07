@@ -45,11 +45,7 @@ which we can't use directly between `G.map 0 = 0` does not hold definitionally.
 -/
 def isLimitMapConeForkEquiv' :
     IsLimit (G.mapCone (KernelFork.ofι h w)) ≃
-      IsLimit
-        (KernelFork.ofι (G.map h)
-          (by
-            simp only [← G.map_comp, w, functor.map_zero]) :
-          Fork (G.map f) 0) :=
+      IsLimit (KernelFork.ofι (G.map h) (by simp only [← G.map_comp, w, functor.map_zero]) : Fork (G.map f) 0) :=
   by
   refine' (is_limit.postcompose_hom_equiv _ _).symm.trans (is_limit.equiv_iso_limit _)
   refine' parallel_pair.ext (iso.refl _) (iso.refl _) _ _ <;> simp
@@ -62,11 +58,7 @@ This is a variant of `is_limit_fork_map_of_is_limit` for equalizers,
 which we can't use directly between `G.map 0 = 0` does not hold definitionally.
 -/
 def isLimitForkMapOfIsLimit' [PreservesLimit (parallelPair f 0) G] (l : IsLimit (KernelFork.ofι h w)) :
-    IsLimit
-      (KernelFork.ofι (G.map h)
-        (by
-          simp only [← G.map_comp, w, functor.map_zero]) :
-        Fork (G.map f) 0) :=
+    IsLimit (KernelFork.ofι (G.map h) (by simp only [← G.map_comp, w, functor.map_zero]) : Fork (G.map f) 0) :=
   isLimitMapConeForkEquiv' G w (PreservesLimit.preserves l)
 
 variable (f) [HasKernel f]
@@ -76,9 +68,7 @@ a kernel fork is a limit.
 -/
 def isLimitOfHasKernelOfPreservesLimit [PreservesLimit (parallelPair f 0) G] :
     IsLimit
-      (Fork.ofι (G.map (kernel.ι f))
-        (by
-          simp only [← G.map_comp, equalizer.condition, comp_zero, functor.map_zero]) :
+      (Fork.ofι (G.map (kernel.ι f)) (by simp only [← G.map_comp, equalizer.condition, comp_zero, functor.map_zero]) :
         Fork (G.map f) 0) :=
   isLimitForkMapOfIsLimit' G (kernel.condition f) (kernelIsKernel f)
 
@@ -128,10 +118,7 @@ which we can't use directly between `G.map 0 = 0` does not hold definitionally.
 def isColimitMapCoconeCoforkEquiv' :
     IsColimit (G.mapCocone (CokernelCofork.ofπ h w)) ≃
       IsColimit
-        (CokernelCofork.ofπ (G.map h)
-          (by
-            simp only [← G.map_comp, w, functor.map_zero]) :
-          Cofork (G.map f) 0) :=
+        (CokernelCofork.ofπ (G.map h) (by simp only [← G.map_comp, w, functor.map_zero]) : Cofork (G.map f) 0) :=
   by
   refine' (is_colimit.precompose_hom_equiv _ _).symm.trans (is_colimit.equiv_iso_colimit _)
   refine' parallel_pair.ext (iso.refl _) (iso.refl _) _ _ <;> simp
@@ -146,11 +133,7 @@ This is a variant of `is_colimit_cofork_map_of_is_colimit` for equalizers,
 which we can't use directly between `G.map 0 = 0` does not hold definitionally.
 -/
 def isColimitCoforkMapOfIsColimit' [PreservesColimit (parallelPair f 0) G] (l : IsColimit (CokernelCofork.ofπ h w)) :
-    IsColimit
-      (CokernelCofork.ofπ (G.map h)
-        (by
-          simp only [← G.map_comp, w, functor.map_zero]) :
-        Cofork (G.map f) 0) :=
+    IsColimit (CokernelCofork.ofπ (G.map h) (by simp only [← G.map_comp, w, functor.map_zero]) : Cofork (G.map f) 0) :=
   isColimitMapCoconeCoforkEquiv' G w (PreservesColimit.preserves l)
 
 variable (f) [HasCokernel f]
@@ -161,8 +144,7 @@ a cokernel cofork is a colimit.
 def isColimitOfHasCokernelOfPreservesColimit [PreservesColimit (parallelPair f 0) G] :
     IsColimit
       (Cofork.ofπ (G.map (cokernel.π f))
-        (by
-          simp only [← G.map_comp, coequalizer.condition, zero_comp, functor.map_zero]) :
+        (by simp only [← G.map_comp, coequalizer.condition, zero_comp, functor.map_zero]) :
         Cofork (G.map f) 0) :=
   isColimitCoforkMapOfIsColimit' G (cokernel.condition f) (cokernelIsCokernel f)
 

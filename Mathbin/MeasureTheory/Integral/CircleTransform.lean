@@ -151,8 +151,7 @@ theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ
   obtain ⟨⟨⟨a, b⟩, ⟨ha, hb⟩⟩, hab⟩ := abs_circle_transform_bounding_function_le hr (pos_of_mem_ball hrx).le z
   let V : ℝ → ℂ → ℂ := fun θ w => circle_transform_deriv R z w (fun x => 1) θ
   have funccomp : ContinuousOn (fun r => abs (f r)) (sphere z R) := by
-    have cabs : ContinuousOn abs ⊤ := by
-      apply continuous_abs.continuous_on
+    have cabs : ContinuousOn abs ⊤ := by apply continuous_abs.continuous_on
     apply cabs.comp hf
     rw [maps_to]
     tauto
@@ -166,10 +165,10 @@ theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ
     simp [interval_of_le real.two_pi_pos.le]
   have :=
     mul_le_mul (hab ⟨⟨v, y1⟩, ⟨ball_subset_closed_ball (H hv), hy2⟩⟩)
-      (HX2 (circleMap z R y1) (circle_map_mem_sphere z hR.le y1)) (abs_nonneg _) (abs_nonneg _)
+      (HX2 (circleMap z R y1) (circle_map_mem_sphere z hR.le y1)) (complex.abs.nonneg _) (complex.abs.nonneg _)
   simp_rw [hfun]
   simp only [circle_transform_bounding_function, circle_transform_deriv, V, norm_eq_abs, Algebra.id.smul_eq_mul,
-    deriv_circle_map, abs_mul, abs_circle_map_zero, abs_I, mul_oneₓ, ← mul_assoc, mul_inv_rev, inv_I, abs_neg, abs_inv,
+    deriv_circle_map, map_mul, abs_circle_map_zero, abs_I, mul_oneₓ, ← mul_assoc, mul_inv_rev, inv_I, abs_neg, abs_inv,
     abs_of_real, one_mulₓ, abs_two, abs_pow, mem_ball, gt_iff_ltₓ, Subtype.coe_mk, SetCoe.forall, mem_prod,
     mem_closed_ball, and_imp, Prod.forallₓ, NormedSpace.sphere_nonempty, mem_sphere_iff_norm] at *
   exact this

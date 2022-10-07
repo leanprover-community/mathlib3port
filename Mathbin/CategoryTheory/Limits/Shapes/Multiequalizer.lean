@@ -191,12 +191,10 @@ noncomputable def sndPiMap : ∏ I.left ⟶ ∏ I.right :=
   Pi.lift fun b => Pi.π I.left (I.sndTo b) ≫ I.snd b
 
 @[simp, reassoc]
-theorem fst_pi_map_π (b) : I.fstPiMap ≫ Pi.π I.right b = Pi.π I.left _ ≫ I.fst b := by
-  simp [fst_pi_map]
+theorem fst_pi_map_π (b) : I.fstPiMap ≫ Pi.π I.right b = Pi.π I.left _ ≫ I.fst b := by simp [fst_pi_map]
 
 @[simp, reassoc]
-theorem snd_pi_map_π (b) : I.sndPiMap ≫ Pi.π I.right b = Pi.π I.left _ ≫ I.snd b := by
-  simp [snd_pi_map]
+theorem snd_pi_map_π (b) : I.sndPiMap ≫ Pi.π I.right b = Pi.π I.left _ ≫ I.snd b := by simp [snd_pi_map]
 
 /-- Taking the multiequalizer over the multicospan index is equivalent to taking the equalizer over
 the two morphsims `∏ I.left ⇉ ∏ I.right`. This is the diagram of the latter.
@@ -256,12 +254,10 @@ noncomputable def sndSigmaMap : ∐ I.left ⟶ ∐ I.right :=
   Sigma.desc fun b => I.snd b ≫ Sigma.ι _ (I.sndFrom b)
 
 @[simp, reassoc]
-theorem ι_fst_sigma_map (b) : Sigma.ι I.left b ≫ I.fstSigmaMap = I.fst b ≫ Sigma.ι I.right _ := by
-  simp [fst_sigma_map]
+theorem ι_fst_sigma_map (b) : Sigma.ι I.left b ≫ I.fstSigmaMap = I.fst b ≫ Sigma.ι I.right _ := by simp [fst_sigma_map]
 
 @[simp, reassoc]
-theorem ι_snd_sigma_map (b) : Sigma.ι I.left b ≫ I.sndSigmaMap = I.snd b ≫ Sigma.ι I.right _ := by
-  simp [snd_sigma_map]
+theorem ι_snd_sigma_map (b) : Sigma.ι I.left b ≫ I.sndSigmaMap = I.snd b ≫ Sigma.ι I.right _ := by simp [snd_sigma_map]
 
 /-- Taking the multicoequalizer over the multispan index is equivalent to taking the coequalizer over
 the two morphsims `∐ I.left ⇉ ∐ I.right`. This is the diagram of the latter.
@@ -309,7 +305,6 @@ theorem app_right_eq_ι_comp_snd (b) : K.π.app (WalkingMulticospan.right b) = K
 theorem hom_comp_ι (K₁ K₂ : Multifork I) (f : K₁ ⟶ K₂) (j : I.L) : f.Hom ≫ K₂.ι j = K₁.ι j :=
   f.w (WalkingMulticospan.left j)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 /-- Construct a multifork using a collection `ι` of morphisms. -/
 @[simps]
 def ofι (I : MulticospanIndex C) (P : C) (ι : ∀ a, P ⟶ I.left a)
@@ -322,13 +317,16 @@ def ofι (I : MulticospanIndex C) (P : C) (ι : ∀ a, P ⟶ I.left a)
         | walking_multicospan.right b => ι (I.fstTo b) ≫ I.fst b,
       naturality' := by
         rintro (_ | _) (_ | _) (_ | _ | _)
-        any_goals {
-        }
-        · dsimp'
+        any_goals
+        symm
+        dsimp
+        rw [category.id_comp]
+        apply category.comp_id
+        · dsimp
           rw [category.id_comp]
           rfl
           
-        · dsimp'
+        · dsimp
           rw [category.id_comp]
           apply w
            }
@@ -358,14 +356,13 @@ def IsLimit.mk (lift : ∀ E : Multifork I, E.x ⟶ K.x) (fac : ∀ (E : Multifo
 
 variable [HasProduct I.left] [HasProduct I.right]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem pi_condition : Pi.lift K.ι ≫ I.fstPiMap = Pi.lift K.ι ≫ I.sndPiMap := by
   ext
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
   simp
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 /-- Given a multifork, we may obtain a fork over `∏ I.left ⇉ ∏ I.right`. -/
 @[simps x]
 noncomputable def toPiFork (K : Multifork I) : Fork I.fstPiMap I.sndPiMap where
@@ -377,11 +374,14 @@ noncomputable def toPiFork (K : Multifork I) : Fork I.fstPiMap I.sndPiMap where
         | walking_parallel_pair.one => Pi.lift K.ι ≫ I.fstPiMap,
       naturality' := by
         rintro (_ | _) (_ | _) (_ | _ | _)
-        any_goals {
-        }
+        any_goals
+        symm
+        dsimp
+        rw [category.id_comp]
+        apply category.comp_id
         all_goals
-          change 𝟙 _ ≫ _ ≫ _ = pi.lift _ ≫ _
-          simp }
+        change 𝟙 _ ≫ _ ≫ _ = pi.lift _ ≫ _
+        simp }
 
 @[simp]
 theorem to_pi_fork_π_app_zero : K.toPiFork.ι = Pi.lift K.ι :=
@@ -393,7 +393,6 @@ theorem to_pi_fork_π_app_one : K.toPiFork.π.app WalkingParallelPair.one = Pi.l
 
 variable (I)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 /-- Given a fork over `∏ I.left ⇉ ∏ I.right`, we may obtain a multifork. -/
 @[simps x]
 noncomputable def ofPiFork (c : Fork I.fstPiMap I.sndPiMap) : Multifork I where
@@ -405,8 +404,11 @@ noncomputable def ofPiFork (c : Fork I.fstPiMap I.sndPiMap) : Multifork I where
         | walking_multicospan.right b => c.ι ≫ I.fstPiMap ≫ Pi.π _ _,
       naturality' := by
         rintro (_ | _) (_ | _) (_ | _ | _)
-        any_goals {
-        }
+        any_goals
+        symm
+        dsimp
+        rw [category.id_comp]
+        apply category.comp_id
         · change 𝟙 _ ≫ _ ≫ _ = (_ ≫ _) ≫ _
           simp
           
@@ -441,12 +443,12 @@ noncomputable def toPiForkFunctor : Multifork I ⥤ Fork I.fstPiMap I.sndPiMap w
       w' := by
         rintro (_ | _)
         · ext
-          dsimp'
+          dsimp
           simp
           
         · ext
           simp only [multifork.to_pi_fork_π_app_one, multifork.pi_condition, category.assoc]
-          dsimp' [snd_pi_map]
+          dsimp [snd_pi_map]
           simp
            }
 
@@ -454,10 +456,7 @@ noncomputable def toPiForkFunctor : Multifork I ⥤ Fork I.fstPiMap I.sndPiMap w
 @[simps]
 noncomputable def ofPiForkFunctor : Fork I.fstPiMap I.sndPiMap ⥤ Multifork I where
   obj := Multifork.ofPiFork I
-  map := fun K₁ K₂ f =>
-    { Hom := f.Hom,
-      w' := by
-        rintro (_ | _) <;> simp }
+  map := fun K₁ K₂ f => { Hom := f.Hom, w' := by rintro (_ | _) <;> simp }
 
 /-- The category of multiforks is equivalent to the category of forks over `∏ I.left ⇉ ∏ I.right`.
 It then follows from `category_theory.is_limit_of_preserves_cone_terminal` (or `reflects`) that it
@@ -471,8 +470,7 @@ noncomputable def multiforkEquivPiFork : Multifork I ≌ Fork I.fstPiMap I.sndPi
     NatIso.ofComponents
       (fun K =>
         Cones.ext (Iso.refl _)
-          (by
-            rintro (_ | _) <;> dsimp' <;> simp [← fork.app_one_eq_ι_comp_left, -fork.app_one_eq_ι_comp_left]))
+          (by rintro (_ | _) <;> dsimp <;> simp [← fork.app_one_eq_ι_comp_left, -fork.app_one_eq_ι_comp_left]))
       fun K₁ K₂ f => by
       ext
       simp
@@ -482,8 +480,8 @@ noncomputable def multiforkEquivPiFork : Multifork I ≌ Fork I.fstPiMap I.sndPi
         Fork.ext (Iso.refl _)
           (by
             ext ⟨j⟩
-            dsimp'
-            simp ))
+            dsimp
+            simp))
       fun K₁ K₂ f => by
       ext
       simp
@@ -512,7 +510,6 @@ theorem snd_app_right (a) : K.ι.app (WalkingMultispan.left a) = I.snd a ≫ K.�
   rw [← K.w (walking_multispan.hom.snd a)]
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 /-- Construct a multicofork using a collection `π` of morphisms. -/
 @[simps]
 def ofπ (I : MultispanIndex C) (P : C) (π : ∀ b, I.right b ⟶ P)
@@ -525,13 +522,15 @@ def ofπ (I : MultispanIndex C) (P : C) (π : ∀ b, I.right b ⟶ P)
         | walking_multispan.right b => π _,
       naturality' := by
         rintro (_ | _) (_ | _) (_ | _ | _)
-        any_goals {
-        }
-        · dsimp'
+        any_goals
+        dsimp
+        rw [category.comp_id]
+        apply category.id_comp
+        · dsimp
           rw [category.comp_id]
           rfl
           
-        · dsimp'
+        · dsimp
           rw [category.comp_id]
           apply (w _).symm
            }
@@ -561,14 +560,13 @@ def IsColimit.mk (desc : ∀ E : Multicofork I, K.x ⟶ E.x) (fac : ∀ (E : Mul
 
 variable [HasCoproduct I.left] [HasCoproduct I.right]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem sigma_condition : I.fstSigmaMap ≫ Sigma.desc K.π = I.sndSigmaMap ≫ Sigma.desc K.π := by
   ext
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
   simp
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 /-- Given a multicofork, we may obtain a cofork over `∐ I.left ⇉ ∐ I.right`. -/
 @[simps x]
 noncomputable def toSigmaCofork (K : Multicofork I) : Cofork I.fstSigmaMap I.sndSigmaMap where
@@ -580,11 +578,13 @@ noncomputable def toSigmaCofork (K : Multicofork I) : Cofork I.fstSigmaMap I.snd
         | walking_parallel_pair.one => Sigma.desc K.π,
       naturality' := by
         rintro (_ | _) (_ | _) (_ | _ | _)
-        any_goals {
-        }
+        any_goals
+        dsimp
+        rw [category.comp_id]
+        apply category.id_comp
         all_goals
-          change _ ≫ sigma.desc _ = (_ ≫ _) ≫ 𝟙 _
-          simp }
+        change _ ≫ sigma.desc _ = (_ ≫ _) ≫ 𝟙 _
+        simp }
 
 @[simp]
 theorem to_sigma_cofork_π : K.toSigmaCofork.π = Sigma.desc K.π :=
@@ -592,7 +592,6 @@ theorem to_sigma_cofork_π : K.toSigmaCofork.π = Sigma.desc K.π :=
 
 variable (I)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 /-- Given a cofork over `∐ I.left ⇉ ∐ I.right`, we may obtain a multicofork. -/
 @[simps x]
 noncomputable def ofSigmaCofork (c : Cofork I.fstSigmaMap I.sndSigmaMap) : Multicofork I where
@@ -604,10 +603,12 @@ noncomputable def ofSigmaCofork (c : Cofork I.fstSigmaMap I.sndSigmaMap) : Multi
         | walking_multispan.right b => (Sigma.ι I.right b : _) ≫ c.π,
       naturality' := by
         rintro (_ | _) (_ | _) (_ | _ | _)
-        any_goals {
-        }
+        any_goals
+        dsimp
+        rw [category.comp_id]
+        apply category.id_comp
         · change _ ≫ _ ≫ _ = (_ ≫ _) ≫ _
-          dsimp'
+          dsimp
           simp only [cofork.condition, category.comp_id]
           rw [← I.ι_fst_sigma_map_assoc, c.condition]
           
@@ -644,10 +645,7 @@ noncomputable def toSigmaCoforkFunctor : Multicofork I ⥤ Cofork I.fstSigmaMap 
 @[simps]
 noncomputable def ofSigmaCoforkFunctor : Cofork I.fstSigmaMap I.sndSigmaMap ⥤ Multicofork I where
   obj := Multicofork.ofSigmaCofork I
-  map := fun K₁ K₂ f =>
-    { Hom := f.Hom,
-      w' := by
-        rintro (_ | _) <;> simp }
+  map := fun K₁ K₂ f => { Hom := f.Hom, w' := by rintro (_ | _) <;> simp }
 
 /-- The category of multicoforks is equivalent to the category of coforks over `∐ I.left ⇉ ∐ I.right`.
 It then follows from `category_theory.is_colimit_of_preserves_cocone_initial` (or `reflects`) that
@@ -658,12 +656,7 @@ noncomputable def multicoforkEquivSigmaCofork : Multicofork I ≌ Cofork I.fstSi
   Functor := toSigmaCoforkFunctor I
   inverse := ofSigmaCoforkFunctor I
   unitIso :=
-    NatIso.ofComponents
-      (fun K =>
-        Cocones.ext (Iso.refl _)
-          (by
-            rintro (_ | _) <;> dsimp' <;> simp ))
-      fun K₁ K₂ f => by
+    NatIso.ofComponents (fun K => Cocones.ext (Iso.refl _) (by rintro (_ | _) <;> dsimp <;> simp)) fun K₁ K₂ f => by
       ext
       simp
   counitIso :=
@@ -672,12 +665,12 @@ noncomputable def multicoforkEquivSigmaCofork : Multicofork I ≌ Cofork I.fstSi
         Cofork.ext (Iso.refl _)
           (by
             ext ⟨j⟩
-            dsimp'
+            dsimp
             simp only [category.comp_id, colimit.ι_desc, cofan.mk_ι_app]
             rfl))
       fun K₁ K₂ f => by
       ext
-      dsimp'
+      dsimp
       simp
 
 end MultispanIndex

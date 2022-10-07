@@ -110,8 +110,7 @@ theorem div_add_mod' (m k : R) : m / k * k + m % k = m := by
 theorem mod_eq_sub_mul_div {R : Type _} [EuclideanDomain R] (a b : R) : a % b = a - b * (a / b) :=
   calc
     a % b = b * (a / b) + a % b - b * (a / b) := (add_sub_cancel' _ _).symm
-    _ = a - b * (a / b) := by
-      rw [div_add_mod]
+    _ = a - b * (a / b) := by rw [div_add_mod]
     
 
 theorem mod_lt : ∀ (a) {b : R}, b ≠ 0 → a % b ≺ b :=
@@ -134,8 +133,7 @@ theorem mul_div_cancel (a) {b : R} (b0 : b ≠ 0) : a * b / b = a := by
   exact mul_div_cancel_left a b0
 
 @[simp]
-theorem mod_zero (a : R) : a % 0 = a := by
-  simpa only [zero_mul, zero_addₓ] using div_add_mod a 0
+theorem mod_zero (a : R) : a % 0 = a := by simpa only [zero_mul, zero_addₓ] using div_add_mod a 0
 
 @[simp]
 theorem mod_eq_zero {a b : R} : a % b = 0 ↔ b ∣ a :=
@@ -144,7 +142,7 @@ theorem mod_eq_zero {a b : R} : a % b = 0 ↔ b ∣ a :=
     exact dvd_mul_right _ _, fun ⟨c, e⟩ => by
     rw [e, ← add_left_cancel_iffₓ, div_add_mod, add_zeroₓ]
     haveI := Classical.dec
-    by_cases' b0 : b = 0
+    by_cases b0:b = 0
     · simp only [b0, zero_mul]
       
     · rw [mul_div_cancel_left _ b0]
@@ -157,11 +155,9 @@ theorem mod_self (a : R) : a % a = 0 :=
 theorem dvd_mod_iff {a b c : R} (h : c ∣ b) : c ∣ a % b ↔ c ∣ a := by
   rw [dvd_add_iff_right (h.mul_right _), div_add_mod]
 
-theorem lt_one (a : R) : a ≺ (1 : R) → a = 0 := by
+theorem lt_one (a : R) : a ≺ (1 : R) → a = 0 :=
   haveI := Classical.dec
-  exact
-    not_imp_not.1 fun h => by
-      simpa only [one_mulₓ] using mul_left_not_lt 1 h
+  not_imp_not.1 fun h => by simpa only [one_mulₓ] using mul_left_not_lt 1 h
 
 theorem val_dvd_le : ∀ a b : R, b ∣ a → a ≠ 0 → ¬a ≺ b
   | _, b, ⟨d, rfl⟩, ha =>
@@ -190,18 +186,16 @@ theorem zero_div {a : R} : 0 / a = 0 :=
     simpa only [zero_mul] using mul_div_cancel 0 a0
 
 @[simp]
-theorem div_self {a : R} (a0 : a ≠ 0) : a / a = 1 := by
-  simpa only [one_mulₓ] using mul_div_cancel 1 a0
+theorem div_self {a : R} (a0 : a ≠ 0) : a / a = 1 := by simpa only [one_mulₓ] using mul_div_cancel 1 a0
 
-theorem eq_div_of_mul_eq_left {a b c : R} (hb : b ≠ 0) (h : a * b = c) : a = c / b := by
-  rw [← h, mul_div_cancel _ hb]
+theorem eq_div_of_mul_eq_left {a b c : R} (hb : b ≠ 0) (h : a * b = c) : a = c / b := by rw [← h, mul_div_cancel _ hb]
 
 theorem eq_div_of_mul_eq_right {a b c : R} (ha : a ≠ 0) (h : a * b = c) : b = c / a := by
   rw [← h, mul_div_cancel_left _ ha]
 
 theorem mul_div_assoc (x : R) {y z : R} (h : z ∣ y) : x * y / z = x * (y / z) := by
   classical
-  by_cases' hz : z = 0
+  by_cases hz:z = 0
   · subst hz
     rw [div_zero, div_zero, mul_zero]
     
@@ -214,7 +208,7 @@ theorem div_one (p : R) : p / 1 = p :=
   (EuclideanDomain.eq_div_of_mul_eq_left (@one_ne_zero R _ _) (mul_oneₓ p)).symm
 
 theorem div_dvd_of_dvd {p q : R} (hpq : q ∣ p) : p / q ∣ p := by
-  by_cases' hq : q = 0
+  by_cases hq:q = 0
   · rw [hq, zero_dvd_iff] at hpq
     rw [hpq]
     exact dvd_zero _
@@ -287,24 +281,19 @@ theorem gcd_dvd_right (a b : R) : gcd a b ∣ b :=
   (gcd_dvd a b).right
 
 protected theorem gcd_eq_zero_iff {a b : R} : gcd a b = 0 ↔ a = 0 ∧ b = 0 :=
-  ⟨fun h => by
-    simpa [h] using gcd_dvd a b, by
+  ⟨fun h => by simpa [h] using gcd_dvd a b, by
     rintro ⟨rfl, rfl⟩
     exact gcd_zero_right _⟩
 
 theorem dvd_gcd {a b c : R} : c ∣ a → c ∣ b → c ∣ gcd a b :=
-  Gcd.induction a b
-    (fun _ _ H => by
-      simpa only [gcd_zero_left] using H)
-    fun a b a0 IH ca cb => by
+  Gcd.induction a b (fun _ _ H => by simpa only [gcd_zero_left] using H) fun a b a0 IH ca cb => by
     rw [gcd_val]
     exact IH ((dvd_mod_iff ca).2 cb) ca
 
 theorem gcd_eq_left {a b : R} : gcd a b = a ↔ a ∣ b :=
   ⟨fun h => by
     rw [← h]
-    apply gcd_dvd_right, fun h => by
-    rw [gcd_val, mod_eq_zero.2 h, gcd_zero_left]⟩
+    apply gcd_dvd_right, fun h => by rw [gcd_val, mod_eq_zero.2 h, gcd_zero_left]⟩
 
 @[simp]
 theorem gcd_one_left (a : R) : gcd 1 a = 1 :=
@@ -338,7 +327,9 @@ theorem xgcd_zero_left {s t r' s' t' : R} : xgcdAux 0 s t r' s' t' = (r', s', t'
 
 theorem xgcd_aux_rec {r s t r' s' t' : R} (h : r ≠ 0) :
     xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
-  conv => lhs rw [xgcd_aux]
+  conv =>
+  lhs
+  rw [xgcd_aux]
   exact if_neg h
 
 /-- Use the extended GCD algorithm to generate the `a` and `b` values
@@ -392,29 +383,23 @@ theorem xgcd_aux_P (a b : R) {r r' : R} :
     fun x y h IH s t s' t' p p' => by
     rw [xgcd_aux_rec h]
     refine' IH _ p
-    unfold P  at p p'⊢
+    unfold P at p p'⊢
     rw [mul_sub, mul_sub, add_sub, sub_add_eq_add_sub, ← p', sub_sub, mul_comm _ s, ← mul_assoc, mul_comm _ t, ←
       mul_assoc, ← add_mulₓ, ← p, mod_eq_sub_mul_div]
 
 /-- An explicit version of **Bézout's lemma** for Euclidean domains. -/
 theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = a * gcdA a b + b * gcdB a b := by
   have :=
-    @xgcd_aux_P _ _ _ a b a b 1 0 0 1
-      (by
-        rw [P, mul_oneₓ, mul_zero, add_zeroₓ])
-      (by
-        rw [P, mul_oneₓ, mul_zero, zero_addₓ])
+    @xgcd_aux_P _ _ _ a b a b 1 0 0 1 (by rw [P, mul_oneₓ, mul_zero, add_zeroₓ])
+      (by rw [P, mul_oneₓ, mul_zero, zero_addₓ])
   rwa [xgcd_aux_val, xgcd_val] at this
 
 -- see Note [lower instance priority]
-instance (priority := 70) (R : Type _) [e : EuclideanDomain R] : IsDomain R := by
+instance (priority := 70) (R : Type _) [e : EuclideanDomain R] : IsDomain R :=
   haveI := Classical.decEq R
-  exact
-    { e with
-      eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h =>
-        or_iff_not_and_not.2 fun h0 =>
-          h0.1 <| by
-            rw [← mul_div_cancel a h0.2, h, zero_div] }
+  { e with
+    eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h =>
+      or_iff_not_and_not.2 fun h0 => h0.1 <| by rw [← mul_div_cancel a h0.2, h, zero_div] }
 
 end Gcd
 
@@ -434,10 +419,7 @@ theorem dvd_lcm_left (x y : R) : x ∣ lcm x y :=
       exact dvd_zero _)
     fun hxy =>
     let ⟨z, hz⟩ := (gcd_dvd x y).2
-    ⟨z,
-      Eq.symm <|
-        eq_div_of_mul_eq_left hxy <| by
-          rw [mul_right_commₓ, mul_assoc, ← hz]⟩
+    ⟨z, Eq.symm <| eq_div_of_mul_eq_left hxy <| by rw [mul_right_commₓ, mul_assoc, ← hz]⟩
 
 theorem dvd_lcm_right (x y : R) : y ∣ lcm x y :=
   Classical.by_cases
@@ -446,14 +428,11 @@ theorem dvd_lcm_right (x y : R) : y ∣ lcm x y :=
       exact dvd_zero _)
     fun hxy =>
     let ⟨z, hz⟩ := (gcd_dvd x y).1
-    ⟨z,
-      Eq.symm <|
-        eq_div_of_mul_eq_right hxy <| by
-          rw [← mul_assoc, mul_right_commₓ, ← hz]⟩
+    ⟨z, Eq.symm <| eq_div_of_mul_eq_right hxy <| by rw [← mul_assoc, mul_right_commₓ, ← hz]⟩
 
 theorem lcm_dvd {x y z : R} (hxz : x ∣ z) (hyz : y ∣ z) : lcm x y ∣ z := by
   rw [lcm]
-  by_cases' hxy : gcd x y = 0
+  by_cases hxy:gcd x y = 0
   · rw [hxy, div_zero]
     rw [EuclideanDomain.gcd_eq_zero_iff] at hxy
     rwa [hxy.1] at hxz
@@ -462,7 +441,7 @@ theorem lcm_dvd {x y z : R} (hxz : x ∣ z) (hyz : y ∣ z) : lcm x y ∣ z := b
   suffices x * y ∣ z * gcd x y by
     cases' this with p hp
     use p
-    generalize gcd x y = g  at hxy hs hp⊢
+    generalize gcd x y = g at hxy hs hp⊢
     subst hs
     rw [mul_left_commₓ, mul_div_cancel_left _ hxy, ← mul_left_inj' hxy, hp]
     rw [← mul_assoc]
@@ -481,12 +460,10 @@ theorem lcm_dvd_iff {x y z : R} : lcm x y ∣ z ↔ x ∣ z ∧ y ∣ z :=
   ⟨fun hz => ⟨(dvd_lcm_left _ _).trans hz, (dvd_lcm_right _ _).trans hz⟩, fun ⟨hxz, hyz⟩ => lcm_dvd hxz hyz⟩
 
 @[simp]
-theorem lcm_zero_left (x : R) : lcm 0 x = 0 := by
-  rw [lcm, zero_mul, zero_div]
+theorem lcm_zero_left (x : R) : lcm 0 x = 0 := by rw [lcm, zero_mul, zero_div]
 
 @[simp]
-theorem lcm_zero_right (x : R) : lcm x 0 = 0 := by
-  rw [lcm, mul_zero, zero_div]
+theorem lcm_zero_right (x : R) : lcm x 0 = 0 := by rw [lcm, mul_zero, zero_div]
 
 @[simp]
 theorem lcm_eq_zero_iff {x y : R} : lcm x y = 0 ↔ x = 0 ∨ y = 0 := by
@@ -495,12 +472,12 @@ theorem lcm_eq_zero_iff {x y : R} : lcm x y = 0 ↔ x = 0 ∨ y = 0 := by
     rw [lcm, mul_div_assoc _ (gcd_dvd_right _ _), mul_eq_zero] at hxy
     apply or_of_or_of_imp_right hxy
     intro hy
-    by_cases' hgxy : gcd x y = 0
+    by_cases hgxy:gcd x y = 0
     · rw [EuclideanDomain.gcd_eq_zero_iff] at hgxy
       exact hgxy.2
       
     · rcases gcd_dvd x y with ⟨⟨r, hr⟩, ⟨s, hs⟩⟩
-      generalize gcd x y = g  at hr hs hy hgxy⊢
+      generalize gcd x y = g at hr hs hy hgxy⊢
       subst hs
       rw [mul_div_cancel_left _ hgxy] at hy
       rw [hy, mul_zero]
@@ -515,13 +492,13 @@ theorem lcm_eq_zero_iff {x y : R} : lcm x y = 0 ↔ x = 0 ∨ y = 0 := by
 @[simp]
 theorem gcd_mul_lcm (x y : R) : gcd x y * lcm x y = x * y := by
   rw [lcm]
-  by_cases' h : gcd x y = 0
+  by_cases h:gcd x y = 0
   · rw [h, zero_mul]
     rw [EuclideanDomain.gcd_eq_zero_iff] at h
     rw [h.1, zero_mul]
     
   rcases gcd_dvd x y with ⟨⟨r, hr⟩, ⟨s, hs⟩⟩
-  generalize gcd x y = g  at h hr⊢
+  generalize gcd x y = g at h hr⊢
   subst hr
   rw [mul_assoc, mul_div_cancel_left _ h]
 
@@ -530,7 +507,7 @@ end Lcm
 section Div
 
 theorem mul_div_mul_cancel {a b c : R} (ha : a ≠ 0) (hcb : c ∣ b) : a * b / (a * c) = b / c := by
-  by_cases' hc : c = 0
+  by_cases hc:c = 0
   · simp [hc]
     
   refine' eq_div_of_mul_eq_right hc (mul_left_cancel₀ ha _)
@@ -572,11 +549,10 @@ instance (priority := 100) Field.toEuclideanDomain {K : Type u} [Field K] : Eucl
     remainder := fun a b => a - a * b / b, quotient_zero := div_zero,
     quotient_mul_add_remainder_eq := fun a b => by
       classical
-      by_cases' b = 0 <;> simp [h, mul_div_cancel'],
+      by_cases b = 0 <;> simp [h, mul_div_cancel'],
     R := fun a b => a = 0 ∧ b ≠ 0,
     r_well_founded :=
       WellFounded.intro fun a => (Acc.intro _) fun b ⟨hb, hna⟩ => (Acc.intro _) fun c ⟨hc, hnb⟩ => False.elim <| hnb hb,
-    remainder_lt := fun a b hnb => by
-      simp [hnb],
+    remainder_lt := fun a b hnb => by simp [hnb],
     mul_left_not_lt := fun a b hnb ⟨hab, hna⟩ => Or.cases_on (mul_eq_zero.1 hab) hna hnb }
 

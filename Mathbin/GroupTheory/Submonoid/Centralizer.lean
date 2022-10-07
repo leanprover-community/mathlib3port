@@ -53,7 +53,7 @@ theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀ g ∈ S, g * z
   Iff.rfl
 
 @[to_additive]
-instance decidableMemCentralizer [DecidableEq M] [Fintype M] [DecidablePred (· ∈ S)] :
+instance decidableMemCentralizer [DecidableEq M] [Fintypeₓ M] [DecidablePred (· ∈ S)] :
     DecidablePred (· ∈ centralizer S) := fun _ => decidableOfIff' _ mem_centralizer_iff
 
 @[to_additive]

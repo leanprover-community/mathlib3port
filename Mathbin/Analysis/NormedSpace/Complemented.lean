@@ -26,15 +26,17 @@ variable {𝕜 E F G : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGrou
 
 noncomputable section
 
+open LinearMap (ker range)
+
 namespace ContinuousLinearMap
 
 section
 
 variable [CompleteSpace 𝕜]
 
-theorem ker_closed_complemented_of_finite_dimensional_range (f : E →L[𝕜] F) [FiniteDimensional 𝕜 f.range] :
-    f.ker.ClosedComplemented := by
-  set f' : E →L[𝕜] f.range := f.cod_restrict _ (f : E →ₗ[𝕜] F).mem_range_self
+theorem ker_closed_complemented_of_finite_dimensional_range (f : E →L[𝕜] F) [FiniteDimensional 𝕜 (range f)] :
+    (ker f).ClosedComplemented := by
+  set f' : E →L[𝕜] range f := f.cod_restrict _ (f : E →ₗ[𝕜] F).mem_range_self
   rcases f'.exists_right_inverse_of_surjective (f : E →ₗ[𝕜] F).range_range_restrict with ⟨g, hg⟩
   simpa only [ker_cod_restrict] using f'.closed_complemented_ker_of_right_inverse g (ext_iff.1 hg)
 
@@ -45,26 +47,26 @@ variable [CompleteSpace E] [CompleteSpace (F × G)]
 /-- If `f : E →L[R] F` and `g : E →L[R] G` are two surjective linear maps and
 their kernels are complement of each other, then `x ↦ (f x, g x)` defines
 a linear equivalence `E ≃L[R] F × G`. -/
-def equivProdOfSurjectiveOfIsCompl (f : E →L[𝕜] F) (g : E →L[𝕜] G) (hf : f.range = ⊤) (hg : g.range = ⊤)
-    (hfg : IsCompl f.ker g.ker) : E ≃L[𝕜] F × G :=
+def equivProdOfSurjectiveOfIsCompl (f : E →L[𝕜] F) (g : E →L[𝕜] G) (hf : range f = ⊤) (hg : range g = ⊤)
+    (hfg : IsCompl (ker f) (ker g)) : E ≃L[𝕜] F × G :=
   ((f : E →ₗ[𝕜] F).equivProdOfSurjectiveOfIsCompl (↑g) hf hg hfg).toContinuousLinearEquivOfContinuous
     (f.Continuous.prod_mk g.Continuous)
 
 @[simp]
-theorem coe_equiv_prod_of_surjective_of_is_compl {f : E →L[𝕜] F} {g : E →L[𝕜] G} (hf : f.range = ⊤) (hg : g.range = ⊤)
-    (hfg : IsCompl f.ker g.ker) : (equivProdOfSurjectiveOfIsCompl f g hf hg hfg : E →ₗ[𝕜] F × G) = f.Prod g :=
+theorem coe_equiv_prod_of_surjective_of_is_compl {f : E →L[𝕜] F} {g : E →L[𝕜] G} (hf : range f = ⊤) (hg : range g = ⊤)
+    (hfg : IsCompl (ker f) (ker g)) : (equivProdOfSurjectiveOfIsCompl f g hf hg hfg : E →ₗ[𝕜] F × G) = f.Prod g :=
   rfl
 
 @[simp]
-theorem equiv_prod_of_surjective_of_is_compl_to_linear_equiv {f : E →L[𝕜] F} {g : E →L[𝕜] G} (hf : f.range = ⊤)
-    (hg : g.range = ⊤) (hfg : IsCompl f.ker g.ker) :
+theorem equiv_prod_of_surjective_of_is_compl_to_linear_equiv {f : E →L[𝕜] F} {g : E →L[𝕜] G} (hf : range f = ⊤)
+    (hg : range g = ⊤) (hfg : IsCompl (ker f) (ker g)) :
     (equivProdOfSurjectiveOfIsCompl f g hf hg hfg).toLinearEquiv =
       LinearMap.equivProdOfSurjectiveOfIsCompl f g hf hg hfg :=
   rfl
 
 @[simp]
-theorem equiv_prod_of_surjective_of_is_compl_apply {f : E →L[𝕜] F} {g : E →L[𝕜] G} (hf : f.range = ⊤) (hg : g.range = ⊤)
-    (hfg : IsCompl f.ker g.ker) (x : E) : equivProdOfSurjectiveOfIsCompl f g hf hg hfg x = (f x, g x) :=
+theorem equiv_prod_of_surjective_of_is_compl_apply {f : E →L[𝕜] F} {g : E →L[𝕜] G} (hf : range f = ⊤) (hg : range g = ⊤)
+    (hfg : IsCompl (ker f) (ker g)) (x : E) : equivProdOfSurjectiveOfIsCompl f g hf hg hfg x = (f x, g x) :=
   rfl
 
 end ContinuousLinearMap

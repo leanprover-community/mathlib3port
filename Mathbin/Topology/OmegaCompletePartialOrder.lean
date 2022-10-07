@@ -86,7 +86,7 @@ def NotBelow :=
   { x | ¬x ≤ y }
 
 theorem not_below_is_open : IsOpen (NotBelow y) := by
-  have h : Monotone (NotBelow y) := by
+  have h : Monotoneₓ (NotBelow y) := by
     intro x y' h
     simp only [NotBelow, SetOf, le_Prop_eq]
     intro h₀ h₁
@@ -112,11 +112,11 @@ theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : Isω
   · apply ωSup_le
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:529:11: unsupported: specialize non-hyp
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:553:11: unsupported: specialize non-hyp
 theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
     (f : Scott α → Scott β) (hf : Continuous f) : OmegaCompletePartialOrder.Continuous' f := by
   simp only [continuous_def, (· ⁻¹' ·)] at hf
-  have h : Monotone f := by
+  have h : Monotoneₓ f := by
     intro x y h
     cases' hf { x | ¬x ≤ f y } (not_below_is_open _) with hf hf'
     clear hf'
@@ -128,7 +128,7 @@ theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α] [O
   intro c
   apply eq_of_forall_ge_iffₓ
   intro z
-  specialize «./././Mathport/Syntax/Translate/Tactic/Lean3.lean:529:11: unsupported: specialize non-hyp»
+  specialize «./././Mathport/Syntax/Translate/Tactic/Lean3.lean:553:11: unsupported: specialize non-hyp»
   cases hf
   specialize hf_h c
   simp only [NotBelow, OrderHom.coe_fun_mk, eq_iff_iff, mem_set_of_eq] at hf_h

@@ -182,9 +182,7 @@ theorem desc {α β : Type _} (f : X → α) (g : α → β) (h : IsLocallyConst
   have : f ⁻¹' {a} = g ∘ f ⁻¹' {g a} := by
     ext x
     simp only [mem_singleton_iff, Function.comp_app, mem_preimage]
-    exact
-      ⟨fun h => by
-        rw [h], fun h => inj h⟩
+    exact ⟨fun h => by rw [h], fun h => inj h⟩
   rw [this]
   apply h
 
@@ -313,7 +311,7 @@ theorem of_clopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x
     ofClopen hU ⁻¹' ({1} : Set (Finₓ 2)) = Uᶜ := by
   ext
   simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, coe_mk, Finₓ.zero_eq_one_iff, mem_preimage,
-    ite_eq_right_iff, mem_compl_eq]
+    ite_eq_right_iff, mem_compl_iff]
   tauto
 
 theorem locally_constant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X] (f g : LocallyConstant X (Finₓ 2))
@@ -369,27 +367,26 @@ def flip {X α β : Type _} [TopologicalSpace X] (f : LocallyConstant X (α → 
 
 /-- If α is finite, this constructs a locally constant function to `α → β` given a
 family of locally constant functions with values in β indexed by α. -/
-def unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → LocallyConstant X β) :
+def unflip {X α β : Type _} [Fintypeₓ α] [TopologicalSpace X] (f : α → LocallyConstant X β) :
     LocallyConstant X (α → β) where
   toFun := fun x a => f a x
   IsLocallyConstant := by
     rw [(IsLocallyConstant.tfae fun x a => f a x).out 0 3]
     intro g
-    have : (fun (x : X) (a : α) => f a x) ⁻¹' {g} = ⋂ a : α, f a ⁻¹' {g a} := by
-      tidy
+    have : (fun (x : X) (a : α) => f a x) ⁻¹' {g} = ⋂ a : α, f a ⁻¹' {g a} := by tidy
     rw [this]
     apply is_open_Inter
     intro a
     apply (f a).IsLocallyConstant
 
 @[simp]
-theorem unflip_flip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : LocallyConstant X (α → β)) :
+theorem unflip_flip {X α β : Type _} [Fintypeₓ α] [TopologicalSpace X] (f : LocallyConstant X (α → β)) :
     unflip f.flip = f := by
   ext
   rfl
 
 @[simp]
-theorem flip_unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → LocallyConstant X β) :
+theorem flip_unflip {X α β : Type _} [Fintypeₓ α] [TopologicalSpace X] (f : α → LocallyConstant X β) :
     (unflip f).flip = f := by
   ext
   rfl
@@ -408,7 +405,7 @@ See also `locally_constant.coe_comap`. -/
 noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant X Z :=
   if hf : Continuous f then fun g => ⟨g ∘ f, g.IsLocallyConstant.comp_continuous hf⟩
   else by
-    by_cases' H : Nonempty X
+    by_cases H:Nonempty X
     · intro g
       exact const X (g <| f <| Classical.arbitrary X)
       
@@ -441,9 +438,7 @@ theorem comap_const (f : X → Y) (y : Y) (h : ∀ x, f x = y) :
   rw [coe_comap]
   · simp only [h, coe_mk, Function.comp_app]
     
-  · rw
-      [show f = fun x => y by
-        ext <;> apply h]
+  · rw [show f = fun x => y by ext <;> apply h]
     exact continuous_const
     
 
@@ -487,7 +482,7 @@ noncomputable def mulIndicator (hU : IsClopen U) : LocallyConstant X R where
     rw [IsLocallyConstant.iff_exists_open]
     rintro x
     obtain ⟨V, hV, hx, h'⟩ := (IsLocallyConstant.iff_exists_open _).1 f.is_locally_constant x
-    by_cases' x ∈ U
+    by_cases x ∈ U
     · refine' ⟨U ∩ V, IsOpen.inter hU.1 hV, Set.mem_inter h hx, _⟩
       rintro y hy
       rw [Set.mem_inter_iff] at hy

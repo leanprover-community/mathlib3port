@@ -97,7 +97,7 @@ theorem c_mk (i j : ℕ) (h : j + 1 = i) : c.Rel i j :=
 /-- This lemma is meant to be used with `null_homotopic_map'_f_of_not_rel_left` -/
 theorem cs_down_0_not_rel_left (j : ℕ) : ¬c.Rel 0 j := by
   intro hj
-  dsimp'  at hj
+  dsimp at hj
   apply Nat.not_succ_le_zeroₓ j
   rw [Nat.succ_eq_add_one, hj]
 
@@ -107,11 +107,7 @@ def hσ (q : ℕ) (n : ℕ) : X _[n] ⟶ X _[n + 1] :=
   if n < q then 0 else (-1 : ℤ) ^ (n - q) • X.σ ⟨n - q, Nat.sub_lt_succₓ n q⟩
 
 /-- We can turn `hσ` into a datum that can be passed to `null_homotopic_map'`. -/
-def hσ' (q : ℕ) : ∀ n m, c.Rel m n → (K[X].x n ⟶ K[X].x m) := fun n m hnm =>
-  hσ q n ≫
-    eqToHom
-      (by
-        congr)
+def hσ' (q : ℕ) : ∀ n m, c.Rel m n → (K[X].x n ⟶ K[X].x m) := fun n m hnm => hσ q n ≫ eqToHom (by congr)
 
 theorem hσ'_eq_zero {q n m : ℕ} (hnq : n < q) (hnm : c.Rel m n) : (hσ' q n m hnm : X _[n] ⟶ X _[m]) = 0 := by
   simp only [hσ', hσ]
@@ -120,10 +116,7 @@ theorem hσ'_eq_zero {q n m : ℕ} (hnq : n < q) (hnm : c.Rel m n) : (hσ' q n m
 
 theorem hσ'_eq {q n a m : ℕ} (ha : n = a + q) (hnm : c.Rel m n) :
     (hσ' q n m hnm : X _[n] ⟶ X _[m]) =
-      ((-1 : ℤ) ^ a • X.σ ⟨a, Nat.lt_succ_iffₓ.mpr (Nat.Le.intro (Eq.symm ha))⟩) ≫
-        eqToHom
-          (by
-            congr) :=
+      ((-1 : ℤ) ^ a • X.σ ⟨a, Nat.lt_succ_iff.mpr (Nat.Le.intro (Eq.symm ha))⟩) ≫ eqToHom (by congr) :=
   by
   simp only [hσ', hσ]
   split_ifs
@@ -147,11 +140,7 @@ theorem Hσ_eq_zero (q : ℕ) : (hσₓ q : K[X] ⟶ K[X]).f 0 = 0 := by
   unfold Hσ
   rw [null_homotopic_map'_f_of_not_rel_left (c_mk 1 0 rfl) cs_down_0_not_rel_left]
   cases q
-  · rw
-      [hσ'_eq
-        (show 0 = 0 + 0 by
-          rfl)
-        (c_mk 1 0 rfl)]
+  · rw [hσ'_eq (show 0 = 0 + 0 by rfl) (c_mk 1 0 rfl)]
     simp only [pow_zeroₓ, Finₓ.mk_zero, one_zsmul, eq_to_hom_refl, category.comp_id]
     erw [ChainComplex.of_d]
     simp only [alternating_face_map_complex.obj_d, Finₓ.sum_univ_two, Finₓ.coe_zero, pow_zeroₓ, one_zsmul, Finₓ.coe_one,

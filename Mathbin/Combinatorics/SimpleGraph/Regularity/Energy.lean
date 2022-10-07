@@ -17,11 +17,11 @@ has an energy greater than the previous one plus some fixed constant.
 -/
 
 
-open Finset
+open Finsetₓ
 
 open BigOperators
 
-variable {α : Type _} [DecidableEq α] {s : Finset α} (P : Finpartition s) (G : SimpleGraph α) [DecidableRel G.Adj]
+variable {α : Type _} [DecidableEq α] {s : Finsetₓ α} (P : Finpartition s) (G : SimpleGraph α) [DecidableRel G.Adj]
 
 namespace Finpartition
 
@@ -31,7 +31,7 @@ def energy : ℚ :=
   (∑ uv in P.parts.offDiag, G.edgeDensity uv.1 uv.2 ^ 2) / P.parts.card ^ 2
 
 theorem energy_nonneg : 0 ≤ P.energy G :=
-  div_nonneg (Finset.sum_nonneg fun _ _ => sq_nonneg _) <| sq_nonneg _
+  div_nonneg (Finsetₓ.sum_nonneg fun _ _ => sq_nonneg _) <| sq_nonneg _
 
 theorem energy_le_one : P.energy G ≤ 1 :=
   div_le_of_nonneg_of_le_mul (sq_nonneg _) zero_le_one <|

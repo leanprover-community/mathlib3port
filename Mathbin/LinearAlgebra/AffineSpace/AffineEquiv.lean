@@ -138,13 +138,10 @@ one base point. Namely, this function takes a map `e : P₁ → P₂`, a linear 
 def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗ[k] V₂) (p : P₁) (h : ∀ p' : P₁, e p' = e' (p' -ᵥ p) +ᵥ e p) : P₁ ≃ᵃ[k] P₂ where
   toFun := e
   invFun := fun q' : P₂ => e'.symm (q' -ᵥ e p) +ᵥ p
-  left_inv := fun p' => by
-    simp [h p']
-  right_inv := fun q' => by
-    simp [h (e'.symm (q' -ᵥ e p) +ᵥ p)]
+  left_inv := fun p' => by simp [h p']
+  right_inv := fun q' => by simp [h (e'.symm (q' -ᵥ e p) +ᵥ p)]
   linear := e'
-  map_vadd' := fun p' v => by
-    simp [h p', h (v +ᵥ p'), vadd_vsub_assoc, vadd_vadd]
+  map_vadd' := fun p' v => by simp [h p', h (v +ᵥ p'), vadd_vsub_assoc, vadd_vadd]
 
 @[simp]
 theorem coe_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) (p h) : ⇑(mk' e e' p h) = e :=
@@ -160,8 +157,7 @@ def symm (e : P₁ ≃ᵃ[k] P₂) : P₂ ≃ᵃ[k] P₁ where
   toEquiv := e.toEquiv.symm
   linear := e.linear.symm
   map_vadd' := fun v p =>
-    e.toEquiv.symm.apply_eq_iff_eq_symm_apply.2 <| by
-      simpa using (e.to_equiv.apply_symm_apply v).symm
+    e.toEquiv.symm.apply_eq_iff_eq_symm_apply.2 <| by simpa using (e.to_equiv.apply_symm_apply v).symm
 
 @[simp]
 theorem symm_to_equiv (e : P₁ ≃ᵃ[k] P₂) : e.toEquiv.symm = e.symm.toEquiv :=
@@ -254,8 +250,7 @@ include V₂ V₃
 def trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : P₁ ≃ᵃ[k] P₃ where
   toEquiv := e.toEquiv.trans e'.toEquiv
   linear := e.linear.trans e'.linear
-  map_vadd' := fun p v => by
-    simp only [LinearEquiv.trans_apply, coe_to_equiv, (· ∘ ·), Equivₓ.coe_trans, map_vadd]
+  map_vadd' := fun p v => by simp only [LinearEquiv.trans_apply, coe_to_equiv, (· ∘ ·), Equivₓ.coe_trans, map_vadd]
 
 @[simp]
 theorem coe_trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : ⇑(e.trans e') = e' ∘ e :=
@@ -363,8 +358,7 @@ def vaddConst (b : P₁) : V₁ ≃ᵃ[k] P₁ where
 def constVsub (p : P₁) : P₁ ≃ᵃ[k] V₁ where
   toEquiv := Equivₓ.constVsub p
   linear := LinearEquiv.neg k
-  map_vadd' := fun p' v => by
-    simp [vsub_vadd_eq_vsub_sub, neg_add_eq_sub]
+  map_vadd' := fun p' v => by simp [vsub_vadd_eq_vsub_sub, neg_add_eq_sub]
 
 @[simp]
 theorem coe_const_vsub (p : P₁) : ⇑(constVsub k p) = (· -ᵥ ·) p :=

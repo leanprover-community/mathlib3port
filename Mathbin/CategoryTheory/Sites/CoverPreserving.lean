@@ -77,8 +77,7 @@ structure CoverPreserving (G : C ⥤ D) : Prop where
 
 /-- The identity functor on a site is cover-preserving. -/
 theorem id_cover_preserving : CoverPreserving J J (𝟭 _) :=
-  ⟨fun U S hS => by
-    simpa using hS⟩
+  ⟨fun U S hS => by simpa using hS⟩
 
 variable (J) (K)
 
@@ -124,10 +123,7 @@ theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
     x.FunctorPushforward G (G.map f) (image_mem_functor_pushforward G T hf) = x f hf := by
   unfold family_of_elements.functor_pushforward
   rcases e₁ : get_functor_pushforward_structure (image_mem_functor_pushforward G T hf) with ⟨X, g, f', hg, eq⟩
-  simpa using
-    hG.compatible ℱ h f' (𝟙 _) hg hf
-      (by
-        simp [Eq])
+  simpa using hG.compatible ℱ h f' (𝟙 _) hg hf (by simp [Eq])
 
 omit h hG
 
@@ -139,188 +135,178 @@ open Limits.WalkingCospan
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(group (Tactic.constructor "constructor") [])
-          (group (Tactic.intro "intro" [`ℱ `Z `T `x `hx `Y₁ `Y₂ `X `f₁ `f₂ `g₁ `g₂ `hg₁ `hg₂ `e]) [])
-          (group
-           (Tactic.tacticLet_
-            "let"
-            (Term.letDecl
-             (Term.letIdDecl
-              `c
-              []
-              [(Term.typeSpec
-                ":"
-                (Term.app
-                 `cone
-                 [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
-                   (Term.app `cospan [`g₁ `g₂])
-                   " ⋙ "
-                   `G)]))]
-              ":="
-              (Term.app
-               (Term.proj
-                (Term.app
-                 `cones.postcompose
-                 [(Term.proj
-                   (Term.app
-                    `diagram_iso_cospan
-                    [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
-                      (Term.app `cospan [`g₁ `g₂])
-                      " ⋙ "
-                      `G)])
-                   "."
-                   `inv)])
-                "."
-                `obj)
-               [(Term.app `pullback_cone.mk [`f₁ `f₂ `e])]))))
-           [])
-          (group
-           (Tactic.tacticLet_
-            "let"
-            (Term.letDecl
-             (Term.letIdDecl
-              `c'
-              []
-              []
-              ":="
-              (Term.app
-               `is_cofiltered.cone
-               [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
-                 (Term.app `structured_arrow_cone.to_diagram [`c])
-                 " ⋙ "
-                 (Term.app `structured_arrow.pre [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))]))))
-           [])
-          (group
-           (Tactic.tacticHave_
-            "have"
-            (Term.haveDecl
-             (Term.haveIdDecl
-              [`eq₁ []]
-              [(Term.typeSpec
-                ":"
-                («term_=_»
-                 `f₁
-                 "="
-                 (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
-                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
-                   `c'.X.hom
-                   " ≫ "
-                   (Term.app `G.map [(Term.proj (Term.app `c'.π.app [`left]) "." `right)]))
-                  " ≫ "
+         [(Tactic.constructor "constructor")
+          []
+          (Tactic.intro "intro" [`ℱ `Z `T `x `hx `Y₁ `Y₂ `X `f₁ `f₂ `g₁ `g₂ `hg₁ `hg₂ `e])
+          []
+          (Tactic.tacticLet_
+           "let"
+           (Term.letDecl
+            (Term.letIdDecl
+             `c
+             []
+             [(Term.typeSpec
+               ":"
+               (Term.app
+                `cone
+                [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                  (Term.app `cospan [`g₁ `g₂])
+                  " ⋙ "
+                  `G)]))]
+             ":="
+             (Term.app
+              (Term.proj
+               (Term.app
+                `cones.postcompose
+                [(Term.proj
                   (Term.app
-                   `eq_to_hom
-                   [(Term.byTactic
-                     "by"
-                     (Tactic.tacticSeq
-                      (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] [] []) [])])))]))))]
-              ":="
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(group
-                   (Tactic.tacticErw__
-                    "erw"
-                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] (Term.proj (Term.app `c'.π.app [`left]) "." `w))] "]")
-                    [])
-                   [])
-                  (group (Tactic.dsimp' "dsimp'" [] [] [] [] []) [])
-                  (group (Tactic.simp "simp" [] [] [] [] []) [])]))))))
-           [])
-          (group
-           (Tactic.tacticHave_
-            "have"
-            (Term.haveDecl
-             (Term.haveIdDecl
-              [`eq₂ []]
-              [(Term.typeSpec
-                ":"
-                («term_=_»
-                 `f₂
-                 "="
+                   `diagram_iso_cospan
+                   [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                     (Term.app `cospan [`g₁ `g₂])
+                     " ⋙ "
+                     `G)])
+                  "."
+                  `inv)])
+               "."
+               `obj)
+              [(Term.app `pullback_cone.mk [`f₁ `f₂ `e])]))))
+          []
+          (Tactic.tacticLet_
+           "let"
+           (Term.letDecl
+            (Term.letIdDecl
+             `c'
+             []
+             []
+             ":="
+             (Term.app
+              `is_cofiltered.cone
+              [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                (Term.app `structured_arrow_cone.to_diagram [`c])
+                " ⋙ "
+                (Term.app `structured_arrow.pre [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))]))))
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             [`eq₁ []]
+             [(Term.typeSpec
+               ":"
+               («term_=_»
+                `f₁
+                "="
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
-                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
-                   `c'.X.hom
-                   " ≫ "
-                   (Term.app `G.map [(Term.proj (Term.app `c'.π.app [`right]) "." `right)]))
+                  `c'.X.hom
                   " ≫ "
-                  (Term.app
-                   `eq_to_hom
-                   [(Term.byTactic
-                     "by"
-                     (Tactic.tacticSeq
-                      (Tactic.tacticSeq1Indented [(group (Tactic.simp "simp" [] [] [] [] []) [])])))]))))]
-              ":="
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(group
-                   (Tactic.tacticErw__
-                    "erw"
-                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] (Term.proj (Term.app `c'.π.app [`right]) "." `w))] "]")
-                    [])
-                   [])
-                  (group (Tactic.dsimp' "dsimp'" [] [] [] [] []) [])
-                  (group (Tactic.simp "simp" [] [] [] [] []) [])]))))))
+                  (Term.app `G.map [(Term.proj (Term.app `c'.π.app [`left]) "." `right)]))
+                 " ≫ "
+                 (Term.app
+                  `eq_to_hom
+                  [(Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))]))))]
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.tacticErw__
+                  "erw"
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] (Term.proj (Term.app `c'.π.app [`left]) "." `w))] "]")
+                  [])
+                 []
+                 (Tactic.dsimp "dsimp" [] [] [] [] [])
+                 []
+                 (Tactic.simp "simp" [] [] [] [] [])]))))))
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             [`eq₂ []]
+             [(Term.typeSpec
+               ":"
+               («term_=_»
+                `f₂
+                "="
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                  `c'.X.hom
+                  " ≫ "
+                  (Term.app `G.map [(Term.proj (Term.app `c'.π.app [`right]) "." `right)]))
+                 " ≫ "
+                 (Term.app
+                  `eq_to_hom
+                  [(Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))]))))]
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.tacticErw__
+                  "erw"
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] (Term.proj (Term.app `c'.π.app [`right]) "." `w))] "]")
+                  [])
+                 []
+                 (Tactic.dsimp "dsimp" [] [] [] [] [])
+                 []
+                 (Tactic.simp "simp" [] [] [] [] [])]))))))
+          []
+          (Mathlib.Tactic.Conv.convLHS
+           "conv_lhs"
+           []
+           []
+           "=>"
+           (Tactic.Conv.convSeq
+            (Tactic.Conv.convSeq1Indented
+             [(Tactic.Conv.convRw__ "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₁)] "]"))])))
+          []
+          (Mathlib.Tactic.Conv.convRHS
+           "conv_rhs"
+           []
+           []
+           "=>"
+           (Tactic.Conv.convSeq
+            (Tactic.Conv.convSeq1Indented
+             [(Tactic.Conv.convRw__ "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₂)] "]"))])))
+          []
+          (Tactic.simp
+           "simp"
+           []
+           []
+           ["only"]
+           ["["
+            [(Tactic.simpLemma [] [] `op_comp)
+             ","
+             (Tactic.simpLemma [] [] `functor.map_comp)
+             ","
+             (Tactic.simpLemma [] [] `types_comp_apply)
+             ","
+             (Tactic.simpLemma [] [] `eq_to_hom_op)
+             ","
+             (Tactic.simpLemma [] [] `eq_to_hom_map)]
+            "]"]
            [])
-          (group
-           (Mathlib.Tactic.Conv.convLHS
-            "conv_lhs"
-            []
-            []
-            "=>"
-            (Tactic.Conv.convSeq
-             (Tactic.Conv.convSeq1Indented
-              [(group (Tactic.Conv.convRw__ "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₁)] "]")) [])])))
-           [])
-          (group
-           (Mathlib.Tactic.Conv.convRHS
-            "conv_rhs"
-            []
-            []
-            "=>"
-            (Tactic.Conv.convSeq
-             (Tactic.Conv.convSeq1Indented
-              [(group (Tactic.Conv.convRw__ "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₂)] "]")) [])])))
-           [])
-          (group
-           (Tactic.simp
-            "simp"
-            []
-            []
-            ["only"]
-            ["["
-             [(Tactic.simpLemma [] [] `op_comp)
-              ","
-              (Tactic.simpLemma [] [] `functor.map_comp)
-              ","
-              (Tactic.simpLemma [] [] `types_comp_apply)
-              ","
-              (Tactic.simpLemma [] [] `eq_to_hom_op)
-              ","
-              (Tactic.simpLemma [] [] `eq_to_hom_map)]
-             "]"]
-            [])
-           [])
-          (group (Tactic.congr' "congr" [(num "1")] []) [])
-          (group
-           (Tactic.injection "injection" (Term.app `c'.π.naturality [`walking_cospan.hom.inl]) ["with" ["_" `e₁]])
-           [])
-          (group
-           (Tactic.injection "injection" (Term.app `c'.π.naturality [`walking_cospan.hom.inr]) ["with" ["_" `e₂]])
-           [])
-          (group
-           (Tactic.exact
-            "exact"
-            (Term.app
-             `hx
-             [(Term.proj (Term.app `c'.π.app [`left]) "." `right)
-              (Term.proj (Term.app `c'.π.app [`right]) "." `right)
-              `hg₁
-              `hg₂
-              (Term.app `e₁.symm.trans [`e₂])]))
-           [])])))
+          []
+          (Tactic.congr' "congr" [(num "1")] [])
+          []
+          (Tactic.injection "injection" (Term.app `c'.π.naturality [`walking_cospan.hom.inl]) ["with" ["_" `e₁]])
+          []
+          (Tactic.injection "injection" (Term.app `c'.π.naturality [`walking_cospan.hom.inr]) ["with" ["_" `e₂]])
+          []
+          (Tactic.exact
+           "exact"
+           (Term.app
+            `hx
+            [(Term.proj (Term.app `c'.π.app [`left]) "." `right)
+             (Term.proj (Term.app `c'.π.app [`right]) "." `right)
+             `hg₁
+             `hg₂
+             (Term.app `e₁.symm.trans [`e₂])]))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
@@ -386,7 +372,7 @@ open Limits.WalkingCospan
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.injection
        "injection"
        (Term.app `c'.π.naturality [`walking_cospan.hom.inr])
@@ -415,12 +401,12 @@ theorem
           eq₁
             : f₁ = c'.X.hom ≫ G.map c'.π.app left . right ≫ eq_to_hom by simp
             :=
-            by erw [ ← c'.π.app left . w ] dsimp' simp
+            by erw [ ← c'.π.app left . w ] dsimp simp
         have
           eq₂
             : f₂ = c'.X.hom ≫ G.map c'.π.app right . right ≫ eq_to_hom by simp
             :=
-            by erw [ ← c'.π.app right . w ] dsimp' simp
+            by erw [ ← c'.π.app right . w ] dsimp simp
         conv_lhs => rw [ eq₁ ]
         conv_rhs => rw [ eq₂ ]
         simp only [ op_comp , functor.map_comp , types_comp_apply , eq_to_hom_op , eq_to_hom_map ]
@@ -454,7 +440,7 @@ theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : CompatibleP
     refine' H.is_separated_for _ y _ _ (H.is_amalgamation (hx.functor_pushforward hG₁ (sheaf_over ℱ X)))
     rintro V f ⟨Z, f', g', h, rfl⟩
     erw [family_of_elements.comp_of_compatible (S.functor_pushforward G) hx' (image_mem_functor_pushforward G S h) g']
-    dsimp'
+    dsimp
     simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ← hy f' h]
     
 

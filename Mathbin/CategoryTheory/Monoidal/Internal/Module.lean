@@ -35,17 +35,14 @@ namespace MonModuleEquivalenceAlgebra
 
 @[simps]
 instance (A : Mon_ (ModuleCat.{u} R)) : Ringₓ A.x :=
-  { (by
-      infer_instance : AddCommGroupₓ A.x) with
-    one := A.one (1 : R), mul := fun x y => A.mul (x ⊗ₜ y),
+  { (by infer_instance : AddCommGroupₓ A.x) with one := A.one (1 : R), mul := fun x y => A.mul (x ⊗ₜ y),
     one_mul := fun x => by
       convert LinearMap.congr_fun A.one_mul ((1 : R) ⊗ₜ x)
-      simp ,
+      simp,
     mul_one := fun x => by
       convert LinearMap.congr_fun A.mul_one (x ⊗ₜ (1 : R))
-      simp ,
-    mul_assoc := fun x y z => by
-      convert LinearMap.congr_fun A.mul_assoc (x ⊗ₜ y ⊗ₜ z),
+      simp,
+    mul_assoc := fun x y z => by convert LinearMap.congr_fun A.mul_assoc (x ⊗ₜ y ⊗ₜ z),
     left_distrib := fun x y z => by
       convert A.mul.map_add (x ⊗ₜ y) (x ⊗ₜ z)
       rw [← TensorProduct.tmul_add]
@@ -61,7 +58,7 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.x :=
       have h := LinearMap.congr_fun A.one_mul.symm (x ⊗ₜ A.one y)
       rwa [monoidal_category.left_unitor_hom_apply, ← A.one.map_smul] at h,
     commutes' := fun r a => by
-      dsimp'
+      dsimp
       have h₁ := LinearMap.congr_fun A.one_mul (r ⊗ₜ a)
       have h₂ := LinearMap.congr_fun A.mul_one (a ⊗ₜ r)
       exact h₁.trans h₂.symm,
@@ -92,18 +89,18 @@ def inverseObj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R) where
   mul := LinearMap.mul' R A
   one_mul' := by
     ext x
-    dsimp' only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply, LinearMap.compr₂_apply,
+    dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply, LinearMap.compr₂_apply,
       Function.comp_app, RingHom.map_one, ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp,
       ModuleCat.monoidalCategory.left_unitor_hom_apply]
     rw [LinearMap.mul'_apply, monoidal_category.left_unitor_hom_apply, ← Algebra.smul_def]
   mul_one' := by
     ext x
-    dsimp' only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply, LinearMap.compr₂_apply,
+    dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply, LinearMap.compr₂_apply,
       Function.comp_app, ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp]
     rw [LinearMap.mul'_apply, ModuleCat.monoidalCategory.right_unitor_hom_apply, ← Algebra.commutes, ← Algebra.smul_def]
   mul_assoc' := by
     ext x y z
-    dsimp' only [AlgebraCat.id_apply, TensorProduct.mk_apply, LinearMap.compr₂_apply, Function.comp_app,
+    dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, LinearMap.compr₂_apply, Function.comp_app,
       ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp, monoidal_category.associator_hom_apply]
     simp only [LinearMap.mul'_apply, mul_assoc]
 
@@ -116,11 +113,11 @@ def inverse : AlgebraCat.{u} R ⥤ Mon_ (ModuleCat.{u} R) where
     { Hom := f.toLinearMap,
       one_hom' := by
         ext
-        dsimp'
+        dsimp
         simp only [RingHom.map_one, AlgHom.map_one],
       mul_hom' := by
         ext
-        dsimp'
+        dsimp
         simp only [LinearMap.mul'_apply, RingHom.map_mul, AlgHom.map_mul] }
 
 end MonModuleEquivalenceAlgebra
@@ -140,16 +137,15 @@ def monModuleEquivalenceAlgebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R where
             { Hom := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun r a => rfl },
               mul_hom' := by
                 ext
-                dsimp'  at *
+                dsimp at *
                 simp only [LinearMap.mul'_apply, Mon_.X.ring_mul] },
           inv :=
             { Hom := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun r a => rfl },
               mul_hom' := by
                 ext
-                dsimp'  at *
+                dsimp at *
                 simp only [LinearMap.mul'_apply, Mon_.X.ring_mul] } })
-      (by
-        tidy)
+      (by tidy)
   counitIso :=
     NatIso.ofComponents
       (fun A =>
@@ -173,8 +169,7 @@ def monModuleEquivalenceAlgebraForget :
     (fun A =>
       { Hom := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun c x => rfl },
         inv := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun c x => rfl } })
-    (by
-      tidy)
+    (by tidy)
 
 end ModuleCat
 

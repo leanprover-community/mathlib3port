@@ -40,19 +40,13 @@ structure Mon_ where
   x : C
   one : 𝟙_ C ⟶ X
   mul : X ⊗ X ⟶ X
-  one_mul' : (one ⊗ 𝟙 X) ≫ mul = (λ_ X).Hom := by
-    run_tac
-      obviously
-  mul_one' : (𝟙 X ⊗ one) ≫ mul = (ρ_ X).Hom := by
-    run_tac
-      obviously
+  one_mul' : (one ⊗ 𝟙 X) ≫ mul = (λ_ X).Hom := by obviously
+  mul_one' : (𝟙 X ⊗ one) ≫ mul = (ρ_ X).Hom := by obviously
   -- Obviously there is some flexibility stating this axiom.
   -- This one has left- and right-hand sides matching the statement of `monoid.mul_assoc`,
   -- and chooses to place the associator on the right-hand side.
   -- The heuristic is that unitors and associators "don't have much weight".
-  mul_assoc' : (mul ⊗ 𝟙 X) ≫ mul = (α_ X X X).Hom ≫ (𝟙 X ⊗ mul) ≫ mul := by
-    run_tac
-      obviously
+  mul_assoc' : (mul ⊗ 𝟙 X) ≫ mul = (α_ X X X).Hom ≫ (𝟙 X ⊗ mul) ≫ mul := by obviously
 
 restate_axiom Mon_.one_mul'
 
@@ -67,8 +61,8 @@ attribute [simp, reassoc] Mon_.mul_assoc
 
 namespace Mon_
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]
 /-- The trivial monoid object. We later show this is initial in `Mon_ C`.
 -/
 @[simps]
@@ -76,10 +70,8 @@ def trivial : Mon_ C where
   x := 𝟙_ C
   one := 𝟙 _
   mul := (λ_ _).Hom
-  mul_assoc' := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
-  mul_one' := by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `coherence #[]"
+  mul_assoc' := by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
+  mul_one' := by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `coherence #[]"
 
 instance : Inhabited (Mon_ C) :=
   ⟨trivial C⟩
@@ -98,20 +90,15 @@ theorem mul_one_hom {Z : C} (f : Z ⟶ M.x) : (f ⊗ M.one) ≫ M.mul = (ρ_ Z).
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem assoc_flip : (𝟙 M.x ⊗ M.mul) ≫ M.mul = (α_ M.x M.x M.x).inv ≫ (M.mul ⊗ 𝟙 M.x) ≫ M.mul := by
-  simp
+theorem assoc_flip : (𝟙 M.x ⊗ M.mul) ≫ M.mul = (α_ M.x M.x M.x).inv ≫ (M.mul ⊗ 𝟙 M.x) ≫ M.mul := by simp
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A morphism of monoid objects. -/
 @[ext]
 structure Hom (M N : Mon_ C) where
   Hom : M.x ⟶ N.x
-  one_hom' : M.one ≫ hom = N.one := by
-    run_tac
-      obviously
-  mul_hom' : M.mul ≫ hom = (hom ⊗ hom) ≫ N.mul := by
-    run_tac
-      obviously
+  one_hom' : M.one ≫ hom = N.one := by obviously
+  mul_hom' : M.mul ≫ hom = (hom ⊗ hom) ≫ N.mul := by obviously
 
 restate_axiom hom.one_hom'
 
@@ -162,13 +149,14 @@ instance {A B : Mon_ C} (f : A ⟶ B) [e : IsIso ((forget C).map f)] : IsIso f.H
 
 /-- The forgetful functor from monoid objects to the ambient category reflects isomorphisms. -/
 instance :
-    ReflectsIsomorphisms (forget C) where reflects := fun X Y f e =>
+    ReflectsIsomorphisms
+      (forget
+        C) where reflects := fun X Y f e =>
     ⟨⟨{ Hom := inv f.hom,
           mul_hom' := by
             simp only [is_iso.comp_inv_eq, hom.mul_hom, category.assoc, ← tensor_comp_assoc, is_iso.inv_hom_id,
               tensor_id, category.id_comp] },
-        by
-        tidy⟩⟩
+        by tidy⟩⟩
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Construct an isomorphism of monoids by giving an isomorphism between the underlying objects
@@ -181,7 +169,7 @@ def isoOfIso {M N : Mon_ C} (f : M.x ≅ N.x) (one_f : M.one ≫ f.Hom = N.one)
     { Hom := f.inv,
       one_hom' := by
         rw [← one_f]
-        simp ,
+        simp,
       mul_hom' := by
         rw [← cancel_mono f.hom]
         slice_rhs 2 3 => rw [mul_f]
@@ -191,10 +179,10 @@ instance uniqueHomFromTrivial (A : Mon_ C) : Unique (trivial C ⟶ A) where
   default :=
     { Hom := A.one,
       one_hom' := by
-        dsimp'
-        simp ,
+        dsimp
+        simp,
       mul_hom' := by
-        dsimp'
+        dsimp
         simp [A.one_mul, unitors_equal] }
   uniq := fun f => by
     ext
@@ -248,10 +236,10 @@ def mapMon (F : LaxMonoidalFunctor C D) : Mon_ C ⥤ Mon_ D where
   map := fun A B f =>
     { Hom := F.map f.Hom,
       one_hom' := by
-        dsimp'
+        dsimp
         rw [category.assoc, ← F.to_functor.map_comp, f.one_hom],
       mul_hom' := by
-        dsimp'
+        dsimp
         rw [category.assoc, F.μ_natural_assoc, ← F.to_functor.map_comp, ← F.to_functor.map_comp, f.mul_hom] }
   map_id' := fun A => by
     ext
@@ -290,7 +278,7 @@ def monToLaxMonoidal : Mon_ C ⥤ LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C 
   map := fun A B f =>
     { app := fun _ => f.Hom,
       naturality' := fun _ _ _ => by
-        dsimp'
+        dsimp
         rw [category.id_comp, category.comp_id],
       unit' := f.OneHom, tensor' := fun _ _ => f.MulHom }
 
@@ -303,27 +291,13 @@ attribute [local simp] eq_to_iso_map
 def unitIso : 𝟭 (LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C) ≅ laxMonoidalToMon C ⋙ monToLaxMonoidal C :=
   NatIso.ofComponents
     (fun F =>
-      MonoidalNatIso.ofComponents
-        (fun _ =>
-          F.toFunctor.mapIso
-            (eqToIso
-              (by
-                ext)))
-        (by
-          tidy)
-        (by
-          tidy)
-        (by
-          tidy))
-    (by
-      tidy)
+      MonoidalNatIso.ofComponents (fun _ => F.toFunctor.mapIso (eqToIso (by ext))) (by tidy) (by tidy) (by tidy))
+    (by tidy)
 
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
 def counitIso : monToLaxMonoidal C ⋙ laxMonoidalToMon C ≅ 𝟭 (Mon_ C) :=
-  NatIso.ofComponents (fun F => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } })
-    (by
-      tidy)
+  NatIso.ofComponents (fun F => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
 
 end EquivLaxMonoidalFunctorPunit
 
@@ -523,10 +497,10 @@ instance monMonoidal : MonoidalCategory (Mon_ C) where
   tensorHom := fun M N P Q f g =>
     { Hom := f.Hom ⊗ g.Hom,
       one_hom' := by
-        dsimp'
+        dsimp
         slice_lhs 2 3 => rw [← tensor_comp, hom.one_hom f, hom.one_hom g],
       mul_hom' := by
-        dsimp'
+        dsimp
         slice_rhs 1 2 => rw [tensor_μ_natural]
         slice_lhs 2 3 => rw [← tensor_comp, hom.mul_hom f, hom.mul_hom g, tensor_comp]
         simp only [category.assoc] }
@@ -543,29 +517,29 @@ instance monMonoidal : MonoidalCategory (Mon_ C) where
   associator_naturality' := by
     intros
     ext
-    dsimp'
+    dsimp
     apply associator_naturality
   leftUnitor := fun M => isoOfIso (λ_ M.x) one_left_unitor mul_left_unitor
   left_unitor_naturality' := by
     intros
     ext
-    dsimp'
+    dsimp
     apply left_unitor_naturality
   rightUnitor := fun M => isoOfIso (ρ_ M.x) one_right_unitor mul_right_unitor
   right_unitor_naturality' := by
     intros
     ext
-    dsimp'
+    dsimp
     apply right_unitor_naturality
   pentagon' := by
     intros
     ext
-    dsimp'
+    dsimp
     apply pentagon
   triangle' := by
     intros
     ext
-    dsimp'
+    dsimp
     apply triangle
 
 end Mon_

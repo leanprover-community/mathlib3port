@@ -92,11 +92,9 @@ theorem heq_path_of_eq_image : HEq ((πₘ f).map ⟦p⟧) ((πₘ g).map ⟦q�
   apply Path.Homotopic.hpath_hext
   exact hfg
 
-private theorem start_path : f x₀ = g x₂ := by
-  convert hfg 0 <;> simp only [Path.source]
+private theorem start_path : f x₀ = g x₂ := by convert hfg 0 <;> simp only [Path.source]
 
-private theorem end_path : f x₁ = g x₃ := by
-  convert hfg 1 <;> simp only [Path.target]
+private theorem end_path : f x₁ = g x₃ := by convert hfg 1 <;> simp only [Path.target]
 
 theorem eq_path_of_eq_image : (πₘ f).map ⟦p⟧ = hcast (start_path hfg) ≫ (πₘ g).map ⟦q⟧ ≫ hcast (end_path hfg).symm := by
   rw [functor.conj_eq_to_hom_iff_heq]
@@ -179,7 +177,7 @@ theorem eval_at_eq (x : X) :
       hcast (H.apply_zero x).symm ≫
         (πₘ H.uliftMap).map (prodToProdTopI uhpath01 (𝟙 x)) ≫ hcast (H.apply_one x).symm.symm :=
   by
-  dunfold prod_to_prod_Top_I uhpath01 hcast
+  dsimp only [prod_to_prod_Top_I, uhpath01, hcast]
   refine' (@functor.conj_eq_to_hom_iff_heq (πₓ Y) _ _ _ _ _ _ _ _ _).mpr _
   simp only [id_eq_path_refl, prod_to_prod_Top_map, Path.Homotopic.prod_lift, map_eq, ← Path.Homotopic.map_lift]
   apply Path.Homotopic.hpath_hext
@@ -192,7 +190,7 @@ theorem eq_diag_path :
       (⟦H.evalAt x₀⟧ ≫ (πₘ g).map p : fromTop (f x₀) ⟶ fromTop (g x₁)) = H.diagonalPath' p :=
   by
   rw [H.apply_zero_path, H.apply_one_path, H.eval_at_eq, H.eval_at_eq]
-  dunfold prod_to_prod_Top_I
+  dsimp only [prod_to_prod_Top_I]
   constructor <;>
     · slice_lhs 2 5 => simp [← CategoryTheory.Functor.map_comp]
       rfl
@@ -214,11 +212,9 @@ variable {X Y : Top.{u}} {f g : C(X, Y)} (H : ContinuousMap.Homotopy f g)
 functors `f` and `g` -/
 def homotopicMapsNatIso : πₘ f ⟶ πₘ g where
   app := fun x => ⟦H.evalAt x⟧
-  naturality' := fun x y p => by
-    rw [(H.eq_diag_path p).1, (H.eq_diag_path p).2]
+  naturality' := fun x y p => by rw [(H.eq_diag_path p).1, (H.eq_diag_path p).2]
 
-instance : IsIso (homotopicMapsNatIso H) := by
-  apply nat_iso.is_iso_of_is_iso_app
+instance : IsIso (homotopicMapsNatIso H) := by apply nat_iso.is_iso_of_is_iso_app
 
 open ContinuousMap
 

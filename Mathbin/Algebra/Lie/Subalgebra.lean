@@ -220,10 +220,8 @@ variable [Module R M] [LieModule R L M]
 /-- Given a Lie algebra `L` containing a Lie subalgebra `L' ⊆ L`, together with a Lie module `M` of
 `L`, we may regard `M` as a Lie module of `L'` by restriction. -/
 instance : LieModule R L' M where
-  smul_lie := fun t x m => by
-    simp only [coe_bracket_of_module, smul_lie, Submodule.coe_smul_of_tower]
-  lie_smul := fun t x m => by
-    simp only [coe_bracket_of_module, lie_smul]
+  smul_lie := fun t x m => by simp only [coe_bracket_of_module, smul_lie, Submodule.coe_smul_of_tower]
+  lie_smul := fun t x m => by simp only [coe_bracket_of_module, lie_smul]
 
 /-- An `L`-equivariant map of Lie modules `M → N` is `L'`-equivariant for any Lie subalgebra
 `L' ⊆ L`. -/
@@ -270,8 +268,7 @@ def range : LieSubalgebra R L₂ :=
   { (f : L →ₗ[R] L₂).range with
     lie_mem' := fun x y =>
       show x ∈ f.toLinearMap.range → y ∈ f.toLinearMap.range → ⁅x, y⁆ ∈ f.toLinearMap.range by
-        repeat'
-          rw [LinearMap.mem_range]
+        repeat' rw [LinearMap.mem_range]
         rintro ⟨x', hx⟩ ⟨y', hy⟩
         refine' ⟨⁅x', y'⁆, _⟩
         rw [← hx, ← hy]
@@ -371,8 +368,7 @@ domain. -/
 def comap : LieSubalgebra R L :=
   { (K₂ : Submodule R L₂).comap (f : L →ₗ[R] L₂) with
     lie_mem' := fun x y hx hy => by
-      suffices ⁅f x, f y⁆ ∈ K₂ by
-        simp [this]
+      suffices ⁅f x, f y⁆ ∈ K₂ by simp [this]
       exact K₂.lie_mem hx hy }
 
 section LatticeStructure
@@ -518,8 +514,7 @@ instance subsingleton_of_bot : Subsingleton (LieSubalgebra R ↥(⊥ : LieSubalg
   simp only [true_iffₓ, eq_self_iff_true, Submodule.mk_eq_zero, mem_bot]
 
 theorem subsingleton_bot : Subsingleton ↥(⊥ : LieSubalgebra R L) :=
-  show Subsingleton ((⊥ : LieSubalgebra R L) : Set L) by
-    simp
+  show Subsingleton ((⊥ : LieSubalgebra R L) : Set L) by simp
 
 variable (R L)
 
@@ -686,8 +681,7 @@ variable [CommRingₓ R] [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieA
 
 /-- An injective Lie algebra morphism is an equivalence onto its range. -/
 noncomputable def ofInjective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) : L₁ ≃ₗ⁅R⁆ f.range :=
-  { LinearEquiv.ofInjective (f : L₁ →ₗ[R] L₂) <| by
-      rwa [LieHom.coe_to_linear_map] with
+  { LinearEquiv.ofInjective (f : L₁ →ₗ[R] L₂) <| by rwa [LieHom.coe_to_linear_map] with
     map_lie' := fun x y => by
       apply SetCoe.ext
       simpa }

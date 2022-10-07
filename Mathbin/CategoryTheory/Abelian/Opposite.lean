@@ -22,7 +22,7 @@ open CategoryTheory.Limits
 variable (C : Type _) [Category C] [Abelian C]
 
 attribute [local instance]
-  has_finite_limits_of_has_equalizers_and_finite_products has_finite_colimits_of_has_coequalizers_and_finite_coproducts has_finite_limits_opposite has_finite_colimits_opposite has_finite_products_opposite
+  has_finite_limits_of_has_equalizers_and_finite_products has_finite_colimits_of_has_coequalizers_and_finite_coproducts
 
 instance : Abelian Cᵒᵖ where
   normalMonoOfMono := fun X Y f m => normal_mono_of_normal_epi_unop _ (normal_epi_of_epi f.unop)
@@ -37,9 +37,7 @@ variable {C} {X Y : C} (f : X ⟶ Y) {A B : Cᵒᵖ} (g : A ⟶ B)
 /-- The kernel of `f.op` is the opposite of `cokernel f`. -/
 @[simps]
 def kernelOpUnop : (kernel f.op).unop ≅ cokernel f where
-  Hom :=
-    (kernel.lift f.op (cokernel.π f).op <| by
-        simp [← op_comp]).unop
+  Hom := (kernel.lift f.op (cokernel.π f).op <| by simp [← op_comp]).unop
   inv :=
     cokernel.desc f (kernel.ι f.op).unop <| by
       rw [← f.unop_op, ← unop_comp, f.unop_op]
@@ -47,11 +45,11 @@ def kernelOpUnop : (kernel f.op).unop ≅ cokernel f where
   hom_inv_id' := by
     rw [← unop_id, ← (cokernel.desc f _ _).unop_op, ← unop_comp]
     congr 1
-    dsimp'
+    dsimp
     ext
     simp [← op_comp]
   inv_hom_id' := by
-    dsimp'
+    dsimp
     ext
     simp [← unop_comp]
 
@@ -64,17 +62,15 @@ def cokernelOpUnop : (cokernel f.op).unop ≅ kernel f where
     kernel.lift f (cokernel.π f.op).unop <| by
       rw [← f.unop_op, ← unop_comp, f.unop_op]
       simp
-  inv :=
-    (cokernel.desc f.op (kernel.ι f).op <| by
-        simp [← op_comp]).unop
+  inv := (cokernel.desc f.op (kernel.ι f).op <| by simp [← op_comp]).unop
   hom_inv_id' := by
     rw [← unop_id, ← (kernel.lift f _ _).unop_op, ← unop_comp]
     congr 1
-    dsimp'
+    dsimp
     ext
     simp [← op_comp]
   inv_hom_id' := by
-    dsimp'
+    dsimp
     ext
     simp [← unop_comp]
 
@@ -114,8 +110,7 @@ theorem Kernel.ι_unop : (kernel.ι g.unop).op = eqToHom (Opposite.op_unop _) �
   simp
 
 theorem Cokernel.π_unop :
-    (cokernel.π g.unop).op = (cokernelUnopOp g).Hom ≫ kernel.ι g ≫ eqToHom (Opposite.op_unop _).symm := by
-  simp
+    (cokernel.π g.unop).op = (cokernelUnopOp g).Hom ≫ kernel.ι g ≫ eqToHom (Opposite.op_unop _).symm := by simp
 
 /-- The cokernel of `g.unop` is the opposite of `kernel g`. -/
 @[simps]

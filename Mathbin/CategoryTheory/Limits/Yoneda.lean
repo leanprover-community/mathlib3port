@@ -34,9 +34,7 @@ variable {C : Type v} [SmallCategory C]
 @[simps]
 def colimitCocone (X : Cᵒᵖ) : Cocone (coyoneda.obj X) where
   x := PUnit
-  ι :=
-    { app := by
-        tidy }
+  ι := { app := by tidy }
 
 /-- The proposed colimit cocone over `coyoneda.obj X` is a colimit cocone.
 -/
@@ -78,7 +76,7 @@ instance yonedaPreservesLimits (X : C) :
               uniq' := fun s m w =>
                 funext fun x => by
                   refine' Quiver.Hom.op_inj (t.uniq ⟨op X, _, _⟩ _ fun j => _)
-                  · dsimp'
+                  · dsimp
                     simp [← s.w α]
                     
                   -- See library note [dsimp, simp]
@@ -95,7 +93,7 @@ instance coyonedaPreservesLimits (X : Cᵒᵖ) :
             { lift := fun s x =>
                 t.lift
                   ⟨unop X, fun j => s.π.app j x, fun j₁ j₂ α => by
-                    dsimp'
+                    dsimp
                     simp [← s.w α]⟩,-- See library note [dsimp, simp]
               fac' := fun s j => funext fun x => t.fac _ _,
               uniq' := fun s m w =>
@@ -112,8 +110,7 @@ def yonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ Cᵒ�
     fac' := fun s j => Quiver.Hom.unop_inj (congr_fun ((t s.x.unop).fac (s' s) j) PUnit.unit),
     uniq' := fun s m w => by
       apply Quiver.Hom.unop_inj
-      suffices (fun x : PUnit => m.unop) = (t s.X.unop).lift (s' s) by
-        apply congr_fun this PUnit.unit
+      suffices (fun x : PUnit => m.unop) = (t s.X.unop).lift (s' s) by apply congr_fun this PUnit.unit
       apply (t _).uniq (s' s) _ fun j => _
       ext
       exact Quiver.Hom.op_inj (w j) }
@@ -125,8 +122,7 @@ def coyonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ C) (
     ⟨PUnit, fun j _ => s.π.app j, fun j₁ j₂ α => funext fun _ => (s.w α).symm⟩
   { lift := fun s => (t (op s.x)).lift (s' s) PUnit.unit, fac' := fun s j => congr_fun ((t _).fac (s' s) j) PUnit.unit,
     uniq' := fun s m w => by
-      suffices (fun x : PUnit => m) = (t _).lift (s' s) by
-        apply congr_fun this PUnit.unit
+      suffices (fun x : PUnit => m) = (t _).lift (s' s) by apply congr_fun this PUnit.unit
       apply (t _).uniq (s' s) _ fun j => _
       ext
       exact w j }

@@ -162,16 +162,11 @@ namespace CategoryTheory.Iso
 def toAlgEquiv {X Y : AlgebraCat R} (i : X ≅ Y) : X ≃ₐ[R] Y where
   toFun := i.hom
   invFun := i.inv
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
-  map_add' := by
-    tidy
-  map_mul' := by
-    tidy
-  commutes' := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
+  map_add' := by tidy
+  map_mul' := by tidy
+  commutes' := by tidy
 
 end CategoryTheory.Iso
 

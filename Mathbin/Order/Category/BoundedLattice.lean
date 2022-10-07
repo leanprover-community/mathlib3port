@@ -57,9 +57,7 @@ instance : LargeCategory.{u} BoundedLattice where
 
 instance : ConcreteCategory BoundedLattice where
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
-  forget_faithful :=
-    ⟨fun X Y => by
-      convert FunLike.coe_injective⟩
+  forget_faithful := ⟨fun X Y => by convert FunLike.coe_injective⟩
 
 instance hasForgetToBoundedOrder :
     HasForget₂ BoundedLattice

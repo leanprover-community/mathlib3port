@@ -93,8 +93,7 @@ theorem eventually_eq_of_mem_source (hx : x ∈ (chartAt H c).Source) : f =ᶠ[�
   f.EqOnSource.eventually_eq_of_mem <| IsOpen.mem_nhds (chartAt H c).open_source hx
 
 theorem one_of_dist_le (hs : x ∈ (chartAt H c).Source) (hd : dist (extChartAt I c x) (extChartAt I c c) ≤ f.R) :
-    f x = 1 := by
-  simp only [f.eq_on_source hs, (· ∘ ·), f.to_cont_diff_bump.one_of_mem_closed_ball hd]
+    f x = 1 := by simp only [f.eq_on_source hs, (· ∘ ·), f.to_cont_diff_bump.one_of_mem_closed_ball hd]
 
 theorem support_eq_inter_preimage : Support f = (chartAt H c).Source ∩ extChartAt I c ⁻¹' Ball (extChartAt I c c) f.r :=
   by

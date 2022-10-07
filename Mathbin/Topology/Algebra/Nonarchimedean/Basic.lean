@@ -92,8 +92,7 @@ contains the cartesian square of an open neighborhood in the group. -/
       "An open neighborhood of the identity in the\ncartesian square of a nonarchimedean group contains the cartesian square of an open neighborhood in\nthe group."]
 theorem prod_self_subset {U} (hU : U ∈ nhds (1 : G × G)) : ∃ V : OpenSubgroup G, (V : Set G) ×ˢ (V : Set G) ⊆ U :=
   let ⟨V, W, h⟩ := prod_subset hU
-  ⟨V ⊓ W, by
-    refine' Set.Subset.trans (Set.prod_mono _ _) ‹_› <;> simp ⟩
+  ⟨V ⊓ W, by refine' Set.Subset.trans (Set.prod_mono _ _) ‹_› <;> simp⟩
 
 /-- The cartesian product of two nonarchimedean groups is nonarchimedean. -/
 @[to_additive "The cartesian product of two nonarchimedean groups is nonarchimedean."]
@@ -129,8 +128,7 @@ theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, (V : Set
   let ⟨V, H⟩ :=
     prod_self_subset
       (IsOpen.mem_nhds (IsOpen.preimage continuous_mul U.IsOpen)
-        (by
-          simpa only [Set.mem_preimage, OpenAddSubgroup.mem_coe, Prod.snd_zero, mul_zero] using U.zero_mem))
+        (by simpa only [Set.mem_preimage, OpenAddSubgroup.mem_coe, Prod.snd_zero, mul_zero] using U.zero_mem))
   use V
   rintro v ⟨a, b, ha, hb, hv⟩
   have hy := H (Set.mk_mem_prod ha hb)

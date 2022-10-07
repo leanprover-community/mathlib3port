@@ -58,18 +58,12 @@ def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMo
     {X Y : C} {f : X ⟶ Y} (hf : NormalMono (F.map f)) : NormalMono f where
   z := F.objPreimage hf.z
   g := Full.preimage (hf.g ≫ (F.objObjPreimageIso hf.z).inv)
-  w :=
-    Faithful.map_injective F <| by
-      simp [reassoc_of hf.w]
+  w := Faithful.map_injective F <| by simp [reassoc_of hf.w]
   IsLimit :=
     reflects_limit.reflects <|
       IsLimit.ofConeEquiv (Cones.postcomposeEquivalence (compNatIso F : _)) <|
         IsLimit.ofIsoLimit
-          (is_limit.of_iso_limit
-            (is_kernel.of_comp_iso _ _ (F.obj_obj_preimage_iso hf.Z)
-              (by
-                simp )
-              hf.is_limit)
+          (is_limit.of_iso_limit (is_kernel.of_comp_iso _ _ (F.obj_obj_preimage_iso hf.Z) (by simp) hf.is_limit)
             (of_ι_congr (category.comp_id _).symm))
           (isoOfι _).symm
 
@@ -77,9 +71,7 @@ end
 
 /-- Every normal monomorphism is a regular monomorphism. -/
 instance (priority := 100) NormalMono.regularMono (f : X ⟶ Y) [I : NormalMono f] : RegularMono f :=
-  { I with left := I.g, right := 0,
-    w := by
-      simpa using I.w }
+  { I with left := I.g, right := 0, w := by simpa using I.w }
 
 /-- If `f` is a normal mono, then any map `k : W ⟶ Y` such that `k ≫ normal_mono.g = 0` induces
     a morphism `l : W ⟶ X` such that `l ≫ f = k`. -/
@@ -96,13 +88,12 @@ def normalOfIsPullbackSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h :
     (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) : NormalMono g where
   z := hn.z
   g := k ≫ hn.g
-  w := by
-    rw [← reassoc_of comm, hn.w, has_zero_morphisms.comp_zero]
+  w := by rw [← reassoc_of comm, hn.w, has_zero_morphisms.comp_zero]
   IsLimit := by
     letI gr := regular_of_is_pullback_snd_of_regular comm t
     have q := (has_zero_morphisms.comp_zero k hn.Z).symm
     convert gr.is_limit
-    dunfold kernel_fork.of_ι fork.of_ι
+    dsimp only [kernel_fork.of_ι, fork.of_ι]
     congr
     exact q
     exact q
@@ -162,18 +153,13 @@ def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMor
     {X Y : C} {f : X ⟶ Y} (hf : NormalEpi (F.map f)) : NormalEpi f where
   w := F.objPreimage hf.w
   g := Full.preimage ((F.objObjPreimageIso hf.w).Hom ≫ hf.g)
-  w :=
-    Faithful.map_injective F <| by
-      simp [hf.w]
+  w := Faithful.map_injective F <| by simp [hf.w]
   IsColimit :=
     reflects_colimit.reflects <|
       IsColimit.ofCoconeEquiv (Cocones.precomposeEquivalence (compNatIso F).symm) <|
         IsColimit.ofIsoColimit
           (is_colimit.of_iso_colimit
-            (is_cokernel.of_iso_comp _ _ (F.obj_obj_preimage_iso hf.W).symm
-              (by
-                simp )
-              hf.is_colimit)
+            (is_cokernel.of_iso_comp _ _ (F.obj_obj_preimage_iso hf.W).symm (by simp) hf.is_colimit)
             (of_π_congr (category.id_comp _).symm))
           (isoOfπ _).symm
 
@@ -181,9 +167,7 @@ end
 
 /-- Every normal epimorphism is a regular epimorphism. -/
 instance (priority := 100) NormalEpi.regularEpi (f : X ⟶ Y) [I : NormalEpi f] : RegularEpi f :=
-  { I with left := I.g, right := 0,
-    w := by
-      simpa using I.w }
+  { I with left := I.g, right := 0, w := by simpa using I.w }
 
 /-- If `f` is a normal epi, then every morphism `k : X ⟶ W` satisfying `normal_epi.g ≫ k = 0`
     induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
@@ -200,13 +184,12 @@ def normalOfIsPushoutSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : 
     (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) : NormalEpi h where
   w := gn.w
   g := gn.g ≫ f
-  w := by
-    rw [category.assoc, comm, reassoc_of gn.w, zero_comp]
+  w := by rw [category.assoc, comm, reassoc_of gn.w, zero_comp]
   IsColimit := by
     letI hn := regular_of_is_pushout_snd_of_regular comm t
     have q := (@zero_comp _ _ _ gn.W _ _ f).symm
     convert hn.is_colimit
-    dunfold cokernel_cofork.of_π cofork.of_π
+    dsimp only [cokernel_cofork.of_π, cofork.of_π]
     congr
     exact q
     exact q
@@ -242,7 +225,7 @@ def normalEpiOfNormalMonoUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalMono f.un
         rintro Z' g' w' m' rfl
         apply Quiver.Hom.unop_inj
         apply m.is_limit.uniq (kernel_fork.of_ι (m'.unop ≫ f.unop) _) m'.unop
-        rintro (⟨⟩ | ⟨⟩) <;> simp )
+        rintro (⟨⟩ | ⟨⟩) <;> simp)
 
 /-- A normal epi becomes a normal mono in the opposite category. -/
 def normalMonoOfNormalEpiUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalEpi f.unop) : NormalMono f where
@@ -258,7 +241,7 @@ def normalMonoOfNormalEpiUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalEpi f.uno
         rintro Z' g' w' m' rfl
         apply Quiver.Hom.unop_inj
         apply m.is_colimit.uniq (cokernel_cofork.of_π (f.unop ≫ m'.unop) _) m'.unop
-        rintro (⟨⟩ | ⟨⟩) <;> simp )
+        rintro (⟨⟩ | ⟨⟩) <;> simp)
 
 section
 

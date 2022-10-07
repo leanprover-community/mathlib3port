@@ -13,7 +13,7 @@ lean3port_rev=$(git rev-parse HEAD)
 tag=$(sed '/^def tag /!d;s/.*"\(.*\)"$/\1/' lakefile.lean)
 popd
 
-sed -i '
+sed -i '' '
   /^def tag / s/"\(.*\)"$/"'$tag'"/;
   /^require lean3port / s/@"\([^"]*\)"$/@"'$lean3port_rev'"/
 ' lakefile.lean

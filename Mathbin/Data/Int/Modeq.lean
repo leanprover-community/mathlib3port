@@ -57,8 +57,7 @@ end Modeq
 theorem coe_nat_modeq_iff {a b n : ℕ} : a ≡ b [ZMOD n] ↔ a ≡ b [MOD n] := by
   unfold modeq Nat.Modeq <;> rw [← Int.coe_nat_eq_coe_nat_iff] <;> simp [coe_nat_mod]
 
-theorem modeq_zero_iff_dvd : a ≡ 0 [ZMOD n] ↔ n ∣ a := by
-  rw [modeq, zero_mod, dvd_iff_mod_eq_zero]
+theorem modeq_zero_iff_dvd : a ≡ 0 [ZMOD n] ↔ n ∣ a := by rw [modeq, zero_mod, dvd_iff_mod_eq_zero]
 
 theorem _root_.has_dvd.dvd.modeq_zero_int (h : n ∣ a) : a ≡ 0 [ZMOD n] :=
   modeq_zero_iff_dvd.2 h
@@ -88,10 +87,7 @@ protected theorem modeq_of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [Z
   modeq_iff_dvd.2 <| d.trans h.Dvd
 
 protected theorem mul_left' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD c * n] :=
-  Or.cases_on hc.lt_or_eq
-    (fun hc => by
-      unfold modeq <;> simp [mul_mod_mul_of_pos hc, show _ = _ from h])
-    fun hc => by
+  Or.cases_on hc.lt_or_eq (fun hc => by unfold modeq <;> simp [mul_mod_mul_of_pos hc, show _ = _ from h]) fun hc => by
     simp [hc.symm]
 
 protected theorem mul_right' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : a * c ≡ b * c [ZMOD n * c] := by
@@ -109,8 +105,7 @@ protected theorem add_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a + c ≡ b + c [
   h.add Modeq.rfl
 
 protected theorem add_left_cancel (h₁ : a ≡ b [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) : c ≡ d [ZMOD n] :=
-  have : d - c = b + d - (a + c) - (b - a) := by
-    ring
+  have : d - c = b + d - (a + c) - (b - a) := by ring
   modeq_iff_dvd.2 <| by
     rw [this]
     exact dvd_sub h₂.dvd h₁.dvd
@@ -126,9 +121,7 @@ protected theorem add_right_cancel' (c : ℤ) (h : a + c ≡ b + c [ZMOD n]) : a
   Modeq.rfl.add_right_cancel h
 
 protected theorem neg (h : a ≡ b [ZMOD n]) : -a ≡ -b [ZMOD n] :=
-  h.add_left_cancel
-    (by
-      simp_rw [← sub_eq_add_neg, sub_self])
+  h.add_left_cancel (by simp_rw [← sub_eq_add_neg, sub_self])
 
 protected theorem sub (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a - c ≡ b - d [ZMOD n] := by
   rw [sub_eq_add_neg, sub_eq_add_neg]
@@ -189,8 +182,7 @@ theorem modeq_add_fac {a b n : ℤ} (c : ℤ) (ha : a ≡ b [ZMOD n]) : a + n * 
   calc
     a + n * c ≡ b + n * c [ZMOD n] := ha.add_right _
     _ ≡ b + 0 [ZMOD n] := (dvd_mul_right _ _).modeq_zero_int.add_left _
-    _ ≡ b [ZMOD n] := by
-      rw [add_zeroₓ]
+    _ ≡ b [ZMOD n] := by rw [add_zeroₓ]
     
 
 theorem modeq_add_fac_self {a t n : ℤ} : a + n * t ≡ a [ZMOD n] :=
@@ -202,20 +194,17 @@ theorem mod_coprime {a b : ℕ} (hab : Nat.Coprime a b) : ∃ y : ℤ, a * y ≡
     calc
       ↑a * Nat.gcdA a b ≡ ↑a * Nat.gcdA a b + ↑b * Nat.gcdB a b [ZMOD ↑b] :=
         modeq.symm <| modeq_add_fac _ <| Modeq.refl _
-      _ ≡ 1 [ZMOD ↑b] := by
-        rw [← Nat.gcd_eq_gcd_ab, hgcd] <;> rfl
+      _ ≡ 1 [ZMOD ↑b] := by rw [← Nat.gcd_eq_gcd_ab, hgcd] <;> rfl
       ⟩
 
 theorem exists_unique_equiv (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℤ, 0 ≤ z ∧ z < b ∧ z ≡ a [ZMOD b] :=
   ⟨a % b, mod_nonnegₓ _ (ne_of_gtₓ hb), by
     have : a % b < abs b := mod_lt _ (ne_of_gtₓ hb)
-    rwa [abs_of_pos hb] at this, by
-    simp [modeq]⟩
+    rwa [abs_of_pos hb] at this, by simp [modeq]⟩
 
 theorem exists_unique_equiv_nat (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℕ, ↑z < b ∧ ↑z ≡ a [ZMOD b] :=
   let ⟨z, hz1, hz2, hz3⟩ := exists_unique_equiv a hb
-  ⟨z.natAbs, by
-    constructor <;> rw [← of_nat_eq_coe, of_nat_nat_abs_eq_of_nonneg hz1] <;> assumption⟩
+  ⟨z.natAbs, by constructor <;> rw [← of_nat_eq_coe, of_nat_nat_abs_eq_of_nonneg hz1] <;> assumption⟩
 
 @[simp]
 theorem mod_mul_right_mod (a b c : ℤ) : a % (b * c) % b = a % b :=

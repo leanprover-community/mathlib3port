@@ -78,22 +78,16 @@ structure LaxMonoidalFunctor extends C ⥤ D where
   -- tensorator
   μ : ∀ X Y : C, obj X ⊗ obj Y ⟶ obj (X ⊗ Y)
   μ_natural' : ∀ {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y'), (map f ⊗ map g) ≫ μ Y Y' = μ X X' ≫ map (f ⊗ g) := by
-    run_tac
-      obviously
+    obviously
   -- associativity of the tensorator
   associativity' :
     ∀ X Y Z : C,
       (μ X Y ⊗ 𝟙 (obj Z)) ≫ μ (X ⊗ Y) Z ≫ map (α_ X Y Z).Hom =
         (α_ (obj X) (obj Y) (obj Z)).Hom ≫ (𝟙 (obj X) ⊗ μ Y Z) ≫ μ X (Y ⊗ Z) := by
-    run_tac
-      obviously
+    obviously
   -- unitality
-  left_unitality' : ∀ X : C, (λ_ (obj X)).Hom = (ε ⊗ 𝟙 (obj X)) ≫ μ (𝟙_ C) X ≫ map (λ_ X).Hom := by
-    run_tac
-      obviously
-  right_unitality' : ∀ X : C, (ρ_ (obj X)).Hom = (𝟙 (obj X) ⊗ ε) ≫ μ X (𝟙_ C) ≫ map (ρ_ X).Hom := by
-    run_tac
-      obviously
+  left_unitality' : ∀ X : C, (λ_ (obj X)).Hom = (ε ⊗ 𝟙 (obj X)) ≫ μ (𝟙_ C) X ≫ map (λ_ X).Hom := by obviously
+  right_unitality' : ∀ X : C, (ρ_ (obj X)).Hom = (𝟙 (obj X) ⊗ ε) ≫ μ X (𝟙_ C) ≫ map (ρ_ X).Hom := by obviously
 
 restate_axiom lax_monoidal_functor.μ_natural'
 
@@ -150,12 +144,8 @@ end
 See <https://stacks.math.columbia.edu/tag/0FFL>.
 -/
 structure MonoidalFunctor extends LaxMonoidalFunctor.{v₁, v₂} C D where
-  ε_is_iso : IsIso ε := by
-    run_tac
-      tactic.apply_instance
-  μ_is_iso : ∀ X Y : C, IsIso (μ X Y) := by
-    run_tac
-      tactic.apply_instance
+  ε_is_iso : IsIso ε := by infer_instance
+  μ_is_iso : ∀ X Y : C, IsIso (μ X Y) := by infer_instance
 
 attribute [instance] monoidal_functor.ε_is_iso monoidal_functor.μ_is_iso
 
@@ -205,21 +195,24 @@ variable (F : MonoidalFunctor.{v₁, v₂} C D)
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem map_tensor {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y') :
-    F.map (f ⊗ g) = inv (F.μ X X') ≫ (F.map f ⊗ F.map g) ≫ F.μ Y Y' := by
-  simp
+    F.map (f ⊗ g) = inv (F.μ X X') ≫ (F.map f ⊗ F.map g) ≫ F.μ Y Y' := by simp
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem map_left_unitor (X : C) :
     F.map (λ_ X).Hom = inv (F.μ (𝟙_ C) X) ≫ (inv F.ε ⊗ 𝟙 (F.obj X)) ≫ (λ_ (F.obj X)).Hom := by
   simp only [lax_monoidal_functor.left_unitality]
-  slice_rhs 2 3 => rw [← comp_tensor_id]simp
+  slice_rhs 2 3 =>
+  rw [← comp_tensor_id]
+  simp
   simp
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem map_right_unitor (X : C) :
     F.map (ρ_ X).Hom = inv (F.μ X (𝟙_ C)) ≫ (𝟙 (F.obj X) ⊗ inv F.ε) ≫ (ρ_ (F.obj X)).Hom := by
   simp only [lax_monoidal_functor.right_unitality]
-  slice_rhs 2 3 => rw [← id_tensor_comp]simp
+  slice_rhs 2 3 =>
+  rw [← id_tensor_comp]
+  simp
   simp
 
 /-- The tensorator as a natural isomorphism. -/
@@ -309,7 +302,7 @@ def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
       rw [← category.assoc, lax_monoidal_functor.μ_natural, category.assoc, ← map_comp, ← map_comp, ←
         lax_monoidal_functor.μ_natural],
     associativity' := fun X Y Z => by
-      dsimp'
+      dsimp
       rw [id_tensor_comp]
       slice_rhs 3 4 => rw [← G.to_functor.map_id, G.μ_natural]
       slice_rhs 1 3 => rw [← G.associativity]
@@ -318,13 +311,13 @@ def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
       rw [category.assoc, category.assoc, category.assoc, category.assoc, category.assoc, ← G.to_functor.map_comp, ←
         G.to_functor.map_comp, ← G.to_functor.map_comp, ← G.to_functor.map_comp, F.associativity],
     left_unitality' := fun X => by
-      dsimp'
+      dsimp
       rw [G.left_unitality, comp_tensor_id, category.assoc, category.assoc]
       apply congr_arg
       rw [F.left_unitality, map_comp, ← nat_trans.id_app, ← category.assoc, ← lax_monoidal_functor.μ_natural,
         nat_trans.id_app, map_id, ← category.assoc, map_comp],
     right_unitality' := fun X => by
-      dsimp'
+      dsimp
       rw [G.right_unitality, id_tensor_comp, category.assoc, category.assoc]
       apply congr_arg
       rw [F.right_unitality, map_comp, ← nat_trans.id_app, ← category.assoc, ← lax_monoidal_functor.μ_natural,
@@ -378,12 +371,12 @@ theorem prod'_to_functor : (F.prod' G).toFunctor = F.toFunctor.prod' G.toFunctor
 
 @[simp]
 theorem prod'_ε : (F.prod' G).ε = (F.ε, G.ε) := by
-  dsimp' [prod']
+  dsimp [prod']
   simp
 
 @[simp]
 theorem prod'_μ (X Y : C) : (F.prod' G).μ X Y = (F.μ X Y, G.μ X Y) := by
-  dsimp' [prod']
+  dsimp [prod']
   simp
 
 end LaxMonoidalFunctor
@@ -397,10 +390,10 @@ variable (F : MonoidalFunctor.{v₁, v₂} C D) (G : MonoidalFunctor.{v₂, v₃
 def comp : MonoidalFunctor.{v₁, v₃} C E :=
   { F.toLaxMonoidalFunctor.comp G.toLaxMonoidalFunctor with
     ε_is_iso := by
-      dsimp'
+      dsimp
       infer_instance,
     μ_is_iso := by
-      dsimp'
+      dsimp
       infer_instance }
 
 -- mathport name: monoidal_functor.comp
@@ -490,10 +483,10 @@ noncomputable def monoidalAdjoint (F : MonoidalFunctor C D) {G : D ⥤ C} (h : F
 noncomputable def monoidalInverse (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : MonoidalFunctor D C where
   toLaxMonoidalFunctor := monoidalAdjoint F (asEquivalence _).toAdjunction
   ε_is_iso := by
-    dsimp' [equivalence.to_adjunction]
+    dsimp [equivalence.to_adjunction]
     infer_instance
   μ_is_iso := fun X Y => by
-    dsimp' [equivalence.to_adjunction]
+    dsimp [equivalence.to_adjunction]
     infer_instance
 
 end CategoryTheory

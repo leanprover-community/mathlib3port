@@ -26,10 +26,8 @@ variable (N : Type _) [AddCommMonoidₓ N] [Module k N] [Module A N] [IsScalarTo
 @[simps]
 def restrictScalarsLinearMap : (M →ₗ[A] N) →ₗ[k] M →ₗ[k] N where
   toFun := LinearMap.restrictScalars k
-  map_add' := by
-    tidy
-  map_smul' := by
-    tidy
+  map_add' := by tidy
+  map_smul' := by tidy
 
 end RestrictScalars
 

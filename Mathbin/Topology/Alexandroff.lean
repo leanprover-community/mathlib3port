@@ -73,7 +73,7 @@ instance : CoeTₓ X (Alexandroff X) :=
 instance : Inhabited (Alexandroff X) :=
   ⟨∞⟩
 
-instance [Fintype X] : Fintype (Alexandroff X) :=
+instance [Fintypeₓ X] : Fintypeₓ (Alexandroff X) :=
   Option.fintype
 
 instance infinite [Infinite X] : Infinite (Alexandroff X) :=
@@ -123,10 +123,8 @@ theorem compl_image_coe (s : Set X) : (coe '' s : Set (Alexandroff X))ᶜ = coe 
 theorem ne_infty_iff_exists {x : Alexandroff X} : x ≠ ∞ ↔ ∃ y : X, (y : Alexandroff X) = x := by
   induction x using Alexandroff.rec <;> simp
 
-instance : CanLift (Alexandroff X) X where
-  coe := coe
-  cond := fun x => x ≠ ∞
-  prf := fun x => ne_infty_iff_exists.1
+instance canLift : CanLift (Alexandroff X) X coe fun x => x ≠ ∞ :=
+  WithTop.canLift
 
 theorem not_mem_range_coe_iff {x : Alexandroff X} : x ∉ Range (coe : X → Alexandroff X) ↔ x = ∞ := by
   rw [← mem_compl_iff, compl_range_coe, mem_singleton_iff]
@@ -160,8 +158,7 @@ variable [TopologicalSpace X]
 
 instance : TopologicalSpace (Alexandroff X) where
   IsOpen := fun s => (∞ ∈ s → IsCompact (((coe : X → Alexandroff X) ⁻¹' s)ᶜ)) ∧ IsOpen ((coe : X → Alexandroff X) ⁻¹' s)
-  is_open_univ := by
-    simp
+  is_open_univ := by simp
   is_open_inter := fun s t => by
     rintro ⟨hms, hs⟩ ⟨hmt, ht⟩
     refine' ⟨_, hs.inter ht⟩
@@ -188,8 +185,7 @@ theorem is_open_iff_of_mem (h : ∞ ∈ s) :
     IsOpen s ↔ IsClosed ((coe ⁻¹' s : Set X)ᶜ) ∧ IsCompact ((coe ⁻¹' s : Set X)ᶜ) := by
   simp only [is_open_iff_of_mem' h, is_closed_compl_iff, And.comm]
 
-theorem is_open_iff_of_not_mem (h : ∞ ∉ s) : IsOpen s ↔ IsOpen (coe ⁻¹' s : Set X) := by
-  simp [is_open_def, h]
+theorem is_open_iff_of_not_mem (h : ∞ ∉ s) : IsOpen s ↔ IsOpen (coe ⁻¹' s : Set X) := by simp [is_open_def, h]
 
 theorem is_closed_iff_of_mem (h : ∞ ∈ s) : IsClosed s ↔ IsClosed (coe ⁻¹' s : Set X) := by
   have : ∞ ∉ sᶜ := fun H => H h
@@ -308,12 +304,10 @@ theorem continuous_at_infty' {Y : Type _} [TopologicalSpace Y] {f : Alexandroff 
 
 theorem continuous_at_infty {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} :
     ContinuousAt f ∞ ↔ ∀ s ∈ 𝓝 (f ∞), ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ MapsTo (f ∘ coe) (tᶜ) s :=
-  continuous_at_infty'.trans <| by
-    simp only [has_basis_coclosed_compact.tendsto_left_iff, exists_propₓ, and_assocₓ]
+  continuous_at_infty'.trans <| by simp only [has_basis_coclosed_compact.tendsto_left_iff, exists_propₓ, and_assocₓ]
 
 theorem continuous_at_coe {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} {x : X} :
-    ContinuousAt f x ↔ ContinuousAt (f ∘ coe) x := by
-  rw [ContinuousAt, nhds_coe_eq, tendsto_map'_iff, ContinuousAt]
+    ContinuousAt f x ↔ ContinuousAt (f ∘ coe) x := by rw [ContinuousAt, nhds_coe_eq, tendsto_map'_iff, ContinuousAt]
 
 /-- If `X` is not a compact space, then the natural embedding `X → alexandroff X` has dense range.
 -/

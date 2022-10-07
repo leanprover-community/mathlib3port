@@ -68,18 +68,15 @@ theorem cross_apply (a b : Finₓ 3 → R) :
 section ProductsProperties
 
 @[simp]
-theorem cross_anticomm (v w : Finₓ 3 → R) : -(v ×₃ w) = w ×₃ v := by
-  simp [cross_apply, mul_comm]
+theorem cross_anticomm (v w : Finₓ 3 → R) : -(v ×₃ w) = w ×₃ v := by simp [cross_apply, mul_comm]
 
 alias cross_anticomm ← neg_cross
 
 @[simp]
-theorem cross_anticomm' (v w : Finₓ 3 → R) : v ×₃ w + w ×₃ v = 0 := by
-  rw [add_eq_zero_iff_eq_neg, cross_anticomm]
+theorem cross_anticomm' (v w : Finₓ 3 → R) : v ×₃ w + w ×₃ v = 0 := by rw [add_eq_zero_iff_eq_neg, cross_anticomm]
 
 @[simp]
-theorem cross_self (v : Finₓ 3 → R) : v ×₃ v = 0 := by
-  simp [cross_apply, mul_comm]
+theorem cross_self (v : Finₓ 3 → R) : v ×₃ v = 0 := by simp [cross_apply, mul_comm]
 
 /-- The cross product of two vectors is perpendicular to the first vector. -/
 @[simp]
@@ -118,7 +115,7 @@ section LeibnizProperties
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- The cross product satisfies the Leibniz lie property. -/
 theorem leibniz_cross (u v w : Finₓ 3 → R) : u ×₃ (v ×₃ w) = u ×₃ v ×₃ w + v ×₃ (u ×₃ w) := by
-  dsimp' only [cross_apply]
+  dsimp only [cross_apply]
   ext i
   fin_cases i <;> norm_num <;> ring
 

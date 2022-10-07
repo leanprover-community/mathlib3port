@@ -38,7 +38,7 @@ conservative dynamical system, Poincare recurrence theorem
 
 noncomputable section
 
-open Classical Set Filter MeasureTheory Finset Function TopologicalSpace
+open Classical Set Filter MeasureTheory Finsetₓ Function TopologicalSpace
 
 open Classical TopologicalSpace
 
@@ -48,14 +48,11 @@ namespace MeasureTheory
 
 open Measureₓ
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (m «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (m «expr ≠ » 0)
 /-- We say that a non-singular (`measure_theory.quasi_measure_preserving`) self-map is
 *conservative* if for any measurable set `s` of positive measure there exists `x ∈ s` such that `x`
 returns back to `s` under some iteration of `f`. -/
-structure Conservative (f : α → α)
-  (μ : Measure α := by
-    run_tac
-      volume_tac) extends
+structure Conservative (f : α → α) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) extends
   QuasiMeasurePreserving f μ μ : Prop where
   exists_mem_image_mem : ∀ ⦃s⦄, MeasurableSet s → μ s ≠ 0 → ∃ x ∈ s, ∃ (m : _)(_ : m ≠ 0), (f^[m]) x ∈ s
 
@@ -93,8 +90,7 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
     convert (measure_bUnion_null_iff <| to_countable _).2 hN
     rw [← inter_Union₂]
     rfl
-  have : μ ((s ∩ f^[n] ⁻¹' s) \ T) ≠ 0 := by
-    rwa [measure_diff_null hμT]
+  have : μ ((s ∩ f^[n] ⁻¹' s) \ T) ≠ 0 := by rwa [measure_diff_null hμT]
   rcases hf.exists_mem_image_mem ((hs.inter (hf.measurable.iterate n hs)).diff hT) this with
     ⟨x, ⟨⟨hxs, hxn⟩, hxT⟩, m, hm0, ⟨hxms, hxm⟩, hxx⟩
   refine' hxT ⟨hxs, mem_Union₂.2 ⟨n + m, _, _⟩⟩

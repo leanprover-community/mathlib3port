@@ -114,23 +114,19 @@ theorem self_sub_to_Ioc_mod (a : α) {b : α} (hb : 0 < b) (x : α) : x - toIocM
 
 @[simp]
 theorem to_Ico_mod_sub_to_Ico_div_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoMod a hb x - toIcoDiv a hb x • b = x := by
-  rw [toIcoMod, add_sub_cancel]
+    toIcoMod a hb x - toIcoDiv a hb x • b = x := by rw [toIcoMod, add_sub_cancel]
 
 @[simp]
 theorem to_Ioc_mod_sub_to_Ioc_div_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocMod a hb x - toIocDiv a hb x • b = x := by
-  rw [toIocMod, add_sub_cancel]
+    toIocMod a hb x - toIocDiv a hb x • b = x := by rw [toIocMod, add_sub_cancel]
 
 @[simp]
 theorem to_Ico_div_zsmul_sub_to_Ico_mod (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoDiv a hb x • b - toIcoMod a hb x = -x := by
-  rw [← neg_sub, to_Ico_mod_sub_to_Ico_div_zsmul]
+    toIcoDiv a hb x • b - toIcoMod a hb x = -x := by rw [← neg_sub, to_Ico_mod_sub_to_Ico_div_zsmul]
 
 @[simp]
 theorem to_Ioc_div_zsmul_sub_to_Ioc_mod (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocDiv a hb x • b - toIocMod a hb x = -x := by
-  rw [← neg_sub, to_Ioc_mod_sub_to_Ioc_div_zsmul]
+    toIocDiv a hb x • b - toIocMod a hb x = -x := by rw [← neg_sub, to_Ioc_mod_sub_to_Ioc_div_zsmul]
 
 theorem to_Ico_mod_eq_iff {a b x y : α} (hb : 0 < b) :
     toIcoMod a hb x = y ↔ a ≤ y ∧ y < a + b ∧ ∃ z : ℤ, y - x = z • b := by
@@ -212,13 +208,11 @@ theorem to_Ioc_div_add_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
 
 @[simp]
 theorem to_Ico_div_zsmul_add (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
-    toIcoDiv a hb (m • b + x) = toIcoDiv a hb x - m := by
-  rw [add_commₓ, to_Ico_div_add_zsmul]
+    toIcoDiv a hb (m • b + x) = toIcoDiv a hb x - m := by rw [add_commₓ, to_Ico_div_add_zsmul]
 
 @[simp]
 theorem to_Ioc_div_zsmul_add (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
-    toIocDiv a hb (m • b + x) = toIocDiv a hb x - m := by
-  rw [add_commₓ, to_Ioc_div_add_zsmul]
+    toIocDiv a hb (m • b + x) = toIocDiv a hb x - m := by rw [add_commₓ, to_Ioc_div_add_zsmul]
 
 @[simp]
 theorem to_Ico_div_sub_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
@@ -272,23 +266,19 @@ theorem to_Ioc_mod_add_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
 
 @[simp]
 theorem to_Ico_mod_zsmul_add (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
-    toIcoMod a hb (m • b + x) = toIcoMod a hb x := by
-  rw [add_commₓ, to_Ico_mod_add_zsmul]
+    toIcoMod a hb (m • b + x) = toIcoMod a hb x := by rw [add_commₓ, to_Ico_mod_add_zsmul]
 
 @[simp]
 theorem to_Ioc_mod_zsmul_add (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
-    toIocMod a hb (m • b + x) = toIocMod a hb x := by
-  rw [add_commₓ, to_Ioc_mod_add_zsmul]
+    toIocMod a hb (m • b + x) = toIocMod a hb x := by rw [add_commₓ, to_Ioc_mod_add_zsmul]
 
 @[simp]
 theorem to_Ico_mod_sub_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
-    toIcoMod a hb (x - m • b) = toIcoMod a hb x := by
-  rw [sub_eq_add_neg, ← neg_smul, to_Ico_mod_add_zsmul]
+    toIcoMod a hb (x - m • b) = toIcoMod a hb x := by rw [sub_eq_add_neg, ← neg_smul, to_Ico_mod_add_zsmul]
 
 @[simp]
 theorem to_Ioc_mod_sub_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
-    toIocMod a hb (x - m • b) = toIocMod a hb x := by
-  rw [sub_eq_add_neg, ← neg_smul, to_Ioc_mod_add_zsmul]
+    toIocMod a hb (x - m • b) = toIocMod a hb x := by rw [sub_eq_add_neg, ← neg_smul, to_Ioc_mod_add_zsmul]
 
 @[simp]
 theorem to_Ico_mod_add_right (a : α) {b : α} (hb : 0 < b) (x : α) : toIcoMod a hb (x + b) = toIcoMod a hb x := by
@@ -405,8 +395,7 @@ theorem to_Ioc_div_eq_floor (a : α) {b : α} (hb : 0 < b) (x : α) : toIocDiv a
   rw [← add_lt_add_iff_right b, add_assocₓ, add_commₓ x, ← sub_lt_iff_lt_add, add_commₓ (_ * _), ← sub_lt_iff_lt_add]
   exact Int.sub_floor_div_mul_lt _ hb
 
-theorem to_Ico_div_zero_one (x : α) : toIcoDiv (0 : α) zero_lt_one x = -⌊x⌋ := by
-  simp [to_Ico_div_eq_neg_floor]
+theorem to_Ico_div_zero_one (x : α) : toIcoDiv (0 : α) zero_lt_one x = -⌊x⌋ := by simp [to_Ico_div_eq_neg_floor]
 
 theorem to_Ico_mod_eq_add_fract_mul (a : α) {b : α} (hb : 0 < b) (x : α) :
     toIcoMod a hb x = a + Int.fract ((x - a) / b) * b := by

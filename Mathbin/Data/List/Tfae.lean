@@ -26,17 +26,10 @@ def Tfae (l : List Prop) : Prop :=
 theorem tfae_nil : Tfae [] :=
   forall_mem_nilₓ _
 
-theorem tfae_singleton (p) : Tfae [p] := by
-  simp [tfae, -eq_iff_iff]
+theorem tfae_singleton (p) : Tfae [p] := by simp [tfae, -eq_iff_iff]
 
 theorem tfae_cons_of_mem {a b} {l : List Prop} (h : b ∈ l) : Tfae (a :: l) ↔ (a ↔ b) ∧ Tfae l :=
-  ⟨fun H =>
-    ⟨H a
-        (by
-          simp )
-        b (Or.inr h),
-      fun p hp q hq => H _ (Or.inr hp) _ (Or.inr hq)⟩,
-    by
+  ⟨fun H => ⟨H a (by simp) b (Or.inr h), fun p hp q hq => H _ (Or.inr hp) _ (Or.inr hq)⟩, by
     rintro ⟨ab, H⟩ p (rfl | hp) q (rfl | hq)
     · rfl
       
@@ -65,14 +58,8 @@ theorem tfae_of_cycle {a b} {l : List Prop} :
   have := IH ⟨bc, ch⟩ (ab ∘ la)
   exact ⟨⟨ab, la ∘ (this.2 c (Or.inl rfl) _ (ilast'_mem _ _)).1 ∘ bc⟩, this⟩
 
-theorem Tfae.out {l} (h : Tfae l) (n₁ n₂) {a b}
-    (h₁ : List.nth l n₁ = some a := by
-      run_tac
-        tactic.interactive.refl)
-    (h₂ : List.nth l n₂ = some b := by
-      run_tac
-        tactic.interactive.refl) :
-    a ↔ b :=
+theorem Tfae.out {l} (h : Tfae l) (n₁ n₂) {a b} (h₁ : List.nth l n₁ = some a := by rfl)
+    (h₂ : List.nth l n₂ = some b := by rfl) : a ↔ b :=
   h _ (List.nth_mem h₁) _ (List.nth_mem h₂)
 
 end List

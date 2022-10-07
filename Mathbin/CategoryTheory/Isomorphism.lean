@@ -50,12 +50,8 @@ See <https://stacks.math.columbia.edu/tag/0017>.
 structure Iso {C : Type u} [Category.{v} C] (X Y : C) where
   Hom : X ⟶ Y
   inv : Y ⟶ X
-  hom_inv_id' : hom ≫ inv = 𝟙 X := by
-    run_tac
-      obviously
-  inv_hom_id' : inv ≫ hom = 𝟙 Y := by
-    run_tac
-      obviously
+  hom_inv_id' : hom ≫ inv = 𝟙 X := by obviously
+  inv_hom_id' : inv ≫ hom = 𝟙 Y := by obviously
 
 restate_axiom iso.hom_inv_id'
 
@@ -75,15 +71,11 @@ namespace Iso
 
 @[ext]
 theorem ext ⦃α β : X ≅ Y⦄ (w : α.Hom = β.Hom) : α = β :=
-  suffices α.inv = β.inv by
-    cases α <;> cases β <;> cc
+  suffices α.inv = β.inv by cases α <;> cases β <;> cc
   calc
-    α.inv = α.inv ≫ β.Hom ≫ β.inv := by
-      rw [iso.hom_inv_id, category.comp_id]
-    _ = (α.inv ≫ α.Hom) ≫ β.inv := by
-      rw [category.assoc, ← w]
-    _ = β.inv := by
-      rw [iso.inv_hom_id, category.id_comp]
+    α.inv = α.inv ≫ β.Hom ≫ β.inv := by rw [iso.hom_inv_id, category.comp_id]
+    _ = (α.inv ≫ α.Hom) ≫ β.inv := by rw [category.assoc, ← w]
+    _ = β.inv := by rw [iso.inv_hom_id, category.id_comp]
     
 
 /-- Inverse isomorphism. -/
@@ -109,8 +101,7 @@ theorem symm_mk {X Y : C} (hom : X ⟶ Y) (inv : Y ⟶ X) (hom_inv_id) (inv_hom_
   rfl
 
 @[simp]
-theorem symm_symm_eq {X Y : C} (α : X ≅ Y) : α.symm.symm = α := by
-  cases α <;> rfl
+theorem symm_symm_eq {X Y : C} (α : X ≅ Y) : α.symm.symm = α := by cases α <;> rfl
 
 @[simp]
 theorem symm_eq_iff {X Y : C} {α β : X ≅ Y} : α.symm = β.symm ↔ α = β :=
@@ -156,12 +147,10 @@ theorem trans_assoc {Z' : C} (α : X ≅ Y) (β : Y ≅ Z) (γ : Z ≅ Z') : (α
   ext <;> simp only [trans_hom, category.assoc]
 
 @[simp]
-theorem refl_trans (α : X ≅ Y) : Iso.refl X ≪≫ α = α := by
-  ext <;> apply category.id_comp
+theorem refl_trans (α : X ≅ Y) : Iso.refl X ≪≫ α = α := by ext <;> apply category.id_comp
 
 @[simp]
-theorem trans_refl (α : X ≅ Y) : α ≪≫ Iso.refl Y = α := by
-  ext <;> apply category.comp_id
+theorem trans_refl (α : X ≅ Y) : α ≪≫ Iso.refl Y = α := by ext <;> apply category.comp_id
 
 @[simp]
 theorem symm_self_id (α : X ≅ Y) : α.symm ≪≫ α = Iso.refl Y :=
@@ -180,31 +169,24 @@ theorem self_symm_id_assoc (α : X ≅ Y) (β : X ≅ Z) : α ≪≫ α.symm ≪
   rw [← trans_assoc, self_symm_id, refl_trans]
 
 theorem inv_comp_eq (α : X ≅ Y) {f : X ⟶ Z} {g : Y ⟶ Z} : α.inv ≫ f = g ↔ f = α.Hom ≫ g :=
-  ⟨fun H => by
-    simp [H.symm], fun H => by
-    simp [H]⟩
+  ⟨fun H => by simp [H.symm], fun H => by simp [H]⟩
 
 theorem eq_inv_comp (α : X ≅ Y) {f : X ⟶ Z} {g : Y ⟶ Z} : g = α.inv ≫ f ↔ α.Hom ≫ g = f :=
   (inv_comp_eq α.symm).symm
 
 theorem comp_inv_eq (α : X ≅ Y) {f : Z ⟶ Y} {g : Z ⟶ X} : f ≫ α.inv = g ↔ f = g ≫ α.Hom :=
-  ⟨fun H => by
-    simp [H.symm], fun H => by
-    simp [H]⟩
+  ⟨fun H => by simp [H.symm], fun H => by simp [H]⟩
 
 theorem eq_comp_inv (α : X ≅ Y) {f : Z ⟶ Y} {g : Z ⟶ X} : g = f ≫ α.inv ↔ g ≫ α.Hom = f :=
   (comp_inv_eq α.symm).symm
 
 theorem inv_eq_inv (f g : X ≅ Y) : f.inv = g.inv ↔ f.Hom = g.Hom :=
-  have : ∀ {X Y : C} (f g : X ≅ Y), f.Hom = g.Hom → f.inv = g.inv := fun X Y f g h => by
-    rw [ext h]
+  have : ∀ {X Y : C} (f g : X ≅ Y), f.Hom = g.Hom → f.inv = g.inv := fun X Y f g h => by rw [ext h]
   ⟨this f.symm g.symm, this f g⟩
 
-theorem hom_comp_eq_id (α : X ≅ Y) {f : Y ⟶ X} : α.Hom ≫ f = 𝟙 X ↔ f = α.inv := by
-  rw [← eq_inv_comp, comp_id]
+theorem hom_comp_eq_id (α : X ≅ Y) {f : Y ⟶ X} : α.Hom ≫ f = 𝟙 X ↔ f = α.inv := by rw [← eq_inv_comp, comp_id]
 
-theorem comp_hom_eq_id (α : X ≅ Y) {f : Y ⟶ X} : f ≫ α.Hom = 𝟙 Y ↔ f = α.inv := by
-  rw [← eq_comp_inv, id_comp]
+theorem comp_hom_eq_id (α : X ≅ Y) {f : Y ⟶ X} : f ≫ α.Hom = 𝟙 Y ↔ f = α.inv := by rw [← eq_comp_inv, id_comp]
 
 theorem inv_comp_eq_id (α : X ≅ Y) {f : X ⟶ Y} : α.inv ≫ f = 𝟙 Y ↔ f = α.Hom :=
   hom_comp_eq_id α.symm
@@ -258,12 +240,12 @@ namespace IsIso
 -- see Note [lower instance priority]
 instance (priority := 100) epi_of_iso (f : X ⟶ Y) [IsIso f] :
     Epi f where left_cancellation := fun Z g h w => -- This is an interesting test case for better rewrite automation.
-  by
-    rw [← is_iso.inv_hom_id_assoc f g, w, is_iso.inv_hom_id_assoc f h]
+  by rw [← is_iso.inv_hom_id_assoc f g, w, is_iso.inv_hom_id_assoc f h]
 
 -- see Note [lower instance priority]
 instance (priority := 100) mono_of_iso (f : X ⟶ Y) [IsIso f] :
-    Mono f where right_cancellation := fun Z g h w => by
+    Mono
+      f where right_cancellation := fun Z g h w => by
     rw [← category.comp_id g, ← category.comp_id h, ← is_iso.hom_inv_id f, ← category.assoc, w, ← category.assoc]
 
 @[ext]
@@ -283,12 +265,10 @@ theorem eq_inv_of_inv_hom_id {f : X ⟶ Y} [IsIso f] {g : Y ⟶ X} (inv_hom_id :
   (inv_eq_of_inv_hom_id inv_hom_id).symm
 
 instance id (X : C) : IsIso (𝟙 X) :=
-  ⟨⟨𝟙 X, by
-      simp ⟩⟩
+  ⟨⟨𝟙 X, by simp⟩⟩
 
 instance of_iso (f : X ≅ Y) : IsIso f.Hom :=
-  ⟨⟨f.inv, by
-      simp ⟩⟩
+  ⟨⟨f.inv, by simp⟩⟩
 
 instance of_iso_inv (f : X ≅ Y) : IsIso f.inv :=
   IsIso.of_iso f.symm
@@ -446,13 +426,11 @@ but then stop.
 -/
 @[simp]
 theorem cancel_iso_hom_right_assoc {W X X' Y Z : C} (f : W ⟶ X) (g : X ⟶ Y) (f' : W ⟶ X') (g' : X' ⟶ Y) (h : Y ≅ Z) :
-    f ≫ g ≫ h.Hom = f' ≫ g' ≫ h.Hom ↔ f ≫ g = f' ≫ g' := by
-  simp only [← category.assoc, cancel_mono]
+    f ≫ g ≫ h.Hom = f' ≫ g' ≫ h.Hom ↔ f ≫ g = f' ≫ g' := by simp only [← category.assoc, cancel_mono]
 
 @[simp]
 theorem cancel_iso_inv_right_assoc {W X X' Y Z : C} (f : W ⟶ X) (g : X ⟶ Y) (f' : W ⟶ X') (g' : X' ⟶ Y) (h : Z ≅ Y) :
-    f ≫ g ≫ h.inv = f' ≫ g' ≫ h.inv ↔ f ≫ g = f' ≫ g' := by
-  simp only [← category.assoc, cancel_mono]
+    f ≫ g ≫ h.inv = f' ≫ g' ≫ h.inv ↔ f ≫ g = f' ≫ g' := by simp only [← category.assoc, cancel_mono]
 
 end Iso
 
@@ -469,10 +447,8 @@ variable [Category.{v₂} D]
 def mapIso (F : C ⥤ D) {X Y : C} (i : X ≅ Y) : F.obj X ≅ F.obj Y where
   Hom := F.map i.Hom
   inv := F.map i.inv
-  hom_inv_id' := by
-    rw [← map_comp, iso.hom_inv_id, ← map_id]
-  inv_hom_id' := by
-    rw [← map_comp, iso.inv_hom_id, ← map_id]
+  hom_inv_id' := by rw [← map_comp, iso.hom_inv_id, ← map_id]
+  inv_hom_id' := by rw [← map_comp, iso.inv_hom_id, ← map_id]
 
 @[simp]
 theorem map_iso_symm (F : C ⥤ D) {X Y : C} (i : X ≅ Y) : F.mapIso i.symm = (F.mapIso i).symm :=
@@ -480,8 +456,7 @@ theorem map_iso_symm (F : C ⥤ D) {X Y : C} (i : X ≅ Y) : F.mapIso i.symm = (
 
 @[simp]
 theorem map_iso_trans (F : C ⥤ D) {X Y Z : C} (i : X ≅ Y) (j : Y ≅ Z) : F.mapIso (i ≪≫ j) = F.mapIso i ≪≫ F.mapIso j :=
-  by
-  ext <;> apply functor.map_comp
+  by ext <;> apply functor.map_comp
 
 @[simp]
 theorem map_iso_refl (F : C ⥤ D) (X : C) : F.mapIso (Iso.refl X) = Iso.refl (F.obj X) :=
@@ -495,11 +470,9 @@ theorem map_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] : F.map (inv f) 
   ext
   simp [← F.map_comp]
 
-theorem map_hom_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] : F.map f ≫ F.map (inv f) = 𝟙 (F.obj X) := by
-  simp
+theorem map_hom_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] : F.map f ≫ F.map (inv f) = 𝟙 (F.obj X) := by simp
 
-theorem map_inv_hom (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] : F.map (inv f) ≫ F.map f = 𝟙 (F.obj Y) := by
-  simp
+theorem map_inv_hom (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] : F.map (inv f) ≫ F.map f = 𝟙 (F.obj Y) := by simp
 
 end Functor
 

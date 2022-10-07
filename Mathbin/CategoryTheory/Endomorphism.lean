@@ -99,11 +99,7 @@ instance group {C : Type u} [Groupoid.{v} C] (X : C) : Groupₓ (End X) :=
 end End
 
 theorem is_unit_iff_is_iso {C : Type u} [Category.{v} C] {X : C} (f : End X) : IsUnit (f : End X) ↔ IsIso f :=
-  ⟨fun h => { out := ⟨h.Unit.inv, ⟨h.Unit.inv_val, h.Unit.val_inv⟩⟩ }, fun h =>
-    ⟨⟨f, inv f, by
-        simp , by
-        simp ⟩,
-      rfl⟩⟩
+  ⟨fun h => { out := ⟨h.Unit.inv, ⟨h.Unit.inv_val, h.Unit.val_inv⟩⟩ }, fun h => ⟨⟨f, inv f, by simp, by simp⟩, rfl⟩⟩
 
 variable {C : Type u} [Category.{v} C] (X : C)
 
@@ -114,8 +110,6 @@ The order of arguments in multiplication agrees with
 -/
 def Aut (X : C) :=
   X ≅ X
-
-attribute [ext Aut] iso.ext
 
 namespace Aut
 
@@ -128,8 +122,7 @@ instance : Groupₓ (Aut X) := by
         npow := @npowRec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩,
         zpow := @zpowRec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩ ⟨iso.symm⟩ } <;>
     intros <;>
-      try
-          rfl <;>
+      try rfl <;>
         ext <;> simp [flip, (· * ·), Monoidₓ.mul, MulOneClassₓ.mul, MulOneClassₓ.one, One.one, Monoidₓ.one, Inv.inv]
 
 theorem Aut_mul_def (f g : Aut X) : f * g = g.trans f :=
@@ -143,19 +136,15 @@ def unitsEndEquivAut : (End X)ˣ ≃* Aut X where
   invFun := fun f => ⟨f.1, f.2, f.4, f.3⟩
   left_inv := fun ⟨f₁, f₂, f₃, f₄⟩ => rfl
   right_inv := fun ⟨f₁, f₂, f₃, f₄⟩ => rfl
-  map_mul' := fun f g => by
-    rcases f with ⟨⟩ <;> rcases g with ⟨⟩ <;> rfl
+  map_mul' := fun f g => by rcases f with ⟨⟩ <;> rcases g with ⟨⟩ <;> rfl
 
 /-- Isomorphisms induce isomorphisms of the automorphism group -/
 def autMulEquivOfIso {X Y : C} (h : X ≅ Y) : Aut X ≃* Aut Y where
   toFun := fun x => ⟨h.inv ≫ x.Hom ≫ h.Hom, h.inv ≫ x.inv ≫ h.Hom⟩
   invFun := fun y => ⟨h.Hom ≫ y.Hom ≫ h.inv, h.Hom ≫ y.inv ≫ h.inv⟩
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
-  map_mul' := by
-    simp [Aut_mul_def]
+  left_inv := by tidy
+  right_inv := by tidy
+  map_mul' := by simp [Aut_mul_def]
 
 end Aut
 

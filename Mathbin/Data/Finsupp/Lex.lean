@@ -65,23 +65,23 @@ private def lt_trichotomy_rec {P : Lex (α →₀ N) → Lex (α →₀ N) → S
   Lex.rec fun f =>
     Lex.rec fun g =>
       match (motive := ∀ y, (f.neLocus g).min = y → _) _, rfl with
-      | ⊤, h => h_eq (Finsupp.ne_locus_eq_empty.mp (Finset.min_eq_top.mp h))
+      | ⊤, h => h_eq (Finsupp.ne_locus_eq_empty.mp (Finsetₓ.min_eq_top.mp h))
       | (wit : α), h =>
-        have hne : f wit ≠ g wit := mem_ne_locus.mp (Finset.mem_of_min h)
+        have hne : f wit ≠ g wit := mem_ne_locus.mp (Finsetₓ.mem_of_min h)
         hne.lt_or_lt.byCases
-          (fun hwit => h_lt ⟨wit, fun j hj => mem_ne_locus.not_left.mp (Finset.not_mem_of_lt_min hj h), hwit⟩)
+          (fun hwit => h_lt ⟨wit, fun j hj => mem_ne_locus.not_left.mp (Finsetₓ.not_mem_of_lt_min hj h), hwit⟩)
           fun hwit =>
           h_gt
             ⟨wit, fun j hj => by
-              refine' mem_ne_locus.not_left.mp (Finset.not_mem_of_lt_min hj _)
+              refine' mem_ne_locus.not_left.mp (Finsetₓ.not_mem_of_lt_min hj _)
               rwa [ne_locus_comm], hwit⟩
 
--- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:273:38: unsupported irreducible non-definition
 irreducible_def Lex.decidableLe : @DecidableRel (Lex (α →₀ N)) (· ≤ ·) :=
   ltTrichotomyRec (fun f g h => is_true <| Or.inr h) (fun f g h => is_true <| Or.inl <| congr_arg _ h) fun f g h =>
     is_false fun h' => (lt_irreflₓ _ (h.trans_le h')).elim
 
--- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:273:38: unsupported irreducible non-definition
 irreducible_def Lex.decidableLt : @DecidableRel (Lex (α →₀ N)) (· < ·) :=
   ltTrichotomyRec (fun f g h => isTrue h) (fun f g h => isFalse h.not_lt) fun f g h => isFalse h.asymm
 
@@ -89,12 +89,7 @@ irreducible_def Lex.decidableLt : @DecidableRel (Lex (α →₀ N)) (· < ·) :=
 instance Lex.linearOrder : LinearOrderₓ (Lex (α →₀ N)) :=
   { Lex.partialOrder with
     le_total := ltTrichotomyRec (fun f g h => Or.inl h.le) (fun f g h => Or.inl h.le) fun f g h => Or.inr h.le,
-    decidableLt := by
-      infer_instance,
-    decidableLe := by
-      infer_instance,
-    DecidableEq := by
-      infer_instance }
+    decidableLt := by infer_instance, decidableLe := by infer_instance, DecidableEq := by infer_instance }
 
 theorem Lex.le_of_forall_le {a b : Lex (α →₀ N)} (h : ∀ i, ofLex a i ≤ ofLex b i) : a ≤ b :=
   le_of_not_ltₓ fun ⟨i, hi⟩ => (h i).not_lt hi.2
@@ -102,7 +97,7 @@ theorem Lex.le_of_forall_le {a b : Lex (α →₀ N)} (h : ∀ i, ofLex a i ≤ 
 theorem Lex.le_of_of_lex_le {a b : Lex (α →₀ N)} (h : ofLex a ≤ ofLex b) : a ≤ b :=
   Lex.le_of_forall_le h
 
-theorem to_lex_monotone : Monotone (@toLex (α →₀ N)) := fun _ _ => Lex.le_of_forall_le
+theorem to_lex_monotone : Monotoneₓ (@toLex (α →₀ N)) := fun _ _ => Lex.le_of_forall_le
 
 theorem lt_of_forall_lt_of_lt (a b : Lex (α →₀ N)) (i : α) :
     (∀ j < i, ofLex a j = ofLex b j) → ofLex a i < ofLex b i → a < b := fun h1 h2 => ⟨i, h1, h2⟩

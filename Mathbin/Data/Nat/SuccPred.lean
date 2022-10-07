@@ -66,14 +66,10 @@ theorem pred_iterate (a : ℕ) : ∀ n, (pred^[n]) a = a - n
     exact congr_arg _ n.pred_iterate
 
 instance : IsSuccArchimedean ℕ :=
-  ⟨fun a b h =>
-    ⟨b - a, by
-      rw [succ_eq_succ, succ_iterate, add_tsub_cancel_of_le h]⟩⟩
+  ⟨fun a b h => ⟨b - a, by rw [succ_eq_succ, succ_iterate, add_tsub_cancel_of_le h]⟩⟩
 
 instance : IsPredArchimedean ℕ :=
-  ⟨fun a b h =>
-    ⟨b - a, by
-      rw [pred_eq_pred, pred_iterate, tsub_tsub_cancel_of_le h]⟩⟩
+  ⟨fun a b h => ⟨b - a, by rw [pred_eq_pred, pred_iterate, tsub_tsub_cancel_of_le h]⟩⟩
 
 /-! ### Covering relation -/
 

@@ -108,12 +108,7 @@ theorem ExtensionOf.ext_iff {a b : ExtensionOf i f} :
     a = b ↔
       ∃ domain_eq : a.domain = b.domain,
         ∀ ⦃x : a.domain⦄ ⦃y : b.domain⦄, (x : N) = y → a.toLinearPmap x = b.toLinearPmap y :=
-  ⟨fun r =>
-    r ▸
-      ⟨rfl, fun x y h =>
-        congr_arg a.toFun <| by
-          exact_mod_cast h⟩,
-    fun ⟨h1, h2⟩ => ExtensionOf.ext h1 h2⟩
+  ⟨fun r => r ▸ ⟨rfl, fun x y h => congr_arg a.toFun <| by exact_mod_cast h⟩, fun ⟨h1, h2⟩ => ExtensionOf.ext h1 h2⟩
 
 end Ext
 
@@ -129,10 +124,7 @@ instance :
 
 instance : SemilatticeInf (ExtensionOf i f) :=
   (Function.Injective.semilatticeInf ExtensionOf.toLinearPmap fun X Y h =>
-      (ExtensionOf.ext
-          (by
-            rw [h]))
-        fun x y h' => by
+      (ExtensionOf.ext (by rw [h])) fun x y h' => by
         induction h
         congr
         exact_mod_cast h')
@@ -210,9 +202,7 @@ private theorem extension_of_max_adjoin.aux1 {y : N} (x : (extensionOfMax i f).d
   rcases mem1 with ⟨a, b, a_mem, b_mem : b ∈ (Submodule.span R _ : Submodule R N), eq1⟩
   rw [Submodule.mem_span_singleton] at b_mem
   rcases b_mem with ⟨z, eq2⟩
-  exact
-    ⟨⟨a, a_mem⟩, z, by
-      rw [← eq1, ← eq2]⟩
+  exact ⟨⟨a, a_mem⟩, z, by rw [← eq1, ← eq2]⟩
 
 /-- If `x ∈ M ⊔ ⟨y⟩`, then `x = m + r • y`, `fst` pick an arbitrary such `m`.-/
 def ExtensionOfMaxAdjoin.fst {y : N} (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) :
@@ -236,10 +226,8 @@ def ExtensionOfMaxAdjoin.ideal (y : N) : Ideal R :=
 /-- A linear map `I ⟶ Q` by `x ↦ f' (x • y)` where `f'` is the maximal extension-/
 def ExtensionOfMaxAdjoin.idealTo (y : N) : ExtensionOfMaxAdjoin.ideal i f y →ₗ[R] Q where
   toFun := fun z => (extensionOfMax i f).toLinearPmap ⟨(↑z : R) • y, z.Prop⟩
-  map_add' := fun z1 z2 => by
-    simp [← (extension_of_max i f).toLinearPmap.map_add, add_smul]
-  map_smul' := fun z1 z2 => by
-    simp [← (extension_of_max i f).toLinearPmap.map_smul, mul_smul] <;> rfl
+  map_add' := fun z1 z2 => by simp [← (extension_of_max i f).toLinearPmap.map_add, add_smul]
+  map_smul' := fun z1 z2 => by simp [← (extension_of_max i f).toLinearPmap.map_smul, mul_smul] <;> rfl
 
 /-- Since we assumed `Q` being Baer, the linear map `x ↦ f' (x • y) : I ⟶ Q` extends to `R ⟶ Q`,
 call this extended map `φ`-/
@@ -253,10 +241,8 @@ theorem ExtensionOfMaxAdjoin.extend_ideal_to_is_extension (h : Module.Baer R Q) 
 
 theorem ExtensionOfMaxAdjoin.extend_ideal_to_wd' (h : Module.Baer R Q) {y : N} (r : R) (eq1 : r • y = 0) :
     ExtensionOfMaxAdjoin.extendIdealTo i f h y r = 0 := by
-  rw
-    [extension_of_max_adjoin.extend_ideal_to_is_extension i f h y r
-      (by
-        rw [eq1] <;> exact Submodule.zero_mem _ : r • y ∈ _)]
+  rw [extension_of_max_adjoin.extend_ideal_to_is_extension i f h y r
+      (by rw [eq1] <;> exact Submodule.zero_mem _ : r • y ∈ _)]
   simp only [extension_of_max_adjoin.ideal_to, LinearMap.coe_mk, eq1, Subtype.coe_mk, ← ZeroMemClass.zero_def,
     (extension_of_max i f).toLinearPmap.map_zero]
 
@@ -291,8 +277,7 @@ theorem ExtensionOfMaxAdjoin.extension_to_fun_wd (h : Module.Baer R Q) {y : N}
     rwa [extension_of_max_adjoin.eqn, ← sub_eq_zero, ← sub_sub_sub_eq, sub_eq_zero, ← sub_smul] at eq1
   have eq3 :=
     extension_of_max_adjoin.extend_ideal_to_eq i f h (r - extension_of_max_adjoin.snd i x)
-      (by
-        rw [← eq2] <;> exact Submodule.sub_mem _ (extension_of_max_adjoin.fst i x).2 ha)
+      (by rw [← eq2] <;> exact Submodule.sub_mem _ (extension_of_max_adjoin.fst i x).2 ha)
   simp only [map_sub, sub_smul, sub_eq_iff_eq_add] at eq3
   unfold extension_of_max_adjoin.extension_to_fun
   rw [eq3, ← add_assocₓ, ← (extension_of_max i f).toLinearPmap.map_add, AddMemClass.mk_add_mk]
@@ -336,11 +321,7 @@ theorem extension_of_max_le (h : Module.Baer R Q) {y : N} : extensionOfMax i f �
   ⟨le_sup_left, fun x x' EQ => by
     symm
     change extension_of_max_adjoin.extension_to_fun i f h _ = _
-    rw
-      [extension_of_max_adjoin.extension_to_fun_wd i f h x' x 0
-        (by
-          simp [EQ]),
-      map_zero, add_zeroₓ]⟩
+    rw [extension_of_max_adjoin.extension_to_fun_wd i f h x' x 0 (by simp [EQ]), map_zero, add_zeroₓ]⟩
 
 theorem extension_of_max_to_submodule_eq_top (h : Module.Baer R Q) : (extensionOfMax i f).domain = ⊤ := by
   refine' submodule.eq_top_iff'.mpr fun y => _
@@ -350,18 +331,17 @@ theorem extension_of_max_to_submodule_eq_top (h : Module.Baer R Q) : (extensionO
 /-- **Baer's criterion** for injective module : a Baer module is an injective module, i.e. if every
 linear map from an ideal can be extended, then the module is injective.-/
 protected theorem injective (h : Module.Baer R Q) : Module.Injective R Q :=
-  { out := fun X Y ins1 ins2 ins3 ins4 i hi f => by
+  { out := fun X Y ins1 ins2 ins3 ins4 i hi f =>
       haveI : Fact (Function.Injective i) := ⟨hi⟩
-      exact
-        ⟨{ toFun := fun y =>
-              (extension_of_max i f).toLinearPmap ⟨y, (extension_of_max_to_submodule_eq_top i f h).symm ▸ trivialₓ⟩,
-            map_add' := fun x y => by
-              rw [← LinearPmap.map_add]
-              congr ,
-            map_smul' := fun r x => by
-              rw [← LinearPmap.map_smul]
-              congr },
-          fun x => ((extension_of_max i f).is_extension x).symm⟩ }
+      ⟨{ toFun := fun y =>
+            (extension_of_max i f).toLinearPmap ⟨y, (extension_of_max_to_submodule_eq_top i f h).symm ▸ trivialₓ⟩,
+          map_add' := fun x y => by
+            rw [← LinearPmap.map_add]
+            congr ,
+          map_smul' := fun r x => by
+            rw [← LinearPmap.map_smul]
+            congr },
+        fun x => ((extension_of_max i f).is_extension x).symm⟩ }
 
 end Module.Baer
 

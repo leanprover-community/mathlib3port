@@ -56,8 +56,7 @@ def IsTorsion :=
 
 /-- A monoid is not a torsion monoid if it has an element of infinite order. -/
 @[simp, to_additive "An additive monoid is not a torsion monoid if it has an element of infinite order."]
-theorem not_is_torsion_iff : ¬IsTorsion G ↔ ∃ g : G, ¬IsOfFinOrder g := by
-  rw [is_torsion, not_forall]
+theorem not_is_torsion_iff : ¬IsTorsion G ↔ ∃ g : G, ¬IsOfFinOrder g := by rw [is_torsion, not_forall]
 
 end Monoidₓ
 
@@ -97,9 +96,7 @@ theorem IsTorsion.extension_closed {f : G →* H} (hN : N = f.ker) (tH : IsTorsi
     have hmem := f.mem_ker.mpr ((f.map_pow g ngn).trans hngn)
     lift g ^ ngn to N using hN.symm ▸ hmem with gn
     obtain ⟨nn, nnpos, hnn⟩ := (is_of_fin_order_iff_pow_eq_one _).mp (tN gn)
-    exact
-      ⟨ngn * nn, mul_pos ngnpos nnpos, by
-        rw [pow_mulₓ, ← h, ← Subgroup.coe_pow, hnn, Subgroup.coe_one]⟩
+    exact ⟨ngn * nn, mul_pos ngnpos nnpos, by rw [pow_mulₓ, ← h, ← Subgroup.coe_pow, hnn, Subgroup.coe_one]⟩
 
 /-- The image of a quotient is torsion iff the group is torsion. -/
 @[to_additive AddIsTorsion.quotient_iff "The image of a quotient is additively torsion iff the group is torsion."]
@@ -138,9 +135,7 @@ namespace AddMonoidₓ
 theorem IsTorsion.module_of_torsion [Semiringₓ R] [Module R M] (tR : IsTorsion R) : IsTorsion M := fun f =>
   (is_of_fin_add_order_iff_nsmul_eq_zero _).mpr <| by
     obtain ⟨n, npos, hn⟩ := (is_of_fin_add_order_iff_nsmul_eq_zero _).mp (tR 1)
-    exact
-      ⟨n, npos, by
-        simp only [nsmul_eq_smul_cast R _ f, ← nsmul_one, hn, zero_smul]⟩
+    exact ⟨n, npos, by simp only [nsmul_eq_smul_cast R _ f, ← nsmul_one, hn, zero_smul]⟩
 
 /-- A module with a finite ring of scalars is additively torsion. -/
 theorem IsTorsion.module_of_finite [Ringₓ R] [Finite R] [Module R M] : IsTorsion M :=
@@ -184,24 +179,19 @@ include hp
 @[to_additive "The `p`-primary component is the submonoid of elements with additive order prime-power of `p`.", simps]
 def primaryComponent : Submonoid G where
   Carrier := { g | ∃ n : ℕ, orderOf g = p ^ n }
-  one_mem' :=
-    ⟨0, by
-      rw [pow_zeroₓ, order_of_one]⟩
+  one_mem' := ⟨0, by rw [pow_zeroₓ, order_of_one]⟩
   mul_mem' := fun g₁ g₂ hg₁ hg₂ =>
     exists_order_of_eq_prime_pow_iff.mpr <| by
       obtain ⟨m, hm⟩ := exists_order_of_eq_prime_pow_iff.mp hg₁
       obtain ⟨n, hn⟩ := exists_order_of_eq_prime_pow_iff.mp hg₂
-      exact
-        ⟨m + n, by
-          rw [mul_powₓ, pow_addₓ, pow_mulₓ, hm, one_pow, Monoidₓ.one_mul, mul_comm, pow_mulₓ, hn, one_pow]⟩
+      exact ⟨m + n, by rw [mul_powₓ, pow_addₓ, pow_mulₓ, hm, one_pow, Monoidₓ.one_mul, mul_comm, pow_mulₓ, hn, one_pow]⟩
 
 variable {G} {p}
 
 /-- Elements of the `p`-primary component have order `p^n` for some `n`. -/
 @[to_additive "Elements of the `p`-primary component have additive order `p^n` for some `n`"]
 theorem primaryComponent.exists_order_of_eq_prime_pow (g : CommMonoidₓ.primaryComponent G p) :
-    ∃ n : ℕ, orderOf g = p ^ n := by
-  simpa [primary_component] using g.property
+    ∃ n : ℕ, orderOf g = p ^ n := by simpa [primary_component] using g.property
 
 /-- The `p`- and `q`-primary components are disjoint for `p ≠ q`. -/
 @[to_additive "The `p`- and `q`-primary components are disjoint for `p ≠ q`."]
@@ -226,8 +216,7 @@ variable {G}
 
 /-- The torsion submonoid of a torsion monoid is `⊤`. -/
 @[simp, to_additive "The additive torsion submonoid of an additive torsion monoid is `⊤`."]
-theorem torsion_eq_top (tG : IsTorsion G) : torsion G = ⊤ := by
-  ext <;> tauto
+theorem torsion_eq_top (tG : IsTorsion G) : torsion G = ⊤ := by ext <;> tauto
 
 /-- A torsion monoid is isomorphic to its torsion submonoid. -/
 @[to_additive "An additive torsion monoid is isomorphic to its torsion submonoid.", simps]
@@ -320,9 +309,7 @@ theorem IsTorsionFree.not_torsion [hN : Nontrivial G] : IsTorsionFree G → ¬Is
 /-- Subgroups of torsion-free groups are torsion-free. -/
 @[to_additive "Subgroups of additive torsion-free groups are additively torsion-free."]
 theorem IsTorsionFree.subgroup (tG : IsTorsionFree G) (H : Subgroup G) : IsTorsionFree H := fun h hne =>
-  (is_of_fin_order_iff_coe H.toSubmonoid h).Not.mpr <|
-    tG h <| by
-      norm_cast <;> simp [hne, not_false_iff]
+  (is_of_fin_order_iff_coe H.toSubmonoid h).Not.mpr <| tG h <| by norm_cast <;> simp [hne, not_false_iff]
 
 /-- Direct products of torsion free groups are torsion free. -/
 @[to_additive AddMonoidₓ.IsTorsionFree.prod "Direct products of additive torsion free groups are torsion free."]

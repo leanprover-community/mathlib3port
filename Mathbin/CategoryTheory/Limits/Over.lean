@@ -75,12 +75,7 @@ by pulling back a morphism along `f`. -/
 def pullback {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X where
   obj := fun g => Over.mk (pullback.snd : pullback g.Hom f ⟶ X)
   map := fun g h k =>
-    Over.homMk
-      (pullback.lift (pullback.fst ≫ k.left) pullback.snd
-        (by
-          simp [pullback.condition]))
-      (by
-        tidy)
+    Over.homMk (pullback.lift (pullback.fst ≫ k.left) pullback.snd (by simp [pullback.condition])) (by tidy)
 
 /-- `over.map f` is left adjoint to `over.pullback f`. -/
 def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
@@ -90,18 +85,18 @@ def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
           invFun := fun Y => by
             refine' over.hom_mk _ _
             refine' Y.left ≫ pullback.fst
-            dsimp'
+            dsimp
             rw [← over.w Y, category.assoc, pullback.condition, category.assoc]
             rfl,
           left_inv := fun X => by
             ext
-            dsimp'
-            simp ,
+            dsimp
+            simp,
           right_inv := fun Y => by
             ext
-            dsimp'
+            dsimp
             simp only [pullback.lift_fst]
-            dsimp'
+            dsimp
             rw [pullback.lift_snd, ← over.w Y]
             rfl } }
 
@@ -157,12 +152,7 @@ by pushing a morphism forward along `f`. -/
 def pushout {X Y : C} (f : X ⟶ Y) : Under X ⥤ Under Y where
   obj := fun g => Under.mk (pushout.inr : Y ⟶ pushout g.Hom f)
   map := fun g h k =>
-    Under.homMk
-      (pushout.desc (k.right ≫ pushout.inl) pushout.inr
-        (by
-          simp [← pushout.condition]))
-      (by
-        tidy)
+    Under.homMk (pushout.desc (k.right ≫ pushout.inl) pushout.inr (by simp [← pushout.condition])) (by tidy)
 
 end
 

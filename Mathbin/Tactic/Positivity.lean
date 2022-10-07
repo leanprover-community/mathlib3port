@@ -49,9 +49,7 @@ introduce these operations.
 
 ## TODO
 
-Implement extensions for other operations (raising to non-numeral powers, `exp`, `log`, coercions
-from `ℕ` and `ℝ≥0`).
-
+Implement extensions for other operations (raising to non-numeral powers, `log`).
 -/
 
 
@@ -86,6 +84,11 @@ unsafe def norm_num.positivity (e : expr) : tactic strictness := do
         pure (nonnegative p')
       else failed
 
+/-- Second base case of the `positivity` tactic: Any element of a canonically ordered additive
+monoid is nonnegative. -/
+unsafe def positivity_canon : expr → tactic strictness
+  | quote.1 (%%ₓa) => nonnegative <$> mk_app `` zero_le [a]
+
 namespace Positivity
 
 /-- Given two tactics whose result is `strictness`, report a `strictness`:
@@ -104,7 +107,7 @@ unsafe def orelse' (tac1 tac2 : tactic strictness) : tactic strictness := do
 /-! ### Core logic of the `positivity` tactic -/
 
 
-/-- Second base case of the `positivity` tactic.  Prove an expression `e` is positive/nonnegative by
+/-- Third base case of the `positivity` tactic.  Prove an expression `e` is positive/nonnegative by
 finding a hypothesis of the form `a < e` or `a ≤ e` in which `a` can be proved positive/nonnegative
 by `norm_num`. -/
 unsafe def compare_hyp (e p₂ : expr) : tactic strictness := do
@@ -147,9 +150,11 @@ unsafe def attr : user_attribute (expr → tactic strictness) Unit where
             orelse' (t e) <|-- run all the extensions on `e`
                   orelse'
                   (norm_num.positivity e) <|-- directly try `norm_num` on `e`
-                  -- loop over hypotheses and try to compare with `e`
-                  local_context >>=
-                  List.foldlₓ (fun tac h => orelse' tac (compare_hyp e h)) failed,
+                    orelse'
+                    (positivity_canon e) <|-- try showing nonnegativity from canonicity of the order
+                    -- loop over hypotheses and try to compare with `e`
+                    local_context >>=
+                    List.foldl (fun tac h => orelse' tac (compare_hyp e h)) failed,
       dependencies := [] }
 
 /-- Look for a proof of positivity/nonnegativity of an expression `e`; if found, return the proof
@@ -183,7 +188,7 @@ example {b : ℤ} : 0 ≤ max (-3) (b ^ 2) := by positivity
 -/
 unsafe def positivity : tactic Unit :=
   focus1 <| do
-    let t ← target
+    let t ← target >>= instantiate_mvars
     let (rel_desired, a) ←
       match t with
         | quote.1 (0 ≤ %%ₓe₂) => pure (false, e₂)
@@ -206,7 +211,7 @@ add_tactic_doc
 
 end Interactive
 
-variable {R : Type _}
+variable {α R : Type _}
 
 /-! ### `positivity` extensions for particular arithmetic operations -/
 
@@ -343,30 +348,52 @@ unsafe def positivity_inv : expr → tactic strictness
 private theorem pow_zero_pos [OrderedSemiring R] [Nontrivial R] (a : R) : 0 < a ^ 0 :=
   zero_lt_one.trans_le (pow_zeroₓ a).Ge
 
-/-- Extension for the `positivity` tactic: raising a number `a` to a natural number power `n` is
-known to be positive if `n = 0` (since `a ^ 0 = 1`) or if `0 < a`, and is known to be nonnegative if
-`n = 2` (squares are nonnegative) or if `0 ≤ a`. -/
+private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : ℤ) :=
+  zero_lt_one.trans_le (zpow_zero a).Ge
+
+/-- Extension for the `positivity` tactic: raising a number `a` to a natural/integer power `n` is
+positive if `n = 0` (since `a ^ 0 = 1`) or if `0 < a`, and is nonnegative if `n` is even (squares
+are nonnegative) or if `0 ≤ a`. -/
 @[positivity]
 unsafe def positivity_pow : expr → tactic strictness
   | quote.1 ((%%ₓa) ^ %%ₓn) => do
-    let n_typ ← infer_type n
-    match n_typ with
-      | quote.1 ℕ => do
-        if n = quote.1 0 then positive <$> mk_app `` pow_zero_pos [a]
+    let typ ← infer_type n
+    (-- even powers are nonnegative
+        -- TODO: Decision procedure for parity
+        -- `a ^ n` is positive if `a` is, and nonnegative if `a` is
+        do
+          unify typ (quote.1 ℕ)
+          if n = quote.1 0 then positive <$> mk_app `` pow_zero_pos [a]
+            else
+              (positivity.orelse' do
+                  match n with
+                    | quote.1 (bit0 (%%ₓn)) => nonnegative <$> mk_app `` pow_bit0_nonneg [a, n]
+                    | _ => failed) <|
+                do
+                let strictness_a ← core a
+                match strictness_a with
+                  | positive p => positive <$> mk_app `` pow_pos [p, n]
+                  | nonnegative p => nonnegative <$> mk_app `pow_nonneg [p, n]) <|>
+        do
+        unify typ (quote.1 ℤ)
+        if n = quote.1 (0 : ℤ) then positive <$> mk_app `` zpow_zero_pos [a]
           else
-            tactic.positivity.orelse'
-              (-- squares are nonnegative (TODO: similar for any `bit0` exponent?)
-                nonnegative <$>
-                mk_app `` sq_nonneg [a])-- moreover `a ^ n` is positive if `a` is and nonnegative if `a` is
-            do
-              let strictness_a ← core a
+            (-- even powers are nonnegative
+                -- TODO: Decision procedure for parity
+                positivity.orelse'
+                do
+                match n with
+                  | quote.1 (bit0 (%%ₓn)) => nonnegative <$> mk_app `` zpow_bit0_nonneg [a, n]
+                  | _ => failed) <|
+              do
+              let strictness_a
+                ←-- `a ^ n` is positive if `a` is, and nonnegative if `a` is
+                    core
+                    a
               match strictness_a with
-                | positive pa => positive <$> mk_app `` pow_pos [pa, n]
-                | nonnegative pa => nonnegative <$> mk_app `` pow_nonneg [pa, n]
-      | _ => failed
-  |-- TODO handle integer powers, maybe even real powers
-    _ =>
-    failed
+                | positive p => positive <$> mk_app `` zpow_pos_of_pos [p, n]
+                | nonnegative p => nonnegative <$> mk_app `` zpow_nonneg [p, n]
+  | _ => failed
 
 /-- Extension for the `positivity` tactic: an absolute value is nonnegative, and is strictly
 positive if its input is. -/
@@ -381,6 +408,72 @@ unsafe def positivity_abs : expr → tactic strictness
   |-- else report nonnegativity
     _ =>
     failed
+
+private theorem nat_cast_pos [OrderedSemiring α] [Nontrivial α] {n : ℕ} : 0 < n → 0 < (n : α) :=
+  Nat.cast_pos.2
+
+private theorem int_coe_nat_nonneg (n : ℕ) : 0 ≤ (n : ℤ) :=
+  n.cast_nonneg
+
+private theorem int_coe_nat_pos {n : ℕ} : 0 < n → 0 < (n : ℤ) :=
+  Nat.cast_pos.2
+
+private theorem int_cast_nonneg [OrderedRing α] {n : ℤ} (hn : 0 ≤ n) : 0 ≤ (n : α) := by
+  rw [← Int.cast_zeroₓ]
+  exact Int.cast_mono hn
+
+private theorem int_cast_pos [OrderedRing α] [Nontrivial α] {n : ℤ} : 0 < n → 0 < (n : α) :=
+  Int.cast_pos.2
+
+private theorem rat_cast_nonneg [LinearOrderedField α] {q : ℚ} : 0 ≤ q → 0 ≤ (q : α) :=
+  Ratₓ.cast_nonneg.2
+
+private theorem rat_cast_pos [LinearOrderedField α] {q : ℚ} : 0 < q → 0 < (q : α) :=
+  Ratₓ.cast_pos.2
+
+/-- Extension for the `positivity` tactic: casts from `ℕ`, `ℤ`, `ℚ`. -/
+@[positivity]
+unsafe def positivity_coe : expr → tactic strictness
+  | quote.1 (@coe _ (%%ₓtyp) (%%ₓinst) (%%ₓa)) => do
+    -- TODO: Using `match` here might turn out too strict since we really want the instance to *unify*
+      -- with one of the instances below rather than being equal on the nose.
+      -- If this turns out to indeed be a problem, we should figure out the right way to pattern match
+      -- up to defeq rather than equality of expressions.
+      -- See also "Reflexive tactics for algebra, revisited" by Kazuhiko Sakaguchi at ITP 2022.
+      match inst with
+      | quote.1 (@coeToLift _ _ (%%ₓinst)) => do
+        let strictness_a ← core a
+        match inst, strictness_a with
+          |-- `mk_mapp` is necessary in some places. Why?
+              quote.1
+              Nat.castCoe,
+            positive p => positive <$> mk_mapp `` nat_cast_pos [typ, none, none, none, p]
+          | quote.1 Nat.castCoe, _ => nonnegative <$> mk_mapp `` Nat.cast_nonneg [typ, none, a]
+          | quote.1 Int.castCoe, positive p => positive <$> mk_mapp `` int_cast_pos [typ, none, none, none, p]
+          | quote.1 Int.castCoe, nonnegative p => nonnegative <$> mk_mapp `` int_cast_nonneg [typ, none, none, p]
+          | quote.1 Ratₓ.castCoe, positive p => positive <$> mk_mapp `` rat_cast_pos [typ, none, none, p]
+          | quote.1 Ratₓ.castCoe, nonnegative p => nonnegative <$> mk_mapp `` rat_cast_nonneg [typ, none, none, p]
+          | quote.1 (@coeBaseₓ _ _ Int.hasCoe), positive p => positive <$> mk_app `` int_coe_nat_pos [p]
+          | quote.1 (@coeBaseₓ _ _ Int.hasCoe), _ => nonnegative <$> mk_app `` int_coe_nat_nonneg [a]
+          | _, _ => failed
+      | _ => failed
+  | _ => failed
+
+private theorem card_univ_pos (α : Type _) [Fintypeₓ α] [Nonempty α] : 0 < (Finsetₓ.univ : Finsetₓ α).card :=
+  Finsetₓ.univ_nonempty.card_pos
+
+/-- Extension for the `positivity` tactic: `finset.card s` is positive if `s` is nonempty. -/
+@[positivity]
+unsafe def positivity_finset_card : expr → tactic strictness
+  | quote.1 (Finsetₓ.card (%%ₓs)) => do
+    let p
+      ←-- TODO: Partial decision procedure for `finset.nonempty`
+            to_expr
+            (pquote.1 (Finsetₓ.Nonempty (%%ₓs))) >>=
+          find_assumption
+    positive <$> mk_app `` Finsetₓ.Nonempty.card_pos [p]
+  | quote.1 (@Fintypeₓ.card (%%ₓα) (%%ₓi)) => positive <$> mk_mapp `` Fintypeₓ.card_pos [α, i, none]
+  | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `finset.card s` or `fintype.card α`"
 
 end Tactic
 

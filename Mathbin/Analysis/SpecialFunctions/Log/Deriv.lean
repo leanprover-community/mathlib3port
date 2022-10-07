@@ -19,7 +19,7 @@ logarithm, derivative
 -/
 
 
-open Filter Finset Set
+open Filter Finsetₓ Set
 
 open TopologicalSpace BigOperators
 
@@ -173,9 +173,7 @@ namespace Real
 theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) : Tendsto (fun x => x * log (1 + t / x)) atTop (𝓝 t) := by
   have h₁ : tendsto (fun h => h⁻¹ * log (1 + t * h)) (𝓝[≠] 0) (𝓝 t) := by
     simpa [has_deriv_at_iff_tendsto_slope, slope_fun_def] using
-      (((has_deriv_at_id (0 : ℝ)).const_mul t).const_add 1).log
-        (by
-          simp )
+      (((has_deriv_at_id (0 : ℝ)).const_mul t).const_add 1).log (by simp)
   have h₂ : tendsto (fun x : ℝ => x⁻¹) at_top (𝓝[≠] 0) :=
     tendsto_inv_at_top_zero'.mono_right (nhds_within_mono _ fun x hx => (set.mem_Ioi.mp hx).ne')
   simpa only [(· ∘ ·), inv_invₓ] using h₁.comp h₂
@@ -206,17 +204,11 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
     intro y hy
     have : y ∈ Ioo (-(1 : ℝ)) 1 := ⟨lt_of_lt_of_leₓ (neg_lt_neg h) hy.1, lt_of_le_of_ltₓ hy.2 h⟩
     calc
-      abs (deriv F y) = abs (-(y ^ n) / (1 - y)) := by
-        rw [A y this]
+      abs (deriv F y) = abs (-(y ^ n) / (1 - y)) := by rw [A y this]
       _ ≤ abs x ^ n / (1 - abs x) := by
         have : abs y ≤ abs x := abs_le.2 hy
-        have : 0 < 1 - abs x := by
-          linarith
-        have : 1 - abs x ≤ abs (1 - y) :=
-          le_transₓ
-            (by
-              linarith [hy.2])
-            (le_abs_self _)
+        have : 0 < 1 - abs x := by linarith
+        have : 1 - abs x ≤ abs (1 - y) := le_transₓ (by linarith [hy.2]) (le_abs_self _)
         simp only [← pow_abs, abs_div, abs_neg]
         apply_rules [div_le_div, pow_nonneg, abs_nonneg, pow_le_pow_of_le_left]
       
@@ -243,8 +235,7 @@ theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : abs x < 1) :
   · rw [tendsto_iff_norm_tendsto_zero]
     simp only [norm_eq_abs, sub_neg_eq_add]
     refine' squeeze_zero (fun n => abs_nonneg _) (abs_log_sub_add_sum_range_le h) _
-    suffices tendsto (fun t : ℕ => abs x ^ (t + 1) / (1 - abs x)) at_top (𝓝 (abs x * 0 / (1 - abs x))) by
-      simpa
+    suffices tendsto (fun t : ℕ => abs x ^ (t + 1) / (1 - abs x)) at_top (𝓝 (abs x * 0 / (1 - abs x))) by simpa
     simp only [pow_succₓ]
     refine' (tendsto_const_nhds.mul _).div_const
     exact tendsto_pow_at_top_nhds_0_of_lt_1 (abs_nonneg _) h
@@ -258,8 +249,7 @@ theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : abs x < 1) :
       _ ≤ abs x ^ (i + 1) / (0 + 1) := by
         apply_rules [div_le_div_of_le_left, pow_nonneg, abs_nonneg, add_le_add_right, i.cast_nonneg]
         norm_num
-      _ ≤ abs x ^ i := by
-        simpa [pow_succ'ₓ] using mul_le_of_le_one_right (pow_nonneg (abs_nonneg x) i) (le_of_ltₓ h)
+      _ ≤ abs x ^ i := by simpa [pow_succ'ₓ] using mul_le_of_le_one_right (pow_nonneg (abs_nonneg x) i) (le_of_ltₓ h)
       
     
 
@@ -269,7 +259,7 @@ theorem has_sum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : abs x < 1) :
   let term := fun n : ℕ => -1 * (-x ^ (n + 1) / ((n : ℝ) + 1)) + x ^ (n + 1) / (n + 1)
   have h_term_eq_goal : term ∘ (· * ·) 2 = fun k : ℕ => 2 * (1 / (2 * k + 1)) * x ^ (2 * k + 1) := by
     ext n
-    dsimp' [term]
+    dsimp [term]
     rw [Odd.neg_pow (⟨n, rfl⟩ : Odd (2 * n + 1)) x]
     push_cast
     ring_nf
@@ -280,7 +270,7 @@ theorem has_sum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : abs x < 1) :
     
   · intro m hm
     rw [range_two_mul, Set.mem_set_of_eq, ← Nat.even_add_one] at hm
-    dsimp' [term]
+    dsimp [term]
     rw [Even.neg_pow hm, neg_one_mul, neg_add_selfₓ]
     
 
@@ -293,14 +283,10 @@ theorem has_sum_log_one_add_inv {a : ℝ} (h : 0 < a) :
       
     · linarith
       
-    · exact
-        div_pos one_pos
-          (by
-            linarith)
+    · exact div_pos one_pos (by linarith)
       
   convert has_sum_log_sub_log_of_abs_lt_1 h₁
-  have h₂ : (2 : ℝ) * a + 1 ≠ 0 := by
-    linarith
+  have h₂ : (2 : ℝ) * a + 1 ≠ 0 := by linarith
   have h₃ := h.ne'
   rw [← log_div]
   · congr

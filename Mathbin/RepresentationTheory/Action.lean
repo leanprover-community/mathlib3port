@@ -67,14 +67,8 @@ theorem ρ_one {G : Mon.{u}} (A : Action V G) : A.ρ 1 = 𝟙 A.V := by
 def ρAut {G : Groupₓₓ.{u}} (A : Action V (Mon.of G)) : G ⟶ Groupₓₓ.of (Aut A.V) where
   toFun := fun g =>
     { Hom := A.ρ g, inv := A.ρ (g⁻¹ : G),
-      hom_inv_id' :=
-        (A.ρ.map_mul (g⁻¹ : G) g).symm.trans
-          (by
-            rw [inv_mul_selfₓ, ρ_one]),
-      inv_hom_id' :=
-        (A.ρ.map_mul g (g⁻¹ : G)).symm.trans
-          (by
-            rw [mul_inv_selfₓ, ρ_one]) }
+      hom_inv_id' := (A.ρ.map_mul (g⁻¹ : G) g).symm.trans (by rw [inv_mul_selfₓ, ρ_one]),
+      inv_hom_id' := (A.ρ.map_mul g (g⁻¹ : G)).symm.trans (by rw [mul_inv_selfₓ, ρ_one]) }
   map_one' := by
     ext
     exact A.ρ.map_one
@@ -104,9 +98,7 @@ commuting with the action of `G`.
 @[ext]
 structure Hom (M N : Action V G) where
   Hom : M.V ⟶ N.V
-  comm' : ∀ g : G, M.ρ g ≫ hom = hom ≫ N.ρ g := by
-    run_tac
-      obviously
+  comm' : ∀ g : G, M.ρ g ≫ hom = hom ≫ N.ρ g := by obviously
 
 restate_axiom hom.comm'
 
@@ -124,8 +116,7 @@ instance (M : Action V G) : Inhabited (Action.Hom M M) :=
 @[simps]
 def comp {M N K : Action V G} (p : Action.Hom M N) (q : Action.Hom N K) : Action.Hom M K where
   Hom := p.Hom ≫ q.Hom
-  comm' := fun g => by
-    rw [← category.assoc, p.comm, category.assoc, q.comm, ← category.assoc]
+  comm' := fun g => by rw [← category.assoc, p.comm, category.assoc, q.comm, ← category.assoc]
 
 end Hom
 
@@ -184,26 +175,12 @@ def inverse : (SingleObj G ⥤ V) ⥤ Action V G where
 /-- Auxilliary definition for `functor_category_equivalence`. -/
 @[simps]
 def unitIso : 𝟭 (Action V G) ≅ Functor ⋙ inverse :=
-  NatIso.ofComponents
-    (fun M =>
-      mkIso (Iso.refl _)
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun M => mkIso (Iso.refl _) (by tidy)) (by tidy)
 
 /-- Auxilliary definition for `functor_category_equivalence`. -/
 @[simps]
 def counitIso : inverse ⋙ Functor ≅ 𝟭 (SingleObj G ⥤ V) :=
-  NatIso.ofComponents
-    (fun M =>
-      NatIso.ofComponents
-        (by
-          tidy)
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun M => NatIso.ofComponents (by tidy) (by tidy)) (by tidy)
 
 end FunctorCategoryEquivalence
 
@@ -281,10 +258,7 @@ section HasZeroMorphisms
 
 variable [HasZeroMorphisms V]
 
-instance :
-    HasZeroMorphisms (Action V G) where HasZero := fun X Y =>
-    ⟨⟨0, by
-        tidy⟩⟩
+instance : HasZeroMorphisms (Action V G) where HasZero := fun X Y => ⟨⟨0, by tidy⟩⟩
 
 instance : Functor.PreservesZeroMorphisms (functorCategoryEquivalence V G).Functor where
 
@@ -296,15 +270,8 @@ variable [Preadditive V]
 
 instance : Preadditive (Action V G) where
   homGroup := fun X Y =>
-    { zero :=
-        ⟨0, by
-          simp ⟩,
-      add := fun f g =>
-        ⟨f.Hom + g.Hom, by
-          simp [f.comm, g.comm]⟩,
-      neg := fun f =>
-        ⟨-f.Hom, by
-          simp [f.comm]⟩,
+    { zero := ⟨0, by simp⟩, add := fun f g => ⟨f.Hom + g.Hom, by simp [f.comm, g.comm]⟩,
+      neg := fun f => ⟨-f.Hom, by simp [f.comm]⟩,
       zero_add := by
         intros
         ext
@@ -356,9 +323,7 @@ variable [Preadditive V] {R : Type _} [Semiringₓ R] [Linear R V]
 
 instance : Linear R (Action V G) where
   homModule := fun X Y =>
-    { smul := fun r f =>
-        ⟨r • f.Hom, by
-          simp [f.comm]⟩,
+    { smul := fun r f => ⟨r • f.Hom, by simp [f.comm]⟩,
       one_smul := by
         intros
         ext
@@ -446,32 +411,32 @@ theorem tensor_hom {W X Y Z : Action V G} (f : W ⟶ X) (g : Y ⟶ Z) : (f ⊗ g
 
 @[simp]
 theorem associator_hom_hom {X Y Z : Action V G} : Hom.hom (α_ X Y Z).Hom = (α_ X.V Y.V Z.V).Hom := by
-  dsimp' [monoidal.transport_associator]
+  dsimp [monoidal.transport_associator]
   simp
 
 @[simp]
 theorem associator_inv_hom {X Y Z : Action V G} : Hom.hom (α_ X Y Z).inv = (α_ X.V Y.V Z.V).inv := by
-  dsimp' [monoidal.transport_associator]
+  dsimp [monoidal.transport_associator]
   simp
 
 @[simp]
 theorem left_unitor_hom_hom {X : Action V G} : Hom.hom (λ_ X).Hom = (λ_ X.V).Hom := by
-  dsimp' [monoidal.transport_left_unitor]
+  dsimp [monoidal.transport_left_unitor]
   simp
 
 @[simp]
 theorem left_unitor_inv_hom {X : Action V G} : Hom.hom (λ_ X).inv = (λ_ X.V).inv := by
-  dsimp' [monoidal.transport_left_unitor]
+  dsimp [monoidal.transport_left_unitor]
   simp
 
 @[simp]
 theorem right_unitor_hom_hom {X : Action V G} : Hom.hom (ρ_ X).Hom = (ρ_ X.V).Hom := by
-  dsimp' [monoidal.transport_right_unitor]
+  dsimp [monoidal.transport_right_unitor]
   simp
 
 @[simp]
 theorem right_unitor_inv_hom {X : Action V G} : Hom.hom (ρ_ X).inv = (ρ_ X.V).inv := by
-  dsimp' [monoidal.transport_right_unitor]
+  dsimp [monoidal.transport_right_unitor]
   simp
 
 variable (V G)
@@ -490,13 +455,7 @@ section
 variable [BraidedCategory V]
 
 instance : BraidedCategory (Action V G) :=
-  braidedCategoryOfFaithful (forgetMonoidal V G)
-    (fun X Y =>
-      mkIso (β_ _ _)
-        (by
-          tidy))
-    (by
-      tidy)
+  braidedCategoryOfFaithful (forgetMonoidal V G) (fun X Y => mkIso (β_ _ _) (by tidy)) (by tidy)
 
 /-- When `V` is braided the forgetful functor `Action V G` to `V` is braided. -/
 @[simps]
@@ -597,22 +556,9 @@ end Monoidal
 /-- Actions/representations of the trivial group are just objects in the ambient category. -/
 def actionPunitEquivalence : Action V (Mon.of PUnit) ≌ V where
   Functor := forget V _
-  inverse :=
-    { obj := fun X => ⟨X, 1⟩,
-      map := fun X Y f =>
-        ⟨f, fun ⟨⟩ => by
-          simp ⟩ }
-  unitIso :=
-    NatIso.ofComponents
-      (fun X =>
-        mkIso (Iso.refl _) fun ⟨⟩ => by
-          simpa using ρ_one X)
-      (by
-        tidy)
-  counitIso :=
-    NatIso.ofComponents (fun X => Iso.refl _)
-      (by
-        tidy)
+  inverse := { obj := fun X => ⟨X, 1⟩, map := fun X Y f => ⟨f, fun ⟨⟩ => by simp⟩ }
+  unitIso := NatIso.ofComponents (fun X => mkIso (Iso.refl _) fun ⟨⟩ => by simpa using ρ_one X) (by tidy)
+  counitIso := NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
 
 variable (V)
 
@@ -630,13 +576,7 @@ def res {G H : Mon} (f : G ⟶ H) : Action V H ⥤ Action V G where
 the identity functor on `Action V G`.
 -/
 def resId {G : Mon} : res V (𝟙 G) ≅ 𝟭 (Action V G) :=
-  NatIso.ofComponents
-    (fun M =>
-      mkIso (Iso.refl _)
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun M => mkIso (Iso.refl _) (by tidy)) (by tidy)
 
 attribute [simps] res_id
 
@@ -644,13 +584,7 @@ attribute [simps] res_id
 to the restriction along the composition of homomorphism.
 -/
 def resComp {G H K : Mon} (f : G ⟶ H) (g : H ⟶ K) : res V g ⋙ res V f ≅ res V (f ≫ g) :=
-  NatIso.ofComponents
-    (fun M =>
-      mkIso (Iso.refl _)
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun M => mkIso (Iso.refl _) (by tidy)) (by tidy)
 
 attribute [simps] res_comp
 
@@ -677,15 +611,12 @@ def mapAction (F : V ⥤ W) (G : Mon.{u}) : Action V G ⥤ Action W G where
   obj := fun M =>
     { V := F.obj M.V,
       ρ :=
-        { toFun := fun g => F.map (M.ρ g),
-          map_one' := by
-            simp only [End.one_def, Action.ρ_one, F.map_id],
-          map_mul' := fun g h => by
-            simp only [End.mul_def, F.map_comp, map_mul] } }
+        { toFun := fun g => F.map (M.ρ g), map_one' := by simp only [End.one_def, Action.ρ_one, F.map_id],
+          map_mul' := fun g h => by simp only [End.mul_def, F.map_comp, map_mul] } }
   map := fun M N f =>
     { Hom := F.map f.Hom,
       comm' := fun g => by
-        dsimp'
+        dsimp
         rw [← F.map_comp, f.comm, F.map_comp] }
   map_id' := fun M => by
     ext
@@ -720,38 +651,35 @@ def mapAction (F : MonoidalFunctor V W) (G : Mon.{u}) : MonoidalFunctor (Action 
     ε :=
       { Hom := F.ε,
         comm' := fun g => by
-          dsimp'
+          dsimp
           erw [category.id_comp, CategoryTheory.Functor.map_id, category.comp_id] },
     μ := fun X Y => { Hom := F.μ X.V Y.V, comm' := fun g => F.toLaxMonoidalFunctor.μ_natural (X.ρ g) (Y.ρ g) },
-    ε_is_iso := by
-      infer_instance,
-    μ_is_iso := by
-      infer_instance,
+    ε_is_iso := by infer_instance, μ_is_iso := by infer_instance,
     μ_natural' := by
       intros
       ext
-      dsimp'
-      simp ,
+      dsimp
+      simp,
     associativity' := by
       intros
       ext
-      dsimp'
+      dsimp
       simp
-      dsimp'
-      simp ,
+      dsimp
+      simp,
     left_unitality' := by
       intros
       ext
-      dsimp'
+      dsimp
       simp
-      dsimp'
-      simp ,
+      dsimp
+      simp,
     right_unitality' := by
       intros
       ext
-      dsimp'
+      dsimp
       simp
-      dsimp'
+      dsimp
       simp }
 
 end CategoryTheory.MonoidalFunctor

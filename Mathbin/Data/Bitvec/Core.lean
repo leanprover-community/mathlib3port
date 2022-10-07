@@ -59,10 +59,7 @@ variable {n : ℕ}
 /-- `shl x i` is the bitvector obtained by left-shifting `x` `i` times and padding with `ff`.
 If `x.length < i` then this will return the all-`ff`s bitvector. -/
 def shl (x : Bitvec n) (i : ℕ) : Bitvec n :=
-  Bitvec.cong
-      (by
-        simp ) <|
-    drop i x++ₜrepeat false (min n i)
+  Bitvec.cong (by simp) <| drop i x++ₜrepeat false (min n i)
 
 /-- `fill_shr x i fill` is the bitvector obtained by right-shifting `x` `i` times and then
 padding with `fill : bool`. If `x.length < i` then this will return the constant `fill`
@@ -70,7 +67,7 @@ bitvector. -/
 def fillShr (x : Bitvec n) (i : ℕ) (fill : Bool) : Bitvec n :=
   Bitvec.cong
       (by
-        by_cases' i ≤ n
+        by_cases i ≤ n
         · have h₁ := Nat.sub_leₓ n i
           rw [min_eq_rightₓ h]
           rw [min_eq_leftₓ h₁, ← add_tsub_assoc_of_le h, Nat.add_comm, add_tsub_cancel_right]
@@ -277,7 +274,7 @@ theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
   cases' xs with xs P
   simp [bits_to_nat_to_list]
   clear P
-  unfold bits_to_nat List.foldlₓ
+  unfold bits_to_nat List.foldl
   -- generalize the accumulator of foldl
   generalize h : 0 = x
   conv in add_lsb x b => rw [← h]
@@ -285,7 +282,7 @@ theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
   simp
   induction' xs with x xs generalizing x
   · simp
-    unfold List.foldlₓ add_lsb
+    unfold List.foldl add_lsb
     simp [Nat.mul_succ]
     
   · simp
@@ -294,7 +291,7 @@ theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
 
 theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (toBool (n % 2 = 1) ::ᵥ nil) = n % 2 := by
   simp [bits_to_nat_to_list]
-  unfold bits_to_nat add_lsb List.foldlₓ cond
+  unfold bits_to_nat add_lsb List.foldl cond
   simp [cond_to_bool_mod_two]
 
 theorem of_nat_succ {k n : ℕ} : Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜtoBool (n % 2 = 1) ::ᵥ nil :=

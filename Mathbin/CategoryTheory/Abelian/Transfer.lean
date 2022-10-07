@@ -102,14 +102,11 @@ def coimageIsoImageAux {X Y : C} (f : X ⟶ Y) : kernel (G.map (cokernel.π (F.m
       kernel_iso_of_eq (π_comp_cokernel_iso_of_eq_hom (nat_iso.naturality_2 i f)).symm
     _ ≅ kernel (cokernel.π (_ ≫ f ≫ _)) := kernel_comp_mono _ _
     _ ≅ kernel (cokernel.π (f ≫ i.inv.app Y) ≫ (cokernel_epi_comp (i.hom.app X) _).inv) :=
-      kernel_iso_of_eq
-        (by
-          simp only [cokernel.π_desc, cokernel_epi_comp_inv])
+      kernel_iso_of_eq (by simp only [cokernel.π_desc, cokernel_epi_comp_inv])
     _ ≅ kernel (cokernel.π (f ≫ _)) := kernel_comp_mono _ _
     _ ≅ kernel (inv (i.inv.app Y) ≫ cokernel.π f ≫ (cokernel_comp_is_iso f (i.inv.app Y)).inv) :=
       kernel_iso_of_eq
-        (by
-          simp only [cokernel.π_desc, cokernel_comp_is_iso_inv, iso.hom_inv_id_app_assoc, nat_iso.inv_inv_app])
+        (by simp only [cokernel.π_desc, cokernel_comp_is_iso_inv, iso.hom_inv_id_app_assoc, nat_iso.inv_inv_app])
     _ ≅ kernel (cokernel.π f ≫ _) := kernel_is_iso_comp _ _
     _ ≅ kernel (cokernel.π f) := kernel_comp_mono _ _
     
@@ -125,11 +122,7 @@ def coimageIsoImage {X Y : C} (f : X ⟶ Y) : Abelian.coimage f ≅ Abelian.imag
   calc
     abelian.coimage f ≅ cokernel (kernel.ι f) := iso.refl _
     _ ≅ G.obj (cokernel (F.map (kernel.ι f))) := (cokernel_iso _ _ i adj _).symm
-    _ ≅ G.obj (cokernel (kernel_comparison f F ≫ kernel.ι (F.map f))) :=
-      G.map_iso
-        (cokernel_iso_of_eq
-          (by
-            simp ))
+    _ ≅ G.obj (cokernel (kernel_comparison f F ≫ kernel.ι (F.map f))) := G.map_iso (cokernel_iso_of_eq (by simp))
     _ ≅ G.obj (cokernel (kernel.ι (F.map f))) := G.map_iso (cokernel_epi_comp _ _)
     _ ≅ G.obj (abelian.coimage (F.map f)) := iso.refl _
     _ ≅ G.obj (abelian.image (F.map f)) := G.map_iso (abelian.coimage_iso_image _)

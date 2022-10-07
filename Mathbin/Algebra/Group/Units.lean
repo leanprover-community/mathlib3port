@@ -130,8 +130,7 @@ theorem copy_eq (u : αˣ) (val hv inv hi) : u.copy val hv inv hi = u :=
 @[to_additive]
 instance : MulOneClassₓ αˣ where
   mul := fun u₁ u₂ =>
-    ⟨u₁.val * u₂.val, u₂.inv * u₁.inv, by
-      rw [mul_assoc, ← mul_assoc u₂.val, val_inv, one_mulₓ, val_inv], by
+    ⟨u₁.val * u₂.val, u₂.inv * u₁.inv, by rw [mul_assoc, ← mul_assoc u₂.val, val_inv, one_mulₓ, val_inv], by
       rw [mul_assoc, ← mul_assoc u₁.inv, inv_val, one_mulₓ, inv_val]⟩
   one := ⟨1, 1, one_mulₓ 1, one_mulₓ 1⟩
   one_mul := fun u => ext <| one_mulₓ u
@@ -166,8 +165,7 @@ theorem coe_one : ((1 : αˣ) : α) = 1 :=
   rfl
 
 @[simp, norm_cast, to_additive]
-theorem coe_eq_one {a : αˣ} : (a : α) = 1 ↔ a = 1 := by
-  rw [← Units.coe_one, eq_iff]
+theorem coe_eq_one {a : αˣ} : (a : α) = 1 ↔ a = 1 := by rw [← Units.coe_one, eq_iff]
 
 @[simp, to_additive]
 theorem inv_mk (x y : α) (h₁ h₂) : (mk x y h₁ h₂)⁻¹ = mk y x h₂ h₁ :=
@@ -190,79 +188,59 @@ theorem mul_inv : (a * ↑a⁻¹ : α) = 1 :=
   val_inv _
 
 @[to_additive]
-theorem inv_mul_of_eq {a : α} (h : ↑u = a) : ↑u⁻¹ * a = 1 := by
-  rw [← h, u.inv_mul]
+theorem inv_mul_of_eq {a : α} (h : ↑u = a) : ↑u⁻¹ * a = 1 := by rw [← h, u.inv_mul]
 
 @[to_additive]
-theorem mul_inv_of_eq {a : α} (h : ↑u = a) : a * ↑u⁻¹ = 1 := by
-  rw [← h, u.mul_inv]
+theorem mul_inv_of_eq {a : α} (h : ↑u = a) : a * ↑u⁻¹ = 1 := by rw [← h, u.mul_inv]
 
 @[simp, to_additive]
-theorem mul_inv_cancel_left (a : αˣ) (b : α) : (a : α) * (↑a⁻¹ * b) = b := by
-  rw [← mul_assoc, mul_inv, one_mulₓ]
+theorem mul_inv_cancel_left (a : αˣ) (b : α) : (a : α) * (↑a⁻¹ * b) = b := by rw [← mul_assoc, mul_inv, one_mulₓ]
 
 @[simp, to_additive]
-theorem inv_mul_cancel_left (a : αˣ) (b : α) : (↑a⁻¹ : α) * (a * b) = b := by
-  rw [← mul_assoc, inv_mul, one_mulₓ]
+theorem inv_mul_cancel_left (a : αˣ) (b : α) : (↑a⁻¹ : α) * (a * b) = b := by rw [← mul_assoc, inv_mul, one_mulₓ]
 
 @[simp, to_additive]
-theorem mul_inv_cancel_right (a : α) (b : αˣ) : a * b * ↑b⁻¹ = a := by
-  rw [mul_assoc, mul_inv, mul_oneₓ]
+theorem mul_inv_cancel_right (a : α) (b : αˣ) : a * b * ↑b⁻¹ = a := by rw [mul_assoc, mul_inv, mul_oneₓ]
 
 @[simp, to_additive]
-theorem inv_mul_cancel_right (a : α) (b : αˣ) : a * ↑b⁻¹ * b = a := by
-  rw [mul_assoc, inv_mul, mul_oneₓ]
+theorem inv_mul_cancel_right (a : α) (b : αˣ) : a * ↑b⁻¹ * b = a := by rw [mul_assoc, inv_mul, mul_oneₓ]
 
 @[simp, to_additive]
 theorem mul_right_inj (a : αˣ) {b c : α} : (a : α) * b = a * c ↔ b = c :=
-  ⟨fun h => by
-    simpa only [inv_mul_cancel_leftₓ] using congr_arg ((· * ·) ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
+  ⟨fun h => by simpa only [inv_mul_cancel_leftₓ] using congr_arg ((· * ·) ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
 
 @[simp, to_additive]
 theorem mul_left_inj (a : αˣ) {b c : α} : b * a = c * a ↔ b = c :=
-  ⟨fun h => by
-    simpa only [mul_inv_cancel_rightₓ] using congr_arg (· * ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
+  ⟨fun h => by simpa only [mul_inv_cancel_rightₓ] using congr_arg (· * ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
 
 @[to_additive]
 theorem eq_mul_inv_iff_mul_eq {a b : α} : a = b * ↑c⁻¹ ↔ a * c = b :=
-  ⟨fun h => by
-    rw [h, inv_mul_cancel_right], fun h => by
-    rw [← h, mul_inv_cancel_rightₓ]⟩
+  ⟨fun h => by rw [h, inv_mul_cancel_right], fun h => by rw [← h, mul_inv_cancel_rightₓ]⟩
 
 @[to_additive]
 theorem eq_inv_mul_iff_mul_eq {a c : α} : a = ↑b⁻¹ * c ↔ ↑b * a = c :=
-  ⟨fun h => by
-    rw [h, mul_inv_cancel_left], fun h => by
-    rw [← h, inv_mul_cancel_leftₓ]⟩
+  ⟨fun h => by rw [h, mul_inv_cancel_left], fun h => by rw [← h, inv_mul_cancel_leftₓ]⟩
 
 @[to_additive]
 theorem inv_mul_eq_iff_eq_mul {b c : α} : ↑a⁻¹ * b = c ↔ b = a * c :=
-  ⟨fun h => by
-    rw [← h, mul_inv_cancel_left], fun h => by
-    rw [h, inv_mul_cancel_leftₓ]⟩
+  ⟨fun h => by rw [← h, mul_inv_cancel_left], fun h => by rw [h, inv_mul_cancel_leftₓ]⟩
 
 @[to_additive]
 theorem mul_inv_eq_iff_eq_mul {a c : α} : a * ↑b⁻¹ = c ↔ a = c * b :=
-  ⟨fun h => by
-    rw [← h, inv_mul_cancel_right], fun h => by
-    rw [h, mul_inv_cancel_rightₓ]⟩
+  ⟨fun h => by rw [← h, inv_mul_cancel_right], fun h => by rw [h, mul_inv_cancel_rightₓ]⟩
 
 @[to_additive]
 protected theorem inv_eq_of_mul_eq_one_left {a : α} (h : a * u = 1) : ↑u⁻¹ = a :=
   calc
-    ↑u⁻¹ = 1 * ↑u⁻¹ := by
-      rw [one_mulₓ]
-    _ = a := by
-      rw [← h, mul_inv_cancel_rightₓ]
+    ↑u⁻¹ = 1 * ↑u⁻¹ := by rw [one_mulₓ]
+    _ = a := by rw [← h, mul_inv_cancel_rightₓ]
     
 
 @[to_additive]
 protected theorem inv_eq_of_mul_eq_one_right {a : α} (h : ↑u * a = 1) : ↑u⁻¹ = a :=
   calc
-    ↑u⁻¹ = ↑u⁻¹ * 1 := by
-      rw [mul_oneₓ]
-    _ = a := by
-      rw [← h, inv_mul_cancel_leftₓ]
+    ↑u⁻¹ = ↑u⁻¹ * 1 := by rw [mul_oneₓ]
+    _ = a := by rw [← h, inv_mul_cancel_leftₓ]
     
 
 @[to_additive]
@@ -282,17 +260,14 @@ theorem inv_mul_eq_one {a : α} : ↑u⁻¹ * a = 1 ↔ ↑u = a :=
   ⟨inv_invₓ u ▸ Units.inv_eq_of_mul_eq_one_right, inv_mul_of_eq⟩
 
 @[to_additive]
-theorem mul_eq_one_iff_eq_inv {a : α} : a * u = 1 ↔ a = ↑u⁻¹ := by
-  rw [← mul_inv_eq_one, inv_invₓ]
+theorem mul_eq_one_iff_eq_inv {a : α} : a * u = 1 ↔ a = ↑u⁻¹ := by rw [← mul_inv_eq_one, inv_invₓ]
 
 @[to_additive]
-theorem mul_eq_one_iff_inv_eq {a : α} : ↑u * a = 1 ↔ ↑u⁻¹ = a := by
-  rw [← inv_mul_eq_one, inv_invₓ]
+theorem mul_eq_one_iff_inv_eq {a : α} : ↑u * a = 1 ↔ ↑u⁻¹ = a := by rw [← inv_mul_eq_one, inv_invₓ]
 
 @[to_additive]
 theorem inv_unique {u₁ u₂ : αˣ} (h : (↑u₁ : α) = ↑u₂) : (↑u₁⁻¹ : α) = ↑u₂⁻¹ :=
-  Units.inv_eq_of_mul_eq_one_right <| by
-    rw [h, u₂.mul_inv]
+  Units.inv_eq_of_mul_eq_one_right <| by rw [h, u₂.mul_inv]
 
 @[simp, to_additive]
 theorem coe_inv {M : Type _} [DivisionMonoid M] (u : Units M) : ↑u⁻¹ = (u⁻¹ : M) :=
@@ -344,13 +319,11 @@ theorem divp_inv (u : αˣ) : a /ₚ u⁻¹ = a * u :=
 
 @[simp]
 theorem divp_mul_cancel (a : α) (u : αˣ) : a /ₚ u * u = a :=
-  (mul_assoc _ _ _).trans <| by
-    rw [Units.inv_mul, mul_oneₓ]
+  (mul_assoc _ _ _).trans <| by rw [Units.inv_mul, mul_oneₓ]
 
 @[simp]
 theorem mul_divp_cancel (a : α) (u : αˣ) : a * u /ₚ u = a :=
-  (mul_assoc _ _ _).trans <| by
-    rw [Units.mul_inv, mul_oneₓ]
+  (mul_assoc _ _ _).trans <| by rw [Units.mul_inv, mul_oneₓ]
 
 @[simp]
 theorem divp_left_inj (u : αˣ) {a b : α} : a /ₚ u = b /ₚ u ↔ a = b :=
@@ -362,16 +335,13 @@ theorem divp_divp_eq_divp_mul (x : α) (u₁ u₂ : αˣ) : x /ₚ u₁ /ₚ u�
 
 @[field_simps]
 theorem divp_eq_iff_mul_eq {x : α} {u : αˣ} {y : α} : x /ₚ u = y ↔ y * u = x :=
-  u.mul_left_inj.symm.trans <| by
-    rw [divp_mul_cancel] <;> exact ⟨Eq.symm, Eq.symm⟩
+  u.mul_left_inj.symm.trans <| by rw [divp_mul_cancel] <;> exact ⟨Eq.symm, Eq.symm⟩
 
 @[field_simps]
-theorem eq_divp_iff_mul_eq {x : α} {u : αˣ} {y : α} : x = y /ₚ u ↔ x * u = y := by
-  rw [eq_comm, divp_eq_iff_mul_eq]
+theorem eq_divp_iff_mul_eq {x : α} {u : αˣ} {y : α} : x = y /ₚ u ↔ x * u = y := by rw [eq_comm, divp_eq_iff_mul_eq]
 
 theorem divp_eq_one_iff_eq {a : α} {u : αˣ} : a /ₚ u = 1 ↔ a = u :=
-  (Units.mul_left_inj u).symm.trans <| by
-    rw [divp_mul_cancel, one_mulₓ]
+  (Units.mul_left_inj u).symm.trans <| by rw [divp_mul_cancel, one_mulₓ]
 
 @[simp]
 theorem one_divp (u : αˣ) : 1 /ₚ u = ↑u⁻¹ :=
@@ -379,23 +349,20 @@ theorem one_divp (u : αˣ) : 1 /ₚ u = ↑u⁻¹ :=
 
 /-- Used for `field_simp` to deal with inverses of units. -/
 @[field_simps]
-theorem inv_eq_one_divp (u : αˣ) : ↑u⁻¹ = 1 /ₚ u := by
-  rw [one_divp]
+theorem inv_eq_one_divp (u : αˣ) : ↑u⁻¹ = 1 /ₚ u := by rw [one_divp]
 
 /-- Used for `field_simp` to deal with inverses of units. This form of the lemma
 is essential since `field_simp` likes to use `inv_eq_one_div` to rewrite
 `↑u⁻¹ = ↑(1 / u)`.
 -/
 @[field_simps]
-theorem inv_eq_one_divp' (u : αˣ) : ((1 / u : αˣ) : α) = 1 /ₚ u := by
-  rw [one_div, one_divp]
+theorem inv_eq_one_divp' (u : αˣ) : ((1 / u : αˣ) : α) = 1 /ₚ u := by rw [one_div, one_divp]
 
 /-- `field_simp` moves division inside `αˣ` to the right, and this lemma
 lifts the calculation to `α`.
 -/
 @[field_simps]
-theorem coe_div_eq_divp (u₁ u₂ : αˣ) : ↑(u₁ / u₂) = ↑u₁ /ₚ u₂ := by
-  rw [divp, division_def, Units.coe_mul]
+theorem coe_div_eq_divp (u₁ u₂ : αˣ) : ↑(u₁ / u₂) = ↑u₁ /ₚ u₂ := by rw [divp, division_def, Units.coe_mul]
 
 end Monoidₓ
 
@@ -404,8 +371,7 @@ section CommMonoidₓ
 variable [CommMonoidₓ α]
 
 @[field_simps]
-theorem divp_mul_eq_mul_divp (x y : α) (u : αˣ) : x /ₚ u * y = x * y /ₚ u := by
-  simp_rw [divp, mul_assoc, mul_comm]
+theorem divp_mul_eq_mul_divp (x y : α) (u : αˣ) : x /ₚ u * y = x * y /ₚ u := by simp_rw [divp, mul_assoc, mul_comm]
 
 -- Theoretically redundant as `field_simp` lemma.
 @[field_simps]
@@ -448,10 +414,7 @@ theorem is_unit_of_subsingleton [Monoidₓ M] [Subsingleton M] (a : M) : IsUnit 
 attribute [nontriviality] is_add_unit_of_subsingleton
 
 @[to_additive]
-instance [Monoidₓ M] : CanLift M Mˣ where
-  coe := coe
-  cond := IsUnit
-  prf := fun _ => id
+instance [Monoidₓ M] : CanLift M Mˣ coe IsUnit where prf := fun _ => id
 
 @[to_additive]
 instance [Monoidₓ M] [Subsingleton M] : Unique Mˣ where
@@ -498,8 +461,7 @@ theorem IsUnit.mul [Monoidₓ M] {x y : M} : IsUnit x → IsUnit y → IsUnit (x
 theorem Units.is_unit_mul_units [Monoidₓ M] (a : M) (u : Mˣ) : IsUnit (a * u) ↔ IsUnit a :=
   Iff.intro
     (fun ⟨v, hv⟩ => by
-      have : IsUnit (a * ↑u * ↑u⁻¹) := by
-        exists v * u⁻¹ <;> rw [← hv, Units.coe_mul]
+      have : IsUnit (a * ↑u * ↑u⁻¹) := by exists v * u⁻¹ <;> rw [← hv, Units.coe_mul]
       rwa [mul_assoc, Units.mul_inv, mul_oneₓ] at this)
     fun v => v.mul u.IsUnit
 
@@ -508,22 +470,18 @@ theorem Units.is_unit_mul_units [Monoidₓ M] (a : M) (u : Mˣ) : IsUnit (a * u)
 theorem Units.is_unit_units_mul {M : Type _} [Monoidₓ M] (u : Mˣ) (a : M) : IsUnit (↑u * a) ↔ IsUnit a :=
   Iff.intro
     (fun ⟨v, hv⟩ => by
-      have : IsUnit (↑u⁻¹ * (↑u * a)) := by
-        exists u⁻¹ * v <;> rw [← hv, Units.coe_mul]
+      have : IsUnit (↑u⁻¹ * (↑u * a)) := by exists u⁻¹ * v <;> rw [← hv, Units.coe_mul]
       rwa [← mul_assoc, Units.inv_mul, one_mulₓ] at this)
     u.IsUnit.mul
 
 @[to_additive]
 theorem is_unit_of_mul_is_unit_left [CommMonoidₓ M] {x y : M} (hu : IsUnit (x * y)) : IsUnit x :=
   let ⟨z, hz⟩ := is_unit_iff_exists_inv.1 hu
-  is_unit_iff_exists_inv.2
-    ⟨y * z, by
-      rwa [← mul_assoc]⟩
+  is_unit_iff_exists_inv.2 ⟨y * z, by rwa [← mul_assoc]⟩
 
 @[to_additive]
 theorem is_unit_of_mul_is_unit_right [CommMonoidₓ M] {x y : M} (hu : IsUnit (x * y)) : IsUnit y :=
-  @is_unit_of_mul_is_unit_left _ _ y x <| by
-    rwa [mul_comm]
+  @is_unit_of_mul_is_unit_left _ _ y x <| by rwa [mul_comm]
 
 namespace IsUnit
 
@@ -555,8 +513,7 @@ theorem coe_inv_mul (h : IsUnit a) : ↑h.Unit⁻¹ * a = 1 :=
   Units.mul_inv _
 
 @[simp, to_additive]
-theorem mul_coe_inv (h : IsUnit a) : a * ↑h.Unit⁻¹ = 1 := by
-  convert h.unit.mul_inv
+theorem mul_coe_inv (h : IsUnit a) : a * ↑h.Unit⁻¹ = 1 := by convert h.unit.mul_inv
 
 /-- `is_unit x` is decidable if we can decide if `x` comes from `Mˣ`. -/
 instance (x : M) [h : Decidable (∃ u : Mˣ, ↑u = x)] : Decidable (IsUnit x) :=

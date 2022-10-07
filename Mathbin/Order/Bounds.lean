@@ -100,8 +100,7 @@ theorem is_greatest_top_iff [OrderTop α] : IsGreatest s ⊤ ↔ ⊤ ∈ s :=
 /-- A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` such that `x`
 is not greater than or equal to `y`. This version only assumes `preorder` structure and uses
 `¬(y ≤ x)`. A version for linear orders is called `not_bdd_above_iff`. -/
-theorem not_bdd_above_iff' : ¬BddAbove s ↔ ∀ x, ∃ y ∈ s, ¬y ≤ x := by
-  simp [BddAbove, UpperBounds, Set.Nonempty]
+theorem not_bdd_above_iff' : ¬BddAbove s ↔ ∀ x, ∃ y ∈ s, ¬y ≤ x := by simp [BddAbove, UpperBounds, Set.Nonempty]
 
 /-- A set `s` is not bounded below if and only if for each `x` there exists `y ∈ s` such that `x`
 is not less than or equal to `y`. This version only assumes `preorder` structure and uses
@@ -350,15 +349,13 @@ theorem IsGlb.union [SemilatticeInf γ] {a₁ a₂ : γ} {s t : Set γ} (hs : Is
 then `min a b` is the least element of `s ∪ t`. -/
 theorem IsLeast.union [LinearOrderₓ γ] {a b : γ} {s t : Set γ} (ha : IsLeast s a) (hb : IsLeast t b) :
     IsLeast (s ∪ t) (min a b) :=
-  ⟨by
-    cases' le_totalₓ a b with h h <;> simp [h, ha.1, hb.1], (ha.IsGlb.union hb.IsGlb).1⟩
+  ⟨by cases' le_totalₓ a b with h h <;> simp [h, ha.1, hb.1], (ha.IsGlb.union hb.IsGlb).1⟩
 
 /-- If `a` is the greatest element of `s` and `b` is the greatest element of `t`,
 then `max a b` is the greatest element of `s ∪ t`. -/
 theorem IsGreatest.union [LinearOrderₓ γ] {a b : γ} {s t : Set γ} (ha : IsGreatest s a) (hb : IsGreatest t b) :
     IsGreatest (s ∪ t) (max a b) :=
-  ⟨by
-    cases' le_totalₓ a b with h h <;> simp [h, ha.1, hb.1], (ha.IsLub.union hb.IsLub).1⟩
+  ⟨by cases' le_totalₓ a b with h h <;> simp [h, ha.1, hb.1], (ha.IsLub.union hb.IsLub).1⟩
 
 theorem IsLub.inter_Ici_of_mem [LinearOrderₓ γ] {s : Set γ} {a b : γ} (ha : IsLub s a) (hb : b ∈ s) :
     IsLub (s ∩ Ici b) a :=
@@ -373,7 +370,7 @@ theorem IsGlb.inter_Iic_of_mem [LinearOrderₓ γ] {s : Set γ} {a b : γ} (ha :
 theorem bdd_above_iff_exists_ge [SemilatticeSup γ] {s : Set γ} (x₀ : γ) : BddAbove s ↔ ∃ x, x₀ ≤ x ∧ ∀ y ∈ s, y ≤ x :=
   by
   rw [bdd_above_def, exists_ge_and_iff_exists]
-  exact Monotone.ball fun x hx => monotone_le
+  exact Monotoneₓ.ball fun x hx => monotone_le
 
 theorem bdd_below_iff_exists_le [SemilatticeInf γ] {s : Set γ} (x₀ : γ) : BddBelow s ↔ ∃ x, x ≤ x₀ ∧ ∀ y ∈ s, x ≤ y :=
   bdd_above_iff_exists_ge (toDual x₀)
@@ -445,7 +442,7 @@ section
 variable [LinearOrderₓ γ]
 
 theorem exists_lub_Iio (i : γ) : ∃ j, IsLub (Set.Iio i) j := by
-  by_cases' h_exists_lt : ∃ j, j ∈ UpperBounds (Set.Iio i) ∧ j < i
+  by_cases h_exists_lt:∃ j, j ∈ UpperBounds (Set.Iio i) ∧ j < i
   · obtain ⟨j, hj_ub, hj_lt_i⟩ := h_exists_lt
     exact ⟨j, hj_ub, fun k hk_ub => hk_ub hj_lt_i⟩
     
@@ -601,14 +598,12 @@ section
 
 variable [SemilatticeInf γ] [DenselyOrdered γ]
 
-theorem is_lub_Ioo {a b : γ} (hab : a < b) : IsLub (Ioo a b) b := by
-  simpa only [dual_Ioo] using is_glb_Ioo hab.dual
+theorem is_lub_Ioo {a b : γ} (hab : a < b) : IsLub (Ioo a b) b := by simpa only [dual_Ioo] using is_glb_Ioo hab.dual
 
 theorem upper_bounds_Ioo {a b : γ} (hab : a < b) : UpperBounds (Ioo a b) = Ici b :=
   (is_lub_Ioo hab).upper_bounds_eq
 
-theorem is_lub_Ico {a b : γ} (hab : a < b) : IsLub (Ico a b) b := by
-  simpa only [dual_Ioc] using is_glb_Ioc hab.dual
+theorem is_lub_Ico {a b : γ} (hab : a < b) : IsLub (Ico a b) b := by simpa only [dual_Ioc] using is_glb_Ioc hab.dual
 
 theorem upper_bounds_Ico {a b : γ} (hab : a < b) : UpperBounds (Ico a b) = Ici b :=
   (is_lub_Ico hab).upper_bounds_eq
@@ -661,8 +656,7 @@ theorem NoMinOrder.lower_bounds_univ [NoMinOrder α] : LowerBounds (Univ : Set �
   @NoMaxOrder.upper_bounds_univ αᵒᵈ _ _
 
 @[simp]
-theorem not_bdd_above_univ [NoMaxOrder α] : ¬BddAbove (Univ : Set α) := by
-  simp [BddAbove]
+theorem not_bdd_above_univ [NoMaxOrder α] : ¬BddAbove (Univ : Set α) := by simp [BddAbove]
 
 @[simp]
 theorem not_bdd_below_univ [NoMinOrder α] : ¬BddBelow (Univ : Set α) :=
@@ -697,10 +691,7 @@ theorem is_lub_empty [Preorderₓ γ] [OrderBot γ] : IsLub ∅ (⊥ : γ) :=
 
 theorem IsLub.nonempty [NoMinOrder α] (hs : IsLub s a) : s.Nonempty :=
   let ⟨a', ha'⟩ := exists_lt a
-  ne_empty_iff_nonempty.1 fun h =>
-    not_le_of_ltₓ ha' <|
-      hs.right <| by
-        simp only [h, upper_bounds_empty]
+  ne_empty_iff_nonempty.1 fun h => not_le_of_ltₓ ha' <| hs.right <| by simp only [h, upper_bounds_empty]
 
 theorem IsGlb.nonempty [NoMaxOrder α] (hs : IsGlb s a) : s.Nonempty :=
   hs.dual.Nonempty
@@ -919,9 +910,9 @@ end LinearOrderedAddCommGroup
 -/
 
 
-namespace MonotoneOn
+namespace MonotoneOnₓ
 
-variable [Preorderₓ α] [Preorderₓ β] {f : α → β} {s t : Set α} (Hf : MonotoneOn f t) {a : α} (Hst : s ⊆ t)
+variable [Preorderₓ α] [Preorderₓ β] {f : α → β} {s t : Set α} (Hf : MonotoneOnₓ f t) {a : α} (Hst : s ⊆ t)
 
 include Hf
 
@@ -963,11 +954,11 @@ theorem map_is_least (Ha : IsLeast t a) : IsLeast (f '' t) (f a) :=
 theorem map_is_greatest (Ha : IsGreatest t a) : IsGreatest (f '' t) (f a) :=
   ⟨mem_image_of_mem _ Ha.1, Hf.mem_upper_bounds_image_self Ha.2 Ha.1⟩
 
-end MonotoneOn
+end MonotoneOnₓ
 
-namespace AntitoneOn
+namespace AntitoneOnₓ
 
-variable [Preorderₓ α] [Preorderₓ β] {f : α → β} {s t : Set α} (Hf : AntitoneOn f t) {a : α} (Hst : s ⊆ t)
+variable [Preorderₓ α] [Preorderₓ β] {f : α → β} {s t : Set α} (Hf : AntitoneOnₓ f t) {a : α} (Hst : s ⊆ t)
 
 include Hf
 
@@ -1005,11 +996,11 @@ theorem map_is_greatest : IsGreatest t a → IsLeast (f '' t) (f a) :=
 theorem map_is_least : IsLeast t a → IsGreatest (f '' t) (f a) :=
   Hf.dual_right.map_is_least
 
-end AntitoneOn
+end AntitoneOnₓ
 
-namespace Monotone
+namespace Monotoneₓ
 
-variable [Preorderₓ α] [Preorderₓ β] {f : α → β} (Hf : Monotone f) {a : α} {s : Set α}
+variable [Preorderₓ α] [Preorderₓ β] {f : α → β} (Hf : Monotoneₓ f) {a : α} {s : Set α}
 
 include Hf
 
@@ -1044,11 +1035,11 @@ theorem map_is_least (Ha : IsLeast s a) : IsLeast (f '' s) (f a) :=
 theorem map_is_greatest (Ha : IsGreatest s a) : IsGreatest (f '' s) (f a) :=
   ⟨mem_image_of_mem _ Ha.1, Hf.mem_upper_bounds_image Ha.2⟩
 
-end Monotone
+end Monotoneₓ
 
-namespace Antitone
+namespace Antitoneₓ
 
-variable [Preorderₓ α] [Preorderₓ β] {f : α → β} (hf : Antitone f) {a : α} {s : Set α}
+variable [Preorderₓ α] [Preorderₓ β] {f : α → β} (hf : Antitoneₓ f) {a : α} {s : Set α}
 
 theorem mem_upper_bounds_image : a ∈ LowerBounds s → f a ∈ UpperBounds (f '' s) :=
   hf.dual_right.mem_lower_bounds_image
@@ -1078,7 +1069,7 @@ theorem map_is_greatest : IsGreatest s a → IsLeast (f '' s) (f a) :=
 theorem map_is_least : IsLeast s a → IsGreatest (f '' s) (f a) :=
   hf.dual_right.map_is_least
 
-end Antitone
+end Antitoneₓ
 
 section Image2
 
@@ -1086,7 +1077,7 @@ variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {f : α → β → �
 
 section MonotoneMonotone
 
-variable (h₀ : ∀ b, Monotone (swap f b)) (h₁ : ∀ a, Monotone (f a))
+variable (h₀ : ∀ b, Monotoneₓ (swap f b)) (h₁ : ∀ a, Monotoneₓ (f a))
 
 include h₀ h₁
 
@@ -1128,7 +1119,7 @@ end MonotoneMonotone
 
 section MonotoneAntitone
 
-variable (h₀ : ∀ b, Monotone (swap f b)) (h₁ : ∀ a, Antitone (f a))
+variable (h₀ : ∀ b, Monotoneₓ (swap f b)) (h₁ : ∀ a, Antitoneₓ (f a))
 
 include h₀ h₁
 
@@ -1170,7 +1161,7 @@ end MonotoneAntitone
 
 section AntitoneAntitone
 
-variable (h₀ : ∀ b, Antitone (swap f b)) (h₁ : ∀ a, Antitone (f a))
+variable (h₀ : ∀ b, Antitoneₓ (swap f b)) (h₁ : ∀ a, Antitoneₓ (f a))
 
 include h₀ h₁
 
@@ -1210,7 +1201,7 @@ end AntitoneAntitone
 
 section AntitoneMonotone
 
-variable (h₀ : ∀ b, Antitone (swap f b)) (h₁ : ∀ a, Monotone (f a))
+variable (h₀ : ∀ b, Antitoneₓ (swap f b)) (h₁ : ∀ a, Monotoneₓ (f a))
 
 include h₀ h₁
 
@@ -1255,7 +1246,7 @@ end Image2
 theorem IsGlb.of_image [Preorderₓ α] [Preorderₓ β] {f : α → β} (hf : ∀ {x y}, f x ≤ f y ↔ x ≤ y) {s : Set α} {x : α}
     (hx : IsGlb (f '' s) (f x)) : IsGlb s x :=
   ⟨fun y hy => hf.1 <| hx.1 <| mem_image_of_mem _ hy, fun y hy =>
-    hf.1 <| hx.2 <| Monotone.mem_lower_bounds_image (fun x y => hf.2) hy⟩
+    hf.1 <| hx.2 <| Monotoneₓ.mem_lower_bounds_image (fun x y => hf.2) hy⟩
 
 theorem IsLub.of_image [Preorderₓ α] [Preorderₓ β] {f : α → β} (hf : ∀ {x y}, f x ≤ f y ↔ x ≤ y) {s : Set α} {x : α}
     (hx : IsLub (f '' s) (f x)) : IsLub s x :=
@@ -1264,14 +1255,14 @@ theorem IsLub.of_image [Preorderₓ α] [Preorderₓ β] {f : α → β} (hf : �
 theorem is_lub_pi {π : α → Type _} [∀ a, Preorderₓ (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
     IsLub s f ↔ ∀ a, IsLub (Function.eval a '' s) (f a) := by
   classical
-  refine' ⟨fun H a => ⟨(Function.monotone_eval a).mem_upper_bounds_image H.1, fun b hb => _⟩, fun H => ⟨_, _⟩⟩
+  refine' ⟨fun H a => ⟨(Function.monotone_evalₓ a).mem_upper_bounds_image H.1, fun b hb => _⟩, fun H => ⟨_, _⟩⟩
   · suffices : Function.update f a b ∈ UpperBounds s
     exact Function.update_same a b f ▸ H.2 this a
     refine' fun g hg => le_update_iffₓ.2 ⟨hb <| mem_image_of_mem _ hg, fun i hi => H.1 hg i⟩
     
   · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
     
-  · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upper_bounds_image hg)
+  · exact fun g hg a => (H a).2 ((Function.monotone_evalₓ a).mem_upper_bounds_image hg)
     
 
 theorem is_glb_pi {π : α → Type _} [∀ a, Preorderₓ (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
@@ -1319,8 +1310,7 @@ theorem is_lub_image {s : Set α} {x : β} : IsLub (f '' s) x ↔ IsLub s (f.sym
   ⟨fun h => IsLub.of_image (fun _ _ => f.le_iff_le) ((f.apply_symm_apply x).symm ▸ h), fun h =>
     (IsLub.of_image fun _ _ => f.symm.le_iff_le) <| (f.symm_image_image s).symm ▸ h⟩
 
-theorem is_lub_image' {s : Set α} {x : α} : IsLub (f '' s) (f x) ↔ IsLub s x := by
-  rw [is_lub_image, f.symm_apply_apply]
+theorem is_lub_image' {s : Set α} {x : α} : IsLub (f '' s) (f x) ↔ IsLub s x := by rw [is_lub_image, f.symm_apply_apply]
 
 @[simp]
 theorem is_glb_image {s : Set α} {x : β} : IsGlb (f '' s) x ↔ IsGlb s (f.symm x) :=

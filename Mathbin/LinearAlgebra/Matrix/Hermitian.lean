@@ -48,23 +48,21 @@ theorem IsHermitian.ext {A : Matrix n n α} : (∀ i j, star (A j i) = A i j) �
   exact h i j
 
 theorem IsHermitian.apply {A : Matrix n n α} (h : A.IsHermitian) (i j : n) : star (A j i) = A i j := by
-  unfold is_hermitian  at h
+  unfold is_hermitian at h
   rw [← h, conj_transpose_apply, star_star, h]
 
 theorem IsHermitian.ext_iff {A : Matrix n n α} : A.IsHermitian ↔ ∀ i j, star (A j i) = A i j :=
   ⟨IsHermitian.apply, IsHermitian.ext⟩
 
-theorem is_hermitian_mul_conj_transpose_self [Fintype n] (A : Matrix n n α) : (A ⬝ Aᴴ).IsHermitian := by
+theorem is_hermitian_mul_conj_transpose_self [Fintypeₓ n] (A : Matrix n n α) : (A ⬝ Aᴴ).IsHermitian := by
   rw [is_hermitian, conj_transpose_mul, conj_transpose_conj_transpose]
 
-theorem is_hermitian_transpose_mul_self [Fintype n] (A : Matrix n n α) : (Aᴴ ⬝ A).IsHermitian := by
+theorem is_hermitian_transpose_mul_self [Fintypeₓ n] (A : Matrix n n α) : (Aᴴ ⬝ A).IsHermitian := by
   rw [is_hermitian, conj_transpose_mul, conj_transpose_conj_transpose]
 
-theorem is_hermitian_add_transpose_self (A : Matrix n n α) : (A + Aᴴ).IsHermitian := by
-  simp [is_hermitian, add_commₓ]
+theorem is_hermitian_add_transpose_self (A : Matrix n n α) : (A + Aᴴ).IsHermitian := by simp [is_hermitian, add_commₓ]
 
-theorem is_hermitian_transpose_add_self (A : Matrix n n α) : (Aᴴ + A).IsHermitian := by
-  simp [is_hermitian, add_commₓ]
+theorem is_hermitian_transpose_add_self (A : Matrix n n α) : (Aᴴ + A).IsHermitian := by simp [is_hermitian, add_commₓ]
 
 @[simp]
 theorem is_hermitian_zero : (0 : Matrix n n α).IsHermitian :=
@@ -146,7 +144,7 @@ section IsROrC
 variable [IsROrC α] [IsROrC β]
 
 /-- A matrix is hermitian iff the corresponding linear map is self adjoint. -/
-theorem is_hermitian_iff_is_symmetric [Fintype n] [DecidableEq n] {A : Matrix n n α} :
+theorem is_hermitian_iff_is_symmetric [Fintypeₓ n] [DecidableEq n] {A : Matrix n n α} :
     IsHermitian A ↔
       LinearMap.IsSymmetric ((PiLp.linearEquiv 2 α fun _ : n => α).symm.conj A.toLin' : Module.End α (PiLp 2 _)) :=
   by

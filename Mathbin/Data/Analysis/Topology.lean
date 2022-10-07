@@ -43,18 +43,13 @@ theorem coe_mk (f T h₁ I h₂ h₃ a) : (@Ctop.mk α σ f T h₁ I h₂ h₃) 
 /-- Map a ctop to an equivalent representation type. -/
 def ofEquiv (E : σ ≃ τ) : Ctop α σ → Ctop α τ
   | ⟨f, T, h₁, I, h₂, h₃⟩ =>
-    { f := fun a => f (E.symm a), top := fun x => E (T x),
-      top_mem := fun x => by
-        simpa using h₁ x,
+    { f := fun a => f (E.symm a), top := fun x => E (T x), top_mem := fun x => by simpa using h₁ x,
       inter := fun a b x h => E (I (E.symm a) (E.symm b) x h),
-      inter_mem := fun a b x h => by
-        simpa using h₂ (E.symm a) (E.symm b) x h,
-      inter_sub := fun a b x h => by
-        simpa using h₃ (E.symm a) (E.symm b) x h }
+      inter_mem := fun a b x h => by simpa using h₂ (E.symm a) (E.symm b) x h,
+      inter_sub := fun a b x h => by simpa using h₃ (E.symm a) (E.symm b) x h }
 
 @[simp]
-theorem of_equiv_val (E : σ ≃ τ) (F : Ctop α σ) (a : τ) : F.of_equiv E a = F (E.symm a) := by
-  cases F <;> rfl
+theorem of_equiv_val (E : σ ≃ τ) (F : Ctop α σ) (a : τ) : F.of_equiv E a = F (E.symm a) := by cases F <;> rfl
 
 end
 
@@ -94,8 +89,7 @@ protected theorem is_basis [T : TopologicalSpace α] (F : Realizer α) :
   have := to_topsp_is_topological_basis F.F <;> rwa [F.eq] at this
 
 protected theorem mem_nhds [T : TopologicalSpace α] (F : Realizer α) {s : Set α} {a : α} :
-    s ∈ 𝓝 a ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s := by
-  have := mem_nhds_to_topsp F.F <;> rwa [F.eq] at this
+    s ∈ 𝓝 a ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s := by have := mem_nhds_to_topsp F.F <;> rwa [F.eq] at this
 
 theorem is_open_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
     IsOpen s ↔ ∀ a ∈ s, ∃ b, a ∈ F.f b ∧ F.f b ⊆ s :=
@@ -114,8 +108,7 @@ theorem mem_interior_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} {a
   mem_interior_iff_mem_nhds.trans F.mem_nhds
 
 protected theorem is_open [TopologicalSpace α] (F : Realizer α) (s : F.σ) : IsOpen (F.f s) :=
-  is_open_iff_nhds.2 fun a m => by
-    simpa using F.mem_nhds.2 ⟨s, m, subset.refl _⟩
+  is_open_iff_nhds.2 fun a m => by simpa using F.mem_nhds.2 ⟨s, m, subset.refl _⟩
 
 theorem ext' [T : TopologicalSpace α] {σ : Type _} {F : Ctop α σ} (H : ∀ a s, s ∈ 𝓝 a ↔ ∃ b, a ∈ F b ∧ F b ⊆ s) :
     F.toTopsp = T := by
@@ -141,13 +134,7 @@ protected def id : Realizer α :=
 def ofEquiv (F : Realizer α) (E : F.σ ≃ τ) : Realizer α :=
   ⟨τ, F.f.of_equiv E,
     ext' fun a s =>
-      F.mem_nhds.trans <|
-        ⟨fun ⟨s, h⟩ =>
-          ⟨E s, by
-            simpa using h⟩,
-          fun ⟨t, h⟩ =>
-          ⟨E.symm t, by
-            simpa using h⟩⟩⟩
+      F.mem_nhds.trans <| ⟨fun ⟨s, h⟩ => ⟨E s, by simpa using h⟩, fun ⟨t, h⟩ => ⟨E.symm t, by simpa using h⟩⟩⟩
 
 @[simp]
 theorem of_equiv_σ (F : Realizer α) (E : F.σ ≃ τ) : (F.of_equiv E).σ = τ :=
@@ -155,7 +142,7 @@ theorem of_equiv_σ (F : Realizer α) (E : F.σ ≃ τ) : (F.of_equiv E).σ = τ
 
 @[simp]
 theorem of_equiv_F (F : Realizer α) (E : F.σ ≃ τ) (s : τ) : (F.of_equiv E).f s = F.f (E.symm s) := by
-  delta' of_equiv <;> simp
+  delta of_equiv <;> simp
 
 protected def nhds (F : Realizer α) (a : α) : (𝓝 a).Realizer :=
   ⟨{ s : F.σ // a ∈ F.f s },
@@ -184,7 +171,7 @@ end Ctop.Realizer
 
 structure LocallyFinite.Realizer [TopologicalSpace α] (F : Realizer α) (f : β → Set α) where
   bas : ∀ a, { s // a ∈ F.f s }
-  Sets : ∀ x : α, Fintype { i | (f i ∩ F.f (bas x)).Nonempty }
+  Sets : ∀ x : α, Fintypeₓ { i | (f i ∩ F.f (bas x)).Nonempty }
 
 theorem LocallyFinite.Realizer.to_locally_finite [TopologicalSpace α] {F : Realizer α} {f : β → Set α}
     (R : LocallyFinite.Realizer F f) : LocallyFinite f := fun a =>

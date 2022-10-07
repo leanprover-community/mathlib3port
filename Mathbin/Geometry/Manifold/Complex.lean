@@ -62,8 +62,7 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
   -- otherwise, let `p₀` be a point where the value of `f` has maximal norm
   obtain ⟨p₀, hp₀s, hp₀⟩ := hs₁.exists_forall_ge hs' hf.continuous.norm.continuous_on
   -- we will show `f` agrees everywhere with `f p₀`
-  suffices s ⊆ { r : M | f r = f p₀ } ∩ s by
-    exact (this hb).1.trans (this ha).1.symm
+  suffices s ⊆ { r : M | f r = f p₀ } ∩ s by exact (this hb).1.trans (this ha).1.symm
   clear ha hb a b
   refine' hs₂.subset_clopen _ ⟨p₀, hp₀s, ⟨rfl, hp₀s⟩⟩
   -- closedness of the set of points sent to `f p₀`
@@ -84,7 +83,7 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
     have H₁ : (chart_at E p).symm z ∈ (chart_at E p).Source := (chart_at E p).map_target hz
     have H₂ : f ((chart_at E p).symm z) ∈ (chart_at F (0 : F)).Source := trivialₓ
     have H := (mdifferentiable_at_iff_of_mem_source H₁ H₂).mp (hf ((chart_at E p).symm z))
-    simp' only [differentiable_within_at_univ] with mfld_simps  at H
+    simp only [differentiable_within_at_univ, mfld_simps] at H
     simpa [LocalHomeomorph.right_inv _ hz] using H.2
   -- `f` pulled back by the chart at `p` has a local max at `chart_at E p p`
   have hf'' : IsLocalMax (norm ∘ f ∘ (chart_at E p).symm) (chart_at E p p) := by

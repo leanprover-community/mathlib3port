@@ -71,13 +71,11 @@ def skewAdjointLieSubalgebraEquiv :
 
 @[simp]
 theorem skew_adjoint_lie_subalgebra_equiv_apply (f : skewAdjointLieSubalgebra (B.comp ↑e ↑e)) :
-    ↑(skewAdjointLieSubalgebraEquiv B e f) = e.lieConj f := by
-  simp [skewAdjointLieSubalgebraEquiv]
+    ↑(skewAdjointLieSubalgebraEquiv B e f) = e.lieConj f := by simp [skewAdjointLieSubalgebraEquiv]
 
 @[simp]
 theorem skew_adjoint_lie_subalgebra_equiv_symm_apply (f : skewAdjointLieSubalgebra B) :
-    ↑((skewAdjointLieSubalgebraEquiv B e).symm f) = e.symm.lieConj f := by
-  simp [skewAdjointLieSubalgebraEquiv]
+    ↑((skewAdjointLieSubalgebraEquiv B e).symm f) = e.symm.lieConj f := by simp [skewAdjointLieSubalgebraEquiv]
 
 end SkewAdjointEndomorphisms
 
@@ -85,13 +83,12 @@ section SkewAdjointMatrices
 
 open Matrix
 
-variable {R : Type u} {n : Type w} [CommRingₓ R] [DecidableEq n] [Fintype n]
+variable {R : Type u} {n : Type w} [CommRingₓ R] [DecidableEq n] [Fintypeₓ n]
 
 variable (J : Matrix n n R)
 
 theorem Matrix.lie_transpose (A B : Matrix n n R) : ⁅A, B⁆ᵀ = ⁅Bᵀ, Aᵀ⁆ :=
-  show (A * B - B * A)ᵀ = Bᵀ * Aᵀ - Aᵀ * Bᵀ by
-    simp
+  show (A * B - B * A)ᵀ = Bᵀ * Aᵀ - Aᵀ * Bᵀ by simp
 
 theorem Matrix.is_skew_adjoint_bracket (A B : Matrix n n R) (hA : A ∈ skewAdjointMatricesSubmodule J)
     (hB : B ∈ skewAdjointMatricesSubmodule J) : ⁅A, B⁆ ∈ skewAdjointMatricesSubmodule J := by
@@ -131,19 +128,18 @@ theorem skew_adjoint_matrices_lie_subalgebra_equiv_apply (P : Matrix n n R) (h :
 
 /-- An equivalence of matrix algebras commuting with the transpose endomorphisms restricts to an
 equivalence of Lie algebras of skew-adjoint matrices. -/
-def skewAdjointMatricesLieSubalgebraEquivTranspose {m : Type w} [DecidableEq m] [Fintype m]
+def skewAdjointMatricesLieSubalgebraEquivTranspose {m : Type w} [DecidableEq m] [Fintypeₓ m]
     (e : Matrix n n R ≃ₐ[R] Matrix m m R) (h : ∀ A, (e A)ᵀ = e Aᵀ) :
     skewAdjointMatricesLieSubalgebra J ≃ₗ⁅R⁆ skewAdjointMatricesLieSubalgebra (e J) :=
   LieEquiv.ofSubalgebras _ _ e.toLieEquiv
     (by
       ext A
-      suffices J.is_skew_adjoint (e.symm A) ↔ (e J).IsSkewAdjoint A by
-        simpa [this]
+      suffices J.is_skew_adjoint (e.symm A) ↔ (e J).IsSkewAdjoint A by simpa [this]
       simp [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, ← Matrix.mul_eq_mul, ← h, ←
         Function.Injective.eq_iff e.injective])
 
 @[simp]
-theorem skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply {m : Type w} [DecidableEq m] [Fintype m]
+theorem skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply {m : Type w} [DecidableEq m] [Fintypeₓ m]
     (e : Matrix n n R ≃ₐ[R] Matrix m m R) (h : ∀ A, (e A)ᵀ = e Aᵀ) (A : skewAdjointMatricesLieSubalgebra J) :
     (skewAdjointMatricesLieSubalgebraEquivTranspose J e h A : Matrix m m R) = e A :=
   rfl

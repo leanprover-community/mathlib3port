@@ -170,21 +170,20 @@ theorem norm_image_zero_le : ∥f 0∥ ≤ ∥f∥ :=
 @[simp]
 theorem norm_eq (h : f 0 = 0) : ∥f∥ = ∥f.contLinear∥ :=
   calc
-    ∥f∥ = max ∥f 0∥ ∥f.contLinear∥ := by
-      rw [norm_def]
-    _ = max 0 ∥f.contLinear∥ := by
-      rw [h, norm_zero]
+    ∥f∥ = max ∥f 0∥ ∥f.contLinear∥ := by rw [norm_def]
+    _ = max 0 ∥f.contLinear∥ := by rw [h, norm_zero]
     _ = ∥f.contLinear∥ := max_eq_rightₓ (norm_nonneg _)
     
 
 noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
-  NormedAddCommGroup.ofCore _
-    { norm_eq_zero_iff := fun f => by
-        rw [norm_def]
-        refine'
-          ⟨fun h₀ => _, by
-            rintro rfl
-            simp ⟩
+  AddGroupNorm.toNormedAddCommGroup
+    { toFun := fun f => max ∥f 0∥ ∥f.contLinear∥, map_zero' := by simp, neg' := fun f => by simp,
+      add_le' := fun f g => by
+        simp only [Pi.add_apply, add_cont_linear, coe_add, max_le_iff]
+        exact
+          ⟨(norm_add_le _ _).trans (add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)),
+            (norm_add_le _ _).trans (add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _))⟩,
+      eq_zero_of_map_eq_zero' := fun f h₀ => by
         rcases max_eq_iff.mp h₀ with (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩) <;> rw [h₁] at h₂
         · rw [norm_le_zero_iff, cont_linear_eq_zero_iff_exists_const] at h₂
           obtain ⟨q, rfl⟩ := h₂
@@ -197,25 +196,19 @@ noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
           simp only [Function.const_applyₓ, coe_const, norm_le_zero_iff] at h₂
           rw [h₂]
           rfl
-          ,
-      triangle := fun f g => by
-        simp only [norm_def, Pi.add_apply, add_cont_linear, coe_add, max_le_iff]
-        exact
-          ⟨(norm_add_le _ _).trans (add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)),
-            (norm_add_le _ _).trans (add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _))⟩,
-      norm_neg := fun f => by
-        simp [norm_def] }
+           }
 
 instance :
-    NormedSpace 𝕜 (V →A[𝕜] W) where norm_smul_le := fun t f => by
+    NormedSpace 𝕜
+      (V →A[𝕜]
+        W) where norm_smul_le := fun t f => by
     simp only [norm_def, smul_cont_linear, coe_smul, Pi.smul_apply, norm_smul, ← mul_max_of_nonneg _ _ (norm_nonneg t)]
 
 theorem norm_comp_le (g : W₂ →A[𝕜] V) : ∥f.comp g∥ ≤ ∥f∥ * ∥g∥ + ∥f 0∥ := by
   rw [norm_def, max_le_iff]
   constructor
   · calc
-      ∥f.comp g 0∥ = ∥f (g 0)∥ := by
-        simp
+      ∥f.comp g 0∥ = ∥f (g 0)∥ := by simp
       _ = ∥f.cont_linear (g 0) + f 0∥ := by
         rw [f.decomp]
         simp
@@ -249,12 +242,9 @@ def toConstProdContinuousLinearMap : (V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V �
   right_inv := by
     rintro ⟨v, f⟩
     ext <;> simp
-  map_add' := by
-    simp
-  map_smul' := by
-    simp
-  norm_map' := fun f => by
-    simp [Prod.norm_def, norm_def]
+  map_add' := fun _ _ => rfl
+  map_smul' := fun _ _ => rfl
+  norm_map' := fun f => rfl
 
 @[simp]
 theorem to_const_prod_continuous_linear_map_fst (f : V →A[𝕜] W) : (toConstProdContinuousLinearMap 𝕜 V W f).fst = f 0 :=

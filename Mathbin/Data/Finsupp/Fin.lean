@@ -38,8 +38,7 @@ theorem tail_apply : tail t i = t i.succ := by
   rfl
 
 @[simp]
-theorem cons_zero : cons y s 0 = y := by
-  simp [cons, Finsupp.equivFunOnFintype]
+theorem cons_zero : cons y s 0 = y := by simp [cons, Finsupp.equivFunOnFintype]
 
 @[simp]
 theorem cons_succ : cons y s i.succ = s i := by
@@ -57,7 +56,7 @@ theorem tail_cons : tail (cons y s) = s := by
 @[simp]
 theorem cons_tail : cons (t 0) (tail t) = t := by
   ext
-  by_cases' c_a : a = 0
+  by_cases c_a:a = 0
   · rw [c_a, cons_zero]
     
   · rw [← Finₓ.succ_pred a c_a, cons_succ, ← tail_apply]
@@ -66,7 +65,7 @@ theorem cons_tail : cons (t 0) (tail t) = t := by
 @[simp]
 theorem cons_zero_zero : cons 0 (0 : Finₓ n →₀ M) = 0 := by
   ext
-  by_cases' c : a = 0
+  by_cases c:a = 0
   · simp [c]
     
   · rw [← Finₓ.succ_pred a c, cons_succ]

@@ -50,13 +50,13 @@ open Matrix
 def toMatrixₓ [DecidableEq n] [Zero α] [One α] (f : m ≃. n) : Matrix m n α
   | i, j => if j ∈ f i then 1 else 0
 
-theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiringₓ α] (f : l ≃. m) (M : Matrix m n α) (i j) :
+theorem mul_matrix_apply [Fintypeₓ m] [DecidableEq m] [Semiringₓ α] (f : l ≃. m) (M : Matrix m n α) (i j) :
     (f.toMatrix ⬝ M) i j = Option.casesOn (f i) 0 fun fi => M fi j := by
-  dsimp' [to_matrix, Matrix.mul_apply]
+  dsimp [to_matrix, Matrix.mul_apply]
   cases' h : f i with fi
   · simp [h]
     
-  · rw [Finset.sum_eq_single fi] <;> simp (config := { contextual := true })[h, eq_comm]
+  · rw [Finsetₓ.sum_eq_single fi] <;> simp (config := { contextual := true }) [h, eq_comm]
     
 
 theorem to_matrix_symm [DecidableEq m] [DecidableEq n] [Zero α] [One α] (f : m ≃. n) :
@@ -67,13 +67,13 @@ theorem to_matrix_symm [DecidableEq m] [DecidableEq n] [Zero α] [One α] (f : m
 theorem to_matrix_refl [DecidableEq n] [Zero α] [One α] : ((Pequiv.refl n).toMatrix : Matrix n n α) = 1 := by
   ext <;> simp [to_matrix, one_apply] <;> congr
 
-theorem matrix_mul_apply [Fintype m] [Semiringₓ α] [DecidableEq n] (M : Matrix l m α) (f : m ≃. n) (i j) :
+theorem matrix_mul_apply [Fintypeₓ m] [Semiringₓ α] [DecidableEq n] (M : Matrix l m α) (f : m ≃. n) (i j) :
     (M ⬝ f.toMatrix) i j = Option.casesOn (f.symm j) 0 fun fj => M i fj := by
-  dsimp' [to_matrix, Matrix.mul_apply]
+  dsimp [to_matrix, Matrix.mul_apply]
   cases' h : f.symm j with fj
   · simp [h, ← f.eq_some_iff]
     
-  · rw [Finset.sum_eq_single fj]
+  · rw [Finsetₓ.sum_eq_single fj]
     · simp [h, ← f.eq_some_iff]
       
     · intro b H n
@@ -83,16 +83,16 @@ theorem matrix_mul_apply [Fintype m] [Semiringₓ α] [DecidableEq n] (M : Matri
       
     
 
-theorem to_pequiv_mul_matrix [Fintype m] [DecidableEq m] [Semiringₓ α] (f : m ≃ m) (M : Matrix m n α) :
+theorem to_pequiv_mul_matrix [Fintypeₓ m] [DecidableEq m] [Semiringₓ α] (f : m ≃ m) (M : Matrix m n α) :
     f.toPequiv.toMatrix ⬝ M = fun i => M (f i) := by
   ext i j
   rw [mul_matrix_apply, Equivₓ.to_pequiv_apply]
 
-theorem to_matrix_trans [Fintype m] [DecidableEq m] [DecidableEq n] [Semiringₓ α] (f : l ≃. m) (g : m ≃. n) :
+theorem to_matrix_trans [Fintypeₓ m] [DecidableEq m] [DecidableEq n] [Semiringₓ α] (f : l ≃. m) (g : m ≃. n) :
     ((f.trans g).toMatrix : Matrix l n α) = f.toMatrix ⬝ g.toMatrix := by
   ext i j
   rw [mul_matrix_apply]
-  dsimp' [to_matrix, Pequiv.trans]
+  dsimp [to_matrix, Pequiv.trans]
   cases f i <;> simp
 
 @[simp]
@@ -125,28 +125,27 @@ theorem to_matrix_swap [DecidableEq n] [Ringₓ α] (i j : n) :
         (single j i).toMatrix :=
   by
   ext
-  dsimp' [to_matrix, single, Equivₓ.swap_apply_def, Equivₓ.toPequiv, one_apply]
+  dsimp [to_matrix, single, Equivₓ.swap_apply_def, Equivₓ.toPequiv, one_apply]
   split_ifs <;>
-    first |
-      · simp_all
-        |
-      · exfalso
+    first
+      |· simp_all
+        |· exfalso
         assumption
         
 
 @[simp]
-theorem single_mul_single [Fintype n] [DecidableEq k] [DecidableEq m] [DecidableEq n] [Semiringₓ α] (a : m) (b : n)
+theorem single_mul_single [Fintypeₓ n] [DecidableEq k] [DecidableEq m] [DecidableEq n] [Semiringₓ α] (a : m) (b : n)
     (c : k) : ((single a b).toMatrix : Matrix _ _ α) ⬝ (single b c).toMatrix = (single a c).toMatrix := by
   rw [← to_matrix_trans, single_trans_single]
 
-theorem single_mul_single_of_ne [Fintype n] [DecidableEq n] [DecidableEq k] [DecidableEq m] [Semiringₓ α] {b₁ b₂ : n}
+theorem single_mul_single_of_ne [Fintypeₓ n] [DecidableEq n] [DecidableEq k] [DecidableEq m] [Semiringₓ α] {b₁ b₂ : n}
     (hb : b₁ ≠ b₂) (a : m) (c : k) : ((single a b₁).toMatrix : Matrix _ _ α) ⬝ (single b₂ c).toMatrix = 0 := by
   rw [← to_matrix_trans, single_trans_single_of_ne hb, to_matrix_bot]
 
 /-- Restatement of `single_mul_single`, which will simplify expressions in `simp` normal form,
   when associativity may otherwise need to be carefully applied. -/
 @[simp]
-theorem single_mul_single_right [Fintype n] [Fintype k] [DecidableEq n] [DecidableEq k] [DecidableEq m] [Semiringₓ α]
+theorem single_mul_single_right [Fintypeₓ n] [Fintypeₓ k] [DecidableEq n] [DecidableEq k] [DecidableEq m] [Semiringₓ α]
     (a : m) (b : n) (c : k) (M : Matrix k l α) :
     (single a b).toMatrix ⬝ ((single b c).toMatrix ⬝ M) = (single a c).toMatrix ⬝ M := by
   rw [← Matrix.mul_assoc, single_mul_single]

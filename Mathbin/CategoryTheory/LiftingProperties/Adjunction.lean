@@ -46,11 +46,8 @@ theorem right_adjoint : CommSq (adj.homEquiv _ _ u) i (F.map p) (adj.homEquiv _ 
 adjoint square. -/
 def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftStruct where
   toFun := fun l =>
-    { l := adj.homEquiv _ _ l.l,
-      fac_left' := by
-        rw [← adj.hom_equiv_naturality_left, l.fac_left],
-      fac_right' := by
-        rw [← adjunction.hom_equiv_naturality_right, l.fac_right] }
+    { l := adj.homEquiv _ _ l.l, fac_left' := by rw [← adj.hom_equiv_naturality_left, l.fac_left],
+      fac_right' := by rw [← adjunction.hom_equiv_naturality_right, l.fac_right] }
   invFun := fun l =>
     { l := (adj.homEquiv _ _).symm l.l,
       fac_left' := by
@@ -59,10 +56,8 @@ def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftSt
       fac_right' := by
         rw [← adjunction.hom_equiv_naturality_right_symm, l.fac_right]
         apply (adj.hom_equiv _ _).left_inv }
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
 
 /-- A square has a lifting if and only if its (right) adjoint square has a lifting. -/
 theorem right_adjoint_has_lift_iff : HasLift (sq.rightAdjoint adj) ↔ HasLift sq := by
@@ -94,11 +89,8 @@ theorem left_adjoint : CommSq ((adj.homEquiv _ _).symm u) (G.map i) p ((adj.homE
 adjoint square. -/
 def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStruct where
   toFun := fun l =>
-    { l := (adj.homEquiv _ _).symm l.l,
-      fac_left' := by
-        rw [← adj.hom_equiv_naturality_left_symm, l.fac_left],
-      fac_right' := by
-        rw [← adj.hom_equiv_naturality_right_symm, l.fac_right] }
+    { l := (adj.homEquiv _ _).symm l.l, fac_left' := by rw [← adj.hom_equiv_naturality_left_symm, l.fac_left],
+      fac_right' := by rw [← adj.hom_equiv_naturality_right_symm, l.fac_right] }
   invFun := fun l =>
     { l := (adj.homEquiv _ _) l.l,
       fac_left' := by
@@ -107,10 +99,8 @@ def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStru
       fac_right' := by
         rw [← adj.hom_equiv_naturality_right, l.fac_right]
         apply (adj.hom_equiv _ _).right_inv }
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
 
 /-- A (left) adjoint square has a lifting if and only if the original square has a lifting. -/
 theorem left_adjoint_has_lift_iff : HasLift (sq.leftAdjoint adj) ↔ HasLift sq := by

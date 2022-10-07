@@ -109,7 +109,7 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
     have : BalancedCore 𝕜 ({ξ₀}ᶜ) ∈ @nhds 𝕜 t 0 := balanced_core_mem_nhds_zero this
     refine' mem_of_superset this fun ξ hξ => _
     -- Let `ξ ∈ 𝓑`. We want to show `∥ξ∥ < ε`. If `ξ = 0`, this is trivial.
-    by_cases' hξ0 : ξ = 0
+    by_cases hξ0:ξ = 0
     · rw [hξ0]
       exact Metric.mem_closed_ball_self hε.le
       
@@ -134,11 +134,13 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
           map id (@nhds 𝕜 hnorm.to_uniform_space.to_topological_space 0) :=
         map_id.symm
       _ = map (fun x => id x • 1) (@nhds 𝕜 hnorm.to_uniform_space.to_topological_space 0) := by
-        conv_rhs => congr ext rw [smul_eq_mul, mul_oneₓ] <;> rfl
+        conv_rhs =>
+          congr
+          ext
+          rw [smul_eq_mul, mul_oneₓ] <;> rfl
       _ ≤ @nhds 𝕜 t ((0 : 𝕜) • 1) :=
         @tendsto.smul_const _ _ _ hnorm.to_uniform_space.to_topological_space t _ _ _ _ _ tendsto_id (1 : 𝕜)
-      _ = @nhds 𝕜 t 0 := by
-        rw [zero_smul]
+      _ = @nhds 𝕜 t 0 := by rw [zero_smul]
       
     
 
@@ -146,7 +148,7 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
     its kernel is closed. -/
 theorem LinearMap.continuous_of_is_closed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsClosed (l.ker : Set E)) : Continuous l := by
   -- `l` is either constant or surjective. If it is constant, the result is trivial.
-  by_cases' H : finrank 𝕜 l.range = 0
+  by_cases H:finrank 𝕜 l.range = 0
   · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H
     rw [H]
     exact continuous_zero
@@ -161,8 +163,7 @@ theorem LinearMap.continuous_of_is_closed_ker (l : E →ₗ[𝕜] 𝕜) (hl : Is
       rw [← LinearMap.range_eq_top, Submodule.range_liftq]
       exact eq_top_of_finrank_eq ((finrank_self 𝕜).symm ▸ this)
     let φ : (E ⧸ l.ker) ≃ₗ[𝕜] 𝕜 := LinearEquiv.ofBijective (l.ker.liftq l (le_reflₓ _)) hi hs
-    have hlφ : (l : E → 𝕜) = φ ∘ l.ker.mkq := by
-      ext <;> rfl
+    have hlφ : (l : E → 𝕜) = φ ∘ l.ker.mkq := by ext <;> rfl
     -- Since the quotient map `E →ₗ[𝕜] (E ⧸ l.ker)` is continuous, the continuity of `l` will follow
     -- form the continuity of `φ`.
     suffices Continuous φ.to_equiv by
@@ -194,13 +195,13 @@ variable [CompleteSpace 𝕜]
 
 /-- This version imposes `ι` and `E` to live in the same universe, so you should instead use
 `continuous_equiv_fun_basis` which gives the same result without universe restrictions. -/
-private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [Fintype ι] (ξ : Basis ι 𝕜 E) :
+private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [Fintypeₓ ι] (ξ : Basis ι 𝕜 E) :
     Continuous ξ.equivFun := by
   letI : UniformSpace E := TopologicalAddGroup.toUniformSpace E
   letI : UniformAddGroup E := topological_add_comm_group_is_uniform
   letI : SeparatedSpace E := separated_iff_t2.mpr ht2
-  induction' hn : Fintype.card ι with n IH generalizing ι E
-  · rw [Fintype.card_eq_zero_iff] at hn
+  induction' hn : Fintypeₓ.card ι with n IH generalizing ι E
+  · rw [Fintypeₓ.card_eq_zero_iff] at hn
     exact continuous_of_const fun x y => funext hn.elim
     
   · haveI : FiniteDimensional 𝕜 E := of_fintype_basis ξ
@@ -211,21 +212,18 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
       letI : UniformAddGroup s := s.to_add_subgroup.uniform_add_group
       let b := Basis.ofVectorSpace 𝕜 s
       have U : UniformEmbedding b.equiv_fun.symm.to_equiv := by
-        have : Fintype.card (Basis.OfVectorSpaceIndex 𝕜 s) = n := by
+        have : Fintypeₓ.card (Basis.OfVectorSpaceIndex 𝕜 s) = n := by
           rw [← s_dim]
           exact (finrank_eq_card_basis b).symm
         have : Continuous b.equiv_fun := IH b this
         exact b.equiv_fun.symm.uniform_embedding b.equiv_fun.symm.to_linear_map.continuous_on_pi this
       have : IsComplete (s : Set E) :=
-        complete_space_coe_iff_is_complete.1
-          ((complete_space_congr U).1
-            (by
-              infer_instance))
+        complete_space_coe_iff_is_complete.1 ((complete_space_congr U).1 (by infer_instance))
       exact this.is_closed
     -- second step: any linear form is continuous, as its kernel is closed by the first step
     have H₂ : ∀ f : E →ₗ[𝕜] 𝕜, Continuous f := by
       intro f
-      by_cases' H : finrank 𝕜 f.range = 0
+      by_cases H:finrank 𝕜 f.range = 0
       · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H
         rw [H]
         exact continuous_zero
@@ -257,7 +255,7 @@ theorem LinearMap.continuous_of_finite_dimensional [T2Space E] [FiniteDimensiona
   have : Continuous (f.comp (b.equiv_fun.symm : (Basis.OfVectorSpaceIndex 𝕜 E → 𝕜) →ₗ[𝕜] E) ∘ b.equiv_fun) := B.comp A
   convert this
   ext x
-  dsimp'
+  dsimp
   rw [Basis.equiv_fun_symm_apply, Basis.sum_repr]
 
 instance LinearMap.continuousLinearMapClassOfFiniteDimensional [T2Space E] [FiniteDimensional 𝕜 E] :
@@ -269,9 +267,9 @@ instance LinearMap.continuousLinearMapClassOfFiniteDimensional [T2Space E] [Fini
 This is the key fact wich makes all linear maps from a T2 finite dimensional TVS over such a field
 continuous (see `linear_map.continuous_of_finite_dimensional`), which in turn implies that all
 norms are equivalent in finite dimensions. -/
-theorem continuous_equiv_fun_basis [T2Space E] {ι : Type _} [Fintype ι] (ξ : Basis ι 𝕜 E) : Continuous ξ.equivFun := by
+theorem continuous_equiv_fun_basis [T2Space E] {ι : Type _} [Fintypeₓ ι] (ξ : Basis ι 𝕜 E) : Continuous ξ.equivFun :=
   haveI : FiniteDimensional 𝕜 E := of_fintype_basis ξ
-  exact ξ.equiv_fun.to_linear_map.continuous_of_finite_dimensional
+  ξ.equiv_fun.to_linear_map.continuous_of_finite_dimensional
 
 namespace LinearMap
 
@@ -303,11 +301,11 @@ theorem det_to_continuous_linear_map (f : E →ₗ[𝕜] E) : f.toContinuousLine
   rfl
 
 @[simp]
-theorem ker_to_continuous_linear_map (f : E →ₗ[𝕜] F') : f.toContinuousLinearMap.ker = f.ker :=
+theorem ker_to_continuous_linear_map (f : E →ₗ[𝕜] F') : ker f.toContinuousLinearMap = ker f :=
   rfl
 
 @[simp]
-theorem range_to_continuous_linear_map (f : E →ₗ[𝕜] F') : f.toContinuousLinearMap.range = f.range :=
+theorem range_to_continuous_linear_map (f : E →ₗ[𝕜] F') : range f.toContinuousLinearMap = range f :=
   rfl
 
 end LinearMap
@@ -320,9 +318,9 @@ variable [T2Space E] [T2Space F] [FiniteDimensional 𝕜 E]
 space. -/
 def toContinuousLinearEquiv (e : E ≃ₗ[𝕜] F) : E ≃L[𝕜] F :=
   { e with continuous_to_fun := e.toLinearMap.continuous_of_finite_dimensional,
-    continuous_inv_fun := by
+    continuous_inv_fun :=
       haveI : FiniteDimensional 𝕜 F := e.finite_dimensional
-      exact e.symm.to_linear_map.continuous_of_finite_dimensional }
+      e.symm.to_linear_map.continuous_of_finite_dimensional }
 
 @[simp]
 theorem coe_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv : E →ₗ[𝕜] F) = e :=

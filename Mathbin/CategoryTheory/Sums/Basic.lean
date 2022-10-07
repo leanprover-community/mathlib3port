@@ -111,25 +111,11 @@ namespace Swap
 
 /-- `swap` gives an equivalence between `C ⊕ D` and `D ⊕ C`. -/
 def equivalence : Sum C D ≌ Sum D C :=
-  Equivalence.mk (swap C D) (swap D C)
-    (NatIso.ofComponents
-      (fun X =>
-        eqToIso
-          (by
-            cases X <;> rfl))
-      (by
-        tidy))
-    (NatIso.ofComponents
-      (fun X =>
-        eqToIso
-          (by
-            cases X <;> rfl))
-      (by
-        tidy))
+  Equivalence.mk (swap C D) (swap D C) (NatIso.ofComponents (fun X => eqToIso (by cases X <;> rfl)) (by tidy))
+    (NatIso.ofComponents (fun X => eqToIso (by cases X <;> rfl)) (by tidy))
 
 instance isEquivalence : IsEquivalence (swap C D) :=
-  (by
-    infer_instance : IsEquivalence (equivalence C D).Functor)
+  (by infer_instance : IsEquivalence (equivalence C D).Functor)
 
 /-- The double swap on `C ⊕ D` is naturally isomorphic to the identity functor. -/
 def symmetry : swap C D ⋙ swap D C ≅ 𝟭 (Sum C D) :=

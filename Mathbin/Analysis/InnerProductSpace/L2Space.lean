@@ -82,7 +82,7 @@ Hilbert space, Hilbert sum, l2, Hilbert basis, unitary equivalence, isometric is
 
 open IsROrC Submodule Filter
 
-open BigOperators Nnreal Ennreal Classical ComplexConjugate
+open BigOperators Nnreal Ennreal Classical ComplexConjugate TopologicalSpace
 
 noncomputable section
 
@@ -116,16 +116,12 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
   { lp.normedSpace with inner := fun f g => ∑' i, ⟪f i, g i⟫,
     norm_sq_eq_inner := fun f => by
       calc
-        ∥f∥ ^ 2 = ∥f∥ ^ (2 : ℝ≥0∞).toReal := by
-          norm_cast
+        ∥f∥ ^ 2 = ∥f∥ ^ (2 : ℝ≥0∞).toReal := by norm_cast
         _ = ∑' i, ∥f i∥ ^ (2 : ℝ≥0∞).toReal := lp.norm_rpow_eq_tsum _ f
-        _ = ∑' i, ∥f i∥ ^ 2 := by
-          norm_cast
-        _ = ∑' i, re ⟪f i, f i⟫ := by
-          simp only [norm_sq_eq_inner]
+        _ = ∑' i, ∥f i∥ ^ 2 := by norm_cast
+        _ = ∑' i, re ⟪f i, f i⟫ := by simp only [norm_sq_eq_inner]
         _ = re (∑' i, ⟪f i, f i⟫) := (is_R_or_C.re_clm.map_tsum _).symm
-        _ = _ := by
-          congr
+        _ = _ := by congr
         
       · norm_num
         
@@ -133,22 +129,17 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         ,
     conj_sym := fun f g => by
       calc
-        conj _ = conj (∑' i, ⟪g i, f i⟫) := by
-          congr
+        conj _ = conj (∑' i, ⟪g i, f i⟫) := by congr
         _ = ∑' i, conj ⟪g i, f i⟫ := is_R_or_C.conj_cle.map_tsum
-        _ = ∑' i, ⟪f i, g i⟫ := by
-          simp only [inner_conj_sym]
-        _ = _ := by
-          congr
+        _ = ∑' i, ⟪f i, g i⟫ := by simp only [inner_conj_sym]
+        _ = _ := by congr
         ,
     add_left := fun f₁ f₂ g => by
       calc
         _ = ∑' i, ⟪(f₁ + f₂) i, g i⟫ := _
-        _ = ∑' i, ⟪f₁ i, g i⟫ + ⟪f₂ i, g i⟫ := by
-          simp only [inner_add_left, Pi.add_apply, coe_fn_add]
+        _ = ∑' i, ⟪f₁ i, g i⟫ + ⟪f₂ i, g i⟫ := by simp only [inner_add_left, Pi.add_apply, coe_fn_add]
         _ = (∑' i, ⟪f₁ i, g i⟫) + ∑' i, ⟪f₂ i, g i⟫ := tsum_add _ _
-        _ = _ := by
-          congr
+        _ = _ := by congr
         
       · congr
         
@@ -159,8 +150,7 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
     smul_left := fun f g c => by
       calc
         _ = ∑' i, ⟪c • f i, g i⟫ := _
-        _ = ∑' i, conj c * ⟪f i, g i⟫ := by
-          simp only [inner_smul_left]
+        _ = ∑' i, conj c * ⟪f i, g i⟫ := by simp only [inner_smul_left]
         _ = conj c * ∑' i, ⟪f i, g i⟫ := tsum_mul_left
         _ = _ := _
         
@@ -220,8 +210,7 @@ protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E where
   norm_map' := fun f => by
     classical
     -- needed for lattice instance on `finset ι`, for `filter.at_top_ne_bot`
-    have H : 0 < (2 : ℝ≥0∞).toReal := by
-      norm_num
+    have H : 0 < (2 : ℝ≥0∞).toReal := by norm_num
     suffices ∥∑' i : ι, V i (f i)∥ ^ (2 : ℝ≥0∞).toReal = ∥f∥ ^ (2 : ℝ≥0∞).toReal by
       exact Real.rpow_left_inj_on H.ne' (norm_nonneg _) (norm_nonneg _) this
     refine' tendsto_nhds_unique _ (lp.has_sum_norm H f)
@@ -254,7 +243,7 @@ protected theorem linear_isometry_apply_dfinsupp_sum_single (W₀ : Π₀ i : ι
     hV.linear_isometry (∑ i in W₀.support, lp.single 2 i (W₀ i)) =
       ∑ i in W₀.support, hV.linear_isometry (lp.single 2 i (W₀ i)) :=
     hV.linear_isometry.to_linear_map.map_sum
-  simp (config := { contextual := true })[Dfinsupp.sum, this]
+  simp (config := { contextual := true }) [Dfinsupp.sum, this]
 
 /-- The canonical linear isometry from the `lp 2` of a mutually orthogonal family of subspaces of
 `E` into E, has range the closure of the span of the subspaces. -/
@@ -314,9 +303,7 @@ theorem IsHilbertSum.mk_internal [∀ i, CompleteSpace <| F i]
     (hFortho : @OrthogonalFamily 𝕜 E _ _ _ (fun i => F i) _ fun i => (F i).subtypeₗᵢ)
     (hFtotal : ⊤ ≤ (⨆ i, F i).topologicalClosure) :
     @IsHilbertSum _ 𝕜 _ E _ _ (fun i => F i) _ fun i => (F i).subtypeₗᵢ :=
-  IsHilbertSum.mk hFortho
-    (by
-      simpa [subtypeₗᵢ_to_linear_map, range_subtype] using hFtotal)
+  IsHilbertSum.mk hFortho (by simpa [subtypeₗᵢ_to_linear_map, range_subtype] using hFtotal)
 
 /-- *A* Hilbert sum `(E, V)` of `G` is canonically isomorphic to *the* Hilbert sum of `G`,
 i.e `lp G 2`.
@@ -363,7 +350,7 @@ protected theorem IsHilbertSum.linear_isometry_equiv_apply_dfinsupp_sum_single (
   rw [← hV.linear_isometry_equiv_symm_apply_dfinsupp_sum_single]
   rw [LinearIsometryEquiv.apply_symm_apply]
   ext i
-  simp (config := { contextual := true })[Dfinsupp.sum, lp.single_apply]
+  simp (config := { contextual := true }) [Dfinsupp.sum, lp.single_apply]
 
 /-- Given a total orthonormal family `v : ι → E`, `E` is a Hilbert sum of `λ i : ι, 𝕜` relative to
 the family of linear isometries `λ i, λ k, k • v i`. -/
@@ -380,10 +367,7 @@ theorem Submodule.is_hilbert_sum_orthogonal (K : Submodule 𝕜 E) [hK : Complet
   by
   have : ∀ b, CompleteSpace ((cond b K Kᗮ : Submodule 𝕜 E) : Type _) := by
     intro b
-    cases b <;>
-      first |
-        exact orthogonal.complete_space K|
-        assumption
+    cases b <;> first |exact orthogonal.complete_space K|assumption
   refine' IsHilbertSum.mk_internal _ K.orthogonal_family_self _
   refine' le_transₓ _ (Submodule.submodule_topological_closure _)
   rw [supr_bool_eq]
@@ -479,17 +463,35 @@ protected theorem tsum_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E) : 
 -- Note : this should be `b.repr` composed with an identification of `lp (λ i : ι, 𝕜) p` with
 -- `pi_Lp p (λ i : ι, 𝕜)` (in this case with `p = 2`), but we don't have this yet (July 2022).
 /-- A finite Hilbert basis is an orthonormal basis. -/
-protected def toOrthonormalBasis [Fintype ι] (b : HilbertBasis ι 𝕜 E) : OrthonormalBasis ι 𝕜 E :=
+protected def toOrthonormalBasis [Fintypeₓ ι] (b : HilbertBasis ι 𝕜 E) : OrthonormalBasis ι 𝕜 E :=
   OrthonormalBasis.mk b.Orthonormal
     (by
       refine' Eq.geₓ _
       have := (span 𝕜 (finset.univ.image b : Set E)).closed_of_finite_dimensional
-      simpa only [Finset.coe_image, Finset.coe_univ, Set.image_univ, HilbertBasis.dense_span] using
+      simpa only [Finsetₓ.coe_image, Finsetₓ.coe_univ, Set.image_univ, HilbertBasis.dense_span] using
         this.submodule_topological_closure_eq.symm)
 
 @[simp]
-theorem coe_to_orthonormal_basis [Fintype ι] (b : HilbertBasis ι 𝕜 E) : (b.toOrthonormalBasis : ι → E) = b :=
+theorem coe_to_orthonormal_basis [Fintypeₓ ι] (b : HilbertBasis ι 𝕜 E) : (b.toOrthonormalBasis : ι → E) = b :=
   OrthonormalBasis.coe_mk _ _
+
+protected theorem has_sum_orthogonal_projection {U : Submodule 𝕜 E} [CompleteSpace U] (b : HilbertBasis ι 𝕜 U) (x : E) :
+    HasSum (fun i => ⟪(b i : E), x⟫ • b i) (orthogonalProjection U x) := by
+  simpa only [b.repr_apply_apply, inner_orthogonal_projection_eq_of_mem_left] using
+    b.has_sum_repr (orthogonalProjection U x)
+
+theorem finite_spans_dense (b : HilbertBasis ι 𝕜 E) :
+    (⨆ J : Finsetₓ ι, span 𝕜 (J.Image b : Set E)).topologicalClosure = ⊤ :=
+  eq_top_iff.mpr <|
+    b.dense_span.Ge.trans
+      (by
+        simp_rw [← Submodule.span_Union]
+        exact
+          topological_closure_mono
+            (span_mono <|
+              set.range_subset_iff.mpr fun i =>
+                Set.mem_Union_of_mem {i} <|
+                  finset.mem_coe.mpr <| Finsetₓ.mem_image_of_mem _ <| Finsetₓ.mem_singleton_self i))
 
 variable {v : ι → E} (hv : Orthonormal 𝕜 v)
 
@@ -510,9 +512,7 @@ protected theorem coe_mk (hsp : ⊤ ≤ (span 𝕜 (Set.Range v)).topologicalClo
 /-- An orthonormal family of vectors whose span has trivial orthogonal complement is a Hilbert
 basis. -/
 protected def mkOfOrthogonalEqBot (hsp : (span 𝕜 (Set.Range v))ᗮ = ⊥) : HilbertBasis ι 𝕜 E :=
-  HilbertBasis.mk hv
-    (by
-      rw [← orthogonal_orthogonal_eq_closure, ← eq_top_iff, orthogonal_eq_top_iff, hsp])
+  HilbertBasis.mk hv (by rw [← orthogonal_orthogonal_eq_closure, ← eq_top_iff, orthogonal_eq_top_iff, hsp])
 
 @[simp]
 protected theorem coe_of_orthogonal_eq_bot_mk (hsp : (span 𝕜 (Set.Range v))ᗮ = ⊥) :
@@ -524,12 +524,13 @@ omit hv
 -- Note : this should be `b.repr` composed with an identification of `lp (λ i : ι, 𝕜) p` with
 -- `pi_Lp p (λ i : ι, 𝕜)` (in this case with `p = 2`), but we don't have this yet (July 2022).
 /-- An orthonormal basis is an Hilbert basis. -/
-protected def _root_.orthonormal_basis.to_hilbert_basis [Fintype ι] (b : OrthonormalBasis ι 𝕜 E) : HilbertBasis ι 𝕜 E :=
+protected def _root_.orthonormal_basis.to_hilbert_basis [Fintypeₓ ι] (b : OrthonormalBasis ι 𝕜 E) :
+    HilbertBasis ι 𝕜 E :=
   HilbertBasis.mk b.Orthonormal <| by
     simpa only [← OrthonormalBasis.coe_to_basis, b.to_basis.span_eq, eq_top_iff] using @subset_closure E _ _
 
 @[simp]
-theorem _root_.orthonormal_basis.coe_to_hilbert_basis [Fintype ι] (b : OrthonormalBasis ι 𝕜 E) :
+theorem _root_.orthonormal_basis.coe_to_hilbert_basis [Fintypeₓ ι] (b : OrthonormalBasis ι 𝕜 E) :
     (b.toHilbertBasis : ι → E) = b :=
   HilbertBasis.coe_mk _ _
 
@@ -539,8 +540,7 @@ theorem _root_.orthonormal.exists_hilbert_basis_extension {s : Set E} (hs : Orth
   let ⟨w, hws, hw_ortho, hw_max⟩ := exists_maximal_orthonormal hs
   ⟨w,
     HilbertBasis.mkOfOrthogonalEqBot hw_ortho
-      (by
-        simpa [maximal_orthonormal_iff_orthogonal_complement_eq_bot hw_ortho] using hw_max),
+      (by simpa [maximal_orthonormal_iff_orthogonal_complement_eq_bot hw_ortho] using hw_max),
     hws, HilbertBasis.coe_of_orthogonal_eq_bot_mk _ _⟩
 
 variable (𝕜 E)

@@ -168,11 +168,7 @@ theorem cancel_right {g₁ g₂ : SpectralMap β γ} {f : SpectralMap α β} (hf
 
 theorem cancel_left {g : SpectralMap β γ} {f₁ f₂ : SpectralMap α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end SpectralMap
 

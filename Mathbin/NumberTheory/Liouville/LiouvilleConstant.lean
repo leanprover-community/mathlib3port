@@ -35,7 +35,7 @@ noncomputable section
 
 open Nat BigOperators
 
-open Real Finset
+open Real Finsetₓ
 
 namespace Liouville
 
@@ -136,13 +136,14 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
         (Or.inl (tsum_geometric_of_abs_lt_1 mi))
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 1 / (m ^ n !) ^ n :=
   calc
     (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 2 * (1 / m ^ (n + 1)!) :=-- the second factors coincide (and are non-negative),
         -- the first factors, satisfy the inequality `sub_one_div_inv_le_two`
-        mul_mono_nonneg
-        (one_div_nonneg.mpr (pow_nonneg (zero_le_two.trans hm) _)) (sub_one_div_inv_le_two hm)
+        mul_le_mul_of_nonneg_right
+        (sub_one_div_inv_le_two hm)
+        (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
     _ = 2 / m ^ (n + 1)! := mul_one_div 2 _
     _ = 2 / m ^ (n ! * (n + 1)) := congr_arg ((· / ·) 2) (congr_arg (pow m) (mul_comm _ _))
     _ ≤ 1 / m ^ (n ! * n) := by
@@ -153,8 +154,8 @@ theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m 
       conv_rhs => rw [one_mulₓ, mul_addₓ, pow_addₓ, mul_oneₓ, pow_mulₓ, mul_comm, ← pow_mulₓ]
       -- the second factors coincide, so we prove the inequality of the first factors*
       refine' (mul_le_mul_right _).mpr _
-      any_goals {
-      }
+      -- solve all the inequalities `0 < m ^ ??`
+      any_goals exact pow_pos (zero_lt_two.trans_le hm) _
       -- `2 ≤ m ^ n!` is a consequence of monotonicity of exponentiation at `2 ≤ m`.
       exact trans (trans hm (pow_oneₓ _).symm.le) (pow_mono (one_le_two.trans hm) n.factorial_pos)
     _ = 1 / (m ^ n !) ^ n := congr_arg ((· / ·) 1) (pow_mulₓ m n ! n)
@@ -168,24 +169,20 @@ numbers where the denominator is `m ^ k!`. -/
 theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
     ∃ p : ℕ, liouvilleNumberInitialTerms m k = p / m ^ k ! := by
   induction' k with k h
-  · exact
-      ⟨1, by
-        rw [liouville_number_initial_terms, range_one, sum_singleton, Nat.cast_oneₓ]⟩
+  · exact ⟨1, by rw [liouville_number_initial_terms, range_one, sum_singleton, Nat.cast_oneₓ]⟩
     
   · rcases h with ⟨p_k, h_k⟩
     use p_k * m ^ ((k + 1)! - k !) + 1
-    unfold liouville_number_initial_terms  at h_k⊢
+    unfold liouville_number_initial_terms at h_k⊢
     rw [sum_range_succ, h_k, div_add_div, div_eq_div_iff, add_mulₓ]
     · norm_cast
       rw [add_mulₓ, one_mulₓ, Nat.factorial_succ,
-        show k.succ * k ! - k ! = (k.succ - 1) * k ! by
-          rw [tsub_mul, one_mulₓ],
-        Nat.succ_sub_one, add_mulₓ, one_mulₓ, pow_addₓ]
+        show k.succ * k ! - k ! = (k.succ - 1) * k ! by rw [tsub_mul, one_mulₓ], Nat.succ_sub_one, add_mulₓ, one_mulₓ,
+        pow_addₓ]
       simp [mul_assoc]
       
     refine' mul_ne_zero_iff.mpr ⟨_, _⟩
-    all_goals
-      exact pow_ne_zero _ (nat.cast_ne_zero.mpr hm.ne.symm)
+    all_goals exact pow_ne_zero _ (nat.cast_ne_zero.mpr hm.ne.symm)
     
 
 theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouvilleNumber m) := by

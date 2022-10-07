@@ -26,8 +26,7 @@ instance {α} [Inhabited α] : Inhabited (Streamₓ α) :=
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 protected theorem eta (s : Streamₓ α) : (head s::tail s) = s :=
-  funext fun i => by
-    cases i <;> rfl
+  funext fun i => by cases i <;> rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
@@ -77,10 +76,7 @@ theorem head_drop {α} (a : Streamₓ α) (n : ℕ) : (a.drop n).head = a.nth n 
 protected theorem ext {s₁ s₂ : Streamₓ α} : (∀ n, nth s₁ n = nth s₂ n) → s₁ = s₂ := fun h => funext h
 
 theorem cons_injective2 : Function.Injective2 (cons : α → Streamₓ α → Streamₓ α) := fun x y s t h =>
-  ⟨by
-    rw [← nth_zero_cons x s, h, nth_zero_cons],
-    Streamₓ.ext fun n => by
-      rw [← nth_succ_cons n _ x, h, nth_succ_cons]⟩
+  ⟨by rw [← nth_zero_cons x s, h, nth_zero_cons], Streamₓ.ext fun n => by rw [← nth_succ_cons n _ x, h, nth_succ_cons]⟩
 
 theorem cons_injective_left (s : Streamₓ α) : Function.Injective fun x => cons x s :=
   cons_injective2.left _
@@ -100,9 +96,7 @@ theorem mem_cons (a : α) (s : Streamₓ α) : a ∈ a::s :=
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mem_cons_of_mem {a : α} {s : Streamₓ α} (b : α) : a ∈ s → a ∈ b::s := fun ⟨n, h⟩ =>
-  Exists.introₓ (succ n)
-    (by
-      rw [nth_succ, tail_cons, h])
+  Exists.introₓ (succ n) (by rw [nth_succ, tail_cons, h])
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem eq_or_mem_of_mem_cons {a b : α} {s : Streamₓ α} : (a ∈ b::s) → a = b ∨ a ∈ s := fun ⟨n, h⟩ => by
@@ -154,10 +148,7 @@ theorem map_map (g : β → δ) (f : α → β) (s : Streamₓ α) : map g (map 
 theorem map_tail (s : Streamₓ α) : map f (tail s) = tail (map f s) :=
   rfl
 
-theorem mem_map {a : α} {s : Streamₓ α} : a ∈ s → f a ∈ map f s := fun ⟨n, h⟩ =>
-  Exists.introₓ n
-    (by
-      rw [nth_map, h])
+theorem mem_map {a : α} {s : Streamₓ α} : a ∈ s → f a ∈ map f s := fun ⟨n, h⟩ => Exists.introₓ n (by rw [nth_map, h])
 
 theorem exists_of_mem_map {f} {b : β} {s : Streamₓ α} : b ∈ map f s → ∃ a, a ∈ s ∧ f a = b := fun ⟨n, h⟩ =>
   ⟨nth s n, ⟨n, rfl⟩, h.symm⟩
@@ -198,8 +189,7 @@ theorem const_eq (a : α) : const a = a::const a := by
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tail_const (a : α) : tail (const a) = const a :=
-  suffices tail (a::const a) = const a by
-    rwa [← const_eq] at this
+  suffices tail (a::const a) = const a by rwa [← const_eq] at this
   rfl
 
 theorem map_const (f : α → β) (a : α) : map f (const a) = const (f a) :=
@@ -220,11 +210,11 @@ theorem tail_iterate (f : α → α) (a : α) : tail (iterate f a) = iterate f (
   · rfl
     
   · unfold tail iterate
-    unfold tail iterate  at ih
+    unfold tail iterate at ih
     rw [add_one] at ih
-    dsimp'  at ih
+    dsimp at ih
     rw [add_one]
-    dsimp'
+    dsimp
     rw [ih]
     
 
@@ -270,9 +260,7 @@ theorem bisim_simple (s₁ s₂ : Streamₓ α) : head s₁ = head s₂ → s₁
       constructor
       exact h₁
       rw [← h₂, ← h₃]
-      repeat'
-          constructor <;>
-        assumption)
+      repeat' constructor <;> assumption)
     (And.intro hh (And.intro ht₁ ht₂))
 
 theorem coinduction {s₁ s₂ : Streamₓ α} :
@@ -302,9 +290,9 @@ theorem map_iterate (f : α → α) (a : α) : iterate f (f a) = map f (iterate 
   · rfl
     
   · unfold map iterate nth
-    dsimp'
-    unfold map iterate nth  at ih
-    dsimp'  at ih
+    dsimp
+    unfold map iterate nth at ih
+    dsimp at ih
     rw [ih]
     
 
@@ -318,8 +306,7 @@ theorem corec_eq (f : α → β) (g : α → α) (a : α) : corec f g a = f a::c
   rw [corec_def, map_eq, head_iterate, tail_iterate]
   rfl
 
-theorem corec_id_id_eq_const (a : α) : corec id id a = const a := by
-  rw [corec_def, map_id, iterate_id]
+theorem corec_id_id_eq_const (a : α) : corec id id a = const a := by rw [corec_def, map_id, iterate_id]
 
 theorem corec_id_f_eq_iterate (f : α → α) (a : α) : corec id f a = iterate f a :=
   rfl
@@ -357,7 +344,7 @@ theorem unfolds_head_eq : ∀ s : Streamₓ α, unfolds head tail s = s := fun s
 theorem interleave_eq (s₁ s₂ : Streamₓ α) : s₁ ⋈ s₂ = head s₁::head s₂::tail s₁ ⋈ tail s₂ := by
   unfold interleave corec_on
   rw [corec_eq]
-  dsimp'
+  dsimp
   rw [corec_eq]
   rfl
 
@@ -385,14 +372,10 @@ theorem nth_interleave_right : ∀ (n : Nat) (s₁ s₂ : Streamₓ α), nth (s�
     rfl
 
 theorem mem_interleave_left {a : α} {s₁ : Streamₓ α} (s₂ : Streamₓ α) : a ∈ s₁ → a ∈ s₁ ⋈ s₂ := fun ⟨n, h⟩ =>
-  Exists.introₓ (2 * n)
-    (by
-      rw [h, nth_interleave_left])
+  Exists.introₓ (2 * n) (by rw [h, nth_interleave_left])
 
 theorem mem_interleave_right {a : α} {s₁ : Streamₓ α} (s₂ : Streamₓ α) : a ∈ s₂ → a ∈ s₁ ⋈ s₂ := fun ⟨n, h⟩ =>
-  Exists.introₓ (2 * n + 1)
-    (by
-      rw [h, nth_interleave_right])
+  Exists.introₓ (2 * n + 1) (by rw [h, nth_interleave_right])
 
 theorem odd_eq (s : Streamₓ α) : odd s = even (tail s) :=
   rfl
@@ -423,9 +406,7 @@ theorem even_interleave (s₁ s₂ : Streamₓ α) : even (s₁ ⋈ s₂) = s₁
       constructor
       · rfl
         
-      · exact
-          ⟨tail s₂, by
-            rw [interleave_eq, even_cons_cons, tail_cons]⟩
+      · exact ⟨tail s₂, by rw [interleave_eq, even_cons_cons, tail_cons]⟩
         )
     (Exists.introₓ s₂ rfl)
 
@@ -452,14 +433,10 @@ theorem nth_odd : ∀ (n : Nat) (s : Streamₓ α), nth (odd s) n = nth s (2 * n
   rfl
 
 theorem mem_of_mem_even (a : α) (s : Streamₓ α) : a ∈ even s → a ∈ s := fun ⟨n, h⟩ =>
-  Exists.introₓ (2 * n)
-    (by
-      rw [h, nth_even])
+  Exists.introₓ (2 * n) (by rw [h, nth_even])
 
 theorem mem_of_mem_odd (a : α) (s : Streamₓ α) : a ∈ odd s → a ∈ s := fun ⟨n, h⟩ =>
-  Exists.introₓ (2 * n + 1)
-    (by
-      rw [h, nth_odd])
+  Exists.introₓ (2 * n + 1) (by rw [h, nth_odd])
 
 theorem nil_append_stream (s : Streamₓ α) : appendStream [] s = s :=
   rfl
@@ -471,19 +448,15 @@ theorem cons_append_stream (a : α) (l : List α) (s : Streamₓ α) : appendStr
 
 theorem append_append_stream : ∀ (l₁ l₂ : List α) (s : Streamₓ α), l₁ ++ l₂ ++ₛ s = l₁ ++ₛ (l₂ ++ₛ s)
   | [], l₂, s => rfl
-  | List.cons a l₁, l₂, s => by
-    rw [List.cons_append, cons_append_stream, cons_append_stream, append_append_stream]
+  | List.cons a l₁, l₂, s => by rw [List.cons_append, cons_append_stream, cons_append_stream, append_append_stream]
 
 theorem map_append_stream (f : α → β) : ∀ (l : List α) (s : Streamₓ α), map f (l ++ₛ s) = List.map f l ++ₛ map f s
   | [], s => rfl
-  | List.cons a l, s => by
-    rw [cons_append_stream, List.map_consₓ, map_cons, cons_append_stream, map_append_stream]
+  | List.cons a l, s => by rw [cons_append_stream, List.map_consₓ, map_cons, cons_append_stream, map_append_stream]
 
 theorem drop_append_stream : ∀ (l : List α) (s : Streamₓ α), drop l.length (l ++ₛ s) = s
-  | [], s => by
-    rfl
-  | List.cons a l, s => by
-    rw [List.length_cons, add_one, drop_succ, cons_append_stream, tail_cons, drop_append_stream]
+  | [], s => by rfl
+  | List.cons a l, s => by rw [List.length_cons, add_one, drop_succ, cons_append_stream, tail_cons, drop_append_stream]
 
 theorem append_stream_head_tail (s : Streamₓ α) : [head s] ++ₛ tail s = s := by
   rw [cons_append_stream, nil_append_stream, Streamₓ.eta]
@@ -510,8 +483,7 @@ theorem take_succ (n : Nat) (s : Streamₓ α) : take (succ n) s = head s::take 
   rfl
 
 @[simp]
-theorem length_take (n : ℕ) (s : Streamₓ α) : (take n s).length = n := by
-  induction n generalizing s <;> simp [*]
+theorem length_take (n : ℕ) (s : Streamₓ α) : (take n s).length = n := by induction n generalizing s <;> simp [*]
 
 theorem nth_take_succ : ∀ (n : Nat) (s : Streamₓ α), List.nth (take (succ n) s) n = some (nth s n)
   | 0, s => rfl
@@ -576,12 +548,10 @@ theorem mem_cycle {a : α} {l : List α} : ∀ h : l ≠ [], a ∈ l → a ∈ c
   exact mem_append_stream_left _ ainl
 
 theorem cycle_singleton (a : α) (h : [a] ≠ []) : cycle [a] h = const a :=
-  coinduction rfl fun β fr ch => by
-    rwa [cycle_eq, const_eq]
+  coinduction rfl fun β fr ch => by rwa [cycle_eq, const_eq]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem tails_eq (s : Streamₓ α) : tails s = tail s::tails (tail s) := by
-  unfold tails <;> rw [corec_eq] <;> rfl
+theorem tails_eq (s : Streamₓ α) : tails s = tail s::tails (tail s) := by unfold tails <;> rw [corec_eq] <;> rfl
 
 theorem nth_tails : ∀ (n : Nat) (s : Streamₓ α), nth (tails s) n = drop n (tail s) := by
   intro n

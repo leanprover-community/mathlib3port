@@ -22,8 +22,7 @@ instance : Inhabited (Buffer α) :=
 theorem ext : ∀ {b₁ b₂ : Buffer α}, toList b₁ = toList b₂ → b₁ = b₂
   | ⟨n₁, a₁⟩, ⟨n₂, a₂⟩, h => by
     simp [to_list, to_array] at h
-    have e : n₁ = n₂ := by
-      rw [← Arrayₓ.to_list_length a₁, ← Arrayₓ.to_list_length a₂, h]
+    have e : n₁ = n₂ := by rw [← Arrayₓ.to_list_length a₁, ← Arrayₓ.to_list_length a₂, h]
     subst e
     have h : HEq a₁ a₂.to_list.to_array := h ▸ a₁.to_list_to_array.symm
     rw [eq_of_heq (h.trans a₂.to_list_to_array)]
@@ -41,8 +40,7 @@ theorem size_eq_zero_iff {b : Buffer α} : b.size = 0 ↔ b = nil := by
     
 
 @[simp]
-theorem size_nil : (@nil α).size = 0 := by
-  rw [size_eq_zero_iff]
+theorem size_nil : (@nil α).size = 0 := by rw [size_eq_zero_iff]
 
 @[simp]
 theorem to_list_nil : toList (@nil α) = [] :=
@@ -52,11 +50,9 @@ instance (α) [DecidableEq α] : DecidableEq (Buffer α) := by
   run_tac
     tactic.mk_dec_eq_instance
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem to_list_append_list {b : Buffer α} : toList (appendList b xs) = toList b ++ xs := by
-  induction xs generalizing b <;> simp [*] <;> cases b <;> simp [to_list, to_array]
+  induction xs generalizing b <;> simp! [*] <;> cases b <;> simp! [to_list, to_array]
 
 @[simp]
 theorem append_list_mk_buffer : appendList mkBuffer xs = Arrayₓ.toBuffer (List.toArrayₓ xs) := by
@@ -133,7 +129,7 @@ theorem read_push_back_left (b : Buffer α) (a : α) {i : ℕ} (h : i < b.size) 
     (b.pushBack a).read
         ⟨i, by
           convert Nat.lt_succ_of_ltₓ h
-          simp ⟩ =
+          simp⟩ =
       b.read ⟨i, h⟩ :=
   by
   cases b
@@ -141,12 +137,7 @@ theorem read_push_back_left (b : Buffer α) (a : α) {i : ℕ} (h : i < b.size) 
   simp
 
 @[simp]
-theorem read_push_back_right (b : Buffer α) (a : α) :
-    (b.pushBack a).read
-        ⟨b.size, by
-          simp ⟩ =
-      a :=
-  by
+theorem read_push_back_right (b : Buffer α) (a : α) : (b.pushBack a).read ⟨b.size, by simp⟩ = a := by
   cases b
   convert Arrayₓ.read_push_back_right
 
@@ -155,8 +146,7 @@ theorem read_append_list_left' (b : Buffer α) (l : List α) {i : ℕ} (h : i < 
   induction' l with hd tl hl generalizing b
   · rfl
     
-  · have hb : i < ((b.push_back hd).appendList tl).size := by
-      convert h using 1
+  · have hb : i < ((b.push_back hd).appendList tl).size := by convert h using 1
     have hb' : i < (b.push_back hd).size := by
       convert Nat.lt_succ_of_ltₓ h'
       simp
@@ -165,19 +155,12 @@ theorem read_append_list_left' (b : Buffer α) (l : List α) {i : ℕ} (h : i < 
     
 
 theorem read_append_list_left (b : Buffer α) (l : List α) {i : ℕ} (h : i < b.size) :
-    (b.appendList l).read
-        ⟨i, by
-          simpa using Nat.lt_add_rightₓ _ _ _ h⟩ =
-      b.read ⟨i, h⟩ :=
+    (b.appendList l).read ⟨i, by simpa using Nat.lt_add_rightₓ _ _ _ h⟩ = b.read ⟨i, h⟩ :=
   read_append_list_left' b l _ h
 
 @[simp]
 theorem read_append_list_right (b : Buffer α) (l : List α) {i : ℕ} (h : i < l.length) :
-    (b.appendList l).read
-        ⟨b.size + i, by
-          simp [h]⟩ =
-      l.nthLe i h :=
-  by
+    (b.appendList l).read ⟨b.size + i, by simp [h]⟩ = l.nthLe i h := by
   induction' l with hd tl hl generalizing b i
   · exact absurd i.zero_le (not_le_of_ltₓ h)
     
@@ -186,8 +169,7 @@ theorem read_append_list_right (b : Buffer α) (l : List α) {i : ℕ} (h : i < 
     · convert read_append_list_left _ _ _ <;> simp
       
     · rw [List.length, Nat.succ_lt_succ_iff] at h
-      have : b.size + i.succ = (b.push_back hd).size + i := by
-        simp [add_commₓ, add_left_commₓ, Nat.succ_eq_add_one]
+      have : b.size + i.succ = (b.push_back hd).size + i := by simp [add_commₓ, add_left_commₓ, Nat.succ_eq_add_one]
       convert hl (b.push_back hd) h using 1
       simpa [Nat.add_succ, Nat.succ_add]
       
@@ -198,8 +180,7 @@ theorem read_to_buffer' (l : List α) {i : ℕ} (h : i < l.toBuffer.size) (h' : 
   cases' l with hd tl
   · simpa using h'
     
-  · have hi : i < ([hd].toBuffer.appendList tl).size := by
-      simpa [add_commₓ] using h
+  · have hi : i < ([hd].toBuffer.appendList tl).size := by simpa [add_commₓ] using h
     convert_to ([hd].toBuffer.appendList tl).read ⟨i, hi⟩ = _
     cases i
     · convert read_append_list_left _ _ _
@@ -217,7 +198,7 @@ theorem read_to_buffer (l : List α) (i) :
       l.nthLe i
         (by
           convert i.property
-          simp ) :=
+          simp) :=
   by
   convert read_to_buffer' _ _ _
   · simp
@@ -226,37 +207,15 @@ theorem read_to_buffer (l : List α) (i) :
     
 
 theorem nth_le_to_list' (b : Buffer α) {i : ℕ} (h h') : b.toList.nthLe i h = b.read ⟨i, h'⟩ := by
-  have :
-    b.to_list.to_buffer.read
-        ⟨i, by
-          simpa using h'⟩ =
-      b.read ⟨i, h'⟩ :=
-    by
-    congr 1 <;> simp [Finₓ.heq_ext_iff]
+  have : b.to_list.to_buffer.read ⟨i, by simpa using h'⟩ = b.read ⟨i, h'⟩ := by congr 1 <;> simp [Finₓ.heq_ext_iff]
   simp [← this]
 
-theorem nth_le_to_list (b : Buffer α) {i : ℕ} (h) :
-    b.toList.nthLe i h =
-      b.read
-        ⟨i, by
-          simpa using h⟩ :=
+theorem nth_le_to_list (b : Buffer α) {i : ℕ} (h) : b.toList.nthLe i h = b.read ⟨i, by simpa using h⟩ :=
   nth_le_to_list' _ _ _
 
-theorem read_eq_nth_le_to_list (b : Buffer α) (i) :
-    b.read i =
-      b.toList.nthLe i
-        (by
-          simp ) :=
-  by
-  simp [nth_le_to_list]
+theorem read_eq_nth_le_to_list (b : Buffer α) (i) : b.read i = b.toList.nthLe i (by simp) := by simp [nth_le_to_list]
 
-theorem read_singleton (c : α) :
-    [c].toBuffer.read
-        ⟨0, by
-          simp ⟩ =
-      c :=
-  by
-  simp
+theorem read_singleton (c : α) : [c].toBuffer.read ⟨0, by simp⟩ = c := by simp
 
 /-- The natural equivalence between lists and buffers, using
 `list.to_buffer` and `buffer.to_list`. -/

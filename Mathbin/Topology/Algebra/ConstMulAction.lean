@@ -94,8 +94,7 @@ theorem Continuous.const_smul (hg : Continuous g) (c : M) : Continuous fun x => 
 
 /-- If a scalar is central, then its right action is continuous when its left action is. -/
 instance HasContinuousConstSmul.op [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] : HasContinuousConstSmul Mᵐᵒᵖ α :=
-  ⟨MulOpposite.rec fun c => by
-      simpa only [op_smul_eq_smul] using continuous_const_smul c⟩
+  ⟨MulOpposite.rec fun c => by simpa only [op_smul_eq_smul] using continuous_const_smul c⟩
 
 @[to_additive]
 instance MulOpposite.has_continuous_const_smul : HasContinuousConstSmul M αᵐᵒᵖ :=
@@ -139,8 +138,7 @@ variable {G : Type _} [TopologicalSpace α] [Groupₓ G] [MulAction G α] [HasCo
 @[to_additive]
 theorem tendsto_const_smul_iff {f : β → α} {l : Filter β} {a : α} (c : G) :
     Tendsto (fun x => c • f x) l (𝓝 <| c • a) ↔ Tendsto f l (𝓝 a) :=
-  ⟨fun h => by
-    simpa only [inv_smul_smul] using h.const_smul c⁻¹, fun h => h.const_smul _⟩
+  ⟨fun h => by simpa only [inv_smul_smul] using h.const_smul c⁻¹, fun h => h.const_smul _⟩
 
 variable [TopologicalSpace β] {f : β → α} {b : β} {s : Set β}
 
@@ -170,7 +168,7 @@ def Homeomorph.smul (γ : G) : α ≃ₜ α where
   continuous_inv_fun := continuous_const_smul γ⁻¹
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident homeomorph.vadd]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident homeomorph.vadd]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[to_additive]
 theorem is_open_map_smul (c : G) : IsOpenMap fun x : α => c • x :=
   (Homeomorph.smul c).IsOpenMap
@@ -378,7 +376,7 @@ instance (priority := 100) t2_space_of_properly_discontinuous_smul_of_t2_space [
     f_op.image_mem_nhds (inter_mem ((bInter_mem bad_Γ_finite).mpr fun γ hγ => hv γ) L₀_in)
   refine' ⟨f '' U₀, U_nhds, f '' V₀, V_nhds, MulAction.disjoint_image_image_iff.2 _⟩
   rintro x ⟨x_in_U₀₀, x_in_K₀⟩ γ
-  by_cases' H : γ ∈ bad_Γ_set
+  by_cases H:γ ∈ bad_Γ_set
   · exact fun h => u_v_disjoint γ ⟨mem_Inter₂.mp x_in_U₀₀ γ H, mem_Inter₂.mp h.1 γ H⟩
     
   · rintro ⟨-, h'⟩

@@ -41,12 +41,10 @@ def rdrop : List α :=
   l.take (l.length - n)
 
 @[simp]
-theorem rdrop_nil : rdrop ([] : List α) n = [] := by
-  simp [rdrop]
+theorem rdrop_nil : rdrop ([] : List α) n = [] := by simp [rdrop]
 
 @[simp]
-theorem rdrop_zero : rdrop l 0 = l := by
-  simp [rdrop]
+theorem rdrop_zero : rdrop l 0 = l := by simp [rdrop]
 
 theorem rdrop_eq_reverse_drop_reverse : l.rdrop n = reverse (l.reverse.drop n) := by
   rw [rdrop]
@@ -61,20 +59,17 @@ theorem rdrop_eq_reverse_drop_reverse : l.rdrop n = reverse (l.reverse.drop n) :
     
 
 @[simp]
-theorem rdrop_concat_succ (x : α) : rdrop (l ++ [x]) (n + 1) = rdrop l n := by
-  simp [rdrop_eq_reverse_drop_reverse]
+theorem rdrop_concat_succ (x : α) : rdrop (l ++ [x]) (n + 1) = rdrop l n := by simp [rdrop_eq_reverse_drop_reverse]
 
 /-- Take `n` elements from the tail end of a list. -/
 def rtake : List α :=
   l.drop (l.length - n)
 
 @[simp]
-theorem rtake_nil : rtake ([] : List α) n = [] := by
-  simp [rtake]
+theorem rtake_nil : rtake ([] : List α) n = [] := by simp [rtake]
 
 @[simp]
-theorem rtake_zero : rtake l 0 = [] := by
-  simp [rtake]
+theorem rtake_zero : rtake l 0 = [] := by simp [rtake]
 
 theorem rtake_eq_reverse_take_reverse : l.rtake n = reverse (l.reverse.take n) := by
   rw [rtake]
@@ -98,8 +93,7 @@ def rdropWhile : List α :=
   reverse (l.reverse.dropWhile p)
 
 @[simp]
-theorem rdrop_while_nil : rdropWhile p ([] : List α) = [] := by
-  simp [rdrop_while, drop_while]
+theorem rdrop_while_nil : rdropWhile p ([] : List α) = [] := by simp [rdrop_while, drop_while]
 
 theorem rdrop_while_concat (x : α) : rdropWhile p (l ++ [x]) = if p x then rdropWhile p l else l ++ [x] := by
   simp only [rdrop_while, drop_while, reverse_append, reverse_singleton, singleton_append]
@@ -128,8 +122,7 @@ theorem rdrop_while_prefix : l.rdropWhile p <+: l := by
 variable {p} {l}
 
 @[simp]
-theorem rdrop_while_eq_nil_iff : rdropWhile p l = [] ↔ ∀ x ∈ l, p x := by
-  simp [rdrop_while]
+theorem rdrop_while_eq_nil_iff : rdropWhile p l = [] ↔ ∀ x ∈ l, p x := by simp [rdrop_while]
 
 -- it is in this file because it requires `list.infix`
 @[simp]
@@ -176,8 +169,7 @@ def rtakeWhile : List α :=
   reverse (l.reverse.takeWhile p)
 
 @[simp]
-theorem rtake_while_nil : rtakeWhile p ([] : List α) = [] := by
-  simp [rtake_while, take_while]
+theorem rtake_while_nil : rtakeWhile p ([] : List α) = [] := by simp [rtake_while, take_while]
 
 theorem rtake_while_concat (x : α) : rtakeWhile p (l ++ [x]) = if p x then rtakeWhile p l ++ [x] else [] := by
   simp only [rtake_while, take_while, reverse_append, reverse_singleton, singleton_append]
@@ -188,8 +180,7 @@ theorem rtake_while_concat_pos (x : α) (h : p x) : rtakeWhile p (l ++ [x]) = rt
   rw [rtake_while_concat, if_pos h]
 
 @[simp]
-theorem rtake_while_concat_neg (x : α) (h : ¬p x) : rtakeWhile p (l ++ [x]) = [] := by
-  rw [rtake_while_concat, if_neg h]
+theorem rtake_while_concat_neg (x : α) (h : ¬p x) : rtakeWhile p (l ++ [x]) = [] := by rw [rtake_while_concat, if_neg h]
 
 theorem rtake_while_suffix : l.rtakeWhile p <:+ l := by
   rw [← reverse_prefix, rtake_while, reverse_reverse]
@@ -198,16 +189,14 @@ theorem rtake_while_suffix : l.rtakeWhile p <:+ l := by
 variable {p} {l}
 
 @[simp]
-theorem rtake_while_eq_self_iff : rtakeWhile p l = l ↔ ∀ x ∈ l, p x := by
-  simp [rtake_while, reverse_eq_iff]
+theorem rtake_while_eq_self_iff : rtakeWhile p l = l ↔ ∀ x ∈ l, p x := by simp [rtake_while, reverse_eq_iff]
 
 @[simp]
 theorem rtake_while_eq_nil_iff : rtakeWhile p l = [] ↔ ∀ hl : l ≠ [], ¬p (l.last hl) := by
   induction l using List.reverseRecOn <;> simp [rtake_while]
 
 theorem mem_rtake_while_imp {x : α} (hx : x ∈ rtakeWhile p l) : p x := by
-  suffices x ∈ take_while p l.reverse by
-    exact mem_take_while_imp this
+  suffices x ∈ take_while p l.reverse by exact mem_take_while_imp this
   rwa [← mem_reverse, ← rtake_while]
 
 variable (p) (l)

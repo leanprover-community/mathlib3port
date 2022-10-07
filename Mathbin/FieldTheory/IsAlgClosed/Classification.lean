@@ -44,7 +44,7 @@ theorem cardinal_mk_le_sigma_polynomial : (#L) ≤ (#Σp : R[X], { x : L // x �
     (fun x : L =>
       let p := Classical.indefiniteDescription _ (halg x)
       ⟨p.1, x, by
-        dsimp'
+        dsimp
         have h : p.1.map (algebraMap R L) ≠ 0 := by
           rw [Ne.def, ← Polynomial.degree_eq_bot,
             Polynomial.degree_map_eq_of_injective (NoZeroSmulDivisors.algebra_map_injective R L),
@@ -62,14 +62,12 @@ of the base ring or `ℵ₀` -/
 theorem cardinal_mk_le_max : (#L) ≤ max (#R) ℵ₀ :=
   calc
     (#L) ≤ (#Σp : R[X], { x : L // x ∈ (p.map (algebraMap R L)).roots }) := cardinal_mk_le_sigma_polynomial R L halg
-    _ = Cardinal.sum fun p : R[X] => #{ x : L | x ∈ (p.map (algebraMap R L)).roots } := by
-      rw [← mk_sigma] <;> rfl
+    _ = Cardinal.sum fun p : R[X] => #{ x : L | x ∈ (p.map (algebraMap R L)).roots } := by rw [← mk_sigma] <;> rfl
     _ ≤ Cardinal.sum.{u, u} fun p : R[X] => ℵ₀ := (sum_le_sum _ _) fun p => (Multiset.finite_to_set _).lt_aleph_0.le
     _ = (#R[X]) * ℵ₀ := sum_const' _ _
     _ ≤ max (max (#R[X]) ℵ₀) ℵ₀ := mul_le_max _ _
     _ ≤ max (max (max (#R) ℵ₀) ℵ₀) ℵ₀ := max_le_max (max_le_max Polynomial.cardinal_mk_le_max le_rflₓ) le_rflₓ
-    _ = max (#R) ℵ₀ := by
-      simp only [max_assocₓ, max_commₓ ℵ₀, max_left_commₓ ℵ₀, max_selfₓ]
+    _ = max (#R) ℵ₀ := by simp only [max_assocₓ, max_commₓ ℵ₀, max_left_commₓ ℵ₀, max_selfₓ]
     
 
 end Algebra.IsAlgebraic
@@ -97,9 +95,7 @@ variable (hv : AlgebraicIndependent R v)
 theorem is_alg_closure_of_transcendence_basis [IsAlgClosed K] (hv : IsTranscendenceBasis R v) :
     IsAlgClosure (Algebra.adjoin R (Set.Range v)) K :=
   letI := RingHom.domain_nontrivial (algebraMap R K)
-  { alg_closed := by
-      infer_instance,
-    algebraic := hv.is_algebraic }
+  { alg_closed := by infer_instance, algebraic := hv.is_algebraic }
 
 variable (hw : AlgebraicIndependent R w)
 
@@ -140,11 +136,9 @@ theorem cardinal_le_max_transcendence_basis (hv : IsTranscendenceBasis R v) : (#
     (#K) ≤ max (#Algebra.adjoin R (Set.Range v)) ℵ₀ :=
       letI := is_alg_closure_of_transcendence_basis v hv
       Algebra.IsAlgebraic.cardinal_mk_le_max _ _ IsAlgClosure.algebraic
-    _ = max (#MvPolynomial ι R) ℵ₀ := by
-      rw [Cardinal.eq.2 ⟨hv.1.aevalEquiv.toEquiv⟩]
+    _ = max (#MvPolynomial ι R) ℵ₀ := by rw [Cardinal.eq.2 ⟨hv.1.aevalEquiv.toEquiv⟩]
     _ ≤ max (max (max (#R) (#ι)) ℵ₀) ℵ₀ := max_le_max MvPolynomial.cardinal_mk_le_max le_rflₓ
-    _ = _ := by
-      simp [max_assocₓ]
+    _ = _ := by simp [max_assocₓ]
     
 
 /-- If `K` is an uncountable algebraically closed field, then its

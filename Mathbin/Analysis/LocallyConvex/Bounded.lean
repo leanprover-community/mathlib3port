@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
 import Mathbin.Analysis.LocallyConvex.Basic
+import Mathbin.Analysis.LocallyConvex.BalancedCoreHull
+import Mathbin.Analysis.NormedSpace.IsROrC
 import Mathbin.Analysis.Seminorm
 import Mathbin.Topology.Bornology.Basic
 import Mathbin.Topology.Algebra.UniformGroup
-import Mathbin.Analysis.LocallyConvex.BalancedCoreHull
+import Mathbin.Topology.UniformSpace.Cauchy
 
 /-!
 # Von Neumann Boundedness
@@ -24,6 +26,9 @@ absorbs `s`.
 
 * `bornology.is_vonN_bounded_of_topological_space_le`: A coarser topology admits more
 von Neumann-bounded sets.
+* `bornology.is_vonN_bounded.image`: A continuous linear image of a bounded set is bounded.
+* `linear_map.continuous_of_locally_bounded`: If `E` is first countable, then every
+locally bounded linear map `E →ₛₗ[σ] F` is continuous.
 
 ## References
 
@@ -32,7 +37,7 @@ von Neumann-bounded sets.
 -/
 
 
-variable {𝕜 E F ι : Type _}
+variable {𝕜 𝕜' E E' F ι : Type _}
 
 open Filter
 
@@ -187,15 +192,15 @@ end UniformAddGroup
 
 section ContinuousLinearMap
 
-variable [NontriviallyNormedField 𝕜]
+variable [AddCommGroupₓ E] [UniformSpace E] [UniformAddGroup E]
 
-variable [AddCommGroupₓ E] [Module 𝕜 E]
+variable [AddCommGroupₓ F] [UniformSpace F]
 
-variable [UniformSpace E] [UniformAddGroup E] [HasContinuousSmul 𝕜 E]
+section NontriviallyNormedField
 
-variable [AddCommGroupₓ F] [Module 𝕜 F]
+variable [UniformAddGroup F]
 
-variable [UniformSpace F] [UniformAddGroup F]
+variable [NontriviallyNormedField 𝕜] [Module 𝕜 E] [Module 𝕜 F] [HasContinuousSmul 𝕜 E]
 
 /-- Construct a continuous linear map from a linear map `f : E →ₗ[𝕜] F` and the existence of a
 neighborhood of zero that gets mapped into a bounded set in `F`. -/
@@ -220,8 +225,7 @@ def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
         _ ⊆ x⁻¹ • f ⁻¹' (x • U) := Set.smul_set_mono (Set.preimage_mono h)
         _ = f ⁻¹' (x⁻¹ • x • U) := by
           ext <;> simp only [Set.mem_inv_smul_set_iff₀ x_ne, Set.mem_preimage, LinearMap.map_smul]
-        _ ⊆ f ⁻¹' U := by
-          rw [inv_smul_smul₀ x_ne _]
+        _ ⊆ f ⁻¹' U := by rw [inv_smul_smul₀ x_ne _]
         
     -- Using this inclusion, it suffices to show that `x⁻¹ • V` is in `𝓝 0`, which is trivial.
     refine' mem_of_superset _ this
@@ -239,6 +243,101 @@ theorem LinearMap.clm_of_exists_bounded_image_apply {f : E →ₗ[𝕜] F}
     f.clmOfExistsBoundedImage h x = f x :=
   rfl
 
+end NontriviallyNormedField
+
+section IsROrC
+
+open TopologicalSpace Bornology
+
+variable [FirstCountableTopology E]
+
+variable [IsROrC 𝕜] [Module 𝕜 E] [HasContinuousSmul 𝕜 E]
+
+variable [IsROrC 𝕜'] [Module 𝕜' F] [HasContinuousSmul 𝕜' F]
+
+variable {σ : 𝕜 →+* 𝕜'}
+
+theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
+    (hf : ∀ (s : Set E) (hs : IsVonNBounded 𝕜 s), IsVonNBounded 𝕜' (f '' s)) : ContinuousAt f 0 := by
+  -- Assume that f is not continuous at 0
+  by_contra
+  -- We use the a decreasing balanced basis for 0 : E and a balanced basis for 0 : F
+  -- and reformulate non-continuity in terms of these bases
+  rcases(nhds_basis_balanced 𝕜 E).exists_antitone_subbasis with ⟨b, bE1, bE⟩
+  simp only [id.def] at bE
+  have bE' : (𝓝 (0 : E)).HasBasis (fun x : ℕ => x ≠ 0) fun n : ℕ => (n : 𝕜)⁻¹ • b n := by
+    refine' bE.1.to_has_basis _ _
+    · intro n _
+      use n + 1
+      simp only [Ne.def, Nat.succ_ne_zero, not_false_iff, Nat.cast_addₓ, Nat.cast_oneₓ, true_andₓ]
+      -- `b (n + 1) ⊆ b n` follows from `antitone`.
+      have h : b (n + 1) ⊆ b n := bE.2 (by simp)
+      refine' subset_trans _ h
+      rintro y ⟨x, hx, hy⟩
+      -- Since `b (n + 1)` is balanced `(n+1)⁻¹ b (n + 1) ⊆ b (n + 1)`
+      rw [← hy]
+      refine' (bE1 (n + 1)).2.smul_mem _ hx
+      have h' : 0 < (n : ℝ) + 1 := n.cast_add_one_pos
+      rw [norm_inv, ← Nat.cast_oneₓ, ← Nat.cast_addₓ, IsROrC.norm_eq_abs, IsROrC.abs_cast_nat, Nat.cast_addₓ,
+        Nat.cast_oneₓ, inv_le h' zero_lt_one]
+      norm_cast
+      simp
+      
+    intro n hn
+    -- The converse direction follows from continuity of the scalar multiplication
+    have hcont : ContinuousAt (fun x : E => (n : 𝕜) • x) 0 := (continuous_const_smul (n : 𝕜)).ContinuousAt
+    simp only [ContinuousAt, map_zero, smul_zero] at hcont
+    rw [bE.1.tendsto_left_iff] at hcont
+    rcases hcont (b n) (bE1 n).1 with ⟨i, _, hi⟩
+    refine' ⟨i, trivialₓ, fun x hx => ⟨(n : 𝕜) • x, hi hx, _⟩⟩
+    simp [← mul_smul, hn]
+  rw [ContinuousAt, map_zero, bE'.tendsto_iff (nhds_basis_balanced 𝕜' F)] at h
+  push_neg  at h
+  rcases h with ⟨V, ⟨hV, hV'⟩, h⟩
+  simp only [id.def, forall_true_left] at h
+  -- There exists `u : ℕ → E` such that for all `n : ℕ` we have `u n ∈ n⁻¹ • b n` and `f (u n) ∉ V`
+  choose! u hu hu' using h
+  -- The sequence `(λ n, n • u n)` converges to `0`
+  have h_tendsto : tendsto (fun n : ℕ => (n : 𝕜) • u n) at_top (𝓝 (0 : E)) := by
+    apply bE.tendsto
+    intro n
+    by_cases h:n = 0
+    · rw [h, Nat.cast_zeroₓ, zero_smul]
+      refine' mem_of_mem_nhds (bE.1.mem_of_mem <| by triv)
+      
+    rcases hu n h with ⟨y, hy, hu1⟩
+    convert hy
+    rw [← hu1, ← mul_smul]
+    simp only [h, mul_inv_cancel, Ne.def, Nat.cast_eq_zero, not_false_iff, one_smul]
+  -- The image `(λ n, n • u n)` is von Neumann bounded:
+  have h_bounded : is_vonN_bounded 𝕜 (Set.Range fun n : ℕ => (n : 𝕜) • u n) :=
+    h_tendsto.cauchy_seq.totally_bounded_range.is_vonN_bounded 𝕜
+  -- Since `range u` is bounded it absorbs `V`
+  rcases hf _ h_bounded hV with ⟨r, hr, h'⟩
+  cases' exists_nat_gt r with n hn
+  -- We now find a contradiction between `f (u n) ∉ V` and the absorbing property
+  have h1 : r ≤ ∥(n : 𝕜')∥ := by
+    rw [IsROrC.norm_eq_abs, IsROrC.abs_cast_nat]
+    exact hn.le
+  have hn' : 0 < ∥(n : 𝕜')∥ := lt_of_lt_of_leₓ hr h1
+  rw [norm_pos_iff, Ne.def, Nat.cast_eq_zero] at hn'
+  have h'' : f (u n) ∈ V := by
+    simp only [Set.image_subset_iff] at h'
+    specialize h' (n : 𝕜') h1 (Set.mem_range_self n)
+    simp only [Set.mem_preimage, LinearMap.map_smulₛₗ, map_nat_cast] at h'
+    rcases h' with ⟨y, hy, h'⟩
+    apply_fun fun y : F => (n : 𝕜')⁻¹ • y  at h'
+    simp only [hn', inv_smul_smul₀, Ne.def, Nat.cast_eq_zero, not_false_iff] at h'
+    rwa [← h']
+  exact hu' n hn' h''
+
+/-- If `E` is first countable, then every locally bounded linear map `E →ₛₗ[σ] F` is continuous. -/
+theorem LinearMap.continuous_of_locally_bounded [UniformAddGroup F] (f : E →ₛₗ[σ] F)
+    (hf : ∀ (s : Set E) (hs : IsVonNBounded 𝕜 s), IsVonNBounded 𝕜' (f '' s)) : Continuous f :=
+  (uniform_continuous_of_continuous_at_zero f <| f.continuous_at_zero_of_locally_bounded hf).Continuous
+
+end IsROrC
+
 end ContinuousLinearMap
 
 section VonNBornologyEqMetric
@@ -252,9 +351,7 @@ theorem is_vonN_bounded_ball (r : ℝ) : Bornology.IsVonNBounded 𝕜 (Metric.Ba
   exact fun ε hε => (normSeminorm 𝕜 E).ball_zero_absorbs_ball_zero hε
 
 theorem is_vonN_bounded_closed_ball (r : ℝ) : Bornology.IsVonNBounded 𝕜 (Metric.ClosedBall (0 : E) r) :=
-  (is_vonN_bounded_ball 𝕜 E (r + 1)).Subset
-    (Metric.closed_ball_subset_ball <| by
-      linarith)
+  (is_vonN_bounded_ball 𝕜 E (r + 1)).Subset (Metric.closed_ball_subset_ball <| by linarith)
 
 theorem is_vonN_bounded_iff (s : Set E) : Bornology.IsVonNBounded 𝕜 s ↔ Bornology.IsBounded s := by
   rw [← Metric.bounded_iff_is_bounded, Metric.bounded_iff_subset_ball (0 : E)]
@@ -268,6 +365,13 @@ theorem is_vonN_bounded_iff (s : Set E) : Bornology.IsVonNBounded 𝕜 s ↔ Bor
     
   · exact fun ⟨C, hC⟩ => (is_vonN_bounded_closed_ball 𝕜 E C).Subset hC
     
+
+theorem is_vonN_bounded_iff' (s : Set E) : Bornology.IsVonNBounded 𝕜 s ↔ ∃ r : ℝ, ∀ (x : E) (hx : x ∈ s), ∥x∥ ≤ r := by
+  rw [NormedSpace.is_vonN_bounded_iff, ← Metric.bounded_iff_is_bounded, bounded_iff_forall_norm_le]
+
+theorem image_is_vonN_bounded_iff (f : E' → E) (s : Set E') :
+    Bornology.IsVonNBounded 𝕜 (f '' s) ↔ ∃ r : ℝ, ∀ (x : E') (hx : x ∈ s), ∥f x∥ ≤ r := by
+  simp_rw [is_vonN_bounded_iff', Set.ball_image_iff]
 
 /-- In a normed space, the von Neumann bornology (`bornology.vonN_bornology`) is equal to the
 metric bornology. -/

@@ -75,12 +75,10 @@ theorem dist_vadd_cancel_right (v₁ v₂ : V) (x : P) : dist (v₁ +ᵥ x) (v�
   rw [dist_eq_norm_vsub V, dist_eq_norm, vadd_vsub_vadd_cancel_right]
 
 @[simp]
-theorem dist_vadd_left (v : V) (x : P) : dist (v +ᵥ x) x = ∥v∥ := by
-  simp [dist_eq_norm_vsub V _ x]
+theorem dist_vadd_left (v : V) (x : P) : dist (v +ᵥ x) x = ∥v∥ := by simp [dist_eq_norm_vsub V _ x]
 
 @[simp]
-theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ∥v∥ := by
-  rw [dist_comm, dist_vadd_left]
+theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ∥v∥ := by rw [dist_comm, dist_vadd_left]
 
 /-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
 addition/subtraction of `x : P`. -/
@@ -163,10 +161,8 @@ P`. -/
 def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedAddCommGroup V] [AddTorsor V P] :
     PseudoMetricSpace P where
   dist := fun x y => ∥(x -ᵥ y : V)∥
-  dist_self := fun x => by
-    simp
-  dist_comm := fun x y => by
-    simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
+  dist_self := fun x => by simp
+  dist_comm := fun x y => by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
   dist_triangle := by
     intro x y z
     change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥
@@ -179,12 +175,9 @@ P`. -/
 def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGroup V] [AddTorsor V P] :
     MetricSpace P where
   dist := fun x y => ∥(x -ᵥ y : V)∥
-  dist_self := fun x => by
-    simp
-  eq_of_dist_eq_zero := fun x y h => by
-    simpa using h
-  dist_comm := fun x y => by
-    simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
+  dist_self := fun x => by simp
+  eq_of_dist_eq_zero := fun x y h => by simpa using h
+  dist_comm := fun x y => by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
   dist_triangle := by
     intro x y z
     change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥

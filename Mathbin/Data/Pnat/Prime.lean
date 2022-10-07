@@ -144,14 +144,12 @@ theorem coprime_coe {m n : ℕ+} : Nat.Coprime ↑m ↑n ↔ m.Coprime n := by
   simp
 
 theorem Coprime.mul {k m n : ℕ+} : m.Coprime k → n.Coprime k → (m * n).Coprime k := by
-  repeat'
-    rw [← coprime_coe]
+  repeat' rw [← coprime_coe]
   rw [mul_coe]
   apply Nat.Coprime.mul
 
 theorem Coprime.mul_right {k m n : ℕ+} : k.Coprime m → k.Coprime n → k.Coprime (m * n) := by
-  repeat'
-    rw [← coprime_coe]
+  repeat' rw [← coprime_coe]
   rw [mul_coe]
   apply Nat.Coprime.mul_right
 
@@ -184,8 +182,8 @@ theorem Coprime.gcd_mul_right_cancel (m : ℕ+) {n k : ℕ+} : k.Coprime n → (
 theorem Coprime.gcd_mul_left_cancel_right (m : ℕ+) {n k : ℕ+} : k.Coprime m → m.gcd (k * n) = m.gcd n := by
   intro h
   iterate 2 
-    rw [gcd_comm]
-    symm
+  rw [gcd_comm]
+  symm
   apply coprime.gcd_mul_left_cancel _ h
 
 theorem Coprime.gcd_mul_right_cancel_right (m : ℕ+) {n k : ℕ+} : k.Coprime m → m.gcd (n * k) = m.gcd n := by
@@ -218,8 +216,7 @@ theorem coprime_one {n : ℕ+} : n.Coprime 1 :=
 
 theorem Coprime.coprime_dvd_left {m k n : ℕ+} : m ∣ k → k.Coprime n → m.Coprime n := by
   rw [dvd_iff]
-  repeat'
-    rw [← coprime_coe]
+  repeat' rw [← coprime_coe]
   apply Nat.Coprime.coprime_dvd_left
 
 theorem Coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) : a = (a * b).gcd m :=

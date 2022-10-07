@@ -235,15 +235,32 @@ local notation "𝒰(" α ", " β ", " u ")" => @UniformConvergence.uniformSpace
 protected theorem has_basis_uniformity : (𝓤 (α → β)).HasBasis (fun V => V ∈ 𝓤 β) (UniformConvergence.Gen α β) :=
   (UniformConvergence.is_basis_gen α β (𝓤 β)).HasBasis
 
+/-- The uniformity of `α → β` endowed with the uniform structure of uniform convergence on admits
+the family `{(f, g) | ∀ x, (f x, g x) ∈ V}` for `V ∈ 𝓑` as a filter basis, for any basis
+`𝓑` of `𝓤 β` (in the case `𝓑 = (𝓤 β).as_basis` this is true by definition). -/
+protected theorem has_basis_uniformity_of_basis {ι : Sort _} {p : ι → Prop} {s : ι → Set (β × β)}
+    (h : (𝓤 β).HasBasis p s) : (𝓤 (α → β)).HasBasis p (UniformConvergence.Gen α β ∘ s) :=
+  (UniformConvergence.has_basis_uniformity α β).to_has_basis
+    (fun U hU =>
+      let ⟨i, hi, hiU⟩ := h.mem_iff.mp hU
+      ⟨i, hi, fun uv huv x => hiU (huv x)⟩)
+    fun i hi => ⟨s i, h.mem_of_mem hi, subset_refl _⟩
+
 /-- Topology of uniform convergence. -/
 protected def topologicalSpace : TopologicalSpace (α → β) :=
   𝒰(α, β, inferInstance).toTopologicalSpace
 
 /-- If `α → β` is endowed with the topology of uniform convergence, `𝓝 f` admits the family
+`{g | ∀ x, (f x, g x) ∈ V}` for `V ∈ 𝓑` as a filter basis, for any basis `𝓑` of `𝓤 β`. -/
+protected theorem has_basis_nhds_of_basis (f) {p : ι → Prop} {s : ι → Set (β × β)} (h : HasBasis (𝓤 β) p s) :
+    (𝓝 f).HasBasis p fun i => { g | (f, g) ∈ UniformConvergence.Gen α β (s i) } :=
+  nhds_basis_uniformity' (UniformConvergence.has_basis_uniformity_of_basis α β h)
+
+/-- If `α → β` is endowed with the topology of uniform convergence, `𝓝 f` admits the family
 `{g | ∀ x, (f x, g x) ∈ V}` for `V ∈ 𝓤 β` as a filter basis. -/
-protected theorem has_basis_nhds :
+protected theorem has_basis_nhds (f) :
     (𝓝 f).HasBasis (fun V => V ∈ 𝓤 β) fun V => { g | (f, g) ∈ UniformConvergence.Gen α β V } :=
-  nhds_basis_uniformity' (UniformConvergence.has_basis_uniformity α β)
+  UniformConvergence.has_basis_nhds_of_basis α β f (Filter.basis_sets _)
 
 variable {α}
 
@@ -257,7 +274,7 @@ variable {β}
 
 /-- If `u₁` and `u₂` are two uniform structures on `γ` and `u₁ ≤ u₂`, then
 `𝒰(α, γ, u₁) ≤ 𝒰(α, γ, u₂)`. -/
-protected theorem mono : Monotone (@UniformConvergence.uniformSpace α γ) := fun u₁ u₂ hu =>
+protected theorem mono : Monotoneₓ (@UniformConvergence.uniformSpace α γ) := fun u₁ u₂ hu =>
   (UniformConvergence.gc α γ).monotone_u hu
 
 /-- If `u` is a family of uniform structures on `γ`, then
@@ -294,8 +311,7 @@ protected theorem comap_eq {f : γ → β} : 𝒰(α, γ, ‹UniformSpace β›.
   have h₃ := UniformConvergence.gc α β
   have h₄ := UniformConvergence.gc α γ
   refine' GaloisConnection.u_comm_of_l_comm h₁ h₂ h₃ h₄ fun 𝓐 => _
-  have : Prod.map f f ∘ Φ α γ = Φ α β ∘ Prod.map (Prod.map ((· ∘ ·) f) ((· ∘ ·) f)) id := by
-    ext <;> rfl
+  have : Prod.map f f ∘ Φ α γ = Φ α β ∘ Prod.map (Prod.map ((· ∘ ·) f) ((· ∘ ·) f)) id := by ext <;> rfl
   rw [map_comm this, ← prod_map_map_eq']
   rfl
 
@@ -344,8 +360,8 @@ protected theorem precomp_uniform_continuous {f : γ → α} : UniformContinuous
   -- Here we simply go back to filter bases.
   rw [uniform_continuous_iff]
   change 𝓤 (α → β) ≤ (𝓤 (γ → β)).comap (Prod.map (fun g : α → β => g ∘ f) fun g : α → β => g ∘ f)
-  rw
-    [(UniformConvergence.has_basis_uniformity α β).le_basis_iff ((UniformConvergence.has_basis_uniformity γ β).comap _)]
+  rw [(UniformConvergence.has_basis_uniformity α β).le_basis_iff
+      ((UniformConvergence.has_basis_uniformity γ β).comap _)]
   exact fun U hU => ⟨U, hU, fun uv huv x => huv (f x)⟩
 
 /-- Turn a bijection `γ ≃ α` into a uniform isomorphism
@@ -375,7 +391,7 @@ protected theorem le_Pi : 𝒰(α, β, _) ≤ Pi.uniformSpace fun _ => β := by
 `tendsto_uniformly`. -/
 protected theorem tendsto_iff_tendsto_uniformly : Tendsto F p (𝓝 f) ↔ TendstoUniformly F f p := by
   letI : UniformSpace (α → β) := 𝒰(α, β, _)
-  rw [(UniformConvergence.has_basis_nhds α β).tendsto_right_iff, TendstoUniformly]
+  rw [(UniformConvergence.has_basis_nhds α β f).tendsto_right_iff, TendstoUniformly]
   exact Iff.rfl
 
 /-- The natural bijection between `α → β × γ` and `(α → β) × (α → γ)`, upgraded to a uniform
@@ -431,12 +447,47 @@ end UniformConvergence
 
 namespace UniformConvergenceOn
 
-variable (α β : Type _) {γ ι : Type _} [UniformSpace β] (𝔖 : Set (Set α))
+variable {α β : Type _} {γ ι : Type _}
 
 variable {F : ι → α → β} {f : α → β} {s s' : Set α} {x : α} {p : Filter ι} {g : ι → α}
 
 -- mathport name: «expr𝒰( , , )»
 local notation "𝒰(" α ", " β ", " u ")" => @UniformConvergence.uniformSpace α β u
+
+/-- Basis sets for the uniformity of `𝔖`-convergence: for `S : set α` and `V : set (β × β)`,
+`gen S V` is the set of pairs `(f, g)` of functions `α → β` such that `∀ x ∈ S, (f x, g x) ∈ V`. -/
+protected def Gen (S : Set α) (V : Set (β × β)) : Set ((α → β) × (α → β)) :=
+  { uv : (α → β) × (α → β) | ∀ x ∈ S, (uv.1 x, uv.2 x) ∈ V }
+
+/-- For `S : set α` and `V : set (β × β)`, we have
+`uniform_convergence_on.gen S V = (S.restrict × S.restrict) ⁻¹' (uniform_convergence.gen S β V)`.
+This is the crucial fact for proving that the family `uniform_convergence_on.gen S V` for
+`S ∈ 𝔖` and `V ∈ 𝓤 β` is indeed a basis for the uniformity `α → β` endowed with `𝒱(α, β, 𝔖, uβ)`
+the uniform structure of `𝔖`-convergence, as defined in `uniform_convergence_on.uniform_space`. -/
+protected theorem gen_eq_preimage_restrict (S : Set α) (V : Set (β × β)) :
+    UniformConvergenceOn.Gen S V = Prod.map S.restrict S.restrict ⁻¹' UniformConvergence.Gen S β V := by
+  ext uv
+  exact ⟨fun h ⟨x, hx⟩ => h x hx, fun h x hx => h ⟨x, hx⟩⟩
+
+/-- `uniform_convergence_on.gen` is antitone in the first argument and monotone in the second. -/
+protected theorem gen_mono {S S' : Set α} {V V' : Set (β × β)} (hS : S' ⊆ S) (hV : V ⊆ V') :
+    UniformConvergenceOn.Gen S V ⊆ UniformConvergenceOn.Gen S' V' := fun uv h x hx => hV (h x <| hS hx)
+
+/-- If `𝔖 : set (set α)` is nonempty and directed and `𝓑` is a filter basis on `β × β`, then the
+family `uniform_convergence_on.gen S V` for `S ∈ 𝔖` and `V ∈ 𝓑` is a filter basis.
+We will show in `has_basis_uniformity_of_basis` that, if `𝓑` is a basis for `𝓤 β`, then the
+corresponding filter is the uniformity of `(α → β, 𝒱(α, β, 𝔖, uβ))`. -/
+protected theorem is_basis_gen (𝔖 : Set (Set α)) (h : 𝔖.Nonempty) (h' : DirectedOn (· ⊆ ·) 𝔖)
+    (𝓑 : FilterBasis <| β × β) :
+    IsBasis (fun SV : Set α × Set (β × β) => SV.1 ∈ 𝔖 ∧ SV.2 ∈ 𝓑) fun SV => UniformConvergenceOn.Gen SV.1 SV.2 :=
+  ⟨h.Prod 𝓑.Nonempty, fun U₁V₁ U₂V₂ h₁ h₂ =>
+    let ⟨U₃, hU₃, hU₁₃, hU₂₃⟩ := h' U₁V₁.1 h₁.1 U₂V₂.1 h₂.1
+    let ⟨V₃, hV₃, hV₁₂₃⟩ := 𝓑.inter_sets h₁.2 h₂.2
+    ⟨⟨U₃, V₃⟩,
+      ⟨⟨hU₃, hV₃⟩, fun uv huv =>
+        ⟨fun x hx => (hV₁₂₃ <| huv x <| hU₁₃ hx).1, fun x hx => (hV₁₂₃ <| huv x <| hU₂₃ hx).2⟩⟩⟩⟩
+
+variable (α β) [UniformSpace β] (𝔖 : Set (Set α))
 
 /-- Uniform structure of `𝔖`-convergence, i.e uniform convergence on the elements of `𝔖`.
 It is defined as the infimum, for `S ∈ 𝔖`, of the pullback of `𝒰 S β` by `S.restrict`, the
@@ -461,6 +512,64 @@ protected theorem topological_space_eq :
   simp only [UniformConvergenceOn.topologicalSpace, to_topological_space_infi, to_topological_space_infi,
     to_topological_space_comap]
   rfl
+
+protected theorem has_basis_uniformity_of_basis_aux₁ {p : ι → Prop} {s : ι → Set (β × β)} (hb : HasBasis (𝓤 β) p s)
+    (S : Set α) :
+    (@uniformity (α → β) ((UniformConvergence.uniformSpace S β).comap S.restrict)).HasBasis p fun i =>
+      UniformConvergenceOn.Gen S (s i) :=
+  by
+  simp_rw [UniformConvergenceOn.gen_eq_preimage_restrict, uniformity_comap rfl]
+  exact (UniformConvergence.has_basis_uniformity_of_basis S β hb).comap _
+
+protected theorem has_basis_uniformity_of_basis_aux₂ (h : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop} {s : ι → Set (β × β)}
+    (hb : HasBasis (𝓤 β) p s) :
+    DirectedOn ((fun s : Set α => (UniformConvergence.uniformSpace s β).comap (s.restrict : (α → β) → s → β)) ⁻¹'o Ge)
+      𝔖 :=
+  h.mono fun s t hst =>
+    ((UniformConvergenceOn.has_basis_uniformity_of_basis_aux₁ α β hb _).le_basis_iff
+          (UniformConvergenceOn.has_basis_uniformity_of_basis_aux₁ α β hb _)).mpr
+      fun V hV => ⟨V, hV, UniformConvergenceOn.gen_mono hst subset_rfl⟩
+
+/-- If `𝔖 : set (set α)` is nonempty and directed and `𝓑` is a filter basis of `𝓤 β`, then the
+uniformity of `(α → β, 𝒱(α, β, 𝔖, uβ))` admits the family `{(f, g) | ∀ x ∈ S, (f x, g x) ∈ V}` for
+`S ∈ 𝔖` and `V ∈ 𝓑` as a filter basis. -/
+protected theorem has_basis_uniformity_of_basis (h : 𝔖.Nonempty) (h' : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop}
+    {s : ι → Set (β × β)} (hb : HasBasis (𝓤 β) p s) :
+    (@uniformity (α → β) (UniformConvergenceOn.uniformSpace α β 𝔖)).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2)
+      fun Si => UniformConvergenceOn.Gen Si.1 (s Si.2) :=
+  by
+  simp only [infi_uniformity']
+  exact
+    has_basis_binfi_of_directed h (fun S => @UniformConvergenceOn.Gen α β S ∘ s) _
+      (fun S hS => UniformConvergenceOn.has_basis_uniformity_of_basis_aux₁ α β hb S)
+      (UniformConvergenceOn.has_basis_uniformity_of_basis_aux₂ α β 𝔖 h' hb)
+
+/-- If `𝔖 : set (set α)` is nonempty and directed, then the uniformity of
+`(α → β, 𝒱(α, β, 𝔖, uβ))` admits the family `{(f, g) | ∀ x ∈ S, (f x, g x) ∈ V}` for `S ∈ 𝔖` and
+`V ∈ 𝓤 β` as a filter basis. -/
+protected theorem has_basis_uniformity (h : 𝔖.Nonempty) (h' : DirectedOn (· ⊆ ·) 𝔖) :
+    (@uniformity (α → β) (UniformConvergenceOn.uniformSpace α β 𝔖)).HasBasis
+      (fun SV : Set α × Set (β × β) => SV.1 ∈ 𝔖 ∧ SV.2 ∈ 𝓤 β) fun SV => UniformConvergenceOn.Gen SV.1 SV.2 :=
+  UniformConvergenceOn.has_basis_uniformity_of_basis α β 𝔖 h h' (𝓤 β).basis_sets
+
+/-- If `α → β` is endowed with the topology of `𝔖`-convergence, where `𝔖 : set (set α)` is
+nonempty and directed, then `𝓝 f` admits the family `{g | ∀ x ∈ S, (f x, g x) ∈ V}` for `S ∈ 𝔖`
+and `V ∈ 𝓑` as a filter basis, for any basis `𝓑` of `𝓤 β`. -/
+protected theorem has_basis_nhds_of_basis (f) (h : 𝔖.Nonempty) (h' : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop}
+    {s : ι → Set (β × β)} (hb : HasBasis (𝓤 β) p s) :
+    (@nhds (α → β) (UniformConvergenceOn.topologicalSpace α β 𝔖) f).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2)
+      fun Si => { g | (g, f) ∈ UniformConvergenceOn.Gen Si.1 (s Si.2) } :=
+  letI : UniformSpace (α → β) := UniformConvergenceOn.uniformSpace α β 𝔖
+  nhds_basis_uniformity (UniformConvergenceOn.has_basis_uniformity_of_basis α β 𝔖 h h' hb)
+
+/-- If `α → β` is endowed with the topology of `𝔖`-convergence, where `𝔖 : set (set α)` is
+nonempty and directed, then `𝓝 f` admits the family `{g | ∀ x ∈ S, (f x, g x) ∈ V}` for `S ∈ 𝔖`
+and `V ∈ 𝓤 β` as a filter basis. -/
+protected theorem has_basis_nhds (f) (h : 𝔖.Nonempty) (h' : DirectedOn (· ⊆ ·) 𝔖) :
+    (@nhds (α → β) (UniformConvergenceOn.topologicalSpace α β 𝔖) f).HasBasis
+      (fun SV : Set α × Set (β × β) => SV.1 ∈ 𝔖 ∧ SV.2 ∈ 𝓤 β) fun SV =>
+      { g | (g, f) ∈ UniformConvergenceOn.Gen SV.1 SV.2 } :=
+  UniformConvergenceOn.has_basis_nhds_of_basis α β 𝔖 f h h' (Filter.basis_sets _)
 
 /-- If `S ∈ 𝔖`, then the restriction to `S` is a uniformly continuous map from `𝒱(α, β, 𝔖, uβ)` to
 `𝒰(↥S, β, uβ)`. -/

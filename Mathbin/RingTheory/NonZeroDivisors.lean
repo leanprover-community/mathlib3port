@@ -25,11 +25,9 @@ section nonZeroDivisors
 /-- The submonoid of non-zero-divisors of a `monoid_with_zero` `R`. -/
 def nonZeroDivisors (R : Type _) [MonoidWithZeroₓ R] : Submonoid R where
   Carrier := { x | ∀ z, z * x = 0 → z = 0 }
-  one_mem' := fun z hz => by
-    rwa [mul_oneₓ] at hz
+  one_mem' := fun z hz => by rwa [mul_oneₓ] at hz
   mul_mem' := fun x₁ x₂ hx₁ hx₂ z hz =>
-    have : z * x₁ * x₂ = 0 := by
-      rwa [mul_assoc]
+    have : z * x₁ * x₂ = 0 := by rwa [mul_assoc]
     hx₁ z <| hx₂ (z * x₁) this
 
 -- mathport name: non_zero_divisors
@@ -42,8 +40,7 @@ theorem mem_non_zero_divisors_iff {r : M} : r ∈ M⁰ ↔ ∀ x, x * r = 0 → 
   Iff.rfl
 
 theorem mul_right_mem_non_zero_divisors_eq_zero_iff {x r : M} (hr : r ∈ M⁰) : x * r = 0 ↔ x = 0 :=
-  ⟨hr _, by
-    simp (config := { contextual := true })⟩
+  ⟨hr _, by simp (config := { contextual := true })⟩
 
 @[simp]
 theorem mul_right_coe_non_zero_divisors_eq_zero_iff {x : M} {c : M⁰} : x * c = 0 ↔ x = 0 :=

@@ -195,7 +195,7 @@ topology.
 Since `compact_conv_nhd K V f` are a neighbourhood basis at `f` for each `f`, it follows that
 the compact-open topology is at least as fine as the topology of compact convergence. -/
 theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : V ∈ 𝓤 β) :
-    ∃ (ι : Sort (u₁ + 1))(_ : Fintype ι)(C : ι → Set α)(hC : ∀ i, IsCompact (C i))(U : ι → Set β)(hU :
+    ∃ (ι : Sort (u₁ + 1))(_ : Fintypeₓ ι)(C : ι → Set α)(hC : ∀ i, IsCompact (C i))(U : ι → Set β)(hU :
       ∀ i, IsOpen (U i)),
       (f ∈ ⋂ i, CompactOpen.Gen (C i) (U i)) ∧ (⋂ i, CompactOpen.Gen (C i) (U i)) ⊆ CompactConvNhd K V f :=
   by
@@ -206,19 +206,14 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
   have hUK : K ⊆ ⋃ x : K, U (x : K) := by
     intro x hx
     simp only [exists_propₓ, mem_Union, Union_coe_set, mem_preimage]
-    exact
-      ⟨(⟨x, hx⟩ : K), by
-        simp [hx, mem_ball_self (f x) hZ₁]⟩
+    exact ⟨(⟨x, hx⟩ : K), by simp [hx, mem_ball_self (f x) hZ₁]⟩
   obtain ⟨t, ht⟩ := hK.elim_finite_subcover _ (fun x : K => hU x.val) hUK
   let C : t → Set α := fun i => K ∩ Closure (U ((i : K) : α))
   have hC : K ⊆ ⋃ i, C i := by
     rw [← K.inter_Union, subset_inter_iff]
     refine' ⟨subset.rfl, ht.trans _⟩
     simp only [SetCoe.forall, Subtype.coe_mk, Union_subset_iff]
-    exact fun x hx₁ hx₂ =>
-      subset_Union_of_subset (⟨_, hx₂⟩ : t)
-        (by
-          simp [subset_closure])
+    exact fun x hx₁ hx₂ => subset_Union_of_subset (⟨_, hx₂⟩ : t) (by simp [subset_closure])
   have hfC : ∀ i : t, C i ⊆ f ⁻¹' ball (f ((i : K) : α)) W := by
     simp only [← image_subset_iff, ← mem_preimage]
     rintro ⟨⟨x, hx₁⟩, hx₂⟩
@@ -236,8 +231,7 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
       
   refine'
     ⟨t, t.fintype_coe_sort, C, fun i => hK.inter_right is_closed_closure, fun i => ball (f ((i : K) : α)) W, fun i =>
-      is_open_ball _ hW₄, by
-      simp [compact_open.gen, hfC], fun g hg x hx => hW₃ (mem_comp_rel.mpr _)⟩
+      is_open_ball _ hW₄, by simp [compact_open.gen, hfC], fun g hg x hx => hW₃ (mem_comp_rel.mpr _)⟩
   simp only [mem_Inter, compact_open.gen, mem_set_of_eq, image_subset_iff] at hg
   obtain ⟨y, hy⟩ := mem_Union.mp (hC hx)
   exact ⟨f y, (mem_ball_symmetry hW₂).mp (hfC y hy), mem_preimage.mp (hg y hy)⟩
@@ -277,18 +271,15 @@ theorem has_basis_compact_convergence_uniformity_aux :
   rintro ⟨K₁, V₁⟩ ⟨hK₁, hV₁⟩ ⟨K₂, V₂⟩ ⟨hK₂, hV₂⟩
   refine' ⟨⟨K₁ ∪ K₂, V₁ ∩ V₂⟩, ⟨hK₁.union hK₂, Filter.inter_mem hV₁ hV₂⟩, _⟩
   simp only [le_eq_subset, Prod.forallₓ, set_of_subset_set_of, ge_iff_leₓ, Order.Preimage, ← forall_and_distrib,
-    mem_inter_eq, mem_union_eq]
-  exact fun f g =>
-    forall_imp fun x => by
-      tauto!
+    mem_inter_iff, mem_union]
+  exact fun f g => forall_imp fun x => by tauto!
 
 /-- An intermediate lemma. Usually `mem_compact_convergence_entourage_iff` is more useful. -/
 theorem mem_compact_convergence_uniformity (X : Set (C(α, β) × C(α, β))) :
     X ∈ @compactConvergenceUniformity α β _ _ ↔
       ∃ (K : Set α)(V : Set (β × β))(hK : IsCompact K)(hV : V ∈ 𝓤 β),
         { fg : C(α, β) × C(α, β) | ∀ x ∈ K, (fg.1 x, fg.2 x) ∈ V } ⊆ X :=
-  by
-  simp only [has_basis_compact_convergence_uniformity_aux.mem_iff, exists_propₓ, Prod.existsₓ, and_assocₓ]
+  by simp only [has_basis_compact_convergence_uniformity_aux.mem_iff, exists_propₓ, Prod.existsₓ, and_assocₓ]
 
 /-- Note that we ensure the induced topology is definitionally the compact-open topology. -/
 instance compactConvergenceUniformSpace : UniformSpace C(α, β) where
@@ -303,10 +294,7 @@ instance compactConvergenceUniformSpace : UniformSpace C(α, β) where
     intro K V hK hV
     obtain ⟨V', hV', hsymm, hsub⟩ := symm_of_uniformity hV
     let X := { fg : C(α, β) × C(α, β) | ∀ x : α, x ∈ K → (fg.1 x, fg.2 x) ∈ V' }
-    have hX : X ∈ compact_convergence_uniformity :=
-      (mem_compact_convergence_uniformity X).mpr
-        ⟨K, V', hK, hV', by
-          simp ⟩
+    have hX : X ∈ compact_convergence_uniformity := (mem_compact_convergence_uniformity X).mpr ⟨K, V', hK, hV', by simp⟩
     exact Filter.eventually_of_mem hX fun fg hfg x hx => hsub (hsymm _ _ (hfg x hx))
   comp := fun X hX => by
     obtain ⟨K, V, hK, hV, hX⟩ := (mem_compact_convergence_uniformity X).mp hX

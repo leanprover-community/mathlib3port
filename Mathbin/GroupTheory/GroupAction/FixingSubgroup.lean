@@ -48,8 +48,7 @@ variable (M : Type _) {α : Type _} [Monoidₓ M] [MulAction M α]
 def fixingSubmonoid (s : Set α) : Submonoid M where
   Carrier := { ϕ : M | ∀ x : s, ϕ • (x : α) = x }
   one_mem' := fun _ => one_smul _ _
-  mul_mem' := fun x y hx hy z => by
-    rw [mul_smul, hy z, hx z]
+  mul_mem' := fun x y hx hy z => by rw [mul_smul, hy z, hx z]
 
 theorem mem_fixing_submonoid_iff {s : Set α} {m : M} : m ∈ fixingSubmonoid M s ↔ ∀ y ∈ s, m • y = y :=
   ⟨fun hg y hy => hg ⟨y, hy⟩, fun h ⟨y, hy⟩ => h y hy⟩
@@ -62,10 +61,10 @@ theorem fixing_submonoid_fixed_points_gc :
       ((fun P : Submonoid M => FixedPoints P α) ∘ OrderDual.ofDual) :=
   fun s P => ⟨fun h s hs p => h p.2 ⟨s, hs⟩, fun h p hp s => h s.2 ⟨p, hp⟩⟩
 
-theorem fixing_submonoid_antitone : Antitone fun s : Set α => fixingSubmonoid M s :=
+theorem fixing_submonoid_antitone : Antitoneₓ fun s : Set α => fixingSubmonoid M s :=
   (fixing_submonoid_fixed_points_gc M α).monotone_l
 
-theorem fixed_points_antitone : Antitone fun P : Submonoid M => FixedPoints P α :=
+theorem fixed_points_antitone : Antitoneₓ fun P : Submonoid M => FixedPoints P α :=
   (fixing_submonoid_fixed_points_gc M α).monotone_u.dual_left
 
 /-- Fixing submonoid of union is intersection -/
@@ -97,9 +96,7 @@ variable (M : Type _) {α : Type _} [Groupₓ M] [MulAction M α]
 /-- The subgroup fixing a set under a `mul_action`. -/
 @[to_additive " The additive subgroup fixing a set under an `add_action`. "]
 def fixingSubgroup (s : Set α) : Subgroup M :=
-  { fixingSubmonoid M s with
-    inv_mem' := fun _ hx z => by
-      rw [inv_smul_eq_iff, hx z] }
+  { fixingSubmonoid M s with inv_mem' := fun _ hx z => by rw [inv_smul_eq_iff, hx z] }
 
 theorem mem_fixing_subgroup_iff {s : Set α} {m : M} : m ∈ fixingSubgroup M s ↔ ∀ y ∈ s, m • y = y :=
   ⟨fun hg y hy => hg ⟨y, hy⟩, fun h ⟨y, hy⟩ => h y hy⟩
@@ -112,10 +109,10 @@ theorem fixing_subgroup_fixed_points_gc :
       ((fun P : Subgroup M => FixedPoints P α) ∘ OrderDual.ofDual) :=
   fun s P => ⟨fun h s hs p => h p.2 ⟨s, hs⟩, fun h p hp s => h s.2 ⟨p, hp⟩⟩
 
-theorem fixing_subgroup_antitone : Antitone (fixingSubgroup M : Set α → Subgroup M) :=
+theorem fixing_subgroup_antitone : Antitoneₓ (fixingSubgroup M : Set α → Subgroup M) :=
   (fixing_subgroup_fixed_points_gc M α).monotone_l
 
-theorem fixed_points_subgroup_antitone : Antitone fun P : Subgroup M => FixedPoints P α :=
+theorem fixed_points_subgroup_antitone : Antitoneₓ fun P : Subgroup M => FixedPoints P α :=
   (fixing_subgroup_fixed_points_gc M α).monotone_u.dual_left
 
 /-- Fixing subgroup of union is intersection -/

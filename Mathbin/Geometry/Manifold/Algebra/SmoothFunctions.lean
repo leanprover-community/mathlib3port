@@ -60,18 +60,13 @@ under pointwise multiplication.
 @[to_additive]
 instance semigroup {G : Type _} [Semigroupₓ G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G] :
     Semigroupₓ C^∞⟮I, N; I', G⟯ :=
-  { SmoothMap.hasMul with
-    mul_assoc := fun a b c => by
-      ext <;> exact mul_assoc _ _ _ }
+  { SmoothMap.hasMul with mul_assoc := fun a b c => by ext <;> exact mul_assoc _ _ _ }
 
 @[to_additive]
 instance monoid {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G] :
     Monoidₓ C^∞⟮I, N; I', G⟯ :=
-  { SmoothMap.semigroup, SmoothMap.hasOne with
-    one_mul := fun a => by
-      ext <;> exact one_mulₓ _,
-    mul_one := fun a => by
-      ext <;> exact mul_oneₓ _ }
+  { SmoothMap.semigroup, SmoothMap.hasOne with one_mul := fun a => by ext <;> exact one_mulₓ _,
+    mul_one := fun a => by ext <;> exact mul_oneₓ _ }
 
 /-- Coercion to a function as an `monoid_hom`. Similar to `monoid_hom.coe_fn`. -/
 @[to_additive "Coercion to a function as an `add_monoid_hom`. Similar to `add_monoid_hom.coe_fn`.", simps]
@@ -84,19 +79,14 @@ def coeFnMonoidHom {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace
 @[to_additive]
 instance commMonoid {G : Type _} [CommMonoidₓ G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G] :
     CommMonoidₓ C^∞⟮I, N; I', G⟯ :=
-  { SmoothMap.monoid, SmoothMap.hasOne with
-    mul_comm := fun a b => by
-      ext <;> exact mul_comm _ _ }
+  { SmoothMap.monoid, SmoothMap.hasOne with mul_comm := fun a b => by ext <;> exact mul_comm _ _ }
 
 @[to_additive]
 instance group {G : Type _} [Groupₓ G] [TopologicalSpace G] [ChartedSpace H' G] [LieGroup I' G] :
     Groupₓ C^∞⟮I, N; I', G⟯ :=
   { SmoothMap.monoid with inv := fun f => ⟨fun x => (f x)⁻¹, f.Smooth.inv⟩,
-    mul_left_inv := fun a => by
-      ext <;> exact mul_left_invₓ _,
-    div := fun f g => ⟨f / g, f.Smooth.div g.Smooth⟩,
-    div_eq_mul_inv := fun f g => by
-      ext <;> exact div_eq_mul_inv _ _ }
+    mul_left_inv := fun a => by ext <;> exact mul_left_invₓ _, div := fun f g => ⟨f / g, f.Smooth.div g.Smooth⟩,
+    div_eq_mul_inv := fun f g => by ext <;> exact div_eq_mul_inv _ _ }
 
 @[simp, to_additive]
 theorem coe_inv {G : Type _} [Groupₓ G] [TopologicalSpace G] [ChartedSpace H' G] [LieGroup I' G]
@@ -127,15 +117,9 @@ under pointwise multiplication.
 
 instance semiring {R : Type _} [Semiringₓ R] [TopologicalSpace R] [ChartedSpace H' R] [SmoothRing I' R] :
     Semiringₓ C^∞⟮I, N; I', R⟯ :=
-  { SmoothMap.addCommMonoid, SmoothMap.monoid with
-    left_distrib := fun a b c => by
-      ext <;> exact left_distrib _ _ _,
-    right_distrib := fun a b c => by
-      ext <;> exact right_distrib _ _ _,
-    zero_mul := fun a => by
-      ext <;> exact zero_mul _,
-    mul_zero := fun a => by
-      ext <;> exact mul_zero _ }
+  { SmoothMap.addCommMonoid, SmoothMap.monoid with left_distrib := fun a b c => by ext <;> exact left_distrib _ _ _,
+    right_distrib := fun a b c => by ext <;> exact right_distrib _ _ _,
+    zero_mul := fun a => by ext <;> exact zero_mul _, mul_zero := fun a => by ext <;> exact mul_zero _ }
 
 instance ring {R : Type _} [Ringₓ R] [TopologicalSpace R] [ChartedSpace H' R] [SmoothRing I' R] :
     Ringₓ C^∞⟮I, N; I', R⟯ :=
@@ -206,21 +190,15 @@ variable {A : Type _} [NormedRing A] [NormedAlgebra 𝕜 A] [SmoothRing 𝓘(�
 /-- Smooth constant functions as a `ring_hom`. -/
 def c : 𝕜 →+* C^∞⟮I, N; 𝓘(𝕜, A), A⟯ where
   toFun := fun c : 𝕜 => ⟨fun x => (algebraMap 𝕜 A) c, smooth_const⟩
-  map_one' := by
-    ext x <;> exact (algebraMap 𝕜 A).map_one
-  map_mul' := fun c₁ c₂ => by
-    ext x <;> exact (algebraMap 𝕜 A).map_mul _ _
-  map_zero' := by
-    ext x <;> exact (algebraMap 𝕜 A).map_zero
-  map_add' := fun c₁ c₂ => by
-    ext x <;> exact (algebraMap 𝕜 A).map_add _ _
+  map_one' := by ext x <;> exact (algebraMap 𝕜 A).map_one
+  map_mul' := fun c₁ c₂ => by ext x <;> exact (algebraMap 𝕜 A).map_mul _ _
+  map_zero' := by ext x <;> exact (algebraMap 𝕜 A).map_zero
+  map_add' := fun c₁ c₂ => by ext x <;> exact (algebraMap 𝕜 A).map_add _ _
 
 instance algebra : Algebra 𝕜 C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
   { SmoothMap.semiring with smul := fun r f => ⟨r • f, smooth_const.smul f.Smooth⟩, toRingHom := SmoothMap.c,
-    commutes' := fun c f => by
-      ext x <;> exact Algebra.commutes' _ _,
-    smul_def' := fun c f => by
-      ext x <;> exact Algebra.smul_def' _ _ }
+    commutes' := fun c f => by ext x <;> exact Algebra.commutes' _ _,
+    smul_def' := fun c f => by ext x <;> exact Algebra.smul_def' _ _ }
 
 /-- Coercion to a function as an `alg_hom`. -/
 @[simps]
@@ -255,18 +233,12 @@ theorem smul_comp' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] (f :
 instance module' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
     Module C^∞⟮I, N; 𝓘(𝕜), 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ where
   smul := (· • ·)
-  smul_add := fun c f g => by
-    ext x <;> exact smul_add (c x) (f x) (g x)
-  add_smul := fun c₁ c₂ f => by
-    ext x <;> exact add_smul (c₁ x) (c₂ x) (f x)
-  mul_smul := fun c₁ c₂ f => by
-    ext x <;> exact mul_smul (c₁ x) (c₂ x) (f x)
-  one_smul := fun f => by
-    ext x <;> exact one_smul 𝕜 (f x)
-  zero_smul := fun f => by
-    ext x <;> exact zero_smul _ _
-  smul_zero := fun r => by
-    ext x <;> exact smul_zero _
+  smul_add := fun c f g => by ext x <;> exact smul_add (c x) (f x) (g x)
+  add_smul := fun c₁ c₂ f => by ext x <;> exact add_smul (c₁ x) (c₂ x) (f x)
+  mul_smul := fun c₁ c₂ f => by ext x <;> exact mul_smul (c₁ x) (c₂ x) (f x)
+  one_smul := fun f => by ext x <;> exact one_smul 𝕜 (f x)
+  zero_smul := fun f => by ext x <;> exact zero_smul _ _
+  smul_zero := fun r => by ext x <;> exact smul_zero _
 
 end ModuleOverContinuousFunctions
 

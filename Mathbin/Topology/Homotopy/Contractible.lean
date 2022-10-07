@@ -24,8 +24,7 @@ def Nullhomotopic (f : C(X, Y)) : Prop :=
   ∃ y : Y, Homotopic f (ContinuousMap.const _ y)
 
 theorem nullhomotopic_of_constant (y : Y) : Nullhomotopic (ContinuousMap.const X y) :=
-  ⟨y, by
-    rfl⟩
+  ⟨y, by rfl⟩
 
 theorem Nullhomotopic.comp_right {f : C(X, Y)} (hf : f.Nullhomotopic) (g : C(Y, Z)) : (g.comp f).Nullhomotopic := by
   cases' hf with y hy
@@ -43,7 +42,7 @@ open ContinuousMap
 
 open ContinuousMap
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`hequiv_unit] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`hequiv_unit] []
 /-- A contractible space is one that is homotopy equivalent to `unit`. -/
 class ContractibleSpace (X : Type _) [TopologicalSpace X] : Prop where
   hequiv_unit : Nonempty (X ≃ₕ Unit)

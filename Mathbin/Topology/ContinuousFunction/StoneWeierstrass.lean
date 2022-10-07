@@ -146,8 +146,8 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open TopologicalSpace
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (f g «expr ∈ » L)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (f g «expr ∈ » L)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (f g «expr ∈ » L)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (f g «expr ∈ » L)
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊓ g ∈ L) (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊔ g ∈ L)
@@ -159,7 +159,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   simp only [exists_propₓ, Metric.mem_ball]
   -- It will be helpful to assume `X` is nonempty later,
   -- so we get that out of the way here.
-  by_cases' nX : Nonempty X
+  by_cases nX:Nonempty X
   swap
   exact ⟨nA.some, (dist_lt_iff Pos).mpr fun x => False.elim (nX ⟨x⟩), nA.some_spec⟩
   /-
@@ -170,7 +170,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     and finally using compactness to produce the desired function `h`
     as a maximum over finitely many `x` of a minimum over finitely many `y` of the `g x y`.
     -/
-  dsimp' [Set.SeparatesPointsStrongly]  at sep
+  dsimp [Set.SeparatesPointsStrongly] at sep
   let g : X → X → L := fun x y => (sep f x y).some
   have w₁ : ∀ x y, g x y x = f x := fun x y => (sep f x y).some_spec.1
   have w₂ : ∀ x y, g x y y = f y := fun x y => (sep f x y).some_spec.2
@@ -193,18 +193,18 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   -- and still equal to `f x` at `x`.
   -- Since `X` is compact, for every `x` there is some finset `ys t`
   -- so the union of the `U x y` for `y ∈ ys x` still covers everything.
-  let ys : ∀ x, Finset X := fun x => (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).some
+  let ys : ∀ x, Finsetₓ X := fun x => (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).some
   let ys_w : ∀ x, (⋃ y ∈ ys x, U x y) = ⊤ := fun x => (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).some_spec
   have ys_nonempty : ∀ x, (ys x).Nonempty := fun x => Set.nonempty_of_union_eq_top_of_nonempty _ _ nX (ys_w x)
   -- Thus for each `x` we have the desired `h x : A` so `f z - ε < h x z` everywhere
   -- and `h x x = f x`.
   let h : ∀ x, L := fun x =>
-    ⟨(ys x).sup' (ys_nonempty x) fun y => (g x y : C(X, ℝ)), Finset.sup'_mem _ sup_mem _ _ _ fun y _ => (g x y).2⟩
+    ⟨(ys x).sup' (ys_nonempty x) fun y => (g x y : C(X, ℝ)), Finsetₓ.sup'_mem _ sup_mem _ _ _ fun y _ => (g x y).2⟩
   have lt_h : ∀ x z, f z - ε < h x z := by
     intro x z
     obtain ⟨y, ym, zm⟩ := Set.exists_set_mem_of_union_eq_top _ _ (ys_w x) z
-    dsimp' [h]
-    simp only [coe_fn_coe_base', Subtype.coe_mk, sup'_coe, Finset.sup'_apply, Finset.lt_sup'_iff]
+    dsimp [h]
+    simp only [coe_fn_coe_base', Subtype.coe_mk, sup'_coe, Finsetₓ.sup'_apply, Finsetₓ.lt_sup'_iff]
     exact ⟨y, ym, zm⟩
   have h_eq : ∀ x, h x x = f x := by
     intro x
@@ -218,36 +218,35 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     refine' IsOpen.mem_nhds _ _
     · apply is_open_lt <;> continuity
       
-    · dsimp' only [W, Set.mem_set_of_eq]
+    · dsimp only [W, Set.mem_set_of_eq]
       rw [h_eq]
       exact lt_add_of_pos_right _ Pos
       
   -- Since `X` is compact, there is some finset `ys t`
   -- so the union of the `W x` for `x ∈ xs` still covers everything.
-  let xs : Finset X := (CompactSpace.elim_nhds_subcover W W_nhd).some
+  let xs : Finsetₓ X := (CompactSpace.elim_nhds_subcover W W_nhd).some
   let xs_w : (⋃ x ∈ xs, W x) = ⊤ := (CompactSpace.elim_nhds_subcover W W_nhd).some_spec
   have xs_nonempty : xs.nonempty := Set.nonempty_of_union_eq_top_of_nonempty _ _ nX xs_w
   -- Finally our candidate function is the infimum over `x ∈ xs` of the `h x`.
   -- This function is then globally less than `f z + ε`.
   let k : (L : Type _) :=
-    ⟨xs.inf' xs_nonempty fun x => (h x : C(X, ℝ)), Finset.inf'_mem _ inf_mem _ _ _ fun x _ => (h x).2⟩
+    ⟨xs.inf' xs_nonempty fun x => (h x : C(X, ℝ)), Finsetₓ.inf'_mem _ inf_mem _ _ _ fun x _ => (h x).2⟩
   refine' ⟨k.1, _, k.2⟩
   -- We just need to verify the bound, which we do pointwise.
   rw [dist_lt_iff Pos]
   intro z
   -- We rewrite into this particular form,
   -- so that simp lemmas about inequalities involving `finset.inf'` can fire.
-  rw
-    [show ∀ a b ε : ℝ, dist a b < ε ↔ a < b + ε ∧ b - ε < a by
+  rw [show ∀ a b ε : ℝ, dist a b < ε ↔ a < b + ε ∧ b - ε < a by
       intros
       simp only [← Metric.mem_ball, Real.ball_eq_Ioo, Set.mem_Ioo, and_comm]]
   fconstructor
-  · dsimp' [k]
-    simp only [Finset.inf'_lt_iff, ContinuousMap.inf'_apply]
+  · dsimp [k]
+    simp only [Finsetₓ.inf'_lt_iff, ContinuousMap.inf'_apply]
     exact Set.exists_set_mem_of_union_eq_top _ _ xs_w z
     
-  · dsimp' [k]
-    simp only [Finset.lt_inf'_iff, ContinuousMap.inf'_apply]
+  · dsimp [k]
+    simp only [Finsetₓ.lt_inf'_iff, ContinuousMap.inf'_apply]
     intro x xm
     apply lt_h
     
@@ -379,9 +378,9 @@ theorem ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separat
     let A₀ : Submodule ℝ C(X, ℝ) := (A.to_submodule.restrict_scalars ℝ).comap I
     -- By `subalgebra.separates_points.complex_to_real`, this subalgebra also separates points, so
     -- we may apply the real Stone-Weierstrass result to it.
-    have SW : A₀.topological_closure = ⊤ := by
-      have := subalgebra_topological_closure_eq_top_of_separates_points _ (hA.is_R_or_C_to_real hA')
-      exact congr_arg Subalgebra.toSubmodule this
+    have SW : A₀.topological_closure = ⊤ :=
+      haveI := subalgebra_topological_closure_eq_top_of_separates_points _ (hA.is_R_or_C_to_real hA')
+      congr_arg Subalgebra.toSubmodule this
     rw [← Submodule.map_top, ← SW]
     -- So it suffices to prove that the image under `I` of the closure of `A₀` is contained in the
     -- closure of `A`, which follows by abstract nonsense

@@ -56,15 +56,9 @@ variable (C : Type u) [Category.{v} C]
 /-- A category is called preadditive if `P ⟶ Q` is an abelian group such that composition is
     linear in both variables. -/
 class Preadditive where
-  homGroup : ∀ P Q : C, AddCommGroupₓ (P ⟶ Q) := by
-    run_tac
-      tactic.apply_instance
-  add_comp' : ∀ (P Q R : C) (f f' : P ⟶ Q) (g : Q ⟶ R), (f + f') ≫ g = f ≫ g + f' ≫ g := by
-    run_tac
-      obviously
-  comp_add' : ∀ (P Q R : C) (f : P ⟶ Q) (g g' : Q ⟶ R), f ≫ (g + g') = f ≫ g + f ≫ g' := by
-    run_tac
-      obviously
+  homGroup : ∀ P Q : C, AddCommGroupₓ (P ⟶ Q) := by infer_instance
+  add_comp' : ∀ (P Q R : C) (f f' : P ⟶ Q) (g : Q ⟶ R), (f + f') ≫ g = f ≫ g + f' ≫ g := by obviously
+  comp_add' : ∀ (P Q R : C) (f : P ⟶ Q) (g g' : Q ⟶ R), f ≫ (g + g') = f ≫ g + f ≫ g' := by obviously
 
 attribute [instance] preadditive.hom_group
 
@@ -107,7 +101,7 @@ instance InducedCategory.category : Preadditive.{v} (InducedCategory C F) where
 end InducedCategory
 
 instance (X : C) : AddCommGroupₓ (End X) := by
-  dsimp' [End]
+  dsimp [End]
   infer_instance
 
 instance (X : C) : Ringₓ (End X) :=
@@ -117,13 +111,11 @@ instance (X : C) : Ringₓ (End X) :=
 
 /-- Composition by a fixed left argument as a group homomorphism -/
 def leftComp {P Q : C} (R : C) (f : P ⟶ Q) : (Q ⟶ R) →+ (P ⟶ R) :=
-  (mk' fun g => f ≫ g) fun g g' => by
-    simp
+  (mk' fun g => f ≫ g) fun g g' => by simp
 
 /-- Composition by a fixed right argument as a group homomorphism -/
 def rightComp (P : C) {Q R : C} (g : Q ⟶ R) : (P ⟶ Q) →+ (P ⟶ R) :=
-  (mk' fun f => f ≫ g) fun f f' => by
-    simp
+  (mk' fun f => f ≫ g) fun f f' => by simp
 
 variable {P Q R : C} (f f' : P ⟶ Q) (g g' : Q ⟶ R)
 
@@ -150,8 +142,7 @@ theorem comp_neg : f ≫ -g = -(f ≫ g) :=
   map_neg (leftComp R f) g
 
 @[reassoc]
-theorem neg_comp_neg : -f ≫ -g = f ≫ g := by
-  simp
+theorem neg_comp_neg : -f ≫ -g = f ≫ g := by simp
 
 theorem nsmul_comp (n : ℕ) : (n • f) ≫ g = n • f ≫ g :=
   map_nsmul (rightComp P g) n f
@@ -166,22 +157,20 @@ theorem comp_zsmul (n : ℤ) : f ≫ (n • g) = n • f ≫ g :=
   map_zsmul (leftComp R f) n g
 
 @[reassoc]
-theorem comp_sum {P Q R : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (Q ⟶ R)) :
+theorem comp_sum {P Q R : C} {J : Type _} (s : Finsetₓ J) (f : P ⟶ Q) (g : J → (Q ⟶ R)) :
     (f ≫ ∑ j in s, g j) = ∑ j in s, f ≫ g j :=
   map_sum (leftComp R f) _ _
 
 @[reassoc]
-theorem sum_comp {P Q R : C} {J : Type _} (s : Finset J) (f : J → (P ⟶ Q)) (g : Q ⟶ R) :
+theorem sum_comp {P Q R : C} {J : Type _} (s : Finsetₓ J) (f : J → (P ⟶ Q)) (g : Q ⟶ R) :
     (∑ j in s, f j) ≫ g = ∑ j in s, f j ≫ g :=
   map_sum (rightComp P g) _ _
 
 instance {P Q : C} {f : P ⟶ Q} [Epi f] : Epi (-f) :=
-  ⟨fun R g g' H => by
-    rwa [neg_comp, neg_comp, ← comp_neg, ← comp_neg, cancel_epi, neg_inj] at H⟩
+  ⟨fun R g g' H => by rwa [neg_comp, neg_comp, ← comp_neg, ← comp_neg, cancel_epi, neg_inj] at H⟩
 
 instance {P Q : C} {f : P ⟶ Q} [Mono f] : Mono (-f) :=
-  ⟨fun R g g' H => by
-    rwa [comp_neg, comp_neg, ← neg_comp, ← neg_comp, cancel_mono, neg_inj] at H⟩
+  ⟨fun R g g' H => by rwa [comp_neg, comp_neg, ← neg_comp, ← neg_comp, cancel_mono, neg_inj] at H⟩
 
 instance (priority := 100) preadditiveHasZeroMorphisms : HasZeroMorphisms C where
   HasZero := inferInstance
@@ -201,8 +190,7 @@ theorem mono_iff_cancel_zero {Q R : C} (f : Q ⟶ R) : Mono f ↔ ∀ (P : C) (g
   ⟨fun m P g => zero_of_comp_mono _, mono_of_cancel_zero f⟩
 
 theorem mono_of_kernel_zero {X Y : C} {f : X ⟶ Y} [HasLimit (parallelPair f 0)] (w : kernel.ι f = 0) : Mono f :=
-  mono_of_cancel_zero f fun P g h => by
-    rw [← kernel.lift_ι f g h, w, limits.comp_zero]
+  mono_of_cancel_zero f fun P g h => by rw [← kernel.lift_ι f g h, w, limits.comp_zero]
 
 theorem epi_of_cancel_zero {P Q : C} (f : P ⟶ Q) (h : ∀ {R : C} (g : Q ⟶ R), f ≫ g = 0 → g = 0) : Epi f :=
   ⟨fun R g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (leftComp R f) g g').trans <| sub_eq_zero.2 hg⟩
@@ -211,18 +199,15 @@ theorem epi_iff_cancel_zero {P Q : C} (f : P ⟶ Q) : Epi f ↔ ∀ (R : C) (g :
   ⟨fun e R g => zero_of_epi_comp _, epi_of_cancel_zero f⟩
 
 theorem epi_of_cokernel_zero {X Y : C} {f : X ⟶ Y} [HasColimit (parallelPair f 0)] (w : cokernel.π f = 0) : Epi f :=
-  epi_of_cancel_zero f fun P g h => by
-    rw [← cokernel.π_desc f g h, w, limits.zero_comp]
+  epi_of_cancel_zero f fun P g h => by rw [← cokernel.π_desc f g h, w, limits.zero_comp]
 
 namespace IsIso
 
 @[simp]
-theorem comp_left_eq_zero [IsIso f] : f ≫ g = 0 ↔ g = 0 := by
-  rw [← is_iso.eq_inv_comp, limits.comp_zero]
+theorem comp_left_eq_zero [IsIso f] : f ≫ g = 0 ↔ g = 0 := by rw [← is_iso.eq_inv_comp, limits.comp_zero]
 
 @[simp]
-theorem comp_right_eq_zero [IsIso g] : f ≫ g = 0 ↔ f = 0 := by
-  rw [← is_iso.eq_comp_inv, limits.zero_comp]
+theorem comp_right_eq_zero [IsIso g] : f ≫ g = 0 ↔ f = 0 := by rw [← is_iso.eq_comp_inv, limits.zero_comp]
 
 end IsIso
 
@@ -249,8 +234,7 @@ variable {X Y : C} {f : X ⟶ Y} {g : X ⟶ Y}
 /-- Map a kernel cone on the difference of two morphisms to the equalizer fork. -/
 @[simps x]
 def forkOfKernelFork (c : KernelFork (f - g)) : Fork f g :=
-  Fork.ofι c.ι <| by
-    rw [← sub_eq_zero, ← comp_sub, c.condition]
+  Fork.ofι c.ι <| by rw [← sub_eq_zero, ← comp_sub, c.condition]
 
 @[simp]
 theorem fork_of_kernel_fork_ι (c : KernelFork (f - g)) : (forkOfKernelFork c).ι = c.ι :=
@@ -258,8 +242,7 @@ theorem fork_of_kernel_fork_ι (c : KernelFork (f - g)) : (forkOfKernelFork c).�
 
 /-- Map any equalizer fork to a cone on the difference of the two morphisms. -/
 def kernelForkOfFork (c : Fork f g) : KernelFork (f - g) :=
-  Fork.ofι c.ι <| by
-    rw [comp_sub, comp_zero, sub_eq_zero, c.condition]
+  Fork.ofι c.ι <| by rw [comp_sub, comp_zero, sub_eq_zero, c.condition]
 
 @[simp]
 theorem kernel_fork_of_fork_ι (c : Fork f g) : (kernelForkOfFork c).ι = c.ι :=
@@ -267,17 +250,13 @@ theorem kernel_fork_of_fork_ι (c : Fork f g) : (kernelForkOfFork c).ι = c.ι :
 
 @[simp]
 theorem kernel_fork_of_fork_of_ι {P : C} (ι : P ⟶ X) (w : ι ≫ f = ι ≫ g) :
-    kernelForkOfFork (Fork.ofι ι w) =
-      KernelFork.ofι ι
-        (by
-          simp [w]) :=
+    kernelForkOfFork (Fork.ofι ι w) = KernelFork.ofι ι (by simp [w]) :=
   rfl
 
 /-- A kernel of `f - g` is an equalizer of `f` and `g`. -/
 def isLimitForkOfKernelFork {c : KernelFork (f - g)} (i : IsLimit c) : IsLimit (forkOfKernelFork c) :=
   (Fork.IsLimit.mk' _) fun s =>
-    ⟨i.lift (kernelForkOfFork s), i.fac _ _, fun m h => by
-      apply fork.is_limit.hom_ext i <;> tidy⟩
+    ⟨i.lift (kernelForkOfFork s), i.fac _ _, fun m h => by apply fork.is_limit.hom_ext i <;> tidy⟩
 
 @[simp]
 theorem is_limit_fork_of_kernel_fork_lift {c : KernelFork (f - g)} (i : IsLimit c) (s : Fork f g) :
@@ -287,8 +266,7 @@ theorem is_limit_fork_of_kernel_fork_lift {c : KernelFork (f - g)} (i : IsLimit 
 /-- An equalizer of `f` and `g` is a kernel of `f - g`. -/
 def isLimitKernelForkOfFork {c : Fork f g} (i : IsLimit c) : IsLimit (kernelForkOfFork c) :=
   (Fork.IsLimit.mk' _) fun s =>
-    ⟨i.lift (forkOfKernelFork s), i.fac _ _, fun m h => by
-      apply fork.is_limit.hom_ext i <;> tidy⟩
+    ⟨i.lift (forkOfKernelFork s), i.fac _ _, fun m h => by apply fork.is_limit.hom_ext i <;> tidy⟩
 
 variable (f g)
 
@@ -307,8 +285,7 @@ variable {f g}
 /-- Map a cokernel cocone on the difference of two morphisms to the coequalizer cofork. -/
 @[simps x]
 def coforkOfCokernelCofork (c : CokernelCofork (f - g)) : Cofork f g :=
-  Cofork.ofπ c.π <| by
-    rw [← sub_eq_zero, ← sub_comp, c.condition]
+  Cofork.ofπ c.π <| by rw [← sub_eq_zero, ← sub_comp, c.condition]
 
 @[simp]
 theorem cofork_of_cokernel_cofork_π (c : CokernelCofork (f - g)) : (coforkOfCokernelCofork c).π = c.π :=
@@ -316,8 +293,7 @@ theorem cofork_of_cokernel_cofork_π (c : CokernelCofork (f - g)) : (coforkOfCok
 
 /-- Map any coequalizer cofork to a cocone on the difference of the two morphisms. -/
 def cokernelCoforkOfCofork (c : Cofork f g) : CokernelCofork (f - g) :=
-  Cofork.ofπ c.π <| by
-    rw [sub_comp, zero_comp, sub_eq_zero, c.condition]
+  Cofork.ofπ c.π <| by rw [sub_comp, zero_comp, sub_eq_zero, c.condition]
 
 @[simp]
 theorem cokernel_cofork_of_cofork_π (c : Cofork f g) : (cokernelCoforkOfCofork c).π = c.π :=
@@ -325,18 +301,14 @@ theorem cokernel_cofork_of_cofork_π (c : Cofork f g) : (cokernelCoforkOfCofork 
 
 @[simp]
 theorem cokernel_cofork_of_cofork_of_π {P : C} (π : Y ⟶ P) (w : f ≫ π = g ≫ π) :
-    cokernelCoforkOfCofork (Cofork.ofπ π w) =
-      CokernelCofork.ofπ π
-        (by
-          simp [w]) :=
+    cokernelCoforkOfCofork (Cofork.ofπ π w) = CokernelCofork.ofπ π (by simp [w]) :=
   rfl
 
 /-- A cokernel of `f - g` is a coequalizer of `f` and `g`. -/
 def isColimitCoforkOfCokernelCofork {c : CokernelCofork (f - g)} (i : IsColimit c) :
     IsColimit (coforkOfCokernelCofork c) :=
   (Cofork.IsColimit.mk' _) fun s =>
-    ⟨i.desc (cokernelCoforkOfCofork s), i.fac _ _, fun m h => by
-      apply cofork.is_colimit.hom_ext i <;> tidy⟩
+    ⟨i.desc (cokernelCoforkOfCofork s), i.fac _ _, fun m h => by apply cofork.is_colimit.hom_ext i <;> tidy⟩
 
 @[simp]
 theorem is_colimit_cofork_of_cokernel_cofork_desc {c : CokernelCofork (f - g)} (i : IsColimit c) (s : Cofork f g) :
@@ -346,8 +318,7 @@ theorem is_colimit_cofork_of_cokernel_cofork_desc {c : CokernelCofork (f - g)} (
 /-- A coequalizer of `f` and `g` is a cokernel of `f - g`. -/
 def isColimitCokernelCoforkOfCofork {c : Cofork f g} (i : IsColimit c) : IsColimit (cokernelCoforkOfCofork c) :=
   (Cofork.IsColimit.mk' _) fun s =>
-    ⟨i.desc (coforkOfCokernelCofork s), i.fac _ _, fun m h => by
-      apply cofork.is_colimit.hom_ext i <;> tidy⟩
+    ⟨i.desc (coforkOfCokernelCofork s), i.fac _ _, fun m h => by apply cofork.is_colimit.hom_ext i <;> tidy⟩
 
 variable (f g)
 

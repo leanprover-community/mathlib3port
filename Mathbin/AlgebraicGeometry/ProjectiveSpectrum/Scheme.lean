@@ -5,6 +5,7 @@ Authors: Jujian Zhang
 -/
 import Mathbin.AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf
 import Mathbin.AlgebraicGeometry.Spec
+import Mathbin.RingTheory.GradedAlgebra.Radical
 
 /-!
 # Proj as a scheme
@@ -21,7 +22,7 @@ This file is to prove that `Proj` is a scheme.
 * `Spec`      : `Spec` as a locally ringed space
 * `Spec.T`    : the underlying topological space of `Spec`
 * `sbo g`     : basic open set at `g` in `Spec`
-* `A⁰_x`       : the degree zero part of localized ring `Aₓ`
+* `A⁰_x`      : the degree zero part of localized ring `Aₓ`
 
 ## Implementation
 
@@ -31,13 +32,27 @@ equipped with this structure sheaf is a scheme. We achieve this by using an affi
 open sets in `Proj`, more specifically:
 
 1. We prove that `Proj` can be covered by basic open sets at homogeneous element of positive degree.
-2. We prove that for any `f : A`, `Proj.T | (pbo f)` is homeomorphic to `Spec.T A⁰_f`:
+2. We prove that for any homogeneous element `f : A` of positive degree `m`, `Proj.T | (pbo f)` is
+    homeomorphic to `Spec.T A⁰_f`:
   - forward direction `to_Spec`:
     for any `x : pbo f`, i.e. a relevant homogeneous prime ideal `x`, send it to
-    `x ∩ span {g / 1 | g ∈ A}` (see `Proj_iso_Spec_Top_component.to_Spec.carrier`). This ideal is
+    `A⁰_f ∩ span {g / 1 | g ∈ x}` (see `Proj_iso_Spec_Top_component.to_Spec.carrier`). This ideal is
     prime, the proof is in `Proj_iso_Spec_Top_component.to_Spec.to_fun`. The fact that this function
     is continuous is found in `Proj_iso_Spec_Top_component.to_Spec`
-  - backward direction `from_Spec`: TBC
+  - backward direction `from_Spec`:
+    for any `q : Spec A⁰_f`, we send it to `{a | ∀ i, aᵢᵐ/fⁱ ∈ q}`; we need this to be a
+    homogeneous prime ideal that is relevant.
+    * This is in fact an ideal, the proof can be found in
+      `Proj_iso_Spec_Top_component.from_Spec.carrier.as_ideal`;
+    * This ideal is also homogeneous, the proof can be found in
+      `Proj_iso_Spec_Top_component.from_Spec.carrier.as_ideal.homogeneous`;
+    * This ideal is relevant, the proof can be found in
+      `Proj_iso_Spec_Top_component.from_Spec.carrier.relevant`;
+    * This ideal is prime, the proof can be found in
+      `Proj_iso_Spec_Top_component.from_Spec.carrier.prime`.
+    Hence we have a well defined function `Spec.T A⁰_f → Proj.T | (pbo f)`, this function is called
+    `Proj_iso_Spec_Top_component.from_Spec.to_fun`. But to prove the continuity of this function,
+    we need to prove `from_Spec ∘ to_Spec` and `to_Spec ∘ from_Spec` are both identities (TBC).
 
 ## Main Definitions and Statements
 
@@ -62,7 +77,7 @@ open DirectSum BigOperators Pointwise BigOperators
 
 open DirectSum SetLike.GradedMonoid Localization
 
-open Finset hiding mk_zero
+open Finsetₓ hiding mk_zero
 
 variable {R A : Type _}
 
@@ -196,6 +211,14 @@ theorem degreeZeroPart.eq {f : A} {m : ℕ} {f_deg : f ∈ 𝒜 m} (x : A⁰_ f_
 theorem degreeZeroPart.coe_mul {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) (x y : A⁰_ f_deg) : (↑(x * y) : Away f) = x * y :=
   rfl
 
+theorem degreeZeroPart.coe_one {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) : (↑(1 : A⁰_ f_deg) : Away f) = 1 :=
+  rfl
+
+theorem degreeZeroPart.coe_sum {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) {ι : Type _} (s : Finsetₓ ι) (g : ι → A⁰_ f_deg) :
+    (↑(∑ i in s, g i) : Away f) = ∑ i in s, (g i : Away f) := by
+  classical
+  induction' s using Finsetₓ.induction_on with i s hi ih <;> simp
+
 end
 
 namespace ProjIsoSpecTopComponent
@@ -227,17 +250,13 @@ theorem MemCarrier.clear_denominator [DecidableEq (Away f)] {z : A⁰_ f_deg} (h
     ∃ (c : algebraMap A (Away f) '' x.1.asHomogeneousIdeal →₀ Away f)(N : ℕ)(acd : ∀ y ∈ c.Support.Image c, A),
       f ^ N • ↑z =
         algebraMap A (Away f)
-          (∑ i in c.Support.attach, acd (c i) (Finset.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * Classical.choose i.1.2) :=
+          (∑ i in c.Support.attach, acd (c i) (Finsetₓ.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * Classical.choose i.1.2) :=
   by
   rw [mem_carrier_iff, ← submodule_span_eq, Finsupp.span_eq_range_total, LinearMap.mem_range] at hz
   rcases hz with ⟨c, eq1⟩
   rw [Finsupp.total_apply, Finsupp.sum] at eq1
   obtain ⟨⟨_, N, rfl⟩, hN⟩ := IsLocalization.exist_integer_multiples_of_finset (Submonoid.powers f) (c.support.image c)
   choose acd hacd using hN
-  have prop1 : ∀ i, i ∈ c.support → c i ∈ Finset.image c c.support := by
-    intro i hi
-    rw [Finset.mem_image]
-    refine' ⟨_, hi, rfl⟩
   refine' ⟨c, N, acd, _⟩
   rw [← eq1, smul_sum, map_sum, ← sum_attach]
   congr 1
@@ -250,14 +269,11 @@ theorem disjoint : Disjoint (x.1.asHomogeneousIdeal.toIdeal : Set A) (Submonoid.
   rw [Set.not_disjoint_iff] at rid
   choose g hg using rid
   obtain ⟨hg1, ⟨k, rfl⟩⟩ := hg
-  by_cases' k_ineq : 0 < k
+  by_cases k_ineq:0 < k
   · erw [x.1.IsPrime.pow_mem_iff_mem _ k_ineq] at hg1
     exact x.2 hg1
     
-  · erw
-      [show k = 0 by
-        linarith,
-      pow_zeroₓ, ← Ideal.eq_top_iff_one] at hg1
+  · erw [show k = 0 by linarith, pow_zeroₓ, ← Ideal.eq_top_iff_one] at hg1
     apply x.1.IsPrime.1
     exact hg1
     
@@ -275,9 +291,7 @@ theorem carrier_ne_top : carrier f_deg x ≠ ⊤ := by
   change f ^ _ * f ^ _ = _ * f ^ _ at eq1
   rw [Set.not_disjoint_iff_nonempty_inter]
   refine'
-    ⟨f ^ N * f ^ M, eq1.symm ▸ mul_mem_right _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _),
-      ⟨N + M, by
-        rw [pow_addₓ]⟩⟩
+    ⟨f ^ N * f ^ M, eq1.symm ▸ mul_mem_right _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _), ⟨N + M, by rw [pow_addₓ]⟩⟩
   generalize_proofs h
   exact (Classical.choose_spec h).1
 
@@ -304,15 +318,13 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_ f_deg :=
     rcases x.1.IsPrime.mem_or_mem h1 with (h1 | h2)
     · left
       rw [mem_carrier_iff]
-      simp only
-        [show (mk a1 ⟨f ^ n1, _⟩ : away f) = mk a1 1 * mk 1 ⟨f ^ n1, ⟨n1, rfl⟩⟩ by
+      simp only [show (mk a1 ⟨f ^ n1, _⟩ : away f) = mk a1 1 * mk 1 ⟨f ^ n1, ⟨n1, rfl⟩⟩ by
           rw [Localization.mk_mul, mul_oneₓ, one_mulₓ]]
       exact Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨_, h1, rfl⟩)
       
     · right
       rw [mem_carrier_iff]
-      simp only
-        [show (mk a2 ⟨f ^ n2, _⟩ : away f) = mk a2 1 * mk 1 ⟨f ^ n2, ⟨n2, rfl⟩⟩ by
+      simp only [show (mk a2 ⟨f ^ n2, _⟩ : away f) = mk a2 1 * mk 1 ⟨f ^ n2, ⟨n2, rfl⟩⟩ by
           rw [Localization.mk_mul, mul_oneₓ, one_mulₓ]]
       exact Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨_, h2, rfl⟩)
       
@@ -345,8 +357,7 @@ theorem preimage_eq (a : A) (n : ℕ) (a_mem_degree_zero : (mk a ⟨f ^ n, ⟨n,
     intro a_mem_y
     apply hy
     rw [to_fun, mem_carrier_iff]
-    simp only
-      [show (mk a ⟨f ^ n, ⟨_, rfl⟩⟩ : away f) = mk 1 ⟨f ^ n, ⟨_, rfl⟩⟩ * mk a 1 by
+    simp only [show (mk a ⟨f ^ n, ⟨_, rfl⟩⟩ : away f) = mk 1 ⟨f ^ n, ⟨_, rfl⟩⟩ * mk a 1 by
         rw [mk_mul, one_mulₓ, mul_oneₓ]]
     exact Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨_, a_mem_y, rfl⟩)
     
@@ -399,6 +410,213 @@ def toSpec {f : A} (m : ℕ) (f_deg : f ∈ 𝒜 m) : (Proj.T| pbo f) ⟶ Spec.T
     constructor <;> intro hz <;> simpa [Set.mem_preimage]
 
 end
+
+namespace FromSpec
+
+open GradedAlgebra SetLike
+
+open Finsetₓ hiding mk_zero
+
+variable {𝒜} {f : A} {m : ℕ} {f_deg : f ∈ 𝒜 m}
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+private unsafe def mem_tac : tactic Unit :=
+  let b : tactic Unit := sorry
+  b <|> sorry
+
+/-- The function from `Spec A⁰_f` to `Proj|D(f)` is defined by `q ↦ {a | aᵢᵐ/fⁱ ∈ q}`, i.e. sending
+`q` a prime ideal in `A⁰_f` to the homogeneous prime relevant ideal containing only and all the
+elements `a : A` such that for every `i`, the degree 0 element formed by dividing the `m`-th power
+of the `i`-th projection of `a` by the `i`-th power of the degree-`m` homogeneous element `f`,
+lies in `q`.
+
+The set `{a | aᵢᵐ/fⁱ ∈ q}`
+* is an ideal, as proved in `carrier.as_ideal`;
+* is homogeneous, as proved in `carrier.as_homogeneous_ideal`;
+* is prime, as proved in `carrier.as_ideal.prime`;
+* is relevant, as proved in `carrier.relevant`.
+-/
+def Carrier (q : Spec.T A⁰_ f_deg) : Set A :=
+  { a |
+    ∀ i,
+      (⟨mk (proj 𝒜 i a ^ m) ⟨_, _, rfl⟩, i,
+          ⟨_, by
+            run_tac
+              mem_tac⟩,
+          rfl⟩ :
+          A⁰_ f_deg) ∈
+        q.1 }
+
+theorem mem_carrier_iff (q : Spec.T A⁰_ f_deg) (a : A) :
+    a ∈ Carrier q ↔
+      ∀ i,
+        (⟨mk (proj 𝒜 i a ^ m) ⟨_, _, rfl⟩, i,
+            ⟨_, by
+              run_tac
+                mem_tac⟩,
+            rfl⟩ :
+            A⁰_ f_deg) ∈
+          q.1 :=
+  Iff.rfl
+
+theorem Carrier.add_mem (q : Spec.T A⁰_ f_deg) {a b : A} (ha : a ∈ Carrier q) (hb : b ∈ Carrier q) :
+    a + b ∈ Carrier q := by
+  refine' fun i => (q.2.mem_or_mem _).elim id id
+  change Subtype.mk (Localization.mk _ _ * mk _ _) _ ∈ q.1
+  simp_rw [mk_mul, ← pow_addₓ, map_add, add_pow, mk_sum, mul_comm, ← nsmul_eq_mul, ← smul_mk]
+  let g : ℕ → A⁰_ f_deg := fun j =>
+    (m + m).choose j •
+      if h2 : m + m < j then 0
+      else
+        if h1 : j ≤ m then
+          ⟨mk (proj 𝒜 i a ^ j * proj 𝒜 i b ^ (m - j)) ⟨_, i, rfl⟩, i, ⟨_, _⟩, rfl⟩ *
+            ⟨mk (proj 𝒜 i b ^ m) ⟨_, i, rfl⟩, i,
+              ⟨_, by
+                run_tac
+                  mem_tac⟩,
+              rfl⟩
+        else
+          ⟨mk (proj 𝒜 i a ^ m) ⟨_, i, rfl⟩, i,
+              ⟨_, by
+                run_tac
+                  mem_tac⟩,
+              rfl⟩ *
+            ⟨mk (proj 𝒜 i a ^ (j - m) * proj 𝒜 i b ^ (m + m - j)) ⟨_, i, rfl⟩, i, ⟨_, _⟩, rfl⟩
+  rotate_left
+  · rw [(_ : m * i = _)]
+    run_tac
+      mem_tac
+    rw [← add_smul, Nat.add_sub_of_leₓ h1]
+    rfl
+    
+  · rw [(_ : m * i = _)]
+    run_tac
+      mem_tac
+    rw [← add_smul]
+    congr
+    zify [le_of_not_ltₓ h2, le_of_not_leₓ h1]
+    abel
+    
+  convert_to (∑ i in range (m + m + 1), g i) ∈ q.1
+  swap
+  · refine' q.1.sum_mem fun j hj => nsmul_mem _ _
+    split_ifs
+    exacts[q.1.zero_mem, q.1.mul_mem_left _ (hb i), q.1.mul_mem_right _ (ha i)]
+    
+  apply Subtype.ext
+  rw [degree_zero_part.coe_sum, Subtype.coe_mk]
+  apply Finsetₓ.sum_congr rfl fun j hj => _
+  congr 1
+  split_ifs with h2 h1
+  · exact ((Finsetₓ.mem_range.1 hj).not_le h2).elim
+    
+  all_goals simp only [Subtype.val_eq_coe, degree_zero_part.coe_mul, Subtype.coe_mk, mk_mul]
+  · rw [mul_assoc, ← pow_addₓ, add_commₓ (m - j), Nat.add_sub_assocₓ h1]
+    
+  · rw [← mul_assoc, ← pow_addₓ, Nat.add_sub_of_leₓ (le_of_not_leₓ h1)]
+    
+
+variable (hm : 0 < m) (q : Spec.T A⁰_ f_deg)
+
+include hm
+
+theorem Carrier.zero_mem : (0 : A) ∈ Carrier q := fun i => by
+  simpa only [LinearMap.map_zero, zero_pow hm, mk_zero] using Submodule.zero_mem _
+
+theorem Carrier.smul_mem (c x : A) (hx : x ∈ Carrier q) : c • x ∈ Carrier q := by
+  revert c
+  refine' DirectSum.Decomposition.induction_on 𝒜 _ _ _
+  · rw [zero_smul]
+    exact carrier.zero_mem hm _
+    
+  · rintro n ⟨a, ha⟩ i
+    simp_rw [Subtype.coe_mk, proj_apply, smul_eq_mul, coe_decompose_mul_of_left_mem 𝒜 i ha]
+    split_ifs
+    · convert_to
+        (⟨mk _ ⟨_, n, rfl⟩, n, ⟨_, pow_mem_graded m ha⟩, rfl⟩ : A⁰_ f_deg) *
+            ⟨mk _ ⟨_, i - n, rfl⟩, _,
+              ⟨proj 𝒜 (i - n) x ^ m, by
+                run_tac
+                  mem_tac⟩,
+              rfl⟩ ∈
+          q.1
+      · erw [Subtype.ext_iff, Subring.coe_mul, mk_mul, Subtype.coe_mk, mul_powₓ]
+        congr
+        erw [← pow_addₓ, Nat.add_sub_of_leₓ h]
+        
+      · exact Ideal.mul_mem_left _ _ (hx _)
+        
+      
+    · simp_rw [zero_pow hm, mk_zero]
+      exact q.1.zero_mem
+      
+    
+  · simp_rw [add_smul]
+    exact fun _ _ => carrier.add_mem q
+    
+
+/-- For a prime ideal `q` in `A⁰_f`, the set `{a | aᵢᵐ/fⁱ ∈ q}` as an ideal.
+-/
+def Carrier.asIdeal : Ideal A where
+  Carrier := Carrier q
+  zero_mem' := Carrier.zero_mem hm q
+  add_mem' := fun a b => Carrier.add_mem q
+  smul_mem' := Carrier.smul_mem hm q
+
+theorem Carrier.asIdeal.homogeneous : (Carrier.asIdeal hm q).IsHomogeneous 𝒜 := fun i a ha j =>
+  (em (i = j)).elim (fun h => h ▸ by simpa only [proj_apply, decompose_coe, of_eq_same] using ha _) fun h => by
+    simpa only [proj_apply, decompose_of_mem_ne 𝒜 (Submodule.coe_mem (decompose 𝒜 a i)) h, zero_pow hm, mk_zero] using
+      Submodule.zero_mem _
+
+/-- For a prime ideal `q` in `A⁰_f`, the set `{a | aᵢᵐ/fⁱ ∈ q}` as a homogeneous ideal.
+-/
+def Carrier.asHomogeneousIdeal : HomogeneousIdeal 𝒜 :=
+  ⟨Carrier.asIdeal hm q, Carrier.asIdeal.homogeneous hm q⟩
+
+theorem Carrier.denom_not_mem : f ∉ Carrier.asIdeal hm q := fun rid =>
+  q.IsPrime.ne_top <|
+    (Ideal.eq_top_iff_one _).mpr
+      (by
+        convert rid m
+        simpa only [Subtype.ext_iff, degree_zero_part.coe_one, Subtype.coe_mk, proj_apply,
+          decompose_of_mem_same _ f_deg] using (mk_self (⟨_, m, rfl⟩ : Submonoid.powers f)).symm)
+
+theorem Carrier.relevant : ¬HomogeneousIdeal.irrelevant 𝒜 ≤ Carrier.asHomogeneousIdeal hm q := fun rid =>
+  Carrier.denom_not_mem hm q <| rid <| DirectSum.decompose_of_mem_ne 𝒜 f_deg hm.ne'
+
+theorem Carrier.asIdeal.ne_top : Carrier.asIdeal hm q ≠ ⊤ := fun rid =>
+  Carrier.denom_not_mem hm q (rid.symm ▸ Submodule.mem_top)
+
+theorem Carrier.asIdeal.prime : (Carrier.asIdeal hm q).IsPrime :=
+  ((Carrier.asIdeal.homogeneous hm q).is_prime_of_homogeneous_mem_or_mem (Carrier.asIdeal.ne_top hm q))
+    fun x y ⟨nx, hnx⟩ ⟨ny, hny⟩ hxy =>
+    show (∀ i, _ ∈ _) ∨ ∀ i, _ ∈ _ by
+      rw [← and_forall_ne nx, and_iff_leftₓ, ← and_forall_ne ny, and_iff_leftₓ]
+      · apply q.2.mem_or_mem
+        convert hxy (nx + ny) using 1
+        simp_rw [proj_apply, decompose_of_mem_same 𝒜 hnx, decompose_of_mem_same 𝒜 hny,
+          decompose_of_mem_same 𝒜 (mul_mem hnx hny), mul_powₓ, pow_addₓ]
+        exact Subtype.ext (mk_mul _ _ _ _)
+        
+      all_goals
+      intro n hn
+      convert q.1.zero_mem using 2
+      rw [proj_apply, decompose_of_mem_ne 𝒜 _ hn.symm]
+      · rw [zero_pow hm, mk_zero]
+        
+      · first |exact hnx|exact hny
+        
+
+variable (f_deg)
+
+/-- The function `Spec A⁰_f → Proj|D(f)` by sending `q` to `{a | aᵢᵐ/fⁱ ∈ q}`.
+-/
+def toFun : (Spec.T A⁰_ f_deg) → Proj.T| pbo f := fun q =>
+  ⟨⟨Carrier.asHomogeneousIdeal hm q, Carrier.asIdeal.prime hm q, Carrier.relevant hm q⟩,
+    (ProjectiveSpectrum.mem_basic_open _ f _).mp <| Carrier.denom_not_mem hm q⟩
+
+end FromSpec
 
 end ProjIsoSpecTopComponent
 

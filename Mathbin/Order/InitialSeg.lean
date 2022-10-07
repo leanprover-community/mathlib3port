@@ -135,8 +135,7 @@ instance [IsWellOrder β s] : Subsingleton (r ≼i s) :=
   ⟨fun a =>
     @Subsingleton.elim _ (unique_of_trichotomous_of_irrefl (@RelEmbedding.well_founded _ _ r s a IsWellFounded.wf)) a⟩
 
-protected theorem eq [IsWellOrder β s] (f g : r ≼i s) (a) : f a = g a := by
-  rw [Subsingleton.elim f g]
+protected theorem eq [IsWellOrder β s] (f g : r ≼i s) (a) : f a = g a := by rw [Subsingleton.elim f g]
 
 theorem Antisymm.aux [IsWellOrder α r] (f : r ≼i s) (g : s ≼i r) : LeftInverse g f :=
   InitialSeg.eq (f.trans g) (InitialSeg.refl _)
@@ -170,8 +169,7 @@ theorem eq_or_principal [IsWellOrder β s] (f : r ≼i s) : Surjective f ∨ ∃
 def codRestrict (p : Set β) (f : r ≼i s) (H : ∀ a, f a ∈ p) : r ≼i Subrel s p :=
   ⟨RelEmbedding.codRestrict p f H, fun a ⟨b, m⟩ (h : s b (f a)) =>
     let ⟨a', e⟩ := f.init' h
-    ⟨a', by
-      clear _let_match <;> subst e <;> rfl⟩⟩
+    ⟨a', by clear _let_match <;> subst e <;> rfl⟩⟩
 
 @[simp]
 theorem cod_restrict_apply (p) (f : r ≼i s) (H a) : codRestrict p f H a = ⟨f a, H a⟩ :=
@@ -291,12 +289,8 @@ theorem trans_top [IsTrans γ t] (f : r ≺i s) (g : s ≺i t) : (f.trans g).top
 /-- Composition of an order isomorphism with a principal segment, as a principal segment -/
 def equivLt (f : r ≃r s) (g : s ≺i t) : r ≺i t :=
   ⟨@RelEmbedding.trans _ _ _ r s t f g, g.top, fun c =>
-    suffices (∃ a : β, g a = c) ↔ ∃ a : α, g (f a) = c by
-      simpa [g.down]
-    ⟨fun ⟨b, h⟩ =>
-      ⟨f.symm b, by
-        simp only [h, RelIso.apply_symm_apply, RelIso.coe_coe_fn]⟩,
-      fun ⟨a, h⟩ => ⟨f a, h⟩⟩⟩
+    suffices (∃ a : β, g a = c) ↔ ∃ a : α, g (f a) = c by simpa [g.down]
+    ⟨fun ⟨b, h⟩ => ⟨f.symm b, by simp only [h, RelIso.apply_symm_apply, RelIso.coe_coe_fn]⟩, fun ⟨a, h⟩ => ⟨f a, h⟩⟩⟩
 
 /-- Composition of a principal segment with an order isomorphism, as a principal segment -/
 def ltEquiv {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} (f : PrincipalSeg r s) (g : s ≃r t) :
@@ -364,9 +358,7 @@ theorem cod_restrict_top (p) (f : r ≺i s) (H H₂) : (codRestrict p f H H₂).
 
 /-- Principal segment from an empty type into a type with a minimal element. -/
 def ofIsEmpty (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ b', ¬s b' b) : r ≺i s :=
-  { RelEmbedding.ofIsEmpty r s with top := b,
-    down' := by
-      simp [H] }
+  { RelEmbedding.ofIsEmpty r s with top := b, down' := by simp [H] }
 
 @[simp]
 theorem of_is_empty_top (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ b', ¬s b' b) : (ofIsEmpty r H).top = b :=
@@ -386,7 +378,7 @@ end PrincipalSeg
 segment (if the range is not everything, hence one can take as top the minimum of the complement
 of the range) or an order isomorphism (if the range is everything). -/
 noncomputable def InitialSeg.ltOrEq [IsWellOrder β s] (f : r ≼i s) : Sum (r ≺i s) (r ≃r s) := by
-  by_cases' h : surjective f
+  by_cases h:surjective f
   · exact Sum.inr (RelIso.ofSurjective f h)
     
   · have h' : _ := (InitialSeg.eq_or_principal f).resolve_left h
@@ -408,7 +400,7 @@ noncomputable def InitialSeg.leLt [IsWellOrder β s] [IsTrans γ t] (f : r ≼i 
 @[simp]
 theorem InitialSeg.le_lt_apply [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) (a : α) :
     (f.leLt g) a = g (f a) := by
-  delta' InitialSeg.leLt
+  delta InitialSeg.leLt
   cases' h : f.lt_or_eq with f' f'
   · simp only [PrincipalSeg.trans_apply, f.lt_or_eq_apply_left]
     

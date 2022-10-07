@@ -57,8 +57,7 @@ theorem vcomp_eq_comp (α : F ⟶ G) (β : G ⟶ H) : vcomp α β = α ≫ β :=
 theorem vcomp_app' (α : F ⟶ G) (β : G ⟶ H) (X : C) : (α ≫ β).app X = α.app X ≫ β.app X :=
   rfl
 
-theorem congr_app {α β : F ⟶ G} (h : α = β) (X : C) : α.app X = β.app X := by
-  rw [h]
+theorem congr_app {α β : F ⟶ G} (h : α = β) (X : C) : α.app X = β.app X := by rw [h]
 
 @[simp]
 theorem id_app (F : C ⥤ D) (X : C) : (𝟙 F : F ⟶ F).app X = 𝟙 (F.obj X) :=
@@ -100,20 +99,18 @@ infixl:80 " ◫ " => hcomp
 
 @[simp]
 theorem hcomp_id_app {H : D ⥤ E} (α : F ⟶ G) (X : C) : (α ◫ 𝟙 H).app X = H.map (α.app X) := by
-  dsimp'
+  dsimp
   simp
 
 -- See note [dsimp, simp].
-theorem id_hcomp_app {H : E ⥤ C} (α : F ⟶ G) (X : E) : (𝟙 H ◫ α).app X = α.app _ := by
-  simp
+theorem id_hcomp_app {H : E ⥤ C} (α : F ⟶ G) (X : E) : (𝟙 H ◫ α).app X = α.app _ := by simp
 
 -- Note that we don't yet prove a `hcomp_assoc` lemma here: even stating it is painful, because we
 -- need to use associativity of functor composition. (It's true without the explicit associator,
 -- because functor composition is definitionally associative,
 -- but relying on the definitional equality causes bad problems with elaboration later.)
 theorem exchange {I J K : D ⥤ E} (α : F ⟶ G) (β : G ⟶ H) (γ : I ⟶ J) (δ : J ⟶ K) :
-    (α ≫ β) ◫ (γ ≫ δ) = (α ◫ γ) ≫ β ◫ δ := by
-  ext <;> simp
+    (α ≫ β) ◫ (γ ≫ δ) = (α ◫ γ) ≫ β ◫ δ := by ext <;> simp
 
 end NatTrans
 
@@ -129,21 +126,18 @@ protected def flip (F : C ⥤ D ⥤ E) : D ⥤ C ⥤ E where
       map_id' := fun X => by
         rw [CategoryTheory.Functor.map_id]
         rfl,
-      map_comp' := fun X Y Z f g => by
-        rw [map_comp, ← comp_app] }
+      map_comp' := fun X Y Z f g => by rw [map_comp, ← comp_app] }
   map := fun c c' f => { app := fun j => (F.obj j).map f }
 
 end Functor
 
 @[simp, reassoc]
 theorem map_hom_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
-    (F.map e.Hom).app Z ≫ (F.map e.inv).app Z = 𝟙 _ := by
-  simp [← nat_trans.comp_app, ← functor.map_comp]
+    (F.map e.Hom).app Z ≫ (F.map e.inv).app Z = 𝟙 _ := by simp [← nat_trans.comp_app, ← functor.map_comp]
 
 @[simp, reassoc]
 theorem map_inv_hom_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
-    (F.map e.inv).app Z ≫ (F.map e.Hom).app Z = 𝟙 _ := by
-  simp [← nat_trans.comp_app, ← functor.map_comp]
+    (F.map e.inv).app Z ≫ (F.map e.Hom).app Z = 𝟙 _ := by simp [← nat_trans.comp_app, ← functor.map_comp]
 
 end CategoryTheory
 

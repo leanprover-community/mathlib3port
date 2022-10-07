@@ -70,7 +70,7 @@ theorem IsOpen.Union_smul [IsMinimal G α] {U : Set α} (hUo : IsOpen U) (hne : 
 
 @[to_additive]
 theorem IsCompact.exists_finite_cover_smul [IsMinimal G α] [HasContinuousConstSmul G α] {K U : Set α} (hK : IsCompact K)
-    (hUo : IsOpen U) (hne : U.Nonempty) : ∃ I : Finset G, K ⊆ ⋃ g ∈ I, g • U :=
+    (hUo : IsOpen U) (hne : U.Nonempty) : ∃ I : Finsetₓ G, K ⊆ ⋃ g ∈ I, g • U :=
   (hK.elim_finite_subcover (fun g : G => g • U) fun g => hUo.smul _) <|
     calc
       K ⊆ univ := subset_univ K

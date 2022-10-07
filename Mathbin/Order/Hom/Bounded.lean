@@ -101,13 +101,11 @@ instance (priority := 100) OrderIsoClass.toBoundedOrderHomClass [LE α] [Bounded
 
 @[simp]
 theorem map_eq_top_iff [LE α] [OrderTop α] [PartialOrderₓ β] [OrderTop β] [OrderIsoClass F α β] (f : F) {a : α} :
-    f a = ⊤ ↔ a = ⊤ := by
-  rw [← map_top f, (EquivLike.injective f).eq_iff]
+    f a = ⊤ ↔ a = ⊤ := by rw [← map_top f, (EquivLike.injective f).eq_iff]
 
 @[simp]
 theorem map_eq_bot_iff [LE α] [OrderBot α] [PartialOrderₓ β] [OrderBot β] [OrderIsoClass F α β] (f : F) {a : α} :
-    f a = ⊥ ↔ a = ⊥ := by
-  rw [← map_bot f, (EquivLike.injective f).eq_iff]
+    f a = ⊥ ↔ a = ⊥ := by rw [← map_bot f, (EquivLike.injective f).eq_iff]
 
 instance [HasTop α] [HasTop β] [TopHomClass F α β] : CoeTₓ F (TopHom α β) :=
   ⟨fun f => ⟨f, map_top f⟩⟩
@@ -132,8 +130,7 @@ variable [HasTop β] [HasTop γ] [HasTop δ]
 
 instance : TopHomClass (TopHom α β) α β where
   coe := TopHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_top := TopHom.map_top'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -180,8 +177,7 @@ theorem id_apply (a : α) : TopHom.id α a = a :=
 /-- Composition of `top_hom`s as a `top_hom`. -/
 def comp (f : TopHom β γ) (g : TopHom α β) : TopHom α γ where
   toFun := f ∘ g
-  map_top' := by
-    rw [comp_apply, map_top, map_top]
+  map_top' := by rw [comp_apply, map_top, map_top]
 
 @[simp]
 theorem coe_comp (f : TopHom β γ) (g : TopHom α β) : (f.comp g : α → γ) = f ∘ g :=
@@ -207,11 +203,7 @@ theorem cancel_right {g₁ g₂ : TopHom β γ} {f : TopHom α β} (hf : Surject
   ⟨fun h => TopHom.ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : TopHom β γ} {f₁ f₂ : TopHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    TopHom.ext fun a =>
-      hg <| by
-        rw [← TopHom.comp_apply, h, TopHom.comp_apply],
-    congr_arg _⟩
+  ⟨fun h => TopHom.ext fun a => hg <| by rw [← TopHom.comp_apply, h, TopHom.comp_apply], congr_arg _⟩
 
 end HasTop
 
@@ -243,9 +235,7 @@ section SemilatticeInf
 variable [SemilatticeInf β] [OrderTop β] (f g : TopHom α β)
 
 instance : HasInf (TopHom α β) :=
-  ⟨fun f g =>
-    ⟨f ⊓ g, by
-      rw [Pi.inf_apply, map_top, map_top, inf_top_eq]⟩⟩
+  ⟨fun f g => ⟨f ⊓ g, by rw [Pi.inf_apply, map_top, map_top, inf_top_eq]⟩⟩
 
 instance : SemilatticeInf (TopHom α β) :=
   (FunLike.coe_injective.SemilatticeInf _) fun _ _ => rfl
@@ -265,9 +255,7 @@ section SemilatticeSup
 variable [SemilatticeSup β] [OrderTop β] (f g : TopHom α β)
 
 instance : HasSup (TopHom α β) :=
-  ⟨fun f g =>
-    ⟨f ⊔ g, by
-      rw [Pi.sup_apply, map_top, map_top, sup_top_eq]⟩⟩
+  ⟨fun f g => ⟨f ⊔ g, by rw [Pi.sup_apply, map_top, map_top, sup_top_eq]⟩⟩
 
 instance : SemilatticeSup (TopHom α β) :=
   (FunLike.coe_injective.SemilatticeSup _) fun _ _ => rfl
@@ -303,8 +291,7 @@ variable [HasBot β] [HasBot γ] [HasBot δ]
 
 instance : BotHomClass (BotHom α β) α β where
   coe := BotHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_bot := BotHom.map_bot'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -351,8 +338,7 @@ theorem id_apply (a : α) : BotHom.id α a = a :=
 /-- Composition of `bot_hom`s as a `bot_hom`. -/
 def comp (f : BotHom β γ) (g : BotHom α β) : BotHom α γ where
   toFun := f ∘ g
-  map_bot' := by
-    rw [comp_apply, map_bot, map_bot]
+  map_bot' := by rw [comp_apply, map_bot, map_bot]
 
 @[simp]
 theorem coe_comp (f : BotHom β γ) (g : BotHom α β) : (f.comp g : α → γ) = f ∘ g :=
@@ -378,11 +364,7 @@ theorem cancel_right {g₁ g₂ : BotHom β γ} {f : BotHom α β} (hf : Surject
   ⟨fun h => BotHom.ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : BotHom β γ} {f₁ f₂ : BotHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    BotHom.ext fun a =>
-      hg <| by
-        rw [← BotHom.comp_apply, h, BotHom.comp_apply],
-    congr_arg _⟩
+  ⟨fun h => BotHom.ext fun a => hg <| by rw [← BotHom.comp_apply, h, BotHom.comp_apply], congr_arg _⟩
 
 end HasBot
 
@@ -414,9 +396,7 @@ section SemilatticeInf
 variable [SemilatticeInf β] [OrderBot β] (f g : BotHom α β)
 
 instance : HasInf (BotHom α β) :=
-  ⟨fun f g =>
-    ⟨f ⊓ g, by
-      rw [Pi.inf_apply, map_bot, map_bot, inf_bot_eq]⟩⟩
+  ⟨fun f g => ⟨f ⊓ g, by rw [Pi.inf_apply, map_bot, map_bot, inf_bot_eq]⟩⟩
 
 instance : SemilatticeInf (BotHom α β) :=
   (FunLike.coe_injective.SemilatticeInf _) fun _ _ => rfl
@@ -436,9 +416,7 @@ section SemilatticeSup
 variable [SemilatticeSup β] [OrderBot β] (f g : BotHom α β)
 
 instance : HasSup (BotHom α β) :=
-  ⟨fun f g =>
-    ⟨f ⊔ g, by
-      rw [Pi.sup_apply, map_bot, map_bot, sup_bot_eq]⟩⟩
+  ⟨fun f g => ⟨f ⊔ g, by rw [Pi.sup_apply, map_bot, map_bot, sup_bot_eq]⟩⟩
 
 instance : SemilatticeSup (BotHom α β) :=
   (FunLike.coe_injective.SemilatticeSup _) fun _ _ => rfl
@@ -479,8 +457,7 @@ def toBotHom (f : BoundedOrderHom α β) : BotHom α β :=
 
 instance : BoundedOrderHomClass (BoundedOrderHom α β) α β where
   coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
-    obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
+  coe_injective' := fun f g h => by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
   map_rel := fun f => f.monotone'
   map_top := fun f => f.map_top'
   map_bot := fun f => f.map_bot'
@@ -568,10 +545,7 @@ theorem cancel_right {g₁ g₂ : BoundedOrderHom β γ} {f : BoundedOrderHom α
 
 theorem cancel_left {g : BoundedOrderHom β γ} {f₁ f₂ : BoundedOrderHom α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    BoundedOrderHom.ext fun a =>
-      hg <| by
-        rw [← BoundedOrderHom.comp_apply, h, BoundedOrderHom.comp_apply],
+  ⟨fun h => BoundedOrderHom.ext fun a => hg <| by rw [← BoundedOrderHom.comp_apply, h, BoundedOrderHom.comp_apply],
     congr_arg _⟩
 
 end BoundedOrderHom

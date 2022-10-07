@@ -78,7 +78,7 @@ include dec_ι
 
 /-- `mk β s x` is the element of `⨁ i, β i` that is zero outside `s`
 and has coefficient `x i` for `i` in `s`. -/
-def mk (s : Finset ι) : (∀ i : (↑s : Set ι), β i.1) →+ ⨁ i, β i where
+def mk (s : Finsetₓ ι) : (∀ i : (↑s : Set ι), β i.1) →+ ⨁ i, β i where
   toFun := Dfinsupp.mk s
   map_add' := fun _ _ => Dfinsupp.mk_add
   map_zero' := Dfinsupp.mk_zero
@@ -110,7 +110,7 @@ theorem sum_support_of [∀ (i : ι) (x : β i), Decidable (x ≠ 0)] (x : ⨁ i
 
 variable {β}
 
-theorem mk_injective (s : Finset ι) : Function.Injective (mk β s) :=
+theorem mk_injective (s : Finsetₓ ι) : Function.Injective (mk β s) :=
   Dfinsupp.mk_injective s
 
 theorem of_injective (i : ι) : Function.Injective (of β i) :=
@@ -203,12 +203,8 @@ protected def id (M : Type v) (ι : Type _ := PUnit) [AddCommMonoidₓ M] [Uniqu
   { DirectSum.toAddMonoid fun _ => AddMonoidHom.id M with toFun := DirectSum.toAddMonoid fun _ => AddMonoidHom.id M,
     invFun := of (fun _ => M) default,
     left_inv := fun x =>
-      DirectSum.induction_on x
-        (by
-          rw [AddMonoidHom.map_zero, AddMonoidHom.map_zero])
-        (fun p x => by
-          rw [Unique.default_eq p, to_add_monoid_of] <;> rfl)
-        fun x y ihx ihy => by
+      DirectSum.induction_on x (by rw [AddMonoidHom.map_zero, AddMonoidHom.map_zero])
+        (fun p x => by rw [Unique.default_eq p, to_add_monoid_of] <;> rfl) fun x y ihx ihy => by
         rw [AddMonoidHom.map_add, AddMonoidHom.map_add, ihx, ihy],
     right_inv := fun x => to_add_monoid_of _ _ _ }
 

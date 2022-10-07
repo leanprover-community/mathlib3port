@@ -31,8 +31,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 ℂ]
 /-- The complex exponential is everywhere differentiable, with the derivative `exp x`. -/
 theorem has_deriv_at_exp (x : ℂ) : HasDerivAt exp (exp x) x := by
   rw [has_deriv_at_iff_is_o_nhds_zero]
-  have : (1 : ℕ) < 2 := by
-    norm_num
+  have : (1 : ℕ) < 2 := by norm_num
   refine' (is_O.of_bound ∥exp x∥ _).trans_is_o (is_o_pow_id this)
   filter_upwards [Metric.ball_mem_nhds (0 : ℂ) zero_lt_one]
   simp only [Metric.mem_ball, dist_zero_right, norm_pow]
@@ -50,8 +49,7 @@ theorem deriv_exp : deriv exp = exp :=
 @[simp]
 theorem iter_deriv_exp : ∀ n : ℕ, (deriv^[n]) exp = exp
   | 0 => rfl
-  | n + 1 => by
-    rw [iterate_succ_apply, deriv_exp, iter_deriv_exp n]
+  | n + 1 => by rw [iterate_succ_apply, deriv_exp, iter_deriv_exp n]
 
 theorem cont_diff_exp : ∀ {n}, ContDiff 𝕜 n exp := by
   refine' cont_diff_all_iff_nat.2 fun n => _
@@ -174,8 +172,7 @@ theorem deriv_exp : deriv exp = exp :=
 @[simp]
 theorem iter_deriv_exp : ∀ n : ℕ, (deriv^[n]) exp = exp
   | 0 => rfl
-  | n + 1 => by
-    rw [iterate_succ_apply, deriv_exp, iter_deriv_exp n]
+  | n + 1 => by rw [iterate_succ_apply, deriv_exp, iter_deriv_exp n]
 
 end Real
 

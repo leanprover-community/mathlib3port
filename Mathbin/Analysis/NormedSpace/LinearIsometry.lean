@@ -505,9 +505,7 @@ protected theorem congr_fun {f g : E ≃ₛₗᵢ[σ₁₂] E₂} (h : f = g) (x
 /-- Construct a `linear_isometry_equiv` from a `linear_equiv` and two inequalities:
 `∀ x, ∥e x∥ ≤ ∥x∥` and `∀ y, ∥e.symm y∥ ≤ ∥y∥`. -/
 def ofBounds (e : E ≃ₛₗ[σ₁₂] E₂) (h₁ : ∀ x, ∥e x∥ ≤ ∥x∥) (h₂ : ∀ y, ∥e.symm y∥ ≤ ∥y∥) : E ≃ₛₗᵢ[σ₁₂] E₂ :=
-  ⟨e, fun x =>
-    le_antisymmₓ (h₁ x) <| by
-      simpa only [e.symm_apply_apply] using h₂ (e x)⟩
+  ⟨e, fun x => le_antisymmₓ (h₁ x) <| by simpa only [e.symm_apply_apply] using h₂ (e x)⟩
 
 @[simp]
 theorem norm_map (x : E) : ∥e x∥ = ∥x∥ :=
@@ -936,10 +934,7 @@ variable (R E E₂ E₃)
 /-- The natural equivalence `(E × E₂) × E₃ ≃ E × (E₂ × E₃)` is a linear isometry. -/
 def prodAssoc [Module R E₂] [Module R E₃] : (E × E₂) × E₃ ≃ₗᵢ[R] E × E₂ × E₃ :=
   { Equivₓ.prodAssoc E E₂ E₃ with toFun := Equivₓ.prodAssoc E E₂ E₃, invFun := (Equivₓ.prodAssoc E E₂ E₃).symm,
-    map_add' := by
-      simp ,
-    map_smul' := by
-      simp ,
+    map_add' := by simp, map_smul' := by simp,
     norm_map' := by
       rintro ⟨⟨e, f⟩, g⟩
       simp only [LinearEquiv.coe_mk, Equivₓ.prod_assoc_apply, Prod.norm_def, max_assocₓ] }
@@ -977,8 +972,7 @@ theorem of_eq_symm (h : p = q) : (ofEq p q h).symm = ofEq q p h.symm :=
   rfl
 
 @[simp]
-theorem of_eq_rfl : ofEq p p rfl = LinearIsometryEquiv.refl R' p := by
-  ext <;> rfl
+theorem of_eq_rfl : ofEq p p rfl = LinearIsometryEquiv.refl R' p := by ext <;> rfl
 
 end LinearIsometryEquiv
 

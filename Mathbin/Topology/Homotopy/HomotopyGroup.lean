@@ -75,8 +75,7 @@ def tail {n} : I^ (n + 1) → I^ n := fun c => Finₓ.tail c
 instance uniqueCube0 : Unique (I^ 0) :=
   Pi.uniqueOfIsEmpty _
 
-theorem one_char (f : I^ 1) : f = fun _ => f 0 := by
-  convert eq_const_of_unique f
+theorem one_char (f : I^ 1) : f = fun _ => f 0 := by convert eq_const_of_unique f
 
 end Cube
 
@@ -172,12 +171,8 @@ def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
       exacts[⟨{ toFun := fun t => H ⟨t, Finₓ.elim0⟩,
             source' := (H.apply_zero _).trans (congr_arg a₁ matrix.zero_empty.symm),
             target' := (H.apply_one _).trans (congr_arg a₂ matrix.zero_empty.symm) }⟩,
-        ⟨{ toFun := fun t0 => H t0.fst,
-            map_zero_left' := fun _ => by
-              convert H.source,
-            map_one_left' := fun _ => by
-              convert H.target,
-            prop' := fun _ _ ⟨i, _⟩ => i.elim0 }⟩])
+        ⟨{ toFun := fun t0 => H t0.fst, map_zero_left' := fun _ => by convert H.source,
+            map_one_left' := fun _ => by convert H.target, prop' := fun _ _ ⟨i, _⟩ => i.elim0 }⟩])
 
 /-- The 1-dimensional generalized loops based at `x` are in 1-1 correspondence with
   paths from `x` to itself. -/
@@ -210,12 +205,8 @@ def pi1EquivFundamentalGroup : π 1 x ≃ FundamentalGroup X x := by
   -- homotopic iff homotopic
   intros
   constructor <;> rintro ⟨H⟩
-  exacts[⟨{ toFun := fun tx => H (tx.fst, fun _ => tx.snd),
-        map_zero_left' := fun _ => by
-          convert H.apply_zero _,
-        map_one_left' := fun _ => by
-          convert H.apply_one _,
-        prop' := fun t y iH => H.prop' _ _ ⟨0, iH⟩ }⟩,
+  exacts[⟨{ toFun := fun tx => H (tx.fst, fun _ => tx.snd), map_zero_left' := fun _ => by convert H.apply_zero _,
+        map_one_left' := fun _ => by convert H.apply_one _, prop' := fun t y iH => H.prop' _ _ ⟨0, iH⟩ }⟩,
     ⟨{ toFun := fun tx => H (tx.fst, tx.snd.head),
         map_zero_left' := fun y => by
           convert H.apply_zero _

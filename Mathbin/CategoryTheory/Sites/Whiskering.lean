@@ -43,8 +43,6 @@ namespace GrothendieckTopology.Cover
 
 variable (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 /-- The multicospan associated to a cover `S : J.cover X` and a presheaf of the form `P ⋙ F`
 is isomorphic to the composition of the multicospan associated to `S` and `P`,
 composed with `F`. -/
@@ -56,10 +54,13 @@ def multicospanComp : (S.index (P ⋙ F)).multicospan ≅ (S.index P).multicospa
       | walking_multicospan.right b => eqToIso rfl)
     (by
       rintro (a | b) (a | b) (f | f | f)
-      any_goals {
-      }
-      any_goals {
-      })
+      any_goals
+      dsimp
+      erw [Functor.map_id, Functor.map_id, category.id_comp]
+      any_goals
+      dsimp
+      erw [category.comp_id, category.id_comp]
+      rfl)
 
 @[simp]
 theorem multicospan_comp_app_left (a) : (S.multicospanComp F P).app (WalkingMulticospan.left a) = eqToIso rfl :=
@@ -96,12 +97,12 @@ def mapMultifork :
   Cones.ext (eqToIso rfl)
     (by
       rintro (a | b)
-      · dsimp'
+      · dsimp
         simpa
         
-      · dsimp'
+      · dsimp
         simp
-        dsimp' [multifork.of_ι]
+        dsimp [multifork.of_ι]
         simpa
         )
 

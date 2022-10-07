@@ -52,9 +52,7 @@ add_tactic_doc
 
 add_hint_tactic rfl
 
-add_hint_tactic
-  exact by
-    decide
+add_hint_tactic exact by decide
 
 add_hint_tactic assumption
 
@@ -64,14 +62,14 @@ add_hint_tactic intro
 
 add_hint_tactic infer_auto_param
 
-add_hint_tactic dsimp'  at *
+add_hint_tactic dsimp at *
 
 add_hint_tactic simp at *
 
 -- TODO hook up to squeeze_simp?
 add_hint_tactic fconstructor
 
-add_hint_tactic injections_and_clear
+add_hint_tactic injections
 
 add_hint_tactic solve_by_elim
 

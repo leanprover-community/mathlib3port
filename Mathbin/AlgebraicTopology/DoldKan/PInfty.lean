@@ -60,11 +60,8 @@ theorem Q_is_eventually_constant {q n : ℕ} (hqn : n ≤ q) : ((q (q + 1)).f n 
 /-- The endomorphism `P_infty : K[X] ⟶ K[X]` obtained from the `P q` by passing to the limit. -/
 def pInfty : K[X] ⟶ K[X] :=
   ChainComplex.ofHom _ _ _ _ _ _ (fun n => ((p n).f n : X _[n] ⟶ _)) fun n => by
-    simpa only [←
-      P_is_eventually_constant
-        (show n ≤ n by
-          rfl),
-      alternating_face_map_complex.obj_d_eq] using (P (n + 1)).comm (n + 1) n
+    simpa only [← P_is_eventually_constant (show n ≤ n by rfl), alternating_face_map_complex.obj_d_eq] using
+      (P (n + 1)).comm (n + 1) n
 
 @[simp]
 theorem P_infty_f_0 : (pInfty.f 0 : X _[0] ⟶ X _[0]) = 𝟙 _ :=
@@ -109,8 +106,7 @@ variable {C}
 theorem map_P_infty_f {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive] (X : SimplicialObject C)
     (n : ℕ) :
     (pInfty : K[((whiskering C D).obj G).obj X] ⟶ _).f n = G.map ((pInfty : AlternatingFaceMapComplex.obj X ⟶ _).f n) :=
-  by
-  simp only [P_infty_f, map_P]
+  by simp only [P_infty_f, map_P]
 
 /-- Given an object `Y : karoubi (simplicial_object C)`, this lemma
 computes `P_infty` for the associated object in `simplicial_object (karoubi C)`
@@ -140,7 +136,7 @@ theorem karoubi_P_infty_f {Y : Karoubi (SimplicialObject C)} (n : ℕ) :
   let τ₂ := nat_trans_P_infty_f (karoubi C) n
   let τ := τ₁ ◫ τ₂
   have h₁₄ := idempotents.nat_trans_eq τ Y
-  dsimp' [τ, τ₁, τ₂, nat_trans_P_infty_f]  at h₁₄
+  dsimp [τ, τ₁, τ₂, nat_trans_P_infty_f] at h₁₄
   rw [id_comp, id_comp, comp_id, comp_id] at h₁₄
   -- We use the three equalities h₃₂, h₄₃, h₁₄.
   rw [← h₃₂, ← h₄₃, h₁₄]
@@ -148,7 +144,7 @@ theorem karoubi_P_infty_f {Y : Karoubi (SimplicialObject C)} (n : ℕ) :
   let π : Y₄ ⟶ Y₄ := (to_karoubi _ ⋙ karoubi_functor_category_embedding _ _).map Y.p
   have eq := karoubi.hom_ext.mp (P_infty_f_naturality n π)
   simp only [karoubi.comp] at eq
-  dsimp' [π]  at eq
+  dsimp [π] at eq
   rw [← Eq, reassoc_of (app_idem Y (op [n]))]
 
 end DoldKan

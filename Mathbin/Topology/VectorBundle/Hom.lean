@@ -163,10 +163,8 @@ def continuousLinearMap : Pretrivialization 𝕜₂ (F₁ →SL[σ] F₂) (Bundl
   target_eq := rfl
   proj_to_fun := fun ⟨x, f⟩ h => rfl
   linear' := fun x h =>
-    { map_add := fun L L' => by
-        simp_rw [add_comp, comp_add],
-      map_smul := fun c L => by
-        simp_rw [smul_comp, comp_smulₛₗ, RingHom.id_apply] }
+    { map_add := fun L L' => by simp_rw [add_comp, comp_add],
+      map_smul := fun c L => by simp_rw [smul_comp, comp_smulₛₗ, RingHom.id_apply] }
 
 theorem continuous_linear_map_apply (p : TotalSpace (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) :
     (continuousLinearMap σ e₁ e₂) p = ⟨p.1, (e₂.continuousLinearMapAt p.1).comp <| p.2.comp <| e₁.symmL p.1⟩ :=
@@ -193,7 +191,7 @@ theorem continuous_linear_map_coord_change_apply (b : B)
     continuous_linear_map_apply, continuous_linear_map_symm_apply' σ e₁ e₂ hb.1, comp_apply,
     ContinuousLinearEquiv.coe_coe, ContinuousLinearEquiv.symm_symm, trivialization.continuous_linear_map_at_apply,
     trivialization.symmL_apply]
-  dsimp' only [total_space_mk]
+  dsimp only [total_space_mk]
   rw [e₂.coord_change_apply e₂', e₁'.coord_change_apply e₁, e₁.coe_linear_map_at_of_mem hb.1.1,
     e₂'.coe_linear_map_at_of_mem hb.2.2]
   exacts[⟨hb.2.1, hb.1.1⟩, ⟨hb.1.2, hb.2.2⟩]

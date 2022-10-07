@@ -42,7 +42,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
   classical
   -- one can assume without loss of generality that `x` belongs to the closure of `s`, as the
   -- statement is empty otherwise
-  by_cases' hx : x ∉ Closure s
+  by_cases hx:x ∉ Closure s
   · rw [← closure_closure] at hx
     exact has_fderiv_within_at_of_not_mem_closure hx
     
@@ -57,15 +57,12 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
     simpa [dist_zero_right] using tendsto_nhds_within_nhds.1 h ε ε_pos
   set B := ball x δ
   suffices : ∀ y ∈ B ∩ Closure s, ∥f y - f x - (f' y - f' x)∥ ≤ ε * ∥y - x∥
-  exact
-    mem_nhds_within_iff.2
-      ⟨δ, δ_pos, fun y hy => by
-        simpa using this y hy⟩
+  exact mem_nhds_within_iff.2 ⟨δ, δ_pos, fun y hy => by simpa using this y hy⟩
   suffices ∀ p : E × E, p ∈ Closure ((B ∩ s) ×ˢ (B ∩ s)) → ∥f p.2 - f p.1 - (f' p.2 - f' p.1)∥ ≤ ε * ∥p.2 - p.1∥ by
     rw [closure_prod_eq] at this
     intro y y_in
     apply this ⟨x, y⟩
-    have : B ∩ Closure s ⊆ Closure (B ∩ s) := closure_inter_open is_open_ball
+    have : B ∩ Closure s ⊆ Closure (B ∩ s) := is_open_ball.closure_inter
     exact ⟨this ⟨mem_ball_self δ_pos, hx⟩, this y_in⟩
   have key : ∀ p : E × E, p ∈ (B ∩ s) ×ˢ (B ∩ s) → ∥f p.2 - f p.1 - (f' p.2 - f' p.1)∥ ≤ ε * ∥p.2 - p.1∥ := by
     rintro ⟨u, v⟩ ⟨u_in, v_in⟩
@@ -84,13 +81,11 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
     intro y y_in
     exact tendsto.sub (f_cont y y_in) f'.cont.continuous_within_at
   all_goals
-    -- common start for both continuity proofs
-    have : (B ∩ s) ×ˢ (B ∩ s) ⊆ s ×ˢ s := by
-      mono <;> exact inter_subset_right _ _
-    obtain ⟨u_in, v_in⟩ : u ∈ Closure s ∧ v ∈ Closure s := by
-      simpa [closure_prod_eq] using closure_mono this uv_in
-    apply ContinuousWithinAt.mono _ this
-    simp only [ContinuousWithinAt]
+  -- common start for both continuity proofs
+  have : (B ∩ s) ×ˢ (B ∩ s) ⊆ s ×ˢ s := by mono <;> exact inter_subset_right _ _
+  obtain ⟨u_in, v_in⟩ : u ∈ Closure s ∧ v ∈ Closure s := by simpa [closure_prod_eq] using closure_mono this uv_in
+  apply ContinuousWithinAt.mono _ this
+  simp only [ContinuousWithinAt]
   rw [nhds_within_prod_eq]
   · have : ∀ u v, f v - f u - (f' v - f' u) = f v - f' v - (f u - f' u) := by
       intros
@@ -123,7 +118,7 @@ theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : 
   have t_cont : ∀ y ∈ Closure t, ContinuousWithinAt f t y := by
     rw [t_closure]
     intro y hy
-    by_cases' h : y = a
+    by_cases h:y = a
     · rw [h]
       exact f_lim.mono ts
       
@@ -159,7 +154,7 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
   have t_cont : ∀ y ∈ Closure t, ContinuousWithinAt f t y := by
     rw [t_closure]
     intro y hy
-    by_cases' h : y = a
+    by_cases h:y = a
     · rw [h]
       exact f_lim.mono ts
       
@@ -177,7 +172,7 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
     exact has_fderiv_at_boundary_of_tendsto_fderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhds_within_Iic <| right_mem_Ioc.2 ba)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y «expr ≠ » x)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ≠ » x)
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is also the derivative of `f` at this point. -/
 theorem has_deriv_at_of_has_deriv_at_of_ne {f g : ℝ → E} {x : ℝ} (f_diff : ∀ (y) (_ : y ≠ x), HasDerivAt f (g y) y)
@@ -204,7 +199,7 @@ theorem has_deriv_at_of_has_deriv_at_of_ne {f g : ℝ → E} {x : ℝ} (f_diff :
     exact (f_diff y (ne_of_ltₓ hy)).deriv.symm
   simpa using B.union A
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y «expr ≠ » x)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ≠ » x)
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is the derivative of `f` everywhere. -/
 theorem has_deriv_at_of_has_deriv_at_of_ne' {f g : ℝ → E} {x : ℝ} (f_diff : ∀ (y) (_ : y ≠ x), HasDerivAt f (g y) y)

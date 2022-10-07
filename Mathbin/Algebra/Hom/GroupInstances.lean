@@ -28,21 +28,12 @@ variable {M : Type uM} {N : Type uN} {P : Type uP} {Q : Type uQ}
 @[to_additive "`(M →+ N)` is an `add_comm_monoid` if `N` is commutative."]
 instance [MulOneClassₓ M] [CommMonoidₓ N] : CommMonoidₓ (M →* N) where
   mul := (· * ·)
-  mul_assoc := by
-    intros <;> ext <;> apply mul_assoc
+  mul_assoc := by intros <;> ext <;> apply mul_assoc
   one := 1
-  one_mul := by
-    intros <;> ext <;> apply one_mulₓ
-  mul_one := by
-    intros <;> ext <;> apply mul_oneₓ
-  mul_comm := by
-    intros <;> ext <;> apply mul_comm
-  npow := fun n f =>
-    { toFun := fun x => f x ^ n,
-      map_one' := by
-        simp ,
-      map_mul' := fun x y => by
-        simp [mul_powₓ] }
+  one_mul := by intros <;> ext <;> apply one_mulₓ
+  mul_one := by intros <;> ext <;> apply mul_oneₓ
+  mul_comm := by intros <;> ext <;> apply mul_comm
+  npow := fun n f => { toFun := fun x => f x ^ n, map_one' := by simp, map_mul' := fun x y => by simp [mul_powₓ] }
   npow_zero' := fun f => by
     ext x
     simp
@@ -58,17 +49,11 @@ instance {M G} [MulOneClassₓ M] [CommGroupₓ G] : CommGroupₓ (M →* G) :=
       intros
       ext
       apply div_eq_mul_inv,
-    mul_left_inv := by
-      intros <;> ext <;> apply mul_left_invₓ,
-    zpow := fun n f =>
-      { toFun := fun x => f x ^ n,
-        map_one' := by
-          simp ,
-        map_mul' := fun x y => by
-          simp [mul_zpow] },
+    mul_left_inv := by intros <;> ext <;> apply mul_left_invₓ,
+    zpow := fun n f => { toFun := fun x => f x ^ n, map_one' := by simp, map_mul' := fun x y => by simp [mul_zpow] },
     zpow_zero' := fun f => by
       ext x
-      simp ,
+      simp,
     zpow_succ' := fun n f => by
       ext x
       simp [zpow_of_nat, pow_succₓ],
@@ -122,10 +107,7 @@ theorem ext_iff₂ {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : CommMon
 /-- `flip` arguments of `f : M →* N →* P` -/
 @[to_additive "`flip` arguments of `f : M →+ N →+ P`"]
 def flip {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : CommMonoidₓ P} (f : M →* N →* P) : N →* M →* P where
-  toFun := fun y =>
-    ⟨fun x => f x y, by
-      rw [f.map_one, one_apply], fun x₁ x₂ => by
-      rw [f.map_mul, mul_apply]⟩
+  toFun := fun y => ⟨fun x => f x y, by rw [f.map_one, one_apply], fun x₁ x₂ => by rw [f.map_mul, mul_apply]⟩
   map_one' := ext fun x => (f x).map_one
   map_mul' := fun y₁ y₂ => ext fun x => (f x).map_mul y₁ y₂
 

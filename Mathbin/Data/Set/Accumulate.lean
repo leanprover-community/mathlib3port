@@ -31,7 +31,7 @@ theorem mem_accumulate [LE α] {x : α} {z : β} : z ∈ Accumulate s x ↔ ∃ 
 
 theorem subset_accumulate [Preorderₓ α] {x : α} : s x ⊆ Accumulate s x := fun z => mem_bUnion le_rflₓ
 
-theorem monotone_accumulate [Preorderₓ α] : Monotone (Accumulate s) := fun x y hxy =>
+theorem monotone_accumulate [Preorderₓ α] : Monotoneₓ (Accumulate s) := fun x y hxy =>
   bUnion_subset_bUnion_left fun z hz => le_transₓ hz hxy
 
 theorem bUnion_accumulate [Preorderₓ α] (x : α) : (⋃ y ≤ x, Accumulate s y) = ⋃ y ≤ x, s y := by

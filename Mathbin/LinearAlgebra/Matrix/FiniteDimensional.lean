@@ -39,10 +39,10 @@ instance [Finite m] [Finite n] : FiniteDimensional R (Matrix m n R) :=
 is the product of the number of rows and columns.
 -/
 @[simp]
-theorem finrank_matrix [Fintype m] [Fintype n] :
-    FiniteDimensional.finrank R (Matrix m n R) = Fintype.card m * Fintype.card n := by
+theorem finrank_matrix [Fintypeₓ m] [Fintypeₓ n] :
+    FiniteDimensional.finrank R (Matrix m n R) = Fintypeₓ.card m * Fintypeₓ.card n := by
   rw [@LinearEquiv.finrank_eq R (Matrix m n R) _ _ _ _ _ _ (LinearEquiv.curry R m n).symm,
-    FiniteDimensional.finrank_fintype_fun_eq_card, Fintype.card_prod]
+    FiniteDimensional.finrank_fintype_fun_eq_card, Fintypeₓ.card_prod]
 
 end FiniteDimensional
 

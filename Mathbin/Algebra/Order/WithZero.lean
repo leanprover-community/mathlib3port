@@ -24,6 +24,7 @@ in another file. However, the lemmas about it are stated here.
 
 
 /-- A linearly ordered commutative group with a zero element. -/
+@[protect_proj]
 class LinearOrderedCommGroupWithZero (α : Type _) extends LinearOrderedCommMonoidWithZero α, CommGroupWithZero α
 
 variable {α : Type _}
@@ -63,13 +64,10 @@ def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [
     LinearOrderedCommMonoidWithZero β :=
   { LinearOrderₓ.lift f hf hsup hinf, hf.OrderedCommMonoid f one mul npow,
     hf.CommMonoidWithZero f zero one mul npow with
-    zero_le_one :=
-      show f 0 ≤ f 1 by
-        simp only [zero, one, LinearOrderedCommMonoidWithZero.zero_le_one] }
+    zero_le_one := show f 0 ≤ f 1 by simp only [zero, one, LinearOrderedCommMonoidWithZero.zero_le_one] }
 
 @[simp]
-theorem zero_le' : 0 ≤ a := by
-  simpa only [mul_zero, mul_oneₓ] using mul_le_mul_left' zero_le_one a
+theorem zero_le' : 0 ≤ a := by simpa only [mul_zero, mul_oneₓ] using mul_le_mul_left' zero_le_one a
 
 @[simp]
 theorem not_lt_zero' : ¬a < 0 :=
@@ -108,18 +106,13 @@ theorem le_of_le_mul_right (h : c ≠ 0) (hab : a * c ≤ b * c) : a ≤ b := by
   simpa only [mul_inv_cancel_right₀ h] using mul_le_mul_right' hab c⁻¹
 
 theorem le_mul_inv_of_mul_le (h : c ≠ 0) (hab : a * c ≤ b) : a ≤ b * c⁻¹ :=
-  le_of_le_mul_right h
-    (by
-      simpa [h] using hab)
+  le_of_le_mul_right h (by simpa [h] using hab)
 
 theorem mul_inv_le_of_le_mul (hab : a ≤ b * c) : a * c⁻¹ ≤ b := by
-  by_cases' h : c = 0
+  by_cases h:c = 0
   · simp [h]
     
-  · exact
-      le_of_le_mul_right h
-        (by
-          simpa [h] using hab)
+  · exact le_of_le_mul_right h (by simpa [h] using hab)
     
 
 theorem inv_le_one₀ (ha : a ≠ 0) : a⁻¹ ≤ 1 ↔ 1 ≤ a :=
@@ -135,11 +128,9 @@ theorem mul_inv_le_iff₀ (hc : c ≠ 0) : a * c⁻¹ ≤ b ↔ a ≤ b * c :=
   ⟨fun h => inv_invₓ c ▸ le_mul_inv_of_mul_le (inv_ne_zero hc) h, mul_inv_le_of_le_mul⟩
 
 theorem div_le_div₀ (a b c d : α) (hb : b ≠ 0) (hd : d ≠ 0) : a * b⁻¹ ≤ c * d⁻¹ ↔ a * d ≤ c * b :=
-  if ha : a = 0 then by
-    simp [ha]
+  if ha : a = 0 then by simp [ha]
   else
-    if hc : c = 0 then by
-      simp [inv_ne_zero hb, hc, hd]
+    if hc : c = 0 then by simp [inv_ne_zero hb, hc, hd]
     else
       show
         Units.mk0 a ha * (Units.mk0 b hb)⁻¹ ≤ Units.mk0 c hc * (Units.mk0 d hd)⁻¹ ↔
@@ -201,11 +192,9 @@ theorem div_le_div_right₀ (hc : c ≠ 0) : a / c ≤ b / c ↔ a ≤ b := by
 theorem div_le_div_left₀ (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) : a / b ≤ a / c ↔ c ≤ b := by
   simp only [div_eq_mul_inv, mul_le_mul_left₀ ha, inv_le_inv₀ hb hc]
 
-theorem le_div_iff₀ (hc : c ≠ 0) : a ≤ b / c ↔ a * c ≤ b := by
-  rw [div_eq_mul_inv, le_mul_inv_iff₀ hc]
+theorem le_div_iff₀ (hc : c ≠ 0) : a ≤ b / c ↔ a * c ≤ b := by rw [div_eq_mul_inv, le_mul_inv_iff₀ hc]
 
-theorem div_le_iff₀ (hc : c ≠ 0) : a / c ≤ b ↔ a ≤ b * c := by
-  rw [div_eq_mul_inv, mul_inv_le_iff₀ hc]
+theorem div_le_iff₀ (hc : c ≠ 0) : a / c ≤ b ↔ a ≤ b * c := by rw [div_eq_mul_inv, mul_inv_le_iff₀ hc]
 
 /-- `equiv.mul_left₀` as an order_iso on a `linear_ordered_comm_group_with_zero.`.
 

@@ -62,33 +62,22 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
   have hxy : x = r • y := by
     rw [← smul_smul, eq_inv_smul_iff₀ (sub_ne_zero.mpr hk_ne_one), ← sub_eq_zero]
     calc
-      (k - 1) • x - (k + 1) • y = k • x - x - (k • y + y) := by
-        simp_rw [sub_smul, add_smul, one_smul]
-      _ = k • x - k • y - (x + y) := by
-        simp_rw [← sub_sub, sub_right_comm]
-      _ = k • (x - y) - (x + y) := by
-        rw [← smul_sub k x y]
+      (k - 1) • x - (k + 1) • y = k • x - x - (k • y + y) := by simp_rw [sub_smul, add_smul, one_smul]
+      _ = k • x - k • y - (x + y) := by simp_rw [← sub_sub, sub_right_comm]
+      _ = k • (x - y) - (x + y) := by rw [← smul_sub k x y]
       _ = 0 := sub_eq_zero.mpr hk.symm
       
   have hzy : ⟪z, y⟫ = 0 := by
     rwa [inner_eq_zero_iff_angle_eq_pi_div_two, ← norm_add_eq_norm_sub_iff_angle_eq_pi_div_two, eq_comm]
-  have hzx : ⟪z, x⟫ = 0 := by
-    rw [hxy, inner_smul_right, hzy, mul_zero]
+  have hzx : ⟪z, x⟫ = 0 := by rw [hxy, inner_smul_right, hzy, mul_zero]
   calc
-    ∥x - y∥ * ∥x + y∥ = ∥(r - 1) • y∥ * ∥(r + 1) • y∥ := by
-      simp [sub_smul, add_smul, hxy]
-    _ = ∥r - 1∥ * ∥y∥ * (∥r + 1∥ * ∥y∥) := by
-      simp_rw [norm_smul]
-    _ = ∥r - 1∥ * ∥r + 1∥ * ∥y∥ ^ 2 := by
-      ring
-    _ = abs ((r - 1) * (r + 1) * ∥y∥ ^ 2) := by
-      simp [abs_mul]
-    _ = abs (r ^ 2 * ∥y∥ ^ 2 - ∥y∥ ^ 2) := by
-      ring_nf
-    _ = abs (∥x∥ ^ 2 - ∥y∥ ^ 2) := by
-      simp [hxy, norm_smul, mul_powₓ, sq_abs]
-    _ = abs (∥z + y∥ ^ 2 - ∥z - x∥ ^ 2) := by
-      simp [norm_add_sq_real, norm_sub_sq_real, hzy, hzx, abs_sub_comm]
+    ∥x - y∥ * ∥x + y∥ = ∥(r - 1) • y∥ * ∥(r + 1) • y∥ := by simp [sub_smul, add_smul, hxy]
+    _ = ∥r - 1∥ * ∥y∥ * (∥r + 1∥ * ∥y∥) := by simp_rw [norm_smul]
+    _ = ∥r - 1∥ * ∥r + 1∥ * ∥y∥ ^ 2 := by ring
+    _ = abs ((r - 1) * (r + 1) * ∥y∥ ^ 2) := by simp [abs_mul]
+    _ = abs (r ^ 2 * ∥y∥ ^ 2 - ∥y∥ ^ 2) := by ring_nf
+    _ = abs (∥x∥ ^ 2 - ∥y∥ ^ 2) := by simp [hxy, norm_smul, mul_powₓ, sq_abs]
+    _ = abs (∥z + y∥ ^ 2 - ∥z - x∥ ^ 2) := by simp [norm_add_sq_real, norm_sub_sq_real, hzy, hzx, abs_sub_comm]
     
 
 end InnerProductGeometry
@@ -116,8 +105,7 @@ theorem mul_dist_eq_abs_sub_sq_dist {a b p q : P} (hp : ∃ k : ℝ, k ≠ 1 ∧
   obtain ⟨v, h1, h2, h3⟩ := vsub_sub_vsub_cancel_left, v a p m, v p q m, v a q m
   have h : ∀ r, b -ᵥ r = m -ᵥ r + (m -ᵥ a) := fun r => by
     rw [midpoint_vsub_left, ← right_vsub_midpoint, add_commₓ, vsub_add_vsub_cancel]
-  iterate 4 
-    rw [dist_eq_norm_vsub V]
+  iterate 4 rw [dist_eq_norm_vsub V]
   rw [← h1, ← h2, h, h]
   rw [← h1, h] at hp
   rw [dist_eq_norm_vsub V a q, dist_eq_norm_vsub V b q, ← h3, h] at hq
@@ -134,20 +122,14 @@ theorem mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Cospherical ({a
     rw [← hb] at ha
     rw [mul_dist_eq_abs_sub_sq_dist hapb ha, hb, mul_dist_eq_abs_sub_sq_dist hcpd hc, hd]
     
-  all_goals
-    simp
+  all_goals simp
 
 /-- **Intersecting Chords Theorem**. -/
 theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi {a b c d p : P} (h : Cospherical ({a, b, c, d} : Set P))
     (hapb : ∠ a p b = π) (hcpd : ∠ c p d = π) : dist a p * dist b p = dist c p * dist d p := by
   obtain ⟨-, k₁, _, hab⟩ := angle_eq_pi_iff.mp hapb
   obtain ⟨-, k₂, _, hcd⟩ := angle_eq_pi_iff.mp hcpd
-  exact
-    mul_dist_eq_mul_dist_of_cospherical h
-      ⟨k₁, by
-        linarith, hab⟩
-      ⟨k₂, by
-        linarith, hcd⟩
+  exact mul_dist_eq_mul_dist_of_cospherical h ⟨k₁, by linarith, hab⟩ ⟨k₂, by linarith, hcd⟩
 
 /-- **Intersecting Secants Theorem**. -/
 theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero {a b c d p : P} (h : Cospherical ({a, b, c, d} : Set P))
@@ -162,27 +144,22 @@ theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero {a b c d p : P} (h 
 /-- **Ptolemy’s Theorem**. -/
 theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Cospherical ({a, b, c, d} : Set P))
     (hapc : ∠ a p c = π) (hbpd : ∠ b p d = π) : dist a b * dist c d + dist b c * dist d a = dist a c * dist b d := by
-  have h' : cospherical ({a, c, b, d} : Set P) := by
-    rwa [Set.insert_comm c b {d}]
+  have h' : cospherical ({a, c, b, d} : Set P) := by rwa [Set.insert_comm c b {d}]
   have hmul := mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi h' hapc hbpd
   have hbp := left_dist_ne_zero_of_angle_eq_pi hbpd
   have h₁ : dist c d = dist c p / dist b p * dist a b := by
     rw [dist_mul_of_eq_angle_of_dist_mul b p a c p d, dist_comm a b]
     · rw [angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi hbpd hapc, angle_comm]
       
-    all_goals
-      field_simp [mul_comm, hmul]
+    all_goals field_simp [mul_comm, hmul]
   have h₂ : dist d a = dist a p / dist b p * dist b c := by
     rw [dist_mul_of_eq_angle_of_dist_mul c p b d p a, dist_comm c b]
     · rwa [angle_comm, angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi]
       rwa [angle_comm]
       
-    all_goals
-      field_simp [mul_comm, hmul]
-  have h₃ : dist d p = dist a p * dist c p / dist b p := by
-    field_simp [mul_comm, hmul]
-  have h₄ : ∀ x y : ℝ, x * (y * x) = x * x * y := fun x y => by
-    rw [mul_left_commₓ, mul_comm]
+    all_goals field_simp [mul_comm, hmul]
+  have h₃ : dist d p = dist a p * dist c p / dist b p := by field_simp [mul_comm, hmul]
+  have h₄ : ∀ x y : ℝ, x * (y * x) = x * x * y := fun x y => by rw [mul_left_commₓ, mul_comm]
   field_simp [h₁, h₂, dist_eq_add_dist_of_angle_eq_pi hbpd, h₃, hbp, dist_comm a b, h₄, ← sq,
     dist_sq_mul_dist_add_dist_sq_mul_dist b, hapc]
 

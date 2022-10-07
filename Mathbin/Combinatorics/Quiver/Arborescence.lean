@@ -116,7 +116,7 @@ noncomputable instance geodesicArborescence : Arborescence (GeodesicSubtree r) :
   arborescenceMk r (fun a => (shortestPath r a).length)
     (by
       rintro a b ⟨e, p, h⟩
-      rw [h, path.length_cons, Nat.lt_succ_iffₓ]
+      rw [h, path.length_cons, Nat.lt_succ_iff]
       apply shortest_path_spec)
     (by
       rintro a b c ⟨e, p, h⟩ ⟨f, q, j⟩

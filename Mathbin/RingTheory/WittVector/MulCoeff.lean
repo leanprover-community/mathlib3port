@@ -37,7 +37,7 @@ variable {k : Type _} [CommRingₓ k]
 -- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
-open Finset MvPolynomial
+open Finsetₓ MvPolynomial
 
 open BigOperators
 
@@ -73,8 +73,7 @@ theorem witt_poly_prod_remainder_vars (n : ℕ) : (wittPolyProdRemainder p n).va
   apply subset.trans (vars_mul _ _)
   apply union_subset
   · apply subset.trans (vars_pow _ _)
-    have : (p : MvPolynomial (Finₓ 2 × ℕ) ℤ) = C (p : ℤ) := by
-      simp only [Int.cast_coe_nat, eq_int_cast]
+    have : (p : MvPolynomial (Finₓ 2 × ℕ) ℤ) = C (p : ℤ) := by simp only [Int.cast_coe_nat, eq_int_cast]
     rw [this, vars_C]
     apply empty_subset
     
@@ -159,7 +158,10 @@ theorem mul_poly_of_interest_aux3 (n : ℕ) :
   -- unfold definitions and peel off the last entries of the sums.
   rw [witt_poly_prod, wittPolynomial, AlgHom.map_sum, AlgHom.map_sum, sum_range_succ]
   -- these are sums up to `n+2`, so be careful to only unfold to `n+1`.
-  conv_lhs => congr skip rw [sum_range_succ]
+conv_lhs =>
+  congr
+  skip
+  rw [sum_range_succ]
   simp only [add_mulₓ, mul_addₓ, tsub_self, pow_zeroₓ, AlgHom.map_sum]
   -- rearrange so that the first summand on rhs and lhs is `remainder`, and peel off
   conv_rhs => rw [add_commₓ]
@@ -228,8 +230,7 @@ theorem peval_poly_of_interest (n : ℕ) (x y : 𝕎 k) :
   simp only [poly_of_interest, peval, map_nat_cast, Matrix.head_cons, map_pow, Function.uncurry_apply_pairₓ, aeval_X,
     Matrix.cons_val_one, map_mul, Matrix.cons_val_zero, map_sub]
   rw [sub_sub, add_commₓ (_ * _), ← sub_sub]
-  have mvpz : (p : MvPolynomial ℕ ℤ) = MvPolynomial.c ↑p := by
-    rw [eq_int_cast, Int.cast_coe_nat]
+  have mvpz : (p : MvPolynomial ℕ ℤ) = MvPolynomial.c ↑p := by rw [eq_int_cast, Int.cast_coe_nat]
   have : ∀ (f : ℤ →+* k) (g : ℕ → k), eval₂ f g p = f p := by
     intros
     rw [mvpz, MvPolynomial.eval₂_C]
@@ -249,7 +250,7 @@ theorem peval_poly_of_interest' (n : ℕ) (x y : 𝕎 k) :
   have sum_zero_pow_mul_pow_p :
     ∀ y : 𝕎 k, (∑ x : ℕ in range (n + 1 + 1), 0 ^ x * y.coeff x ^ p ^ (n + 1 - x)) = y.coeff 0 ^ p ^ (n + 1) := by
     intro y
-    rw [Finset.sum_eq_single_of_mem 0]
+    rw [Finsetₓ.sum_eq_single_of_mem 0]
     · simp
       
     · simp
@@ -282,7 +283,7 @@ theorem nth_mul_coeff' (n : ℕ) :
     cases' ha with ha ha <;> linarith only [ha]
   use f
   intro x y
-  dsimp' [peval]
+  dsimp [peval]
   rw [← hf₀]
   simp only [f, Function.uncurry_apply_pairₓ]
   congr
@@ -291,8 +292,7 @@ theorem nth_mul_coeff' (n : ℕ) :
   cases' a with i m
   simp only [true_andₓ, Multiset.mem_cons, range_coe, product_val, Multiset.mem_range, Multiset.mem_product,
     Multiset.range_succ, mem_univ_val] at ha
-  have ha' : m < n + 1 := by
-    cases' ha with ha ha <;> linarith only [ha]
+  have ha' : m < n + 1 := by cases' ha with ha ha <;> linarith only [ha]
   fin_cases i <;>-- surely this case split is not necessary
     · simpa only using x.coeff_truncate_fun ⟨m, ha'⟩
       

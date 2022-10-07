@@ -64,10 +64,8 @@ def ringEquiv [NonUnitalNonAssocSemiringₓ α] : ULift α ≃+* α where
   invFun := ULift.up
   map_mul' := fun x y => rfl
   map_add' := fun x y => rfl
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
 
 instance nonUnitalCommSemiring [NonUnitalCommSemiring α] : NonUnitalCommSemiring (ULift α) := by
   refine_struct { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul } <;>

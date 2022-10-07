@@ -30,6 +30,8 @@ universe u
 
 open Pointwise
 
+open OrderDual (toDual ofDual)
+
 namespace Set
 
 section LinearOrderₓ
@@ -44,15 +46,16 @@ def Interval (a b : α) :=
 localized [Interval] notation "[" a ", " b "]" => Set.Interval a b
 
 @[simp]
-theorem interval_of_le (h : a ≤ b) : [a, b] = Icc a b := by
-  rw [interval, min_eq_leftₓ h, max_eq_rightₓ h]
+theorem dual_interval (a b : α) : [toDual a, toDual b] = of_dual ⁻¹' [a, b] :=
+  dual_Icc
 
 @[simp]
-theorem interval_of_ge (h : b ≤ a) : [a, b] = Icc b a := by
-  rw [interval, min_eq_rightₓ h, max_eq_leftₓ h]
+theorem interval_of_le (h : a ≤ b) : [a, b] = Icc a b := by rw [interval, min_eq_leftₓ h, max_eq_rightₓ h]
 
-theorem interval_swap (a b : α) : [a, b] = [b, a] := by
-  rw [interval, interval, min_commₓ, max_commₓ]
+@[simp]
+theorem interval_of_ge (h : b ≤ a) : [a, b] = Icc b a := by rw [interval, min_eq_rightₓ h, max_eq_leftₓ h]
+
+theorem interval_swap (a b : α) : [a, b] = [b, a] := by rw [interval, interval, min_commₓ, max_commₓ]
 
 theorem interval_of_lt (h : a < b) : [a, b] = Icc a b :=
   interval_of_le (le_of_ltₓ h)
@@ -68,8 +71,7 @@ theorem interval_of_not_ge (h : ¬b ≤ a) : [a, b] = Icc a b :=
 
 @[simp]
 theorem interval_self : [a, a] = {a} :=
-  Set.ext <| by
-    simp [le_antisymm_iffₓ, and_comm]
+  Set.ext <| by simp [le_antisymm_iffₓ, and_comm]
 
 @[simp]
 theorem nonempty_interval : Set.Nonempty [a, b] := by
@@ -162,24 +164,20 @@ def IntervalOc : α → α → Set α := fun a b => Ioc (min a b) (max a b)
 -- Below is a capital iota
 localized [Interval] notation "Ι" => Set.IntervalOc
 
-theorem interval_oc_of_le (h : a ≤ b) : Ι a b = Ioc a b := by
-  simp [interval_oc, h]
+theorem interval_oc_of_le (h : a ≤ b) : Ι a b = Ioc a b := by simp [interval_oc, h]
 
-theorem interval_oc_of_lt (h : b < a) : Ι a b = Ioc b a := by
-  simp [interval_oc, le_of_ltₓ h]
+theorem interval_oc_of_lt (h : b < a) : Ι a b = Ioc b a := by simp [interval_oc, le_of_ltₓ h]
 
-theorem interval_oc_eq_union : Ι a b = Ioc a b ∪ Ioc b a := by
-  cases le_totalₓ a b <;> simp [interval_oc, *]
+theorem interval_oc_eq_union : Ι a b = Ioc a b ∪ Ioc b a := by cases le_totalₓ a b <;> simp [interval_oc, *]
 
 theorem forall_interval_oc_iff {P : α → Prop} : (∀ x ∈ Ι a b, P x) ↔ (∀ x ∈ Ioc a b, P x) ∧ ∀ x ∈ Ioc b a, P x := by
-  simp only [interval_oc_eq_union, mem_union_eq, or_imp_distrib, forall_and_distrib]
+  simp only [interval_oc_eq_union, mem_union, or_imp_distrib, forall_and_distrib]
 
 theorem interval_oc_subset_interval_oc_of_interval_subset_interval {a b c d : α} (h : [a, b] ⊆ [c, d]) :
     Ι a b ⊆ Ι c d :=
   Ioc_subset_Ioc (interval_subset_interval_iff_le.1 h).1 (interval_subset_interval_iff_le.1 h).2
 
-theorem interval_oc_swap (a b : α) : Ι a b = Ι b a := by
-  simp only [interval_oc, min_commₓ a b, max_commₓ a b]
+theorem interval_oc_swap (a b : α) : Ι a b = Ι b a := by simp only [interval_oc, min_commₓ a b, max_commₓ a b]
 
 theorem Ioc_subset_interval_oc : Ioc a b ⊆ Ι a b :=
   Ioc_subset_Ioc (min_le_leftₓ _ _) (le_max_rightₓ _ _)
@@ -208,8 +206,7 @@ theorem preimage_neg_interval : -[a, b] = [-a, -b] := by
   simp only [interval, preimage_neg_Icc, min_neg_neg, max_neg_neg]
 
 @[simp]
-theorem preimage_sub_const_interval : (fun x => x - a) ⁻¹' [b, c] = [b + a, c + a] := by
-  simp [sub_eq_add_neg]
+theorem preimage_sub_const_interval : (fun x => x - a) ⁻¹' [b, c] = [b + a, c + a] := by simp [sub_eq_add_neg]
 
 @[simp]
 theorem preimage_const_sub_interval : (fun x => a - x) ⁻¹' [b, c] = [a - b, a - c] := by
@@ -217,23 +214,19 @@ theorem preimage_const_sub_interval : (fun x => a - x) ⁻¹' [b, c] = [a - b, a
   simp only [sub_eq_add_neg, min_add_add_left, max_add_add_left, min_neg_neg, max_neg_neg]
 
 @[simp]
-theorem image_const_add_interval : (fun x => a + x) '' [b, c] = [a + b, a + c] := by
-  simp [add_commₓ]
+theorem image_const_add_interval : (fun x => a + x) '' [b, c] = [a + b, a + c] := by simp [add_commₓ]
 
 @[simp]
-theorem image_add_const_interval : (fun x => x + a) '' [b, c] = [b + a, c + a] := by
-  simp
+theorem image_add_const_interval : (fun x => x + a) '' [b, c] = [b + a, c + a] := by simp
 
 @[simp]
 theorem image_const_sub_interval : (fun x => a - x) '' [b, c] = [a - b, a - c] := by
   simp [sub_eq_add_neg, image_comp (fun x => a + x) fun x => -x]
 
 @[simp]
-theorem image_sub_const_interval : (fun x => x - a) '' [b, c] = [b - a, c - a] := by
-  simp [sub_eq_add_neg, add_commₓ]
+theorem image_sub_const_interval : (fun x => x - a) '' [b, c] = [b - a, c - a] := by simp [sub_eq_add_neg, add_commₓ]
 
-theorem image_neg_interval : Neg.neg '' [a, b] = [-a, -b] := by
-  simp
+theorem image_neg_interval : Neg.neg '' [a, b] = [-a, -b] := by simp
 
 variable {a b c x y}
 
@@ -263,10 +256,8 @@ variable {k : Type u} [LinearOrderedField k] {a : k}
 @[simp]
 theorem preimage_mul_const_interval (ha : a ≠ 0) (b c : k) : (fun x => x * a) ⁻¹' [b, c] = [b / a, c / a] :=
   (lt_or_gt_of_neₓ ha).elim
-    (fun ha => by
-      simp [interval, ha, ha.le, min_div_div_right_of_nonpos, max_div_div_right_of_nonpos])
-    fun ha : 0 < a => by
-    simp [interval, ha, ha.le, min_div_div_right, max_div_div_right]
+    (fun ha => by simp [interval, ha, ha.le, min_div_div_right_of_nonpos, max_div_div_right_of_nonpos])
+    fun ha : 0 < a => by simp [interval, ha, ha.le, min_div_div_right, max_div_div_right]
 
 @[simp]
 theorem preimage_const_mul_interval (ha : a ≠ 0) (b c : k) : (fun x => a * x) ⁻¹' [b, c] = [b / a, c / a] := by
@@ -278,13 +269,11 @@ theorem preimage_div_const_interval (ha : a ≠ 0) (b c : k) : (fun x => x / a) 
 
 @[simp]
 theorem image_mul_const_interval (a b c : k) : (fun x => x * a) '' [b, c] = [b * a, c * a] :=
-  if ha : a = 0 then by
-    simp [ha]
+  if ha : a = 0 then by simp [ha]
   else
     calc
       (fun x => x * a) '' [b, c] = (fun x => x * a⁻¹) ⁻¹' [b, c] := (Units.mk0 a ha).mul_right.image_eq_preimage _
-      _ = (fun x => x / a) ⁻¹' [b, c] := by
-        simp only [div_eq_mul_inv]
+      _ = (fun x => x / a) ⁻¹' [b, c] := by simp only [div_eq_mul_inv]
       _ = [b * a, c * a] := preimage_div_const_interval ha _ _
       
 

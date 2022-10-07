@@ -57,6 +57,10 @@ instance nonnegHomClass : NonnegHomClass (AbsoluteValue R S) R S :=
 instance subadditiveHomClass : SubadditiveHomClass (AbsoluteValue R S) R S :=
   { AbsoluteValue.zeroHomClass with map_add_le_add := fun f => f.add_le' }
 
+@[simp]
+theorem coe_mk (f : R →ₙ* S) {h₁ h₂ h₃} : (AbsoluteValue.mk f h₁ h₂ h₃ : R → S) = f :=
+  rfl
+
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (AbsoluteValue R S) fun f => R → S :=
@@ -80,6 +84,9 @@ protected theorem add_le (x y : R) : abv (x + y) ≤ abv x + abv y :=
 protected theorem map_mul (x y : R) : abv (x * y) = abv x * abv y :=
   abv.map_mul' x y
 
+protected theorem ne_zero_iff {x : R} : abv x ≠ 0 ↔ x ≠ 0 :=
+  abv.eq_zero.Not
+
 protected theorem pos {x : R} (hx : x ≠ 0) : 0 < abv x :=
   lt_of_le_of_neₓ (abv.Nonneg x) (Ne.symm <| mt abv.eq_zero.mp hx)
 
@@ -91,8 +98,7 @@ protected theorem ne_zero {x : R} (hx : x ≠ 0) : abv x ≠ 0 :=
   (abv.Pos hx).ne'
 
 theorem map_one_of_is_regular (h : IsLeftRegular (abv 1)) : abv 1 = 1 :=
-  h <| by
-    simp [← abv.map_mul]
+  h <| by simp [← abv.map_mul]
 
 @[simp]
 protected theorem map_zero : abv 0 = 0 :=
@@ -163,8 +169,7 @@ section Ringₓ
 variable {R S : Type _} [Ringₓ R] [OrderedRing S] (abv : AbsoluteValue R S)
 
 protected theorem le_sub (a b : R) : abv a - abv b ≤ abv (a - b) :=
-  sub_le_iff_le_add.2 <| by
-    simpa using abv.add_le (a - b) b
+  sub_le_iff_le_add.2 <| by simpa using abv.add_le (a - b) b
 
 end Ringₓ
 
@@ -178,18 +183,13 @@ variable [NoZeroDivisors S]
 
 @[simp]
 protected theorem map_neg (a : R) : abv (-a) = abv a := by
-  by_cases' ha : a = 0
+  by_cases ha:a = 0
   · simp [ha]
     
-  refine'
-    (mul_self_eq_mul_self_iff.mp
-          (by
-            rw [← abv.map_mul, neg_mul_neg, abv.map_mul])).resolve_right
-      _
+  refine' (mul_self_eq_mul_self_iff.mp (by rw [← abv.map_mul, neg_mul_neg, abv.map_mul])).resolve_right _
   exact ((neg_lt_zero.mpr (abv.pos ha)).trans (abv.pos (neg_ne_zero.mpr ha))).ne'
 
-protected theorem map_sub (a b : R) : abv (a - b) = abv (b - a) := by
-  rw [← neg_sub, abv.map_neg]
+protected theorem map_sub (a b : R) : abv (a - b) = abv (b - a) := by rw [← neg_sub, abv.map_neg]
 
 end OrderedCommRing
 
@@ -216,18 +216,16 @@ section LinearOrderedCommRing
 variable {R S : Type _} [Ringₓ R] [LinearOrderedCommRing S] (abv : AbsoluteValue R S)
 
 theorem abs_abv_sub_le_abv_sub (a b : R) : abs (abv a - abv b) ≤ abv (a - b) :=
-  abs_sub_le_iff.2
-    ⟨abv.le_sub _ _, by
-      rw [abv.map_sub] <;> apply abv.le_sub⟩
+  abs_sub_le_iff.2 ⟨abv.le_sub _ _, by rw [abv.map_sub] <;> apply abv.le_sub⟩
 
 end LinearOrderedCommRing
 
 end AbsoluteValue
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] []
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] []
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`abv_add] []
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`abv_mul] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`abv_add] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`abv_mul] []
 /-- A function `f` is an absolute value if it is nonnegative, zero only at 0, additive, and
 multiplicative.
 

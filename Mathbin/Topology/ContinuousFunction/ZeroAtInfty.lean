@@ -106,10 +106,7 @@ theorem eq_of_empty [IsEmpty α] (f g : C₀(α, β)) : f = g :=
 infinity. -/
 @[simps]
 def ContinuousMap.liftZeroAtInfty [CompactSpace α] : C(α, β) ≃ C₀(α, β) where
-  toFun := fun f =>
-    { toFun := f, continuous_to_fun := f.Continuous,
-      zero_at_infty' := by
-        simp }
+  toFun := fun f => { toFun := f, continuous_to_fun := f.Continuous, zero_at_infty' := by simp }
   invFun := fun f => f
   left_inv := fun f => by
     ext
@@ -126,8 +123,7 @@ def zeroAtInftyContinuousMapClass.ofCompact {G : Type _} [ContinuousMapClass G �
   coe := fun g => g
   coe_injective' := fun f g h => FunLike.coe_fn_eq.mp h
   map_continuous := map_continuous
-  zero_at_infty := by
-    simp
+  zero_at_infty := by simp
 
 end Basics
 
@@ -157,9 +153,7 @@ theorem zero_apply [Zero β] : (0 : C₀(α, β)) x = 0 :=
   rfl
 
 instance [MulZeroClassₓ β] [HasContinuousMul β] : Mul C₀(α, β) :=
-  ⟨fun f g =>
-    ⟨f * g, by
-      simpa only [mul_zero] using (zero_at_infty f).mul (zero_at_infty g)⟩⟩
+  ⟨fun f g => ⟨f * g, by simpa only [mul_zero] using (zero_at_infty f).mul (zero_at_infty g)⟩⟩
 
 @[simp]
 theorem coe_mul [MulZeroClassₓ β] [HasContinuousMul β] (f g : C₀(α, β)) : ⇑(f * g) = f * g :=
@@ -175,9 +169,7 @@ instance [SemigroupWithZeroₓ β] [HasContinuousMul β] : SemigroupWithZeroₓ 
   FunLike.coe_injective.SemigroupWithZero _ coe_zero coe_mul
 
 instance [AddZeroClassₓ β] [HasContinuousAdd β] : Add C₀(α, β) :=
-  ⟨fun f g =>
-    ⟨f + g, by
-      simpa only [add_zeroₓ] using (zero_at_infty f).add (zero_at_infty g)⟩⟩
+  ⟨fun f g => ⟨f + g, by simpa only [add_zeroₓ] using (zero_at_infty f).add (zero_at_infty g)⟩⟩
 
 @[simp]
 theorem coe_add [AddZeroClassₓ β] [HasContinuousAdd β] (f g : C₀(α, β)) : ⇑(f + g) = f + g :=
@@ -195,15 +187,11 @@ variable [AddMonoidₓ β] [HasContinuousAdd β] (f g : C₀(α, β))
 
 @[simp]
 theorem coe_nsmul_rec : ∀ n, ⇑(nsmulRec n f) = n • f
-  | 0 => by
-    rw [nsmulRec, zero_smul, coe_zero]
-  | n + 1 => by
-    rw [nsmulRec, succ_nsmul, coe_add, coe_nsmul_rec]
+  | 0 => by rw [nsmulRec, zero_smul, coe_zero]
+  | n + 1 => by rw [nsmulRec, succ_nsmul, coe_add, coe_nsmul_rec]
 
 instance hasNatScalar : HasSmul ℕ C₀(α, β) :=
-  ⟨fun n f =>
-    ⟨n • f, by
-      simpa [coe_nsmul_rec] using zero_at_infty (nsmulRec n f)⟩⟩
+  ⟨fun n f => ⟨n • f, by simpa [coe_nsmul_rec] using zero_at_infty (nsmulRec n f)⟩⟩
 
 instance : AddMonoidₓ C₀(α, β) :=
   FunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => rfl
@@ -218,9 +206,7 @@ section AddGroupₓ
 variable [AddGroupₓ β] [TopologicalAddGroup β] (f g : C₀(α, β))
 
 instance : Neg C₀(α, β) :=
-  ⟨fun f =>
-    ⟨-f, by
-      simpa only [neg_zero] using (zero_at_infty f).neg⟩⟩
+  ⟨fun f => ⟨-f, by simpa only [neg_zero] using (zero_at_infty f).neg⟩⟩
 
 @[simp]
 theorem coe_neg : ⇑(-f) = -f :=
@@ -230,9 +216,7 @@ theorem neg_apply : (-f) x = -f x :=
   rfl
 
 instance : Sub C₀(α, β) :=
-  ⟨fun f g =>
-    ⟨f - g, by
-      simpa only [sub_zero] using (zero_at_infty f).sub (zero_at_infty g)⟩⟩
+  ⟨fun f g => ⟨f - g, by simpa only [sub_zero] using (zero_at_infty f).sub (zero_at_infty g)⟩⟩
 
 @[simp]
 theorem coe_sub : ⇑(f - g) = f - g :=
@@ -243,15 +227,11 @@ theorem sub_apply : (f - g) x = f x - g x :=
 
 @[simp]
 theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
-  | Int.ofNat n => by
-    rw [zsmulRec, Int.of_nat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
-  | -[1 + n] => by
-    rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
+  | Int.ofNat n => by rw [zsmulRec, Int.of_nat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
+  | -[1 + n] => by rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
 
 instance hasIntScalar : HasSmul ℤ C₀(α, β) :=
-  ⟨fun n f =>
-    ⟨n • f, by
-      simpa using zero_at_infty (zsmulRec n f)⟩⟩
+  ⟨fun n f => ⟨n • f, by simpa using zero_at_infty (zsmulRec n f)⟩⟩
 
 instance : AddGroupₓ C₀(α, β) :=
   FunLike.coe_injective.AddGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
@@ -262,9 +242,7 @@ instance [AddCommGroupₓ β] [TopologicalAddGroup β] : AddCommGroupₓ C₀(α
   FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 instance [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasContinuousConstSmul R β] : HasSmul R C₀(α, β) :=
-  ⟨fun r f =>
-    ⟨r • f, by
-      simpa [smul_zero] using (zero_at_infty f).const_smul r⟩⟩
+  ⟨fun r f => ⟨r • f, by simpa [smul_zero] using (zero_at_infty f).const_smul r⟩⟩
 
 @[simp]
 theorem coe_smul [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasContinuousConstSmul R β] (r : R) (f : C₀(α, β)) :
@@ -346,7 +324,7 @@ protected theorem bounded (f : F) : ∃ C, ∀ x y : α, dist ((f : α → β) x
   refine' ⟨max C 1 + max C 1, fun x y => _⟩
   have : ∀ x, f x ∈ closed_ball (0 : β) (max C 1) := by
     intro x
-    by_cases' hx : x ∈ K
+    by_cases hx:x ∈ K
     · exact (mem_closed_ball.mp <| hC ⟨x, hx, rfl⟩).trans (le_max_leftₓ _ _)
       
     · exact (mem_closed_ball.mp <| mem_preimage.mp (hK₂ hx)).trans (le_max_rightₓ _ _)
@@ -382,9 +360,7 @@ variable {C : ℝ} {f g : C₀(α, β)}
 /-- The type of continuous functions vanishing at infinity, with the uniform distance induced by the
 inclusion `zero_at_infinity_continuous_map.to_bcf`, is a metric space. -/
 noncomputable instance : MetricSpace C₀(α, β) :=
-  MetricSpace.induced _ (to_bcf_injective α β)
-    (by
-      infer_instance)
+  MetricSpace.induced _ (to_bcf_injective α β) (by infer_instance)
 
 @[simp]
 theorem dist_to_bcf_eq_dist {f g : C₀(α, β)} : dist f.toBcf g.toBcf = dist f g :=
@@ -398,8 +374,7 @@ theorem tendsto_iff_tendsto_uniformly {ι : Type _} {F : ι → C₀(α, β)} {f
   simpa only [Metric.tendsto_nhds] using
     @BoundedContinuousFunction.tendsto_iff_tendsto_uniformly _ _ _ _ _ (fun i => (F i).toBcf) f.to_bcf l
 
-theorem isometry_to_bcf : Isometry (toBcf : C₀(α, β) → α →ᵇ β) := by
-  tauto
+theorem isometry_to_bcf : Isometry (toBcf : C₀(α, β) → α →ᵇ β) := by tauto
 
 theorem closed_range_to_bcf : IsClosed (Range (toBcf : C₀(α, β) → α →ᵇ β)) := by
   refine' is_closed_iff_cluster_pt.mpr fun f hf => _
@@ -411,8 +386,7 @@ theorem closed_range_to_bcf : IsClosed (Range (toBcf : C₀(α, β) → α →�
     calc
       dist (f x) 0 ≤ dist (g.to_bcf x) (f x) + dist (g x) 0 := dist_triangle_left _ _ _
       _ < dist g.to_bcf f + ε / 2 := add_lt_add_of_le_of_lt (dist_coe_le_dist x) hx
-      _ < ε := by
-        simpa [add_halves ε] using add_lt_add_right hg (ε / 2)
+      _ < ε := by simpa [add_halves ε] using add_lt_add_right hg (ε / 2)
       
   exact
     ⟨⟨f.to_continuous_map, this⟩, by
@@ -494,8 +468,7 @@ instance :
       C₀(α,
         β) where star := fun f =>
     { toFun := fun x => star (f x), continuous_to_fun := (map_continuous f).star,
-      zero_at_infty' := by
-        simpa only [star_zero] using (continuous_star.tendsto (0 : β)).comp (zero_at_infty f) }
+      zero_at_infty' := by simpa only [star_zero] using (continuous_star.tendsto (0 : β)).comp (zero_at_infty f) }
 
 @[simp]
 theorem coe_star (f : C₀(α, β)) : ⇑(star f) = star f :=

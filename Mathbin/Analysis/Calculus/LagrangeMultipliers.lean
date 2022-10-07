@@ -38,7 +38,7 @@ variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpac
 at `x₀`, both `f : E → F` and `φ` are strictly differentiable at `x₀`, and the codomain of `f` is
 a complete space, then the linear map `x ↦ (f' x, φ' x)` is not surjective. -/
 theorem IsLocalExtrOn.range_ne_top_of_has_strict_fderiv_at (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀)
-    (hf' : HasStrictFderivAt f f' x₀) (hφ' : HasStrictFderivAt φ φ' x₀) : (f'.Prod φ').range ≠ ⊤ := by
+    (hf' : HasStrictFderivAt f f' x₀) (hφ' : HasStrictFderivAt φ φ' x₀) : LinearMap.range (f'.Prod φ') ≠ ⊤ := by
   intro htop
   set fφ := fun x => (f x, φ x)
   have A : map φ (𝓝[f ⁻¹' {f x₀}] x₀) = 𝓝 (φ x₀) := by
@@ -63,10 +63,10 @@ theorem IsLocalExtrOn.exists_linear_map_of_has_strict_fderiv_at (hextr : IsLocal
   refine' ⟨Λ, Λ₀, e.map_ne_zero_iff.1 h0, fun x => _⟩
   convert LinearMap.congr_fun (LinearMap.range_le_ker_iff.1 hΛ') x using 1
   -- squeezed `simp [mul_comm]` to speed up elaboration
-  simp only [LinearMap.coprod_equiv_apply, LinearEquiv.refl_apply, LinearMap.ring_lmap_equiv_self_symm_apply,
-    LinearMap.comp_apply, ContinuousLinearMap.coe_coe, ContinuousLinearMap.prod_apply, LinearEquiv.trans_apply,
-    LinearEquiv.prod_apply, LinearMap.coprod_apply, LinearMap.smul_right_apply, LinearMap.one_apply, smul_eq_mul,
-    mul_comm]
+  simp only [mul_comm, Algebra.id.smul_eq_mul, LinearEquiv.trans_apply, LinearEquiv.prod_apply, LinearEquiv.refl_apply,
+    LinearMap.ring_lmap_equiv_self_symm_apply, LinearMap.coprod_equiv_apply, ContinuousLinearMap.to_linear_map_eq_coe,
+    ContinuousLinearMap.coe_prod, LinearMap.coprod_comp_prod, LinearMap.add_apply, LinearMap.coe_comp,
+    ContinuousLinearMap.coe_coe, LinearMap.coe_smul_right, LinearMap.one_apply]
 
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
 at `x₀`, and both `f : E → ℝ` and `φ` are strictly differentiable at `x₀`, then there exist
@@ -82,10 +82,8 @@ theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d {f : E → �
     simpa [hΛ.1] using Λ.map_smul x 1
     
   · ext x
-    have H₁ : Λ (f' x) = f' x * Λ 1 := by
-      simpa only [mul_oneₓ, Algebra.id.smul_eq_mul] using Λ.map_smul (f' x) 1
-    have H₂ : f' x * Λ 1 + Λ₀ * φ' x = 0 := by
-      simpa only [Algebra.id.smul_eq_mul, H₁] using hfΛ x
+    have H₁ : Λ (f' x) = f' x * Λ 1 := by simpa only [mul_oneₓ, Algebra.id.smul_eq_mul] using Λ.map_smul (f' x) 1
+    have H₂ : f' x * Λ 1 + Λ₀ * φ' x = 0 := by simpa only [Algebra.id.smul_eq_mul, H₁] using hfΛ x
     simpa [mul_comm] using H₂
     
 
@@ -97,7 +95,7 @@ there exist `Λ : ι → ℝ` and `Λ₀ : ℝ`, `(Λ, Λ₀) ≠ 0`, such that 
 
 See also `is_local_extr_on.linear_dependent_of_has_strict_fderiv_at` for a version that
 states `¬linear_independent ℝ _` instead of existence of `Λ` and `Λ₀`. -/
-theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [Fintype ι] {f : ι → E → ℝ}
+theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [Fintypeₓ ι] {f : ι → E → ℝ}
     {f' : ι → E →L[ℝ] ℝ} (hextr : IsLocalExtrOn φ { x | ∀ i, f i x = f i x₀ } x₀)
     (hf' : ∀ i, HasStrictFderivAt (f i) (f' i) x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
     ∃ (Λ : ι → ℝ)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 := by
@@ -128,7 +126,7 @@ theorem IsLocalExtrOn.linear_dependent_of_has_strict_fderiv_at {ι : Type _} [Fi
     (hf' : ∀ i, HasStrictFderivAt (f i) (f' i) x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
     ¬LinearIndependent ℝ (Option.elimₓ φ' f' : Option ι → E →L[ℝ] ℝ) := by
   cases nonempty_fintype ι
-  rw [Fintype.linear_independent_iff]
+  rw [Fintypeₓ.linear_independent_iff]
   push_neg
   rcases hextr.exists_multipliers_of_has_strict_fderiv_at hf' hφ' with ⟨Λ, Λ₀, hΛ, hΛf⟩
   refine' ⟨Option.elimₓ Λ₀ Λ, _, _⟩

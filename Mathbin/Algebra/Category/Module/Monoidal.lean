@@ -103,15 +103,13 @@ end
 theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : ModuleCat R} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (f₃ : X₃ ⟶ Y₃) :
     tensorHom (tensorHom f₁ f₂) f₃ ≫ (associator Y₁ Y₂ Y₃).Hom =
       (associator X₁ X₂ X₃).Hom ≫ tensorHom f₁ (tensorHom f₂ f₃) :=
-  by
-  convert associator_naturality_aux f₁ f₂ f₃ using 1
+  by convert associator_naturality_aux f₁ f₂ f₃ using 1
 
 theorem pentagon (W X Y Z : ModuleCat R) :
     tensorHom (associator W X Y).Hom (𝟙 Z) ≫
         (associator W (tensorObj X Y) Z).Hom ≫ tensorHom (𝟙 W) (associator X Y Z).Hom =
       (associator (tensorObj W X) Y Z).Hom ≫ (associator W X (tensorObj Y Z)).Hom :=
-  by
-  convert pentagon_aux R W X Y Z using 1
+  by convert pentagon_aux R W X Y Z using 1
 
 /-- (implementation) the left unitor for R-modules -/
 def leftUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
@@ -120,7 +118,7 @@ def leftUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
 theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
     tensorHom (𝟙 (ModuleCat.of R R)) f ≫ (leftUnitor N).Hom = (leftUnitor M).Hom ≫ f := by
   ext x y
-  dsimp'
+  dsimp
   erw [TensorProduct.lid_tmul, TensorProduct.lid_tmul]
   rw [LinearMap.map_smul]
   rfl
@@ -132,7 +130,7 @@ def rightUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
 theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
     tensorHom f (𝟙 (ModuleCat.of R R)) ≫ (rightUnitor N).Hom = (rightUnitor M).Hom ≫ f := by
   ext x y
-  dsimp'
+  dsimp
   erw [TensorProduct.rid_tmul, TensorProduct.rid_tmul]
   rw [LinearMap.map_smul]
   rfl
@@ -144,7 +142,7 @@ theorem triangle (M N : ModuleCat.{u} R) :
   apply TensorProduct.ext_threefold
   intro x y z
   change R at y
-  dsimp' [tensor_hom, associator]
+  dsimp [tensor_hom, associator]
   erw [TensorProduct.lid_tmul, TensorProduct.rid_tmul]
   exact (TensorProduct.smul_tmul _ _ _).symm
 
@@ -171,8 +169,7 @@ instance monoidalCategory : MonoidalCategory (ModuleCat.{u} R) where
 
 /-- Remind ourselves that the monoidal unit, being just `R`, is still a commutative ring. -/
 instance : CommRingₓ ((𝟙_ (ModuleCat.{u} R) : ModuleCat.{u} R) : Type u) :=
-  (by
-    infer_instance : CommRingₓ R)
+  (by infer_instance : CommRingₓ R)
 
 namespace MonoidalCategory
 

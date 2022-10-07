@@ -47,8 +47,7 @@ theorem Union_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C 
 theorem Union_decode₂_disjoint_on {f : β → Set α} (hd : Pairwise (Disjoint on f)) :
     Pairwise (Disjoint on fun i => ⋃ b ∈ decode₂ β i, f b) := by
   rintro i j ij x
-  suffices ∀ a, encode a = i → x ∈ f a → ∀ b, encode b = j → x ∉ f b by
-    simpa [decode₂_eq_some]
+  suffices ∀ a, encode a = i → x ∈ f a → ∀ b, encode b = j → x ∉ f b by simpa [decode₂_eq_some]
   rintro a rfl ha b rfl hb
   exact hd a b (mt (congr_arg encode) ij) ⟨ha, hb⟩
 

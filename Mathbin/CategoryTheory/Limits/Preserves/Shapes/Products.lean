@@ -33,7 +33,7 @@ namespace CategoryTheory.Limits
 
 variable {J : Type w} (f : J → C)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
 /-- The map of a fan is a limit iff the fan consisting of the mapped morphisms is a limit. This
 essentially lets us commute `fan.mk` with `functor.map_cone`.
 -/
@@ -43,8 +43,8 @@ def isLimitMapConeFanMkEquiv {P : C} (g : ∀ j, P ⟶ f j) :
   refine' discrete.nat_iso fun j => iso.refl (G.obj (f j.as))
   refine'
     cones.ext (iso.refl _) fun j => by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
-      dsimp'
+      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
+      dsimp
       simp
 
 /-- The property of preserving products expressed in terms of fans. -/
@@ -95,7 +95,7 @@ instance : IsIso (piComparison G f) := by
 
 end
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
 /-- The map of a cofan is a colimit iff the cofan consisting of the mapped morphisms is a colimit.
 This essentially lets us commute `cofan.mk` with `functor.map_cocone`.
 -/
@@ -106,8 +106,8 @@ def isColimitMapCoconeCofanMkEquiv {P : C} (g : ∀ j, f j ⟶ P) :
   refine' discrete.nat_iso fun j => iso.refl (G.obj (f j.as))
   refine'
     cocones.ext (iso.refl _) fun j => by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
-      dsimp'
+      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
+      dsimp
       simp
 
 /-- The property of preserving coproducts expressed in terms of cofans. -/

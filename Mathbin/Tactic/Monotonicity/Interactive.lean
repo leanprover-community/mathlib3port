@@ -104,7 +104,7 @@ unsafe def unify_with_instance (e : expr) : tactic Unit :=
 
 private unsafe def match_rule_head (p : expr) : List expr → expr → expr → tactic expr
   | vs, e, t =>
-    (unify t p >> mmap' unify_with_instance vs) >> instantiate_mvars e <|> do
+    (unify t p >> mmap' unify_with_instance vs.reverse) >> instantiate_mvars e <|> do
       let expr.pi _ _ d b ← return t | failed
       let v ← mk_meta_var d
       match_rule_head (v :: vs) (expr.app e v) (b v)
@@ -188,12 +188,12 @@ unsafe def parse_assoc_chain (f : expr) : expr → tactic (List expr) :=
   map Dlist.toList ∘ parse_assoc_chain' f
 
 unsafe def fold_assoc (op : expr) : Option (expr × expr × expr) → List expr → Option (expr × List expr)
-  | _, x :: xs => some (foldlₓ (expr.app ∘ expr.app op) x xs, [])
+  | _, x :: xs => some (foldl (expr.app ∘ expr.app op) x xs, [])
   | none, [] => none
   | some (l_id, r_id, x₀), [] => some (x₀, [l_id, r_id])
 
 unsafe def fold_assoc1 (op : expr) : List expr → Option expr
-  | x :: xs => some <| foldlₓ (expr.app ∘ expr.app op) x xs
+  | x :: xs => some <| foldl (expr.app ∘ expr.app op) x xs
   | [] => none
 
 unsafe def same_function_aux : List expr → List expr → expr → expr → tactic (expr × List expr × List expr)
@@ -332,7 +332,7 @@ unsafe def match_rule (pat : expr) (r : Name) : tactic expr := do
   let t ← infer_type r'
   let t ←
     expr.dsimp t { failIfUnchanged := false } true []
-        [simp_arg_type.expr (pquote.1 Monotone), simp_arg_type.expr (pquote.1 StrictMono)]
+        [simp_arg_type.expr (pquote.1 Monotoneₓ), simp_arg_type.expr (pquote.1 StrictMonoₓ)]
   match_rule_head pat [] r' t
 
 unsafe def find_lemma (pat : expr) : List Name → tactic (List expr)

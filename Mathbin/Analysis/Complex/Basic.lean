@@ -44,22 +44,21 @@ theorem norm_eq_abs (z : ℂ) : ∥z∥ = abs z :=
   rfl
 
 instance : NormedAddCommGroup ℂ :=
-  NormedAddCommGroup.ofCore ℂ { norm_eq_zero_iff := fun z => abs_eq_zero, triangle := abs_add, norm_neg := abs_neg }
+  AddGroupNorm.toNormedAddCommGroup
+    { abs with map_zero' := map_zero abs, neg' := abs.map_neg, eq_zero_of_map_eq_zero' := fun _ => abs.eq_zero.1 }
 
 instance : NormedField ℂ :=
-  { Complex.field, Complex.normedAddCommGroup with norm := abs, dist_eq := fun _ _ => rfl, norm_mul' := abs_mul }
+  { Complex.field, Complex.normedAddCommGroup with norm := abs, dist_eq := fun _ _ => rfl, norm_mul' := map_mul abs }
 
 instance :
     DenselyNormedField ℂ where lt_norm_lt := fun r₁ r₂ h₀ hr =>
     let ⟨x, h⟩ := NormedField.exists_lt_norm_lt ℝ h₀ hr
-    have this : ∥(∥x∥ : ℂ)∥ = ∥∥x∥∥ := by
-      simp only [norm_eq_abs, abs_of_real, Real.norm_eq_abs]
-    ⟨∥x∥, by
-      rwa [this, norm_norm]⟩
+    have this : ∥(∥x∥ : ℂ)∥ = ∥∥x∥∥ := by simp only [norm_eq_abs, abs_of_real, Real.norm_eq_abs]
+    ⟨∥x∥, by rwa [this, norm_norm]⟩
 
 instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R ℂ where
   norm_smul_le := fun r x => by
-    rw [norm_eq_abs, norm_eq_abs, ← algebra_map_smul ℝ r x, Algebra.smul_def, abs_mul, ← norm_algebra_map' ℝ r,
+    rw [norm_eq_abs, norm_eq_abs, ← algebra_map_smul ℝ r x, Algebra.smul_def, map_mul, ← norm_algebra_map' ℝ r,
       coe_algebra_map, abs_of_real]
     rfl
   toAlgebra := Complex.algebra
@@ -105,20 +104,16 @@ theorem dist_conj_self (z : ℂ) : dist (conj z) z = 2 * abs z.im := by
     abs_of_pos (@two_pos ℝ _ _)]
 
 theorem nndist_conj_self (z : ℂ) : nndist (conj z) z = 2 * Real.nnabs z.im :=
-  Nnreal.eq <| by
-    rw [← dist_nndist, Nnreal.coe_mul, Nnreal.coe_two, Real.coe_nnabs, dist_conj_self]
+  Nnreal.eq <| by rw [← dist_nndist, Nnreal.coe_mul, Nnreal.coe_two, Real.coe_nnabs, dist_conj_self]
 
-theorem dist_self_conj (z : ℂ) : dist z (conj z) = 2 * abs z.im := by
-  rw [dist_comm, dist_conj_self]
+theorem dist_self_conj (z : ℂ) : dist z (conj z) = 2 * abs z.im := by rw [dist_comm, dist_conj_self]
 
-theorem nndist_self_conj (z : ℂ) : nndist z (conj z) = 2 * Real.nnabs z.im := by
-  rw [nndist_comm, nndist_conj_self]
+theorem nndist_self_conj (z : ℂ) : nndist z (conj z) = 2 * Real.nnabs z.im := by rw [nndist_comm, nndist_conj_self]
 
 @[simp]
 theorem comap_abs_nhds_zero : Filter.comap abs (𝓝 0) = 𝓝 0 :=
   comap_norm_nhds_zero
 
-@[simp]
 theorem norm_real (r : ℝ) : ∥(r : ℂ)∥ = ∥r∥ :=
   abs_of_real _
 
@@ -132,19 +127,16 @@ theorem norm_nat (n : ℕ) : ∥(n : ℂ)∥ = n :=
   abs_of_nat _
 
 @[simp]
-theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = abs n := by
-  simp (config := { singlePass := true })[← Ratₓ.cast_coe_int]
+theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = abs n := by simp (config := { singlePass := true }) [← Ratₓ.cast_coe_int]
 
-theorem norm_int_of_nonneg {n : ℤ} (hn : 0 ≤ n) : ∥(n : ℂ)∥ = n := by
-  simp [hn]
+theorem norm_int_of_nonneg {n : ℤ} (hn : 0 ≤ n) : ∥(n : ℂ)∥ = n := by simp [hn]
 
 @[continuity]
 theorem continuous_abs : Continuous abs :=
   continuous_norm
 
 @[continuity]
-theorem continuous_norm_sq : Continuous normSq := by
-  simpa [← norm_sq_eq_abs] using continuous_abs.pow 2
+theorem continuous_norm_sq : Continuous normSq := by simpa [← norm_sq_eq_abs] using continuous_abs.pow 2
 
 @[simp, norm_cast]
 theorem nnnorm_real (r : ℝ) : ∥(r : ℂ)∥₊ = ∥r∥₊ :=
@@ -152,13 +144,11 @@ theorem nnnorm_real (r : ℝ) : ∥(r : ℂ)∥₊ = ∥r∥₊ :=
 
 @[simp, norm_cast]
 theorem nnnorm_nat (n : ℕ) : ∥(n : ℂ)∥₊ = n :=
-  Subtype.ext <| by
-    simp
+  Subtype.ext <| by simp
 
 @[simp, norm_cast]
 theorem nnnorm_int (n : ℤ) : ∥(n : ℂ)∥₊ = ∥n∥₊ :=
-  Subtype.ext <| by
-    simp only [coe_nnnorm, norm_int, Int.norm_eq_abs]
+  Subtype.ext <| by simp only [coe_nnnorm, norm_int, Int.norm_eq_abs]
 
 theorem nnnorm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n ≠ 0) : ∥ζ∥₊ = 1 := by
   refine' (@pow_left_inj Nnreal _ _ _ _ zero_le' zero_le' hn.bot_lt).mp _
@@ -179,8 +169,7 @@ open ContinuousLinearMap
 
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def reClm : ℂ →L[ℝ] ℝ :=
-  reLm.mkContinuous 1 fun x => by
-    simp [abs_re_le_abs]
+  reLm.mkContinuous 1 fun x => by simp [abs_re_le_abs]
 
 @[continuity]
 theorem continuous_re : Continuous re :=
@@ -198,12 +187,8 @@ theorem re_clm_apply (z : ℂ) : (reClm : ℂ → ℝ) z = z.re :=
 theorem re_clm_norm : ∥re_clm∥ = 1 :=
   le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
     calc
-      1 = ∥reClm 1∥ := by
-        simp
-      _ ≤ ∥re_clm∥ :=
-        unit_le_op_norm _ _
-          (by
-            simp )
+      1 = ∥reClm 1∥ := by simp
+      _ ≤ ∥re_clm∥ := unit_le_op_norm _ _ (by simp)
       
 
 @[simp]
@@ -212,8 +197,7 @@ theorem re_clm_nnnorm : ∥re_clm∥₊ = 1 :=
 
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def imClm : ℂ →L[ℝ] ℝ :=
-  imLm.mkContinuous 1 fun x => by
-    simp [abs_im_le_abs]
+  imLm.mkContinuous 1 fun x => by simp [abs_im_le_abs]
 
 @[continuity]
 theorem continuous_im : Continuous im :=
@@ -231,12 +215,8 @@ theorem im_clm_apply (z : ℂ) : (imClm : ℂ → ℝ) z = z.im :=
 theorem im_clm_norm : ∥im_clm∥ = 1 :=
   le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
     calc
-      1 = ∥imClm i∥ := by
-        simp
-      _ ≤ ∥im_clm∥ :=
-        unit_le_op_norm _ _
-          (by
-            simp )
+      1 = ∥imClm i∥ := by simp
+      _ ≤ ∥im_clm∥ := unit_le_op_norm _ _ (by simp)
       
 
 @[simp]
@@ -253,7 +233,7 @@ theorem restrict_scalars_one_smul_right' (x : E) :
 theorem restrict_scalars_one_smul_right (x : ℂ) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] ℂ) = x • 1 := by
   ext1 z
-  dsimp'
+  dsimp
   apply mul_comm
 
 /-- The complex-conjugation function from `ℂ` to itself is an isometric linear equivalence. -/
@@ -279,8 +259,7 @@ theorem dist_conj_conj (z w : ℂ) : dist (conj z) (conj w) = dist z w :=
 theorem nndist_conj_conj (z w : ℂ) : nndist (conj z) (conj w) = nndist z w :=
   isometry_conj.nndist_eq z w
 
-theorem dist_conj_comm (z w : ℂ) : dist (conj z) w = dist z (conj w) := by
-  rw [← dist_conj_conj, conj_conj]
+theorem dist_conj_comm (z w : ℂ) : dist (conj z) w = dist z (conj w) := by rw [← dist_conj_conj, conj_conj]
 
 theorem nndist_conj_comm (z w : ℂ) : nndist (conj z) w = nndist z (conj w) :=
   Subtype.ext <| dist_conj_comm _ _
@@ -306,20 +285,14 @@ theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=
 conjugation. -/
 theorem ring_hom_eq_id_or_conj_of_continuous {f : ℂ →+* ℂ} (hf : Continuous f) : f = RingHom.id ℂ ∨ f = conj := by
   refine' (real_alg_hom_eq_id_or_conj <| (AlgHom.mk' f) fun x z => congr_fun _ x).imp (fun h => _) fun h => _
-  · refine'
-      rat.dense_embedding_coe_real.dense.equalizer
-        (by
-          continuity)
-        (by
-          continuity)
-        _
+  · refine' rat.dense_embedding_coe_real.dense.equalizer (by continuity) (by continuity) _
     ext1
     simp only [real_smul, Function.comp_app, map_rat_cast, of_real_rat_cast, map_mul]
     
   all_goals
-    convert congr_arg AlgHom.toRingHom h
-    ext1
-    rfl
+  convert congr_arg AlgHom.toRingHom h
+  ext1
+  rfl
 
 /-- Continuous linear equiv version of the conj function, from `ℂ` to `ℂ`. -/
 def conjCle : ℂ ≃L[ℝ] ℂ :=
@@ -376,28 +349,22 @@ noncomputable instance : IsROrC ℂ where
   re := ⟨Complex.re, Complex.zero_re, Complex.add_re⟩
   im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩
   i := Complex.i
-  I_re_ax := by
-    simp only [AddMonoidHom.coe_mk, Complex.I_re]
-  I_mul_I_ax := by
-    simp only [Complex.I_mul_I, eq_self_iff_true, or_trueₓ]
+  I_re_ax := by simp only [AddMonoidHom.coe_mk, Complex.I_re]
+  I_mul_I_ax := by simp only [Complex.I_mul_I, eq_self_iff_true, or_trueₓ]
   re_add_im_ax := fun z => by
     simp only [AddMonoidHom.coe_mk, Complex.re_add_im, Complex.coe_algebra_map, Complex.of_real_eq_coe]
   of_real_re_ax := fun r => by
     simp only [AddMonoidHom.coe_mk, Complex.of_real_re, Complex.coe_algebra_map, Complex.of_real_eq_coe]
   of_real_im_ax := fun r => by
     simp only [AddMonoidHom.coe_mk, Complex.of_real_im, Complex.coe_algebra_map, Complex.of_real_eq_coe]
-  mul_re_ax := fun z w => by
-    simp only [Complex.mul_re, AddMonoidHom.coe_mk]
-  mul_im_ax := fun z w => by
-    simp only [AddMonoidHom.coe_mk, Complex.mul_im]
+  mul_re_ax := fun z w => by simp only [Complex.mul_re, AddMonoidHom.coe_mk]
+  mul_im_ax := fun z w => by simp only [AddMonoidHom.coe_mk, Complex.mul_im]
   conj_re_ax := fun z => rfl
   conj_im_ax := fun z => rfl
-  conj_I_ax := by
-    simp only [Complex.conj_I, RingHom.coe_mk]
+  conj_I_ax := by simp only [Complex.conj_I, RingHom.coe_mk]
   norm_sq_eq_def_ax := fun z => by
     simp only [← Complex.norm_sq_eq_abs, ← Complex.norm_sq_apply, AddMonoidHom.coe_mk, Complex.norm_eq_abs]
-  mul_im_I_ax := fun z => by
-    simp only [mul_oneₓ, AddMonoidHom.coe_mk, Complex.I_im]
+  mul_im_I_ax := fun z => by simp only [mul_oneₓ, AddMonoidHom.coe_mk, Complex.I_im]
   inv_def_ax := fun z => by
     simp only [Complex.inv_def, Complex.norm_sq_eq_abs, Complex.coe_algebra_map, Complex.of_real_eq_coe,
       Complex.norm_eq_abs]
@@ -416,16 +383,12 @@ variable {α β γ : Type _} [AddCommMonoidₓ α] [TopologicalSpace α] [AddCom
 /-- The natural `add_equiv` from `ℂ` to `ℝ × ℝ`. -/
 @[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
 def equivRealProdAddHom : ℂ ≃+ ℝ × ℝ :=
-  { equivRealProd with
-    map_add' := by
-      simp }
+  { equivRealProd with map_add' := by simp }
 
 /-- The natural `linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
 @[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
 def equivRealProdAddHomLm : ℂ ≃ₗ[ℝ] ℝ × ℝ :=
-  { equivRealProdAddHom with
-    map_smul' := by
-      simp [equiv_real_prod_add_hom] }
+  { equivRealProdAddHom with map_smul' := by simp [equiv_real_prod_add_hom] }
 
 /-- The natural `continuous_linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
 @[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
@@ -479,12 +442,10 @@ theorem I_to_complex : IC = Complex.i :=
   rfl
 
 @[simp]
-theorem norm_sq_to_complex {x : ℂ} : norm_sqC x = Complex.normSq x := by
-  simp [IsROrC.normSq, Complex.normSq]
+theorem norm_sq_to_complex {x : ℂ} : norm_sqC x = Complex.normSq x := by simp [IsROrC.normSq, Complex.normSq]
 
 @[simp]
-theorem abs_to_complex {x : ℂ} : absC x = Complex.abs x := by
-  simp [IsROrC.abs, Complex.abs]
+theorem abs_to_complex {x : ℂ} : absC x = Complex.abs x := by simp [IsROrC.abs, Complex.abs]
 
 end IsROrC
 

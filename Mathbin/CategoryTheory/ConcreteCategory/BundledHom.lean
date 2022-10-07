@@ -29,17 +29,12 @@ structure BundledHom where
   toFun : ∀ {α β : Type u} (Iα : c α) (Iβ : c β), hom Iα Iβ → α → β
   id : ∀ {α : Type u} (I : c α), hom I I
   comp : ∀ {α β γ : Type u} (Iα : c α) (Iβ : c β) (Iγ : c γ), hom Iβ Iγ → hom Iα Iβ → hom Iα Iγ
-  hom_ext : ∀ {α β : Type u} (Iα : c α) (Iβ : c β), Function.Injective (to_fun Iα Iβ) := by
-    run_tac
-      obviously
-  id_to_fun : ∀ {α : Type u} (I : c α), to_fun I I (id I) = _root_.id := by
-    run_tac
-      obviously
+  hom_ext : ∀ {α β : Type u} (Iα : c α) (Iβ : c β), Function.Injective (to_fun Iα Iβ) := by obviously
+  id_to_fun : ∀ {α : Type u} (I : c α), to_fun I I (id I) = _root_.id := by obviously
   comp_to_fun :
     ∀ {α β γ : Type u} (Iα : c α) (Iβ : c β) (Iγ : c γ) (f : hom Iα Iβ) (g : hom Iβ Iγ),
       to_fun Iα Iγ (comp Iα Iβ Iγ g f) = to_fun Iβ Iγ g ∘ to_fun Iα Iβ f := by
-    run_tac
-      obviously
+    obviously
 
 attribute [class] bundled_hom
 
@@ -71,11 +66,8 @@ This instance generates the type-class problem `bundled_hom ?m` (which is why th
 instance concreteCategory : ConcreteCategory.{u} (Bundled c) where
   forget :=
     { obj := fun X => X, map := fun X Y f => 𝒞.toFun X.str Y.str f, map_id' := fun X => 𝒞.id_to_fun X.str,
-      map_comp' := by
-        intros <;> erw [𝒞.comp_to_fun] <;> rfl }
-  forget_faithful :=
-    { map_injective' := by
-        intros <;> apply 𝒞.hom_ext }
+      map_comp' := by intros <;> erw [𝒞.comp_to_fun] <;> rfl }
+  forget_faithful := { map_injective' := by intros <;> apply 𝒞.hom_ext }
 
 variable {hom}
 
@@ -85,9 +77,7 @@ attribute [local instance] concrete_category.has_coe_to_fun
 def mkHasForget₂ {d : Type u → Type u} {hom_d : ∀ ⦃α β : Type u⦄ (Iα : d α) (Iβ : d β), Type u} [BundledHom hom_d]
     (obj : ∀ ⦃α⦄, c α → d α) (map : ∀ {X Y : Bundled c}, (X ⟶ Y) → (Bundled.map obj X ⟶ Bundled.map obj Y))
     (h_map : ∀ {X Y : Bundled c} (f : X ⟶ Y), (map f : X → Y) = f) : HasForget₂ (Bundled c) (Bundled d) :=
-  HasForget₂.mk' (Bundled.map @obj) (fun _ => rfl) (@map)
-    (by
-      intros <;> apply heq_of_eq <;> apply h_map)
+  HasForget₂.mk' (Bundled.map @obj) (fun _ => rfl) (@map) (by intros <;> apply heq_of_eq <;> apply h_map)
 
 variable {d : Type u → Type u}
 

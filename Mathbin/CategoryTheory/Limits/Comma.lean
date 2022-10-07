@@ -61,8 +61,7 @@ def coneOfPreserves [PreservesLimit (F ⋙ snd L R) R] (c₁ : Cone (F ⋙ fst L
     { app := fun j =>
         { left := c₁.π.app j, right := c₂.π.app j,
           w' := ((isLimitOfPreserves R t₂).fac (limitAuxiliaryCone F c₁) j).symm },
-      naturality' := fun j₁ j₂ t => by
-        ext <;> dsimp' <;> simp [← c₁.w t, ← c₂.w t] }
+      naturality' := fun j₁ j₂ t => by ext <;> dsimp <;> simp [← c₁.w t, ← c₂.w t] }
 
 /-- Provided that `R` preserves the appropriate limit, then the cone in `cone_of_preserves` is a
 limit. -/
@@ -76,11 +75,8 @@ def coneOfPreservesIsLimit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (F �
             L.map_comp_assoc, t₁.fac, R.map_cone_π_app, ← R.map_comp, t₂.fac]
           exact (s.π.app j).w }
   uniq' := fun s m w =>
-    CommaMorphism.ext _ _
-      (t₁.uniq ((fst L R).mapCone s) _ fun j => by
-        simp [← w])
-      (t₂.uniq ((snd L R).mapCone s) _ fun j => by
-        simp [← w])
+    CommaMorphism.ext _ _ (t₁.uniq ((fst L R).mapCone s) _ fun j => by simp [← w])
+      (t₂.uniq ((snd L R).mapCone s) _ fun j => by simp [← w])
 
 /-- (Implementation). An auxiliary cocone which is useful in order to construct colimits
 in the comma category. -/
@@ -100,8 +96,7 @@ def coconeOfPreserves [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙
     { app := fun j =>
         { left := c₁.ι.app j, right := c₂.ι.app j,
           w' := (isColimitOfPreserves L t₁).fac (colimitAuxiliaryCocone _ c₂) j },
-      naturality' := fun j₁ j₂ t => by
-        ext <;> dsimp' <;> simp [← c₁.w t, ← c₂.w t] }
+      naturality' := fun j₁ j₂ t => by ext <;> dsimp <;> simp [← c₁.w t, ← c₂.w t] }
 
 /-- Provided that `L` preserves the appropriate colimit, then the cocone in `cocone_of_preserves` is
 a colimit. -/
@@ -115,13 +110,8 @@ def coconeOfPreservesIsColimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Coco
             assoc, ← R.map_comp, t₂.fac, L.map_cocone_ι_app, ← L.map_comp_assoc, t₁.fac]
           exact (s.ι.app j).w }
   uniq' := fun s m w =>
-    CommaMorphism.ext _ _
-      (t₁.uniq ((fst L R).mapCocone s) _
-        (by
-          simp [← w]))
-      (t₂.uniq ((snd L R).mapCocone s) _
-        (by
-          simp [← w]))
+    CommaMorphism.ext _ _ (t₁.uniq ((fst L R).mapCocone s) _ (by simp [← w]))
+      (t₂.uniq ((snd L R).mapCocone s) _ (by simp [← w]))
 
 instance has_limit (F : J ⥤ Comma L R) [HasLimit (F ⋙ fst L R)] [HasLimit (F ⋙ snd L R)]
     [PreservesLimit (F ⋙ snd L R) R] : HasLimit F :=

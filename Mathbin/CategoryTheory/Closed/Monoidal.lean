@@ -65,12 +65,9 @@ def unitClosed :
         Adjunction.mkOfHomEquiv
           { homEquiv := fun X _ =>
               { toFun := fun a => (leftUnitor X).inv ≫ a, invFun := fun a => (leftUnitor X).Hom ≫ a,
-                left_inv := by
-                  tidy,
-                right_inv := by
-                  tidy },
+                left_inv := by tidy, right_inv := by tidy },
             hom_equiv_naturality_left_symm' := fun X' X Y f g => by
-              dsimp'
+              dsimp
               rw [left_unitor_naturality_assoc] } }
 
 variable (A B : C) {X X' Y Y' Z : C}
@@ -215,8 +212,7 @@ theorem uncurry_injective : Function.Injective (uncurry : (Y ⟶ A ⟶[C] X) →
 
 variable (A X)
 
-theorem uncurry_id_eq_ev : uncurry (𝟙 (A ⟶[C] X)) = (ihom.ev A).app X := by
-  rw [uncurry_eq, tensor_id, id_comp]
+theorem uncurry_id_eq_ev : uncurry (𝟙 (A ⟶[C] X)) = (ihom.ev A).app X := by rw [uncurry_eq, tensor_id, id_comp]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem curry_id_eq_coev : curry (𝟙 _) = (ihom.coev A).app X := by
@@ -250,13 +246,12 @@ theorem coev_app_comp_pre_app (f : B ⟶ A) :
 @[simp]
 theorem pre_id (A : C) [Closed A] : pre (𝟙 A) = 𝟙 _ := by
   simp only [pre, Functor.map_id]
-  dsimp'
+  dsimp
   simp
 
 @[simp]
 theorem pre_map {A₁ A₂ A₃ : C} [Closed A₁] [Closed A₂] [Closed A₃] (f : A₁ ⟶ A₂) (g : A₂ ⟶ A₃) :
-    pre (f ≫ g) = pre g ≫ pre f := by
-  rw [pre, pre, pre, transfer_nat_trans_self_comp, (tensoring_left C).map_comp]
+    pre (f ≫ g) = pre g ≫ pre f := by rw [pre, pre, pre, transfer_nat_trans_self_comp, (tensoring_left C).map_comp]
 
 end Pre
 

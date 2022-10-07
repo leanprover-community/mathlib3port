@@ -145,49 +145,41 @@ theorem Admissible.one_lt_sum_inv {pqr : Multiset ℕ+} : Admissible pqr → 1 <
     norm_num
     
   all_goals
-    rw [← H, E', sum_inv_pqr]
-    norm_num
+  rw [← H, E', sum_inv_pqr]
+  norm_num
 
 theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv {p, q, r}) : p < 3 := by
-  have h3 : (0 : ℚ) < 3 := by
-    norm_num
+  have h3 : (0 : ℚ) < 3 := by norm_num
   contrapose! H
   rw [sum_inv_pqr]
   have h3q := H.trans hpq
   have h3r := h3q.trans hqr
   calc
     (p⁻¹ + q⁻¹ + r⁻¹ : ℚ) ≤ 3⁻¹ + 3⁻¹ + 3⁻¹ := add_le_add (add_le_add _ _) _
-    _ = 1 := by
-      norm_num
+    _ = 1 := by norm_num
     
-  all_goals
-    rw [inv_le_inv _ h3] <;> [assumption_mod_cast, norm_num]
+  all_goals rw [inv_le_inv _ h3] <;> [assumption_mod_cast, norm_num]
 
 theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 := by
-  have h4 : (0 : ℚ) < 4 := by
-    norm_num
+  have h4 : (0 : ℚ) < 4 := by norm_num
   contrapose! H
   rw [sum_inv_pqr]
   have h4r := H.trans hqr
   simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_oneₓ, coe_coe]
   calc
     (2⁻¹ + q⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 4⁻¹ + 4⁻¹ := add_le_add (add_le_add le_rflₓ _) _
-    _ = 1 := by
-      norm_num
+    _ = 1 := by norm_num
     
-  all_goals
-    rw [inv_le_inv _ h4] <;> [assumption_mod_cast, norm_num]
+  all_goals rw [inv_le_inv _ h4] <;> [assumption_mod_cast, norm_num]
 
 theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 := by
-  have h6 : (0 : ℚ) < 6 := by
-    norm_num
+  have h6 : (0 : ℚ) < 6 := by norm_num
   contrapose! H
   rw [sum_inv_pqr]
   simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_bit1, Nat.cast_oneₓ, Pnat.coe_bit1, coe_coe]
   calc
     (2⁻¹ + 3⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 3⁻¹ + 6⁻¹ := add_le_add (add_le_add le_rflₓ le_rflₓ) _
-    _ = 1 := by
-      norm_num
+    _ = 1 := by norm_num
     
   rw [inv_le_inv _ h6] <;> [assumption_mod_cast, norm_num]
 

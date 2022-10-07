@@ -72,7 +72,8 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
   | symm : ∀ (x y) (h : relation x y), relation y x
   | trans : ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
 
-  | map :
+  |
+  map :
     ∀ (j j' : J) (f : j ⟶ j') (x : F.obj j),
       relation (of j' ((F.map f) x)) (of j x)-- Then one relation per operation, describing the interaction with `of`
 
@@ -115,7 +116,7 @@ instance monoidColimitType : Monoidₓ (ColimitType F) where
     · intro x x' r
       funext y
       induction y
-      dsimp'
+      dsimp
       apply Quot.sound
       · exact relation.mul_1 _ _ _ r
         
@@ -127,7 +128,7 @@ instance monoidColimitType : Monoidₓ (ColimitType F) where
     induction x
     induction y
     induction z
-    dsimp'
+    dsimp
     apply Quot.sound
     apply relation.mul_assoc
     rfl
@@ -135,13 +136,13 @@ instance monoidColimitType : Monoidₓ (ColimitType F) where
     rfl
   one_mul := fun x => by
     induction x
-    dsimp'
+    dsimp
     apply Quot.sound
     apply relation.one_mul
     rfl
   mul_one := fun x => by
     induction x
-    dsimp'
+    dsimp
     apply Quot.sound
     apply relation.mul_one
     rfl
@@ -156,8 +157,7 @@ theorem quot_mul (x y) : Quot.mk Setoidₓ.R (mul x y) = (Quot.mk Setoidₓ.R x 
 
 /-- The bundled monoid giving the colimit of a diagram. -/
 def colimit : Mon :=
-  ⟨ColimitType F, by
-    infer_instance⟩
+  ⟨ColimitType F, by infer_instance⟩
 
 /-- The function from a given monoid in the diagram to the colimit monoid. -/
 def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
@@ -199,9 +199,7 @@ def descFun (s : Cocone F) : ColimitType F → s.x := by
   · exact desc_fun_lift F s
     
   · intro x y r
-    induction r <;>
-      try
-        dsimp'
+    induction r <;> try dsimp
     -- refl
     · rfl
       
@@ -241,8 +239,7 @@ def descFun (s : Cocone F) : ColimitType F → s.x := by
 def descMorphism (s : Cocone F) : colimit F ⟶ s.x where
   toFun := descFun F s
   map_one' := rfl
-  map_mul' := fun x y => by
-    induction x <;> induction y <;> rfl
+  map_mul' := fun x y => by induction x <;> induction y <;> rfl
 
 /-- Evidence that the proposed colimit is the colimit. -/
 def colimitIsColimit : IsColimit (colimitCocone F) where

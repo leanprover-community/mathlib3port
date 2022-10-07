@@ -93,8 +93,7 @@ theorem minpoly_coeff_zero_of_injective (hf : Function.Injective f) : (minpoly R
     rw [h, mul_zero] at hP
     exact minpoly.ne_zero (IsIntegral f) hP
   have hPmonic : P.monic := by
-    suffices (minpoly R f).Monic by
-      rwa [monic.def, hP, mul_comm, leading_coeff_mul_X, ← monic.def] at this
+    suffices (minpoly R f).Monic by rwa [monic.def, hP, mul_comm, leading_coeff_mul_X, ← monic.def] at this
     exact minpoly.monic (IsIntegral f)
   have hzero : aeval f (minpoly R f) = 0 := minpoly.aeval _ _
   simp only [hP, mul_eq_comp, ext_iff, hf, aeval_X, map_eq_zero_iff, coe_comp, AlgHom.map_mul, zero_apply] at hzero

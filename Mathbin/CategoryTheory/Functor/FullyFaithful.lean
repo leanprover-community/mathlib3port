@@ -42,23 +42,19 @@ See <https://stacks.math.columbia.edu/tag/001C>.
 -/
 class Full (F : C ⥤ D) where
   preimage : ∀ {X Y : C} (f : F.obj X ⟶ F.obj Y), X ⟶ Y
-  witness' : ∀ {X Y : C} (f : F.obj X ⟶ F.obj Y), F.map (preimage f) = f := by
-    run_tac
-      obviously
+  witness' : ∀ {X Y : C} (f : F.obj X ⟶ F.obj Y), F.map (preimage f) = f := by obviously
 
 restate_axiom full.witness'
 
 attribute [simp] full.witness
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`map_injective'] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`map_injective'] []
 /-- A functor `F : C ⥤ D` is faithful if for each `X Y : C`, `F.map` is injective.
 
 See <https://stacks.math.columbia.edu/tag/001C>.
 -/
 class Faithful (F : C ⥤ D) : Prop where
-  map_injective' : ∀ {X Y : C}, Function.Injective (@Functor.map _ _ _ _ F X Y) := by
-    run_tac
-      obviously
+  map_injective' : ∀ {X Y : C}, Function.Injective (@Functor.map _ _ _ _ F X Y) := by obviously
 
 restate_axiom faithful.map_injective'
 
@@ -103,22 +99,16 @@ variable {F : C ⥤ D} [Full F] [Faithful F] {X Y Z : C}
 
 @[simp]
 theorem preimage_id : F.preimage (𝟙 (F.obj X)) = 𝟙 X :=
-  F.map_injective
-    (by
-      simp )
+  F.map_injective (by simp)
 
 @[simp]
 theorem preimage_comp (f : F.obj X ⟶ F.obj Y) (g : F.obj Y ⟶ F.obj Z) :
     F.preimage (f ≫ g) = F.preimage f ≫ F.preimage g :=
-  F.map_injective
-    (by
-      simp )
+  F.map_injective (by simp)
 
 @[simp]
 theorem preimage_map (f : X ⟶ Y) : F.preimage (F.map f) = f :=
-  F.map_injective
-    (by
-      simp )
+  F.map_injective (by simp)
 
 variable (F)
 
@@ -129,14 +119,8 @@ namespace Functor
 def preimageIso (f : F.obj X ≅ F.obj Y) : X ≅ Y where
   Hom := F.preimage f.Hom
   inv := F.preimage f.inv
-  hom_inv_id' :=
-    F.map_injective
-      (by
-        simp )
-  inv_hom_id' :=
-    F.map_injective
-      (by
-        simp )
+  hom_inv_id' := F.map_injective (by simp)
+  inv_hom_id' := F.map_injective (by simp)
 
 @[simp]
 theorem preimage_iso_map_iso (f : X ≅ Y) : F.preimageIso (F.mapIso f) = f := by
@@ -149,31 +133,22 @@ end Functor
 then the original morphisms is also an isomorphism.
 -/
 theorem is_iso_of_fully_faithful (f : X ⟶ Y) [IsIso (F.map f)] : IsIso f :=
-  ⟨⟨F.preimage (inv (F.map f)),
-      ⟨F.map_injective
-          (by
-            simp ),
-        F.map_injective
-          (by
-            simp )⟩⟩⟩
+  ⟨⟨F.preimage (inv (F.map f)), ⟨F.map_injective (by simp), F.map_injective (by simp)⟩⟩⟩
 
 /-- If `F` is fully faithful, we have an equivalence of hom-sets `X ⟶ Y` and `F X ⟶ F Y`. -/
 @[simps]
 def equivOfFullyFaithful {X Y} : (X ⟶ Y) ≃ (F.obj X ⟶ F.obj Y) where
   toFun := fun f => F.map f
   invFun := fun f => F.preimage f
-  left_inv := fun f => by
-    simp
-  right_inv := fun f => by
-    simp
+  left_inv := fun f => by simp
+  right_inv := fun f => by simp
 
 /-- If `F` is fully faithful, we have an equivalence of iso-sets `X ≅ Y` and `F X ≅ F Y`. -/
 @[simps]
 def isoEquivOfFullyFaithful {X Y} : (X ≅ Y) ≃ (F.obj X ≅ F.obj Y) where
   toFun := fun f => F.mapIso f
   invFun := fun f => F.preimageIso f
-  left_inv := fun f => by
-    simp
+  left_inv := fun f => by simp
   right_inv := fun f => by
     ext
     simp
@@ -190,7 +165,7 @@ natural transformation between those functors composed with a fully faithful fun
 def natTransOfCompFullyFaithful (α : F ⋙ H ⟶ G ⋙ H) : F ⟶ G where
   app := fun X => (equivOfFullyFaithful H).symm (α.app X)
   naturality' := fun X Y f => by
-    dsimp'
+    dsimp
     apply H.map_injective
     simpa using α.naturality f
 
@@ -199,7 +174,7 @@ between those functors composed with a fully faithful functor. -/
 @[simps]
 def natIsoOfCompFullyFaithful (i : F ⋙ H ≅ G ⋙ H) : F ≅ G :=
   NatIso.ofComponents (fun X => (isoEquivOfFullyFaithful H).symm (i.app X)) fun X Y f => by
-    dsimp'
+    dsimp
     apply H.map_injective
     simpa using i.hom.naturality f
 
@@ -212,7 +187,7 @@ theorem nat_iso_of_comp_fully_faithful_inv (i : F ⋙ H ≅ G ⋙ H) :
     (natIsoOfCompFullyFaithful H i).inv = natTransOfCompFullyFaithful H i.inv := by
   ext
   simp [← preimage_comp]
-  dsimp'
+  dsimp
   simp
 
 end
@@ -246,14 +221,11 @@ variable {F F'}
 /-- If `F` is full, and naturally isomorphic to some `F'`, then `F'` is also full. -/
 def Full.ofIso [Full F] (α : F ≅ F') : Full F' where
   preimage := fun X Y f => F.preimage ((α.app X).Hom ≫ f ≫ (α.app Y).inv)
-  witness' := fun X Y f => by
-    simp [← nat_iso.naturality_1 α]
+  witness' := fun X Y f => by simp [← nat_iso.naturality_1 α]
 
 theorem Faithful.of_iso [Faithful F] (α : F ≅ F') : Faithful F' :=
   { map_injective' := fun X Y f f' h =>
-      F.map_injective
-        (by
-          rw [← nat_iso.naturality_1 α.symm, h, nat_iso.naturality_1 α.symm]) }
+      F.map_injective (by rw [← nat_iso.naturality_1 α.symm, h, nat_iso.naturality_1 α.symm]) }
 
 end
 
@@ -291,10 +263,7 @@ protected def Faithful.div (F : C ⥤ E) (G : D ⥤ E) [Faithful G] (obj : C →
       trans F.map (f ≫ g)
       exact h_map
       rw [F.map_comp, G.map_comp]
-      congr 1 <;>
-        try
-            exact (h_obj _).symm <;>
-          exact h_map.symm }
+      congr 1 <;> try exact (h_obj _).symm <;> exact h_map.symm }
 
 -- This follows immediately from `functor.hext` (`functor.hext h_obj @h_map`),
 -- but importing `category_theory.eq_to_hom` causes an import loop:
@@ -334,9 +303,7 @@ can 'cancel' it to give a natural iso between `F` and `G`.
 -/
 def fullyFaithfulCancelRight {F G : C ⥤ D} (H : D ⥤ E) [Full H] [Faithful H] (comp_iso : F ⋙ H ≅ G ⋙ H) : F ≅ G :=
   NatIso.ofComponents (fun X => H.preimageIso (comp_iso.app X)) fun X Y f =>
-    H.map_injective
-      (by
-        simpa using comp_iso.hom.naturality f)
+    H.map_injective (by simpa using comp_iso.hom.naturality f)
 
 @[simp]
 theorem fully_faithful_cancel_right_hom_app {F G : C ⥤ D} {H : D ⥤ E} [Full H] [Faithful H] (comp_iso : F ⋙ H ≅ G ⋙ H)

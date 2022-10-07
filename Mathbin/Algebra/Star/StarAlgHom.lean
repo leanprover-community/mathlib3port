@@ -57,7 +57,7 @@ infixr:25 " →⋆ₙₐ " => NonUnitalStarAlgHom _
 notation:25 A " →⋆ₙₐ[" R "] " B => NonUnitalStarAlgHom R A B
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident non_unital_star_alg_hom.to_non_unital_alg_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident non_unital_star_alg_hom.to_non_unital_alg_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `non_unital_star_alg_hom_class F R A B` asserts `F` is a type of bundled non-unital ⋆-algebra
 homomorphisms from `A` to `B`. -/
 class NonUnitalStarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _)) (B : outParam (Type _))
@@ -83,8 +83,7 @@ variable [NonUnitalNonAssocSemiringₓ D] [DistribMulAction R D] [HasStar D]
 
 instance : NonUnitalStarAlgHomClass (A →⋆ₙₐ[R] B) R A B where
   coe := toFun
-  coe_injective' := by
-    rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
+  coe_injective' := by rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
   map_smul := fun f => f.map_smul'
   map_add := fun f => f.map_add'
   map_zero := fun f => f.map_zero'
@@ -193,9 +192,7 @@ variable [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A] [StarAddMonoid 
 variable [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B] [StarAddMonoid B]
 
 instance : Zero (A →⋆ₙₐ[R] B) :=
-  ⟨{ (0 : NonUnitalAlgHom R A B) with
-      map_star' := by
-        simp }⟩
+  ⟨{ (0 : NonUnitalAlgHom R A B) with map_star' := by simp }⟩
 
 instance : Inhabited (A →⋆ₙₐ[R] B) :=
   ⟨0⟩
@@ -233,7 +230,7 @@ infixr:25 " →⋆ₐ " => StarAlgHom _
 notation:25 A " →⋆ₐ[" R "] " B => StarAlgHom R A B
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident star_alg_hom.to_alg_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident star_alg_hom.to_alg_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `star_alg_hom_class F R A B` states that `F` is a type of ⋆-algebra homomorphisms.
 
 You should also extend this typeclass when you extend `star_alg_hom`. -/
@@ -257,8 +254,7 @@ variable {F R A B C D : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A
 
 instance : StarAlgHomClass (A →⋆ₐ[R] B) R A B where
   coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
-    obtain ⟨_, _, _, _, _, _, _⟩ := f <;> obtain ⟨_, _, _, _, _, _, _⟩ := g <;> congr
+  coe_injective' := fun f g h => by obtain ⟨_, _, _, _, _, _, _⟩ := f <;> obtain ⟨_, _, _, _, _, _, _⟩ := g <;> congr
   map_mul := map_mul'
   map_one := map_one'
   map_add := map_add'
@@ -390,20 +386,16 @@ variable {R A B C}
 /-- The `pi.prod` of two morphisms is a morphism. -/
 @[simps]
 def prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : A →⋆ₙₐ[R] B × C :=
-  { f.toNonUnitalAlgHom.Prod g.toNonUnitalAlgHom with
-    map_star' := fun x => by
-      simp [map_star, Prod.star_def] }
+  { f.toNonUnitalAlgHom.Prod g.toNonUnitalAlgHom with map_star' := fun x => by simp [map_star, Prod.star_def] }
 
 theorem coe_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
 
 @[simp]
-theorem fst_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : (fst R B C).comp (prod f g) = f := by
-  ext <;> rfl
+theorem fst_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : (fst R B C).comp (prod f g) = f := by ext <;> rfl
 
 @[simp]
-theorem snd_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : (snd R B C).comp (prod f g) = g := by
-  ext <;> rfl
+theorem snd_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : (snd R B C).comp (prod f g) = g := by ext <;> rfl
 
 @[simp]
 theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
@@ -415,10 +407,8 @@ their codomains. -/
 def prodEquiv : (A →⋆ₙₐ[R] B) × (A →⋆ₙₐ[R] C) ≃ (A →⋆ₙₐ[R] B × C) where
   toFun := fun f => f.1.Prod f.2
   invFun := fun f => ((fst _ _ _).comp f, (snd _ _ _).comp f)
-  left_inv := fun f => by
-    ext <;> rfl
-  right_inv := fun f => by
-    ext <;> rfl
+  left_inv := fun f => by ext <;> rfl
+  right_inv := fun f => by ext <;> rfl
 
 end Prod
 
@@ -476,20 +466,16 @@ variable {R A B C}
 /-- The `pi.prod` of two morphisms is a morphism. -/
 @[simps]
 def prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : A →⋆ₐ[R] B × C :=
-  { f.toAlgHom.Prod g.toAlgHom with
-    map_star' := fun x => by
-      simp [Prod.star_def, map_star] }
+  { f.toAlgHom.Prod g.toAlgHom with map_star' := fun x => by simp [Prod.star_def, map_star] }
 
 theorem coe_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
 
 @[simp]
-theorem fst_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : (fst R B C).comp (prod f g) = f := by
-  ext <;> rfl
+theorem fst_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : (fst R B C).comp (prod f g) = f := by ext <;> rfl
 
 @[simp]
-theorem snd_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : (snd R B C).comp (prod f g) = g := by
-  ext <;> rfl
+theorem snd_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : (snd R B C).comp (prod f g) = g := by ext <;> rfl
 
 @[simp]
 theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
@@ -501,10 +487,8 @@ their codomains. -/
 def prodEquiv : (A →⋆ₐ[R] B) × (A →⋆ₐ[R] C) ≃ (A →⋆ₐ[R] B × C) where
   toFun := fun f => f.1.Prod f.2
   invFun := fun f => ((fst _ _ _).comp f, (snd _ _ _).comp f)
-  left_inv := fun f => by
-    ext <;> rfl
-  right_inv := fun f => by
-    ext <;> rfl
+  left_inv := fun f => by ext <;> rfl
+  right_inv := fun f => by ext <;> rfl
 
 end StarAlgHom
 

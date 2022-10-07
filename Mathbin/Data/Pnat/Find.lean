@@ -19,8 +19,7 @@ variable {p q : ℕ+ → Prop} [DecidablePred p] [DecidablePred q] (h : ∃ n, p
 
 instance decidablePredExistsNat : DecidablePred fun n' : ℕ => ∃ (n : ℕ+)(hn : n' = n), p n := fun n' =>
   decidableOfIff' (∃ h : 0 < n', p ⟨n', h⟩) <|
-    Subtype.exists.trans <| by
-      simp_rw [Subtype.coe_mk, @exists_comm (_ < _) (_ = _), exists_propₓ, exists_eq_left']
+    Subtype.exists.trans <| by simp_rw [Subtype.coe_mk, @exists_comm (_ < _) (_ = _), exists_propₓ, exists_eq_left']
 
 include h
 
@@ -82,21 +81,18 @@ theorem find_le_iff (n : ℕ+) : Pnat.find h ≤ n ↔ ∃ m ≤ n, p m := by
   simp only [exists_propₓ, ← lt_add_one_iff, find_lt_iff]
 
 @[simp]
-theorem le_find_iff (n : ℕ+) : n ≤ Pnat.find h ↔ ∀ m < n, ¬p m := by
-  simp_rw [← not_ltₓ, find_lt_iff, not_exists]
+theorem le_find_iff (n : ℕ+) : n ≤ Pnat.find h ↔ ∀ m < n, ¬p m := by simp_rw [← not_ltₓ, find_lt_iff, not_exists]
 
 @[simp]
 theorem lt_find_iff (n : ℕ+) : n < Pnat.find h ↔ ∀ m ≤ n, ¬p m := by
   simp only [← add_one_le_iff, le_find_iff, add_le_add_iff_right]
 
 @[simp]
-theorem find_eq_one : Pnat.find h = 1 ↔ p 1 := by
-  simp [find_eq_iff]
+theorem find_eq_one : Pnat.find h = 1 ↔ p 1 := by simp [find_eq_iff]
 
 @[simp]
 theorem one_le_find : 1 < Pnat.find h ↔ ¬p 1 :=
-  not_iff_not.mp <| by
-    simp
+  not_iff_not.mp <| by simp
 
 theorem find_mono (h : ∀ n, q n → p n) {hp : ∃ n, p n} {hq : ∃ n, q n} : Pnat.find hp ≤ Pnat.find hq :=
   Pnat.find_min' _ (h _ (Pnat.find_spec hq))

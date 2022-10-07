@@ -35,26 +35,23 @@ open Classical TopologicalSpace
 
 noncomputable section
 
-variable {ι : Type _} [Fintype ι] {I J : Box ι}
+variable {ι : Type _} [Fintypeₓ ι] {I J : Box ι}
 
 namespace Prepartition
 
 /-- Split a box in `ℝⁿ` into `2 ^ n` boxes by hyperplanes passing through its center. -/
 def splitCenter (I : Box ι) : Prepartition I where
-  boxes := Finset.univ.map (Box.splitCenterBoxEmb I)
-  le_of_mem' := by
-    simp [I.split_center_box_le]
+  boxes := Finsetₓ.univ.map (Box.splitCenterBoxEmb I)
+  le_of_mem' := by simp [I.split_center_box_le]
   PairwiseDisjoint := by
-    rw [Finset.coe_map, Finset.coe_univ, image_univ]
+    rw [Finsetₓ.coe_map, Finsetₓ.coe_univ, image_univ]
     rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ Hne
     exact I.disjoint_split_center_box (mt (congr_arg _) Hne)
 
 @[simp]
-theorem mem_split_center : J ∈ splitCenter I ↔ ∃ s, I.splitCenterBox s = J := by
-  simp [split_center]
+theorem mem_split_center : J ∈ splitCenter I ↔ ∃ s, I.splitCenterBox s = J := by simp [split_center]
 
-theorem is_partition_split_center (I : Box ι) : IsPartition (splitCenter I) := fun x hx => by
-  simp [hx]
+theorem is_partition_split_center (I : Box ι) : IsPartition (splitCenter I) := fun x hx => by simp [hx]
 
 theorem upper_sub_lower_of_mem_split_center (h : J ∈ splitCenter I) (i : ι) :
     J.upper i - J.lower i = (I.upper i - I.lower i) / 2 :=
@@ -139,7 +136,7 @@ end Box
 
 namespace Prepartition
 
-open TaggedPrepartition Finset Function
+open TaggedPrepartition Finsetₓ Function
 
 /-- Given a box `I` in `ℝⁿ`, a function `r : ℝⁿ → (0, ∞)`, and a prepartition `π` of `I`, there
 exists a tagged prepartition `π'` of `I` such that

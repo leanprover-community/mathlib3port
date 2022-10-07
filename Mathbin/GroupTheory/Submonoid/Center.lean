@@ -53,7 +53,7 @@ variable {M}
 theorem mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 
-instance decidableMemCenter [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) := fun _ =>
+instance decidableMemCenter [DecidableEq M] [Fintypeₓ M] : DecidablePred (· ∈ center M) := fun _ =>
   decidableOfIff' _ mem_center_iff
 
 /-- The center of a monoid is commutative. -/
@@ -72,8 +72,7 @@ instance center.smul_comm_class_right : SmulCommClass M (center M) M :=
 `submonoid.smul_comm_class_right` -/
 
 
-example : SmulCommClass (center M) (center M) M := by
-  infer_instance
+example : SmulCommClass (center M) (center M) M := by infer_instance
 
 end
 

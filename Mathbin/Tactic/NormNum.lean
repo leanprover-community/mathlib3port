@@ -48,15 +48,12 @@ namespace NormNum
 variable {α : Type u}
 
 theorem subst_into_add {α} [Add α] (l r tl tr t) (prl : (l : α) = tl) (prr : r = tr) (prt : tl + tr = t) : l + r = t :=
-  by
-  rw [prl, prr, prt]
+  by rw [prl, prr, prt]
 
 theorem subst_into_mul {α} [Mul α] (l r tl tr t) (prl : (l : α) = tl) (prr : r = tr) (prt : tl * tr = t) : l * r = t :=
-  by
-  rw [prl, prr, prt]
+  by rw [prl, prr, prt]
 
-theorem subst_into_neg {α} [Neg α] (a ta t : α) (pra : a = ta) (prt : -ta = t) : -a = t := by
-  simp [pra, prt]
+theorem subst_into_neg {α} [Neg α] (a ta t : α) (pra : a = ta) (prt : -ta = t) : -a = t := by simp [pra, prt]
 
 /-- The result type of `match_numeral`, either `0`, `1`, or a top level
 decomposition of `bit0 e` or `bit1 e`. The `other` case means it is not a numeral. -/
@@ -85,8 +82,7 @@ theorem bit0_succ {α} [Semiringₓ α] (a : α) : bit0 a + 1 = bit1 a :=
   rfl
 
 theorem bit1_succ {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : bit1 a + 1 = bit0 b :=
-  h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+  h ▸ by simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 section
 
@@ -115,65 +111,50 @@ unsafe def prove_succ' (c : instance_cache) (a : expr) : tactic (instance_cache 
   let (c, p) ← prove_succ c a b
   return (c, b, p)
 
-theorem zero_adc {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 0 + a + 1 = b := by
-  rwa [zero_addₓ]
+theorem zero_adc {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 0 + a + 1 = b := by rwa [zero_addₓ]
 
-theorem adc_zero {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : a + 0 + 1 = b := by
-  rwa [add_zeroₓ]
+theorem adc_zero {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : a + 0 + 1 = b := by rwa [add_zeroₓ]
 
-theorem one_add {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 1 + a = b := by
-  rwa [add_commₓ]
+theorem one_add {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 1 + a = b := by rwa [add_commₓ]
 
 theorem add_bit0_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit0 a + bit0 b = bit0 c :=
-  h ▸ by
-    simp [bit0, add_left_commₓ, add_assocₓ]
+  h ▸ by simp [bit0, add_left_commₓ, add_assocₓ]
 
 theorem add_bit0_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit0 a + bit1 b = bit1 c :=
-  h ▸ by
-    simp [bit0, bit1, add_left_commₓ, add_assocₓ]
+  h ▸ by simp [bit0, bit1, add_left_commₓ, add_assocₓ]
 
 theorem add_bit1_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit1 a + bit0 b = bit1 c :=
-  h ▸ by
-    simp [bit0, bit1, add_left_commₓ, add_commₓ, add_assocₓ]
+  h ▸ by simp [bit0, bit1, add_left_commₓ, add_commₓ, add_assocₓ]
 
 theorem add_bit1_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit1 a + bit1 b = bit0 c :=
-  h ▸ by
-    simp [bit0, bit1, add_left_commₓ, add_commₓ, add_assocₓ]
+  h ▸ by simp [bit0, bit1, add_left_commₓ, add_commₓ, add_assocₓ]
 
 theorem adc_one_one {α} [Semiringₓ α] : (1 + 1 + 1 : α) = 3 :=
   rfl
 
 theorem adc_bit0_one {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : bit0 a + 1 + 1 = bit0 b :=
-  h ▸ by
-    simp [bit0, add_left_commₓ, add_assocₓ]
+  h ▸ by simp [bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_one_bit0 {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 1 + bit0 a + 1 = bit0 b :=
-  h ▸ by
-    simp [bit0, add_left_commₓ, add_assocₓ]
+  h ▸ by simp [bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_bit1_one {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : bit1 a + 1 + 1 = bit1 b :=
-  h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+  h ▸ by simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_one_bit1 {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 1 + bit1 a + 1 = bit1 b :=
-  h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+  h ▸ by simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_bit0_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit0 a + bit0 b + 1 = bit1 c :=
-  h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+  h ▸ by simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_bit1_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit1 a + bit0 b + 1 = bit0 c :=
-  h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+  h ▸ by simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_bit0_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit0 a + bit1 b + 1 = bit0 c :=
-  h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+  h ▸ by simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_bit1_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit1 a + bit1 b + 1 = bit1 c :=
-  h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+  h ▸ by simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 section
 
@@ -252,9 +233,9 @@ mutual
 end
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident prove_add_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident prove_add_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident prove_adc_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident prove_adc_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Given `a`,`b` natural numerals, returns `(r, ⊢ a + b = r)`. -/
 unsafe def prove_add_nat' (c : instance_cache) (a b : expr) : tactic (instance_cache × expr × expr) := do
   let na ← a.toNat
@@ -266,12 +247,10 @@ unsafe def prove_add_nat' (c : instance_cache) (a b : expr) : tactic (instance_c
 end
 
 theorem bit0_mul {α} [Semiringₓ α] (a b c : α) (h : a * b = c) : bit0 a * b = bit0 c :=
-  h ▸ by
-    simp [bit0, add_mulₓ]
+  h ▸ by simp [bit0, add_mulₓ]
 
 theorem mul_bit0' {α} [Semiringₓ α] (a b c : α) (h : a * b = c) : a * bit0 b = bit0 c :=
-  h ▸ by
-    simp [bit0, mul_addₓ]
+  h ▸ by simp [bit0, mul_addₓ]
 
 theorem mul_bit0_bit0 {α} [Semiringₓ α] (a b c : α) (h : a * b = c) : bit0 a * bit0 b = bit0 (bit0 c) :=
   bit0_mul _ _ _ (mul_bit0' _ _ _ h)
@@ -386,8 +365,7 @@ unsafe def prove_ne_zero' (c : instance_cache) : expr → tactic (instance_cache
       c `` ne_zero_of_pos [a, p]
 
 theorem clear_denom_div {α} [DivisionRing α] (a b b' c d : α) (h₀ : b ≠ 0) (h₁ : b * b' = d) (h₂ : a * b' = c) :
-    a / b * d = c := by
-  rwa [← h₁, ← mul_assoc, div_mul_cancel _ h₀]
+    a / b * d = c := by rwa [← h₁, ← mul_assoc, div_mul_cancel _ h₀]
 
 /-- Given `a` nonnegative rational and `d` a natural number, returns `(b, ⊢ a * d = b)`.
 (`d` should be a multiple of the denominator of `a`, so that `b` is a natural number.) -/
@@ -419,10 +397,7 @@ theorem lt_bit0_bit1 {α} [LinearOrderedSemiring α] (a b : α) (h : a ≤ b) : 
   lt_of_le_of_ltₓ (bit0_le_bit0.2 h) (lt_add_one _)
 
 theorem lt_bit1_bit0 {α} [LinearOrderedSemiring α] (a b : α) (h : a + 1 ≤ b) : bit1 a < bit0 b :=
-  lt_of_lt_of_leₓ
-    (by
-      simp [bit0, bit1, zero_lt_one, add_assocₓ])
-    (bit0_le_bit0.2 h)
+  lt_of_lt_of_leₓ (by simp [bit0, bit1, zero_lt_one, add_assocₓ]) (bit0_le_bit0.2 h)
 
 theorem lt_bit1_bit1 {α} [LinearOrderedSemiring α] (a b : α) : a < b → bit1 a < bit1 b :=
   bit1_lt_bit1.2
@@ -542,9 +517,9 @@ mutual
 end
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident prove_le_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident prove_le_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident prove_sle_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident prove_sle_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Given `a`,`b` natural numerals, proves `⊢ a < b`. -/
 unsafe def prove_lt_nat (ic : instance_cache) : expr → expr → tactic (instance_cache × expr)
   | a, b =>
@@ -574,10 +549,7 @@ end
 
 theorem clear_denom_lt {α} [LinearOrderedSemiring α] (a a' b b' d : α) (h₀ : 0 < d) (ha : a * d = a') (hb : b * d = b')
     (h : a' < b') : a < b :=
-  lt_of_mul_lt_mul_right
-    (by
-      rwa [ha, hb])
-    (le_of_ltₓ h₀)
+  lt_of_mul_lt_mul_right (by rwa [ha, hb]) (le_of_ltₓ h₀)
 
 /-- Given `a`,`b` nonnegative rational numerals, proves `⊢ a < b`. -/
 unsafe def prove_lt_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr) :=
@@ -614,10 +586,7 @@ unsafe def prove_lt_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tacti
 
 theorem clear_denom_le {α} [LinearOrderedSemiring α] (a a' b b' d : α) (h₀ : 0 < d) (ha : a * d = a') (hb : b * d = b')
     (h : a' ≤ b') : a ≤ b :=
-  le_of_mul_le_mul_right
-    (by
-      rwa [ha, hb])
-    h₀
+  le_of_mul_le_mul_right (by rwa [ha, hb]) h₀
 
 /-- Given `a`,`b` nonnegative rational numerals, proves `⊢ a ≤ b`. -/
 unsafe def prove_le_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr) :=
@@ -876,8 +845,7 @@ unsafe def prove_clear_denom : instance_cache → expr → expr → ℚ → ℕ 
 
 theorem clear_denom_add {α} [DivisionRing α] (a a' b b' c c' d : α) (h₀ : d ≠ 0) (ha : a * d = a') (hb : b * d = b')
     (hc : c * d = c') (h : a' + b' = c') : a + b = c :=
-  mul_right_cancel₀ h₀ <| by
-    rwa [add_mulₓ, ha, hb, hc]
+  mul_right_cancel₀ h₀ <| by rwa [add_mulₓ, ha, hb, hc]
 
 /-- Given `a`,`b`,`c` nonnegative rational numerals, returns `⊢ a + b = c`. -/
 unsafe def prove_add_nonneg_rat (ic : instance_cache) (a b c : expr) (na nb nc : ℚ) : tactic (instance_cache × expr) :=
@@ -893,24 +861,19 @@ unsafe def prove_add_nonneg_rat (ic : instance_cache) (a b c : expr) (na nb nc :
     ic `` clear_denom_add [a, a', b, b', c, c', d, p₀, pa, pb, pc, p]
 
 theorem add_pos_neg_pos {α} [AddGroupₓ α] (a b c : α) (h : c + b = a) : a + -b = c :=
-  h ▸ by
-    simp
+  h ▸ by simp
 
 theorem add_pos_neg_neg {α} [AddGroupₓ α] (a b c : α) (h : c + a = b) : a + -b = -c :=
-  h ▸ by
-    simp
+  h ▸ by simp
 
 theorem add_neg_pos_pos {α} [AddGroupₓ α] (a b c : α) (h : a + c = b) : -a + b = c :=
-  h ▸ by
-    simp
+  h ▸ by simp
 
 theorem add_neg_pos_neg {α} [AddGroupₓ α] (a b c : α) (h : b + c = a) : -a + b = -c :=
-  h ▸ by
-    simp
+  h ▸ by simp
 
 theorem add_neg_neg {α} [AddGroupₓ α] (a b c : α) (h : b + a = c) : -a + -b = -c :=
-  h ▸ by
-    simp
+  h ▸ by simp
 
 /-- Given `a`,`b`,`c` rational numerals, returns `⊢ a + b = c`. -/
 unsafe def prove_add_rat (ic : instance_cache) (ea eb ec : expr) (a b c : ℚ) : tactic (instance_cache × expr) :=
@@ -964,8 +927,7 @@ unsafe def prove_clear_denom_simple (c : instance_cache) (a : expr) (na : ℚ) :
 theorem clear_denom_mul {α} [Field α] (a a' b b' c c' d₁ d₂ d : α) (ha : d₁ ≠ 0 ∧ a * d₁ = a')
     (hb : d₂ ≠ 0 ∧ b * d₂ = b') (hc : c * d = c') (hd : d₁ * d₂ = d) (h : a' * b' = c') : a * b = c :=
   mul_right_cancel₀ ha.1 <|
-    mul_right_cancel₀ hb.1 <| by
-      rw [mul_assoc c, hd, hc, ← h, ← ha.2, ← hb.2, ← mul_assoc, mul_right_commₓ a]
+    mul_right_cancel₀ hb.1 <| by rw [mul_assoc c, hd, hc, ← h, ← ha.2, ← hb.2, ← mul_assoc, mul_right_commₓ a]
 
 /-- Given `a`,`b` nonnegative rational numerals, returns `(c, ⊢ a * b = c)`. -/
 unsafe def prove_mul_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
@@ -984,16 +946,13 @@ unsafe def prove_mul_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ)
     return (ic, c, p)
 
 theorem mul_neg_pos {α} [Ringₓ α] (a b c : α) (h : a * b = c) : -a * b = -c :=
-  h ▸ by
-    simp
+  h ▸ by simp
 
 theorem mul_pos_neg {α} [Ringₓ α] (a b c : α) (h : a * b = c) : a * -b = -c :=
-  h ▸ by
-    simp
+  h ▸ by simp
 
 theorem mul_neg_neg {α} [Ringₓ α] (a b c : α) (h : a * b = c) : -a * -b = c :=
-  h ▸ by
-    simp
+  h ▸ by simp
 
 /-- Given `a`,`b` rational numerals, returns `(c, ⊢ a * b = c)`. -/
 unsafe def prove_mul_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr × expr) :=
@@ -1023,20 +982,17 @@ unsafe def prove_mul_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tact
   | Sum.inr tt, Sum.inr tt => prove_mul_nonneg_rat ic a b na nb
 
 theorem inv_neg {α} [DivisionRing α] (a b : α) (h : a⁻¹ = b) : (-a)⁻¹ = -b :=
-  h ▸ by
-    simp only [inv_eq_one_div, one_div_neg_eq_neg_one_div]
+  h ▸ by simp only [inv_eq_one_div, one_div_neg_eq_neg_one_div]
 
 theorem inv_one {α} [DivisionRing α] : (1 : α)⁻¹ = 1 :=
   inv_one
 
-theorem inv_one_div {α} [DivisionRing α] (a : α) : (1 / a)⁻¹ = a := by
-  rw [one_div, inv_invₓ]
+theorem inv_one_div {α} [DivisionRing α] (a : α) : (1 / a)⁻¹ = a := by rw [one_div, inv_invₓ]
 
 theorem inv_div_one {α} [DivisionRing α] (a : α) : a⁻¹ = 1 / a :=
   inv_eq_one_div _
 
-theorem inv_div {α} [DivisionRing α] (a b : α) : (a / b)⁻¹ = b / a := by
-  simp only [inv_eq_one_div, one_div_div]
+theorem inv_div {α} [DivisionRing α] (a b : α) : (a / b)⁻¹ = b / a := by simp only [inv_eq_one_div, one_div_div]
 
 /-- Given `a` a rational numeral, returns `(b, ⊢ a⁻¹ = b)`. -/
 unsafe def prove_inv : instance_cache → expr → ℚ → tactic (instance_cache × expr × expr)
@@ -1097,8 +1053,7 @@ unsafe def prove_neg (ic : instance_cache) (a : expr) : tactic (instance_cache �
 theorem sub_pos {α} [AddGroupₓ α] (a b b' c : α) (hb : -b = b') (h : a + b' = c) : a - b = c := by
   rwa [← hb, ← sub_eq_add_neg] at h
 
-theorem sub_neg {α} [AddGroupₓ α] (a b c : α) (h : a + b = c) : a - -b = c := by
-  rwa [sub_neg_eq_add]
+theorem sub_neg {α} [AddGroupₓ α] (a b c : α) (h : a + b = c) : a - -b = c := by rwa [sub_neg_eq_add]
 
 /-- Given `a`,`b` rational numerals, returns `(c, ⊢ a - b = c)`. -/
 unsafe def prove_sub (ic : instance_cache) (a b : expr) : tactic (instance_cache × expr × expr) :=
@@ -1171,12 +1126,10 @@ unsafe def eval_field : expr → tactic (expr × expr)
   | _ => failed
 
 theorem pow_bit0 [Monoidₓ α] (a c' c : α) (b : ℕ) (h : a ^ b = c') (h₂ : c' * c' = c) : a ^ bit0 b = c :=
-  h₂ ▸ by
-    simp [pow_bit0, h]
+  h₂ ▸ by simp [pow_bit0, h]
 
 theorem pow_bit1 [Monoidₓ α] (a c₁ c₂ c : α) (b : ℕ) (h : a ^ b = c₁) (h₂ : c₁ * c₁ = c₂) (h₃ : c₂ * a = c) :
-    a ^ bit1 b = c := by
-  rw [← h₃, ← h₂] <;> simp [pow_bit1, h]
+    a ^ bit1 b = c := by rw [← h₃, ← h₂] <;> simp [pow_bit1, h]
 
 section
 
@@ -1214,8 +1167,7 @@ theorem zpow_pos {α} [DivInvMonoidₓ α] (a : α) (b : ℤ) (b' : ℕ) (c : α
   rw [← h, hb, zpow_coe_nat]
 
 theorem zpow_neg {α} [DivInvMonoidₓ α] (a : α) (b : ℤ) (b' : ℕ) (c c' : α) (b0 : 0 < b') (hb : b = b') (h : a ^ b' = c)
-    (hc : c⁻¹ = c') : a ^ -b = c' := by
-  rw [← hc, ← h, hb, zpow_neg_coe_of_pos _ b0]
+    (hc : c⁻¹ = c') : a ^ -b = c' := by rw [← hc, ← h, hb, zpow_neg_coe_of_pos _ b0]
 
 /-- Given `a` a rational numeral and `b : ℤ`, returns `(c, ⊢ a ^ b = c)`. -/
 unsafe def prove_zpow (ic zc nc : instance_cache) (a : expr) (na : ℚ) (b : expr) :
@@ -1335,8 +1287,7 @@ unsafe def eval_ineq : expr → tactic (expr × expr)
         true_intro p
   | _ => failed
 
-theorem nat_succ_eq (a b c : ℕ) (h₁ : a = b) (h₂ : b + 1 = c) : Nat.succ a = c := by
-  rwa [h₁]
+theorem nat_succ_eq (a b c : ℕ) (h₁ : a = b) (h₂ : b + 1 = c) : Nat.succ a = c := by rwa [h₁]
 
 /-- Evaluates the expression `nat.succ ... (nat.succ n)` where `n` is a natural numeral.
 (We could also just handle `nat.succ n` here and rely on `simp` to work bottom up, but we figure
@@ -1406,14 +1357,10 @@ unsafe def prove_div_mod (ic : instance_cache) : expr → expr → Bool → tact
           else failed
 
 theorem dvd_eq_nat (a b c : ℕ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
-  (propext <| by
-        rw [← h₁, Nat.dvd_iff_mod_eq_zeroₓ]).trans
-    h₂
+  (propext <| by rw [← h₁, Nat.dvd_iff_mod_eq_zeroₓ]).trans h₂
 
 theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
-  (propext <| by
-        rw [← h₁, Int.dvd_iff_mod_eq_zeroₓ]).trans
-    h₂
+  (propext <| by rw [← h₁, Int.dvd_iff_mod_eq_zeroₓ]).trans h₂
 
 theorem int_to_nat_pos (a : ℤ) (b : ℕ)
     (h :
@@ -1421,11 +1368,9 @@ theorem int_to_nat_pos (a : ℤ) (b : ℕ)
         b :
           ℤ) =
         a) :
-    a.toNat = b := by
-  rw [← h] <;> simp
+    a.toNat = b := by rw [← h] <;> simp
 
-theorem int_to_nat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by
-  simp only [Int.to_nat_of_nonpos, h.le, neg_nonpos]
+theorem int_to_nat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by simp only [Int.to_nat_of_nonpos, h.le, neg_nonpos]
 
 theorem nat_abs_pos (a : ℤ) (b : ℕ)
     (h :
@@ -1433,8 +1378,7 @@ theorem nat_abs_pos (a : ℤ) (b : ℕ)
         b :
           ℤ) =
         a) :
-    a.natAbs = b := by
-  rw [← h] <;> simp
+    a.natAbs = b := by rw [← h] <;> simp
 
 theorem nat_abs_neg (a : ℤ) (b : ℕ)
     (h :
@@ -1442,8 +1386,7 @@ theorem nat_abs_neg (a : ℤ) (b : ℕ)
         b :
           ℤ) =
         a) :
-    (-a).natAbs = b := by
-  rw [← h] <;> simp
+    (-a).natAbs = b := by rw [← h] <;> simp
 
 theorem neg_succ_of_nat (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
     (h₂ :
@@ -1451,8 +1394,7 @@ theorem neg_succ_of_nat (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
         b :
           ℤ) =
         c) :
-    -[1 + a] = -c := by
-  rw [← h₂, ← h₁] <;> rfl
+    -[1 + a] = -c := by rw [← h₂, ← h₁] <;> rfl
 
 /-- Evaluates some extra numeric operations on `nat` and `int`, specifically
 `nat.succ`, `/` and `%`, and `∣` (divisibility). -/
@@ -1518,10 +1460,7 @@ theorem int_to_nat_cast (a : ℕ) (b : ℤ)
           ℤ) =
         b) :
     ↑a = b :=
-  Eq.trans
-    (by
-      simp )
-    h
+  Eq.trans (by simp) h
 
 /-- Evaluates the `↑n` cast operation from `ℕ`, `ℤ`, `ℚ` to an arbitrary type `α`. -/
 unsafe def eval_cast : expr → tactic (expr × expr)

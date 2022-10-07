@@ -29,30 +29,26 @@ This file exists mainly to avoid importing `is_R_or_C` in the main normed space 
 
 open Metric
 
-@[simp, is_R_or_C_simps]
-theorem IsROrC.norm_coe_norm {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedAddCommGroup E] {z : E} : ∥(∥z∥ : 𝕜)∥ = ∥z∥ :=
-  by
-  unfold_coes
-  simp only [norm_algebra_map', RingHom.to_fun_eq_coe, norm_norm]
+variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedAddCommGroup E]
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+theorem IsROrC.norm_coe_norm {z : E} : ∥(∥z∥ : 𝕜)∥ = ∥z∥ := by simp
+
+variable [NormedSpace 𝕜 E]
 
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to unit length. -/
 @[simp]
 theorem norm_smul_inv_norm {x : E} (hx : x ≠ 0) : ∥(∥x∥⁻¹ : 𝕜) • x∥ = 1 := by
-  have : ∥x∥ ≠ 0 := by
-    simp [hx]
+  have : ∥x∥ ≠ 0 := by simp [hx]
   field_simp [norm_smul]
 
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to length `r`. -/
 theorem norm_smul_inv_norm' {r : ℝ} (r_nonneg : 0 ≤ r) {x : E} (hx : x ≠ 0) : ∥(r * ∥x∥⁻¹ : 𝕜) • x∥ = r := by
-  have : ∥x∥ ≠ 0 := by
-    simp [hx]
-  field_simp [norm_smul, IsROrC.norm_eq_abs, r_nonneg] with is_R_or_C_simps
+  have : ∥x∥ ≠ 0 := by simp [hx]
+  field_simp [norm_smul, IsROrC.norm_eq_abs, r_nonneg, is_R_or_C_simps]
 
 theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜)
     (h : ∀ z ∈ Sphere (0 : E) r, ∥f z∥ ≤ c) (z : E) : ∥f z∥ ≤ c / r * ∥z∥ := by
-  by_cases' z_zero : z = 0
+  by_cases z_zero:z = 0
   · rw [z_zero]
     simp only [LinearMap.map_zero, norm_zero, mul_zero]
     
@@ -83,11 +79,7 @@ theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r
     (h : ∀ z ∈ ClosedBall (0 : E) r, ∥f z∥ ≤ c) : ∥f∥ ≤ c / r := by
   apply ContinuousLinearMap.op_norm_le_bound
   · apply div_nonneg _ r_pos.le
-    exact
-      (norm_nonneg _).trans
-        (h 0
-          (by
-            simp only [norm_zero, mem_closed_ball, dist_zero_left, r_pos.le]))
+    exact (norm_nonneg _).trans (h 0 (by simp only [norm_zero, mem_closed_ball, dist_zero_left, r_pos.le]))
     
   apply LinearMap.bound_of_ball_bound' r_pos
   exact fun z hz => h z hz
@@ -96,7 +88,7 @@ variable (𝕜)
 
 include 𝕜
 
-theorem NormedSpace.sphere_nonempty_is_R_or_C [Nontrivial E] {r : ℝ} (hr : 0 ≤ r) : Nonempty (Sphere (0 : E) r) := by
+theorem NormedSpace.sphere_nonempty_is_R_or_C [Nontrivial E] {r : ℝ} (hr : 0 ≤ r) : Nonempty (Sphere (0 : E) r) :=
   letI : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 E
-  exact set.nonempty_coe_sort.mpr (normed_space.sphere_nonempty.mpr hr)
+  set.nonempty_coe_sort.mpr (normed_space.sphere_nonempty.mpr hr)
 

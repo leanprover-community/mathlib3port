@@ -25,20 +25,17 @@ variable [∀ i, Preorderₓ (α i)] (x y : ∀ i, α i)
 
 @[simp]
 theorem pi_univ_Ici : (Pi Univ fun i => Ici (x i)) = Ici x :=
-  ext fun y => by
-    simp [Pi.le_def]
+  ext fun y => by simp [Pi.le_def]
 
 @[simp]
 theorem pi_univ_Iic : (Pi Univ fun i => Iic (x i)) = Iic x :=
-  ext fun y => by
-    simp [Pi.le_def]
+  ext fun y => by simp [Pi.le_def]
 
 @[simp]
 theorem pi_univ_Icc : (Pi Univ fun i => Icc (x i) (y i)) = Icc x y :=
-  ext fun y => by
-    simp [Pi.le_def, forall_and_distrib]
+  ext fun y => by simp [Pi.le_def, forall_and_distrib]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_mem_Icc {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, α i}
     (h₁ : ∀ i ∈ s, f₁ i ∈ Icc (g₁ i) (g₂ i)) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ∈ Icc (g₁ i) (g₂ i)) :
     s.piecewise f₁ f₂ ∈ Icc g₁ g₂ :=

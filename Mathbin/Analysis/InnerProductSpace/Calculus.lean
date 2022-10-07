@@ -228,7 +228,7 @@ section PiLike
 
 open ContinuousLinearMap
 
-variable {𝕜 ι H : Type _} [IsROrC 𝕜] [NormedAddCommGroup H] [NormedSpace 𝕜 H] [Fintype ι] {f : H → EuclideanSpace 𝕜 ι}
+variable {𝕜 ι H : Type _} [IsROrC 𝕜] [NormedAddCommGroup H] [NormedSpace 𝕜 H] [Fintypeₓ ι] {f : H → EuclideanSpace 𝕜 ι}
   {f' : H →L[𝕜] EuclideanSpace 𝕜 ι} {t : Set H} {y : H}
 
 theorem differentiable_within_at_euclidean :
@@ -283,12 +283,11 @@ open Metric hiding mem_nhds_iff
 
 variable {n : ℕ∞} {E : Type _} [InnerProductSpace ℝ E]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 theorem cont_diff_homeomorph_unit_ball : (ContDiff ℝ n) fun x : E => (homeomorphUnitBall x : E) := by
-  suffices ContDiff ℝ n fun x => (1 + ∥x∥ ^ 2).sqrt⁻¹ by
-    exact this.smul cont_diff_id
+  suffices ContDiff ℝ n fun x => (1 + ∥x∥ ^ 2).sqrt⁻¹ by exact this.smul cont_diff_id
   have h : ∀ x : E, 0 < 1 + ∥x∥ ^ 2 := fun x => by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]"
+    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
   refine' ContDiff.inv _ fun x => real.sqrt_ne_zero'.mpr (h x)
   exact (cont_diff_const.add cont_diff_norm_sq).sqrt fun x => (h x).Ne.symm
 
@@ -302,8 +301,7 @@ theorem cont_diff_on_homeomorph_unit_ball_symm {f : E → E}
     rw [h z hz]
     rfl
   refine' ContDiffAt.congr_of_eventually_eq _ hf
-  suffices ContDiffAt ℝ n (fun y => (1 - ∥(y : E)∥ ^ 2).sqrt⁻¹) y by
-    exact this.smul cont_diff_at_id
+  suffices ContDiffAt ℝ n (fun y => (1 - ∥(y : E)∥ ^ 2).sqrt⁻¹) y by exact this.smul cont_diff_at_id
   have h : 0 < 1 - ∥(y : E)∥ ^ 2 := by
     rwa [mem_ball_zero_iff, ← _root_.abs_one, ← abs_norm_eq_norm, ← sq_lt_sq, one_pow, ← sub_pos] at hy
   refine' ContDiffAt.inv _ (real.sqrt_ne_zero'.mpr h)

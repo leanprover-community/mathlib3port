@@ -148,15 +148,10 @@ alias dvd_mul_of_dvd_right ← Dvd.Dvd.mul_left
 attribute [local simp] mul_assoc mul_comm mul_left_commₓ
 
 theorem mul_dvd_mul : ∀ {a b c d : α}, a ∣ b → c ∣ d → a * c ∣ b * d
-  | a, _, c, _, ⟨e, rfl⟩, ⟨f, rfl⟩ =>
-    ⟨e * f, by
-      simp ⟩
+  | a, _, c, _, ⟨e, rfl⟩, ⟨f, rfl⟩ => ⟨e * f, by simp⟩
 
 theorem dvd_of_mul_left_dvd (h : a * b ∣ c) : b ∣ c :=
-  Dvd.elim h fun d ceq =>
-    Dvd.intro (a * d)
-      (by
-        simp [ceq])
+  Dvd.elim h fun d ceq => Dvd.intro (a * d) (by simp [ceq])
 
 end CommSemigroupₓ
 
@@ -186,27 +181,23 @@ theorem zero_dvd_iff : 0 ∣ a ↔ a = 0 :=
   ⟨eq_zero_of_zero_dvd, fun h => by
     rw [h]
     use 0
-    simp ⟩
+    simp⟩
 
 @[simp]
 theorem dvd_zero (a : α) : a ∣ 0 :=
-  Dvd.intro 0
-    (by
-      simp )
+  Dvd.intro 0 (by simp)
 
 end SemigroupWithZeroₓ
 
 /-- Given two elements `b`, `c` of a `cancel_monoid_with_zero` and a nonzero element `a`,
  `a*b` divides `a*c` iff `b` divides `c`. -/
 theorem mul_dvd_mul_iff_left [CancelMonoidWithZero α] {a b c : α} (ha : a ≠ 0) : a * b ∣ a * c ↔ b ∣ c :=
-  exists_congr fun d => by
-    rw [mul_assoc, mul_right_inj' ha]
+  exists_congr fun d => by rw [mul_assoc, mul_right_inj' ha]
 
 /-- Given two elements `a`, `b` of a commutative `cancel_monoid_with_zero` and a nonzero
   element `c`, `a*c` divides `b*c` iff `a` divides `b`. -/
 theorem mul_dvd_mul_iff_right [CancelCommMonoidWithZero α] {a b c : α} (hc : c ≠ 0) : a * c ∣ b * c ↔ a ∣ b :=
-  exists_congr fun d => by
-    rw [mul_right_commₓ, mul_left_inj' hc]
+  exists_congr fun d => by rw [mul_right_commₓ, mul_left_inj' hc]
 
 /-!
 ### Units in various monoids
@@ -222,26 +213,18 @@ variable [Monoidₓ α] {a b : α} {u : αˣ}
 /-- Elements of the unit group of a monoid represented as elements of the monoid
     divide any element of the monoid. -/
 theorem coe_dvd : ↑u ∣ a :=
-  ⟨↑u⁻¹ * a, by
-    simp ⟩
+  ⟨↑u⁻¹ * a, by simp⟩
 
 /-- In a monoid, an element `a` divides an element `b` iff `a` divides all
     associates of `b`. -/
 theorem dvd_mul_right : a ∣ b * u ↔ a ∣ b :=
-  Iff.intro
-    (fun ⟨c, Eq⟩ =>
-      ⟨c * ↑u⁻¹, by
-        rw [← mul_assoc, ← Eq, Units.mul_inv_cancel_right]⟩)
-    fun ⟨c, Eq⟩ => Eq.symm ▸ (dvd_mul_right _ _).mul_right _
+  Iff.intro (fun ⟨c, Eq⟩ => ⟨c * ↑u⁻¹, by rw [← mul_assoc, ← Eq, Units.mul_inv_cancel_right]⟩) fun ⟨c, Eq⟩ =>
+    Eq.symm ▸ (dvd_mul_right _ _).mul_right _
 
 /-- In a monoid, an element `a` divides an element `b` iff all associates of `a` divide `b`. -/
 theorem mul_right_dvd : a * u ∣ b ↔ a ∣ b :=
   Iff.intro (fun ⟨c, Eq⟩ => ⟨↑u * c, Eq.trans (mul_assoc _ _ _)⟩) fun h =>
-    dvd_trans
-      (Dvd.intro (↑u⁻¹)
-        (by
-          rw [mul_assoc, u.mul_inv, mul_oneₓ]))
-      h
+    dvd_trans (Dvd.intro (↑u⁻¹) (by rw [mul_assoc, u.mul_inv, mul_oneₓ])) h
 
 end Monoidₓ
 
@@ -321,10 +304,7 @@ section CommMonoidₓ
 variable [CommMonoidₓ α]
 
 theorem is_unit_iff_dvd_one {x : α} : IsUnit x ↔ x ∣ 1 :=
-  ⟨IsUnit.dvd, fun ⟨y, h⟩ =>
-    ⟨⟨x, y, h.symm, by
-        rw [h, mul_comm]⟩,
-      rfl⟩⟩
+  ⟨IsUnit.dvd, fun ⟨y, h⟩ => ⟨⟨x, y, h.symm, by rw [h, mul_comm]⟩, rfl⟩⟩
 
 theorem is_unit_iff_forall_dvd {x : α} : IsUnit x ↔ ∀ y, x ∣ y :=
   is_unit_iff_dvd_one.trans ⟨fun h y => h.trans (one_dvd _), fun h => h _⟩
@@ -332,7 +312,7 @@ theorem is_unit_iff_forall_dvd {x : α} : IsUnit x ↔ ∀ y, x ∣ y :=
 theorem is_unit_of_dvd_unit {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x :=
   is_unit_iff_dvd_one.2 <| xy.trans <| is_unit_iff_dvd_one.1 hu
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a «expr ∣ » 1)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (a «expr ∣ » 1)
 theorem is_unit_of_dvd_one : ∀ (a) (_ : a ∣ 1), IsUnit (a : α)
   | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩
 
@@ -365,21 +345,17 @@ end CommMonoidWithZero
 
 theorem dvd_and_not_dvd_iff [CancelCommMonoidWithZero α] {x y : α} : x ∣ y ∧ ¬y ∣ x ↔ DvdNotUnit x y :=
   ⟨fun ⟨⟨d, hd⟩, hyx⟩ =>
-    ⟨fun hx0 => by
-      simpa [hx0] using hyx,
-      ⟨d,
-        mt is_unit_iff_dvd_one.1 fun ⟨e, he⟩ =>
-          hyx
-            ⟨e, by
-              rw [hd, mul_assoc, ← he, mul_oneₓ]⟩,
-        hd⟩⟩,
+    ⟨fun hx0 => by simpa [hx0] using hyx,
+      ⟨d, mt is_unit_iff_dvd_one.1 fun ⟨e, he⟩ => hyx ⟨e, by rw [hd, mul_assoc, ← he, mul_oneₓ]⟩, hd⟩⟩,
     fun ⟨hx0, d, hdu, hdx⟩ =>
     ⟨⟨d, hdx⟩, fun ⟨e, he⟩ =>
       hdu
         (is_unit_of_dvd_one _
           ⟨e,
             mul_left_cancel₀ hx0 <| by
-              conv => lhs rw [he, hdx] <;> simp [mul_assoc]⟩)⟩⟩
+              conv =>
+                lhs
+                rw [he, hdx] <;> simp [mul_assoc]⟩)⟩⟩
 
 section MonoidWithZeroₓ
 

@@ -77,9 +77,7 @@ def mk' {α} (e : α ≃ ℕ) : Denumerable α where
 /-- Denumerability is conserved by equivalences. This is transitivity of equivalence the denumerable
 way. -/
 def ofEquiv (α) {β} [Denumerable α] (e : β ≃ α) : Denumerable β :=
-  { Encodable.ofEquiv _ e with
-    decode_inv := fun n => by
-      simp }
+  { Encodable.ofEquiv _ e with decode_inv := fun n => by simp }
 
 @[simp]
 theorem of_equiv_of_nat (α) {β} [Denumerable α] (e : β ≃ α) (n) : @ofNat β (ofEquiv _ e) n = e.symm (ofNat α n) := by
@@ -104,15 +102,14 @@ instance option : Denumerable (Option α) :=
       rw [decode_option_zero, Option.mem_def]
       
     refine' ⟨some (of_nat α n), _, _⟩
-    · rw [decode_option_succ, decode_eq_of_nat, Option.map_some', Option.mem_def]
+    · rw [decode_option_succ, decode_eq_of_nat, Option.map_some'ₓ, Option.mem_def]
       
     rw [encode_some, encode_of_nat]⟩
 
 /-- If `α` and `β` are denumerable, then so is their sum. -/
 instance sum : Denumerable (Sum α β) :=
   ⟨fun n => by
-    suffices ∃ a ∈ @decode_sum α β _ _ n, encode_sum a = bit (bodd n) (div2 n) by
-      simpa [bit_decomp]
+    suffices ∃ a ∈ @decode_sum α β _ _ n, encode_sum a = bit (bodd n) (div2 n) by simpa [bit_decomp]
     simp [decode_sum] <;> cases bodd n <;> simp [decode_sum, bit, encode_sum]⟩
 
 section Sigma
@@ -121,16 +118,11 @@ variable {γ : α → Type _} [∀ a, Denumerable (γ a)]
 
 /-- A denumerable collection of denumerable types is denumerable. -/
 instance sigma : Denumerable (Sigma γ) :=
-  ⟨fun n => by
-    simp [decode_sigma] <;>
-      exact
-        ⟨_, _, ⟨rfl, HEq.rfl⟩, by
-          simp ⟩⟩
+  ⟨fun n => by simp [decode_sigma] <;> exact ⟨_, _, ⟨rfl, HEq.rfl⟩, by simp⟩⟩
 
 @[simp]
 theorem sigma_of_nat_val (n : ℕ) : ofNat (Sigma γ) n = ⟨ofNat α (unpair n).1, ofNat (γ _) (unpair n).2⟩ :=
-  Option.some.injₓ <| by
-    rw [← decode_eq_of_nat, decode_sigma_val] <;> simp <;> rfl
+  Option.some.injₓ <| by rw [← decode_eq_of_nat, decode_sigma_val] <;> simp <;> rfl
 
 end Sigma
 
@@ -139,12 +131,10 @@ instance prod : Denumerable (α × β) :=
   ofEquiv _ (Equivₓ.sigmaEquivProd α β).symm
 
 @[simp]
-theorem prod_of_nat_val (n : ℕ) : ofNat (α × β) n = (ofNat α (unpair n).1, ofNat β (unpair n).2) := by
-  simp <;> rfl
+theorem prod_of_nat_val (n : ℕ) : ofNat (α × β) n = (ofNat α (unpair n).1, ofNat β (unpair n).2) := by simp <;> rfl
 
 @[simp]
-theorem prod_nat_of_nat : ofNat (ℕ × ℕ) = unpair := by
-  funext <;> simp
+theorem prod_nat_of_nat : ofNat (ℕ × ℕ) = unpair := by funext <;> simp
 
 instance int : Denumerable ℤ :=
   Denumerable.mk' Equivₓ.intEquivNat
@@ -184,16 +174,11 @@ open Classical
 theorem exists_succ (x : s) : ∃ n, ↑x + n + 1 ∈ s :=
   Classical.by_contradiction fun h =>
     have : ∀ (a : ℕ) (ha : a ∈ s), a < succ x := fun a ha =>
-      lt_of_not_geₓ fun hax =>
-        h
-          ⟨a - (x + 1), by
-            rwa [add_right_commₓ, add_tsub_cancel_of_le hax]⟩
-    Fintype.false
+      lt_of_not_geₓ fun hax => h ⟨a - (x + 1), by rwa [add_right_commₓ, add_tsub_cancel_of_le hax]⟩
+    Fintypeₓ.false
       ⟨(((Multiset.range (succ x)).filter (· ∈ s)).pmap (fun (y : ℕ) (hy : y ∈ s) => Subtype.mk y hy)
-            (by
-              simp [-Multiset.range_succ])).toFinset,
-        by
-        simpa [Subtype.ext_iff_val, Multiset.mem_filter, -Multiset.range_succ] ⟩
+            (by simp [-Multiset.range_succ])).toFinset,
+        by simpa [Subtype.ext_iff_val, Multiset.mem_filter, -Multiset.range_succ] ⟩
 
 end Classical
 
@@ -208,8 +193,7 @@ theorem succ_le_of_lt {x y : s} (h : y < x) : succ y ≤ x :=
   have hx : ∃ m, ↑y + m + 1 ∈ s := exists_succ _
   let ⟨k, hk⟩ := Nat.exists_eq_add_of_lt h
   have : Nat.findₓ hx ≤ k := Nat.find_min'ₓ _ (hk ▸ x.2)
-  show (y : ℕ) + Nat.findₓ hx + 1 ≤ x by
-    rw [hk] <;> exact add_le_add_right (add_le_add_left this _) _
+  show (y : ℕ) + Nat.findₓ hx + 1 ≤ x by rw [hk] <;> exact add_le_add_right (add_le_add_left this _) _
 
 theorem le_succ_of_forall_lt_le {x y : s} (h : ∀ z < x, z ≤ y) : x ≤ succ y :=
   have hx : ∃ m, ↑y + m + 1 ∈ s := exists_succ _
@@ -237,33 +221,20 @@ def ofNat (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : ℕ → s
 
 theorem of_nat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n = ⟨x, hx⟩
   | x => fun hx => by
-    let t : List s :=
-      ((List.range x).filter fun y => y ∈ s).pmap (fun (y : ℕ) (hy : y ∈ s) => ⟨y, hy⟩)
-        (by
-          simp )
-    have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ := by
-      simp [List.mem_filterₓ, Subtype.ext_iff_val, t] <;> intros <;> rfl
-    have wf : ∀ m : s, List.maximum t = m → ↑m < x := fun m hmax => by
-      simpa [hmt] using List.maximum_mem hmax
+    let t : List s := ((List.range x).filter fun y => y ∈ s).pmap (fun (y : ℕ) (hy : y ∈ s) => ⟨y, hy⟩) (by simp)
+    have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ := by simp [List.mem_filterₓ, Subtype.ext_iff_val, t] <;> intros <;> rfl
+    have wf : ∀ m : s, List.maximum t = m → ↑m < x := fun m hmax => by simpa [hmt] using List.maximum_mem hmax
     cases' hmax : List.maximum t with m
     · exact
         ⟨0,
           le_antisymmₓ bot_le
             (le_of_not_gtₓ fun h =>
-              List.not_mem_nilₓ (⊥ : s) <| by
-                rw [← List.maximum_eq_none.1 hmax, hmt] <;> exact h)⟩
+              List.not_mem_nilₓ (⊥ : s) <| by rw [← List.maximum_eq_none.1 hmax, hmt] <;> exact h)⟩
       
     cases' of_nat_surjective_aux m.2 with a ha
     exact
       ⟨a + 1,
-        le_antisymmₓ
-            (by
-              rw [of_nat] <;>
-                exact
-                  succ_le_of_lt
-                    (by
-                      rw [ha] <;> exact wf _ hmax)) <|
-          by
+        le_antisymmₓ (by rw [of_nat] <;> exact succ_le_of_lt (by rw [ha] <;> exact wf _ hmax)) <| by
           rw [of_nat] <;>
             exact
               le_succ_of_forall_lt_le fun z hz => by
@@ -282,10 +253,10 @@ theorem coe_comp_of_nat_range : Set.Range (coe ∘ ofNat s : ℕ → ℕ) = s :=
 private def to_fun_aux (x : s) : ℕ :=
   (List.range x).countp (· ∈ s)
 
-private theorem to_fun_aux_eq (x : s) : toFunAux x = ((Finset.range x).filter (· ∈ s)).card := by
+private theorem to_fun_aux_eq (x : s) : toFunAux x = ((Finsetₓ.range x).filter (· ∈ s)).card := by
   rw [to_fun_aux, List.countp_eq_length_filter] <;> rfl
 
-open Finset
+open Finsetₓ
 
 private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
   | 0 => by
@@ -295,17 +266,18 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
     exact bot_le.not_lt (show (⟨n, hn.2⟩ : s) < ⊥ from hn.1)
   | n + 1 => by
     have ih : toFunAux (ofNat s n) = n := right_inverse_aux n
-    have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filter (· ∈ s) := by
-      simp
+    have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filter (· ∈ s) := by simp
     have h₂ : (range (succ (ofNat s n))).filter (· ∈ s) = insert (ofNat s n) ((range (ofNat s n)).filter (· ∈ s)) := by
-      simp only [Finset.ext_iff, mem_insert, mem_range, mem_filter]
+      simp only [Finsetₓ.ext_iff, mem_insert, mem_range, mem_filter]
       exact fun m =>
         ⟨fun h => by
           simp only [h.2, and_trueₓ] <;> exact Or.symm (lt_or_eq_of_leₓ ((@lt_succ_iff_le _ _ _ ⟨m, h.2⟩ _).1 h.1)),
           fun h =>
           h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).Prop⟩) fun h => ⟨h.1.trans (lt_succ_self _), h.2⟩⟩
     simp only [to_fun_aux_eq, of_nat, range_succ] at ih⊢
-    conv => rhs rw [← ih, ← card_insert_of_not_mem h₁, ← h₂]
+    conv =>
+    rhs
+    rw [← ih, ← card_insert_of_not_mem h₁, ← h₂]
 
 /-- Any infinite set of naturals is denumerable. -/
 def denumerable (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : Denumerable s :=

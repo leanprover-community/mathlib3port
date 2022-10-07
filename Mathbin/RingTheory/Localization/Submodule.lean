@@ -40,8 +40,7 @@ theorem coe_submodule_mono {I J : Ideal R} (h : I ≤ J) : coeSubmodule S I ≤ 
   Submodule.map_mono h
 
 @[simp]
-theorem coe_submodule_bot : coeSubmodule S (⊥ : Ideal R) = ⊥ := by
-  rw [coe_submodule, Submodule.map_bot]
+theorem coe_submodule_bot : coeSubmodule S (⊥ : Ideal R) = ⊥ := by rw [coe_submodule, Submodule.map_bot]
 
 @[simp]
 theorem coe_submodule_top : coeSubmodule S (⊤ : Ideal R) = 1 := by
@@ -95,14 +94,15 @@ theorem coe_submodule_le_coe_submodule (h : M ≤ nonZeroDivisors R) {I J : Idea
   Submodule.map_le_map_iff_of_injective (IsLocalization.injective _ h) _ _
 
 @[mono]
-theorem coe_submodule_strict_mono (h : M ≤ nonZeroDivisors R) : StrictMono (coeSubmodule S : Ideal R → Submodule R S) :=
+theorem coe_submodule_strict_mono (h : M ≤ nonZeroDivisors R) :
+    StrictMonoₓ (coeSubmodule S : Ideal R → Submodule R S) :=
   strict_mono_of_le_iff_le fun _ _ => (coe_submodule_le_coe_submodule h).symm
 
 variable (S) {Q M}
 
 theorem coe_submodule_injective (h : M ≤ nonZeroDivisors R) :
     Function.Injective (coeSubmodule S : Ideal R → Submodule R S) :=
-  injective_of_le_imp_le _ fun _ _ => (coe_submodule_le_coe_submodule h).mp
+  injective_of_le_imp_leₓ _ fun _ _ => (coe_submodule_le_coe_submodule h).mp
 
 theorem coe_submodule_is_principal {I : Ideal R} (h : M ≤ nonZeroDivisors R) :
     (coeSubmodule S I).IsPrincipal ↔ I.IsPrincipal := by
@@ -124,13 +124,9 @@ theorem mem_span_iff {N : Type _} [AddCommGroupₓ N] [Module R N] [Module S N] 
   intro h
   · refine' Submodule.span_induction h _ _ _ _
     · rintro x hx
-      exact
-        ⟨x, Submodule.subset_span hx, 1, by
-          rw [mk'_one, _root_.map_one, one_smul]⟩
+      exact ⟨x, Submodule.subset_span hx, 1, by rw [mk'_one, _root_.map_one, one_smul]⟩
       
-    · exact
-        ⟨0, Submodule.zero_mem _, 1, by
-          rw [mk'_one, _root_.map_one, one_smul]⟩
+    · exact ⟨0, Submodule.zero_mem _, 1, by rw [mk'_one, _root_.map_one, one_smul]⟩
       
     · rintro _ _ ⟨y, hy, z, rfl⟩ ⟨y', hy', z', rfl⟩
       refine'
@@ -143,16 +139,14 @@ theorem mem_span_iff {N : Type _} [AddCommGroupₓ N] [Module R N] [Module S N] 
         
       · rw [← mul_oneₓ (1 : R), mk'_mul, mul_right_commₓ, mk'_spec, _root_.map_one, mul_oneₓ, one_mulₓ]
         
-      all_goals
-        infer_instance
+      all_goals infer_instance
       
     · rintro a _ ⟨y, hy, z, rfl⟩
       obtain ⟨y', z', rfl⟩ := mk'_surjective M a
       refine' ⟨y' • y, Submodule.smul_mem _ _ hy, z' * z, _⟩
       rw [← IsScalarTower.algebra_map_smul S y', smul_smul, ← mk'_mul, smul_smul, mul_comm (mk' S _ _),
         mul_mk'_eq_mk'_of_mul]
-      all_goals
-        infer_instance
+      all_goals infer_instance
       
     
   · rintro ⟨y, hy, z, rfl⟩
@@ -190,13 +184,13 @@ theorem coe_submodule_le_coe_submodule {I J : Ideal R} : coeSubmodule K I ≤ co
   IsLocalization.coe_submodule_le_coe_submodule le_rflₓ
 
 @[mono]
-theorem coe_submodule_strict_mono : StrictMono (coeSubmodule K : Ideal R → Submodule R K) :=
+theorem coe_submodule_strict_mono : StrictMonoₓ (coeSubmodule K : Ideal R → Submodule R K) :=
   strict_mono_of_le_iff_le fun _ _ => coe_submodule_le_coe_submodule.symm
 
 variable (R K)
 
 theorem coe_submodule_injective : Function.Injective (coeSubmodule K : Ideal R → Submodule R K) :=
-  injective_of_le_imp_le _ fun _ _ => coe_submodule_le_coe_submodule.mp
+  injective_of_le_imp_leₓ _ fun _ _ => coe_submodule_le_coe_submodule.mp
 
 @[simp]
 theorem coe_submodule_is_principal {I : Ideal R} : (coeSubmodule K I).IsPrincipal ↔ I.IsPrincipal :=

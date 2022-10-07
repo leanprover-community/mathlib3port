@@ -146,8 +146,7 @@ protected theorem gcd (hm : IsPeriodicPt f m x) (hn : IsPeriodicPt f n x) : IsPe
 /-- If `f` sends two periodic points `x` and `y` of the same positive period to the same point,
 then `x = y`. For a similar statement about points of different periods see `eq_of_apply_eq`. -/
 theorem eq_of_apply_eq_same (hx : IsPeriodicPt f n x) (hy : IsPeriodicPt f n y) (hn : 0 < n) (h : f x = f y) : x = y :=
-  by
-  rw [← hx.eq, ← hy.eq, ← iterate_pred_comp_of_pos f hn, comp_app, h]
+  by rw [← hx.eq, ← hy.eq, ← iterate_pred_comp_of_pos f hn, comp_app, h]
 
 /-- If `f` sends two periodic points `x` and `y` of positive periods to the same point,
 then `x = y`. -/
@@ -171,8 +170,7 @@ theorem Semiconj.maps_to_pts_of_period {g : α → β} (h : Semiconj g fa fb) (n
 
 theorem bij_on_pts_of_period (f : α → α) {n : ℕ} (hn : 0 < n) : BijOn f (PtsOfPeriod f n) (PtsOfPeriod f n) :=
   ⟨(Commute.refl f).maps_to_pts_of_period n, fun x hx y hy hxy => hx.eq_of_apply_eq_same hy hn hxy, fun x hx =>
-    ⟨(f^[n.pred]) x, hx.apply_iterate _, by
-      rw [← comp_app f, comp_iterate_pred_of_pos f hn, hx.eq]⟩⟩
+    ⟨(f^[n.pred]) x, hx.apply_iterate _, by rw [← comp_app f, comp_iterate_pred_of_pos f hn, hx.eq]⟩⟩
 
 theorem directed_pts_of_period_pnat (f : α → α) : Directed (· ⊆ ·) fun n : ℕ+ => PtsOfPeriod f n := fun m n =>
   ⟨m * n, fun x hx => hx.mul_const n, fun x hx => hx.const_mul m⟩
@@ -191,16 +189,14 @@ theorem is_periodic_pt_of_mem_periodic_pts_of_is_periodic_pt_iterate (hx : x ∈
     (hm : IsPeriodicPt f m ((f^[n]) x)) : IsPeriodicPt f m x := by
   rcases hx with ⟨r, hr, hr'⟩
   convert (hm.apply_iterate ((n / r + 1) * r - n)).Eq
-  suffices n ≤ (n / r + 1) * r by
-    rw [← iterate_add_apply, Nat.sub_add_cancelₓ this, iterate_mul, (hr'.iterate _).Eq]
+  suffices n ≤ (n / r + 1) * r by rw [← iterate_add_apply, Nat.sub_add_cancelₓ this, iterate_mul, (hr'.iterate _).Eq]
   rw [add_mulₓ, one_mulₓ]
   exact (Nat.lt_div_mul_add hr).le
 
 variable (f)
 
 theorem bUnion_pts_of_period : (⋃ n > 0, PtsOfPeriod f n) = PeriodicPts f :=
-  Set.ext fun x => by
-    simp [mem_periodic_pts]
+  Set.ext fun x => by simp [mem_periodic_pts]
 
 theorem Union_pnat_pts_of_period : (⋃ n : ℕ+, PtsOfPeriod f n) = PeriodicPts f :=
   supr_subtype.trans <| bUnion_pts_of_period f
@@ -224,7 +220,7 @@ def minimalPeriod (f : α → α) (x : α) :=
   if h : x ∈ PeriodicPts f then Nat.findₓ h else 0
 
 theorem is_periodic_pt_minimal_period (f : α → α) (x : α) : IsPeriodicPt f (minimalPeriod f x) x := by
-  delta' minimal_period
+  delta minimal_period
   split_ifs with hx
   · exact (Nat.find_specₓ hx).snd
     
@@ -255,8 +251,7 @@ theorem IsPeriodicPt.minimal_period_pos (hn : 0 < n) (hx : IsPeriodicPt f n x) :
   minimal_period_pos_of_mem_periodic_pts <| mk_mem_periodic_pts hn hx
 
 theorem minimal_period_pos_iff_mem_periodic_pts : 0 < minimalPeriod f x ↔ x ∈ PeriodicPts f :=
-  ⟨not_imp_not.1 fun h => by
-      simp only [minimal_period, dif_neg h, lt_irreflₓ 0, not_false_iff],
+  ⟨not_imp_not.1 fun h => by simp only [minimal_period, dif_neg h, lt_irreflₓ 0, not_false_iff],
     minimal_period_pos_of_mem_periodic_pts⟩
 
 theorem minimal_period_eq_zero_iff_nmem_periodic_pts : minimalPeriod f x = 0 ↔ x ∉ PeriodicPts f := by
@@ -466,7 +461,7 @@ theorem periodic_orbit_apply_eq (hx : x ∈ PeriodicPts f) : periodicOrbit f (f 
 
 theorem periodic_orbit_chain (r : α → α → Prop) {f : α → α} {x : α} :
     (periodicOrbit f x).Chain r ↔ ∀ n < minimalPeriod f x, r ((f^[n]) x) ((f^[n + 1]) x) := by
-  by_cases' hx : x ∈ periodic_pts f
+  by_cases hx:x ∈ periodic_pts f
   · have hx' := minimal_period_pos_of_mem_periodic_pts hx
     have hM := Nat.sub_add_cancelₓ (succ_le_iff.2 hx')
     rw [periodic_orbit, ← Cycle.map_coe, Cycle.chain_map, ← hM, Cycle.chain_range_succ]
@@ -479,8 +474,8 @@ theorem periodic_orbit_chain (r : α → α → Prop) {f : α → α} {x : α} :
         
       
     · rw [iterate_zero_apply]
-      nth_rw 2[← @iterate_minimal_period α f x]
-      nth_rw 1[← hM]
+      nth_rw 2 [← @iterate_minimal_period α f x]
+      nth_rw 1 [← hM]
       exact H _ (Nat.lt_succ_selfₓ _)
       
     
@@ -493,7 +488,7 @@ theorem periodic_orbit_chain' (r : α → α → Prop) {f : α → α} {x : α} 
   rw [periodic_orbit_chain r]
   refine' ⟨fun H n => _, fun H n _ => H n⟩
   rw [iterate_succ_apply, ← iterate_mod_minimal_period_eq]
-  nth_rw 1[← iterate_mod_minimal_period_eq]
+  nth_rw 1 [← iterate_mod_minimal_period_eq]
   rw [← iterate_succ_apply, minimal_period_apply hx]
   exact H _ (mod_lt _ (minimal_period_pos_of_mem_periodic_pts hx))
 

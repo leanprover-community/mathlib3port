@@ -73,7 +73,7 @@ end AddBasic
 
 instance covariant_class_add_le [AddMonoidₓ M] [PartialOrderₓ M] [CovariantClass M M (· + ·) (· < ·)] :
     CovariantClass { x : M // 0 < x } { x : M // 0 < x } (· + ·) (· ≤ ·) :=
-  ⟨fun x => StrictMono.monotone fun _ _ h => add_lt_add_left h _⟩
+  ⟨fun x => StrictMonoₓ.monotone fun _ _ h => add_lt_add_left h _⟩
 
 section Mul
 
@@ -118,12 +118,9 @@ instance [OrderedCommSemiring R] [Nontrivial R] : OrderedCommMonoid { x : R // 0
     mul_le_mul_left := fun x y hxy c => Subtype.coe_le_coe.1 <| mul_le_mul_of_nonneg_left hxy c.2.le }
 
 /-- If `R` is a nontrivial linear ordered commutative semiring, then `{x : R // 0 < x}` is a linear
-ordered cancellative commutative monoid. We don't have a typeclass for linear ordered commutative
-semirings, so we assume `[linear_ordered_semiring R] [is_commutative R (*)] instead. -/
-instance [LinearOrderedSemiring R] [IsCommutative R (· * ·)] [Nontrivial R] :
-    LinearOrderedCancelCommMonoid { x : R // 0 < x } :=
-  { Subtype.linearOrder _,
-    @Positive.Subtype.orderedCommMonoid R { ‹LinearOrderedSemiring R› with mul_comm := IsCommutative.comm } _ with
+ordered cancellative commutative monoid. -/
+instance [LinearOrderedCommSemiring R] : LinearOrderedCancelCommMonoid { x : R // 0 < x } :=
+  { Subtype.linearOrder _, Positive.Subtype.orderedCommMonoid with
     le_of_mul_le_mul_left := fun a b c h => Subtype.coe_le_coe.1 <| (mul_le_mul_left a.2).1 h }
 
 end mul_comm

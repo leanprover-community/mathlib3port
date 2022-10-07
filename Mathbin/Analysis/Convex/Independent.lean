@@ -42,7 +42,7 @@ independence, convex position
 
 open Affine BigOperators Classical
 
-open Finset Function
+open Finsetₓ Function
 
 variable {𝕜 E ι : Type _}
 
@@ -75,10 +75,7 @@ theorem ConvexIndependent.comp_embedding {ι' : Type _} (f : ι' ↪ ι) {p : ι
     ConvexIndependent 𝕜 (p ∘ f) := by
   intro s x hx
   rw [← f.injective.mem_set_image]
-  exact
-    hc _ _
-      (by
-        rwa [Set.image_image])
+  exact hc _ _ (by rwa [Set.image_image])
 
 /-- If a family is convex independent, so is any subfamily indexed by a subtype of the index type.
 -/
@@ -165,9 +162,9 @@ variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {s : Set 
 
 /-- To check convex independence, one only has to check finsets thanks to Carathéodory's theorem. -/
 theorem convex_independent_iff_finset {p : ι → E} :
-    ConvexIndependent 𝕜 p ↔ ∀ (s : Finset ι) (x : ι), p x ∈ convexHull 𝕜 (s.Image p : Set E) → x ∈ s := by
+    ConvexIndependent 𝕜 p ↔ ∀ (s : Finsetₓ ι) (x : ι), p x ∈ convexHull 𝕜 (s.Image p : Set E) → x ∈ s := by
   refine' ⟨fun hc s x hx => hc s x _, fun h s x hx => _⟩
-  · rwa [Finset.coe_image] at hx
+  · rwa [Finsetₓ.coe_image] at hx
     
   have hp : injective p := by
     rintro a b hab
@@ -180,8 +177,7 @@ theorem convex_independent_iff_finset {p : ι → E} :
   obtain ⟨t, ht, hx⟩ := hx
   rw [← hp.mem_set_image]
   refine' ht _
-  suffices x ∈ t.preimage p (hp.inj_on _) by
-    rwa [mem_preimage, ← mem_coe] at this
+  suffices x ∈ t.preimage p (hp.inj_on _) by rwa [mem_preimage, ← mem_coe] at this
   refine' h _ x _
   rwa [t.image_preimage p (hp.inj_on _), filter_true_of_mem]
   · exact fun y hy => s.image_subset_range p (ht <| mem_coe.2 hy)

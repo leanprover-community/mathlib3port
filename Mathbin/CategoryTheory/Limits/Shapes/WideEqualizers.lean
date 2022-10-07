@@ -135,11 +135,7 @@ theorem parallel_family_map_left {j : J} : (parallelFamily f).map (line j) = f j
     `parallel_family` -/
 @[simps]
 def diagramIsoParallelFamily (F : WalkingParallelFamily J ⥤ C) : F ≅ parallelFamily fun j => F.map (line j) :=
-  (NatIso.ofComponents fun j =>
-      eq_to_iso <| by
-        cases j <;> tidy) <|
-    by
-    tidy
+  (NatIso.ofComponents fun j => eq_to_iso <| by cases j <;> tidy) <| by tidy
 
 /-- `walking_parallel_pair` as a category is equivalent to a special case of
 `walking_parallel_family`.  -/
@@ -147,22 +143,8 @@ def diagramIsoParallelFamily (F : WalkingParallelFamily J ⥤ C) : F ≅ paralle
 def walkingParallelFamilyEquivWalkingParallelPair : WalkingParallelFamily.{w} (ULift Bool) ≌ walking_parallel_pair where
   Functor := parallelFamily fun p => cond p.down WalkingParallelPairHom.left WalkingParallelPairHom.right
   inverse := parallelPair (line (ULift.up true)) (line (ULift.up false))
-  unitIso :=
-    NatIso.ofComponents
-      (fun X =>
-        eqToIso
-          (by
-            cases X <;> rfl))
-      (by
-        tidy)
-  counitIso :=
-    NatIso.ofComponents
-      (fun X =>
-        eqToIso
-          (by
-            cases X <;> rfl))
-      (by
-        tidy)
+  unitIso := NatIso.ofComponents (fun X => eqToIso (by cases X <;> rfl)) (by tidy)
+  counitIso := NatIso.ofComponents (fun X => eqToIso (by cases X <;> rfl)) (by tidy)
 
 /-- A trident on `f` is just a `cone (parallel_family f)`. -/
 abbrev Trident :=
@@ -211,7 +193,7 @@ def Trident.ofι [Nonempty J] {P : C} (ι : P ⟶ X) (w : ∀ j₁ j₂, ι ≫ 
   π :=
     { app := fun X => WalkingParallelFamily.casesOn X ι (ι ≫ f (Classical.arbitrary J)),
       naturality' := fun i j f => by
-        dsimp'
+        dsimp
         cases' f with _ k
         · simp
           
@@ -227,7 +209,7 @@ def Cotrident.ofπ [Nonempty J] {P : C} (π : Y ⟶ P) (w : ∀ j₁ j₂, f j�
   ι :=
     { app := fun X => WalkingParallelFamily.casesOn X (f (Classical.arbitrary J) ≫ π) π,
       naturality' := fun i j f => by
-        dsimp'
+        dsimp
         cases' f with _ k
         · simp
           
@@ -243,27 +225,23 @@ theorem Cotrident.π_of_π [Nonempty J] {P : C} (π : Y ⟶ P) (w : ∀ j₁ j�
   rfl
 
 @[reassoc]
-theorem Trident.condition (j₁ j₂ : J) (t : Trident f) : t.ι ≫ f j₁ = t.ι ≫ f j₂ := by
-  rw [t.app_zero, t.app_zero]
+theorem Trident.condition (j₁ j₂ : J) (t : Trident f) : t.ι ≫ f j₁ = t.ι ≫ f j₂ := by rw [t.app_zero, t.app_zero]
 
 @[reassoc]
-theorem Cotrident.condition (j₁ j₂ : J) (t : Cotrident f) : f j₁ ≫ t.π = f j₂ ≫ t.π := by
-  rw [t.app_one, t.app_one]
+theorem Cotrident.condition (j₁ j₂ : J) (t : Cotrident f) : f j₁ ≫ t.π = f j₂ ≫ t.π := by rw [t.app_one, t.app_one]
 
 /-- To check whether two maps are equalized by both maps of a trident, it suffices to check it for
 the first map -/
 theorem Trident.equalizer_ext [Nonempty J] (s : Trident f) {W : C} {k l : W ⟶ s.x} (h : k ≫ s.ι = l ≫ s.ι) :
     ∀ j : WalkingParallelFamily J, k ≫ s.π.app j = l ≫ s.π.app j
   | zero => h
-  | one => by
-    rw [← s.app_zero (Classical.arbitrary J), reassoc_of h]
+  | one => by rw [← s.app_zero (Classical.arbitrary J), reassoc_of h]
 
 /-- To check whether two maps are coequalized by both maps of a cotrident, it suffices to check it
 for the second map -/
 theorem Cotrident.coequalizer_ext [Nonempty J] (s : Cotrident f) {W : C} {k l : s.x ⟶ W} (h : s.π ≫ k = s.π ≫ l) :
     ∀ j : WalkingParallelFamily J, s.ι.app j ≫ k = s.ι.app j ≫ l
-  | zero => by
-    rw [← s.app_one (Classical.arbitrary J), category.assoc, category.assoc, h]
+  | zero => by rw [← s.app_one (Classical.arbitrary J), category.assoc, category.assoc, h]
   | one => h
 
 theorem Trident.IsLimit.hom_ext [Nonempty J] {s : Trident f} (hs : IsLimit s) {W : C} {k l : W ⟶ s.x}
@@ -297,9 +275,7 @@ def Trident.IsLimit.mk [Nonempty J] (t : Trident f) (lift : ∀ s : Trident f, s
     IsLimit t :=
   { lift,
     fac' := fun s j =>
-      WalkingParallelFamily.casesOn j (fac s)
-        (by
-          rw [← t.w (line (Classical.arbitrary J)), reassoc_of fac, s.w]),
+      WalkingParallelFamily.casesOn j (fac s) (by rw [← t.w (line (Classical.arbitrary J)), reassoc_of fac, s.w]),
     uniq' := uniq }
 
 /-- This is another convenient method to verify that a trident is a limit cone. It
@@ -318,10 +294,7 @@ def Cotrident.IsColimit.mk [Nonempty J] (t : Cotrident f) (desc : ∀ s : Cotrid
     IsColimit t :=
   { desc,
     fac' := fun s j =>
-      WalkingParallelFamily.casesOn j
-        (by
-          rw [← t.w_assoc (line (Classical.arbitrary J)), fac, s.w])
-        (fac s),
+      WalkingParallelFamily.casesOn j (by rw [← t.w_assoc (line (Classical.arbitrary J)), fac, s.w]) (fac s),
     uniq' := uniq }
 
 /-- This is another convenient method to verify that a cotrident is a colimit cocone. It
@@ -338,9 +311,7 @@ Further, this bijection is natural in `Z`: see `trident.is_limit.hom_iso_natural
 @[simps]
 def Trident.IsLimit.homIso [Nonempty J] {t : Trident f} (ht : IsLimit t) (Z : C) :
     (Z ⟶ t.x) ≃ { h : Z ⟶ X // ∀ j₁ j₂, h ≫ f j₁ = h ≫ f j₂ } where
-  toFun := fun k =>
-    ⟨k ≫ t.ι, by
-      simp ⟩
+  toFun := fun k => ⟨k ≫ t.ι, by simp⟩
   invFun := fun h => (Trident.IsLimit.lift' ht _ h.Prop).1
   left_inv := fun k => Trident.IsLimit.hom_ext ht (Trident.IsLimit.lift' _ _ _).Prop
   right_inv := fun h => Subtype.ext (Trident.IsLimit.lift' ht _ _).Prop
@@ -358,9 +329,7 @@ point to `Z` are in bijection with morphisms `h : Z ⟶ X` such that
 @[simps]
 def Cotrident.IsColimit.homIso [Nonempty J] {t : Cotrident f} (ht : IsColimit t) (Z : C) :
     (t.x ⟶ Z) ≃ { h : Y ⟶ Z // ∀ j₁ j₂, f j₁ ≫ h = f j₂ ≫ h } where
-  toFun := fun k =>
-    ⟨t.π ≫ k, by
-      simp ⟩
+  toFun := fun k => ⟨t.π ≫ k, by simp⟩
   invFun := fun h => (Cotrident.IsColimit.desc' ht _ h.Prop).1
   left_inv := fun k => Cotrident.IsColimit.hom_ext ht (Cotrident.IsColimit.desc' _ _ _).Prop
   right_inv := fun h => Subtype.ext (Cotrident.IsColimit.desc' ht _ _).Prop
@@ -382,14 +351,10 @@ theorem Cotrident.IsColimit.hom_iso_natural [Nonempty J] {t : Cotrident f} {Z Z'
 def Cone.ofTrident {F : WalkingParallelFamily J ⥤ C} (t : Trident fun j => F.map (line j)) : Cone F where
   x := t.x
   π :=
-    { app := fun X =>
-        t.π.app X ≫
-          eqToHom
-            (by
-              tidy),
+    { app := fun X => t.π.app X ≫ eqToHom (by tidy),
       naturality' := fun j j' g => by
         cases g <;>
-          · dsimp'
+          · dsimp
             simp
              }
 
@@ -404,30 +369,17 @@ def Cone.ofTrident {F : WalkingParallelFamily J ⥤ C} (t : Trident fun j => F.m
 def Cocone.ofCotrident {F : WalkingParallelFamily J ⥤ C} (t : Cotrident fun j => F.map (line j)) : Cocone F where
   x := t.x
   ι :=
-    { app := fun X =>
-        eqToHom
-            (by
-              tidy) ≫
-          t.ι.app X,
-      naturality' := fun j j' g => by
-        cases g <;> dsimp' <;> simp [cotrident.app_one t] }
+    { app := fun X => eqToHom (by tidy) ≫ t.ι.app X,
+      naturality' := fun j j' g => by cases g <;> dsimp <;> simp [cotrident.app_one t] }
 
 @[simp]
 theorem Cone.of_trident_π {F : WalkingParallelFamily J ⥤ C} (t : Trident fun j => F.map (line j)) (j) :
-    (Cone.ofTrident t).π.app j =
-      t.π.app j ≫
-        eqToHom
-          (by
-            tidy) :=
+    (Cone.ofTrident t).π.app j = t.π.app j ≫ eqToHom (by tidy) :=
   rfl
 
 @[simp]
 theorem Cocone.of_cotrident_ι {F : WalkingParallelFamily J ⥤ C} (t : Cotrident fun j => F.map (line j)) (j) :
-    (Cocone.ofCotrident t).ι.app j =
-      eqToHom
-          (by
-            tidy) ≫
-        t.ι.app j :=
+    (Cocone.ofCotrident t).ι.app j = eqToHom (by tidy) ≫ t.ι.app j :=
   rfl
 
 /-- Given `F : walking_parallel_family ⥤ C`, which is really the same as
@@ -435,41 +387,23 @@ theorem Cocone.of_cotrident_ι {F : WalkingParallelFamily J ⥤ C} (t : Cotriden
     `λ j, F.map (line j)`. -/
 def Trident.ofCone {F : WalkingParallelFamily J ⥤ C} (t : Cone F) : Trident fun j => F.map (line j) where
   x := t.x
-  π :=
-    { app := fun X =>
-        t.π.app X ≫
-          eqToHom
-            (by
-              tidy) }
+  π := { app := fun X => t.π.app X ≫ eqToHom (by tidy) }
 
 /-- Given `F : walking_parallel_family ⥤ C`, which is really the same as
     `parallel_family (F.map left) (F.map right)` and a cocone on `F`, we get a cotrident on
     `λ j, F.map (line j)`. -/
 def Cotrident.ofCocone {F : WalkingParallelFamily J ⥤ C} (t : Cocone F) : Cotrident fun j => F.map (line j) where
   x := t.x
-  ι :=
-    { app := fun X =>
-        eqToHom
-            (by
-              tidy) ≫
-          t.ι.app X }
+  ι := { app := fun X => eqToHom (by tidy) ≫ t.ι.app X }
 
 @[simp]
 theorem Trident.of_cone_π {F : WalkingParallelFamily J ⥤ C} (t : Cone F) (j) :
-    (Trident.ofCone t).π.app j =
-      t.π.app j ≫
-        eqToHom
-          (by
-            tidy) :=
+    (Trident.ofCone t).π.app j = t.π.app j ≫ eqToHom (by tidy) :=
   rfl
 
 @[simp]
 theorem Cotrident.of_cocone_ι {F : WalkingParallelFamily J ⥤ C} (t : Cocone F) (j) :
-    (Cotrident.ofCocone t).ι.app j =
-      eqToHom
-          (by
-            tidy) ≫
-        t.ι.app j :=
+    (Cotrident.ofCocone t).ι.app j = eqToHom (by tidy) ≫ t.ι.app j :=
   rfl
 
 /-- Helper function for constructing morphisms between wide equalizer tridents.
@@ -491,10 +425,7 @@ and check that it commutes with the `ι` morphisms.
 @[simps]
 def Trident.ext [Nonempty J] {s t : Trident f} (i : s.x ≅ t.x) (w : i.Hom ≫ t.ι = s.ι) : s ≅ t where
   Hom := Trident.mkHom i.Hom w
-  inv :=
-    Trident.mkHom i.inv
-      (by
-        rw [← w, iso.inv_hom_id_assoc])
+  inv := Trident.mkHom i.inv (by rw [← w, iso.inv_hom_id_assoc])
 
 /-- Helper function for constructing morphisms between coequalizer cotridents.
 -/
@@ -514,10 +445,7 @@ and check that it commutes with the `π` morphisms.
 -/
 def Cotrident.ext [Nonempty J] {s t : Cotrident f} (i : s.x ≅ t.x) (w : s.π ≫ i.Hom = t.π) : s ≅ t where
   Hom := Cotrident.mkHom i.Hom w
-  inv :=
-    Cotrident.mkHom i.inv
-      (by
-        rw [iso.comp_inv_eq, w])
+  inv := Cotrident.mkHom i.inv (by rw [iso.comp_inv_eq, w])
 
 variable (f)
 
@@ -560,10 +488,7 @@ theorem wideEqualizer.condition (j₁ j₂ : J) : wideEqualizer.ι f ≫ f j₁ 
 
 /-- The wide_equalizer built from `wide_equalizer.ι f` is limiting. -/
 def wideEqualizerIsWideEqualizer [Nonempty J] : IsLimit (Trident.ofι (wideEqualizer.ι f) (wideEqualizer.condition f)) :=
-  IsLimit.ofIsoLimit (limit.isLimit _)
-    (Trident.ext (Iso.refl _)
-      (by
-        tidy))
+  IsLimit.ofIsoLimit (limit.isLimit _) (Trident.ext (Iso.refl _) (by tidy))
 
 variable {f}
 
@@ -647,10 +572,7 @@ theorem wideCoequalizer.condition (j₁ j₂ : J) : f j₁ ≫ wideCoequalizer.�
 /-- The cotrident built from `wide_coequalizer.π f` is colimiting. -/
 def wideCoequalizerIsWideCoequalizer [Nonempty J] :
     IsColimit (Cotrident.ofπ (wideCoequalizer.π f) (wideCoequalizer.condition f)) :=
-  IsColimit.ofIsoColimit (colimit.isColimit _)
-    (Cotrident.ext (Iso.refl _)
-      (by
-        tidy))
+  IsColimit.ofIsoColimit (colimit.isColimit _) (Cotrident.ext (Iso.refl _) (by tidy))
 
 variable {f}
 

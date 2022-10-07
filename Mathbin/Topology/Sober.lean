@@ -130,9 +130,7 @@ theorem generic_point_closure [QuasiSober α] [IrreducibleSpace α] : Closure ({
 variable {α}
 
 theorem generic_point_specializes [QuasiSober α] [IrreducibleSpace α] (x : α) : genericPoint α ⤳ x :=
-  (IsIrreducible.generic_point_spec _).Specializes
-    (by
-      simp )
+  (IsIrreducible.generic_point_spec _).Specializes (by simp)
 
 attribute [local instance] specializationOrder
 
@@ -183,7 +181,7 @@ theorem OpenEmbedding.quasi_sober {f : α → β} (hf : OpenEmbedding f) [QuasiS
   rw [hf.to_embedding.closure_eq_preimage_closure_image, Set.image_singleton, show _ = _ from hx]
   apply set.image_injective.mpr hf.inj
   ext z
-  simp only [Set.image_preimage_eq_inter_range, Set.mem_inter_eq, And.congr_left_iffₓ]
+  simp only [Set.image_preimage_eq_inter_range, Set.mem_inter_iff, And.congr_left_iffₓ]
   exact fun hy => ⟨fun h => hT.closure_eq ▸ closure_mono (Set.inter_subset_left _ _) h, fun h => subset_closure ⟨h, hy⟩⟩
 
 /-- A space is quasi sober if it can be covered by open quasi sober subsets. -/
@@ -197,10 +195,7 @@ theorem quasi_sober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s 
     trivial
   haveI : QuasiSober U := hS' ⟨U, hU⟩
   have H : IsPreirreducible (coe ⁻¹' t : Set U) := h.2.Preimage (hS ⟨U, hU⟩).open_embedding_subtype_coe
-  replace H : IsIrreducible (coe ⁻¹' t : Set U) :=
-    ⟨⟨⟨x, hU'⟩, by
-        simpa using hx⟩,
-      H⟩
+  replace H : IsIrreducible (coe ⁻¹' t : Set U) := ⟨⟨⟨x, hU'⟩, by simpa using hx⟩, H⟩
   use H.generic_point
   have := continuous_subtype_coe.closure_preimage_subset _ H.generic_point_spec.mem
   rw [h'.closure_eq] at this
@@ -219,7 +214,7 @@ theorem quasi_sober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s 
 instance (priority := 100) T2Space.quasi_sober [T2Space α] : QuasiSober α := by
   constructor
   rintro S h -
-  obtain ⟨x, rfl⟩ := (is_irreducible_iff_singleton S).mp h
+  obtain ⟨x, rfl⟩ := is_irreducible_iff_singleton.mp h
   exact ⟨x, closure_singleton⟩
 
 end Sober

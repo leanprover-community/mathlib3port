@@ -98,27 +98,21 @@ def map (x : X) : OpenNhds (f x) ⥤ OpenNhds x where
   map := fun U V i => (Opens.map f).map i
 
 @[simp]
-theorem map_obj (x : X) (U) (q) :
-    (map f x).obj ⟨U, q⟩ =
-      ⟨(Opens.map f).obj U, by
-        tidy⟩ :=
+theorem map_obj (x : X) (U) (q) : (map f x).obj ⟨U, q⟩ = ⟨(Opens.map f).obj U, by tidy⟩ :=
   rfl
 
 @[simp]
-theorem map_id_obj (x : X) (U) : (map (𝟙 X) x).obj U = U := by
-  tidy
+theorem map_id_obj (x : X) (U) : (map (𝟙 X) x).obj U = U := by tidy
 
 @[simp]
 theorem map_id_obj' (x : X) (U) (p) (q) : (map (𝟙 X) x).obj ⟨⟨U, p⟩, q⟩ = ⟨⟨U, p⟩, q⟩ :=
   rfl
 
 @[simp]
-theorem map_id_obj_unop (x : X) (U : (OpenNhds x)ᵒᵖ) : (map (𝟙 X) x).obj (unop U) = unop U := by
-  simp
+theorem map_id_obj_unop (x : X) (U : (OpenNhds x)ᵒᵖ) : (map (𝟙 X) x).obj (unop U) = unop U := by simp
 
 @[simp]
-theorem op_map_id_obj (x : X) (U : (OpenNhds x)ᵒᵖ) : (map (𝟙 X) x).op.obj U = U := by
-  simp
+theorem op_map_id_obj (x : X) (U : (OpenNhds x)ᵒᵖ) : (map (𝟙 X) x).op.obj U = U := by simp
 
 /-- `opens.map f` and `open_nhds.map f` form a commuting square (up to natural isomorphism)
 with the inclusion functors into `opens X`. -/
@@ -128,8 +122,7 @@ def inclusionMapIso (x : X) : inclusion (f x) ⋙ Opens.map f ≅ map f x ⋙ in
       constructor
       exact 𝟙 _
       exact 𝟙 _)
-    (by
-      tidy)
+    (by tidy)
 
 @[simp]
 theorem inclusion_map_iso_hom (x : X) : (inclusionMapIso f x).Hom = 𝟙 _ :=

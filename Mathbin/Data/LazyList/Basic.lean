@@ -25,10 +25,7 @@ def mk {α} (x : α) : Thunkₓ α := fun _ => x
 
 instance {α : Type u} [DecidableEq α] : DecidableEq (Thunkₓ α)
   | a, b => by
-    have : a = b ↔ a () = b () :=
-      ⟨by
-        cc, by
-        intro <;> ext x <;> cases x <;> assumption⟩
+    have : a = b ↔ a () = b () := ⟨by cc, by intro <;> ext x <;> cases x <;> assumption⟩
     rw [this] <;> infer_instance
 
 end Thunkₓ
@@ -37,8 +34,6 @@ namespace LazyList
 
 open Function
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 /-- Isomorphism between strict and lazy lists. -/
 def listEquivLazyList (α : Type _) : List α ≃ LazyList α where
   toFun := LazyList.ofList
@@ -47,7 +42,7 @@ def listEquivLazyList (α : Type _) : List α ≃ LazyList α where
     intro
     induction x
     rfl
-    simp [*]
+    simp! [*]
     ext
     cases x
     rfl
@@ -55,35 +50,20 @@ def listEquivLazyList (α : Type _) : List α ≃ LazyList α where
     intro
     induction x
     rfl
-    simp [*]
+    simp! [*]
 
 instance {α : Type u} [DecidableEq α] : DecidableEq (LazyList α)
   | nil, nil => isTrue rfl
   | cons x xs, cons y ys =>
     if h : x = y then
       match DecidableEq (xs ()) (ys ()) with
-      | is_false h2 =>
-        isFalse
-          (by
-            intro <;> cc)
+      | is_false h2 => isFalse (by intro <;> cc)
       | is_true h2 =>
-        have : xs = ys := by
-          ext u <;> cases u <;> assumption
-        isTrue
-          (by
-            cc)
-    else
-      isFalse
-        (by
-          intro <;> cc)
-  | nil, cons _ _ =>
-    isFalse
-      (by
-        cc)
-  | cons _ _, nil =>
-    isFalse
-      (by
-        cc)
+        have : xs = ys := by ext u <;> cases u <;> assumption
+        isTrue (by cc)
+    else isFalse (by intro <;> cc)
+  | nil, cons _ _ => isFalse (by cc)
+  | cons _ _, nil => isFalse (by cc)
 
 /-- Traversal of lazy lists using an applicative effect. -/
 protected def traverse {m : Type u → Type u} [Applicativeₓ m] {α β : Type u} (f : α → m β) : LazyList α → m (LazyList β)
@@ -94,33 +74,28 @@ instance : Traversable LazyList where
   map := @LazyList.traverse id _
   traverse := @LazyList.traverse
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 instance : IsLawfulTraversable LazyList := by
   apply Equivₓ.isLawfulTraversable' list_equiv_lazy_list <;> intros <;> skip <;> ext
   · induction x
     rfl
-    simp [Equivₓ.map, Functor.map] at *
+    simp! [Equivₓ.map, Functor.map] at *
     simp [*]
     rfl
     
   · induction x
     rfl
-    simp [Equivₓ.map, Functor.mapConst] at *
+    simp! [Equivₓ.map, Functor.mapConst] at *
     simp [*]
     rfl
     
   · induction x
-    · simp' [Traversable.traverse, Equivₓ.traverse] with functor_norm
+    · simp! [Traversable.traverse, Equivₓ.traverse, functor_norm]
       rfl
       
-    simp [Equivₓ.map, Functor.mapConst, Traversable.traverse] at *
+    simp! [Equivₓ.map, Functor.mapConst, Traversable.traverse] at *
     rw [x_ih]
-    dsimp' [list_equiv_lazy_list, Equivₓ.traverse, to_list, Traversable.traverse, List.traverseₓ]
-    simp' with functor_norm
+    dsimp [list_equiv_lazy_list, Equivₓ.traverse, to_list, Traversable.traverse, List.traverseₓ]
+    simp! [functor_norm]
     rfl
     
 
@@ -189,7 +164,7 @@ instance : IsLawfulMonad LazyList where
     apply append_nil
   bind_assoc := by
     intros
-    dsimp' [(· >>= ·)]
+    dsimp [(· >>= ·)]
     induction x <;> simp [LazyList.bind, append_bind, *]
   id_map := by
     intros
@@ -216,10 +191,7 @@ instance Mem.decidable {α} [DecidableEq α] (x : α) : ∀ xs : LazyList α, De
   | LazyList.nil => Decidable.false
   | LazyList.cons y ys =>
     if h : x = y then Decidable.isTrue (Or.inl h)
-    else
-      decidableOfDecidableOfIff (mem.decidable (ys ()))
-        (by
-          simp [*, (· ∈ ·), LazyList.Mem])
+    else decidableOfDecidableOfIff (mem.decidable (ys ())) (by simp [*, (· ∈ ·), LazyList.Mem])
 
 @[simp]
 theorem mem_nil {α} (x : α) : x ∈ @LazyList.nil α ↔ False :=

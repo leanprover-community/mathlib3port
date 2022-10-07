@@ -35,8 +35,8 @@ possible turns remaining from this state.
 -/
 class State (S : Type u) where
   turnBound : S → ℕ
-  l : S → Finset S
-  r : S → Finset S
+  l : S → Finsetₓ S
+  r : S → Finsetₓ S
   left_bound : ∀ {s t : S} (m : t ∈ L s), turn_bound t < turn_bound s
   right_bound : ∀ {s t : S} (m : t ∈ R s), turn_bound t < turn_bound s
 
@@ -83,52 +83,52 @@ def ofStateAuxRelabelling :
     ∀ (s : S) (n m : ℕ) (hn : turnBound s ≤ n) (hm : turnBound s ≤ m),
       Relabelling (ofStateAux n s hn) (ofStateAux m s hm)
   | s, 0, 0, hn, hm => by
-    dsimp' [Pgame.ofStateAux]
+    dsimp [Pgame.ofStateAux]
     fconstructor
     rfl
     rfl
     · intro i
-      dsimp'  at i
+      dsimp at i
       exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hn)
       
     · intro j
-      dsimp'  at j
+      dsimp at j
       exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
       
   | s, 0, m + 1, hn, hm => by
-    dsimp' [Pgame.ofStateAux]
+    dsimp [Pgame.ofStateAux]
     fconstructor
     rfl
     rfl
     · intro i
-      dsimp'  at i
+      dsimp at i
       exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hn)
       
     · intro j
-      dsimp'  at j
+      dsimp at j
       exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hn)
       
   | s, n + 1, 0, hn, hm => by
-    dsimp' [Pgame.ofStateAux]
+    dsimp [Pgame.ofStateAux]
     fconstructor
     rfl
     rfl
     · intro i
-      dsimp'  at i
+      dsimp at i
       exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hm)
       
     · intro j
-      dsimp'  at j
+      dsimp at j
       exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
       
   | s, n + 1, m + 1, hn, hm => by
-    dsimp' [Pgame.ofStateAux]
+    dsimp [Pgame.ofStateAux]
     fconstructor
     rfl
     rfl
@@ -212,13 +212,14 @@ def relabellingMoveRight (s : S) (t : RightMoves (ofState s)) :
   apply relabelling_move_right_aux
   apply of_state_aux_relabelling
 
-instance fintypeLeftMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintype (LeftMoves (ofStateAux n s h)) := by
-  apply Fintype.ofEquiv _ (left_moves_of_state_aux _ _).symm
+instance fintypeLeftMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintypeₓ (LeftMoves (ofStateAux n s h)) :=
+  by
+  apply Fintypeₓ.ofEquiv _ (left_moves_of_state_aux _ _).symm
   infer_instance
 
-instance fintypeRightMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintype (RightMoves (ofStateAux n s h)) :=
+instance fintypeRightMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintypeₓ (RightMoves (ofStateAux n s h)) :=
   by
-  apply Fintype.ofEquiv _ (right_moves_of_state_aux _ _).symm
+  apply Fintypeₓ.ofEquiv _ (right_moves_of_state_aux _ _).symm
   infer_instance
 
 instance shortOfStateAux : ∀ (n : ℕ) {s : S} (h : turnBound s ≤ n), Short (ofStateAux n s h)
@@ -237,7 +238,7 @@ instance shortOfStateAux : ∀ (n : ℕ) {s : S} (h : turnBound s ≤ n), Short 
       shortOfRelabelling (relabellingMoveRightAux (n + 1) h j).symm (short_of_state_aux n _)
 
 instance shortOfState (s : S) : Short (ofState s) := by
-  dsimp' [Pgame.ofState]
+  dsimp [Pgame.ofState]
   infer_instance
 
 end Pgame

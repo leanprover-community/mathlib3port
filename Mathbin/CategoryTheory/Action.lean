@@ -73,8 +73,7 @@ theorem coe_back (x : X) : (↑x : ActionCategory M X).back = x :=
   rfl
 
 @[simp]
-theorem back_coe (x : ActionCategory M X) : ↑x.back = x := by
-  ext <;> rfl
+theorem back_coe (x : ActionCategory M X) : ↑x.back = x := by ext <;> rfl
 
 variable (M X)
 

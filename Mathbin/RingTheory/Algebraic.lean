@@ -55,7 +55,7 @@ variable {R A}
 
 /-- A subalgebra is algebraic if and only if it is algebraic as an algebra. -/
 theorem Subalgebra.is_algebraic_iff (S : Subalgebra R A) : S.IsAlgebraic ↔ @Algebra.IsAlgebraic R S _ _ S.Algebra := by
-  delta' Algebra.IsAlgebraic Subalgebra.IsAlgebraic
+  delta Algebra.IsAlgebraic Subalgebra.IsAlgebraic
   rw [Subtype.forall']
   refine' forall_congrₓ fun x => exists_congr fun p => and_congrₓ Iff.rfl _
   have h : Function.Injective S.val := Subtype.val_injective
@@ -64,7 +64,7 @@ theorem Subalgebra.is_algebraic_iff (S : Subalgebra R A) : S.IsAlgebraic ↔ @Al
 
 /-- An algebra is algebraic if and only if it is algebraic as a subalgebra. -/
 theorem Algebra.is_algebraic_iff : Algebra.IsAlgebraic R A ↔ (⊤ : Subalgebra R A).IsAlgebraic := by
-  delta' Algebra.IsAlgebraic Subalgebra.IsAlgebraic
+  delta Algebra.IsAlgebraic Subalgebra.IsAlgebraic
   simp only [Algebra.mem_top, forall_prop_of_true, iff_selfₓ]
 
 theorem is_algebraic_iff_not_injective {x : A} :
@@ -92,8 +92,7 @@ theorem is_algebraic_zero [Nontrivial R] : IsAlgebraic R (0 : A) :=
 
 /-- An element of `R` is algebraic, when viewed as an element of the `R`-algebra `A`. -/
 theorem is_algebraic_algebra_map [Nontrivial R] (x : R) : IsAlgebraic R (algebraMap R A x) :=
-  ⟨_, X_sub_C_ne_zero x, by
-    rw [_root_.map_sub, aeval_X, aeval_C, sub_self]⟩
+  ⟨_, X_sub_C_ne_zero x, by rw [_root_.map_sub, aeval_X, aeval_C, sub_self]⟩
 
 theorem is_algebraic_one [Nontrivial R] : IsAlgebraic R (1 : A) := by
   rw [← _root_.map_one _]
@@ -119,17 +118,14 @@ theorem is_algebraic_of_mem_root_set {R : Type u} {A : Type v} [Field R] [Field 
 open IsScalarTower
 
 theorem is_algebraic_algebra_map_of_is_algebraic {a : S} : IsAlgebraic R a → IsAlgebraic R (algebraMap S A a) :=
-  fun ⟨f, hf₁, hf₂⟩ =>
-  ⟨f, hf₁, by
-    rw [← algebra_map_aeval, hf₂, map_zero]⟩
+  fun ⟨f, hf₁, hf₂⟩ => ⟨f, hf₁, by rw [aeval_algebra_map_apply, hf₂, map_zero]⟩
 
 /-- This is slightly more general than `is_algebraic_algebra_map_of_is_algebraic` in that it
   allows noncommutative intermediate rings `A`. -/
 theorem is_algebraic_alg_hom_of_is_algebraic {B} [Ringₓ B] [Algebra R B] (f : A →ₐ[R] B) {a : A} (h : IsAlgebraic R a) :
     IsAlgebraic R (f a) :=
   let ⟨p, hp, ha⟩ := h
-  ⟨p, hp, by
-    rw [aeval_alg_hom, f.comp_apply, ha, map_zero]⟩
+  ⟨p, hp, by rw [aeval_alg_hom, f.comp_apply, ha, map_zero]⟩
 
 /-- Transfer `algebra.is_algebraic` across an `alg_equiv`. -/
 theorem _root_.alg_equiv.is_algebraic {B} [Ringₓ B] [Algebra R B] (e : A ≃ₐ[R] B) (h : Algebra.IsAlgebraic R A) :
@@ -142,11 +138,7 @@ theorem _root_.alg_equiv.is_algebraic_iff {B} [Ringₓ B] [Algebra R B] (e : A �
 
 theorem is_algebraic_algebra_map_iff {a : S} (h : Function.Injective (algebraMap S A)) :
     IsAlgebraic R (algebraMap S A a) ↔ IsAlgebraic R a :=
-  ⟨fun ⟨p, hp0, hp⟩ =>
-    ⟨p, hp0,
-      h
-        (by
-          rwa [map_zero, algebra_map_aeval])⟩,
+  ⟨fun ⟨p, hp0, hp⟩ => ⟨p, hp0, h (by rwa [map_zero, ← aeval_algebra_map_apply])⟩,
     is_algebraic_algebra_map_of_is_algebraic⟩
 
 theorem is_algebraic_of_pow {r : A} {n : ℕ} (hn : 0 < n) (ht : IsAlgebraic R (r ^ n)) : IsAlgebraic R r := by
@@ -201,9 +193,7 @@ variable (K L)
 theorem _root_.is_algebraic_of_larger_base_of_injective (hinj : Function.Injective (algebraMap R S)) {x : A}
     (A_alg : IsAlgebraic R x) : IsAlgebraic S x :=
   let ⟨p, hp₁, hp₂⟩ := A_alg
-  ⟨p.map (algebraMap _ _), by
-    rwa [Ne.def, ← degree_eq_bot, degree_map_eq_of_injective hinj, degree_eq_bot], by
-    simpa⟩
+  ⟨p.map (algebraMap _ _), by rwa [Ne.def, ← degree_eq_bot, degree_map_eq_of_injective hinj, degree_eq_bot], by simpa⟩
 
 /-- If A is an algebraic algebra over R, then A is algebraic over S when S is an extension of R,
   and the map from `R` to `S` is injective. -/
@@ -266,7 +256,7 @@ end Algebra
 
 variable {R S : Type _} [CommRingₓ R] [IsDomain R] [CommRingₓ S]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ≠ » (0 : R))
 theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
     (inj : ∀ x, algebraMap R S x = 0 → x = 0) :
     ∃ (x : integralClosure R S)(y : _)(_ : y ≠ (0 : R)), z * algebraMap R S y = x := by
@@ -278,7 +268,7 @@ theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
     ⟨p.integral_normalization, monic_integral_normalization p_ne_zero, integral_normalization_aeval_eq_zero px inj⟩
   exact ⟨⟨_, x_integral⟩, a, a_ne_zero, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (d «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (d «expr ≠ » (0 : R))
 /-- A fraction `(a : S) / (b : S)` can be reduced to `(c : S) / (d : R)`,
 if `S` is the integral closure of `R` in an algebraic extension `L` of `R`. -/
 theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S] [Algebra S L] [Algebra R L]
@@ -319,8 +309,7 @@ theorem Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero {x : A} {p : K[X]} (aev
   suffices (x⁻¹ : L) = (-p.coeff 0)⁻¹ • aeval x (div_X p) by
     rw [this]
     exact A.smul_mem (aeval x _).2 _
-  have : aeval (x : L) p = 0 := by
-    rw [Subalgebra.aeval_coe, aeval_eq, Subalgebra.coe_zero]
+  have : aeval (x : L) p = 0 := by rw [Subalgebra.aeval_coe, aeval_eq, Subalgebra.coe_zero]
   rw [inv_eq_of_root_of_coeff_zero_ne_zero this coeff_zero_ne, div_eq_inv_mul, Algebra.smul_def, map_inv₀, map_neg,
     inv_neg, neg_mul, Subalgebra.aeval_coe]
 
@@ -348,9 +337,7 @@ theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (
 
 /-- In an algebraic extension L/K, an intermediate subalgebra is a field. -/
 theorem Subalgebra.is_field_of_algebraic (hKL : Algebra.IsAlgebraic K L) : IsField A :=
-  { show Nontrivial A by
-      infer_instance,
-    Subalgebra.toCommRing A with
+  { show Nontrivial A by infer_instance, Subalgebra.toCommRing A with
     mul_inv_cancel := fun a ha =>
       ⟨⟨a⁻¹, A.inv_mem_of_algebraic (hKL a)⟩, Subtype.ext (mul_inv_cancel (mt (Subalgebra.coe_eq_zero _).mp ha))⟩ }
 
@@ -392,18 +379,10 @@ variable [CommSemiringₓ R'] [CommSemiringₓ S'] [CommSemiringₓ T'] [Algebra
 /-- This is not an instance for the same reasons as `polynomial.has_smul_pi'`. -/
 noncomputable def Polynomial.algebraPi : Algebra R'[X] (S' → T') :=
   { Polynomial.hasSmulPi' R' S' T' with toFun := fun p z => algebraMap S' T' (aeval z p),
-    map_one' :=
-      funext fun z => by
-        simp only [Polynomial.aeval_one, Pi.one_apply, map_one],
-    map_mul' := fun f g =>
-      funext fun z => by
-        simp only [Pi.mul_apply, map_mul],
-    map_zero' :=
-      funext fun z => by
-        simp only [Polynomial.aeval_zero, Pi.zero_apply, map_zero],
-    map_add' := fun f g =>
-      funext fun z => by
-        simp only [Polynomial.aeval_add, Pi.add_apply, map_add],
+    map_one' := funext fun z => by simp only [Polynomial.aeval_one, Pi.one_apply, map_one],
+    map_mul' := fun f g => funext fun z => by simp only [Pi.mul_apply, map_mul],
+    map_zero' := funext fun z => by simp only [Polynomial.aeval_zero, Pi.zero_apply, map_zero],
+    map_add' := fun f g => funext fun z => by simp only [Polynomial.aeval_add, Pi.add_apply, map_add],
     commutes' := fun p f => funext fun z => mul_comm _ _,
     smul_def' := fun p f =>
       funext fun z => by

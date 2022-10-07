@@ -28,14 +28,8 @@ def exactPairingOfFaithful [Faithful F.toFunctor] {X Y : C} (eval : Y ⊗ X ⟶ 
     (map_coeval : F.map coeval = inv F.ε ≫ η_ _ _ ≫ F.μ _ _) : ExactPairing X Y where
   evaluation := eval
   coevaluation := coeval
-  evaluation_coevaluation' :=
-    F.toFunctor.map_injective
-      (by
-        simp [map_eval, map_coeval, monoidal_functor.map_tensor])
-  coevaluation_evaluation' :=
-    F.toFunctor.map_injective
-      (by
-        simp [map_eval, map_coeval, monoidal_functor.map_tensor])
+  evaluation_coevaluation' := F.toFunctor.map_injective (by simp [map_eval, map_coeval, monoidal_functor.map_tensor])
+  coevaluation_evaluation' := F.toFunctor.map_injective (by simp [map_eval, map_coeval, monoidal_functor.map_tensor])
 
 /-- Given a pair of objects which are sent by a fully faithful functor to a pair of objects
 with an exact pairing, we get an exact pairing.
@@ -43,11 +37,7 @@ with an exact pairing, we get an exact pairing.
 def exactPairingOfFullyFaithful [Full F.toFunctor] [Faithful F.toFunctor] (X Y : C) [ExactPairing (F.obj X) (F.obj Y)] :
     ExactPairing X Y :=
   exactPairingOfFaithful F (F.toFunctor.preimage (inv (F.μ _ _) ≫ ε_ _ _ ≫ F.ε))
-    (F.toFunctor.preimage (inv F.ε ≫ η_ _ _ ≫ F.μ _ _))
-    (by
-      simp )
-    (by
-      simp )
+    (F.toFunctor.preimage (inv F.ε ≫ η_ _ _ ≫ F.μ _ _)) (by simp) (by simp)
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Pull back a left dual along an equivalence. -/
@@ -56,7 +46,7 @@ def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F
   exact := by
     apply exact_pairing_of_fully_faithful F _ _
     apply exact_pairing_congr_left (F.to_functor.as_equivalence.counit_iso.app _)
-    dsimp'
+    dsimp
     infer_instance
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -66,7 +56,7 @@ def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual 
   exact := by
     apply exact_pairing_of_fully_faithful F _ _
     apply exact_pairing_congr_right (F.to_functor.as_equivalence.counit_iso.app _)
-    dsimp'
+    dsimp
     infer_instance
 
 /-- Pull back a left rigid structure along an equivalence. -/

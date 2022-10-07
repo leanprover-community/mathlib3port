@@ -53,11 +53,11 @@ instance : ∀ [DivInvMonoidₓ G], DivInvMonoidₓ (ConjAct G) :=
 instance : ∀ [GroupWithZeroₓ G], GroupWithZeroₓ (ConjAct G) :=
   id
 
-instance : ∀ [Fintype G], Fintype (ConjAct G) :=
+instance : ∀ [Fintypeₓ G], Fintypeₓ (ConjAct G) :=
   id
 
 @[simp]
-theorem card [Fintype G] : Fintype.card (ConjAct G) = Fintype.card G :=
+theorem card [Fintypeₓ G] : Fintypeₓ.card (ConjAct G) = Fintypeₓ.card G :=
   rfl
 
 section DivInvMonoidₓ
@@ -143,23 +143,19 @@ theorem units_smul_def (g : ConjAct Mˣ) (h : M) : g • h = ofConjAct g * h * �
 
 instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M where
   smul := (· • ·)
-  one_smul := by
-    simp [units_smul_def]
-  mul_smul := by
-    simp [units_smul_def, mul_assoc, mul_inv_rev]
-  smul_mul := by
-    simp [units_smul_def, mul_assoc]
-  smul_one := by
-    simp [units_smul_def]
+  one_smul := by simp [units_smul_def]
+  mul_smul := by simp [units_smul_def, mul_assoc, mul_inv_rev]
+  smul_mul := by simp [units_smul_def, mul_assoc]
+  smul_one := by simp [units_smul_def]
 
 instance units_smul_comm_class [HasSmul α M] [SmulCommClass α M M] [IsScalarTower α M M] :
-    SmulCommClass α (ConjAct Mˣ) M where smul_comm := fun a um m => by
-    rw [units_smul_def, units_smul_def, mul_smul_comm, smul_mul_assoc]
+    SmulCommClass α (ConjAct Mˣ)
+      M where smul_comm := fun a um m => by rw [units_smul_def, units_smul_def, mul_smul_comm, smul_mul_assoc]
 
 instance units_smul_comm_class' [HasSmul α M] [SmulCommClass M α M] [IsScalarTower α M M] :
-    SmulCommClass (ConjAct Mˣ) α M := by
+    SmulCommClass (ConjAct Mˣ) α M :=
   haveI : SmulCommClass α M M := SmulCommClass.symm _ _ _
-  exact SmulCommClass.symm _ _ _
+  SmulCommClass.symm _ _ _
 
 end Monoidₓ
 
@@ -168,11 +164,8 @@ section Semiringₓ
 variable [Semiringₓ R]
 
 instance unitsMulSemiringAction : MulSemiringAction (ConjAct Rˣ) R :=
-  { ConjAct.unitsMulDistribMulAction with smul := (· • ·),
-    smul_zero := by
-      simp [units_smul_def],
-    smul_add := by
-      simp [units_smul_def, mul_addₓ, add_mulₓ] }
+  { ConjAct.unitsMulDistribMulAction with smul := (· • ·), smul_zero := by simp [units_smul_def],
+    smul_add := by simp [units_smul_def, mul_addₓ, add_mulₓ] }
 
 end Semiringₓ
 
@@ -192,19 +185,17 @@ theorem to_conj_act_zero : toConjAct (0 : G₀) = 0 :=
 
 instance mulAction₀ : MulAction (ConjAct G₀) G₀ where
   smul := (· • ·)
-  one_smul := by
-    simp [smul_def]
-  mul_smul := by
-    simp [smul_def, mul_assoc, mul_inv_rev]
+  one_smul := by simp [smul_def]
+  mul_smul := by simp [smul_def, mul_assoc, mul_inv_rev]
 
 instance smul_comm_class₀ [HasSmul α G₀] [SmulCommClass α G₀ G₀] [IsScalarTower α G₀ G₀] :
-    SmulCommClass α (ConjAct G₀) G₀ where smul_comm := fun a ug g => by
-    rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
+    SmulCommClass α (ConjAct G₀)
+      G₀ where smul_comm := fun a ug g => by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
 
 instance smul_comm_class₀' [HasSmul α G₀] [SmulCommClass G₀ α G₀] [IsScalarTower α G₀ G₀] :
-    SmulCommClass (ConjAct G₀) α G₀ := by
+    SmulCommClass (ConjAct G₀) α G₀ :=
   haveI := SmulCommClass.symm G₀ α G₀
-  exact SmulCommClass.symm _ _ _
+  SmulCommClass.symm _ _ _
 
 end GroupWithZeroₓ
 
@@ -213,11 +204,8 @@ section DivisionRing
 variable [DivisionRing K]
 
 instance distribMulAction₀ : DistribMulAction (ConjAct K) K :=
-  { ConjAct.mulAction₀ with smul := (· • ·),
-    smul_zero := by
-      simp [smul_def],
-    smul_add := by
-      simp [smul_def, mul_addₓ, add_mulₓ] }
+  { ConjAct.mulAction₀ with smul := (· • ·), smul_zero := by simp [smul_def],
+    smul_add := by simp [smul_def, mul_addₓ, add_mulₓ] }
 
 end DivisionRing
 
@@ -225,23 +213,18 @@ variable [Groupₓ G]
 
 instance : MulDistribMulAction (ConjAct G) G where
   smul := (· • ·)
-  smul_mul := by
-    simp [smul_def, mul_assoc]
-  smul_one := by
-    simp [smul_def]
-  one_smul := by
-    simp [smul_def]
-  mul_smul := by
-    simp [smul_def, mul_assoc]
+  smul_mul := by simp [smul_def, mul_assoc]
+  smul_one := by simp [smul_def]
+  one_smul := by simp [smul_def]
+  mul_smul := by simp [smul_def, mul_assoc]
 
 instance smul_comm_class [HasSmul α G] [SmulCommClass α G G] [IsScalarTower α G G] :
-    SmulCommClass α (ConjAct G) G where smul_comm := fun a ug g => by
-    rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
+    SmulCommClass α (ConjAct G)
+      G where smul_comm := fun a ug g => by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
 
 instance smul_comm_class' [HasSmul α G] [SmulCommClass G α G] [IsScalarTower α G G] : SmulCommClass (ConjAct G) α G :=
-  by
   haveI := SmulCommClass.symm G α G
-  exact SmulCommClass.symm _ _ _
+  SmulCommClass.symm _ _ _
 
 theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (ofConjAct g) h :=
   rfl

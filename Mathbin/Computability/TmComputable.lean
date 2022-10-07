@@ -41,7 +41,7 @@ the namespace `turing.TM2` in `turing_machine.lean`), with an input and output s
 structure FinTm2 where
   {k : Type}
   [kDecidableEq : DecidableEq K]
-  [kFin : Fintype K]
+  [kFin : Fintypeₓ K]
   -- index type of stacks
   (k₀ k₁ : K)
   -- input and output stack
@@ -49,13 +49,13 @@ structure FinTm2 where
   -- type of stack elements
   Λ : Type
   main : Λ
-  [ΛFin : Fintype Λ]
+  [ΛFin : Fintypeₓ Λ]
   -- type of function labels
   σ : Type
   initialState : σ
   -- type of states of the machine
-  [σFin : Fintype σ]
-  [Γk₀Fin : Fintype (Γ k₀)]
+  [σFin : Fintypeₓ σ]
+  [Γk₀Fin : Fintypeₓ (Γ k₀)]
   m : Λ → Turing.TM2.Stmt Γ Λ σ
 
 -- the program itself, i.e. one function for every function label
@@ -136,8 +136,7 @@ def EvalsTo.refl {σ : Type _} (f : σ → Option σ) (a : σ) : EvalsTo f a a :
 @[trans]
 def EvalsTo.trans {σ : Type _} (f : σ → Option σ) (a : σ) (b : σ) (c : Option σ) (h₁ : EvalsTo f a b)
     (h₂ : EvalsTo f b c) : EvalsTo f a c :=
-  ⟨h₂.steps + h₁.steps, by
-    rw [Function.iterate_add_apply, h₁.evals_in_steps, h₂.evals_in_steps]⟩
+  ⟨h₂.steps + h₁.steps, by rw [Function.iterate_add_apply, h₁.evals_in_steps, h₂.evals_in_steps]⟩
 
 /-- Reflexivity of `evals_to_in_time` in 0 steps. -/
 @[refl]
@@ -232,10 +231,7 @@ def idComputableInPolyTime {α : Type} (ea : FinEncoding α) : @Tm2ComputableInP
   inputAlphabet := Equivₓ.cast rfl
   outputAlphabet := Equivₓ.cast rfl
   time := 1
-  outputsFun := fun _ =>
-    { steps := 1, evals_in_steps := rfl,
-      steps_le_m := by
-        simp only [Polynomial.eval_one] }
+  outputsFun := fun _ => { steps := 1, evals_in_steps := rfl, steps_le_m := by simp only [Polynomial.eval_one] }
 
 instance inhabitedTm2ComputableInPolyTime :
     Inhabited (Tm2ComputableInPolyTime (default : FinEncoding Bool) default id) :=

@@ -76,7 +76,7 @@ def fAux (n : ℕ) (x : ℝ) : ℝ :=
 /-- The `0`-th auxiliary function `f_aux 0` coincides with `exp_neg_inv_glue`, by definition. -/
 theorem f_aux_zero_eq : fAux 0 = expNegInvGlue := by
   ext x
-  by_cases' h : x ≤ 0
+  by_cases h:x ≤ 0
   · simp [expNegInvGlue, f_aux, h]
     
   · simp [h, expNegInvGlue, f_aux, ne_of_gtₓ (not_leₓ.1 h), P_aux]
@@ -141,13 +141,11 @@ theorem f_aux_deriv_zero (n : ℕ) : HasDerivAt (fAux n) 0 0 := by
       apply mem_of_superset self_mem_nhds_within fun x hx => _
       simp [(f_aux_deriv_pos n x hx).deriv]
       
-    · have : f_aux n 0 = 0 := by
-        simp [f_aux, le_reflₓ]
+    · have : f_aux n 0 = 0 := by simp [f_aux, le_reflₓ]
       simp only [ContinuousWithinAt, this]
       refine' (f_aux_limit n).congr' _
       apply mem_of_superset self_mem_nhds_within fun x hx => _
-      have : ¬x ≤ 0 := by
-        simpa using hx
+      have : ¬x ≤ 0 := by simpa using hx
       simp [f_aux, this]
       
   simpa using A.union B
@@ -159,15 +157,13 @@ theorem f_aux_has_deriv_at (n : ℕ) (x : ℝ) : HasDerivAt (fAux n) (fAux (n + 
   -- in `f_aux_deriv_pos`, and for `x = 0`, done in
   -- `f_aux_deriv_zero`.
   rcases lt_trichotomyₓ x 0 with (hx | hx | hx)
-  · have : f_aux (n + 1) x = 0 := by
-      simp [f_aux, le_of_ltₓ hx]
+  · have : f_aux (n + 1) x = 0 := by simp [f_aux, le_of_ltₓ hx]
     rw [this]
     apply (has_deriv_at_const x (0 : ℝ)).congr_of_eventually_eq
     filter_upwards [gt_mem_nhds hx] with _ hy
     simp [f_aux, hy.le]
     
-  · have : f_aux (n + 1) 0 = 0 := by
-      simp [f_aux, le_reflₓ]
+  · have : f_aux (n + 1) 0 = 0 := by simp [f_aux, le_reflₓ]
     rw [hx, this]
     exact f_aux_deriv_zero n
     
@@ -196,12 +192,10 @@ protected theorem cont_diff {n} : ContDiff ℝ n expNegInvGlue := by
   exact fun x => (f_aux_has_deriv_at m x).DifferentiableAt
 
 /-- The function `exp_neg_inv_glue` vanishes on `(-∞, 0]`. -/
-theorem zero_of_nonpos {x : ℝ} (hx : x ≤ 0) : expNegInvGlue x = 0 := by
-  simp [expNegInvGlue, hx]
+theorem zero_of_nonpos {x : ℝ} (hx : x ≤ 0) : expNegInvGlue x = 0 := by simp [expNegInvGlue, hx]
 
 /-- The function `exp_neg_inv_glue` is positive on `(0, +∞)`. -/
-theorem pos_of_pos {x : ℝ} (hx : 0 < x) : 0 < expNegInvGlue x := by
-  simp [expNegInvGlue, not_leₓ.2 hx, exp_pos]
+theorem pos_of_pos {x : ℝ} (hx : 0 < x) : 0 < expNegInvGlue x := by simp [expNegInvGlue, not_leₓ.2 hx, exp_pos]
 
 /-- The function exp_neg_inv_glue` is nonnegative. -/
 theorem nonneg (x : ℝ) : 0 ≤ expNegInvGlue x := by
@@ -231,11 +225,9 @@ theorem pos_denom (x) : 0 < expNegInvGlue x + expNegInvGlue (1 - x) :=
     add_pos_of_nonneg_of_pos (nonneg _) (pos_of_pos <| sub_pos.2 hx)
 
 theorem one_of_one_le (h : 1 ≤ x) : smoothTransition x = 1 :=
-  (div_eq_one_iff_eq <| (pos_denom x).ne').2 <| by
-    rw [zero_of_nonpos (sub_nonpos.2 h), add_zeroₓ]
+  (div_eq_one_iff_eq <| (pos_denom x).ne').2 <| by rw [zero_of_nonpos (sub_nonpos.2 h), add_zeroₓ]
 
-theorem zero_of_nonpos (h : x ≤ 0) : smoothTransition x = 0 := by
-  rw [smooth_transition, zero_of_nonpos h, zero_div]
+theorem zero_of_nonpos (h : x ≤ 0) : smoothTransition x = 0 := by rw [smooth_transition, zero_of_nonpos h, zero_div]
 
 @[simp]
 protected theorem zero : smoothTransition 0 = 0 :=
@@ -311,8 +303,7 @@ instance : CoeFun (ContDiffBumpOfInner c) fun _ => E → ℝ :=
 protected theorem def (x : E) : f x = Real.smoothTransition ((f.r - dist x c) / (f.r - f.R)) :=
   rfl
 
-protected theorem sub (x : E) : f (c - x) = f (c + x) := by
-  simp_rw [f.def, dist_self_sub_left, dist_self_add_left]
+protected theorem sub (x : E) : f (c - x) = f (c + x) := by simp_rw [f.def, dist_self_sub_left, dist_self_add_left]
 
 protected theorem neg (f : ContDiffBumpOfInner (0 : E)) (x : E) : f (-x) = f x := by
   simp_rw [← zero_sub, f.sub, zero_addₓ]
@@ -345,16 +336,14 @@ theorem zero_of_le_dist (hx : f.r ≤ dist x c) : f x = 0 :=
 
 theorem support_eq : Support (f : E → ℝ) = Metric.Ball c f.r := by
   ext x
-  suffices f x ≠ 0 ↔ dist x c < f.R by
-    simpa [mem_support]
+  suffices f x ≠ 0 ↔ dist x c < f.R by simpa [mem_support]
   cases' lt_or_leₓ (dist x c) f.R with hx hx
   · simp [hx, (f.pos_of_mem_ball hx).ne']
     
   · simp [hx.not_lt, f.zero_of_le_dist hx]
     
 
-theorem tsupport_eq : Tsupport f = ClosedBall c f.r := by
-  simp_rw [Tsupport, f.support_eq, closure_ball _ f.R_pos.ne']
+theorem tsupport_eq : Tsupport f = ClosedBall c f.r := by simp_rw [Tsupport, f.support_eq, closure_ball _ f.R_pos.ne']
 
 protected theorem has_compact_support [FiniteDimensional ℝ E] : HasCompactSupport f := by
   simp_rw [HasCompactSupport, f.tsupport_eq, is_compact_closed_ball]
@@ -372,8 +361,7 @@ protected theorem _root_.cont_diff_at.cont_diff_bump {c g : X → E} {f : ∀ x,
     (hg : ContDiffAt ℝ n g x) : ContDiffAt ℝ n (fun x => f x (g x)) x := by
   rcases eq_or_ne (g x) (c x) with (hx | hx)
   · have : (fun x => f x (g x)) =ᶠ[𝓝 x] fun x => 1 := by
-      have : dist (g x) (c x) < (f x).R := by
-        simp_rw [hx, dist_self, (f x).r_pos]
+      have : dist (g x) (c x) < (f x).R := by simp_rw [hx, dist_self, (f x).r_pos]
       have := ContinuousAt.eventually_lt (hg.continuous_at.dist hc.continuous_at) hr.continuous_at this
       exact eventually_of_mem this fun x hx => (f x).one_of_mem_closed_ball (mem_set_of_eq.mp hx).le
     exact cont_diff_at_const.congr_of_eventually_eq this
@@ -419,8 +407,7 @@ theorem cont_diff_normed {n : ℕ∞} : ContDiff ℝ n (f.normed μ) :=
 theorem continuous_normed : Continuous (f.normed μ) :=
   f.Continuous.div_const
 
-theorem normed_sub (x : E) : f.normed μ (c - x) = f.normed μ (c + x) := by
-  simp_rw [f.normed_def, f.sub]
+theorem normed_sub (x : E) : f.normed μ (c - x) = f.normed μ (c + x) := by simp_rw [f.normed_def, f.sub]
 
 theorem normed_neg (f : ContDiffBumpOfInner (0 : E)) (x : E) : f.normed μ (-x) = f.normed μ x := by
   simp_rw [f.normed_def, f.neg]
@@ -452,6 +439,17 @@ theorem tsupport_normed_eq : Tsupport (f.normed μ) = Metric.ClosedBall c f.r :=
 
 theorem has_compact_support_normed : HasCompactSupport (f.normed μ) := by
   simp_rw [HasCompactSupport, f.tsupport_normed_eq, is_compact_closed_ball]
+
+theorem tendsto_support_normed_small_sets {ι} {φ : ι → ContDiffBumpOfInner c} {l : Filter ι}
+    (hφ : Tendsto (fun i => (φ i).r) l (𝓝 0)) :
+    Tendsto (fun i => Support fun x => (φ i).normed μ x) l (𝓝 c).smallSets := by
+  simp_rw [NormedAddCommGroup.tendsto_nhds_zero, Real.norm_eq_abs, abs_eq_self.mpr (φ _).R_pos.le] at hφ
+  rw [tendsto_small_sets_iff]
+  intro t ht
+  rcases metric.mem_nhds_iff.mp ht with ⟨ε, hε, ht⟩
+  refine' (hφ ε hε).mono fun i hi => subset_trans _ ht
+  simp_rw [(φ i).support_normed_eq]
+  exact ball_subset_ball hi.le
 
 variable (μ)
 
@@ -537,8 +535,7 @@ protected theorem cont_diff_within_at {s n} : ContDiffWithinAt ℝ n f s x :=
 
 theorem exists_tsupport_subset {s : Set E} (hs : s ∈ 𝓝 c) : ∃ f : ContDiffBump c, Tsupport f ⊆ s :=
   let ⟨R, h0, hR⟩ := Euclidean.nhds_basis_closed_ball.mem_iff.1 hs
-  ⟨⟨⟨R / 2, R, half_pos h0, half_lt_self h0⟩⟩, by
-    rwa [tsupport_eq]⟩
+  ⟨⟨⟨R / 2, R, half_pos h0, half_lt_self h0⟩⟩, by rwa [tsupport_eq]⟩
 
 theorem exists_closure_subset {R : ℝ} (hR : 0 < R) {s : Set E} (hs : IsClosed s) (hsR : s ⊆ Euclidean.Ball c R) :
     ∃ f : ContDiffBump c, f.r = R ∧ s ⊆ Euclidean.Ball c f.R := by

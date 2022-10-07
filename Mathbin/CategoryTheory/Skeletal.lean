@@ -199,16 +199,12 @@ noncomputable def fromThinSkeleton : ThinSkeleton C ⥤ C where
 
 noncomputable instance fromThinSkeletonEquivalence : IsEquivalence (fromThinSkeleton C) where
   inverse := toThinSkeleton C
-  counitIso :=
-    NatIso.ofComponents (fun X => Nonempty.some (Quotientₓ.mk_out X))
-      (by
-        tidy)
+  counitIso := NatIso.ofComponents (fun X => Nonempty.some (Quotientₓ.mk_out X)) (by tidy)
   unitIso :=
     NatIso.ofComponents
       (fun x =>
         Quotientₓ.recOnSubsingleton x fun X => eqToIso (Quotientₓ.sound ⟨(Nonempty.some (Quotientₓ.mk_out X)).symm⟩))
-      (by
-        tidy)
+      (by tidy)
 
 /-- The equivalence between the thin skeleton and the category itself. -/
 noncomputable def equivalence : ThinSkeleton C ≌ C :=
@@ -232,15 +228,11 @@ theorem skeletal : Skeletal (ThinSkeleton C) := fun X Y =>
 
 theorem map_comp_eq (F : E ⥤ D) (G : D ⥤ C) : map (F ⋙ G) = map F ⋙ map G :=
   Functor.eq_of_iso skeletal <|
-    NatIso.ofComponents (fun X => Quotientₓ.recOnSubsingleton X fun x => Iso.refl _)
-      (by
-        tidy)
+    NatIso.ofComponents (fun X => Quotientₓ.recOnSubsingleton X fun x => Iso.refl _) (by tidy)
 
 theorem map_id_eq : map (𝟭 C) = 𝟭 (ThinSkeleton C) :=
   Functor.eq_of_iso skeletal <|
-    NatIso.ofComponents (fun X => Quotientₓ.recOnSubsingleton X fun x => Iso.refl _)
-      (by
-        tidy)
+    NatIso.ofComponents (fun X => Quotientₓ.recOnSubsingleton X fun x => Iso.refl _) (by tidy)
 
 theorem map_iso_eq {F₁ F₂ : D ⥤ C} (h : F₁ ≅ F₂) : map F₁ = map F₂ :=
   Functor.eq_of_iso skeletal { Hom := mapNatTrans h.Hom, inv := mapNatTrans h.inv }

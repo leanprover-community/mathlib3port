@@ -46,11 +46,7 @@ instance : Groupₓ (MulAut M) := by
       { mul := fun g h => MulEquiv.trans h g, one := MulEquiv.refl M, inv := MulEquiv.symm, div := _,
         npow := @npowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩,
         zpow := @zpowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩ ⟨MulEquiv.symm⟩ } <;>
-    intros <;>
-      ext <;>
-        try
-            rfl <;>
-          apply Equivₓ.left_inv
+    intros <;> ext <;> try rfl <;> apply Equivₓ.left_inv
 
 instance : Inhabited (MulAut M) :=
   ⟨1⟩
@@ -89,8 +85,7 @@ theorem inv_apply_self (e : MulAut M) (m : M) : e⁻¹ (e m) = m :=
   MulEquiv.apply_symm_apply _ _
 
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
-def toPerm : MulAut M →* Equivₓ.Perm M := by
-  refine_struct { toFun := MulEquiv.toEquiv } <;> intros <;> rfl
+def toPerm : MulAut M →* Equivₓ.Perm M := by refine_struct { toFun := MulEquiv.toEquiv } <;> intros <;> rfl
 
 /-- The tautological action by `mul_aut M` on `M`.
 
@@ -116,17 +111,10 @@ See also the type `conj_act G` for any group `G`, which has a `mul_action (conj_
 where `conj G` acts on `G` by conjugation. -/
 def conj [Groupₓ G] : G →* MulAut G where
   toFun := fun g =>
-    { toFun := fun h => g * h * g⁻¹, invFun := fun h => g⁻¹ * h * g,
-      left_inv := fun _ => by
-        simp [mul_assoc],
-      right_inv := fun _ => by
-        simp [mul_assoc],
-      map_mul' := by
-        simp [mul_assoc] }
-  map_mul' := fun _ _ => by
-    ext <;> simp [mul_assoc]
-  map_one' := by
-    ext <;> simp [mul_assoc]
+    { toFun := fun h => g * h * g⁻¹, invFun := fun h => g⁻¹ * h * g, left_inv := fun _ => by simp [mul_assoc],
+      right_inv := fun _ => by simp [mul_assoc], map_mul' := by simp [mul_assoc] }
+  map_mul' := fun _ _ => by ext <;> simp [mul_assoc]
+  map_one' := by ext <;> simp [mul_assoc]
 
 @[simp]
 theorem conj_apply [Groupₓ G] (g h : G) : conj g h = g * h * g⁻¹ :=
@@ -155,11 +143,7 @@ instance group : Groupₓ (AddAut A) := by
       { mul := fun g h => AddEquiv.trans h g, one := AddEquiv.refl A, inv := AddEquiv.symm, div := _,
         npow := @npowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩,
         zpow := @zpowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩ ⟨AddEquiv.symm⟩ } <;>
-    intros <;>
-      ext <;>
-        try
-            rfl <;>
-          apply Equivₓ.left_inv
+    intros <;> ext <;> try rfl <;> apply Equivₓ.left_inv
 
 instance : Inhabited (AddAut A) :=
   ⟨1⟩
@@ -198,8 +182,7 @@ theorem inv_apply_self (e : AddAut A) (a : A) : e (e⁻¹ a) = a :=
   AddEquiv.apply_symm_apply _ _
 
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
-def toPerm : AddAut A →* Equivₓ.Perm A := by
-  refine_struct { toFun := AddEquiv.toEquiv } <;> intros <;> rfl
+def toPerm : AddAut A →* Equivₓ.Perm A := by refine_struct { toFun := AddEquiv.toEquiv } <;> intros <;> rfl
 
 /-- The tautological action by `add_aut A` on `A`.
 
@@ -227,16 +210,10 @@ def conj [AddGroupₓ G] : G →+ Additive (AddAut G) where
     @Additive.ofMul (AddAut G)
       { toFun := fun h => g + h + -g,-- this definition is chosen to match `mul_aut.conj`
         invFun := fun h => -g + h + g,
-        left_inv := fun _ => by
-          simp [add_assocₓ],
-        right_inv := fun _ => by
-          simp [add_assocₓ],
-        map_add' := by
-          simp [add_assocₓ] }
-  map_add' := fun _ _ => by
-    apply additive.to_mul.injective <;> ext <;> simp [add_assocₓ]
-  map_zero' := by
-    ext <;> simpa
+        left_inv := fun _ => by simp [add_assocₓ], right_inv := fun _ => by simp [add_assocₓ],
+        map_add' := by simp [add_assocₓ] }
+  map_add' := fun _ _ => by apply additive.to_mul.injective <;> ext <;> simp [add_assocₓ]
+  map_zero' := by ext <;> simpa
 
 @[simp]
 theorem conj_apply [AddGroupₓ G] (g h : G) : conj g h = g + h + -g :=

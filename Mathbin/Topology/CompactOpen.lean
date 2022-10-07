@@ -76,9 +76,7 @@ instance compactOpen : TopologicalSpace C(α, β) :=
 
 protected theorem is_open_gen {s : Set α} (hs : IsCompact s) {u : Set β} (hu : IsOpen u) :
     IsOpen (CompactOpen.Gen s u) :=
-  TopologicalSpace.GenerateOpen.basic _
-    (by
-      dsimp' [mem_set_of_eq] <;> tauto)
+  TopologicalSpace.GenerateOpen.basic _ (by dsimp [mem_set_of_eq] <;> tauto)
 
 section Functorial
 
@@ -116,7 +114,12 @@ theorem continuous_comp' [LocallyCompactSpace β] : Continuous fun x : C(α, β)
   continuous_generated_from
     (by
       rintro M ⟨K, hK, U, hU, rfl⟩
-      conv => congr rw [compact_open.gen, preimage_set_of_eq]congr ext rw [coe_comp, image_comp, image_subset_iff]
+      conv =>
+      congr
+      rw [compact_open.gen, preimage_set_of_eq]
+      congr
+      ext
+      rw [coe_comp, image_comp, image_subset_iff]
       rw [is_open_iff_forall_mem_open]
       rintro ⟨φ₀, ψ₀⟩ H
       obtain ⟨L, hL, hKL, hLU⟩ := exists_compact_between (hK.image φ₀.2) (hU.preimage ψ₀.2) H
@@ -155,11 +158,7 @@ theorem continuous_eval' [LocallyCompactSpace α] : Continuous fun p : C(α, β)
           
       have : IsOpen w := (ContinuousMap.is_open_gen sc vo).Prod uo
       have : (f, x) ∈ w := ⟨image_subset_iff.mpr sv, xu⟩
-      mem_nhds_iff.mpr
-        ⟨w, by
-          assumption, by
-          assumption, by
-          assumption⟩
+      mem_nhds_iff.mpr ⟨w, by assumption, by assumption, by assumption⟩
 
 /-- See also `continuous_map.continuous_eval_const` -/
 theorem continuous_eval_const' [LocallyCompactSpace α] (a : α) : Continuous fun f : C(α, β) => f a :=
@@ -295,8 +294,7 @@ def coev (b : β) : C(α, β × α) :=
 variable {α β}
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem image_coev {y : β} (s : Set α) : coev α β y '' s = ({y} : Set β) ×ˢ s := by
-  tidy
+theorem image_coev {y : β} (s : Set α) : coev α β y '' s = ({y} : Set β) ×ˢ s := by tidy
 
 -- The coevaluation map β → C(α, β × α) is continuous (always).
 theorem continuous_coev : Continuous (coev α β) :=
@@ -399,10 +397,7 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 /-- Currying as a homeomorphism between the function spaces `C(α × β, γ)` and `C(α, C(β, γ))`. -/
 def curry [LocallyCompactSpace α] [LocallyCompactSpace β] : C(α × β, γ) ≃ₜ C(α, C(β, γ)) :=
-  ⟨⟨curry, uncurry, by
-      tidy, by
-      tidy⟩,
-    continuous_curry, continuous_uncurry⟩
+  ⟨⟨curry, uncurry, by tidy, by tidy⟩, continuous_curry, continuous_uncurry⟩
 
 /-- If `α` has a single element, then `β` is homeomorphic to `C(α, β)`. -/
 def continuousMapOfUnique [Unique α] : β ≃ₜ C(α, β) where

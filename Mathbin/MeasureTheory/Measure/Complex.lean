@@ -59,10 +59,8 @@ def im : ComplexMeasure α →ₗ[ℝ] SignedMeasure α :=
 @[simps]
 def _root_.measure_theory.signed_measure.to_complex_measure (s t : SignedMeasure α) : ComplexMeasure α where
   measureOf' := fun i => ⟨s i, t i⟩
-  empty' := by
-    rw [s.empty, t.empty] <;> rfl
-  not_measurable' := fun i hi => by
-    rw [s.not_measurable hi, t.not_measurable hi] <;> rfl
+  empty' := by rw [s.empty, t.empty] <;> rfl
+  not_measurable' := fun i hi => by rw [s.not_measurable hi, t.not_measurable hi] <;> rfl
   m_Union' := fun f hf hfdisj => (Complex.has_sum_iff _ _).2 ⟨s.m_Union hf hfdisj, t.m_Union hf hfdisj⟩
 
 theorem _root_.measure_theory.signed_measure.to_complex_measure_apply {s t : SignedMeasure α} {i : Set α} :
@@ -99,9 +97,7 @@ variable [HasContinuousConstSmul R ℝ] [HasContinuousConstSmul R ℂ]
 /-- The complex measures form an linear isomorphism to the type of pairs of signed measures. -/
 @[simps]
 def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × SignedMeasure α :=
-  { equivSignedMeasure with
-    map_add' := fun c d => by
-      ext i hi <;> rfl,
+  { equivSignedMeasure with map_add' := fun c d => by ext i hi <;> rfl,
     map_smul' := by
       intro r c
       ext i hi
@@ -125,8 +121,7 @@ theorem absolutely_continuous_ennreal_iff (c : ComplexMeasure α) (μ : VectorMe
     
   · intro i hi
     rw [← Complex.re_add_im (c i), (_ : (c i).re = 0), (_ : (c i).im = 0)]
-    exacts[by
-      simp , h.2 hi, h.1 hi]
+    exacts[by simp, h.2 hi, h.1 hi]
     
 
 end ComplexMeasure

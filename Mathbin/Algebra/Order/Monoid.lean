@@ -32,14 +32,14 @@ variable {α : Type u} {β : Type _}
 /-- An ordered commutative monoid is a commutative monoid
 with a partial order such that `a ≤ b → c * a ≤ c * b` (multiplication is monotone)
 -/
-@[protect_proj, ancestor CommMonoidₓ PartialOrderₓ]
+@[protect_proj]
 class OrderedCommMonoid (α : Type _) extends CommMonoidₓ α, PartialOrderₓ α where
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
 
 /-- An ordered (additive) commutative monoid is a commutative monoid
   with a partial order such that `a ≤ b → c + a ≤ c + b` (addition is monotone)
 -/
-@[protect_proj, ancestor AddCommMonoidₓ PartialOrderₓ]
+@[protect_proj]
 class OrderedAddCommMonoid (α : Type _) extends AddCommMonoidₓ α, PartialOrderₓ α where
   add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, c + a ≤ c + b
 
@@ -117,11 +117,11 @@ theorem le_iff_forall_one_lt_lt_mul' : a ≤ b ↔ ∀ ε, 1 < ε → a < b * ε
 end HasExistsMulOfLe
 
 /-- A linearly ordered additive commutative monoid. -/
-@[protect_proj, ancestor LinearOrderₓ OrderedAddCommMonoid]
+@[protect_proj]
 class LinearOrderedAddCommMonoid (α : Type _) extends LinearOrderₓ α, OrderedAddCommMonoid α
 
 /-- A linearly ordered commutative monoid. -/
-@[protect_proj, ancestor LinearOrderₓ OrderedCommMonoid, to_additive]
+@[protect_proj, to_additive]
 class LinearOrderedCommMonoid (α : Type _) extends LinearOrderₓ α, OrderedCommMonoid α
 
 /-- Typeclass for expressing that the `0` of a type is less or equal to its `1`. -/
@@ -172,7 +172,7 @@ instance (priority := 100) LinearOrderedCommMonoidWithZero.zeroLeOneClass [h : L
 
 /-- A linearly ordered commutative monoid with an additively absorbing `⊤` element.
   Instances should include number systems with an infinite element adjoined.` -/
-@[protect_proj, ancestor LinearOrderedAddCommMonoid HasTop]
+@[protect_proj]
 class LinearOrderedAddCommMonoidWithTop (α : Type _) extends LinearOrderedAddCommMonoid α, HasTop α where
   le_top : ∀ x : α, x ≤ ⊤
   top_add' : ∀ x : α, ⊤ + x = ⊤
@@ -253,11 +253,11 @@ def orderEmbeddingCoe [Monoidₓ α] [LinearOrderₓ α] : αˣ ↪o α :=
 
 @[simp, norm_cast, to_additive]
 theorem max_coe [Monoidₓ α] [LinearOrderₓ α] {a b : αˣ} : (↑(max a b) : α) = max a b :=
-  Monotone.map_max orderEmbeddingCoe.Monotone
+  Monotoneₓ.map_max orderEmbeddingCoe.Monotone
 
 @[simp, norm_cast, to_additive]
 theorem min_coe [Monoidₓ α] [LinearOrderₓ α] {a b : αˣ} : (↑(min a b) : α) = min a b :=
-  Monotone.map_min orderEmbeddingCoe.Monotone
+  Monotoneₓ.map_min orderEmbeddingCoe.Monotone
 
 end Units
 
@@ -374,7 +374,7 @@ end WithZero
   which is to say, `a ≤ b` iff there exists `c` with `b = a + c`.
   This is satisfied by the natural numbers, for example, but not
   the integers or other nontrivial `ordered_add_comm_group`s. -/
-@[protect_proj, ancestor OrderedAddCommMonoid HasBot]
+@[protect_proj]
 class CanonicallyOrderedAddMonoid (α : Type _) extends OrderedAddCommMonoid α, HasBot α where
   bot_le : ∀ x : α, ⊥ ≤ x
   exists_add_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a + c
@@ -394,7 +394,7 @@ instance (priority := 100) CanonicallyOrderedAddMonoid.toOrderBot (α : Type u) 
   Dedekind domain satisfy this; collections of all things ≤ 1 seem to
   be more natural that collections of all things ≥ 1).
 -/
-@[protect_proj, ancestor OrderedCommMonoid HasBot, to_additive]
+@[protect_proj, to_additive]
 class CanonicallyOrderedMonoid (α : Type _) extends OrderedCommMonoid α, HasBot α where
   bot_le : ∀ x : α, ⊥ ≤ x
   exists_mul_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a * c
@@ -448,8 +448,7 @@ theorem le_iff_exists_mul : a ≤ b ↔ ∃ c, b = a * c :=
     exact le_self_mul⟩
 
 @[to_additive]
-theorem le_iff_exists_mul' : a ≤ b ↔ ∃ c, b = c * a := by
-  simpa only [mul_comm _ a] using le_iff_exists_mul
+theorem le_iff_exists_mul' : a ≤ b ↔ ∃ c, b = c * a := by simpa only [mul_comm _ a] using le_iff_exists_mul
 
 @[simp, to_additive zero_le]
 theorem one_le (a : α) : 1 ≤ a :=
@@ -489,16 +488,14 @@ theorem exists_one_lt_mul_of_lt (h : a < b) : ∃ (c : _)(hc : 1 < c), a * c = b
 @[to_additive]
 theorem le_mul_left (h : a ≤ c) : a ≤ b * c :=
   calc
-    a = 1 * a := by
-      simp
+    a = 1 * a := by simp
     _ ≤ b * c := mul_le_mul' (one_le _) h
     
 
 @[to_additive]
 theorem le_mul_right (h : a ≤ b) : a ≤ b * c :=
   calc
-    a = a * 1 := by
-      simp
+    a = a * 1 := by simp
     _ ≤ b * c := mul_le_mul' h (one_le _)
     
 
@@ -557,12 +554,12 @@ instance (priority := 100) CanonicallyOrderedAddMonoid.zeroLeOneClass {M : Type 
 
 /-- A canonically linear-ordered additive monoid is a canonically ordered additive monoid
     whose ordering is a linear order. -/
-@[protect_proj, ancestor CanonicallyOrderedAddMonoid LinearOrderₓ]
+@[protect_proj]
 class CanonicallyLinearOrderedAddMonoid (α : Type _) extends CanonicallyOrderedAddMonoid α, LinearOrderₓ α
 
 /-- A canonically linear-ordered monoid is a canonically ordered monoid
     whose ordering is a linear order. -/
-@[protect_proj, ancestor CanonicallyOrderedMonoid LinearOrderₓ, to_additive]
+@[protect_proj, to_additive]
 class CanonicallyLinearOrderedMonoid (α : Type _) extends CanonicallyOrderedMonoid α, LinearOrderₓ α
 
 section CanonicallyLinearOrderedMonoid
@@ -612,7 +609,7 @@ end CanonicallyLinearOrderedMonoid
 /-- An ordered cancellative additive commutative monoid
 is an additive commutative monoid with a partial order,
 in which addition is cancellative and monotone. -/
-@[protect_proj, ancestor AddCommMonoidₓ PartialOrderₓ]
+@[protect_proj]
 class OrderedCancelAddCommMonoid (α : Type u) extends AddCommMonoidₓ α, PartialOrderₓ α where
   add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, c + a ≤ c + b
   le_of_add_le_add_left : ∀ a b c : α, a + b ≤ a + c → b ≤ c
@@ -620,7 +617,7 @@ class OrderedCancelAddCommMonoid (α : Type u) extends AddCommMonoidₓ α, Part
 /-- An ordered cancellative commutative monoid
 is a commutative monoid with a partial order,
 in which multiplication is cancellative and monotone. -/
-@[protect_proj, ancestor CommMonoidₓ PartialOrderₓ, to_additive]
+@[protect_proj, to_additive]
 class OrderedCancelCommMonoid (α : Type u) extends CommMonoidₓ α, PartialOrderₓ α where
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
   le_of_mul_le_mul_left : ∀ a b c : α, a * b ≤ a * c → b ≤ c
@@ -675,9 +672,7 @@ def Function.Injective.orderedCancelCommMonoid {β : Type _} [One β] [Mul β] [
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : OrderedCancelCommMonoid β :=
   { hf.OrderedCommMonoid f one mul npow with
     le_of_mul_le_mul_left := fun a b c (bc : f (a * b) ≤ f (a * c)) =>
-      (mul_le_mul_iff_left (f a)).mp
-        (by
-          rwa [← mul, ← mul]) }
+      (mul_le_mul_iff_left (f a)).mp (by rwa [← mul, ← mul]) }
 
 end OrderedCancelCommMonoid
 
@@ -687,8 +682,7 @@ end OrderedCancelCommMonoid
 
 @[to_additive]
 theorem fn_min_mul_fn_max {β} [LinearOrderₓ α] [CommSemigroupₓ β] (f : α → β) (n m : α) :
-    f (min n m) * f (max n m) = f n * f m := by
-  cases' le_totalₓ n m with h h <;> simp [h, mul_comm]
+    f (min n m) * f (max n m) = f n * f m := by cases' le_totalₓ n m with h h <;> simp [h, mul_comm]
 
 @[to_additive]
 theorem min_mul_max [LinearOrderₓ α] [CommSemigroupₓ α] (n m : α) : min n m * max n m = n * m :=
@@ -697,13 +691,13 @@ theorem min_mul_max [LinearOrderₓ α] [CommSemigroupₓ α] (n m : α) : min n
 /-- A linearly ordered cancellative additive commutative monoid
 is an additive commutative monoid with a decidable linear order
 in which addition is cancellative and monotone. -/
-@[protect_proj, ancestor OrderedCancelAddCommMonoid LinearOrderedAddCommMonoid]
+@[protect_proj]
 class LinearOrderedCancelAddCommMonoid (α : Type u) extends OrderedCancelAddCommMonoid α, LinearOrderedAddCommMonoid α
 
 /-- A linearly ordered cancellative commutative monoid
 is a commutative monoid with a linear order
 in which multiplication is cancellative and monotone. -/
-@[protect_proj, ancestor OrderedCancelCommMonoid LinearOrderedCommMonoid, to_additive]
+@[protect_proj, to_additive]
 class LinearOrderedCancelCommMonoid (α : Type u) extends OrderedCancelCommMonoid α, LinearOrderedCommMonoid α
 
 section CovariantClassMulLe
@@ -720,11 +714,11 @@ variable [CovariantClass α α (· * ·) (· ≤ ·)]
 
 @[to_additive]
 theorem min_mul_mul_left (a b c : α) : min (a * b) (a * c) = a * min b c :=
-  (monotone_id.const_mul' a).map_min.symm
+  (monotone_idₓ.const_mul' a).map_min.symm
 
 @[to_additive]
 theorem max_mul_mul_left (a b c : α) : max (a * b) (a * c) = a * max b c :=
-  (monotone_id.const_mul' a).map_max.symm
+  (monotone_idₓ.const_mul' a).map_max.symm
 
 @[to_additive]
 theorem lt_or_lt_of_mul_lt_mul [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a b m n : α} (h : m * n < a * b) :
@@ -751,11 +745,11 @@ variable [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)]
 
 @[to_additive]
 theorem min_mul_mul_right (a b c : α) : min (a * c) (b * c) = min a b * c :=
-  (monotone_id.mul_const' c).map_min.symm
+  (monotone_idₓ.mul_const' c).map_min.symm
 
 @[to_additive]
 theorem max_mul_mul_right (a b c : α) : max (a * c) (b * c) = max a b * c :=
-  (monotone_id.mul_const' c).map_max.symm
+  (monotone_idₓ.mul_const' c).map_max.symm
 
 end Right
 
@@ -962,8 +956,7 @@ theorem top_add (a : WithTop α) : ⊤ + a = ⊤ :=
   rfl
 
 @[simp]
-theorem add_top (a : WithTop α) : a + ⊤ = ⊤ := by
-  cases a <;> rfl
+theorem add_top (a : WithTop α) : a + ⊤ = ⊤ := by cases a <;> rfl
 
 @[simp]
 theorem add_eq_top : a + b = ⊤ ↔ a = ⊤ ∨ b = ⊤ := by
@@ -976,12 +969,9 @@ theorem add_lt_top [PartialOrderₓ α] {a b : WithTop α} : a + b < ⊤ ↔ a <
   simp_rw [lt_top_iff_ne_top, add_ne_top]
 
 theorem add_eq_coe : ∀ {a b : WithTop α} {c : α}, a + b = c ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = c
-  | none, b, c => by
-    simp [none_eq_top]
-  | some a, none, c => by
-    simp [none_eq_top]
-  | some a, some b, c => by
-    simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_distrib_leftₓ, exists_eq_left]
+  | none, b, c => by simp [none_eq_top]
+  | some a, none, c => by simp [none_eq_top]
+  | some a, some b, c => by simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_distrib_leftₓ, exists_eq_left]
 
 @[simp]
 theorem add_coe_eq_top_iff {x : WithTop α} {y : α} : x + y = ⊤ ↔ x = ⊤ := by
@@ -994,20 +984,14 @@ theorem coe_add_eq_top_iff {y : WithTop α} : ↑x + y = ⊤ ↔ y = ⊤ := by
 instance covariant_class_add_le [LE α] [CovariantClass α α (· + ·) (· ≤ ·)] :
     CovariantClass (WithTop α) (WithTop α) (· + ·) (· ≤ ·) :=
   ⟨fun a b c h => by
-    cases a <;>
-      cases c <;>
-        try
-          exact le_top
+    cases a <;> cases c <;> try exact le_top
     rcases le_coe_iff.1 h with ⟨b, rfl, h'⟩
     exact coe_le_coe.2 (add_le_add_left (coe_le_coe.1 h) _)⟩
 
 instance covariant_class_swap_add_le [LE α] [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
     CovariantClass (WithTop α) (WithTop α) (swap (· + ·)) (· ≤ ·) :=
   ⟨fun a b c h => by
-    cases a <;>
-      cases c <;>
-        try
-          exact le_top
+    cases a <;> cases c <;> try exact le_top
     rcases le_coe_iff.1 h with ⟨b, rfl, h'⟩
     exact coe_le_coe.2 (add_le_add_right (coe_le_coe.1 h) _)⟩
 
@@ -1029,10 +1013,7 @@ instance contravariant_class_add_lt [LT α] [ContravariantClass α α (· + ·) 
 instance contravariant_class_swap_add_lt [LT α] [ContravariantClass α α (swap (· + ·)) (· < ·)] :
     ContravariantClass (WithTop α) (WithTop α) (swap (· + ·)) (· < ·) :=
   ⟨fun a b c h => by
-    cases a <;>
-      cases b <;>
-        try
-          exact (not_none_lt _ h).elim
+    cases a <;> cases b <;> try exact (not_none_lt _ h).elim
     cases c
     · exact coe_lt_top _
       
@@ -1126,21 +1107,11 @@ end Add
 
 instance [AddSemigroupₓ α] : AddSemigroupₓ (WithTop α) :=
   { WithTop.hasAdd with
-    add_assoc := by
-      repeat'
-          refine' WithTop.recTopCoe _ _ <;>
-            try
-              intro <;>
-        simp [← WithTop.coe_add, add_assocₓ] }
+    add_assoc := by repeat' refine' WithTop.recTopCoe _ _ <;> try intro <;> simp [← WithTop.coe_add, add_assocₓ] }
 
 instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithTop α) :=
   { WithTop.addSemigroup with
-    add_comm := by
-      repeat'
-          refine' WithTop.recTopCoe _ _ <;>
-            try
-              intro <;>
-        simp [← WithTop.coe_add, add_commₓ] }
+    add_comm := by repeat' refine' WithTop.recTopCoe _ _ <;> try intro <;> simp [← WithTop.coe_add, add_commₓ] }
 
 instance [AddZeroClassₓ α] : AddZeroClassₓ (WithTop α) :=
   { WithTop.hasZero, WithTop.hasAdd with
@@ -1167,10 +1138,8 @@ instance [AddCommMonoidₓ α] : AddCommMonoidₓ (WithTop α) :=
 
 instance [AddMonoidWithOneₓ α] : AddMonoidWithOneₓ (WithTop α) :=
   { WithTop.hasOne, WithTop.addMonoid with natCast := fun n => ↑(n : α),
-    nat_cast_zero := by
-      rw [Nat.cast_zeroₓ, WithTop.coe_zero],
-    nat_cast_succ := fun n => by
-      rw [Nat.cast_add_one, WithTop.coe_add, WithTop.coe_one] }
+    nat_cast_zero := by rw [Nat.cast_zeroₓ, WithTop.coe_zero],
+    nat_cast_succ := fun n => by rw [Nat.cast_add_one, WithTop.coe_add, WithTop.coe_one] }
 
 instance [AddCommMonoidWithOne α] : AddCommMonoidWithOne (WithTop α) :=
   { WithTop.addMonoidWithOne, WithTop.addCommMonoid with }
@@ -1195,8 +1164,7 @@ instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoidWithTop (Wi
 instance [LE α] [Add α] [HasExistsAddOfLe α] : HasExistsAddOfLe (WithTop α) :=
   ⟨fun a b =>
     match a, b with
-    | ⊤, ⊤ => by
-      simp
+    | ⊤, ⊤ => by simp
     | (a : α), ⊤ => fun _ => ⟨⊤, rfl⟩
     | (a : α), (b : α) => fun h => by
       obtain ⟨c, rfl⟩ := exists_add_of_le (WithTop.coe_le_coe.1 h)
@@ -1248,8 +1216,7 @@ theorem zero_lt_coe [OrderedAddCommMonoid α] (a : α) : (0 : WithTop α) < a �
 protected def _root_.one_hom.with_top_map {M N : Type _} [One M] [One N] (f : OneHom M N) :
     OneHom (WithTop M) (WithTop N) where
   toFun := WithTop.map f
-  map_one' := by
-    rw [WithTop.map_one, map_one, coe_one]
+  map_one' := by rw [WithTop.map_one, map_one, coe_one]
 
 /-- A version of `with_top.map` for `add_hom`s. -/
 @[simps (config := { fullyApplied := false })]
@@ -1344,8 +1311,7 @@ theorem bot_add (a : WithBot α) : ⊥ + a = ⊥ :=
   rfl
 
 @[simp]
-theorem add_bot (a : WithBot α) : a + ⊥ = ⊥ := by
-  cases a <;> rfl
+theorem add_bot (a : WithBot α) : a + ⊥ = ⊥ := by cases a <;> rfl
 
 @[simp]
 theorem add_eq_bot : a + b = ⊥ ↔ a = ⊥ ∨ b = ⊥ :=
@@ -1379,8 +1345,7 @@ protected theorem map_add {F} [Add β] [AddHomClass F α β] (f : F) (a b : With
 protected def _root_.one_hom.with_bot_map {M N : Type _} [One M] [One N] (f : OneHom M N) :
     OneHom (WithBot M) (WithBot N) where
   toFun := WithBot.map f
-  map_one' := by
-    rw [WithBot.map_one, map_one, coe_one]
+  map_one' := by rw [WithBot.map_one, map_one, coe_one]
 
 /-- A version of `with_bot.map` for `add_hom`s. -/
 @[simps (config := { fullyApplied := false })]
@@ -1630,7 +1595,7 @@ theorem to_mul_bot_coe_of_add (x : α) : toMulBot.symm (Multiplicative.ofAdd (x 
 
 variable [Preorderₓ α] (a b : WithZero (Multiplicative α))
 
-theorem to_mul_bot_strict_mono : StrictMono (@toMulBot α _) := fun x y => id
+theorem to_mul_bot_strict_mono : StrictMonoₓ (@toMulBot α _) := fun x y => id
 
 @[simp]
 theorem to_mul_bot_le : toMulBot a ≤ toMulBot b ↔ a ≤ b :=

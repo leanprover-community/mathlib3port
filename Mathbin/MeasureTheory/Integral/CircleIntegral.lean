@@ -96,18 +96,15 @@ theorem Set.Countable.preimage_circle_map {s : Set ℂ} (hs : s.Countable) (c : 
       of_real_injective
 
 @[simp]
-theorem circle_map_sub_center (c : ℂ) (R : ℝ) (θ : ℝ) : circleMap c R θ - c = circleMap 0 R θ := by
-  simp [circleMap]
+theorem circle_map_sub_center (c : ℂ) (R : ℝ) (θ : ℝ) : circleMap c R θ - c = circleMap 0 R θ := by simp [circleMap]
 
 theorem circle_map_zero (R θ : ℝ) : circleMap 0 R θ = R * exp (θ * I) :=
   zero_addₓ _
 
 @[simp]
-theorem abs_circle_map_zero (R : ℝ) (θ : ℝ) : abs (circleMap 0 R θ) = abs R := by
-  simp [circleMap]
+theorem abs_circle_map_zero (R : ℝ) (θ : ℝ) : abs (circleMap 0 R θ) = abs R := by simp [circleMap]
 
-theorem circle_map_mem_sphere' (c : ℂ) (R : ℝ) (θ : ℝ) : circleMap c R θ ∈ Sphere c (abs R) := by
-  simp
+theorem circle_map_mem_sphere' (c : ℂ) (R : ℝ) (θ : ℝ) : circleMap c R θ ∈ Sphere c (abs R) := by simp
 
 theorem circle_map_mem_sphere (c : ℂ) {R : ℝ} (hR : 0 ≤ R) (θ : ℝ) : circleMap c R θ ∈ Sphere c R := by
   simpa only [_root_.abs_of_nonneg hR] using circle_map_mem_sphere' c R θ
@@ -115,8 +112,7 @@ theorem circle_map_mem_sphere (c : ℂ) {R : ℝ} (hR : 0 ≤ R) (θ : ℝ) : ci
 theorem circle_map_mem_closed_ball (c : ℂ) {R : ℝ} (hR : 0 ≤ R) (θ : ℝ) : circleMap c R θ ∈ ClosedBall c R :=
   sphere_subset_closed_ball (circle_map_mem_sphere c hR θ)
 
-theorem circle_map_not_mem_ball (c : ℂ) (R : ℝ) (θ : ℝ) : circleMap c R θ ∉ Ball c R := by
-  simp [dist_eq, le_abs_self]
+theorem circle_map_not_mem_ball (c : ℂ) (R : ℝ) (θ : ℝ) : circleMap c R θ ∉ Ball c R := by simp [dist_eq, le_abs_self]
 
 theorem circle_map_ne_mem_ball {c : ℂ} {R : ℝ} {w : ℂ} (hw : w ∈ Ball c R) (θ : ℝ) : circleMap c R θ ≠ w :=
   (ne_of_mem_of_not_memₓ hw (circle_map_not_mem_ball _ _ _)).symm
@@ -127,8 +123,7 @@ theorem range_circle_map (c : ℂ) (R : ℝ) : Range (circleMap c R) = Sphere c 
   calc
     Range (circleMap c R) = c +ᵥ R • Range fun θ : ℝ => exp (θ * I) := by
       simp only [← image_vadd, ← image_smul, ← range_comp, vadd_eq_add, circleMap, (· ∘ ·), real_smul]
-    _ = Sphere c (abs R) := by
-      simp [smul_sphere R (0 : ℂ) zero_le_one]
+    _ = Sphere c (abs R) := by simp [smul_sphere R (0 : ℂ) zero_le_one]
     
 
 /-- The image of `(0, 2π]` under `circle_map c R` is the circle with center `c` and radius `|R|`. -/
@@ -175,9 +170,7 @@ theorem deriv_circle_map_ne_zero {c : ℂ} {R : ℝ} {θ : ℝ} (hR : R ≠ 0) :
   mt deriv_circle_map_eq_zero_iff.1 hR
 
 theorem lipschitz_with_circle_map (c : ℂ) (R : ℝ) : LipschitzWith R.nnabs (circleMap c R) :=
-  (lipschitz_with_of_nnnorm_deriv_le (differentiable_circle_map _ _)) fun θ =>
-    Nnreal.coe_le_coe.1 <| by
-      simp
+  (lipschitz_with_of_nnnorm_deriv_le (differentiable_circle_map _ _)) fun θ => Nnreal.coe_le_coe.1 <| by simp
 
 theorem continuous_circle_map_inv {R : ℝ} {z w : ℂ} (hw : w ∈ Ball z R) : Continuous fun θ => (circleMap z R θ - w)⁻¹ :=
   by
@@ -228,21 +221,19 @@ theorem out [NormedSpace ℂ E] (hf : CircleIntegrable f c R) :
 end CircleIntegrable
 
 @[simp]
-theorem circle_integrable_zero_radius {f : ℂ → E} {c : ℂ} : CircleIntegrable f c 0 := by
-  simp [CircleIntegrable]
+theorem circle_integrable_zero_radius {f : ℂ → E} {c : ℂ} : CircleIntegrable f c 0 := by simp [CircleIntegrable]
 
 theorem circle_integrable_iff [NormedSpace ℂ E] {f : ℂ → E} {c : ℂ} (R : ℝ) :
     CircleIntegrable f c R ↔
       IntervalIntegrable (fun θ : ℝ => deriv (circleMap c R) θ • f (circleMap c R θ)) volume 0 (2 * π) :=
   by
-  by_cases' h₀ : R = 0
+  by_cases h₀:R = 0
   · simp [h₀]
     
   refine' ⟨fun h => h.out, fun h => _⟩
   simp only [CircleIntegrable, interval_integrable_iff, deriv_circle_map] at h⊢
   refine' (h.norm.const_mul (abs R)⁻¹).mono' _ _
-  · have H : ∀ {θ}, circleMap 0 R θ * I ≠ 0 := fun θ => by
-      simp [h₀, I_ne_zero]
+  · have H : ∀ {θ}, circleMap 0 R θ * I ≠ 0 := fun θ => by simp [h₀, I_ne_zero]
     simpa only [inv_smul_smul₀ H] using
       ((continuous_circle_map 0 R).AeStronglyMeasurable.mul_const I).AeMeasurable.inv.AeStronglyMeasurable.smul
         h.ae_strongly_measurable
@@ -280,7 +271,8 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
         ((differentiable_circle_map c R θ).HasDerivAt.tendsto_punctured_nhds (deriv_circle_map_ne_zero hR)).Eventually
           this
       filter_upwards [self_mem_nhds_within, mem_nhds_within_of_mem_nhds (ball_mem_nhds _ zero_lt_one)]
-      simp (config := { contextual := true })[dist_eq, sub_eq_zero]
+      simp (config := { contextual := true }) only [dist_eq, sub_eq_zero, mem_compl_iff, mem_singleton_iff, mem_ball,
+        mem_diff, mem_ball_zero_iff, norm_eq_abs, not_false_iff, and_selfₓ, implies_true_iff]
     refine'
       (((has_deriv_at_circle_map c R θ).is_O_sub.mono inf_le_left).inv_rev
             (this.mono fun θ' h₁ h₂ => absurd h₂ h₁.2)).trans
@@ -288,9 +280,9 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
     refine' is_O.of_bound (abs R)⁻¹ (this.mono fun θ' hθ' => _)
     set x := abs (f θ')
     suffices x⁻¹ ≤ x ^ n by
-      simpa [inv_mul_cancel_left₀, mt _root_.abs_eq_zero.1 hR]
-    have : x ∈ Ioo (0 : ℝ) 1 := by
-      simpa [And.comm, x] using hθ'
+      simpa only [inv_mul_cancel_left₀, abs_eq_zero.not.2 hR, norm_eq_abs, map_inv₀, Algebra.id.smul_eq_mul, map_mul,
+        abs_circle_map_zero, abs_I, mul_oneₓ, abs_zpow, Ne.def, not_false_iff] using this
+    have : x ∈ Ioo (0 : ℝ) 1 := by simpa [And.comm, x] using hθ'
     rw [← zpow_neg_one]
     refine' (zpow_strict_anti this.1 this.2).le_iff_le.2 (Int.lt_add_one_iffₓ.1 _)
     exact hn
@@ -324,13 +316,11 @@ theorem circle_integral_def_Icc (f : ℂ → E) (c : ℂ) (R : ℝ) :
 namespace circleIntegral
 
 @[simp]
-theorem integral_radius_zero (f : ℂ → E) (c : ℂ) : (∮ z in C(c, 0), f z) = 0 := by
-  simp [circleIntegral]
+theorem integral_radius_zero (f : ℂ → E) (c : ℂ) : (∮ z in C(c, 0), f z) = 0 := by simp [circleIntegral]
 
 theorem integral_congr {f g : ℂ → E} {c : ℂ} {R : ℝ} (hR : 0 ≤ R) (h : EqOn f g (Sphere c R)) :
     (∮ z in C(c, R), f z) = ∮ z in C(c, R), g z :=
-  intervalIntegral.integral_congr fun θ hθ => by
-    simp only [h (circle_map_mem_sphere _ hR _)]
+  intervalIntegral.integral_congr fun θ hθ => by simp only [h (circle_map_mem_sphere _ hR _)]
 
 theorem integral_sub_inv_smul_sub_smul (f : ℂ → E) (c w : ℂ) (R : ℝ) :
     (∮ z in C(c, R), (z - w)⁻¹ • (z - w) • f z) = ∮ z in C(c, R), f z := by
@@ -355,8 +345,7 @@ theorem norm_integral_le_of_norm_le_const' {f : ℂ → E} {c : ℂ} {R C : ℝ}
     ∥∮ z in C(c, R), f z∥ ≤ abs R * C * abs (2 * π - 0) :=
       intervalIntegral.norm_integral_le_of_norm_le_const fun θ _ =>
         calc
-          ∥deriv (circleMap c R) θ • f (circleMap c R θ)∥ = abs R * ∥f (circleMap c R θ)∥ := by
-            simp [norm_smul]
+          ∥deriv (circleMap c R) θ • f (circleMap c R θ)∥ = abs R * ∥f (circleMap c R θ)∥ := by simp [norm_smul]
           _ ≤ abs R * C := mul_le_mul_of_nonneg_left (hf _ <| circle_map_mem_sphere' _ _ _) (abs_nonneg _)
           
     _ = 2 * π * abs R * C := by
@@ -368,17 +357,13 @@ theorem norm_integral_le_of_norm_le_const {f : ℂ → E} {c : ℂ} {R C : ℝ} 
     (hf : ∀ z ∈ Sphere c R, ∥f z∥ ≤ C) : ∥∮ z in C(c, R), f z∥ ≤ 2 * π * R * C :=
   have : abs R = R := abs_of_nonneg hR
   calc
-    ∥∮ z in C(c, R), f z∥ ≤ 2 * π * abs R * C :=
-      norm_integral_le_of_norm_le_const' <| by
-        rwa [this]
-    _ = 2 * π * R * C := by
-      rw [this]
+    ∥∮ z in C(c, R), f z∥ ≤ 2 * π * abs R * C := norm_integral_le_of_norm_le_const' <| by rwa [this]
+    _ = 2 * π * R * C := by rw [this]
     
 
 theorem norm_two_pi_I_inv_smul_integral_le_of_norm_le_const {f : ℂ → E} {c : ℂ} {R C : ℝ} (hR : 0 ≤ R)
     (hf : ∀ z ∈ Sphere c R, ∥f z∥ ≤ C) : ∥(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), f z∥ ≤ R * C := by
-  have : ∥(2 * π * I : ℂ)⁻¹∥ = (2 * π)⁻¹ := by
-    simp [real.pi_pos.le]
+  have : ∥(2 * π * I : ℂ)⁻¹∥ = (2 * π)⁻¹ := by simp [real.pi_pos.le]
   rw [norm_smul, this, ← div_eq_inv_mul, div_le_iff Real.two_pi_pos, mul_comm (R * C), ← mul_assoc]
   exact norm_integral_le_of_norm_le_const hR hf
 
@@ -394,8 +379,7 @@ theorem norm_integral_lt_of_norm_le_const_of_lt {f : ℂ → E} {c : ℂ} {R C :
     ∥∮ z in C(c, R), f z∥ ≤ ∫ θ in 0 ..2 * π, ∥deriv (circleMap c R) θ • f (circleMap c R θ)∥ :=
       intervalIntegral.norm_integral_le_integral_norm real.two_pi_pos.le
     _ < ∫ θ in 0 ..2 * π, R * C := by
-      simp only [norm_smul, deriv_circle_map, norm_eq_abs, Complex.abs_mul, abs_I, mul_oneₓ, abs_circle_map_zero,
-        abs_of_pos hR]
+      simp only [norm_smul, deriv_circle_map, norm_eq_abs, map_mul, abs_I, mul_oneₓ, abs_circle_map_zero, abs_of_pos hR]
       refine'
         intervalIntegral.integral_lt_integral_of_continuous_on_of_le_of_exists_lt Real.two_pi_pos _ continuous_on_const
           (fun θ hθ => _) ⟨θ₀, Ioc_subset_Icc_self hmem, _⟩
@@ -407,8 +391,7 @@ theorem norm_integral_lt_of_norm_le_const_of_lt {f : ℂ → E} {c : ℂ} {R C :
         
       · exact (mul_lt_mul_left hR).2 hlt
         
-    _ = 2 * π * R * C := by
-      simp [mul_assoc]
+    _ = 2 * π * R * C := by simp [mul_assoc]
     
 
 @[simp]
@@ -433,7 +416,7 @@ theorem integral_sub_center_inv (c : ℂ) {R : ℝ} (hR : R ≠ 0) : (∮ z in C
 `metric.sphere c |R|`, then `∮ z in C(c, R), f' z = 0`. -/
 theorem integral_eq_zero_of_has_deriv_within_at' {f f' : ℂ → E} {c : ℂ} {R : ℝ}
     (h : ∀ z ∈ Sphere c (abs R), HasDerivWithinAt f (f' z) (Sphere c (abs R)) z) : (∮ z in C(c, R), f' z) = 0 := by
-  by_cases' hi : CircleIntegrable f' c R
+  by_cases hi:CircleIntegrable f' c R
   · rw [← sub_eq_zero.2 ((periodic_circle_map c R).comp f).Eq]
     refine' intervalIntegral.integral_eq_sub_of_has_deriv_at (fun θ hθ => _) hi.out
     exact
@@ -463,19 +446,13 @@ theorem integral_sub_zpow_of_undef {n : ℤ} {c w : ℂ} {R : ℝ} (hn : n < 0) 
 zero. -/
 theorem integral_sub_zpow_of_ne {n : ℤ} (hn : n ≠ -1) (c w : ℂ) (R : ℝ) : (∮ z in C(c, R), (z - w) ^ n) = 0 := by
   rcases em (w ∈ sphere c (abs R) ∧ n < -1) with (⟨hw, hn⟩ | H)
-  · exact
-      integral_sub_zpow_of_undef
-        (hn.trans
-          (by
-            decide))
-        hw
+  · exact integral_sub_zpow_of_undef (hn.trans (by decide)) hw
     
   push_neg  at H
   have hd : ∀ z, z ≠ w ∨ -1 ≤ n → HasDerivAt (fun z => (z - w) ^ (n + 1) / (n + 1)) ((z - w) ^ n) z := by
     intro z hne
     convert ((has_deriv_at_zpow (n + 1) _ (hne.imp _ _)).comp z ((has_deriv_at_id z).sub_const w)).div_const _ using 1
-    · have hn' : (n + 1 : ℂ) ≠ 0 := by
-        rwa [Ne, ← eq_neg_iff_add_eq_zero, ← Int.cast_oneₓ, ← Int.cast_neg, Int.cast_inj]
+    · have hn' : (n + 1 : ℂ) ≠ 0 := by rwa [Ne, ← eq_neg_iff_add_eq_zero, ← Int.cast_oneₓ, ← Int.cast_neg, Int.cast_inj]
       simp [mul_assoc, mul_div_cancel_left _ hn']
       
     exacts[sub_ne_zero.2, neg_le_iff_add_nonneg.1]
@@ -509,8 +486,7 @@ theorem norm_cauchy_power_series_le (f : ℂ → E) (c : ℂ) (R : ℝ) (n : ℕ
           ∫ θ in 0 ..2 * π,
             ∥deriv (circleMap c R) θ • (circleMap c R θ - c)⁻¹ ^ n • (circleMap c R θ - c)⁻¹ • f (circleMap c R θ)∥ :=
       mul_le_mul_of_nonneg_left (intervalIntegral.norm_integral_le_integral_norm Real.two_pi_pos.le)
-        (by
-          simp [real.pi_pos.le])
+        (by simp [real.pi_pos.le])
     _ = (2 * π)⁻¹ * ((abs R)⁻¹ ^ n * (abs R * ((abs R)⁻¹ * ∫ x : ℝ in 0 ..2 * π, ∥f (circleMap c R x)∥))) := by
       simp [norm_smul, mul_left_commₓ (abs R)]
     _ ≤ ((2 * π)⁻¹ * ∫ θ : ℝ in 0 ..2 * π, ∥f (circleMap c R θ)∥) * (abs R)⁻¹ ^ n := by
@@ -544,8 +520,8 @@ theorem has_sum_two_pi_I_cauchy_power_series_integral {f : ℂ → E} {c : ℂ} 
     (hw : abs w < R) :
     HasSum (fun n : ℕ => ∮ z in C(c, R), (w / (z - c)) ^ n • (z - c)⁻¹ • f z) (∮ z in C(c, R), (z - (c + w))⁻¹ • f z) :=
   by
-  have hR : 0 < R := (abs_nonneg w).trans_lt hw
-  have hwR : abs w / R ∈ Ico (0 : ℝ) 1 := ⟨div_nonneg (abs_nonneg w) hR.le, (div_lt_one hR).2 hw⟩
+  have hR : 0 < R := (complex.abs.nonneg w).trans_lt hw
+  have hwR : abs w / R ∈ Ico (0 : ℝ) 1 := ⟨div_nonneg (complex.abs.nonneg w) hR.le, (div_lt_one hR).2 hw⟩
   refine'
     intervalIntegral.has_sum_integral_of_dominated_convergence (fun n θ => ∥f (circleMap c R θ)∥ * (abs w / R) ^ n)
       (fun n => _) (fun n => _) _ _ _
@@ -564,8 +540,7 @@ theorem has_sum_two_pi_I_cauchy_power_series_integral {f : ℂ → E} {c : ℂ} 
   · refine' eventually_of_forall fun θ hθ => HasSum.const_smul _
     simp only [smul_smul]
     refine' HasSum.smul_const _
-    have : ∥w / (circleMap c R θ - c)∥ < 1 := by
-      simpa [abs_of_pos hR] using hwR.2
+    have : ∥w / (circleMap c R θ - c)∥ < 1 := by simpa [abs_of_pos hR] using hwR.2
     convert (has_sum_geometric_of_norm_lt_1 this).mul_right _
     simp [← sub_sub, ← mul_inv, sub_mul, div_mul_cancel _ (circle_map_ne_center hR.ne')]
     
@@ -614,8 +589,7 @@ theorem integral_sub_inv_of_mem_ball {c w : ℂ} {R : ℝ} (hw : w ∈ Ball c R)
   have H : ∀ n : ℕ, n ≠ 0 → (∮ z in C(c, R), (z - c) ^ (-n - 1 : ℤ)) = 0 := by
     refine' fun n hn => integral_sub_zpow_of_ne _ _ _ _
     simpa
-  have : (∮ z in C(c, R), ((w - c) / (z - c)) ^ 0 * (z - c)⁻¹) = 2 * π * I := by
-    simp [hR.ne']
+  have : (∮ z in C(c, R), ((w - c) / (z - c)) ^ 0 * (z - c)⁻¹) = 2 * π * I := by simp [hR.ne']
   refine' this ▸ has_sum_single _ fun n hn => _
   simp only [div_eq_mul_inv, mul_powₓ, integral_const_mul, mul_assoc]
   rw [(integral_congr hR.le fun z hz => _).trans (H n hn), mul_zero]

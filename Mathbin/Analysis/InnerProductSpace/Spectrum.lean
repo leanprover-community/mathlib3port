@@ -66,8 +66,7 @@ include hT
 /-- A self-adjoint operator preserves orthogonal complements of its eigenspaces. -/
 theorem invariant_orthogonal_eigenspace (μ : 𝕜) (v : E) (hv : v ∈ (eigenspace T μ)ᗮ) : T v ∈ (eigenspace T μ)ᗮ := by
   intro w hw
-  have : T w = (μ : 𝕜) • w := by
-    rwa [mem_eigenspace_iff] at hw
+  have : T w = (μ : 𝕜) • w := by rwa [mem_eigenspace_iff] at hw
   simp [← hT w, this, inner_smul_left, hv w hw]
 
 /-- The eigenvalues of a self-adjoint operator are real. -/
@@ -80,7 +79,7 @@ theorem conj_eigenvalue_eq_self {μ : 𝕜} (hμ : HasEigenvalue T μ) : conj μ
 theorem orthogonal_family_eigenspaces :
     @OrthogonalFamily 𝕜 _ _ _ _ (fun μ => eigenspace T μ) _ fun μ => (eigenspace T μ).subtypeₗᵢ := by
   rintro μ ν hμν ⟨v, hv⟩ ⟨w, hw⟩
-  by_cases' hv' : v = 0
+  by_cases hv':v = 0
   · simp [hv']
     
   have H := hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector ⟨hv, hv'⟩)
@@ -190,8 +189,7 @@ theorem has_eigenvector_eigenvector_basis (i : Finₓ n) :
   have key : has_eigenvector T μ v := by
     have H₁ : v ∈ eigenspace T μ :=
       hT.direct_sum_is_internal.subordinate_orthonormal_basis_subordinate hn i hT.orthogonal_family_eigenspaces'
-    have H₂ : v ≠ 0 := by
-      simpa using (hT.eigenvector_basis hn).toBasis.ne_zero i
+    have H₂ : v ≠ 0 := by simpa using (hT.eigenvector_basis hn).toBasis.ne_zero i
     exact ⟨H₁, H₂⟩
   have re_μ : ↑(IsROrC.re μ) = μ := by
     rw [← IsROrC.eq_conj_iff_re]
@@ -219,7 +217,7 @@ theorem diagonalization_basis_apply_self_apply (v : E) (i : Finₓ n) :
       congr_arg (fun v => (hT.eigenvector_basis hn).repr v i) (this ((hT.eigenvector_basis hn).repr v))
   intro w
   simp_rw [← OrthonormalBasis.sum_repr_symm, LinearMap.map_sum, LinearMap.map_smul, apply_eigenvector_basis]
-  apply Fintype.sum_congr
+  apply Fintypeₓ.sum_congr
   intro a
   rw [smul_smul, mul_comm]
 
@@ -233,14 +231,12 @@ section Nonneg
 
 @[simp]
 theorem inner_product_apply_eigenvector {μ : 𝕜} {v : E} {T : E →ₗ[𝕜] E} (h : v ∈ Module.End.eigenspace T μ) :
-    ⟪v, T v⟫ = μ * ∥v∥ ^ 2 := by
-  simp only [mem_eigenspace_iff.mp h, inner_smul_right, inner_self_eq_norm_sq_to_K]
+    ⟪v, T v⟫ = μ * ∥v∥ ^ 2 := by simp only [mem_eigenspace_iff.mp h, inner_smul_right, inner_self_eq_norm_sq_to_K]
 
 theorem eigenvalue_nonneg_of_nonneg {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenvalue T μ)
     (hnn : ∀ x : E, 0 ≤ IsROrC.re ⟪x, T x⟫) : 0 ≤ μ := by
   obtain ⟨v, hv⟩ := hμ.exists_has_eigenvector
-  have hpos : 0 < ∥v∥ ^ 2 := by
-    simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
+  have hpos : 0 < ∥v∥ ^ 2 := by simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
   have : IsROrC.re ⟪v, T v⟫ = μ * ∥v∥ ^ 2 := by
     exact_mod_cast congr_arg IsROrC.re (inner_product_apply_eigenvector hv.1)
   exact (zero_le_mul_right hpos).mp (this ▸ hnn v)
@@ -248,8 +244,7 @@ theorem eigenvalue_nonneg_of_nonneg {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : Has
 theorem eigenvalue_pos_of_pos {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenvalue T μ) (hnn : ∀ x : E, 0 < IsROrC.re ⟪x, T x⟫) :
     0 < μ := by
   obtain ⟨v, hv⟩ := hμ.exists_has_eigenvector
-  have hpos : 0 < ∥v∥ ^ 2 := by
-    simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
+  have hpos : 0 < ∥v∥ ^ 2 := by simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
   have : IsROrC.re ⟪v, T v⟫ = μ * ∥v∥ ^ 2 := by
     exact_mod_cast congr_arg IsROrC.re (inner_product_apply_eigenvector hv.1)
   exact (zero_lt_mul_right hpos).mp (this ▸ hnn v)

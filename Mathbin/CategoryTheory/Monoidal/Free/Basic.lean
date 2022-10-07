@@ -77,17 +77,20 @@ inductive HomEquiv : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
   | symm {X Y} (f g : X ⟶ᵐ Y) : hom_equiv f g → hom_equiv g f
   | trans {X Y} {f g h : X ⟶ᵐ Y} : hom_equiv f g → hom_equiv g h → hom_equiv f h
   | comp {X Y Z} {f f' : X ⟶ᵐ Y} {g g' : Y ⟶ᵐ Z} : hom_equiv f f' → hom_equiv g g' → hom_equiv (f.comp g) (f'.comp g')
-  | tensor {W X Y Z} {f f' : W ⟶ᵐ X} {g g' : Y ⟶ᵐ Z} :
+  |
+  tensor {W X Y Z} {f f' : W ⟶ᵐ X} {g g' : Y ⟶ᵐ Z} :
     hom_equiv f f' → hom_equiv g g' → hom_equiv (f.tensor g) (f'.tensor g')
   | comp_id {X Y} (f : X ⟶ᵐ Y) : hom_equiv (f.comp (Hom.id _)) f
   | id_comp {X Y} (f : X ⟶ᵐ Y) : hom_equiv ((Hom.id _).comp f) f
   | assoc {X Y U V : F C} (f : X ⟶ᵐ U) (g : U ⟶ᵐ V) (h : V ⟶ᵐ Y) : hom_equiv ((f.comp g).comp h) (f.comp (g.comp h))
   | tensor_id {X Y} : hom_equiv ((Hom.id X).tensor (Hom.id Y)) (Hom.id _)
-  | tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : F C} (f₁ : X₁ ⟶ᵐ Y₁) (f₂ : X₂ ⟶ᵐ Y₂) (g₁ : Y₁ ⟶ᵐ Z₁) (g₂ : Y₂ ⟶ᵐ Z₂) :
+  |
+  tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : F C} (f₁ : X₁ ⟶ᵐ Y₁) (f₂ : X₂ ⟶ᵐ Y₂) (g₁ : Y₁ ⟶ᵐ Z₁) (g₂ : Y₂ ⟶ᵐ Z₂) :
     hom_equiv ((f₁.comp g₁).tensor (f₂.comp g₂)) ((f₁.tensor f₂).comp (g₁.tensor g₂))
   | α_hom_inv {X Y Z} : hom_equiv ((Hom.α_hom X Y Z).comp (Hom.α_inv X Y Z)) (Hom.id _)
   | α_inv_hom {X Y Z} : hom_equiv ((Hom.α_inv X Y Z).comp (Hom.α_hom X Y Z)) (Hom.id _)
-  | associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃} (f₁ : X₁ ⟶ᵐ Y₁) (f₂ : X₂ ⟶ᵐ Y₂) (f₃ : X₃ ⟶ᵐ Y₃) :
+  |
+  associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃} (f₁ : X₁ ⟶ᵐ Y₁) (f₂ : X₂ ⟶ᵐ Y₂) (f₃ : X₃ ⟶ᵐ Y₃) :
     hom_equiv (((f₁.tensor f₂).tensor f₃).comp (Hom.α_hom Y₁ Y₂ Y₃))
       ((Hom.α_hom X₁ X₂ X₃).comp (f₁.tensor (f₂.tensor f₃)))
   | ρ_hom_inv {X} : hom_equiv ((Hom.ρ_hom X).comp (Hom.ρ_inv X)) (Hom.id _)
@@ -96,12 +99,14 @@ inductive HomEquiv : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
   | l_hom_inv {X} : hom_equiv ((Hom.l_hom X).comp (Hom.l_inv X)) (Hom.id _)
   | l_inv_hom {X} : hom_equiv ((Hom.l_inv X).comp (Hom.l_hom X)) (Hom.id _)
   | l_naturality {X Y} (f : X ⟶ᵐ Y) : hom_equiv (((Hom.id unit).tensor f).comp (Hom.l_hom Y)) ((Hom.l_hom X).comp f)
-  | pentagon {W X Y Z} :
+  |
+  pentagon {W X Y Z} :
     hom_equiv
       (((Hom.α_hom W X Y).tensor (Hom.id Z)).comp
         ((Hom.α_hom W (X.tensor Y) Z).comp ((Hom.id W).tensor (Hom.α_hom X Y Z))))
       ((Hom.α_hom (W.tensor X) Y Z).comp (Hom.α_hom W X (Y.tensor Z)))
-  | triangle {X Y} :
+  |
+  triangle {X Y} :
     hom_equiv ((Hom.α_hom X unit Y).comp ((Hom.id X).tensor (Hom.l_hom Y))) ((Hom.ρ_hom X).tensor (Hom.id Y))
 
 /-- We say that two formal morphisms in the free monoidal category are equivalent if they become
@@ -276,7 +281,7 @@ def projectMap (X Y : F C) : (X ⟶ Y) → (projectObjₓ f X ⟶ projectObjₓ 
       · simp only [project_map_aux, iso.inv_hom_id]
         
       · simp only [project_map_aux]
-        dsimp' [project_obj]
+        dsimp [project_obj]
         exact monoidal_category.right_unitor_naturality _
         
       · simp only [project_map_aux, iso.hom_inv_id]
@@ -284,7 +289,7 @@ def projectMap (X Y : F C) : (X ⟶ Y) → (projectObjₓ f X ⟶ projectObjₓ 
       · simp only [project_map_aux, iso.inv_hom_id]
         
       · simp only [project_map_aux]
-        dsimp' [project_obj]
+        dsimp [project_obj]
         exact monoidal_category.left_unitor_naturality _
         
       · simp only [project_map_aux]

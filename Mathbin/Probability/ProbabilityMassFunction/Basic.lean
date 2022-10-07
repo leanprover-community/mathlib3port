@@ -65,8 +65,7 @@ def Support (p : Pmf α) : Set α :=
 theorem mem_support_iff (p : Pmf α) (a : α) : a ∈ p.Support ↔ p a ≠ 0 :=
   Iff.rfl
 
-theorem apply_eq_zero_iff (p : Pmf α) (a : α) : p a = 0 ↔ a ∉ p.Support := by
-  rw [mem_support_iff, not_not]
+theorem apply_eq_zero_iff (p : Pmf α) (a : α) : p a = 0 ↔ a ∉ p.Support := by rw [mem_support_iff, not_not]
 
 theorem coe_le_one (p : Pmf α) (a : α) : p a ≤ 1 :=
   has_sum_le
@@ -94,11 +93,11 @@ theorem to_outer_measure_apply' : p.toOuterMeasure s = ↑(∑' x : α, s.indica
     to_outer_measure_apply]
 
 @[simp]
-theorem to_outer_measure_apply_finset (s : Finset α) : p.toOuterMeasure s = ∑ x in s, ↑(p x) := by
+theorem to_outer_measure_apply_finset (s : Finsetₓ α) : p.toOuterMeasure s = ∑ x in s, ↑(p x) := by
   refine' (to_outer_measure_apply p s).trans ((@tsum_eq_sum _ _ _ _ _ _ s _).trans _)
   · exact fun x hx => Set.indicator_of_not_mem hx _
     
-  · exact Finset.sum_congr rfl fun x hx => Set.indicator_of_mem hx _
+  · exact Finsetₓ.sum_congr rfl fun x hx => Set.indicator_of_mem hx _
     
 
 theorem to_outer_measure_apply_singleton (a : α) : p.toOuterMeasure {a} = p a := by
@@ -142,8 +141,8 @@ theorem to_outer_measure_apply_eq_of_inter_support_eq {s t : Set α} (h : s ∩ 
     (p.to_outer_measure_mono (h ▸ Set.inter_subset_left s p.Support))
 
 @[simp]
-theorem to_outer_measure_apply_fintype [Fintype α] : p.toOuterMeasure s = ↑(∑ x, s.indicator p x) :=
-  (p.to_outer_measure_apply' s).trans (Ennreal.coe_eq_coe.2 <| tsum_eq_sum fun x h => absurd (Finset.mem_univ x) h)
+theorem to_outer_measure_apply_fintype [Fintypeₓ α] : p.toOuterMeasure s = ↑(∑ x, s.indicator p x) :=
+  (p.to_outer_measure_apply' s).trans (Ennreal.coe_eq_coe.2 <| tsum_eq_sum fun x h => absurd (Finsetₓ.mem_univ x) h)
 
 @[simp]
 theorem to_outer_measure_caratheodory (p : Pmf α) : (toOuterMeasure p).caratheodory = ⊤ := by
@@ -205,14 +204,14 @@ section MeasurableSingletonClass
 variable [MeasurableSingletonClass α]
 
 @[simp]
-theorem to_measure_apply_finset (s : Finset α) : p.toMeasure s = ∑ x in s, (p x : ℝ≥0∞) :=
+theorem to_measure_apply_finset (s : Finsetₓ α) : p.toMeasure s = ∑ x in s, (p x : ℝ≥0∞) :=
   (p.to_measure_apply_eq_to_outer_measure_apply s s.MeasurableSet).trans (p.to_outer_measure_apply_finset s)
 
 theorem to_measure_apply_of_finite (hs : s.Finite) : p.toMeasure s = ↑(∑' x, s.indicator p x) :=
   (p.to_measure_apply_eq_to_outer_measure_apply s hs.MeasurableSet).trans (p.to_outer_measure_apply' s)
 
 @[simp]
-theorem to_measure_apply_fintype [Fintype α] : p.toMeasure s = ↑(∑ x, s.indicator p x) :=
+theorem to_measure_apply_fintype [Fintypeₓ α] : p.toMeasure s = ↑(∑ x, s.indicator p x) :=
   (p.to_measure_apply_eq_to_outer_measure_apply s s.to_finite.MeasurableSet).trans (p.to_outer_measure_apply_fintype s)
 
 end MeasurableSingletonClass

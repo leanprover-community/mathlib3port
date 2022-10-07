@@ -166,9 +166,9 @@ theorem log_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : log b n ≤ lo
     _ ≤ n.succ := pow_log_le_self (hc.trans_le hb) (zero_lt_succ n)
     
 
-theorem log_monotone {b : ℕ} : Monotone (log b) := fun x y => log_mono_right
+theorem log_monotone {b : ℕ} : Monotoneₓ (log b) := fun x y => log_mono_right
 
-theorem log_antitone_left {n : ℕ} : AntitoneOn (fun b => log b n) (Set.Ioi 1) := fun _ hc _ _ hb =>
+theorem log_antitone_left {n : ℕ} : AntitoneOnₓ (fun b => log b n) (Set.Ioi 1) := fun _ hc _ _ hb =>
   log_anti_left (Set.mem_Iio.1 hc) hb
 
 @[simp]
@@ -190,8 +190,7 @@ theorem log_div_mul_self (b n : ℕ) : log b (n / b * b) = log b n :=
         rw [← pow_le_iff_le_log, pow_succ'ₓ] at h⊢
         · rwa [(strict_mono_mul_right_of_pos Nat.succ_pos').le_iff_le, Nat.le_div_iff_mul_leₓ Nat.succ_pos']
           
-        all_goals
-          simp [hn, Nat.div_pos hb Nat.succ_pos']
+        all_goals simp [hn, Nat.div_pos hb Nat.succ_pos']
         
       · simpa [div_eq_of_lt, hb, log_of_lt] using h
         ⟩
@@ -322,9 +321,9 @@ theorem clog_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : clog b n ≤ 
     _ ≤ b ^ clog c n := pow_le_pow_of_le_left (zero_lt_one.trans hc).le hb _
     
 
-theorem clog_monotone (b : ℕ) : Monotone (clog b) := fun x y => clog_mono_right _
+theorem clog_monotone (b : ℕ) : Monotoneₓ (clog b) := fun x y => clog_mono_right _
 
-theorem clog_antitone_left {n : ℕ} : AntitoneOn (fun b : ℕ => clog b n) (Set.Ioi 1) := fun _ hc _ _ hb =>
+theorem clog_antitone_left {n : ℕ} : AntitoneOnₓ (fun b : ℕ => clog b n) (Set.Ioi 1) := fun _ hc _ _ hb =>
   clog_anti_left (Set.mem_Iio.1 hc) hb
 
 theorem log_le_clog (b n : ℕ) : log b n ≤ clog b n := by

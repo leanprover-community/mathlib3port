@@ -78,12 +78,12 @@ instance Function.algebraRing (I : Type _) {R : Type _} (A : Type _) [CommSemiri
 
 /-- A special case of `pi.algebra` for when `f = λ i, matrix (m i) (m i) A`. -/
 instance Pi.matrixAlgebra (I R A : Type _) (m : I → Type _) [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
-    [∀ i, Fintype (m i)] [∀ i, DecidableEq (m i)] : Algebra R (∀ i, Matrix (m i) (m i) A) :=
+    [∀ i, Fintypeₓ (m i)] [∀ i, DecidableEq (m i)] : Algebra R (∀ i, Matrix (m i) (m i) A) :=
   @Pi.algebra I R (fun i => Matrix (m i) (m i) A) _ _ fun i => Matrix.algebra
 
 /-- A special case of `pi.topological_ring` for when `f = λ i, matrix (m i) (m i) A`. -/
 instance Pi.matrix_topological_ring (I A : Type _) (m : I → Type _) [Ringₓ A] [TopologicalSpace A] [TopologicalRing A]
-    [∀ i, Fintype (m i)] : TopologicalRing (∀ i, Matrix (m i) (m i) A) :=
+    [∀ i, Fintypeₓ (m i)] : TopologicalRing (∀ i, Matrix (m i) (m i) A) :=
   @Pi.topological_ring _ (fun i => Matrix (m i) (m i) A) _ _ fun i => Matrix.topological_ring
 
 end HacksForPiInstanceSearch
@@ -96,7 +96,7 @@ section Topological
 
 section Ringₓ
 
-variable [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [∀ i, Fintype (n' i)] [∀ i, DecidableEq (n' i)]
+variable [Fintypeₓ m] [DecidableEq m] [Fintypeₓ n] [DecidableEq n] [∀ i, Fintypeₓ (n' i)] [∀ i, DecidableEq (n' i)]
   [Field 𝕂] [Ringₓ 𝔸] [TopologicalSpace 𝔸] [TopologicalRing 𝔸] [Algebra 𝕂 𝔸] [T2Space 𝔸]
 
 theorem exp_diagonal (v : m → 𝔸) : exp 𝕂 (diagonalₓ v) = diagonalₓ (exp 𝕂 v) := by
@@ -106,8 +106,7 @@ theorem exp_block_diagonal (v : m → Matrix n n 𝔸) : exp 𝕂 (blockDiagonal
   simp_rw [exp_eq_tsum, ← block_diagonal_pow, ← block_diagonal_smul, ← block_diagonal_tsum]
 
 theorem exp_block_diagonal' (v : ∀ i, Matrix (n' i) (n' i) 𝔸) : exp 𝕂 (blockDiagonal'ₓ v) = blockDiagonal'ₓ (exp 𝕂 v) :=
-  by
-  simp_rw [exp_eq_tsum, ← block_diagonal'_pow, ← block_diagonal'_smul, ← block_diagonal'_tsum]
+  by simp_rw [exp_eq_tsum, ← block_diagonal'_pow, ← block_diagonal'_smul, ← block_diagonal'_tsum]
 
 theorem exp_conj_transpose [StarRing 𝔸] [HasContinuousStar 𝔸] (A : Matrix m m 𝔸) : exp 𝕂 Aᴴ = (exp 𝕂 A)ᴴ :=
   (star_exp A).symm
@@ -116,7 +115,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable [Fintype m] [DecidableEq m] [Field 𝕂] [CommRingₓ 𝔸] [TopologicalSpace 𝔸] [TopologicalRing 𝔸] [Algebra 𝕂 𝔸]
+variable [Fintypeₓ m] [DecidableEq m] [Field 𝕂] [CommRingₓ 𝔸] [TopologicalSpace 𝔸] [TopologicalRing 𝔸] [Algebra 𝕂 𝔸]
   [T2Space 𝔸]
 
 theorem exp_transpose (A : Matrix m m 𝔸) : exp 𝕂 Aᵀ = (exp 𝕂 A)ᵀ := by
@@ -128,7 +127,7 @@ end Topological
 
 section Normed
 
-variable [IsROrC 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [∀ i, Fintype (n' i)]
+variable [IsROrC 𝕂] [Fintypeₓ m] [DecidableEq m] [Fintypeₓ n] [DecidableEq n] [∀ i, Fintypeₓ (n' i)]
   [∀ i, DecidableEq (n' i)] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 theorem exp_add_of_commute (A B : Matrix m m 𝔸) (h : Commute A B) : exp 𝕂 (A + B) = exp 𝕂 A ⬝ exp 𝕂 B := by
@@ -137,7 +136,7 @@ theorem exp_add_of_commute (A B : Matrix m m 𝔸) (h : Commute A B) : exp 𝕂 
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact exp_add_of_commute h
 
-theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → Matrix m m 𝔸) (h : ∀ i ∈ s, ∀ j ∈ s, Commute (f i) (f j)) :
+theorem exp_sum_of_commute {ι} (s : Finsetₓ ι) (f : ι → Matrix m m 𝔸) (h : ∀ i ∈ s, ∀ j ∈ s, Commute (f i) (f j)) :
     exp 𝕂 (∑ i in s, f i) = s.noncommProd (fun i => exp 𝕂 (f i)) fun i hi j hj => (h i hi j hj).exp 𝕂 := by
   letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
@@ -171,7 +170,7 @@ end Normed
 
 section NormedComm
 
-variable [IsROrC 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [∀ i, Fintype (n' i)]
+variable [IsROrC 𝕂] [Fintypeₓ m] [DecidableEq m] [Fintypeₓ n] [DecidableEq n] [∀ i, Fintypeₓ (n' i)]
   [∀ i, DecidableEq (n' i)] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 theorem exp_neg (A : Matrix m m 𝔸) : exp 𝕂 (-A) = (exp 𝕂 A)⁻¹ := by
@@ -191,13 +190,11 @@ theorem exp_zsmul (z : ℤ) (A : Matrix m m 𝔸) : exp 𝕂 (z • A) = exp �
 
 theorem exp_conj (U : Matrix m m 𝔸) (A : Matrix m m 𝔸) (hy : IsUnit U) : exp 𝕂 (U ⬝ A ⬝ U⁻¹) = U ⬝ exp 𝕂 A ⬝ U⁻¹ :=
   let ⟨u, hu⟩ := hy
-  hu ▸ by
-    simpa only [Matrix.coe_units_inv] using exp_units_conj 𝕂 u A
+  hu ▸ by simpa only [Matrix.coe_units_inv] using exp_units_conj 𝕂 u A
 
 theorem exp_conj' (U : Matrix m m 𝔸) (A : Matrix m m 𝔸) (hy : IsUnit U) : exp 𝕂 (U⁻¹ ⬝ A ⬝ U) = U⁻¹ ⬝ exp 𝕂 A ⬝ U :=
   let ⟨u, hu⟩ := hy
-  hu ▸ by
-    simpa only [Matrix.coe_units_inv] using exp_units_conj' 𝕂 u A
+  hu ▸ by simpa only [Matrix.coe_units_inv] using exp_units_conj' 𝕂 u A
 
 end NormedComm
 

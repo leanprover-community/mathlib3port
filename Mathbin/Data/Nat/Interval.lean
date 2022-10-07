@@ -18,7 +18,7 @@ and subsequently be moved upstream to `data.finset.locally_finite`.
 -/
 
 
-open Finset Nat
+open Finsetₓ Nat
 
 instance : LocallyFiniteOrder ℕ where
   finsetIcc := fun a b => ⟨List.range' a (b + 1 - a), List.nodup_range' _ _⟩
@@ -26,15 +26,15 @@ instance : LocallyFiniteOrder ℕ where
   finsetIoc := fun a b => ⟨List.range' (a + 1) (b - a), List.nodup_range' _ _⟩
   finsetIoo := fun a b => ⟨List.range' (a + 1) (b - a - 1), List.nodup_range' _ _⟩
   finset_mem_Icc := fun a b x => by
-    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range']
+    rw [Finsetₓ.mem_mk, Multiset.mem_coe, List.mem_range']
     cases le_or_ltₓ a b
-    · rw [add_tsub_cancel_of_le (Nat.lt_succ_of_leₓ h).le, Nat.lt_succ_iffₓ]
+    · rw [add_tsub_cancel_of_le (Nat.lt_succ_of_leₓ h).le, Nat.lt_succ_iff]
       
     · rw [tsub_eq_zero_iff_le.2 (succ_le_of_lt h), add_zeroₓ]
       exact iff_of_false (fun hx => hx.2.not_le hx.1) fun hx => h.not_le (hx.1.trans hx.2)
       
   finset_mem_Ico := fun a b x => by
-    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range']
+    rw [Finsetₓ.mem_mk, Multiset.mem_coe, List.mem_range']
     cases le_or_ltₓ a b
     · rw [add_tsub_cancel_of_le h]
       
@@ -42,15 +42,15 @@ instance : LocallyFiniteOrder ℕ where
       exact iff_of_false (fun hx => hx.2.not_le hx.1) fun hx => h.not_le (hx.1.trans hx.2.le)
       
   finset_mem_Ioc := fun a b x => by
-    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range']
+    rw [Finsetₓ.mem_mk, Multiset.mem_coe, List.mem_range']
     cases le_or_ltₓ a b
-    · rw [← succ_sub_succ, add_tsub_cancel_of_le (succ_le_succ h), Nat.lt_succ_iffₓ, Nat.succ_le_iff]
+    · rw [← succ_sub_succ, add_tsub_cancel_of_le (succ_le_succ h), Nat.lt_succ_iff, Nat.succ_le_iff]
       
     · rw [tsub_eq_zero_iff_le.2 h.le, add_zeroₓ]
       exact iff_of_false (fun hx => hx.2.not_le hx.1) fun hx => h.not_le (hx.1.le.trans hx.2)
       
   finset_mem_Ioo := fun a b x => by
-    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range', ← tsub_add_eq_tsub_tsub]
+    rw [Finsetₓ.mem_mk, Multiset.mem_coe, List.mem_range', ← tsub_add_eq_tsub_tsub]
     cases le_or_ltₓ (a + 1) b
     · rw [add_tsub_cancel_of_le h, Nat.succ_le_iff]
       
@@ -79,8 +79,7 @@ theorem Iio_eq_range : Iio = range := by
   rw [mem_Iio, mem_range]
 
 @[simp]
-theorem Ico_zero_eq_range : ico 0 = range := by
-  rw [← bot_eq_zero, ← Iio_eq_Ico, Iio_eq_range]
+theorem Ico_zero_eq_range : ico 0 = range := by rw [← bot_eq_zero, ← Iio_eq_Ico, Iio_eq_range]
 
 theorem _root_.finset.range_eq_Ico : range = ico 0 :=
   Ico_zero_eq_range.symm
@@ -102,36 +101,28 @@ theorem card_Ioo : (ioo a b).card = b - a - 1 :=
   List.length_range' _ _
 
 @[simp]
-theorem card_Iic : (iic b).card = b + 1 := by
-  rw [Iic_eq_Icc, card_Icc, bot_eq_zero, tsub_zero]
+theorem card_Iic : (iic b).card = b + 1 := by rw [Iic_eq_Icc, card_Icc, bot_eq_zero, tsub_zero]
 
 @[simp]
-theorem card_Iio : (iio b).card = b := by
-  rw [Iio_eq_Ico, card_Ico, bot_eq_zero, tsub_zero]
+theorem card_Iio : (iio b).card = b := by rw [Iio_eq_Ico, card_Ico, bot_eq_zero, tsub_zero]
 
 @[simp]
-theorem card_fintype_Icc : Fintype.card (Set.Icc a b) = b + 1 - a := by
-  rw [Fintype.card_of_finset, card_Icc]
+theorem card_fintype_Icc : Fintypeₓ.card (Set.Icc a b) = b + 1 - a := by rw [Fintypeₓ.card_of_finset, card_Icc]
 
 @[simp]
-theorem card_fintype_Ico : Fintype.card (Set.Ico a b) = b - a := by
-  rw [Fintype.card_of_finset, card_Ico]
+theorem card_fintype_Ico : Fintypeₓ.card (Set.Ico a b) = b - a := by rw [Fintypeₓ.card_of_finset, card_Ico]
 
 @[simp]
-theorem card_fintype_Ioc : Fintype.card (Set.Ioc a b) = b - a := by
-  rw [Fintype.card_of_finset, card_Ioc]
+theorem card_fintype_Ioc : Fintypeₓ.card (Set.Ioc a b) = b - a := by rw [Fintypeₓ.card_of_finset, card_Ioc]
 
 @[simp]
-theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
-  rw [Fintype.card_of_finset, card_Ioo]
+theorem card_fintype_Ioo : Fintypeₓ.card (Set.Ioo a b) = b - a - 1 := by rw [Fintypeₓ.card_of_finset, card_Ioo]
 
 @[simp]
-theorem card_fintype_Iic : Fintype.card (Set.Iic b) = b + 1 := by
-  rw [Fintype.card_of_finset, card_Iic]
+theorem card_fintype_Iic : Fintypeₓ.card (Set.Iic b) = b + 1 := by rw [Fintypeₓ.card_of_finset, card_Iic]
 
 @[simp]
-theorem card_fintype_Iio : Fintype.card (Set.Iio b) = b := by
-  rw [Fintype.card_of_finset, card_Iio]
+theorem card_fintype_Iio : Fintypeₓ.card (Set.Iio b) = b := by rw [Fintypeₓ.card_of_finset, card_Iio]
 
 -- TODO@Yaël: Generalize all the following lemmas to `succ_order`
 theorem Icc_succ_left : icc a.succ b = ioc a b := by
@@ -155,16 +146,13 @@ theorem Ico_succ_succ : ico a.succ b.succ = ioc a b := by
   rw [mem_Ico, mem_Ioc, succ_le_iff, lt_succ_iff]
 
 @[simp]
-theorem Ico_succ_singleton : ico a (a + 1) = {a} := by
-  rw [Ico_succ_right, Icc_self]
+theorem Ico_succ_singleton : ico a (a + 1) = {a} := by rw [Ico_succ_right, Icc_self]
 
 @[simp]
-theorem Ico_pred_singleton {a : ℕ} (h : 0 < a) : ico (a - 1) a = {a - 1} := by
-  rw [← Icc_pred_right _ h, Icc_self]
+theorem Ico_pred_singleton {a : ℕ} (h : 0 < a) : ico (a - 1) a = {a - 1} := by rw [← Icc_pred_right _ h, Icc_self]
 
 @[simp]
-theorem Ioc_succ_singleton : ioc b (b + 1) = {b + 1} := by
-  rw [← Nat.Icc_succ_left, Icc_self]
+theorem Ioc_succ_singleton : ioc b (b + 1) = {b + 1} := by rw [← Nat.Icc_succ_left, Icc_self]
 
 variable {a b c}
 
@@ -216,11 +204,11 @@ theorem Ico_succ_left_eq_erase_Ico : ico a.succ b = erase (ico a b) a := by
   ext x
   rw [Ico_succ_left, mem_erase, mem_Ico, mem_Ioo, ← and_assocₓ, ne_comm, and_comm (a ≠ x), lt_iff_le_and_neₓ]
 
-theorem mod_inj_on_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.ico n (n + a)) := by
+theorem mod_inj_on_Ico (n a : ℕ) : Set.InjOn (· % a) (Finsetₓ.ico n (n + a)) := by
   induction' n with n ih
   · simp only [zero_addₓ, nat_zero_eq_zero, Ico_zero_eq_range]
     rintro k hk l hl (hkl : k % a = l % a)
-    simp only [Finset.mem_range, Finset.mem_coe] at hk hl
+    simp only [Finsetₓ.mem_range, Finsetₓ.mem_coe] at hk hl
     rwa [mod_eq_of_lt hk, mod_eq_of_lt hl] at hkl
     
   rw [Ico_succ_left_eq_erase_Ico, succ_add, Ico_succ_right_eq_insert_Ico le_self_add]
@@ -229,21 +217,20 @@ theorem mod_inj_on_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.ico n (n + a)) :
     by_contra ha
     simp only [not_ltₓ, nonpos_iff_eq_zero] at ha
     simpa [ha] using hk
-  simp only [Finset.mem_coe, Finset.mem_insert, Finset.mem_erase] at hk hl
+  simp only [Finsetₓ.mem_coe, Finsetₓ.mem_insert, Finsetₓ.mem_erase] at hk hl
   rcases hk with ⟨hkn, rfl | hk⟩ <;> rcases hl with ⟨hln, rfl | hl⟩
   · rfl
     
   · rw [add_mod_right] at hkl
     refine' (hln <| ih hl _ hkl.symm).elim
-    simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]
+    simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finsetₓ.coe_Ico, ha]
     
   · rw [add_mod_right] at hkl
-    suffices k = n by
-      contradiction
+    suffices k = n by contradiction
     refine' ih hk _ hkl
-    simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]
+    simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finsetₓ.coe_Ico, ha]
     
-  · refine' ih _ _ hkl <;> simp only [Finset.mem_coe, hk, hl]
+  · refine' ih _ _ hkl <;> simp only [Finsetₓ.mem_coe, hk, hl]
     
 
 /-- Note that while this lemma cannot be easily generalized to a type class, it holds for ℤ as
@@ -288,28 +275,28 @@ section Multiset
 open Multiset
 
 theorem multiset_Ico_map_mod (n a : ℕ) : (Multiset.ico n (n + a)).map (· % a) = range a := by
-  convert congr_arg Finset.val (image_Ico_mod n a)
-  refine' ((nodup_map_iff_inj_on (Finset.ico _ _).Nodup).2 <| _).dedup.symm
+  convert congr_arg Finsetₓ.val (image_Ico_mod n a)
+  refine' ((nodup_map_iff_inj_on (Finsetₓ.ico _ _).Nodup).2 <| _).dedup.symm
   exact mod_inj_on_Ico _ _
 
 end Multiset
 
 end Nat
 
-namespace Finset
+namespace Finsetₓ
 
-theorem range_image_pred_top_sub (n : ℕ) : ((Finset.range n).Image fun j => n - 1 - j) = Finset.range n := by
+theorem range_image_pred_top_sub (n : ℕ) : ((Finsetₓ.range n).Image fun j => n - 1 - j) = Finsetₓ.range n := by
   cases n
   · rw [range_zero, image_empty]
     
-  · rw [Finset.range_eq_Ico, Nat.Ico_image_const_sub_eq_Ico (zero_le _)]
+  · rw [Finsetₓ.range_eq_Ico, Nat.Ico_image_const_sub_eq_Ico (zero_le _)]
     simp_rw [succ_sub_succ, tsub_zero, tsub_self]
     
 
 theorem range_add_eq_union : range (a + b) = range a ∪ (range b).map (addLeftEmbedding a) := by
-  rw [Finset.range_eq_Ico, map_eq_image]
+  rw [Finsetₓ.range_eq_Ico, map_eq_image]
   convert (Ico_union_Ico_eq_Ico a.zero_le le_self_add).symm
   exact image_add_left_Ico _ _ _
 
-end Finset
+end Finsetₓ
 

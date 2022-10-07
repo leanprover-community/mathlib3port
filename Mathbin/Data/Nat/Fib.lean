@@ -69,20 +69,17 @@ theorem fib_two : fib 2 = 1 :=
   rfl
 
 /-- Shows that `fib` indeed satisfies the Fibonacci recurrence `Fₙ₊₂ = Fₙ + Fₙ₊₁.` -/
-theorem fib_add_two {n : ℕ} : fib (n + 2) = fib n + fib (n + 1) := by
-  simp only [fib, Function.iterate_succ']
+theorem fib_add_two {n : ℕ} : fib (n + 2) = fib n + fib (n + 1) := by simp only [fib, Function.iterate_succ']
 
-theorem fib_le_fib_succ {n : ℕ} : fib n ≤ fib (n + 1) := by
-  cases n <;> simp [fib_add_two]
+theorem fib_le_fib_succ {n : ℕ} : fib n ≤ fib (n + 1) := by cases n <;> simp [fib_add_two]
 
 @[mono]
-theorem fib_mono : Monotone fib :=
+theorem fib_mono : Monotoneₓ fib :=
   monotone_nat_of_le_succ fun _ => fib_le_fib_succ
 
 theorem fib_pos {n : ℕ} (n_pos : 0 < n) : 0 < fib n :=
   calc
-    0 < fib 1 := by
-      decide
+    0 < fib 1 := by decide
     _ ≤ fib n := fib_mono n_pos
     
 
@@ -95,7 +92,7 @@ theorem fib_lt_fib_succ {n : ℕ} (hn : 2 ≤ n) : fib n < fib (n + 1) := by
   apply fib_pos (succ_pos n)
 
 /-- `fib (n + 2)` is strictly monotone. -/
-theorem fib_add_two_strict_mono : StrictMono fun n => fib (n + 2) := by
+theorem fib_add_two_strict_mono : StrictMonoₓ fun n => fib (n + 2) := by
   refine' strict_mono_nat_of_lt_succ fun n => _
   rw [add_right_commₓ]
   exact fib_lt_fib_succ (self_le_add_left _ _)
@@ -109,12 +106,7 @@ theorem le_fib_self {n : ℕ} (five_le_n : 5 ≤ n) : n ≤ fib n := by
     rw [succ_le_iff]
     calc
       n ≤ fib n := IH
-      _ < fib (n + 1) :=
-        fib_lt_fib_succ
-          (le_transₓ
-            (by
-              decide)
-            five_le_n)
+      _ < fib (n + 1) := fib_lt_fib_succ (le_transₓ (by decide) five_le_n)
       
     
 
@@ -153,8 +145,7 @@ theorem fib_two_mul_add_one (n : ℕ) : fib (2 * n + 1) = fib (n + 1) ^ 2 + fib 
   rw [two_mul, fib_add]
   ring
 
-theorem fib_bit0 (n : ℕ) : fib (bit0 n) = fib n * (2 * fib (n + 1) - fib n) := by
-  rw [bit0_eq_two_mul, fib_two_mul]
+theorem fib_bit0 (n : ℕ) : fib (bit0 n) = fib n * (2 * fib (n + 1) - fib n) := by rw [bit0_eq_two_mul, fib_two_mul]
 
 theorem fib_bit1 (n : ℕ) : fib (bit1 n) = fib (n + 1) ^ 2 + fib n ^ 2 := by
   rw [Nat.bit1_eq_succ_bit0, bit0_eq_two_mul, fib_two_mul_add_one]
@@ -213,8 +204,7 @@ theorem fast_fib_aux_eq (n : ℕ) : fastFibAux n = (fib n, fib (n + 1)) := by
         constructor <;> simp [bit, fib_bit0, fib_bit1, fib_bit0_succ, fib_bit1_succ]
     
 
-theorem fast_fib_eq (n : ℕ) : fastFib n = fib n := by
-  rw [fast_fib, fast_fib_aux_eq]
+theorem fast_fib_eq (n : ℕ) : fastFib n = fib n := by rw [fast_fib, fast_fib_aux_eq]
 
 theorem gcd_fib_add_self (m n : ℕ) : gcdₓ (fib m) (fib (n + m)) = gcdₓ (fib m) (fib n) := by
   cases Nat.eq_zero_or_posₓ n
@@ -234,10 +224,8 @@ theorem gcd_fib_add_self (m n : ℕ) : gcdₓ (fib m) (fib (n + m)) = gcdₓ (fi
     
 
 theorem gcd_fib_add_mul_self (m n : ℕ) : ∀ k, gcdₓ (fib m) (fib (n + k * m)) = gcdₓ (fib m) (fib n)
-  | 0 => by
-    simp
-  | k + 1 => by
-    rw [← gcd_fib_add_mul_self k, add_mulₓ, ← add_assocₓ, one_mulₓ, gcd_fib_add_self _ _]
+  | 0 => by simp
+  | k + 1 => by rw [← gcd_fib_add_mul_self k, add_mulₓ, ← add_assocₓ, one_mulₓ, gcd_fib_add_self _ _]
 
 /-- `fib n` is a strong divisibility sequence,
   see https://proofwiki.org/wiki/GCD_of_Fibonacci_Numbers -/
@@ -254,24 +242,21 @@ theorem fib_gcd (m n : ℕ) : fib (gcdₓ m n) = gcdₓ (fib m) (fib n) := by
     
   rwa [gcd_comm, gcd_comm (fib m)]
 
-theorem fib_dvd (m n : ℕ) (h : m ∣ n) : fib m ∣ fib n := by
-  rwa [gcd_eq_left_iff_dvd, ← fib_gcd, gcd_eq_left_iff_dvd.mp]
+theorem fib_dvd (m n : ℕ) (h : m ∣ n) : fib m ∣ fib n := by rwa [gcd_eq_left_iff_dvd, ← fib_gcd, gcd_eq_left_iff_dvd.mp]
 
-theorem fib_succ_eq_sum_choose : ∀ n : ℕ, fib (n + 1) = ∑ p in Finset.Nat.antidiagonal n, choose p.1 p.2 :=
+theorem fib_succ_eq_sum_choose : ∀ n : ℕ, fib (n + 1) = ∑ p in Finsetₓ.Nat.antidiagonal n, choose p.1 p.2 :=
   twoStepInduction rfl rfl fun n h1 h2 => by
-    rw [fib_add_two, h1, h2, Finset.Nat.antidiagonal_succ_succ', Finset.Nat.antidiagonal_succ']
-    simp [choose_succ_succ, Finset.sum_add_distrib, add_left_commₓ]
+    rw [fib_add_two, h1, h2, Finsetₓ.Nat.antidiagonal_succ_succ', Finsetₓ.Nat.antidiagonal_succ']
+    simp [choose_succ_succ, Finsetₓ.sum_add_distrib, add_left_commₓ]
 
-theorem fib_succ_eq_succ_sum (n : ℕ) : fib (n + 1) = (∑ k in Finset.range n, fib k) + 1 := by
+theorem fib_succ_eq_succ_sum (n : ℕ) : fib (n + 1) = (∑ k in Finsetₓ.range n, fib k) + 1 := by
   induction' n with n ih
   · simp
     
   · calc
       fib (n + 2) = fib n + fib (n + 1) := fib_add_two
-      _ = (fib n + ∑ k in Finset.range n, fib k) + 1 := by
-        rw [ih, add_assocₓ]
-      _ = (∑ k in Finset.range (n + 1), fib k) + 1 := by
-        simp [Finset.range_add_one]
+      _ = (fib n + ∑ k in Finsetₓ.range n, fib k) + 1 := by rw [ih, add_assocₓ]
+      _ = (∑ k in Finsetₓ.range (n + 1), fib k) + 1 := by simp [Finsetₓ.range_add_one]
       
     
 
@@ -297,18 +282,12 @@ theorem is_fib_aux_one : IsFibAux 1 1 1 :=
 
 theorem is_fib_aux_bit0 {n a b c a2 b2 a' b' : ℕ} (H : IsFibAux n a b) (h1 : a + c = bit0 b) (h2 : a * c = a')
     (h3 : a * a = a2) (h4 : b * b = b2) (h5 : a2 + b2 = b') : IsFibAux (bit0 n) a' b' :=
-  ⟨by
-    rw [fib_bit0, H.1, H.2, ← bit0_eq_two_mul,
-      show bit0 b - a = c by
-        rw [← h1, Nat.add_sub_cancel_left],
-      h2],
-    by
+  ⟨by rw [fib_bit0, H.1, H.2, ← bit0_eq_two_mul, show bit0 b - a = c by rw [← h1, Nat.add_sub_cancel_left], h2], by
     rw [fib_bit0_succ, H.1, H.2, pow_two, pow_two, h3, h4, add_commₓ, h5]⟩
 
 theorem is_fib_aux_bit1 {n a b c a2 b2 a' b' : ℕ} (H : IsFibAux n a b) (h1 : a * a = a2) (h2 : b * b = b2)
     (h3 : a2 + b2 = a') (h4 : bit0 a + b = c) (h5 : b * c = b') : IsFibAux (bit1 n) a' b' :=
-  ⟨by
-    rw [fib_bit1, H.1, H.2, pow_two, pow_two, h1, h2, add_commₓ, h3], by
+  ⟨by rw [fib_bit1, H.1, H.2, pow_two, pow_two, h1, h2, add_commₓ, h3], by
     rw [fib_bit1_succ, H.1, H.2, ← bit0_eq_two_mul, h4, h5]⟩
 
 theorem is_fib_aux_bit0_done {n a b c a' : ℕ} (H : IsFibAux n a b) (h1 : a + c = bit0 b) (h2 : a * c = a') :

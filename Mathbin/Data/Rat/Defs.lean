@@ -127,8 +127,7 @@ def mk : ℤ → ℤ → ℚ
 -- mathport name: rat.mk
 localized [Ratₓ] infixl:70 " /. " => Ratₓ.mk
 
-theorem mk_pnat_eq (n d h) : mkPnat n ⟨d, h⟩ = n /. d := by
-  change n /. d with dite _ _ _ <;> simp [ne_of_gtₓ h]
+theorem mk_pnat_eq (n d h) : mkPnat n ⟨d, h⟩ = n /. d := by change n /. d with dite _ _ _ <;> simp [ne_of_gtₓ h]
 
 theorem mk_nat_eq (n d) : mkNat n d = n /. d :=
   rfl
@@ -144,12 +143,10 @@ theorem zero_mk_pnat (n) : mkPnat 0 n = 0 := by
   rfl
 
 @[simp]
-theorem zero_mk_nat (n) : mkNat 0 n = 0 := by
-  by_cases' n = 0 <;> simp [*, mk_nat]
+theorem zero_mk_nat (n) : mkNat 0 n = 0 := by by_cases n = 0 <;> simp [*, mk_nat]
 
 @[simp]
-theorem zero_mk (n) : 0 /. n = 0 := by
-  cases n <;> simp [mk]
+theorem zero_mk (n) : 0 /. n = 0 := by cases n <;> simp [mk]
 
 private theorem gcd_abs_dvd_left {a b} : (Nat.gcdₓ (Int.natAbs a) b : ℤ) ∣ a :=
   Int.dvd_nat_abs.1 <| Int.coe_nat_dvd.2 <| Nat.gcd_dvd_leftₓ (Int.natAbs a) b
@@ -159,7 +156,7 @@ theorem mk_eq_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b = 0 ↔ a = 0 := by
   refine'
     ⟨fun h => _, by
       rintro rfl
-      simp ⟩
+      simp⟩
   have : ∀ {a b}, mk_pnat a b = 0 → a = 0 := by
     rintro a ⟨b, h⟩ e
     injection e with e
@@ -181,12 +178,11 @@ theorem mk_eq : ∀ {a b c d : ℤ} (hb : b ≠ 0) (hd : d ≠ 0), a /. b = c /.
     cases' b with b b <;> simp [mk, mk_nat, Nat.succPnat]
     simp [mt (congr_arg Int.ofNat) hb]
     all_goals
-      cases' d with d d <;> simp [mk, mk_nat, Nat.succPnat]
-      simp [mt (congr_arg Int.ofNat) hd]
-      all_goals
-        rw [this]
-        try
-          rfl
+    cases' d with d d <;> simp [mk, mk_nat, Nat.succPnat]
+    simp [mt (congr_arg Int.ofNat) hd]
+    all_goals
+    rw [this]
+    try rfl
     · change a * ↑d.succ = -c * ↑b ↔ a * -d.succ = c * b
       constructor <;>
         intro h <;>
@@ -221,19 +217,14 @@ theorem mk_eq : ∀ {a b c d : ℤ} (hb : b ≠ 0) (hd : d ≠ 0), a /. b = c /.
     simpa [mul_comm, mul_left_commₓ] using congr (congr_arg (· * ·) ha.symm) (congr_arg coe hb)
     
   · suffices ∀ a c, a * d = c * b → a / a.gcd b = c / c.gcd d ∧ b / a.gcd b = d / c.gcd d by
-      cases'
-        this a.nat_abs c.nat_abs
-          (by
-            simpa [Int.nat_abs_mul] using congr_arg Int.natAbs h) with
-        h₁ h₂
+      cases' this a.nat_abs c.nat_abs (by simpa [Int.nat_abs_mul] using congr_arg Int.natAbs h) with h₁ h₂
       have hs := congr_arg Int.sign h
       simp [Int.sign_eq_one_of_posₓ (Int.coe_nat_ltₓ.2 hb), Int.sign_eq_one_of_posₓ (Int.coe_nat_ltₓ.2 hd)] at hs
       conv in a => rw [← Int.sign_mul_nat_abs a]
       conv in c => rw [← Int.sign_mul_nat_abs c]
       rw [Int.mul_div_assocₓ, Int.mul_div_assocₓ]
       exact ⟨congr (congr_arg (· * ·) hs) (congr_arg coe h₁), h₂⟩
-      all_goals
-        exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_leftₓ _ _)
+      all_goals exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_leftₓ _ _)
     intro a c h
     suffices bd : b / a.gcd b = d / c.gcd d
     · refine' ⟨_, bd⟩
@@ -260,7 +251,7 @@ theorem mk_eq : ∀ {a b c d : ℤ} (hb : b ≠ 0) (hd : d ≠ 0), a /. b = c /.
 
 @[simp]
 theorem div_mk_div_cancel_left {a b c : ℤ} (c0 : c ≠ 0) : a * c /. (b * c) = a /. b := by
-  by_cases' b0 : b = 0
+  by_cases b0:b = 0
   · subst b0
     simp
     
@@ -269,9 +260,7 @@ theorem div_mk_div_cancel_left {a b c : ℤ} (c0 : c ≠ 0) : a * c /. (b * c) =
 
 @[simp]
 theorem num_denom : ∀ {a : ℚ}, a.num /. a.denom = a
-  | ⟨n, d, h, (c : _ = 1)⟩ =>
-    show mkNat n d = _ by
-      simp [mk_nat, ne_of_gtₓ h, mk_pnat, c]
+  | ⟨n, d, h, (c : _ = 1)⟩ => show mkNat n d = _ by simp [mk_nat, ne_of_gtₓ h, mk_pnat, c]
 
 theorem num_denom' {n d h c} : (⟨n, d, h, c⟩ : ℚ) = n /. d :=
   num_denom.symm
@@ -283,8 +272,7 @@ theorem of_int_eq_mk (z : ℤ) : ofInt z = z /. 1 :=
 numbers of the form `n /. d` with `0 < d` and coprime `n`, `d`. -/
 @[elabAsElim]
 def numDenomCasesOn.{u} {C : ℚ → Sort u} : ∀ (a : ℚ) (H : ∀ n d, 0 < d → (Int.natAbs n).Coprime d → C (n /. d)), C a
-  | ⟨n, d, h, c⟩, H => by
-    rw [num_denom'] <;> exact H n d h c
+  | ⟨n, d, h, c⟩, H => by rw [num_denom'] <;> exact H n d h c
 
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `d ≠ 0`. -/
@@ -301,7 +289,7 @@ theorem num_dvd (a) {b : ℤ} (b0 : b ≠ 0) : (a /. b).num ∣ a := by
   simp [this]
 
 theorem denom_dvd (a b : ℤ) : ((a /. b).denom : ℤ) ∣ b := by
-  by_cases' b0 : b = 0
+  by_cases b0:b = 0
   · simp [b0]
     
   cases' e : a /. b with n d h c
@@ -337,34 +325,27 @@ theorem lift_binop_eq (f : ℚ → ℚ → ℚ) (f₁ : ℤ → ℤ → ℤ → 
 
 @[simp]
 theorem add_def {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : a /. b + c /. d = (a * d + c * b) /. (b * d) := by
-  apply lift_binop_eq Ratₓ.add <;>
-    intros <;>
-      try
-        assumption
+  apply lift_binop_eq Ratₓ.add <;> intros <;> try assumption
   · apply mk_pnat_eq
     
   · apply mul_ne_zero d₁0 d₂0
     
   calc
-    (n₁ * d₂ + n₂ * d₁) * (b * d) = n₁ * b * d₂ * d + n₂ * d * (d₁ * b) := by
-      simp [mul_addₓ, mul_comm, mul_left_commₓ]
-    _ = a * d₁ * d₂ * d + c * d₂ * (d₁ * b) := by
-      rw [h₁, h₂]
-    _ = (a * d + c * b) * (d₁ * d₂) := by
-      simp [mul_addₓ, mul_comm, mul_left_commₓ]
+    (n₁ * d₂ + n₂ * d₁) * (b * d) = n₁ * b * d₂ * d + n₂ * d * (d₁ * b) := by simp [mul_addₓ, mul_comm, mul_left_commₓ]
+    _ = a * d₁ * d₂ * d + c * d₂ * (d₁ * b) := by rw [h₁, h₂]
+    _ = (a * d + c * b) * (d₁ * d₂) := by simp [mul_addₓ, mul_comm, mul_left_commₓ]
     
 
 /-- Negation of rational numbers. Use `-r` instead. -/
 protected def neg (r : ℚ) : ℚ :=
-  ⟨-r.num, r.denom, r.Pos, by
-    simp [r.cop]⟩
+  ⟨-r.num, r.denom, r.Pos, by simp [r.cop]⟩
 
 instance : Neg ℚ :=
   ⟨Ratₓ.neg⟩
 
 @[simp]
 theorem neg_def {a b : ℤ} : -(a /. b) = -a /. b := by
-  by_cases' b0 : b = 0
+  by_cases b0:b = 0
   · subst b0
     simp
     rfl
@@ -380,8 +361,7 @@ theorem neg_def {a b : ℤ} : -(a /. b) = -a /. b := by
   simp only [neg_mul, congr_arg Neg.neg h₁]
 
 @[simp]
-theorem mk_neg_denom (n d : ℤ) : n /. -d = -n /. d := by
-  by_cases' hd : d = 0 <;> simp [Ratₓ.mk_eq, hd]
+theorem mk_neg_denom (n d : ℤ) : n /. -d = -n /. d := by by_cases hd:d = 0 <;> simp [Ratₓ.mk_eq, hd]
 
 /-- Multiplication of rational numbers. Use `(*)` instead. -/
 protected def mul : ℚ → ℚ → ℚ
@@ -392,10 +372,7 @@ instance : Mul ℚ :=
 
 @[simp]
 theorem mul_def {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : a /. b * (c /. d) = a * c /. (b * d) := by
-  apply lift_binop_eq Ratₓ.mul <;>
-    intros <;>
-      try
-        assumption
+  apply lift_binop_eq Ratₓ.mul <;> intros <;> try assumption
   · apply mk_pnat_eq
     
   · apply mul_ne_zero d₁0 d₂0
@@ -406,10 +383,7 @@ theorem mul_def {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : a /. b * (c /. d
 protected def inv : ℚ → ℚ
   | ⟨(n + 1 : ℕ), d, h, c⟩ => ⟨d, n + 1, n.succ_pos, c.symm⟩
   | ⟨0, d, h, c⟩ => 0
-  | ⟨-[1 + n], d, h, c⟩ =>
-    ⟨-d, n + 1, n.succ_pos,
-      Nat.Coprime.symm <| by
-        simp <;> exact c⟩
+  | ⟨-[1 + n], d, h, c⟩ => ⟨-d, n + 1, n.succ_pos, Nat.Coprime.symm <| by simp <;> exact c⟩
 
 instance : Inv ℚ :=
   ⟨Ratₓ.inv⟩
@@ -419,12 +393,12 @@ instance : Div ℚ :=
 
 @[simp]
 theorem inv_def {a b : ℤ} : (a /. b)⁻¹ = b /. a := by
-  by_cases' a0 : a = 0
+  by_cases a0:a = 0
   · subst a0
     simp
     rfl
     
-  by_cases' b0 : b = 0
+  by_cases b0:b = 0
   · subst b0
     simp
     rfl
@@ -457,17 +431,13 @@ theorem inv_def {a b : ℤ} : (a /. b)⁻¹ = b /. a := by
 variable (a b c : ℚ)
 
 protected theorem add_zero : a + 0 = a :=
-  (numDenomCasesOn' a) fun n d h => by
-    rw [← zero_mk d] <;> simp [h, -zero_mk]
+  (numDenomCasesOn' a) fun n d h => by rw [← zero_mk d] <;> simp [h, -zero_mk]
 
 protected theorem zero_add : 0 + a = a :=
-  (numDenomCasesOn' a) fun n d h => by
-    rw [← zero_mk d] <;> simp [h, -zero_mk]
+  (numDenomCasesOn' a) fun n d h => by rw [← zero_mk d] <;> simp [h, -zero_mk]
 
 protected theorem add_comm : a + b = b + a :=
-  (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
-    (numDenomCasesOn' b) fun n₂ d₂ h₂ => by
-      simp [h₁, h₂] <;> cc
+  (numDenomCasesOn' a) fun n₁ d₁ h₁ => (numDenomCasesOn' b) fun n₂ d₂ h₂ => by simp [h₁, h₂] <;> cc
 
 protected theorem add_assoc : a + b + c = a + (b + c) :=
   (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
@@ -476,8 +446,7 @@ protected theorem add_assoc : a + b + c = a + (b + c) :=
         simp [h₁, h₂, h₃, mul_ne_zero, mul_addₓ, mul_comm, mul_left_commₓ, add_left_commₓ, add_assocₓ]
 
 protected theorem add_left_neg : -a + a = 0 :=
-  (numDenomCasesOn' a) fun n d h => by
-    simp [h]
+  (numDenomCasesOn' a) fun n d h => by simp [h]
 
 @[simp]
 theorem mk_zero_one : 0 /. 1 = 0 :=
@@ -511,15 +480,12 @@ protected theorem one_mul : 1 * a = a :=
     simp [h, -mk_one_one]
 
 protected theorem mul_comm : a * b = b * a :=
-  (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
-    (numDenomCasesOn' b) fun n₂ d₂ h₂ => by
-      simp [h₁, h₂, mul_comm]
+  (numDenomCasesOn' a) fun n₁ d₁ h₁ => (numDenomCasesOn' b) fun n₂ d₂ h₂ => by simp [h₁, h₂, mul_comm]
 
 protected theorem mul_assoc : a * b * c = a * (b * c) :=
   (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
     (numDenomCasesOn' b) fun n₂ d₂ h₂ =>
-      (numDenomCasesOn' c) fun n₃ d₃ h₃ => by
-        simp [h₁, h₂, h₃, mul_ne_zero, mul_comm, mul_left_commₓ]
+      (numDenomCasesOn' c) fun n₃ d₃ h₃ => by simp [h₁, h₂, h₃, mul_ne_zero, mul_comm, mul_left_commₓ]
 
 protected theorem add_mul : (a + b) * c = a * c + b * c :=
   (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
@@ -542,7 +508,7 @@ protected theorem mul_inv_cancel : a ≠ 0 → a * a⁻¹ = 1 :=
       mt
         (by
           rintro rfl
-          simp )
+          simp)
         a0
     simpa [h, n0, mul_comm] using @div_mk_div_cancel_left 1 1 _ n0
 
@@ -579,8 +545,7 @@ instance : CommRingₓ ℚ where
   natCast := fun n => Ratₓ.ofInt n
   nat_cast_zero := rfl
   nat_cast_succ := fun n =>
-    show ofInt _ = ofInt _ + 1 by
-      simp only [of_int_eq_mk, add_def one_ne_zero one_ne_zero, ← mk_one_one] <;> simp
+    show ofInt _ = ofInt _ + 1 by simp only [of_int_eq_mk, add_def one_ne_zero one_ne_zero, ← mk_one_one] <;> simp
 
 instance : CommGroupWithZero ℚ :=
   { Ratₓ.commRing with zero := 0, one := 1, mul := (· * ·), inv := Inv.inv, div := (· / ·),
@@ -592,51 +557,36 @@ instance : IsDomain ℚ :=
 
 -- Extra instances to short-circuit type class resolution 
 -- TODO(Mario): this instance slows down data.real.basic
-instance : Nontrivial ℚ := by
-  infer_instance
+instance : Nontrivial ℚ := by infer_instance
 
 --instance : ring ℚ             := by apply_instance
-instance : CommSemiringₓ ℚ := by
-  infer_instance
+instance : CommSemiringₓ ℚ := by infer_instance
 
-instance : Semiringₓ ℚ := by
-  infer_instance
+instance : Semiringₓ ℚ := by infer_instance
 
-instance : AddCommGroupₓ ℚ := by
-  infer_instance
+instance : AddCommGroupₓ ℚ := by infer_instance
 
-instance : AddGroupₓ ℚ := by
-  infer_instance
+instance : AddGroupₓ ℚ := by infer_instance
 
-instance : AddCommMonoidₓ ℚ := by
-  infer_instance
+instance : AddCommMonoidₓ ℚ := by infer_instance
 
-instance : AddMonoidₓ ℚ := by
-  infer_instance
+instance : AddMonoidₓ ℚ := by infer_instance
 
-instance : AddLeftCancelSemigroup ℚ := by
-  infer_instance
+instance : AddLeftCancelSemigroup ℚ := by infer_instance
 
-instance : AddRightCancelSemigroup ℚ := by
-  infer_instance
+instance : AddRightCancelSemigroup ℚ := by infer_instance
 
-instance : AddCommSemigroupₓ ℚ := by
-  infer_instance
+instance : AddCommSemigroupₓ ℚ := by infer_instance
 
-instance : AddSemigroupₓ ℚ := by
-  infer_instance
+instance : AddSemigroupₓ ℚ := by infer_instance
 
-instance : CommMonoidₓ ℚ := by
-  infer_instance
+instance : CommMonoidₓ ℚ := by infer_instance
 
-instance : Monoidₓ ℚ := by
-  infer_instance
+instance : Monoidₓ ℚ := by infer_instance
 
-instance : CommSemigroupₓ ℚ := by
-  infer_instance
+instance : CommSemigroupₓ ℚ := by infer_instance
 
-instance : Semigroupₓ ℚ := by
-  infer_instance
+instance : Semigroupₓ ℚ := by infer_instance
 
 theorem sub_def {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : a /. b - c /. d = (a * d - c * b) /. (b * d) := by
   simp [b0, d0, sub_eq_add_neg]
@@ -662,8 +612,7 @@ theorem zero_of_num_zero {q : ℚ} (hq : q.num = 0) : q = 0 := by
   simpa [hq]
 
 theorem zero_iff_num_zero {q : ℚ} : q = 0 ↔ q.num = 0 :=
-  ⟨fun _ => by
-    simp [*], zero_of_num_zero⟩
+  ⟨fun _ => by simp [*], zero_of_num_zero⟩
 
 theorem num_ne_zero_of_ne_zero {q : ℚ} (h : q ≠ 0) : q.num ≠ 0 := fun this : q.num = 0 => h <| zero_of_num_zero this
 
@@ -679,27 +628,24 @@ theorem denom_ne_zero (q : ℚ) : q.denom ≠ 0 :=
   ne_of_gtₓ q.Pos
 
 theorem eq_iff_mul_eq_mul {p q : ℚ} : p = q ↔ p.num * q.denom = q.num * p.denom := by
-  conv => lhs rw [← @num_denom p, ← @num_denom q]
+  conv =>
+  lhs
+  rw [← @num_denom p, ← @num_denom q]
   apply Ratₓ.mk_eq <;> rw [← Nat.cast_zeroₓ, Ne, Int.coe_nat_eq_coe_nat_iff] <;> apply denom_ne_zero
 
 theorem mk_num_ne_zero_of_ne_zero {q : ℚ} {n d : ℤ} (hq : q ≠ 0) (hqnd : q = n /. d) : n ≠ 0 := fun this : n = 0 =>
-  hq <| by
-    simpa [this] using hqnd
+  hq <| by simpa [this] using hqnd
 
 theorem mk_denom_ne_zero_of_ne_zero {q : ℚ} {n d : ℤ} (hq : q ≠ 0) (hqnd : q = n /. d) : d ≠ 0 := fun this : d = 0 =>
-  hq <| by
-    simpa [this] using hqnd
+  hq <| by simpa [this] using hqnd
 
 theorem mk_ne_zero_of_ne_zero {n d : ℤ} (h : n ≠ 0) (hd : d ≠ 0) : n /. d ≠ 0 :=
   (mk_ne_zero hd).mpr h
 
 theorem mul_num_denom (q r : ℚ) : q * r = q.num * r.num /. ↑(q.denom * r.denom) := by
-  have hq' : (↑q.denom : ℤ) ≠ 0 := by
-    have := denom_ne_zero q <;> simpa
-  have hr' : (↑r.denom : ℤ) ≠ 0 := by
-    have := denom_ne_zero r <;> simpa
-  suffices q.num /. ↑q.denom * (r.num /. ↑r.denom) = q.num * r.num /. ↑(q.denom * r.denom) by
-    simpa using this
+  have hq' : (↑q.denom : ℤ) ≠ 0 := by have := denom_ne_zero q <;> simpa
+  have hr' : (↑r.denom : ℤ) ≠ 0 := by have := denom_ne_zero r <;> simpa
+  suffices q.num /. ↑q.denom * (r.num /. ↑r.denom) = q.num * r.num /. ↑(q.denom * r.denom) by simpa using this
   simp [mul_def hq' hr', -num_denom]
 
 theorem div_num_denom (q r : ℚ) : q / r = q.num * r.denom /. (q.denom * r.num) :=
@@ -709,15 +655,9 @@ theorem div_num_denom (q r : ℚ) : q / r = q.num * r.denom /. (q.denom * r.num)
   else
     calc
       q / r = q * r⁻¹ := div_eq_mul_inv q r
-      _ = q.num /. q.denom * (r.num /. r.denom)⁻¹ := by
-        simp
-      _ = q.num /. q.denom * (r.denom /. r.num) := by
-        rw [inv_def]
-      _ = q.num * r.denom /. (q.denom * r.num) :=
-        mul_def
-          (by
-            simpa using denom_ne_zero q)
-          hr
+      _ = q.num /. q.denom * (r.num /. r.denom)⁻¹ := by simp
+      _ = q.num /. q.denom * (r.denom /. r.num) := by rw [inv_def]
+      _ = q.num * r.denom /. (q.denom * r.num) := mul_def (by simpa using denom_ne_zero q) hr
       
 
 theorem num_denom_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) : ∃ c : ℤ, n = c * q.num ∧ d = c * q.denom := by
@@ -741,11 +681,9 @@ theorem num_denom_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) : �
     exact Ratₓ.num_ne_zero_of_ne_zero ((mk_ne_zero hd).mpr hn)
     
 
-theorem mk_pnat_num (n : ℤ) (d : ℕ+) : (mkPnat n d).num = n / Nat.gcdₓ n.natAbs d := by
-  cases d <;> rfl
+theorem mk_pnat_num (n : ℤ) (d : ℕ+) : (mkPnat n d).num = n / Nat.gcdₓ n.natAbs d := by cases d <;> rfl
 
-theorem mk_pnat_denom (n : ℤ) (d : ℕ+) : (mkPnat n d).denom = d / Nat.gcdₓ n.natAbs d := by
-  cases d <;> rfl
+theorem mk_pnat_denom (n : ℤ) (d : ℕ+) : (mkPnat n d).denom = d / Nat.gcdₓ n.natAbs d := by cases d <;> rfl
 
 theorem num_mk (n d : ℤ) : (n /. d).num = d.sign * n / n.gcd d := by
   rcases d with ((_ | _) | _) <;>
@@ -794,26 +732,23 @@ theorem add_num_denom (q r : ℚ) : q + r = (q.num * r.denom + q.denom * r.num :
 section Casts
 
 protected theorem add_mk (a b c : ℤ) : (a + b) /. c = a /. c + b /. c :=
-  if h : c = 0 then by
-    simp [h]
+  if h : c = 0 then by simp [h]
   else by
     rw [add_def h h, mk_eq h (mul_ne_zero h h)]
     simp [add_mulₓ, mul_assoc]
 
 theorem coe_int_eq_mk : ∀ z : ℤ, ↑z = z /. 1
   | (n : ℕ) => of_int_eq_mk _
-  | -[1 + n] =>
-    show -ofInt _ = _ by
-      simp [of_int_eq_mk, neg_def, Int.neg_succ_of_nat_coe]
+  | -[1 + n] => show -ofInt _ = _ by simp [of_int_eq_mk, neg_def, Int.neg_succ_of_nat_coe]
 
 theorem mk_eq_div (n d : ℤ) : n /. d = (n : ℚ) / d := by
-  by_cases' d0 : d = 0
+  by_cases d0:d = 0
   · simp [d0, div_zero]
     
   simp [division_def, coe_int_eq_mk, mul_def one_ne_zero d0]
 
 theorem mk_mul_mk_cancel {x : ℤ} (hx : x ≠ 0) (n d : ℤ) : n /. x * (x /. d) = n /. d := by
-  by_cases' hd : d = 0
+  by_cases hd:d = 0
   · rw [hd]
     simp
     
@@ -826,28 +761,24 @@ theorem mk_div_mk_cancel_right {x : ℤ} (hx : x ≠ 0) (n d : ℤ) : x /. n / (
   rw [div_eq_mul_inv, inv_def, mul_comm, mk_mul_mk_cancel hx]
 
 theorem coe_int_div_eq_mk {n d : ℤ} : (n : ℚ) / ↑d = n /. d := by
-  repeat'
-    rw [coe_int_eq_mk]
+  repeat' rw [coe_int_eq_mk]
   exact mk_div_mk_cancel_left one_ne_zero n d
 
 @[simp]
-theorem num_div_denom (r : ℚ) : (r.num / r.denom : ℚ) = r := by
-  rw [← Int.cast_coe_nat, ← mk_eq_div, num_denom]
+theorem num_div_denom (r : ℚ) : (r.num / r.denom : ℚ) = r := by rw [← Int.cast_coe_nat, ← mk_eq_div, num_denom]
 
 theorem exists_eq_mul_div_num_and_eq_mul_div_denom (n : ℤ) {d : ℤ} (d_ne_zero : d ≠ 0) :
-    ∃ c : ℤ, n = c * ((n : ℚ) / d).num ∧ (d : ℤ) = c * ((n : ℚ) / d).denom := by
-  have : (n : ℚ) / d = Ratₓ.mk n d := by
-    rw [← Ratₓ.mk_eq_div]
-  exact Ratₓ.num_denom_mk d_ne_zero this
+    ∃ c : ℤ, n = c * ((n : ℚ) / d).num ∧ (d : ℤ) = c * ((n : ℚ) / d).denom :=
+  haveI : (n : ℚ) / d = Ratₓ.mk n d := by rw [← Ratₓ.mk_eq_div]
+  Ratₓ.num_denom_mk d_ne_zero this
 
 theorem mul_num_denom' (q r : ℚ) : (q * r).num * q.denom * r.denom = q.num * r.num * (q * r).denom := by
   let s := q.num * r.num /. (q.denom * r.denom : ℤ)
   have hs : (q.denom * r.denom : ℤ) ≠ 0 := int.coe_nat_ne_zero_iff_pos.mpr (mul_pos q.pos r.pos)
   obtain ⟨c, ⟨c_mul_num, c_mul_denom⟩⟩ := exists_eq_mul_div_num_and_eq_mul_div_denom (q.num * r.num) hs
   rw [c_mul_num, mul_assoc, mul_comm]
-  nth_rw 0[c_mul_denom]
-  repeat'
-    rw [mul_assoc]
+  nth_rw 0 [c_mul_denom]
+  repeat' rw [mul_assoc]
   apply mul_eq_mul_left_iff.2
   rw [or_iff_not_imp_right]
   intro c_pos
@@ -866,9 +797,8 @@ theorem add_num_denom' (q r : ℚ) :
   obtain ⟨c, ⟨c_mul_num, c_mul_denom⟩⟩ :=
     exists_eq_mul_div_num_and_eq_mul_div_denom (q.num * r.denom + r.num * q.denom) hs
   rw [c_mul_num, mul_assoc, mul_comm]
-  nth_rw 0[c_mul_denom]
-  repeat'
-    rw [mul_assoc]
+  nth_rw 0 [c_mul_denom]
+  repeat' rw [mul_assoc]
   apply mul_eq_mul_left_iff.2
   rw [or_iff_not_imp_right]
   intro c_pos
@@ -888,12 +818,10 @@ theorem coe_int_eq_of_int (z : ℤ) : ↑z = ofInt z :=
   (coe_int_eq_mk z).trans (of_int_eq_mk z).symm
 
 @[simp, norm_cast]
-theorem coe_int_num (n : ℤ) : (n : ℚ).num = n := by
-  rw [coe_int_eq_of_int] <;> rfl
+theorem coe_int_num (n : ℤ) : (n : ℚ).num = n := by rw [coe_int_eq_of_int] <;> rfl
 
 @[simp, norm_cast]
-theorem coe_int_denom (n : ℤ) : (n : ℚ).denom = 1 := by
-  rw [coe_int_eq_of_int] <;> rfl
+theorem coe_int_denom (n : ℤ) : (n : ℚ).denom = 1 := by rw [coe_int_eq_of_int] <;> rfl
 
 theorem coe_int_num_of_denom_eq_one {q : ℚ} (hq : q.denom = 1) : ↑q.num = q := by
   conv_rhs => rw [← @num_denom q, hq]
@@ -903,25 +831,21 @@ theorem coe_int_num_of_denom_eq_one {q : ℚ} (hq : q.denom = 1) : ↑q.num = q 
 theorem denom_eq_one_iff (r : ℚ) : r.denom = 1 ↔ ↑r.num = r :=
   ⟨Ratₓ.coe_int_num_of_denom_eq_one, fun h => h ▸ Ratₓ.coe_int_denom r.num⟩
 
-instance : CanLift ℚ ℤ :=
-  ⟨coe, fun q => q.denom = 1, fun q hq => ⟨q.num, coe_int_num_of_denom_eq_one hq⟩⟩
+instance canLift : CanLift ℚ ℤ coe fun q => q.denom = 1 :=
+  ⟨fun q hq => ⟨q.num, coe_int_num_of_denom_eq_one hq⟩⟩
 
-theorem coe_nat_eq_mk (n : ℕ) : ↑n = n /. 1 := by
-  rw [← Int.cast_coe_nat, coe_int_eq_mk]
-
-@[simp, norm_cast]
-theorem coe_nat_num (n : ℕ) : (n : ℚ).num = n := by
-  rw [← Int.cast_coe_nat, coe_int_num]
+theorem coe_nat_eq_mk (n : ℕ) : ↑n = n /. 1 := by rw [← Int.cast_coe_nat, coe_int_eq_mk]
 
 @[simp, norm_cast]
-theorem coe_nat_denom (n : ℕ) : (n : ℚ).denom = 1 := by
-  rw [← Int.cast_coe_nat, coe_int_denom]
+theorem coe_nat_num (n : ℕ) : (n : ℚ).num = n := by rw [← Int.cast_coe_nat, coe_int_num]
+
+@[simp, norm_cast]
+theorem coe_nat_denom (n : ℕ) : (n : ℚ).denom = 1 := by rw [← Int.cast_coe_nat, coe_int_denom]
 
 -- Will be subsumed by `int.coe_inj` after we have defined
 -- `linear_ordered_field ℚ` (which implies characteristic zero).
 theorem coe_int_inj (m n : ℤ) : (m : ℚ) = n ↔ m = n :=
-  ⟨fun h => by
-    simpa using congr_arg num h, congr_arg _⟩
+  ⟨fun h => by simpa using congr_arg num h, congr_arg _⟩
 
 end Casts
 
@@ -934,20 +858,12 @@ protected theorem inv_neg (q : ℚ) : (-q)⁻¹ = -q⁻¹ := by
   simp only [inv_def']
   cases' eq_or_ne (q.num : ℚ) 0 with hq hq <;> simp [div_eq_iff, hq]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in rw #[["<-", expr @num_denom q]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp]
 theorem mul_denom_eq_num {q : ℚ} : q * q.denom = q.num := by
   suffices mk q.num ↑q.denom * mk (↑q.denom) 1 = mk q.num 1 by
-    conv =>
-      for q [1] =>
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in rw #[[\"<-\", expr @num_denom q]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    conv => pattern (occs := 1)q <;> (rw [← @num_denom q])
     rwa [coe_int_eq_mk, coe_nat_eq_mk]
-  have : (q.denom : ℤ) ≠ 0 :=
-    ne_of_gtₓ
-      (by
-        exact_mod_cast q.pos)
+  have : (q.denom : ℤ) ≠ 0 := ne_of_gtₓ (by exact_mod_cast q.pos)
   rw [Ratₓ.mul_def this one_ne_zero, mul_comm (q.denom : ℤ) 1, div_mk_div_cancel_left this]
 
 theorem denom_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).denom = 1 ↔ n ∣ m := by
@@ -986,12 +902,11 @@ theorem div_int_inj {a b c d : ℤ} (hb0 : 0 < b) (hd0 : 0 < d) (h1 : Nat.Coprim
 
 @[norm_cast]
 theorem coe_int_div_self (n : ℤ) : ((n / n : ℤ) : ℚ) = n / n := by
-  by_cases' hn : n = 0
+  by_cases hn:n = 0
   · subst hn
     simp only [Int.cast_zeroₓ, Int.zero_divₓ, zero_div]
     
-  · have : (n : ℚ) ≠ 0 := by
-      rwa [← coe_int_inj] at hn
+  · have : (n : ℚ) ≠ 0 := by rwa [← coe_int_inj] at hn
     simp only [Int.div_selfₓ hn, Int.cast_oneₓ, Ne.def, not_false_iff, div_self this]
     
 
@@ -1014,9 +929,7 @@ theorem inv_coe_int_num_of_pos {a : ℤ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 
   exact Nat.coprime_one_leftₓ _
 
 theorem inv_coe_nat_num_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 :=
-  inv_coe_int_num_of_pos
-    (by
-      exact_mod_cast ha0 : 0 < (a : ℤ))
+  inv_coe_int_num_of_pos (by exact_mod_cast ha0 : 0 < (a : ℤ))
 
 theorem inv_coe_int_denom_of_pos {a : ℤ} (ha0 : 0 < a) : ((a : ℚ)⁻¹.denom : ℤ) = a := by
   rw [Ratₓ.inv_def', Ratₓ.coe_int_num, Ratₓ.coe_int_denom, Nat.cast_oneₓ, ← Int.cast_oneₓ]
@@ -1045,20 +958,13 @@ theorem inv_coe_int_denom (a : ℤ) : (a : ℚ)⁻¹.denom = if a = 0 then 1 els
       -Nat.cast_succₓ, inv_coe_nat_denom_of_pos, -Int.cast_neg_succ_of_nat]
 
 @[simp]
-theorem inv_coe_nat_denom (a : ℕ) : (a : ℚ)⁻¹.denom = if a = 0 then 1 else a := by
-  simpa using inv_coe_int_denom a
+theorem inv_coe_nat_denom (a : ℕ) : (a : ℚ)⁻¹.denom = if a = 0 then 1 else a := by simpa using inv_coe_int_denom a
 
 protected theorem forall {p : ℚ → Prop} : (∀ r, p r) ↔ ∀ a b : ℤ, p (a / b) :=
-  ⟨fun h _ _ => h _, fun h q =>
-    show q = q.num / q.denom by
-          simp [Ratₓ.div_num_denom].symm ▸
-      h q.1 q.2⟩
+  ⟨fun h _ _ => h _, fun h q => show q = q.num / q.denom by simp [Ratₓ.div_num_denom].symm ▸ h q.1 q.2⟩
 
 protected theorem exists {p : ℚ → Prop} : (∃ r, p r) ↔ ∃ a b : ℤ, p (a / b) :=
-  ⟨fun ⟨r, hr⟩ =>
-    ⟨r.num, r.denom, by
-      rwa [← mk_eq_div, num_denom]⟩,
-    fun ⟨a, b, h⟩ => ⟨_, h⟩⟩
+  ⟨fun ⟨r, hr⟩ => ⟨r.num, r.denom, by rwa [← mk_eq_div, num_denom]⟩, fun ⟨a, b, h⟩ => ⟨_, h⟩⟩
 
 /-!
 ### Denominator as `ℕ+`
@@ -1076,8 +982,7 @@ theorem coe_pnat_denom (x : ℚ) : (x.pnatDenom : ℕ) = x.denom :=
   rfl
 
 @[simp]
-theorem mk_pnat_pnat_denom_eq (x : ℚ) : mkPnat x.num x.pnatDenom = x := by
-  rw [pnat_denom, mk_pnat_eq, num_denom]
+theorem mk_pnat_pnat_denom_eq (x : ℚ) : mkPnat x.num x.pnatDenom = x := by rw [pnat_denom, mk_pnat_eq, num_denom]
 
 theorem pnat_denom_eq_iff_denom_eq {x : ℚ} {n : ℕ+} : x.pnatDenom = n ↔ x.denom = ↑n :=
   Subtype.ext_iff

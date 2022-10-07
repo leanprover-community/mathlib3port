@@ -59,8 +59,7 @@ theorem Ratₓ.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → �
   ext s
   erw [Metric.mem_uniformity_dist, IsAbsoluteValue.mem_uniformity]
   constructor <;> rintro ⟨ε, ε_pos, h⟩
-  · use ε, by
-      exact_mod_cast ε_pos
+  · use ε, by exact_mod_cast ε_pos
     intro a b hab
     apply h
     rw [Ratₓ.dist_eq, abs_sub_comm] at hab
@@ -77,15 +76,12 @@ theorem Ratₓ.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → �
     
 
 /-- Cauchy reals packaged as a completion of ℚ using the absolute value route. -/
-noncomputable def rationalCauSeqPkg : @AbstractCompletion ℚ <| IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) where
+def rationalCauSeqPkg : @AbstractCompletion ℚ <| IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) where
   Space := ℝ
   coe := (coe : ℚ → ℝ)
-  uniformStruct := by
-    infer_instance
-  complete := by
-    infer_instance
-  separation := by
-    infer_instance
+  uniformStruct := by infer_instance
+  complete := by infer_instance
+  separation := by infer_instance
   UniformInducing := by
     rw [Ratₓ.uniform_space_eq]
     exact rat.uniform_embedding_coe_real.to_uniform_inducing
@@ -114,8 +110,8 @@ instance Bourbaki.uniformSpace : UniformSpace Bourbakiℝ :=
 def bourbakiPkg : AbstractCompletion Q :=
   completion.cpkg
 
-/-- The equivalence between Bourbaki and Cauchy reals-/
-noncomputable def compareEquiv : Bourbakiℝ ≃ ℝ :=
+/-- The uniform bijection between Bourbaki and Cauchy reals. -/
+noncomputable def compareEquiv : Bourbakiℝ ≃ᵤ ℝ :=
   bourbakiPkg.compareEquiv rationalCauSeqPkg
 
 theorem compare_uc : UniformContinuous compareEquiv :=

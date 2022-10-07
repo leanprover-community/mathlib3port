@@ -59,8 +59,7 @@ theorem expand_comp_bind₁ (p : ℕ) (f : σ → MvPolynomial τ R) :
   simp only [AlgHom.comp_apply, bind₁_X_right]
 
 theorem expand_bind₁ (p : ℕ) (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-    expand p (bind₁ f φ) = bind₁ (fun i => expand p (f i)) φ := by
-  rw [← AlgHom.comp_apply, expand_comp_bind₁]
+    expand p (bind₁ f φ) = bind₁ (fun i => expand p (f i)) φ := by rw [← AlgHom.comp_apply, expand_comp_bind₁]
 
 @[simp]
 theorem map_expand (f : R →+* S) (p : ℕ) (φ : MvPolynomial σ R) : map f (expand p φ) = expand p (map f φ) := by

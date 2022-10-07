@@ -147,17 +147,11 @@ def changeInv (f : α ≃ᵤ β) (g : β → α) (hg : Function.RightInverse g f
     funext fun x =>
       calc
         g x = f.symm (f (g x)) := (f.left_inv (g x)).symm
-        _ = f.symm x := by
-          rw [hg x]
+        _ = f.symm x := by rw [hg x]
         
-  { toFun := f, invFun := g,
-    left_inv := by
-      convert f.left_inv,
-    right_inv := by
-      convert f.right_inv,
+  { toFun := f, invFun := g, left_inv := by convert f.left_inv, right_inv := by convert f.right_inv,
     uniform_continuous_to_fun := f.UniformContinuous,
-    uniform_continuous_inv_fun := by
-      convert f.symm.uniform_continuous }
+    uniform_continuous_inv_fun := by convert f.symm.uniform_continuous }
 
 @[simp]
 theorem symm_comp_self (h : α ≃ᵤ β) : ⇑h.symm ∘ ⇑h = id :=
@@ -198,8 +192,7 @@ protected theorem uniform_embedding (h : α ≃ᵤ β) : UniformEmbedding h :=
 /-- Uniform equiv given a uniform embedding. -/
 noncomputable def ofUniformEmbedding (f : α → β) (hf : UniformEmbedding f) : α ≃ᵤ Set.Range f where
   uniform_continuous_to_fun := hf.to_uniform_inducing.UniformContinuous.subtype_mk _
-  uniform_continuous_inv_fun := by
-    simp [hf.to_uniform_inducing.uniform_continuous_iff, uniform_continuous_subtype_coe]
+  uniform_continuous_inv_fun := by simp [hf.to_uniform_inducing.uniform_continuous_iff, uniform_continuous_subtype_coe]
   toEquiv := Equivₓ.ofInjective f hf.inj
 
 /-- If two sets are equal, then they are uniformly equivalent. -/
@@ -304,7 +297,5 @@ end UniformEquiv
 def Equivₓ.toUniformEquivOfUniformInducing [UniformSpace α] [UniformSpace β] (f : α ≃ β) (hf : UniformInducing f) :
     α ≃ᵤ β :=
   { f with uniform_continuous_to_fun := hf.UniformContinuous,
-    uniform_continuous_inv_fun :=
-      hf.uniform_continuous_iff.2 <| by
-        simpa using uniform_continuous_id }
+    uniform_continuous_inv_fun := hf.uniform_continuous_iff.2 <| by simpa using uniform_continuous_id }
 

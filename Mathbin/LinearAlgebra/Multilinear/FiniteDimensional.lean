@@ -44,8 +44,8 @@ private theorem free_and_finite : Module.Free R (MultilinearMap R M₁ M₂) ∧
           Module.Free R (MultilinearMap R N M₂) ∧ Module.Finite R (MultilinearMap R N M₂)
     by
     cases nonempty_fintype ι
-    cases this _ (M₁ ∘ (Fintype.equivFin ι).symm)
-    have e := dom_dom_congr_linear_equiv' R M₁ M₂ (Fintype.equivFin ι)
+    cases this _ (M₁ ∘ (Fintypeₓ.equivFin ι).symm)
+    have e := dom_dom_congr_linear_equiv' R M₁ M₂ (Fintypeₓ.equivFin ι)
     exact ⟨Module.Free.of_equiv e.symm, Module.Finite.equiv e.symm⟩
   intro n N _ _ _ _
   induction' n with n ih

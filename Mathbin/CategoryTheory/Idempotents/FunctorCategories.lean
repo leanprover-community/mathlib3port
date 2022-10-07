@@ -43,18 +43,14 @@ instance functor_category_is_idempotent_complete [IsIdempotentComplete C] : IsId
     { obj := fun j => limits.equalizer (𝟙 _) (p.app j),
       map := fun j j' φ =>
         equalizer.lift (limits.equalizer.ι (𝟙 _) (p.app j) ≫ F.map φ)
-          (by
-            rw [comp_id, assoc, p.naturality φ, ← assoc, ← limits.equalizer.condition, comp_id]),
+          (by rw [comp_id, assoc, p.naturality φ, ← assoc, ← limits.equalizer.condition, comp_id]),
       map_id' := fun j => by
         ext
         simp only [comp_id, Functor.map_id, equalizer.lift_ι, id_comp],
       map_comp' := fun j j' j'' φ φ' => by
         ext
         simp only [assoc, functor.map_comp, equalizer.lift_ι, equalizer.lift_ι_assoc] }
-  let i : Y ⟶ F :=
-    { app := fun j => equalizer.ι _ _,
-      naturality' := fun j j' φ => by
-        rw [equalizer.lift_ι] }
+  let i : Y ⟶ F := { app := fun j => equalizer.ι _ _, naturality' := fun j j' φ => by rw [equalizer.lift_ι] }
   let e : F ⟶ Y :=
     { app := fun j =>
         equalizer.lift (p.app j)
@@ -108,7 +104,7 @@ def map {P Q : Karoubi (J ⥤ C)} (f : P ⟶ Q) : obj P ⟶ obj Q where
     simp only [comp]
     have h := congr_app (comp_p f) j
     have h' := congr_app (p_comp f) j'
-    dsimp'  at h h'⊢
+    dsimp at h h'⊢
     slice_rhs 1 2 => erw [h]
     rw [← P.p.naturality]
     slice_lhs 2 3 => erw [h']
@@ -134,7 +130,7 @@ instance : Full (karoubiFunctorCategoryEmbedding J C) where
             slice_rhs 1 1 => rw [← karoubi.comp_p]
             have h := hom_ext.mp (f.naturality φ)
             simp only [comp] at h
-            dsimp' [karoubi_functor_category_embedding]  at h⊢
+            dsimp [karoubi_functor_category_embedding] at h⊢
             erw [assoc, ← h, ← P.p.naturality φ, assoc, p_comp (f.app j')] },
       comm := by
         ext j
@@ -156,7 +152,7 @@ theorem to_karoubi_comp_karoubi_functor_category_embedding :
   apply Functor.ext
   · intro X Y f
     ext j
-    dsimp' [to_karoubi]
+    dsimp [to_karoubi]
     simp only [eq_to_hom_app, eq_to_hom_refl, id_comp]
     erw [comp_id]
     
@@ -164,7 +160,7 @@ theorem to_karoubi_comp_karoubi_functor_category_embedding :
     apply Functor.ext
     · intro j j' φ
       ext
-      dsimp'
+      dsimp
       simpa only [comp_id, id_comp]
       
     · intro j

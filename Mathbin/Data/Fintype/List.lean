@@ -33,7 +33,7 @@ namespace Multiset
 
 /-- The `finset` of `l : list α` that, given `m : multiset α`, have the property `⟦l⟧ = m`.
 -/
-def lists : Multiset α → Finset (List α) := fun s =>
+def lists : Multiset α → Finsetₓ (List α) := fun s =>
   Quotientₓ.liftOn s (fun l => l.permutations.toFinset) fun l l' (h : l ~ l') => by
     ext sl
     simp only [mem_permutations, List.mem_to_finset]
@@ -50,10 +50,9 @@ theorem mem_lists_iff (s : Multiset α) (l : List α) : l ∈ lists s ↔ s = �
 
 end Multiset
 
-instance fintypeNodupList [Fintype α] : Fintype { l : List α // l.Nodup } :=
-  Fintype.subtype ((Finset.univ : Finset α).Powerset.bUnion fun s => s.val.lists) fun l => by
-    suffices (∃ a : Finset α, a.val = ↑l) ↔ l.nodup by
-      simpa
+instance fintypeNodupList [Fintypeₓ α] : Fintypeₓ { l : List α // l.Nodup } :=
+  Fintypeₓ.subtype ((Finsetₓ.univ : Finsetₓ α).Powerset.bUnion fun s => s.val.lists) fun l => by
+    suffices (∃ a : Finsetₓ α, a.val = ↑l) ↔ l.nodup by simpa
     constructor
     · rintro ⟨s, hs⟩
       simpa [← Multiset.coe_nodup, ← hs] using s.nodup

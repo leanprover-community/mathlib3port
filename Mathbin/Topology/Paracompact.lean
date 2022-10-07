@@ -72,8 +72,7 @@ theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, 
   -- Apply definition to `range u`, then turn existence quantifiers into functions using `choose`
   have :=
     ParacompactSpace.locally_finite_refinement (range u) coe (SetCoe.forall.2 <| forall_range_iff.2 uo)
-      (by
-        rwa [← sUnion_range, Subtype.range_coe])
+      (by rwa [← sUnion_range, Subtype.range_coe])
   simp only [SetCoe.exists, Subtype.coe_mk, exists_range_iff', Union_eq_univ_iff, exists_propₓ] at this
   choose α t hto hXt htf ind hind
   choose t_inv ht_inv using hXt
@@ -86,7 +85,7 @@ theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, 
     exact fun x => ⟨ind (t_inv x), _, rfl, ht_inv _⟩
     
   · refine' fun x => ⟨U x, hxU x, ((hU x).Image ind).Subset _⟩
-    simp only [subset_def, mem_Union, mem_set_of_eq, Set.Nonempty, mem_inter_eq]
+    simp only [subset_def, mem_Union, mem_set_of_eq, Set.Nonempty, mem_inter_iff]
     rintro i ⟨y, ⟨a, rfl, hya⟩, hyU⟩
     exact mem_image_of_mem _ ⟨y, hya, hyU⟩
     
@@ -182,7 +181,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
       (finite_le_nat _).bUnion fun k hk => finite_range _
     apply this.subset
     rintro ⟨k, c, hc⟩
-    simp only [mem_Union, mem_set_of_eq, mem_image_eq, Subtype.coe_mk]
+    simp only [mem_Union, mem_set_of_eq, mem_image, Subtype.coe_mk]
     rintro ⟨x, hxB : x ∈ B c (r k c), hxK⟩
     refine' ⟨k, _, ⟨c, hc⟩, rfl⟩
     have := (mem_compl_iff _ _).1 (hr k c hxB)

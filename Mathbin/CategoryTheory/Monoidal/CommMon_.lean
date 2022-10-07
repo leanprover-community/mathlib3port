@@ -22,9 +22,7 @@ variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory.{v₁} C] [Braide
 /-- A commutative monoid object internal to a monoidal category.
 -/
 structure CommMon_ extends Mon_ C where
-  mul_comm' : (β_ _ _).Hom ≫ mul = mul := by
-    run_tac
-      obviously
+  mul_comm' : (β_ _ _).Hom ≫ mul = mul := by obviously
 
 restate_axiom CommMon_.mul_comm'
 
@@ -38,7 +36,7 @@ namespace CommMon_
 def trivial : CommMon_ C :=
   { Mon_.trivial C with
     mul_comm' := by
-      dsimp'
+      dsimp
       rw [braiding_left_unitor, unitors_equal] }
 
 instance : Inhabited (CommMon_ C) :=
@@ -102,7 +100,7 @@ def mapCommMon (F : LaxBraidedFunctor C D) : CommMon_ C ⥤ CommMon_ D where
   obj := fun A =>
     { F.toLaxMonoidalFunctor.mapMon.obj A.toMon_ with
       mul_comm' := by
-        dsimp'
+        dsimp
         have := F.braided
         slice_lhs 1 2 => rw [← this]
         slice_lhs 2 3 => rw [← CategoryTheory.Functor.map_comp, A.mul_comm] }
@@ -138,7 +136,7 @@ def commMonToLaxBraided : CommMon_ C ⥤ LaxBraidedFunctor (Discrete PUnit.{u + 
   map := fun A B f =>
     { app := fun _ => f.Hom,
       naturality' := fun _ _ _ => by
-        dsimp'
+        dsimp
         rw [category.id_comp, category.comp_id],
       unit' := f.OneHom, tensor' := fun _ _ => f.MulHom }
 
@@ -152,27 +150,14 @@ def unitIso : 𝟭 (LaxBraidedFunctor (Discrete PUnit.{u + 1}) C) ≅ laxBraided
   NatIso.ofComponents
     (fun F =>
       LaxBraidedFunctor.mkIso
-        (MonoidalNatIso.ofComponents
-          (fun _ =>
-            F.toLaxMonoidalFunctor.toFunctor.mapIso
-              (eqToIso
-                (by
-                  ext)))
-          (by
-            tidy)
-          (by
-            tidy)
-          (by
-            tidy)))
-    (by
-      tidy)
+        (MonoidalNatIso.ofComponents (fun _ => F.toLaxMonoidalFunctor.toFunctor.mapIso (eqToIso (by ext))) (by tidy)
+          (by tidy) (by tidy)))
+    (by tidy)
 
 /-- Implementation of `CommMon_.equiv_lax_braided_functor_punit`. -/
 @[simps]
 def counitIso : commMonToLaxBraided C ⋙ laxBraidedToCommMon C ≅ 𝟭 (CommMon_ C) :=
-  NatIso.ofComponents (fun F => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } })
-    (by
-      tidy)
+  NatIso.ofComponents (fun F => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
 
 end EquivLaxBraidedFunctorPunit
 

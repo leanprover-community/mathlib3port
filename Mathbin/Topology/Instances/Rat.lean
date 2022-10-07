@@ -16,12 +16,11 @@ The structure of a metric space on `ℚ` is introduced in this file, induced fro
 -/
 
 
-noncomputable section
-
 open Metric Set Filter
 
 namespace Ratₓ
 
+-- without the `by exact` this is noncomputable
 instance : MetricSpace ℚ :=
   MetricSpace.induced coe Ratₓ.cast_injective Real.metricSpace
 
@@ -54,24 +53,20 @@ theorem Nat.dist_cast_rat (x y : ℕ) : dist (x : ℚ) y = dist x y := by
   rw [← Nat.dist_cast_real, ← Ratₓ.dist_cast] <;> congr 1 <;> norm_cast
 
 theorem Nat.uniform_embedding_coe_rat : UniformEmbedding (coe : ℕ → ℚ) :=
-  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one <| by
-    simpa using Nat.pairwise_one_le_dist
+  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one <| by simpa using Nat.pairwise_one_le_dist
 
 theorem Nat.closed_embedding_coe_rat : ClosedEmbedding (coe : ℕ → ℚ) :=
-  closed_embedding_of_pairwise_le_dist zero_lt_one <| by
-    simpa using Nat.pairwise_one_le_dist
+  closed_embedding_of_pairwise_le_dist zero_lt_one <| by simpa using Nat.pairwise_one_le_dist
 
 @[norm_cast, simp]
 theorem Int.dist_cast_rat (x y : ℤ) : dist (x : ℚ) y = dist x y := by
   rw [← Int.dist_cast_real, ← Ratₓ.dist_cast] <;> congr 1 <;> norm_cast
 
 theorem Int.uniform_embedding_coe_rat : UniformEmbedding (coe : ℤ → ℚ) :=
-  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one <| by
-    simpa using Int.pairwise_one_le_dist
+  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one <| by simpa using Int.pairwise_one_le_dist
 
 theorem Int.closed_embedding_coe_rat : ClosedEmbedding (coe : ℤ → ℚ) :=
-  closed_embedding_of_pairwise_le_dist zero_lt_one <| by
-    simpa using Int.pairwise_one_le_dist
+  closed_embedding_of_pairwise_le_dist zero_lt_one <| by simpa using Int.pairwise_one_le_dist
 
 namespace Ratₓ
 
@@ -86,25 +81,19 @@ theorem uniform_continuous_add : UniformContinuous fun p : ℚ × ℚ => p.1 + p
 
 theorem uniform_continuous_neg : UniformContinuous (@Neg.neg ℚ _) :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
-    ⟨_, ε0, fun a b h => by
-      rw [dist_comm] at h <;> simpa [Ratₓ.dist_eq] using h⟩
+    ⟨_, ε0, fun a b h => by rw [dist_comm] at h <;> simpa [Ratₓ.dist_eq] using h⟩
 
 instance : UniformAddGroup ℚ :=
   UniformAddGroup.mk' Ratₓ.uniform_continuous_add Ratₓ.uniform_continuous_neg
 
-instance : TopologicalAddGroup ℚ := by
-  infer_instance
+instance : TopologicalAddGroup ℚ := by infer_instance
 
 instance : OrderTopology ℚ :=
   induced_order_topology _ (fun x y => Ratₓ.cast_lt) (@exists_rat_btwn _ _ _)
 
 theorem uniform_continuous_abs : UniformContinuous (abs : ℚ → ℚ) :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
-    ⟨ε, ε0, fun a b h =>
-      lt_of_le_of_ltₓ
-        (by
-          simpa [Ratₓ.dist_eq] using abs_abs_sub_abs_le_abs_sub _ _)
-        h⟩
+    ⟨ε, ε0, fun a b h => lt_of_le_of_ltₓ (by simpa [Ratₓ.dist_eq] using abs_abs_sub_abs_le_abs_sub _ _) h⟩
 
 theorem continuous_mul : Continuous fun p : ℚ × ℚ => p.1 * p.2 :=
   Ratₓ.embedding_coe_real.continuous_iff.2 <| by

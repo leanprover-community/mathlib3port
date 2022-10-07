@@ -67,8 +67,7 @@ instance (X : Bipointed) : Inhabited (Hom X X) :=
 /-- Composition of morphisms of `Bipointed`. -/
 @[simps]
 def comp {X Y Z : Bipointed.{u}} (f : Hom X Y) (g : Hom Y Z) : Hom X Z :=
-  ⟨g.toFun ∘ f.toFun, by
-    rw [Function.comp_applyₓ, f.map_fst, g.map_fst], by
+  ⟨g.toFun ∘ f.toFun, by rw [Function.comp_applyₓ, f.map_fst, g.map_fst], by
     rw [Function.comp_applyₓ, f.map_snd, g.map_snd]⟩
 
 end Hom

@@ -342,7 +342,8 @@ defined later.
 -- We mark some existing extensionality lemmas.
 attribute [ext] Arrayₓ.ext propext Function.hfunext
 
-attribute [ext Thunkₓ] _root_.funext
+-- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Ext.lean:17:36: unsupported: attribute [ext id]
+attribute [ext] _root_.funext
 
 -- This line is equivalent to:
 --   attribute [ext (→)] _root_.funext

@@ -73,8 +73,7 @@ variable {M : Type u} [MulOneClassₓ M]
 
 /-- Any element semiconjugates `1` to `1`. -/
 @[simp, to_additive "Any element additively semiconjugates `0` to `0`."]
-theorem one_right (a : M) : SemiconjBy a 1 1 := by
-  rw [SemiconjBy, mul_oneₓ, one_mulₓ]
+theorem one_right (a : M) : SemiconjBy a 1 1 := by rw [SemiconjBy, mul_oneₓ, one_mulₓ]
 
 /-- One semiconjugates any element to itself. -/
 @[simp, to_additive "Zero additively semiconjugates any element to itself."]
@@ -98,10 +97,8 @@ variable {M : Type u} [Monoidₓ M]
       "If `a` semiconjugates an additive unit `x` to an additive unit `y`, then it\nsemiconjugates `-x` to `-y`."]
 theorem units_inv_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) : SemiconjBy a ↑x⁻¹ ↑y⁻¹ :=
   calc
-    a * ↑x⁻¹ = ↑y⁻¹ * (y * a) * ↑x⁻¹ := by
-      rw [Units.inv_mul_cancel_left]
-    _ = ↑y⁻¹ * a := by
-      rw [← h.eq, mul_assoc, Units.mul_inv_cancel_right]
+    a * ↑x⁻¹ = ↑y⁻¹ * (y * a) * ↑x⁻¹ := by rw [Units.inv_mul_cancel_left]
+    _ = ↑y⁻¹ * a := by rw [← h.eq, mul_assoc, Units.mul_inv_cancel_right]
     
 
 @[simp, to_additive]
@@ -112,10 +109,8 @@ theorem units_inv_right_iff {a : M} {x y : Mˣ} : SemiconjBy a ↑x⁻¹ ↑y⁻
 @[to_additive "If an additive unit `a` semiconjugates `x` to `y`, then `-a` semiconjugates `y` to\n`x`."]
 theorem units_inv_symm_left {a : Mˣ} {x y : M} (h : SemiconjBy (↑a) x y) : SemiconjBy (↑a⁻¹) y x :=
   calc
-    ↑a⁻¹ * y = ↑a⁻¹ * (y * a * ↑a⁻¹) := by
-      rw [Units.mul_inv_cancel_right]
-    _ = x * ↑a⁻¹ := by
-      rw [← h.eq, ← mul_assoc, Units.inv_mul_cancel_left]
+    ↑a⁻¹ * y = ↑a⁻¹ * (y * a * ↑a⁻¹) := by rw [Units.mul_inv_cancel_right]
+    _ = x * ↑a⁻¹ := by rw [← h.eq, ← mul_assoc, Units.inv_mul_cancel_left]
     
 
 @[simp, to_additive]
@@ -152,8 +147,7 @@ variable [DivisionMonoid G] {a x y : G}
 
 @[simp, to_additive]
 theorem inv_inv_symm_iff : SemiconjBy a⁻¹ x⁻¹ y⁻¹ ↔ SemiconjBy a y x :=
-  inv_involutive.Injective.eq_iff.symm.trans <| by
-    simp_rw [mul_inv_rev, inv_invₓ, eq_comm, SemiconjBy]
+  inv_involutive.Injective.eq_iff.symm.trans <| by simp_rw [mul_inv_rev, inv_invₓ, eq_comm, SemiconjBy]
 
 @[to_additive]
 theorem inv_inv_symm : SemiconjBy a x y → SemiconjBy a⁻¹ y⁻¹ x⁻¹ :=
@@ -192,8 +186,7 @@ end SemiconjBy
 
 @[simp, to_additive add_semiconj_by_iff_eq]
 theorem semiconj_by_iff_eq {M : Type u} [CancelCommMonoid M] {a x y : M} : SemiconjBy a x y ↔ x = y :=
-  ⟨fun h => mul_left_cancelₓ (h.trans (mul_comm _ _)), fun h => by
-    rw [h, SemiconjBy, mul_comm]⟩
+  ⟨fun h => mul_left_cancelₓ (h.trans (mul_comm _ _)), fun h => by rw [h, SemiconjBy, mul_comm]⟩
 
 /-- `a` semiconjugates `x` to `a * x * a⁻¹`. -/
 @[to_additive "`a` semiconjugates `x` to `a + x + -a`."]

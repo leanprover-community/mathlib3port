@@ -23,7 +23,7 @@ We prove the basic properties of the variance:
 -/
 
 
-open MeasureTheory Filter Finset
+open MeasureTheory Filter Finsetₓ
 
 noncomputable section
 
@@ -37,8 +37,7 @@ def variance {Ω : Type _} {m : MeasurableSpace Ω} (f : Ω → ℝ) (μ : Measu
   μ[(f - fun ω => μ[f]) ^ 2]
 
 @[simp]
-theorem variance_zero {Ω : Type _} {m : MeasurableSpace Ω} (μ : Measureₓ Ω) : variance 0 μ = 0 := by
-  simp [variance]
+theorem variance_zero {Ω : Type _} {m : MeasurableSpace Ω} (μ : Measureₓ Ω) : variance 0 μ = 0 := by simp [variance]
 
 theorem variance_nonneg {Ω : Type _} {m : MeasurableSpace Ω} (f : Ω → ℝ) (μ : Measureₓ Ω) : 0 ≤ variance f μ :=
   integral_nonneg fun ω => sq_nonneg _
@@ -93,11 +92,11 @@ theorem variance_def' {X : Ω → ℝ} (hX : Memℒp X 2) : Var[X] = 𝔼[X ^ 2]
   ring
 
 theorem variance_le_expectation_sq {X : Ω → ℝ} : Var[X] ≤ 𝔼[X ^ 2] := by
-  by_cases' h_int : integrable X
+  by_cases h_int:integrable X
   swap
   · simp only [variance, integral_undef h_int, Pi.pow_apply, Pi.sub_apply, sub_zero]
     
-  by_cases' hX : mem_ℒp X 2
+  by_cases hX:mem_ℒp X 2
   · rw [variance_def' hX]
     simp only [sq_nonneg, sub_le_self_iff]
     
@@ -118,14 +117,12 @@ theorem variance_le_expectation_sq {X : Ω → ℝ} : Var[X] ≤ 𝔼[X ^ 2] := 
 from its expectation in terms of the variance. -/
 theorem meas_ge_le_variance_div_sq {X : Ω → ℝ} (hX : Memℒp X 2) {c : ℝ} (hc : 0 < c) :
     ℙ { ω | c ≤ abs (X ω - 𝔼[X]) } ≤ Ennreal.ofReal (Var[X] / c ^ 2) := by
-  have A : (Ennreal.ofReal c : ℝ≥0∞) ≠ 0 := by
-    simp only [hc, Ne.def, Ennreal.of_real_eq_zero, not_leₓ]
+  have A : (Ennreal.ofReal c : ℝ≥0∞) ≠ 0 := by simp only [hc, Ne.def, Ennreal.of_real_eq_zero, not_leₓ]
   have B : ae_strongly_measurable (fun ω : Ω => 𝔼[X]) ℙ := ae_strongly_measurable_const
   convert meas_ge_le_mul_pow_snorm ℙ Ennreal.two_ne_zero Ennreal.two_ne_top (hX.ae_strongly_measurable.sub B) A
   · ext ω
     set d : ℝ≥0 := ⟨c, hc.le⟩ with hd
-    have cd : c = d := by
-      simp only [Subtype.coe_mk]
+    have cd : c = d := by simp only [Subtype.coe_mk]
     simp only [Pi.sub_apply, Ennreal.coe_le_coe, ← Real.norm_eq_abs, ← coe_nnnorm, Nnreal.coe_le_coe, cd,
       Ennreal.of_real_coe_nnreal]
     
@@ -179,11 +176,11 @@ theorem IndepFunₓ.variance_add {X Y : Ω → ℝ} (hX : Memℒp X 2) (hY : Mem
 
 /-- The variance of a finite sum of pairwise independent random variables is the sum of the
 variances. -/
-theorem IndepFunₓ.variance_sum {ι : Type _} {X : ι → Ω → ℝ} {s : Finset ι} (hs : ∀ i ∈ s, Memℒp (X i) 2)
+theorem IndepFunₓ.variance_sum {ι : Type _} {X : ι → Ω → ℝ} {s : Finsetₓ ι} (hs : ∀ i ∈ s, Memℒp (X i) 2)
     (h : Set.Pairwise ↑s fun i j => IndepFunₓ (X i) (X j)) : Var[∑ i in s, X i] = ∑ i in s, Var[X i] := by
   classical
-  induction' s using Finset.induction_on with k s ks IH
-  · simp only [Finset.sum_empty, variance_zero]
+  induction' s using Finsetₓ.induction_on with k s ks IH
+  · simp only [Finsetₓ.sum_empty, variance_zero]
     
   rw [variance_def' (mem_ℒp_finset_sum' _ hs), sum_insert ks, sum_insert ks]
   simp only [add_sq']
@@ -237,7 +234,7 @@ theorem IndepFunₓ.variance_sum {ι : Type _} {X : ι → Ω → ℝ} {s : Fins
         
       rw [integral_finset_sum s fun i hi => mem_ℒp.integrable one_le_two (hs _ (mem_insert_of_mem hi)), mul_sum,
         mul_sum, ← sum_sub_distrib]
-      apply Finset.sum_eq_zero fun i hi => _
+      apply Finsetₓ.sum_eq_zero fun i hi => _
       rw [integral_mul_left, indep_fun.integral_mul', sub_self]
       · apply h (mem_insert_self _ _) (mem_insert_of_mem hi)
         exact fun hki => ks (hki.symm ▸ hi)
@@ -247,11 +244,7 @@ theorem IndepFunₓ.variance_sum {ι : Type _} {X : ι → Ω → ℝ} {s : Fins
       · exact mem_ℒp.ae_strongly_measurable (hs _ (mem_insert_of_mem hi))
         
     _ = Var[X k] + ∑ i in s, Var[X i] := by
-      rw
-        [IH (fun i hi => hs i (mem_insert_of_mem hi))
-          (h.mono
-            (by
-              simp only [coe_insert, Set.subset_insert]))]
+      rw [IH (fun i hi => hs i (mem_insert_of_mem hi)) (h.mono (by simp only [coe_insert, Set.subset_insert]))]
     
 
 end ProbabilityTheory

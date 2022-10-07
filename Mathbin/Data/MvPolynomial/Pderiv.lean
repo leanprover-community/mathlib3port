@@ -62,7 +62,7 @@ def pderiv (i : σ) : Derivation R (MvPolynomial σ R) (MvPolynomial σ R) :=
 @[simp]
 theorem pderiv_monomial {i : σ} : pderiv i (monomial s a) = monomial (s - single i 1) (a * s i) := by
   simp only [pderiv, mk_derivation_monomial, Finsupp.smul_sum, smul_eq_mul, ← smul_mul_assoc, ← (monomial _).map_smul]
-  refine' (Finset.sum_eq_single i (fun j hj hne => _) fun hi => _).trans _
+  refine' (Finsetₓ.sum_eq_single i (fun j hj hne => _) fun hi => _).trans _
   · simp [Pi.single_eq_of_ne hne]
     
   · rw [Finsupp.not_mem_support_iff] at hi
@@ -79,24 +79,19 @@ theorem pderiv_one {i : σ} : pderiv i (1 : MvPolynomial σ R) = 0 :=
 
 @[simp]
 theorem pderiv_X [d : DecidableEq σ] (i j : σ) : pderiv i (x j : MvPolynomial σ R) = @Pi.single σ _ d _ i 1 j :=
-  (mk_derivation_X _ _ _).trans
-    (by
-      congr )
+  (mk_derivation_X _ _ _).trans (by congr )
 
 @[simp]
-theorem pderiv_X_self (i : σ) : pderiv i (x i : MvPolynomial σ R) = 1 := by
-  simp
+theorem pderiv_X_self (i : σ) : pderiv i (x i : MvPolynomial σ R) = 1 := by simp
 
 @[simp]
-theorem pderiv_X_of_ne {i j : σ} (h : j ≠ i) : pderiv i (x j : MvPolynomial σ R) = 0 := by
-  simp [h]
+theorem pderiv_X_of_ne {i j : σ} (h : j ≠ i) : pderiv i (x j : MvPolynomial σ R) = 0 := by simp [h]
 
 theorem pderiv_eq_zero_of_not_mem_vars {i : σ} {f : MvPolynomial σ R} (h : i ∉ f.vars) : pderiv i f = 0 :=
   derivation_eq_zero_of_forall_mem_vars fun j hj => pderiv_X_of_ne <| ne_of_mem_of_not_memₓ hj h
 
 theorem pderiv_monomial_single {i : σ} {n : ℕ} :
-    pderiv i (monomial (single i n) a) = monomial (single i (n - 1)) (a * n) := by
-  simp
+    pderiv i (monomial (single i n) a) = monomial (single i (n - 1)) (a * n) := by simp
 
 theorem pderiv_mul {i : σ} {f g : MvPolynomial σ R} : pderiv i (f * g) = pderiv i f * g + f * pderiv i g := by
   simp only [(pderiv i).leibniz f g, smul_eq_mul, mul_comm, add_commₓ]

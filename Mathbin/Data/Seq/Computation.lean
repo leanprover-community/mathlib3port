@@ -93,7 +93,7 @@ unsafe def run : Computation α → α
     | Sum.inr ca => run ca
 
 theorem destruct_eq_ret {s : Computation α} {a : α} : destruct s = Sum.inl a → s = return a := by
-  dsimp' [destruct]
+  dsimp [destruct]
   induction' f0 : s.1 0 with <;> intro h
   · contradiction
     
@@ -108,13 +108,13 @@ theorem destruct_eq_ret {s : Computation α} {a : α} : destruct s = Sum.inl a �
     
 
 theorem destruct_eq_think {s : Computation α} {s'} : destruct s = Sum.inr s' → s = think s' := by
-  dsimp' [destruct]
+  dsimp [destruct]
   induction' f0 : s.1 0 with a' <;> intro h
   · injection h with h'
     rw [← h']
     cases' s with f al
     apply Subtype.eq
-    dsimp' [think, tail]
+    dsimp [think, tail]
     rw [← f0]
     exact (Streamₓ.eta f).symm
     
@@ -151,7 +151,7 @@ theorem tail_ret (a : α) : tail (return a) = return a :=
 
 @[simp]
 theorem tail_think (s : Computation α) : tail (think s) = s := by
-  cases' s with f al <;> apply Subtype.eq <;> dsimp' [tail, think] <;> rw [Streamₓ.tail_cons]
+  cases' s with f al <;> apply Subtype.eq <;> dsimp [tail, think] <;> rw [Streamₓ.tail_cons]
 
 @[simp]
 theorem tail_empty : tail (empty α) = empty α :=
@@ -194,8 +194,8 @@ def corec (f : β → Sum α β) (b : β) : Computation α := by
     cases' o with a b <;> intro h
     · exact h
       
-    dsimp' [corec.F]  at h
-    dsimp' [corec.F]
+    dsimp [corec.F] at h
+    dsimp [corec.F]
     cases' f b with a b'
     · exact h
       
@@ -220,17 +220,17 @@ attribute [simp] lmap rmap
 
 @[simp]
 theorem corec_eq (f : β → Sum α β) (b : β) : destruct (corec f b) = rmap (corec f) (f b) := by
-  dsimp' [corec, destruct]
+  dsimp [corec, destruct]
   change Streamₓ.corec' (corec.F f) (Sum.inr b) 0 with corec.F._match_1 (f b)
   induction' h : f b with a b'
   · rfl
     
-  dsimp' [corec.F, destruct]
+  dsimp [corec.F, destruct]
   apply congr_arg
   apply Subtype.eq
-  dsimp' [corec, tail]
+  dsimp [corec, tail]
   rw [Streamₓ.corec'_eq, Streamₓ.tail_cons]
-  dsimp' [corec.F]
+  dsimp [corec.F]
   rw [h]
 
 section Bisim
@@ -254,23 +254,18 @@ def IsBisimulation :=
 theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ := by
   apply Subtype.eq
   apply Streamₓ.eq_of_bisim fun x y => ∃ s s' : Computation α, s.1 = x ∧ s'.1 = y ∧ R s s'
-  dsimp' [Streamₓ.IsBisimulation]
+  dsimp [Streamₓ.IsBisimulation]
   intro t₁ t₂ e
   exact
     match t₁, t₂, e with
     | _, _, ⟨s, s', rfl, rfl, r⟩ => by
       suffices head s = head s' ∧ R (tail s) (tail s') from
-        And.impₓ id
-          (fun r =>
-            ⟨tail s, tail s', by
-              cases s <;> rfl, by
-              cases s' <;> rfl, r⟩)
-          this
+        And.impₓ id (fun r => ⟨tail s, tail s', by cases s <;> rfl, by cases s' <;> rfl, r⟩) this
       have := bisim r
       revert r this
       apply cases_on s _ _ <;> intros <;> apply cases_on s' _ _ <;> intros <;> intro r this
       · constructor
-        dsimp'  at this
+        dsimp at this
         rw [this]
         assumption
         
@@ -319,7 +314,7 @@ theorem terminates_of_mem {s : Computation α} {a : α} (h : a ∈ s) : Terminat
 theorem terminates_def (s : Computation α) : Terminates s ↔ ∃ n, (s.1 n).isSome :=
   ⟨fun ⟨⟨a, n, h⟩⟩ =>
     ⟨n, by
-      dsimp' [Streamₓ.nth]  at h
+      dsimp [Streamₓ.nth] at h
       rw [← h]
       exact rfl⟩,
     fun ⟨n, h⟩ => ⟨⟨Option.getₓ h, n, (Option.eq_some_of_is_some h).symm⟩⟩⟩
@@ -348,8 +343,7 @@ theorem of_think_mem {s : Computation α} {a} : a ∈ think s → a ∈ s
 theorem of_think_terminates {s : Computation α} : Terminates (think s) → Terminates s
   | ⟨⟨a, h⟩⟩ => ⟨⟨a, of_think_mem h⟩⟩
 
-theorem not_mem_empty (a : α) : a ∉ empty α := fun ⟨n, h⟩ => by
-  clear _fun_match <;> contradiction
+theorem not_mem_empty (a : α) : a ∉ empty α := fun ⟨n, h⟩ => by clear _fun_match <;> contradiction
 
 theorem not_terminates_empty : ¬Terminates (empty α) := fun ⟨⟨a, h⟩⟩ => not_mem_empty a h
 
@@ -404,8 +398,7 @@ theorem get_mem : get s ∈ s :=
 theorem get_eq_of_mem {a} : a ∈ s → get s = a :=
   mem_unique (get_mem _)
 
-theorem mem_of_get_eq {a} : get s = a → a ∈ s := by
-  intro h <;> rw [← h] <;> apply get_mem
+theorem mem_of_get_eq {a} : get s = a → a ∈ s := by intro h <;> rw [← h] <;> apply get_mem
 
 @[simp]
 theorem get_think : get (think s) = get s :=
@@ -490,8 +483,7 @@ theorem length_think (s : Computation α) [h : Terminates s] : length (think s) 
 
 theorem results_think {s : Computation α} {a n} (h : Results s a n) : Results (think s) a (n + 1) :=
   haveI := h.terminates
-  ⟨think_mem h.mem, by
-    rw [length_think, h.length]⟩
+  ⟨think_mem h.mem, by rw [length_think, h.length]⟩
 
 theorem of_results_think {s : Computation α} {a n} (h : Results (think s) a n) : ∃ m, Results s a m ∧ n = m + 1 := by
   haveI := of_think_terminates h.terminates
@@ -551,7 +543,7 @@ def terminatesRecOn {C : Computation α → Sort v} (s) [Terminates s] (h1 : ∀
 def map (f : α → β) : Computation α → Computation β
   | ⟨s, al⟩ =>
     ⟨s.map fun o => Option.casesOn o none (some ∘ f), fun n b => by
-      dsimp' [Streamₓ.map, Streamₓ.nth]
+      dsimp [Streamₓ.map, Streamₓ.nth]
       induction' e : s n with a <;> intro h
       · contradiction
         
@@ -589,8 +581,7 @@ theorem map_ret (f : α → β) (a) : map f (return a) = return (f a) :=
 
 @[simp]
 theorem map_think (f : α → β) : ∀ s, map f (think s) = think (map f s)
-  | ⟨s, al⟩ => by
-    apply Subtype.eq <;> dsimp' [think, map] <;> rw [Streamₓ.map_cons]
+  | ⟨s, al⟩ => by apply Subtype.eq <;> dsimp [think, map] <;> rw [Streamₓ.map_cons]
 
 @[simp]
 theorem destruct_map (f : α → β) (s) : destruct (map f s) = lmap f (rmap (map f) (destruct s)) := by
@@ -600,13 +591,12 @@ theorem destruct_map (f : α → β) (s) : destruct (map f s) = lmap f (rmap (ma
 theorem map_id : ∀ s : Computation α, map id s = s
   | ⟨f, al⟩ => by
     apply Subtype.eq <;> simp [map, Function.comp]
-    have e : @Option.rec α (fun _ => Option α) none some = id := by
-      ext ⟨⟩ <;> rfl
+    have e : @Option.rec α (fun _ => Option α) none some = id := by ext ⟨⟩ <;> rfl
     simp [e, Streamₓ.map_id]
 
 theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Computation α, map (g ∘ f) s = map g (map f s)
   | ⟨s, al⟩ => by
-    apply Subtype.eq <;> dsimp' [map]
+    apply Subtype.eq <;> dsimp [map]
     rw [Streamₓ.map_map]
     apply congr_arg fun f : _ → Option γ => Streamₓ.map f s
     ext ⟨⟩ <;> rfl
@@ -629,8 +619,7 @@ theorem ret_bind (a) (f : α → Computation β) : bind (return a) f = f a := by
 
 @[simp]
 theorem think_bind (c) (f : α → Computation β) : bind (think c) f = think (bind c f) :=
-  destruct_eq_think <| by
-    simp [bind, bind.F]
+  destruct_eq_think <| by simp [bind, bind.F]
 
 @[simp]
 theorem bind_ret (f : α → β) (s) : bind s (return ∘ f) = map f s := by
@@ -638,8 +627,7 @@ theorem bind_ret (f : α → β) (s) : bind s (return ∘ f) = map f s := by
   · intro c₁ c₂ h
     exact
       match c₁, c₂, h with
-      | _, _, Or.inl (Eq.refl c) => by
-        cases' destruct c with b cb <;> simp
+      | _, _, Or.inl (Eq.refl c) => by cases' destruct c with b cb <;> simp
       | _, _, Or.inr ⟨s, rfl, rfl⟩ => by
         apply cases_on s <;> intro s <;> simp
         exact Or.inr ⟨s, rfl, rfl⟩
@@ -658,8 +646,7 @@ theorem bind_assoc (s : Computation α) (f : α → Computation β) (g : β → 
   · intro c₁ c₂ h
     exact
       match c₁, c₂, h with
-      | _, _, Or.inl (Eq.refl c) => by
-        cases' destruct c with b cb <;> simp
+      | _, _, Or.inl (Eq.refl c) => by cases' destruct c with b cb <;> simp
       | _, _, Or.inr ⟨s, rfl, rfl⟩ => by
         apply cases_on s <;> intro s <;> simp
         · generalize f s = fs
@@ -800,18 +787,15 @@ instance : Alternativeₓ Computation :=
 
 @[simp]
 theorem ret_orelse (a : α) (c₂ : Computation α) : (return a <|> c₂) = return a :=
-  destruct_eq_ret <| by
-    unfold HasOrelse.orelse <;> simp [orelse]
+  destruct_eq_ret <| by unfold HasOrelse.orelse <;> simp [orelse]
 
 @[simp]
 theorem orelse_ret (c₁ : Computation α) (a : α) : (think c₁ <|> return a) = return a :=
-  destruct_eq_ret <| by
-    unfold HasOrelse.orelse <;> simp [orelse]
+  destruct_eq_ret <| by unfold HasOrelse.orelse <;> simp [orelse]
 
 @[simp]
 theorem orelse_think (c₁ c₂ : Computation α) : (think c₁ <|> think c₂) = think (c₁ <|> c₂) :=
-  destruct_eq_think <| by
-    unfold HasOrelse.orelse <;> simp [orelse]
+  destruct_eq_think <| by unfold HasOrelse.orelse <;> simp [orelse]
 
 @[simp]
 theorem empty_orelse (c) : (empty α <|> c) = c := by
@@ -850,9 +834,7 @@ theorem Equiv.equivalence : Equivalenceₓ (@Equiv α) :=
   ⟨@Equiv.refl _, @Equiv.symm _, @Equiv.trans _⟩
 
 theorem equiv_of_mem {s t : Computation α} {a} (h1 : a ∈ s) (h2 : a ∈ t) : s ~ t := fun a' =>
-  ⟨fun ma => by
-    rw [mem_unique ma h1] <;> exact h2, fun ma => by
-    rw [mem_unique ma h2] <;> exact h1⟩
+  ⟨fun ma => by rw [mem_unique ma h1] <;> exact h2, fun ma => by rw [mem_unique ma h2] <;> exact h1⟩
 
 theorem terminates_congr {c₁ c₂ : Computation α} (h : c₁ ~ c₂) : Terminates c₁ ↔ Terminates c₂ := by
   simp only [terminates_iff, exists_congr h]
@@ -948,8 +930,7 @@ theorem rel_of_lift_rel {R : α → β → Prop} {ca cb} : LiftRel R ca cb → �
     rw [mem_unique mb mb'] <;> exact ab'
 
 theorem lift_rel_of_mem {R : α → β → Prop} {a b ca cb} (ma : a ∈ ca) (mb : b ∈ cb) (ab : R a b) : LiftRel R ca cb :=
-  ⟨fun a' ma' => by
-    rw [mem_unique ma' ma] <;> exact ⟨b, mb, ab⟩, fun b' mb' => by
+  ⟨fun a' ma' => by rw [mem_unique ma' ma] <;> exact ⟨b, mb, ab⟩, fun b' mb' => by
     rw [mem_unique mb' mb] <;> exact ⟨a, ma, ab⟩⟩
 
 theorem exists_of_lift_rel_left {R : α → β → Prop} {ca cb} (H : LiftRel R ca cb) {a} (h : a ∈ ca) :
@@ -995,22 +976,17 @@ theorem lift_rel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1
 theorem lift_rel_return_left (R : α → β → Prop) (a : α) (cb : Computation β) :
     LiftRel R (return a) cb ↔ ∃ b, b ∈ cb ∧ R a b :=
   ⟨fun ⟨l, r⟩ => l (ret_mem _), fun ⟨b, mb, ab⟩ =>
-    ⟨fun a' ma' => by
-      rw [eq_of_ret_mem ma'] <;> exact ⟨b, mb, ab⟩, fun b' mb' =>
-      ⟨_, ret_mem _, by
-        rw [mem_unique mb' mb] <;> exact ab⟩⟩⟩
+    ⟨fun a' ma' => by rw [eq_of_ret_mem ma'] <;> exact ⟨b, mb, ab⟩, fun b' mb' =>
+      ⟨_, ret_mem _, by rw [mem_unique mb' mb] <;> exact ab⟩⟩⟩
 
 @[simp]
 theorem lift_rel_return_right (R : α → β → Prop) (ca : Computation α) (b : β) :
-    LiftRel R ca (return b) ↔ ∃ a, a ∈ ca ∧ R a b := by
-  rw [lift_rel.swap, lift_rel_return_left]
+    LiftRel R ca (return b) ↔ ∃ a, a ∈ ca ∧ R a b := by rw [lift_rel.swap, lift_rel_return_left]
 
 @[simp]
 theorem lift_rel_return (R : α → β → Prop) (a : α) (b : β) : LiftRel R (return a) (return b) ↔ R a b := by
   rw [lift_rel_return_left] <;>
-    exact
-      ⟨fun ⟨b', mb', ab'⟩ => by
-        rwa [eq_of_ret_mem mb'] at ab', fun ab => ⟨_, ret_mem _, ab⟩⟩
+    exact ⟨fun ⟨b', mb', ab'⟩ => by rwa [eq_of_ret_mem mb'] at ab', fun ab => ⟨_, ret_mem _, ab⟩⟩
 
 @[simp]
 theorem lift_rel_think_left (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
@@ -1034,8 +1010,7 @@ theorem lift_rel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb
 
 theorem lift_rel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α} {s2 : Computation β} {f1 : α → γ}
     {f2 : β → δ} (h1 : LiftRel R s1 s2) (h2 : ∀ {a b}, R a b → S (f1 a) (f2 b)) : LiftRel S (map f1 s1) (map f2 s2) :=
-  by
-  rw [← bind_ret, ← bind_ret] <;> apply lift_rel_bind _ _ h1 <;> simp <;> exact @h2
+  by rw [← bind_ret, ← bind_ret] <;> apply lift_rel_bind _ _ h1 <;> simp <;> exact @h2
 
 theorem map_congr (R : α → α → Prop) (S : β → β → Prop) {s1 s2 : Computation α} {f : α → β} (h1 : s1 ~ s2) :
     map f s1 ~ map f s2 := by
@@ -1054,9 +1029,7 @@ attribute [simp] lift_rel_aux
 theorem LiftRelAux.ret_left (R : α → β → Prop) (C : Computation α → Computation β → Prop) (a cb) :
     LiftRelAux R C (Sum.inl a) (destruct cb) ↔ ∃ b, b ∈ cb ∧ R a b := by
   apply cb.cases_on (fun b => _) fun cb => _
-  · exact
-      ⟨fun h => ⟨_, ret_mem _, h⟩, fun ⟨b', mb, h⟩ => by
-        rw [mem_unique (ret_mem _) mb] <;> exact h⟩
+  · exact ⟨fun h => ⟨_, ret_mem _, h⟩, fun ⟨b', mb, h⟩ => by rw [mem_unique (ret_mem _) mb] <;> exact h⟩
     
   · rw [destruct_think]
     exact ⟨fun ⟨b, h, r⟩ => ⟨b, think_mem h, r⟩, fun ⟨b, h, r⟩ => ⟨b, of_think_mem h, r⟩⟩
@@ -1067,8 +1040,7 @@ theorem LiftRelAux.swap (R : α → β → Prop) (C) (a b) : LiftRelAux (swap R)
 
 @[simp]
 theorem LiftRelAux.ret_right (R : α → β → Prop) (C : Computation α → Computation β → Prop) (b ca) :
-    LiftRelAux R C (destruct ca) (Sum.inl b) ↔ ∃ a, a ∈ ca ∧ R a b := by
-  rw [← lift_rel_aux.swap, lift_rel_aux.ret_left]
+    LiftRelAux R C (destruct ca) (Sum.inl b) ↔ ∃ a, a ∈ ca ∧ R a b := by rw [← lift_rel_aux.swap, lift_rel_aux.ret_left]
 
 theorem LiftRelRec.lem {R : α → β → Prop} (C : Computation α → Computation β → Prop)
     (H : ∀ {ca cb}, C ca cb → LiftRelAux R C (destruct ca) (destruct cb)) (ca cb) (Hc : C ca cb) (a) (ha : a ∈ ca) :

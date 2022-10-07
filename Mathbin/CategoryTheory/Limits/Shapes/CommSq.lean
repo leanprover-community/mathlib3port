@@ -73,43 +73,27 @@ def cocone (s : CommSq f g h i) : PushoutCocone f g :=
 a commutative square identifies to the cocone of the flipped commutative square in
 the opposite category -/
 def coneOp (p : CommSq f g h i) : p.Cone.op ≅ p.flip.op.Cocone :=
-  PushoutCocone.ext (Iso.refl _)
-    (by
-      tidy)
-    (by
-      tidy)
+  PushoutCocone.ext (Iso.refl _) (by tidy) (by tidy)
 
 /-- The pullback cone in the opposite category associated to the cocone of
 a commutative square identifies to the cone of the flipped commutative square in
 the opposite category -/
 def coconeOp (p : CommSq f g h i) : p.Cocone.op ≅ p.flip.op.Cone :=
-  PullbackCone.ext (Iso.refl _)
-    (by
-      tidy)
-    (by
-      tidy)
+  PullbackCone.ext (Iso.refl _) (by tidy) (by tidy)
 
 /-- The pushout cocone obtained from the pullback cone associated to a
 commutative square in the opposite category identifies to the cocone associated
 to the flipped square. -/
 def coneUnop {W X Y Z : Cᵒᵖ} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z} (p : CommSq f g h i) :
     p.Cone.unop ≅ p.flip.unop.Cocone :=
-  PushoutCocone.ext (Iso.refl _)
-    (by
-      tidy)
-    (by
-      tidy)
+  PushoutCocone.ext (Iso.refl _) (by tidy) (by tidy)
 
 /-- The pullback cone obtained from the pushout cone associated to a
 commutative square in the opposite category identifies to the cone associated
 to the flipped square. -/
 def coconeUnop {W X Y Z : Cᵒᵖ} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z} (p : CommSq f g h i) :
     p.Cocone.unop ≅ p.flip.unop.Cone :=
-  PullbackCone.ext (Iso.refl _)
-    (by
-      tidy)
-    (by
-      tidy)
+  PullbackCone.ext (Iso.refl _) (by tidy) (by tidy)
 
 end CommSq
 
@@ -168,14 +152,7 @@ noncomputable def isLimit (h : IsPullback fst snd f g) : IsLimit h.Cone :=
 
 /-- If `c` is a limiting pullback cone, then we have a `is_pullback c.fst c.snd f g`. -/
 theorem of_is_limit {c : PullbackCone f g} (h : Limits.IsLimit c) : IsPullback c.fst c.snd f g :=
-  { w := c.condition,
-    is_limit' :=
-      ⟨IsLimit.ofIsoLimit h
-          (Limits.PullbackCone.ext (Iso.refl _)
-            (by
-              tidy)
-            (by
-              tidy))⟩ }
+  { w := c.condition, is_limit' := ⟨IsLimit.ofIsoLimit h (Limits.PullbackCone.ext (Iso.refl _) (by tidy) (by tidy))⟩ }
 
 /-- A variant of `of_is_limit` that is more useful with `apply`. -/
 theorem of_is_limit' (w : CommSq fst snd f g) (h : Limits.IsLimit w.Cone) : IsPullback fst snd f g :=
@@ -197,7 +174,7 @@ theorem of_is_product {c : BinaryFan X Y} (h : Limits.IsLimit c) (t : IsTerminal
         (Limits.Cones.ext (Iso.refl c.x)
           (by
             rintro ⟨⟨⟩⟩ <;>
-              · dsimp'
+              · dsimp
                 simp
                 ))))
 
@@ -223,24 +200,22 @@ noncomputable def isoPullback (h : IsPullback fst snd f g) [HasPullback f g] : P
 @[simp]
 theorem iso_pullback_hom_fst (h : IsPullback fst snd f g) [HasPullback f g] : h.isoPullback.Hom ≫ pullback.fst = fst :=
   by
-  dsimp' [iso_pullback, cone, comm_sq.cone]
+  dsimp [iso_pullback, cone, comm_sq.cone]
   simp
 
 @[simp]
 theorem iso_pullback_hom_snd (h : IsPullback fst snd f g) [HasPullback f g] : h.isoPullback.Hom ≫ pullback.snd = snd :=
   by
-  dsimp' [iso_pullback, cone, comm_sq.cone]
+  dsimp [iso_pullback, cone, comm_sq.cone]
   simp
 
 @[simp]
 theorem iso_pullback_inv_fst (h : IsPullback fst snd f g) [HasPullback f g] : h.isoPullback.inv ≫ fst = pullback.fst :=
-  by
-  simp [iso.inv_comp_eq]
+  by simp [iso.inv_comp_eq]
 
 @[simp]
 theorem iso_pullback_inv_snd (h : IsPullback fst snd f g) [HasPullback f g] : h.isoPullback.inv ≫ snd = pullback.snd :=
-  by
-  simp [iso.inv_comp_eq]
+  by simp [iso.inv_comp_eq]
 
 theorem of_iso_pullback (h : CommSq fst snd f g) [HasPullback f g] (i : P ≅ pullback f g)
     (w₁ : i.Hom ≫ pullback.fst = fst) (w₂ : i.Hom ≫ pullback.snd = snd) : IsPullback fst snd f g :=
@@ -251,13 +226,7 @@ theorem of_iso_pullback (h : CommSq fst snd f g) [HasPullback f g] (i : P ≅ pu
 theorem of_horiz_is_iso [IsIso fst] [IsIso g] (sq : CommSq fst snd f g) : IsPullback fst snd f g :=
   of_is_limit' sq
     (by
-      refine'
-        pullback_cone.is_limit.mk _ (fun s => s.fst ≫ inv fst)
-          (by
-            tidy)
-          (fun s => _)
-          (by
-            tidy)
+      refine' pullback_cone.is_limit.mk _ (fun s => s.fst ≫ inv fst) (by tidy) (fun s => _) (by tidy)
       simp only [← cancel_mono g, category.assoc, ← sq.w, is_iso.inv_hom_id_assoc, s.condition])
 
 end IsPullback
@@ -280,13 +249,7 @@ noncomputable def isColimit (h : IsPushout f g inl inr) : IsColimit h.Cocone :=
 /-- If `c` is a colimiting pushout cocone, then we have a `is_pushout f g c.inl c.inr`. -/
 theorem of_is_colimit {c : PushoutCocone f g} (h : Limits.IsColimit c) : IsPushout f g c.inl c.inr :=
   { w := c.condition,
-    is_colimit' :=
-      ⟨IsColimit.ofIsoColimit h
-          (Limits.PushoutCocone.ext (Iso.refl _)
-            (by
-              tidy)
-            (by
-              tidy))⟩ }
+    is_colimit' := ⟨IsColimit.ofIsoColimit h (Limits.PushoutCocone.ext (Iso.refl _) (by tidy) (by tidy))⟩ }
 
 /-- A variant of `of_is_colimit` that is more useful with `apply`. -/
 theorem of_is_colimit' (w : CommSq f g inl inr) (h : Limits.IsColimit w.Cocone) : IsPushout f g inl inr :=
@@ -308,7 +271,7 @@ theorem of_is_coproduct {c : BinaryCofan X Y} (h : Limits.IsColimit c) (t : IsIn
         (Limits.Cocones.ext (Iso.refl c.x)
           (by
             rintro ⟨⟨⟩⟩ <;>
-              · dsimp'
+              · dsimp
                 simp
                 ))))
 
@@ -333,12 +296,12 @@ noncomputable def isoPushout (h : IsPushout f g inl inr) [HasPushout f g] : P �
 
 @[simp]
 theorem inl_iso_pushout_inv (h : IsPushout f g inl inr) [HasPushout f g] : pushout.inl ≫ h.isoPushout.inv = inl := by
-  dsimp' [iso_pushout, cocone, comm_sq.cocone]
+  dsimp [iso_pushout, cocone, comm_sq.cocone]
   simp
 
 @[simp]
 theorem inr_iso_pushout_inv (h : IsPushout f g inl inr) [HasPushout f g] : pushout.inr ≫ h.isoPushout.inv = inr := by
-  dsimp' [iso_pushout, cocone, comm_sq.cocone]
+  dsimp [iso_pushout, cocone, comm_sq.cocone]
   simp
 
 @[simp]
@@ -372,15 +335,13 @@ open ZeroObject
 
 /-- The square with `0 : 0 ⟶ 0` on the left and `𝟙 X` on the right is a pullback square. -/
 theorem zero_left (X : C) : IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ 0) (𝟙 X) (0 : 0 ⟶ X) :=
-  { w := by
-      simp ,
+  { w := by simp,
     is_limit' :=
       ⟨{ lift := fun s => 0,
           fac' := fun s => by
             simpa using
               @pullback_cone.equalizer_ext _ _ _ _ _ _ _ s _ 0 (𝟙 _)
-                (by
-                  simpa using (pullback_cone.condition s).symm) }⟩ }
+                (by simpa using (pullback_cone.condition s).symm) }⟩ }
 
 /-- The square with `0 : 0 ⟶ 0` on the top and `𝟙 X` on the bottom is a pullback square. -/
 theorem zero_top (X : C) : IsPullback (0 : 0 ⟶ 0) (0 : 0 ⟶ X) (0 : 0 ⟶ X) (𝟙 X) :=
@@ -448,18 +409,14 @@ open ZeroObject
 
 /-- The square with `0 : 0 ⟶ 0` on the right and `𝟙 X` on the left is a pushout square. -/
 theorem zero_right (X : C) : IsPushout (0 : X ⟶ 0) (𝟙 X) (0 : 0 ⟶ 0) (0 : X ⟶ 0) :=
-  { w := by
-      simp ,
+  { w := by simp,
     is_colimit' :=
       ⟨{ desc := fun s => 0,
           fac' := fun s => by
             have c :=
-              @pushout_cocone.coequalizer_ext _ _ _ _ _ _ _ s _ 0 (𝟙 _)
-                (by
-                  simp )
-                (by
-                  simpa using pushout_cocone.condition s)
-            dsimp'  at c
+              @pushout_cocone.coequalizer_ext _ _ _ _ _ _ _ s _ 0 (𝟙 _) (by simp)
+                (by simpa using pushout_cocone.condition s)
+            dsimp at c
             simpa using c }⟩ }
 
 /-- The square with `0 : 0 ⟶ 0` on the bottom and `𝟙 X` on the top is a pushout square. -/
@@ -508,6 +465,15 @@ theorem unop {Z X Y P : Cᵒᵖ} {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {in
     (IsLimit.ofIsoLimit (Limits.PushoutCocone.isColimitEquivIsLimitUnop h.flip.Cocone h.flip.IsColimit)
       h.to_comm_sq.flip.coconeUnop)
 
+theorem of_horiz_is_iso [IsIso f] [IsIso inr] (sq : CommSq f g inl inr) : IsPushout f g inl inr :=
+  of_is_colimit' sq
+    (by
+      refine' pushout_cocone.is_colimit.mk _ (fun s => inv inr ≫ s.inr) (fun s => _) (by tidy) (by tidy)
+      simp only [← cancel_epi f, s.condition, sq.w_assoc, is_iso.hom_inv_id_assoc])
+
+theorem of_vert_is_iso [IsIso g] [IsIso inl] (sq : CommSq f g inl inr) : IsPushout f g inl inr :=
+  (of_horiz_is_iso sq.flip).flip
+
 end IsPushout
 
 namespace Functor
@@ -526,11 +492,11 @@ theorem map_is_pullback [PreservesLimit (cospan h i) F] (s : IsPullback f g h i)
         (is_limit_of_preserves F s.is_limit))
   · rfl
     
-  · dsimp'
+  · dsimp
     simp
     rfl
     
-  · dsimp'
+  · dsimp
     simp
     rfl
     
@@ -543,11 +509,11 @@ theorem map_is_pushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
         (is_colimit_of_preserves F s.is_colimit))
   · rfl
     
-  · dsimp'
+  · dsimp
     simp
     rfl
     
-  · dsimp'
+  · dsimp
     simp
     rfl
     

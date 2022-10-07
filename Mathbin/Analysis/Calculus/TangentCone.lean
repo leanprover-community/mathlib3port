@@ -142,10 +142,7 @@ theorem subset_tangent_cone_prod_left {t : Set F} {y : F} (ht : y ∈ Closure t)
     intro n
     rcases mem_closure_iff_nhds.1 ht _ (eventually_nhds_norm_smul_sub_lt (c n) y (pow_pos one_half_pos n)) with
       ⟨z, hz, hzt⟩
-    exact
-      ⟨z - y, by
-        simpa using hzt, by
-        simpa using hz⟩
+    exact ⟨z - y, by simpa using hzt, by simpa using hz⟩
   choose d' hd' using this
   refine' ⟨c, fun n => (d n, d' n), _, hc, _⟩
   show ∀ᶠ n in at_top, (x, y) + (d n, d' n) ∈ s ×ˢ t
@@ -167,10 +164,7 @@ theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s
     intro n
     rcases mem_closure_iff_nhds.1 hs _ (eventually_nhds_norm_smul_sub_lt (c n) x (pow_pos one_half_pos n)) with
       ⟨z, hz, hzs⟩
-    exact
-      ⟨z - x, by
-        simpa using hzs, by
-        simpa using hz⟩
+    exact ⟨z - x, by simpa using hzs, by simpa using hz⟩
   choose d' hd' using this
   refine' ⟨c, fun n => (d' n, d n), _, hc, _⟩
   show ∀ᶠ n in at_top, (x, y) + (d' n, d n) ∈ s ×ˢ t
@@ -182,8 +176,8 @@ theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s
     exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- The tangent cone of a product contains the tangent cone of each factor. -/
 theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _} [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] {s : ∀ i, Set (E i)} {x : ∀ i, E i} {i : ι}
@@ -197,10 +191,7 @@ theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type 
     rcases mem_closure_iff_nhds.1 (hi j hj) _
         (eventually_nhds_norm_smul_sub_lt (c n) (x j) (pow_pos one_half_pos n)) with
       ⟨z, hz, hzs⟩
-    exact
-      ⟨z - x j, by
-        simpa using hzs, by
-        simpa using hz⟩
+    exact ⟨z - x j, by simpa using hzs, by simpa using hz⟩
   choose! d' hd's hcd'
   refine' ⟨c, fun n => Function.update (d' n) i (d n), hd.mono fun n hn j hj' => _, hc, tendsto_pi_nhds.2 fun j => _⟩
   · rcases em (j = i) with (rfl | hj) <;> simp [*]
@@ -208,8 +199,7 @@ theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type 
   · rcases em (j = i) with (rfl | hj)
     · simp [hy]
       
-    · suffices tendsto (fun n => c n • d' n j) at_top (𝓝 0) by
-        simpa [hj]
+    · suffices tendsto (fun n => c n • d' n j) at_top (𝓝 0) by simpa [hj]
       refine' squeeze_zero_norm (fun n => (hcd' n j hj).le) _
       exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
       
@@ -240,28 +230,16 @@ theorem mem_tangent_cone_of_open_segment_subset {s : Set G} {x y : G} (h : OpenS
   show Filter.Tendsto (fun n : ℕ => ∥c n∥) Filter.atTop Filter.atTop
   · have : (fun n : ℕ => ∥c n∥) = c := by
       ext n
-      exact
-        abs_of_nonneg
-          (pow_nonneg
-            (by
-              norm_num)
-            _)
+      exact abs_of_nonneg (pow_nonneg (by norm_num) _)
     rw [this]
-    exact
-      (tendsto_pow_at_top_at_top_of_one_lt
-            (by
-              norm_num)).comp
-        (tendsto_add_at_top_nat 1)
+    exact (tendsto_pow_at_top_at_top_of_one_lt (by norm_num)).comp (tendsto_add_at_top_nat 1)
     
   show Filter.Tendsto (fun n : ℕ => c n • d n) Filter.atTop (𝓝 (y - x))
   · have : (fun n : ℕ => c n • d n) = fun n => y - x := by
       ext n
       simp only [d, smul_smul]
       rw [mul_inv_cancel, one_smul]
-      exact
-        pow_ne_zero _
-          (by
-            norm_num)
+      exact pow_ne_zero _ (by norm_num)
     rw [this]
     apply tendsto_const_nhds
     
@@ -360,7 +338,7 @@ theorem UniqueDiffWithinAt.pi (ι : Type _) [Finite ι] (E : ι → Type _) [∀
   classical
   rw [← Set.univ_pi_piecewise]
   refine' UniqueDiffWithinAt.univ_pi _ _ _ _ fun i => _
-  by_cases' hi : i ∈ I <;> simp [*, unique_diff_within_at_univ]
+  by_cases hi:i ∈ I <;> simp [*, unique_diff_within_at_univ]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product of two sets of unique differentiability is a set of unique differentiability. -/
@@ -386,8 +364,7 @@ theorem unique_diff_within_at_convex {s : Set G} (conv : Convex ℝ s) (hs : (In
   rcases hs with ⟨y, hy⟩
   suffices y - x ∈ Interior (TangentConeAt ℝ s x) by
     refine' ⟨Dense.of_closure _, hx⟩
-    simp
-      [(Submodule.span ℝ (TangentConeAt ℝ s x)).eq_top_of_nonempty_interior'
+    simp [(Submodule.span ℝ (TangentConeAt ℝ s x)).eq_top_of_nonempty_interior'
         ⟨y - x, interior_mono Submodule.subset_span this⟩]
   rw [mem_interior_iff_mem_nhds]
   replace hy : Interior s ∈ 𝓝 y := IsOpen.mem_nhds is_open_interior hy
@@ -402,12 +379,10 @@ theorem unique_diff_on_convex {s : Set G} (conv : Convex ℝ s) (hs : (Interior 
   fun x xs => unique_diff_within_at_convex conv hs (subset_closure xs)
 
 theorem unique_diff_on_Ici (a : ℝ) : UniqueDiffOn ℝ (Ici a) :=
-  unique_diff_on_convex (convex_Ici a) <| by
-    simp only [interior_Ici, nonempty_Ioi]
+  unique_diff_on_convex (convex_Ici a) <| by simp only [interior_Ici, nonempty_Ioi]
 
 theorem unique_diff_on_Iic (a : ℝ) : UniqueDiffOn ℝ (Iic a) :=
-  unique_diff_on_convex (convex_Iic a) <| by
-    simp only [interior_Iic, nonempty_Iio]
+  unique_diff_on_convex (convex_Iic a) <| by simp only [interior_Iic, nonempty_Iio]
 
 theorem unique_diff_on_Ioi (a : ℝ) : UniqueDiffOn ℝ (Ioi a) :=
   is_open_Ioi.UniqueDiffOn
@@ -416,22 +391,15 @@ theorem unique_diff_on_Iio (a : ℝ) : UniqueDiffOn ℝ (Iio a) :=
   is_open_Iio.UniqueDiffOn
 
 theorem unique_diff_on_Icc {a b : ℝ} (hab : a < b) : UniqueDiffOn ℝ (Icc a b) :=
-  unique_diff_on_convex (convex_Icc a b) <| by
-    simp only [interior_Icc, nonempty_Ioo, hab]
+  unique_diff_on_convex (convex_Icc a b) <| by simp only [interior_Icc, nonempty_Ioo, hab]
 
 theorem unique_diff_on_Ico (a b : ℝ) : UniqueDiffOn ℝ (Ico a b) :=
-  if hab : a < b then
-    unique_diff_on_convex (convex_Ico a b) <| by
-      simp only [interior_Ico, nonempty_Ioo, hab]
-  else by
-    simp only [Ico_eq_empty hab, unique_diff_on_empty]
+  if hab : a < b then unique_diff_on_convex (convex_Ico a b) <| by simp only [interior_Ico, nonempty_Ioo, hab]
+  else by simp only [Ico_eq_empty hab, unique_diff_on_empty]
 
 theorem unique_diff_on_Ioc (a b : ℝ) : UniqueDiffOn ℝ (Ioc a b) :=
-  if hab : a < b then
-    unique_diff_on_convex (convex_Ioc a b) <| by
-      simp only [interior_Ioc, nonempty_Ioo, hab]
-  else by
-    simp only [Ioc_eq_empty hab, unique_diff_on_empty]
+  if hab : a < b then unique_diff_on_convex (convex_Ioc a b) <| by simp only [interior_Ioc, nonempty_Ioo, hab]
+  else by simp only [Ioc_eq_empty hab, unique_diff_on_empty]
 
 theorem unique_diff_on_Ioo (a b : ℝ) : UniqueDiffOn ℝ (Ioo a b) :=
   is_open_Ioo.UniqueDiffOn
@@ -440,19 +408,14 @@ theorem unique_diff_on_Ioo (a b : ℝ) : UniqueDiffOn ℝ (Ioo a b) :=
 theorem unique_diff_on_Icc_zero_one : UniqueDiffOn ℝ (Icc (0 : ℝ) 1) :=
   unique_diff_on_Icc zero_lt_one
 
+theorem unique_diff_within_at_Ioo {a b t : ℝ} (ht : t ∈ Set.Ioo a b) : UniqueDiffWithinAt ℝ (Set.Ioo a b) t :=
+  IsOpen.unique_diff_within_at is_open_Ioo ht
+
 theorem unique_diff_within_at_Ioi (a : ℝ) : UniqueDiffWithinAt ℝ (Ioi a) a :=
-  unique_diff_within_at_convex (convex_Ioi a)
-    (by
-      simp )
-    (by
-      simp )
+  unique_diff_within_at_convex (convex_Ioi a) (by simp) (by simp)
 
 theorem unique_diff_within_at_Iio (a : ℝ) : UniqueDiffWithinAt ℝ (Iio a) a :=
-  unique_diff_within_at_convex (convex_Iio a)
-    (by
-      simp )
-    (by
-      simp )
+  unique_diff_within_at_convex (convex_Iio a) (by simp) (by simp)
 
 end UniqueDiff
 

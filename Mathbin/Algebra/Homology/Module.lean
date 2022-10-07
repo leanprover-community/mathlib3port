@@ -56,11 +56,7 @@ attribute [local instance] concrete_category.has_coe_to_sort
 
 @[simp]
 theorem cycles_map_to_cycles (f : C ⟶ D) {i : ι} (x : LinearMap.ker (C.dFrom i)) :
-    (cyclesMap f i) (toCycles x) =
-      toCycles
-        ⟨f.f i x.1, by
-          simp [x.2]⟩ :=
-  by
+    (cyclesMap f i) (toCycles x) = toCycles ⟨f.f i x.1, by simp [x.2]⟩ := by
   ext
   simp
 

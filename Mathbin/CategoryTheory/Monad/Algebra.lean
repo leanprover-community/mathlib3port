@@ -38,12 +38,8 @@ namespace Monadₓ
 structure Algebra (T : Monad C) : Type max u₁ v₁ where
   a : C
   a : (T : C ⥤ C).obj A ⟶ A
-  unit' : T.η.app A ≫ a = 𝟙 A := by
-    run_tac
-      obviously
-  assoc' : T.μ.app A ≫ a = (T : C ⥤ C).map a ≫ a := by
-    run_tac
-      obviously
+  unit' : T.η.app A ≫ a = 𝟙 A := by obviously
+  assoc' : T.μ.app A ≫ a = (T : C ⥤ C).map a ≫ a := by obviously
 
 restate_axiom algebra.unit'
 
@@ -59,9 +55,7 @@ variable {T : Monad C}
 @[ext]
 structure Hom (A B : Algebra T) where
   f : A.a ⟶ B.a
-  h' : (T : C ⥤ C).map f ≫ B.a = A.a ≫ f := by
-    run_tac
-      obviously
+  h' : (T : C ⥤ C).map f ≫ B.a = A.a ≫ f := by obviously
 
 restate_axiom hom.h'
 
@@ -148,14 +142,14 @@ def adj : T.free ⊣ T.forget :=
           invFun := fun f =>
             { f := T.map f ≫ Y.a,
               h' := by
-                dsimp'
+                dsimp
                 simp [← Y.assoc, ← T.μ.naturality_assoc] },
           left_inv := fun f => by
             ext
-            dsimp'
-            simp ,
+            dsimp
+            simp,
           right_inv := fun f => by
-            dsimp' only [forget_obj, monad_to_functor_eq_coe]
+            dsimp only [forget_obj, monad_to_functor_eq_coe]
             rw [← T.η.naturality_assoc, Y.unit]
             apply category.comp_id } }
 
@@ -166,8 +160,7 @@ theorem algebra_iso_of_iso {A B : Algebra T} (f : A ⟶ B) [IsIso f.f] : IsIso f
         h' := by
           rw [is_iso.eq_comp_inv f.f, category.assoc, ← f.h]
           simp },
-      by
-      tidy⟩⟩
+      by tidy⟩⟩
 
 instance forget_reflects_iso : ReflectsIsomorphisms T.forget where reflects := fun A B => algebra_iso_of_iso T
 
@@ -202,10 +195,10 @@ def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra
   obj := fun A =>
     { a := A.a, a := h.app A.a ≫ A.a,
       unit' := by
-        dsimp'
+        dsimp
         simp [A.unit],
       assoc' := by
-        dsimp'
+        dsimp
         simp [A.assoc] }
   map := fun A₁ A₂ f => { f := f.f }
 
@@ -217,11 +210,11 @@ def algebraFunctorOfMonadHomId {T₁ : Monad C} : algebraFunctorOfMonadHom (𝟙
     (fun X =>
       Algebra.isoMk (Iso.refl _)
         (by
-          dsimp'
-          simp ))
+          dsimp
+          simp))
     fun X Y f => by
     ext
-    dsimp'
+    dsimp
     simp
 
 /-- A composition of monad morphisms gives the composition of corresponding functors.
@@ -233,11 +226,11 @@ def algebraFunctorOfMonadHomComp {T₁ T₂ T₃ : Monad C} (f : T₁ ⟶ T₂) 
     (fun X =>
       Algebra.isoMk (Iso.refl _)
         (by
-          dsimp'
-          simp ))
+          dsimp
+          simp))
     fun X Y f => by
     ext
-    dsimp'
+    dsimp
     simp
 
 /-- If `f` and `g` are two equal morphisms of monads, then the functors of algebras induced by them
@@ -252,11 +245,11 @@ def algebraFunctorOfMonadHomEq {T₁ T₂ : Monad C} {f g : T₁ ⟶ T₂} (h : 
     (fun X =>
       Algebra.isoMk (Iso.refl _)
         (by
-          dsimp'
+          dsimp
           simp [h]))
     fun X Y f => by
     ext
-    dsimp'
+    dsimp
     simp
 
 /-- Isomorphic monads give equivalent categories of algebras. Furthermore, they are equivalent as
@@ -266,18 +259,9 @@ categories over `C`, that is, we have `algebra_equiv_of_iso_monads h ⋙ forget 
 def algebraEquivOfIsoMonads {T₁ T₂ : Monad C} (h : T₁ ≅ T₂) : Algebra T₁ ≌ Algebra T₂ where
   Functor := algebraFunctorOfMonadHom h.inv
   inverse := algebraFunctorOfMonadHom h.Hom
-  unitIso :=
-    algebraFunctorOfMonadHomId.symm ≪≫
-      algebraFunctorOfMonadHomEq
-          (by
-            simp ) ≪≫
-        algebraFunctorOfMonadHomComp _ _
+  unitIso := algebraFunctorOfMonadHomId.symm ≪≫ algebraFunctorOfMonadHomEq (by simp) ≪≫ algebraFunctorOfMonadHomComp _ _
   counitIso :=
-    (algebraFunctorOfMonadHomComp _ _).symm ≪≫
-      algebraFunctorOfMonadHomEq
-          (by
-            simp ) ≪≫
-        algebra_functor_of_monad_hom_id
+    (algebraFunctorOfMonadHomComp _ _).symm ≪≫ algebraFunctorOfMonadHomEq (by simp) ≪≫ algebra_functor_of_monad_hom_id
 
 @[simp]
 theorem algebra_equiv_of_iso_monads_comp_forget {T₁ T₂ : Monad C} (h : T₁ ⟶ T₂) :
@@ -293,12 +277,8 @@ namespace Comonad
 structure Coalgebra (G : Comonad C) : Type max u₁ v₁ where
   a : C
   a : A ⟶ (G : C ⥤ C).obj A
-  counit' : a ≫ G.ε.app A = 𝟙 A := by
-    run_tac
-      obviously
-  coassoc' : a ≫ G.δ.app A = a ≫ G.map a := by
-    run_tac
-      obviously
+  counit' : a ≫ G.ε.app A = 𝟙 A := by obviously
+  coassoc' : a ≫ G.δ.app A = a ≫ G.map a := by obviously
 
 restate_axiom coalgebra.counit'
 
@@ -314,9 +294,7 @@ variable {G : Comonad C}
 @[ext, nolint has_nonempty_instance]
 structure Hom (A B : Coalgebra G) where
   f : A.a ⟶ B.a
-  h' : A.a ≫ (G : C ⥤ C).map f = f ≫ B.a := by
-    run_tac
-      obviously
+  h' : A.a ≫ (G : C ⥤ C).map f = f ≫ B.a := by obviously
 
 restate_axiom hom.h'
 
@@ -399,15 +377,15 @@ def adj : G.forget ⊣ G.cofree :=
         { toFun := fun f =>
             { f := X.a ≫ G.map f,
               h' := by
-                dsimp'
+                dsimp
                 simp [← coalgebra.coassoc_assoc] },
           invFun := fun g => g.f ≫ G.ε.app Y,
           left_inv := fun f => by
-            dsimp'
+            dsimp
             rw [category.assoc, G.ε.naturality, functor.id_map, X.counit_assoc],
           right_inv := fun g => by
             ext1
-            dsimp'
+            dsimp
             rw [functor.map_comp, g.h_assoc, cofree_obj_a, comonad.right_counit]
             apply comp_id } }
 
@@ -418,8 +396,7 @@ theorem coalgebra_iso_of_iso {A B : Coalgebra G} (f : A ⟶ B) [IsIso f.f] : IsI
         h' := by
           rw [is_iso.eq_inv_comp f.f, ← f.h_assoc]
           simp },
-      by
-      tidy⟩⟩
+      by tidy⟩⟩
 
 instance forget_reflects_iso : ReflectsIsomorphisms G.forget where reflects := fun A B => coalgebra_iso_of_iso G
 

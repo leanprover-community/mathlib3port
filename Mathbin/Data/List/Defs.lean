@@ -162,7 +162,7 @@ def scanr (f : α → β → β) (b : β) (l : List α) : List β :=
 
      prod [a, b, c] = ((1 * a) * b) * c -/
 def prod [Mul α] [One α] : List α → α :=
-  foldlₓ (· * ·) 1
+  foldl (· * ·) 1
 
 -- Later this will be tagged with `to_additive`, but this can't be done yet because of import
 -- dependencies.
@@ -170,7 +170,7 @@ def prod [Mul α] [One α] : List α → α :=
 
      sum [a, b, c] = ((0 + a) + b) + c -/
 def sum [Add α] [Zero α] : List α → α :=
-  foldlₓ (· + ·) 0
+  foldl (· + ·) 0
 
 /-- The alternating sum of a list. -/
 def alternatingSum {G : Type _} [Zero G] [Add G] [Neg G] : List G → G
@@ -197,7 +197,7 @@ def partitionMapₓ (f : α → Sum β γ) : List α → List β × List γ
 
 /-- `find p l` is the first element of `l` satisfying `p`, or `none` if no such
   element exists. -/
-def findₓ (p : α → Prop) [DecidablePred p] : List α → Option α
+def find (p : α → Prop) [DecidablePred p] : List α → Option α
   | [] => none
   | a :: l => if p a then some a else find l
 
@@ -552,13 +552,13 @@ def permutations' : List α → List (List α)
 end Permutations
 
 /-- `erasep p l` removes the first element of `l` satisfying the predicate `p`. -/
-def erasepₓ (p : α → Prop) [DecidablePred p] : List α → List α
+def erasep (p : α → Prop) [DecidablePred p] : List α → List α
   | [] => []
   | a :: l => if p a then l else a :: erasep l
 
 /-- `extractp p l` returns a pair of an element `a` of `l` satisfying the predicate
   `p`, and `l`, with `a` removed. If there is no such element `a` it returns `(none, l)`. -/
-def extractpₓ (p : α → Prop) [DecidablePred p] : List α → Option α × List α
+def extractp (p : α → Prop) [DecidablePred p] : List α → Option α × List α
   | [] => (none, [])
   | a :: l =>
     if p a then (some a, l)
@@ -609,7 +609,7 @@ def ofFnNthValₓ {n} (f : Finₓ n → α) (i : ℕ) : Option α :=
   if h : i < n then some (f ⟨i, h⟩) else none
 
 /-- `disjoint l₁ l₂` means that `l₁` and `l₂` have no elements in common. -/
-def Disjoint (l₁ l₂ : List α) : Prop :=
+def Disjointₓ (l₁ l₂ : List α) : Prop :=
   ∀ ⦃a⦄, a ∈ l₁ → a ∈ l₂ → False
 
 section Pairwise
@@ -631,12 +631,11 @@ variable {R}
 
 @[simp]
 theorem pairwise_cons {a : α} {l : List α} : Pairwiseₓ R (a :: l) ↔ (∀ a' ∈ l, R a a') ∧ Pairwiseₓ R l :=
-  ⟨fun p => by
-    cases' p with a l n p <;> exact ⟨n, p⟩, fun ⟨n, p⟩ => p.cons n⟩
+  ⟨fun p => by cases' p with a l n p <;> exact ⟨n, p⟩, fun ⟨n, p⟩ => p.cons n⟩
 
 attribute [simp] pairwise.nil
 
-instance decidablePairwiseₓ [DecidableRel R] (l : List α) : Decidable (Pairwiseₓ R l) := by
+instance decidablePairwise [DecidableRel R] (l : List α) : Decidable (Pairwiseₓ R l) := by
   induction' l with hd tl ih <;> [exact is_true pairwise.nil, exact decidableOfIff' _ pairwise_cons]
 
 end Pairwise
@@ -674,8 +673,7 @@ variable {R}
 
 @[simp]
 theorem chain_cons {a b : α} {l : List α} : Chain R a (b :: l) ↔ R a b ∧ Chain R b l :=
-  ⟨fun p => by
-    cases' p with _ a b l n p <;> exact ⟨n, p⟩, fun ⟨n, p⟩ => p.cons n⟩
+  ⟨fun p => by cases' p with _ a b l n p <;> exact ⟨n, p⟩, fun ⟨n, p⟩ => p.cons n⟩
 
 attribute [simp] chain.nil
 
@@ -683,7 +681,7 @@ instance decidableChain [DecidableRel R] (a : α) (l : List α) : Decidable (Cha
   induction l generalizing a <;> simp only [chain.nil, chain_cons] <;> skip <;> infer_instance
 
 instance decidableChain' [DecidableRel R] (l : List α) : Decidable (Chain' R l) := by
-  cases l <;> dunfold chain' <;> infer_instance
+  cases l <;> dsimp only [chain'] <;> infer_instance
 
 end Chain
 
@@ -693,9 +691,9 @@ def Nodupₓ : List α → Prop :=
   Pairwiseₓ (· ≠ ·)
 
 instance nodupDecidableₓ [DecidableEq α] : ∀ l : List α, Decidable (Nodupₓ l) :=
-  List.decidablePairwiseₓ
+  List.decidablePairwise
 
-/-- `dedup l` removes duplicates from `l` (taking only the first occurrence).
+/-- `dedup l` removes duplicates from `l` (taking only the last occurrence).
   Defined as `pw_filter (≠)`.
 
      dedup [1, 0, 2, 2, 1] = [0, 2, 1] -/

@@ -59,14 +59,11 @@ def BoundedAtFilter [HasNorm β] [One (α → β)] (l : Filter α) (f : α → �
 
 theorem zero_at_filter_is_bounded_at_filter [NormedField β] (l : Filter α) (f : α → β) (hf : ZeroAtFilter l f) :
     BoundedAtFilter l f :=
-  Asymptotics.is_O_of_div_tendsto_nhds
-    (by
-      simp )
-    _
+  Asymptotics.is_O_of_div_tendsto_nhds (by simp) _
     (by
       convert hf
       ext1
-      simp )
+      simp)
 
 theorem zero_is_bounded_at_filter [NormedField β] (l : Filter α) : BoundedAtFilter l (0 : α → β) :=
   (zero_at_filter_is_bounded_at_filter l _) (zero_is_zero_at_filter l)

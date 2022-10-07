@@ -52,7 +52,7 @@ protected theorem wf : (∃ x, p x) → WellFounded (Upto.Gt p)
       rw [this]
       apply measure_wf
     ext ⟨a, ha⟩ ⟨b, _⟩
-    dsimp' [Measureₓ, InvImage, upto.gt]
+    dsimp [Measureₓ, InvImage, upto.gt]
     rw [tsub_lt_tsub_iff_left_of_le]
     exact le_of_not_ltₓ fun h' => ha _ h' h
 
@@ -62,8 +62,7 @@ def zero : Nat.Upto p :=
 
 /-- The successor of `n` is in `nat.upto p` provided that `n` doesn't satisfy `p`. -/
 def succ (x : Nat.Upto p) (h : ¬p x.val) : Nat.Upto p :=
-  ⟨x.val.succ, fun j h' => by
-    rcases Nat.lt_succ_iff_lt_or_eq.1 h' with (h' | rfl) <;> [exact x.2 _ h', exact h]⟩
+  ⟨x.val.succ, fun j h' => by rcases Nat.lt_succ_iff_lt_or_eq.1 h' with (h' | rfl) <;> [exact x.2 _ h', exact h]⟩
 
 end Upto
 

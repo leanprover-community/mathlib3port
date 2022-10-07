@@ -30,29 +30,15 @@ open CategoryTheory.Limits Preadditive
 instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T) where
   homGroup := fun F G =>
     { add := fun α β =>
-        { f := α.f + β.f,
-          h' := by
-            simp only [functor.map_add, add_comp, monad.algebra.hom.h, comp_add] },
-      zero :=
-        { f := 0,
-          h' := by
-            simp only [functor.map_zero, zero_comp, comp_zero] },
+        { f := α.f + β.f, h' := by simp only [functor.map_add, add_comp, monad.algebra.hom.h, comp_add] },
+      zero := { f := 0, h' := by simp only [functor.map_zero, zero_comp, comp_zero] },
       nsmul := fun n α =>
-        { f := n • α.f,
-          h' := by
-            rw [functor.map_nsmul, nsmul_comp, monad.algebra.hom.h, comp_nsmul] },
-      neg := fun α =>
-        { f := -α.f,
-          h' := by
-            simp only [functor.map_neg, neg_comp, monad.algebra.hom.h, comp_neg] },
+        { f := n • α.f, h' := by rw [functor.map_nsmul, nsmul_comp, monad.algebra.hom.h, comp_nsmul] },
+      neg := fun α => { f := -α.f, h' := by simp only [functor.map_neg, neg_comp, monad.algebra.hom.h, comp_neg] },
       sub := fun α β =>
-        { f := α.f - β.f,
-          h' := by
-            simp only [functor.map_sub, sub_comp, monad.algebra.hom.h, comp_sub] },
+        { f := α.f - β.f, h' := by simp only [functor.map_sub, sub_comp, monad.algebra.hom.h, comp_sub] },
       zsmul := fun r α =>
-        { f := r • α.f,
-          h' := by
-            rw [functor.map_zsmul, zsmul_comp, monad.algebra.hom.h, comp_zsmul] },
+        { f := r • α.f, h' := by rw [functor.map_zsmul, zsmul_comp, monad.algebra.hom.h, comp_zsmul] },
       add_assoc := by
         intros
         ext
@@ -84,7 +70,7 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T) where
       zsmul_succ' := by
         intros
         ext
-        dsimp'
+        dsimp
         simp only [coe_nat_zsmul, succ_nsmul]
         rfl,
       zsmul_neg' := by
@@ -117,29 +103,15 @@ variable (U : Comonad C) [Functor.Additive (U : C ⥤ C)]
 instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U) where
   homGroup := fun F G =>
     { add := fun α β =>
-        { f := α.f + β.f,
-          h' := by
-            simp only [functor.map_add, comp_add, comonad.coalgebra.hom.h, add_comp] },
-      zero :=
-        { f := 0,
-          h' := by
-            simp only [functor.map_zero, comp_zero, zero_comp] },
+        { f := α.f + β.f, h' := by simp only [functor.map_add, comp_add, comonad.coalgebra.hom.h, add_comp] },
+      zero := { f := 0, h' := by simp only [functor.map_zero, comp_zero, zero_comp] },
       nsmul := fun n α =>
-        { f := n • α.f,
-          h' := by
-            rw [functor.map_nsmul, comp_nsmul, comonad.coalgebra.hom.h, nsmul_comp] },
-      neg := fun α =>
-        { f := -α.f,
-          h' := by
-            simp only [functor.map_neg, comp_neg, comonad.coalgebra.hom.h, neg_comp] },
+        { f := n • α.f, h' := by rw [functor.map_nsmul, comp_nsmul, comonad.coalgebra.hom.h, nsmul_comp] },
+      neg := fun α => { f := -α.f, h' := by simp only [functor.map_neg, comp_neg, comonad.coalgebra.hom.h, neg_comp] },
       sub := fun α β =>
-        { f := α.f - β.f,
-          h' := by
-            simp only [functor.map_sub, comp_sub, comonad.coalgebra.hom.h, sub_comp] },
+        { f := α.f - β.f, h' := by simp only [functor.map_sub, comp_sub, comonad.coalgebra.hom.h, sub_comp] },
       zsmul := fun r α =>
-        { f := r • α.f,
-          h' := by
-            rw [functor.map_zsmul, comp_zsmul, comonad.coalgebra.hom.h, zsmul_comp] },
+        { f := r • α.f, h' := by rw [functor.map_zsmul, comp_zsmul, comonad.coalgebra.hom.h, zsmul_comp] },
       add_assoc := by
         intros
         ext
@@ -171,7 +143,7 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U) where
       zsmul_succ' := by
         intros
         ext
-        dsimp'
+        dsimp
         simp only [coe_nat_zsmul, succ_nsmul]
         rfl,
       zsmul_neg' := by

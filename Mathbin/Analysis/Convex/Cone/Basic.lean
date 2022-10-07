@@ -95,8 +95,7 @@ variable [HasSmul 𝕜 E] (S T : ConvexCone 𝕜 E)
 
 instance : SetLike (ConvexCone 𝕜 E) E where
   coe := Carrier
-  coe_injective' := fun S T h => by
-    cases S <;> cases T <;> congr
+  coe_injective' := fun S T h => by cases S <;> cases T <;> congr
 
 @[simp]
 theorem coe_mk {s : Set E} {h₁ h₂} : ↑(@mk 𝕜 _ _ _ _ s h₁ h₂) = s :=
@@ -144,12 +143,10 @@ theorem mem_Inf {x : E} {S : Set (ConvexCone 𝕜 E)} : x ∈ inf S ↔ ∀ s �
   mem_Inter₂
 
 @[simp]
-theorem coe_infi {ι : Sort _} (f : ι → ConvexCone 𝕜 E) : ↑(infi f) = ⋂ i, (f i : Set E) := by
-  simp [infi]
+theorem coe_infi {ι : Sort _} (f : ι → ConvexCone 𝕜 E) : ↑(infi f) = ⋂ i, (f i : Set E) := by simp [infi]
 
 theorem mem_infi {ι : Sort _} {x : E} {f : ι → ConvexCone 𝕜 E} : x ∈ infi f ↔ ∀ i, x ∈ f i :=
-  mem_Inter₂.trans <| by
-    simp
+  mem_Inter₂.trans <| by simp
 
 variable (𝕜)
 
@@ -308,8 +305,7 @@ def Blunt (S : ConvexCone 𝕜 E) : Prop :=
 theorem pointed_iff_not_blunt (S : ConvexCone 𝕜 E) : S.Pointed ↔ ¬S.Blunt :=
   ⟨fun h₁ h₂ => h₂ h₁, not_not.mp⟩
 
-theorem blunt_iff_not_pointed (S : ConvexCone 𝕜 E) : S.Blunt ↔ ¬S.Pointed := by
-  rw [pointed_iff_not_blunt, not_not]
+theorem blunt_iff_not_pointed (S : ConvexCone 𝕜 E) : S.Blunt ↔ ¬S.Pointed := by rw [pointed_iff_not_blunt, not_not]
 
 theorem Pointed.mono {S T : ConvexCone 𝕜 E} (h : S ≤ T) : S.Pointed → T.Pointed :=
   @h _
@@ -337,7 +333,7 @@ theorem salient_iff_not_flat (S : ConvexCone 𝕜 E) : S.Salient ↔ ¬S.Flat :=
     exact h₁ x xs H₁ H₂
     
   · intro h
-    unfold flat  at h
+    unfold flat at h
     push_neg  at h
     exact h
     
@@ -362,10 +358,8 @@ theorem Blunt.salient {S : ConvexCone 𝕜 E} : S.Blunt → S.Salient := by
 /-- A pointed convex cone defines a preorder. -/
 def toPreorder (h₁ : S.Pointed) : Preorderₓ E where
   le := fun x y => y - x ∈ S
-  le_refl := fun x => by
-    change x - x ∈ S <;> rw [sub_self x] <;> exact h₁
-  le_trans := fun x y z xy zy => by
-    simpa using add_mem S zy xy
+  le_refl := fun x => by change x - x ∈ S <;> rw [sub_self x] <;> exact h₁
+  le_trans := fun x y z xy zy => by simpa using add_mem S zy xy
 
 /-- A pointed and salient cone defines a partial order. -/
 def toPartialOrder (h₁ : S.Pointed) (h₂ : S.Salient) : PartialOrderₓ E :=
@@ -380,9 +374,7 @@ def toPartialOrder (h₁ : S.Pointed) (h₂ : S.Salient) : PartialOrderₓ E :=
 
 /-- A pointed and salient cone defines an `ordered_add_comm_group`. -/
 def toOrderedAddCommGroup (h₁ : S.Pointed) (h₂ : S.Salient) : OrderedAddCommGroup E :=
-  { toPartialOrder S h₁ h₂,
-    show AddCommGroupₓ E by
-      infer_instance with
+  { toPartialOrder S h₁ h₂, show AddCommGroupₓ E by infer_instance with
     add_le_add_left := by
       intro a b hab c
       change c + b - (c + a) ∈ S
@@ -396,9 +388,7 @@ section Module
 variable [AddCommMonoidₓ E] [Module 𝕜 E]
 
 instance : Zero (ConvexCone 𝕜 E) :=
-  ⟨⟨0, fun _ _ => by
-      simp , fun _ => by
-      simp ⟩⟩
+  ⟨⟨0, fun _ _ => by simp, fun _ => by simp⟩⟩
 
 @[simp]
 theorem mem_zero (x : E) : x ∈ (0 : ConvexCone 𝕜 E) ↔ x = 0 :=
@@ -408,8 +398,7 @@ theorem mem_zero (x : E) : x ∈ (0 : ConvexCone 𝕜 E) ↔ x = 0 :=
 theorem coe_zero : ((0 : ConvexCone 𝕜 E) : Set E) = 0 :=
   rfl
 
-theorem pointed_zero : (0 : ConvexCone 𝕜 E).Pointed := by
-  rw [pointed, mem_zero]
+theorem pointed_zero : (0 : ConvexCone 𝕜 E).Pointed := by rw [pointed, mem_zero]
 
 end Module
 
@@ -511,20 +500,13 @@ theorem mem_to_cone : x ∈ hs.toCone s ↔ ∃ c : 𝕜, 0 < c ∧ ∃ y ∈ s,
 theorem mem_to_cone' : x ∈ hs.toCone s ↔ ∃ c : 𝕜, 0 < c ∧ c • x ∈ s := by
   refine' hs.mem_to_cone.trans ⟨_, _⟩
   · rintro ⟨c, hc, y, hy, rfl⟩
-    exact
-      ⟨c⁻¹, inv_pos.2 hc, by
-        rwa [smul_smul, inv_mul_cancel hc.ne', one_smul]⟩
+    exact ⟨c⁻¹, inv_pos.2 hc, by rwa [smul_smul, inv_mul_cancel hc.ne', one_smul]⟩
     
   · rintro ⟨c, hc, hcx⟩
-    exact
-      ⟨c⁻¹, inv_pos.2 hc, _, hcx, by
-        rw [smul_smul, inv_mul_cancel hc.ne', one_smul]⟩
+    exact ⟨c⁻¹, inv_pos.2 hc, _, hcx, by rw [smul_smul, inv_mul_cancel hc.ne', one_smul]⟩
     
 
-theorem subset_to_cone : s ⊆ hs.toCone s := fun x hx =>
-  hs.mem_to_cone'.2
-    ⟨1, zero_lt_one, by
-      rwa [one_smul]⟩
+theorem subset_to_cone : s ⊆ hs.toCone s := fun x hx => hs.mem_to_cone'.2 ⟨1, zero_lt_one, by rwa [one_smul]⟩
 
 /-- `hs.to_cone s` is the least cone that includes `s`. -/
 theorem to_cone_is_least : IsLeast { t : ConvexCone 𝕜 E | s ⊆ t } (hs.toCone s) := by
@@ -624,8 +606,7 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x) (dense : �
       apply nonneg
       exact hzs
       
-    · have : r⁻¹ • x + y ∈ s := by
-        rwa [← s.smul_mem_iff hr, smul_add, smul_smul, mul_inv_cancel hr.ne', one_smul]
+    · have : r⁻¹ • x + y ∈ s := by rwa [← s.smul_mem_iff hr, smul_add, smul_smul, mul_inv_cancel hr.ne', one_smul]
       replace := c_le (r⁻¹ • ⟨x, hx⟩) this
       rwa [← mul_le_mul_left hr, f.map_smul, smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne', one_mulₓ] at this
       
@@ -709,8 +690,7 @@ theorem exists_extension_of_le_sublinear (f : E →ₗ.[ℝ] ℝ) (N : E → ℝ
       simp [g_eq x 0]
       
     · intro x
-      have A : (x, N x) = (x, 0) + (0, N x) := by
-        simp
+      have A : (x, N x) = (x, 0) + (0, N x) := by simp
       have B := g_nonneg ⟨x, N x⟩ (le_reflₓ (N x))
       rw [A, map_add, ← neg_le_iff_add_nonneg'] at B
       have C := g_eq 0 (N x)
@@ -764,14 +744,12 @@ theorem inner_dual_cone_univ : (Univ : Set H).innerDualCone = 0 := by
   suffices ∀ x : H, x ∈ (univ : Set H).innerDualCone → x = 0 by
     apply SetLike.coe_injective
     exact eq_singleton_iff_unique_mem.mpr ⟨fun x hx => inner_zero_right.ge, this⟩
-  exact fun x hx => by
-    simpa [← real_inner_self_nonpos] using hx (-x) (mem_univ _)
+  exact fun x hx => by simpa [← real_inner_self_nonpos] using hx (-x) (mem_univ _)
 
 theorem inner_dual_cone_le_inner_dual_cone (h : t ⊆ s) : s.innerDualCone ≤ t.innerDualCone := fun y hy x hx =>
   hy x (h hx)
 
-theorem pointed_inner_dual_cone : s.innerDualCone.Pointed := fun x hx => by
-  rw [inner_zero_right]
+theorem pointed_inner_dual_cone : s.innerDualCone.Pointed := fun x hx => by rw [inner_zero_right]
 
 /-- The inner dual cone of a singleton is given by the preimage of the positive cone under the
 linear map `λ y, ⟪x, y⟫`. -/
@@ -783,8 +761,7 @@ theorem inner_dual_cone_union (s t : Set H) : (s ∪ t).innerDualCone = s.innerD
     Or.ndrec (hx.1 _) (hx.2 _)
 
 theorem inner_dual_cone_insert (x : H) (s : Set H) :
-    (insert x s).innerDualCone = Set.innerDualCone {x} ⊓ s.innerDualCone := by
-  rw [insert_eq, inner_dual_cone_union]
+    (insert x s).innerDualCone = Set.innerDualCone {x} ⊓ s.innerDualCone := by rw [insert_eq, inner_dual_cone_union]
 
 theorem inner_dual_cone_Union {ι : Sort _} (f : ι → Set H) : (⋃ i, f i).innerDualCone = ⨅ i, (f i).innerDualCone := by
   refine' le_antisymmₓ (le_infi fun i x hx y hy => hx _ <| mem_Union_of_mem _ hy) _
@@ -811,10 +788,7 @@ theorem is_closed_inner_dual_cone : IsClosed (s.innerDualCone : Set H) := by
     rw [inner_dual_cone_singleton, ConvexCone.coe_comap, ConvexCone.coe_positive, innerₛₗ_apply_coe]
   -- the preimage is closed as `inner x` is continuous and `[0, ∞)` is closed
   rw [h]
-  exact
-    is_closed_Ici.preimage
-      (by
-        continuity)
+  exact is_closed_Ici.preimage (by continuity)
 
 theorem ConvexCone.pointed_of_nonempty_of_is_closed (K : ConvexCone ℝ H) (ne : (K : Set H).Nonempty)
     (hc : IsClosed (K : Set H)) : K.Pointed := by
@@ -829,10 +803,7 @@ theorem ConvexCone.pointed_of_nonempty_of_is_closed (K : ConvexCone ℝ H) (ne :
   -- f is continuous at 0 from the right
   have fc : ContinuousWithinAt f (Set.Ioi (0 : ℝ)) 0 := (continuous_id.smul continuous_const).ContinuousWithinAt
   -- 0 belongs to the closure of the f (0, ∞)
-  have mem₀ :=
-    fc.mem_closure_image
-      (by
-        rw [closure_Ioi (0 : ℝ), mem_Ici])
+  have mem₀ := fc.mem_closure_image (by rw [closure_Ioi (0 : ℝ), mem_Ici])
   -- as 0 ∈ closure f (0, ∞) and closure f (0, ∞) ⊆ K, 0 ∈ K.
   have f₀ : f 0 = 0 := zero_smul ℝ x
   simpa only [f₀, ConvexCone.Pointed, ← SetLike.mem_coe] using mem_of_subset_of_mem clf mem₀
@@ -874,8 +845,7 @@ theorem ConvexCone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem (K : C
       _ = ⟪b - z, b - z⟫_ℝ + 0 := (add_zeroₓ _).symm
       _ ≤ ⟪b - z, b - z⟫_ℝ + ⟪b - z, z⟫_ℝ := add_le_add rfl.ge hinner₀
       _ = ⟪b - z, b - z + z⟫_ℝ := inner_add_right.symm
-      _ = ⟪b - z, b⟫_ℝ := by
-        rw [sub_add_cancel]
+      _ = ⟪b - z, b⟫_ℝ := by rw [sub_add_cancel]
       
     
 

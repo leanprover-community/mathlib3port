@@ -39,7 +39,7 @@ universe w v v' u
 
 namespace CategoryTheory
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`forget] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`forget] []
 /-- A concrete category is a category `C` with a fixed faithful functor `forget : C ⥤ Type`.
 
 Note that `concrete_category` potentially depends on three independent universe levels,
@@ -150,9 +150,7 @@ end
 class HasForget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory.{u} C] [Category D]
   [ConcreteCategory.{u} D] where
   forget₂ : C ⥤ D
-  forget_comp : forget₂ ⋙ forget D = forget C := by
-    run_tac
-      obviously
+  forget_comp : forget₂ ⋙ forget D = forget C := by obviously
 
 /-- The forgetful functor `C ⥤ D` between concrete categories for which we have an instance
 `has_forget₂ C `. -/
@@ -202,8 +200,7 @@ def HasForget₂.mk' {C : Type v} {D : Type v'} [Category C] [ConcreteCategory C
     (obj : C → D) (h_obj : ∀ X, (forget D).obj (obj X) = (forget C).obj X) (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y))
     (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq ((forget D).map (map f)) ((forget C).map f)) : HasForget₂ C D where
   forget₂ := Faithful.div _ _ _ @h_obj _ @h_map
-  forget_comp := by
-    apply faithful.div_comp
+  forget_comp := by apply faithful.div_comp
 
 /-- Every forgetful functor factors through the identity functor. This is not a global instance as
     it is prone to creating type class resolution loops. -/

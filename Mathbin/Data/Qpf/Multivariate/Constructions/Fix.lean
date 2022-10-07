@@ -82,9 +82,11 @@ theorem recF_eq' {α : Typevec n} {β : Type _} (g : F (α.Append1 β) → β) (
 /-- Equivalence relation on W-types that represent the same `fix F`
 value -/
 inductive Wequiv {α : Typevec n} : q.p.W α → q.p.W α → Prop
-  | ind (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f₀ f₁ : q.p.last.B a → q.p.W α) :
+  |
+  ind (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f₀ f₁ : q.p.last.B a → q.p.W α) :
     (∀ x, Wequiv (f₀ x) (f₁ x)) → Wequiv (q.p.wMk a f' f₀) (q.p.wMk a f' f₁)
-  | abs (a₀ : q.p.A) (f'₀ : q.p.drop.B a₀ ⟹ α) (f₀ : q.p.last.B a₀ → q.p.W α) (a₁ : q.p.A) (f'₁ : q.p.drop.B a₁ ⟹ α)
+  |
+  abs (a₀ : q.p.A) (f'₀ : q.p.drop.B a₀ ⟹ α) (f₀ : q.p.last.B a₀ → q.p.W α) (a₁ : q.p.A) (f'₁ : q.p.drop.B a₁ ⟹ α)
     (f₁ : q.p.last.B a₁ → q.p.W α) :
     abs ⟨a₀, q.p.appendContents f'₀ f₀⟩ = abs ⟨a₁, q.p.appendContents f'₁ f₁⟩ →
       Wequiv (q.p.wMk a₀ f'₀ f₀) (q.p.wMk a₁ f'₁ f₁)
@@ -98,12 +100,9 @@ theorem recF_eq_of_Wequiv (α : Typevec n) {β : Type _} (u : F (α.Append1 β) 
   intro a₁ f'₁ f₁
   intro h
   induction h
-  case mvqpf.Wequiv.ind a f' f₀ f₁ h ih =>
-    simp only [recF_eq, Function.comp, ih]
-  case mvqpf.Wequiv.abs a₀ f'₀ f₀ a₁ f'₁ f₁ h =>
-    simp only [recF_eq', abs_map, Mvpfunctor.W_dest'_W_mk, h]
-  case mvqpf.Wequiv.trans x y z e₁ e₂ ih₁ ih₂ =>
-    exact Eq.trans ih₁ ih₂
+  case ind a f' f₀ f₁ h ih => simp only [recF_eq, Function.comp, ih]
+  case abs a₀ f'₀ f₀ a₁ f'₁ f₁ h => simp only [recF_eq', abs_map, Mvpfunctor.W_dest'_W_mk, h]
+  case trans x y z e₁ e₂ ih₁ ih₂ => exact Eq.trans ih₁ ih₂
 
 theorem Wequiv.abs' {α : Typevec n} (x y : q.p.W α) (h : abs (q.p.wDest' x) = abs (q.p.wDest' y)) : Wequiv x y := by
   revert h
@@ -119,12 +118,9 @@ theorem Wequiv.refl {α : Typevec n} (x : q.p.W α) : Wequiv x x := by
 theorem Wequiv.symm {α : Typevec n} (x y : q.p.W α) : Wequiv x y → Wequiv y x := by
   intro h
   induction h
-  case mvqpf.Wequiv.ind a f' f₀ f₁ h ih =>
-    exact Wequiv.ind _ _ _ _ ih
-  case mvqpf.Wequiv.abs a₀ f'₀ f₀ a₁ f'₁ f₁ h =>
-    exact Wequiv.abs _ _ _ _ _ _ h.symm
-  case mvqpf.Wequiv.trans x y z e₁ e₂ ih₁ ih₂ =>
-    exact Mvqpf.Wequiv.trans _ _ _ ih₂ ih₁
+  case ind a f' f₀ f₁ h ih => exact Wequiv.ind _ _ _ _ ih
+  case abs a₀ f'₀ f₀ a₁ f'₁ f₁ h => exact Wequiv.abs _ _ _ _ _ _ h.symm
+  case trans x y z e₁ e₂ ih₁ ih₂ => exact Mvqpf.Wequiv.trans _ _ _ ih₂ ih₁
 
 /-- maps every element of the W type to a canonical representative -/
 def wrepr {α : Typevec n} : q.p.W α → q.p.W α :=
@@ -148,21 +144,21 @@ theorem Wrepr_equiv {α : Typevec n} (x : q.p.W α) : Wequiv (wrepr x) x := by
 theorem Wequiv_map {α β : Typevec n} (g : α ⟹ β) (x y : q.p.W α) : Wequiv x y → Wequiv (g <$$> x) (g <$$> y) := by
   intro h
   induction h
-  case mvqpf.Wequiv.ind a f' f₀ f₁ h ih =>
-    rw [q.P.W_map_W_mk, q.P.W_map_W_mk]
-    apply Wequiv.ind
-    apply ih
-  case mvqpf.Wequiv.abs a₀ f'₀ f₀ a₁ f'₁ f₁ h =>
-    rw [q.P.W_map_W_mk, q.P.W_map_W_mk]
-    apply Wequiv.abs
-    show
-      abs (q.P.obj_append1 a₀ (g ⊚ f'₀) fun x => q.P.W_map g (f₀ x)) =
-        abs (q.P.obj_append1 a₁ (g ⊚ f'₁) fun x => q.P.W_map g (f₁ x))
-    rw [← q.P.map_obj_append1, ← q.P.map_obj_append1, abs_map, abs_map, h]
-  case mvqpf.Wequiv.trans x y z e₁ e₂ ih₁ ih₂ =>
-    apply Mvqpf.Wequiv.trans
-    apply ih₁
-    apply ih₂
+  case ind a f' f₀ f₁ h ih =>
+  rw [q.P.W_map_W_mk, q.P.W_map_W_mk]
+  apply Wequiv.ind
+  apply ih
+  case abs a₀ f'₀ f₀ a₁ f'₁ f₁ h =>
+  rw [q.P.W_map_W_mk, q.P.W_map_W_mk]
+  apply Wequiv.abs
+  show
+    abs (q.P.obj_append1 a₀ (g ⊚ f'₀) fun x => q.P.W_map g (f₀ x)) =
+      abs (q.P.obj_append1 a₁ (g ⊚ f'₁) fun x => q.P.W_map g (f₁ x))
+  rw [← q.P.map_obj_append1, ← q.P.map_obj_append1, abs_map, abs_map, h]
+  case trans x y z e₁ e₂ ih₁ ih₂ =>
+  apply Mvqpf.Wequiv.trans
+  apply ih₁
+  apply ih₂
 
 /-- Define the fixed point as the quotient of trees under the equivalence relation.
 -/
@@ -216,7 +212,10 @@ theorem Fix.rec_eq {β : Type u} (g : F (Append1 α β) → β) (x : F (Append1 
     intro x
     apply recF_eq_of_Wequiv
     apply Wrepr_equiv
-  conv => lhs rw [fix.rec, fix.mk]dsimp
+  conv =>
+  lhs
+  rw [fix.rec, fix.mk]
+  dsimp
   cases' h : reprₓ x with a f
   rw [Mvpfunctor.map_eq, recF_eq', ← Mvpfunctor.map_eq, Mvpfunctor.W_dest'_W_mk']
   rw [← Mvpfunctor.comp_map, abs_map, ← h, abs_repr, ← append_fun_comp, id_comp, this]
@@ -227,7 +226,9 @@ theorem Fix.ind_aux (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a →
     apply Quot.sound
     apply Wequiv.abs'
     rw [Mvpfunctor.W_dest'_W_mk', abs_map, abs_repr, ← abs_map, Mvpfunctor.map_eq]
-    conv => rhs rw [Wrepr_W_mk, q.P.W_dest'_W_mk', abs_repr, Mvpfunctor.map_eq]
+    conv =>
+    rhs
+    rw [Wrepr_W_mk, q.P.W_dest'_W_mk', abs_repr, Mvpfunctor.map_eq]
     congr 2
     rw [Mvpfunctor.appendContents, Mvpfunctor.appendContents]
     rw [append_fun, append_fun, ← split_fun_comp, ← split_fun_comp]
@@ -266,7 +267,7 @@ theorem Fix.mk_dest (x : Fix F α) : Fix.mk (Fix.dest x) = x := by
   change (fix.mk ∘ fix.dest) x = x
   apply fix.ind_rec
   intro x
-  dsimp'
+  dsimp
   rw [fix.dest, fix.rec_eq, ← comp_map, ← append_fun_comp, id_comp]
   intro h
   rw [h]
@@ -276,7 +277,9 @@ theorem Fix.mk_dest (x : Fix F α) : Fix.mk (Fix.dest x) = x := by
 theorem Fix.dest_mk (x : F (Append1 α (Fix F α))) : Fix.dest (Fix.mk x) = x := by
   unfold fix.dest
   rw [fix.rec_eq, ← fix.dest, ← comp_map]
-  conv => rhs rw [← Mvfunctor.id_map x]
+  conv =>
+  rhs
+  rw [← Mvfunctor.id_map x]
   rw [← append_fun_comp, id_comp]
   have : fix.mk ∘ fix.dest = id := by
     ext x
@@ -313,7 +316,9 @@ instance mvqpfFix : Mvqpf (Fix F) where
     apply Wrepr_equiv
   abs_map := by
     intro α β g x
-    conv => rhs dsimp [Mvfunctor.map]
+    conv =>
+    rhs
+    dsimp [Mvfunctor.map]
     rw [fix.map]
     apply Quot.sound
     apply Wequiv.refl
@@ -326,19 +331,18 @@ def Fix.drec {β : Fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fi
   let y := @Fix.rec _ F _ _ α (Sigma β) (fun i => ⟨_, g i⟩) x
   have : x = y.1 := by
     symm
-    dsimp' [y]
+    dsimp [y]
     apply fix.ind_rec _ id _ x
     intro x' ih
     rw [fix.rec_eq]
-    dsimp'
+    dsimp
     simp [append_fun_id_id] at ih
     congr
-    conv => rhs rw [← ih]
+    conv =>
+    rhs
+    rw [← ih]
     rw [Mvfunctor.map_map, ← append_fun_comp, id_comp]
-  cast
-    (by
-      rw [this])
-    y.2
+  cast (by rw [this]) y.2
 
 end Mvqpf
 

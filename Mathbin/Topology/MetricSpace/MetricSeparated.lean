@@ -20,7 +20,7 @@ open Emetric Set
 
 noncomputable section
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (r «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (r «expr ≠ » 0)
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
 def IsMetricSeparated {X : Type _} [EmetricSpace X] (s t : Set X) :=
@@ -48,9 +48,7 @@ theorem empty_right (s : Set X) : IsMetricSeparated s ∅ :=
 
 protected theorem disjoint (h : IsMetricSeparated s t) : Disjoint s t :=
   let ⟨r, r0, hr⟩ := h
-  fun x hx =>
-  r0 <| by
-    simpa using hr x hx.1 x hx.2
+  fun x hx => r0 <| by simpa using hr x hx.1 x hx.2
 
 theorem subset_compl_right (h : IsMetricSeparated s t) : s ⊆ tᶜ := fun x hs ht => h.Disjoint ⟨hs, ht⟩
 
@@ -88,11 +86,7 @@ theorem union_right_iff {t'} : IsMetricSeparated s (t ∪ t') ↔ IsMetricSepara
 
 theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : ι → Set X} {t : Set X} :
     IsMetricSeparated (⋃ i ∈ I, s i) t ↔ ∀ i ∈ I, IsMetricSeparated (s i) t := by
-  refine'
-    finite.induction_on hI
-      (by
-        simp )
-      fun i I hi _ hI => _
+  refine' finite.induction_on hI (by simp) fun i I hi _ hI => _
   rw [bUnion_insert, ball_insert_iff, union_left_iff, hI]
 
 alias finite_Union_left_iff ↔ _ finite_Union_left
@@ -102,14 +96,14 @@ theorem finite_Union_right_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : S
   simpa only [@comm _ _ s] using finite_Union_left_iff hI
 
 @[simp]
-theorem finset_Union_left_iff {ι : Type _} {I : Finset ι} {s : ι → Set X} {t : Set X} :
+theorem finset_Union_left_iff {ι : Type _} {I : Finsetₓ ι} {s : ι → Set X} {t : Set X} :
     IsMetricSeparated (⋃ i ∈ I, s i) t ↔ ∀ i ∈ I, IsMetricSeparated (s i) t :=
   finite_Union_left_iff I.finite_to_set
 
 alias finset_Union_left_iff ↔ _ finset_Union_left
 
 @[simp]
-theorem finset_Union_right_iff {ι : Type _} {I : Finset ι} {s : Set X} {t : ι → Set X} :
+theorem finset_Union_right_iff {ι : Type _} {I : Finsetₓ ι} {s : Set X} {t : ι → Set X} :
     IsMetricSeparated s (⋃ i ∈ I, t i) ↔ ∀ i ∈ I, IsMetricSeparated s (t i) :=
   finite_Union_right_iff I.finite_to_set
 

@@ -33,7 +33,7 @@ is less than `ε`.
 -/
 
 
-open Finset
+open Finsetₓ
 
 variable {α 𝕜 : Type _} [LinearOrderedField 𝕜]
 
@@ -42,12 +42,12 @@ variable {α 𝕜 : Type _} [LinearOrderedField 𝕜]
 
 namespace SimpleGraph
 
-variable (G : SimpleGraph α) [DecidableRel G.Adj] (ε : 𝕜) {s t : Finset α} {a b : α}
+variable (G : SimpleGraph α) [DecidableRel G.Adj] (ε : 𝕜) {s t : Finsetₓ α} {a b : α}
 
 /-- A pair of finsets of vertices is `ε`-uniform (aka `ε`-regular) iff their edge density is close
 to the density of any big enough pair of subsets. Intuitively, the edges between them are
 random-like. -/
-def IsUniform (s t : Finset α) : Prop :=
+def IsUniform (s t : Finsetₓ α) : Prop :=
   ∀ ⦃s'⦄,
     s' ⊆ s →
       ∀ ⦃t'⦄,
@@ -74,26 +74,19 @@ theorem is_uniform_comm : IsUniform G ε s t ↔ IsUniform G ε t s :=
 theorem is_uniform_singleton (hε : 0 < ε) : G.IsUniform ε {a} {b} := by
   intro s' hs' t' ht' hs ht
   rw [card_singleton, Nat.cast_oneₓ, one_mulₓ] at hs ht
-  obtain rfl | rfl := Finset.subset_singleton_iff.1 hs'
-  · replace hs : ε ≤ 0 := by
-      simpa using hs
+  obtain rfl | rfl := Finsetₓ.subset_singleton_iff.1 hs'
+  · replace hs : ε ≤ 0 := by simpa using hs
     exact (hε.not_le hs).elim
     
-  obtain rfl | rfl := Finset.subset_singleton_iff.1 ht'
-  · replace ht : ε ≤ 0 := by
-      simpa using ht
+  obtain rfl | rfl := Finsetₓ.subset_singleton_iff.1 ht'
+  · replace ht : ε ≤ 0 := by simpa using ht
     exact (hε.not_le ht).elim
     
   · rwa [sub_self, abs_zero]
     
 
 theorem not_is_uniform_zero : ¬G.IsUniform (0 : 𝕜) s t := fun h =>
-  (abs_nonneg _).not_lt <|
-    h (empty_subset _) (empty_subset _)
-      (by
-        simp )
-      (by
-        simp )
+  (abs_nonneg _).not_lt <| h (empty_subset _) (empty_subset _) (by simp) (by simp)
 
 theorem is_uniform_one : G.IsUniform (1 : 𝕜) s t := by
   intro s' hs' t' ht' hs ht
@@ -122,7 +115,7 @@ variable (G)
 /-- An arbitrary pair of subsets witnessing the non-uniformity of `(s, t)`. If `(s, t)` is uniform,
 returns `(s, t)`. Witnesses for `(s, t)` and `(t, s)` don't necessarily match. See
 `simple_graph.nonuniform_witness`. -/
-noncomputable def nonuniformWitnesses (ε : 𝕜) (s t : Finset α) : Finset α × Finset α :=
+noncomputable def nonuniformWitnesses (ε : 𝕜) (s t : Finsetₓ α) : Finsetₓ α × Finsetₓ α :=
   if h : ¬G.IsUniform ε s t then ((not_is_uniform_iff.1 h).some, (not_is_uniform_iff.1 h).some_spec.2.some) else (s, t)
 
 theorem left_nonuniform_witnesses_subset (h : ¬G.IsUniform ε s t) : (G.nonuniformWitnesses ε s t).1 ⊆ s := by
@@ -151,7 +144,7 @@ theorem nonuniform_witnesses_spec (h : ¬G.IsUniform ε s t) :
 /-- Arbitrary witness of non-uniformity. `G.nonuniform_witness ε s t` and
 `G.nonuniform_witness ε t s` form a pair of subsets witnessing the non-uniformity of `(s, t)`. If
 `(s, t)` is uniform, returns `s`. -/
-noncomputable def nonuniformWitness (ε : 𝕜) (s t : Finset α) : Finset α :=
+noncomputable def nonuniformWitness (ε : 𝕜) (s t : Finsetₓ α) : Finsetₓ α :=
   if WellOrderingRel s t then (G.nonuniformWitnesses ε s t).1 else (G.nonuniformWitnesses ε t s).2
 
 theorem nonuniform_witness_subset (h : ¬G.IsUniform ε s t) : G.nonuniformWitness ε s t ⊆ s := by
@@ -188,7 +181,7 @@ end SimpleGraph
 /-! ### Uniform partitions -/
 
 
-variable [DecidableEq α] {A : Finset α} (P : Finpartition A) (G : SimpleGraph α) [DecidableRel G.Adj] {ε : 𝕜}
+variable [DecidableEq α] {A : Finsetₓ α} (P : Finpartition A) (G : SimpleGraph α) [DecidableRel G.Adj] {ε : 𝕜}
 
 namespace Finpartition
 
@@ -196,10 +189,10 @@ open Classical
 
 /-- The pairs of parts of a partition `P` which are not `ε`-uniform in a graph `G`. Note that we
 dismiss the diagonal. We do not care whether `s` is `ε`-uniform with itself. -/
-noncomputable def nonUniforms (ε : 𝕜) : Finset (Finset α × Finset α) :=
+noncomputable def nonUniforms (ε : 𝕜) : Finsetₓ (Finsetₓ α × Finsetₓ α) :=
   P.parts.offDiag.filter fun uv => ¬G.IsUniform ε uv.1 uv.2
 
-theorem mk_mem_non_uniforms_iff (u v : Finset α) (ε : 𝕜) :
+theorem mk_mem_non_uniforms_iff (u v : Finsetₓ α) (ε : 𝕜) :
     (u, v) ∈ P.nonUniforms G ε ↔ u ∈ P.parts ∧ v ∈ P.parts ∧ u ≠ v ∧ ¬G.IsUniform ε u v := by
   rw [non_uniforms, mem_filter, mem_off_diag, and_assocₓ, and_assocₓ]
 
@@ -220,7 +213,7 @@ def IsUniform (ε : 𝕜) : Prop :=
   ((P.nonUniforms G ε).card : 𝕜) ≤ (P.parts.card * (P.parts.card - 1) : ℕ) * ε
 
 theorem bot_is_uniform (hε : 0 < ε) : (⊥ : Finpartition A).IsUniform G ε := by
-  rw [Finpartition.IsUniform, Finpartition.card_bot, non_uniforms_bot _ hε, Finset.card_empty, Nat.cast_zeroₓ]
+  rw [Finpartition.IsUniform, Finpartition.card_bot, non_uniforms_bot _ hε, Finsetₓ.card_empty, Nat.cast_zeroₓ]
   exact mul_nonneg (Nat.cast_nonneg _) hε.le
 
 theorem is_uniform_one : P.IsUniform G (1 : 𝕜) := by
@@ -234,19 +227,18 @@ theorem IsUniform.mono {ε ε' : 𝕜} (hP : P.IsUniform G ε) (h : ε ≤ ε') 
   ((Nat.cast_le.2 <| card_le_of_subset <| P.non_uniforms_mono G h).trans hP).trans <|
     mul_le_mul_of_nonneg_left h <| Nat.cast_nonneg _
 
-theorem is_uniform_of_empty (hP : P.parts = ∅) : P.IsUniform G ε := by
-  simp [is_uniform, hP, non_uniforms]
+theorem is_uniform_of_empty (hP : P.parts = ∅) : P.IsUniform G ε := by simp [is_uniform, hP, non_uniforms]
 
 theorem nonempty_of_not_uniform (h : ¬P.IsUniform G ε) : P.parts.Nonempty :=
   nonempty_of_ne_empty fun h₁ => h <| is_uniform_of_empty h₁
 
-variable (P G ε) (s : Finset α)
+variable (P G ε) (s : Finsetₓ α)
 
 /-- A choice of witnesses of non-uniformity among the parts of a finpartition. -/
-noncomputable def nonuniformWitnesses : Finset (Finset α) :=
+noncomputable def nonuniformWitnesses : Finsetₓ (Finsetₓ α) :=
   (P.parts.filter fun t => s ≠ t ∧ ¬G.IsUniform ε s t).Image (G.nonuniformWitness ε s)
 
-variable {P G ε s} {t : Finset α}
+variable {P G ε s} {t : Finsetₓ α}
 
 theorem nonuniform_witness_mem_nonuniform_witnesses (h : ¬G.IsUniform ε s t) (ht : t ∈ P.parts) (hst : s ≠ t) :
     G.nonuniformWitness ε s t ∈ P.nonuniformWitnesses G ε s :=

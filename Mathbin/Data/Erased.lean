@@ -55,12 +55,10 @@ theorem out_mk {α} (a : α) : (mk a).out = a := by
 
 @[simp]
 theorem mk_out {α} : ∀ a : Erased α, mk (out a) = a
-  | ⟨s, h⟩ => by
-    simp [mk] <;> congr <;> exact Classical.choose_spec h
+  | ⟨s, h⟩ => by simp [mk] <;> congr <;> exact Classical.choose_spec h
 
 @[ext]
-theorem out_inj {α} (a b : Erased α) (h : a.out = b.out) : a = b := by
-  simpa using congr_arg mk h
+theorem out_inj {α} (a b : Erased α) (h : a.out = b.out) : a = b := by simpa using congr_arg mk h
 
 /-- Equivalence between `erased α` and `α`. -/
 noncomputable def equiv (α) : Erased α ≃ α :=
@@ -95,8 +93,7 @@ def bind {α β} (a : Erased α) (f : α → Erased β) : Erased β :=
   ⟨fun b => (f a.out).1 b, (f a.out).2⟩
 
 @[simp]
-theorem bind_eq_out {α β} (a f) : @bind α β a f = f a.out := by
-  delta' bind bind._proof_1 <;> cases f a.out <;> rfl
+theorem bind_eq_out {α β} (a f) : @bind α β a f = f a.out := by delta bind bind._proof_1 <;> cases f a.out <;> rfl
 
 /-- Collapses two levels of erasure.
 -/
@@ -116,8 +113,7 @@ def map {α β} (f : α → β) (a : Erased α) : Erased β :=
   bind a (mk ∘ f)
 
 @[simp]
-theorem map_out {α β} {f : α → β} (a : Erased α) : (a.map f).out = f a.out := by
-  simp [map]
+theorem map_out {α β} {f : α → β} (a : Erased α) : (a.map f).out = f a.out := by simp [map]
 
 instance : Monadₓ Erased where
   pure := @mk
@@ -136,8 +132,7 @@ theorem bind_def {α β} : ((· >>= ·) : Erased α → (α → Erased β) → E
 theorem map_def {α β} : ((· <$> ·) : (α → β) → Erased α → Erased β) = @map _ _ :=
   rfl
 
-instance : IsLawfulMonad Erased := by
-  refine' { .. } <;> intros <;> ext <;> simp
+instance : IsLawfulMonad Erased := by refine' { .. } <;> intros <;> ext <;> simp
 
 end Erased
 

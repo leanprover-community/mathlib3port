@@ -80,7 +80,7 @@ private unsafe def rewrites_for_rule (exp : expr) (cfg : config) (numbered_rule 
 -/
 unsafe def get_rewrites (rules : List (expr × Bool)) (exp : expr) (cfg : config) : tactic (Buffer rewrite) := do
   let lists ← List.mmap (rewrites_for_rule exp cfg) rules.enum
-  return (List.foldlₓ Buffer.appendList Buffer.nil lists)
+  return (List.foldl Buffer.appendList Buffer.nil lists)
 
 end Tactic.RewriteSearch
 

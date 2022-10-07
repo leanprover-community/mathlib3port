@@ -258,21 +258,21 @@ theorem IndepFunₓ.integral_mul_of_integrable (hXY : IndepFunₓ X Y μ) (hX : 
   variables is the product of their integrals. -/
 theorem IndepFunₓ.integral_mul (hXY : IndepFunₓ X Y μ) (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) :
     integral μ (X * Y) = integral μ X * integral μ Y := by
-  by_cases' h'X : X =ᵐ[μ] 0
+  by_cases h'X:X =ᵐ[μ] 0
   · have h' : X * Y =ᵐ[μ] 0 := by
       filter_upwards [h'X] with ω hω
       simp [hω]
     simp only [integral_congr_ae h'X, integral_congr_ae h', Pi.zero_apply, integral_const, Algebra.id.smul_eq_mul,
       mul_zero, zero_mul]
     
-  by_cases' h'Y : Y =ᵐ[μ] 0
+  by_cases h'Y:Y =ᵐ[μ] 0
   · have h' : X * Y =ᵐ[μ] 0 := by
       filter_upwards [h'Y] with ω hω
       simp [hω]
     simp only [integral_congr_ae h'Y, integral_congr_ae h', Pi.zero_apply, integral_const, Algebra.id.smul_eq_mul,
       mul_zero, zero_mul]
     
-  by_cases' h : integrable (X * Y) μ
+  by_cases h:integrable (X * Y) μ
   · have HX : integrable X μ := hXY.integrable_left_of_integrable_mul h hX hY h'Y
     have HY : integrable Y μ := hXY.integrable_right_of_integrable_mul h hX hY h'X
     exact hXY.integral_mul_of_integrable HX HY

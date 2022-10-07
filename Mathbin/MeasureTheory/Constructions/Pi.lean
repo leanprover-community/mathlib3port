@@ -102,7 +102,7 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
     rw [comap_generate_from]
     apply generate_from_le
     rintro _ ⟨s, hs, rfl⟩
-    dsimp'
+    dsimp
     choose t h1t h2t using hC
     simp_rw [eval_preimage, ← h2t]
     rw [← @Union_const _ ℕ _ s]
@@ -114,7 +114,7 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
       simp_rw [mem_univ_pi]
       apply forall_congrₓ
       intro i'
-      by_cases' i' = i
+      by_cases i' = i
       · subst h
         simp
         
@@ -127,8 +127,8 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
     apply measurable_set_generate_from
     apply mem_image_of_mem
     intro j _
-    dsimp' only
-    by_cases' h : j = i
+    dsimp only
+    by_cases h:j = i
     subst h
     rwa [update_same]
     rw [update_noteq h]
@@ -147,8 +147,7 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
   generate the σ-algebra on `α × β`. -/
 theorem generate_from_eq_pi [h : ∀ i, MeasurableSpace (α i)] {C : ∀ i, Set (Set (α i))}
     (hC : ∀ i, generateFrom (C i) = h i) (h2C : ∀ i, IsCountablySpanning (C i)) :
-    generateFrom (pi Univ '' pi Univ C) = MeasurableSpace.pi := by
-  rw [← funext hC, generate_from_pi_eq h2C]
+    generateFrom (pi Univ '' pi Univ C) = MeasurableSpace.pi := by rw [← funext hC, generate_from_pi_eq h2C]
 
 /-- The product σ-algebra is generated from boxes, i.e. `s ×ˢ t` for sets `s : set α` and
   `t : set β`. -/
@@ -160,7 +159,7 @@ end Finite
 
 namespace MeasureTheory
 
-variable [Fintype ι] {m : ∀ i, OuterMeasure (α i)}
+variable [Fintypeₓ ι] {m : ∀ i, OuterMeasure (α i)}
 
 /-- An upper bound for the measure in a finite product space.
   It is defined to by taking the image of the set under all projections, and taking the product
@@ -171,8 +170,7 @@ def piPremeasure (m : ∀ i, OuterMeasure (α i)) (s : Set (∀ i, α i)) : ℝ�
   ∏ i, m i (eval i '' s)
 
 theorem pi_premeasure_pi {s : ∀ i, Set (α i)} (hs : (pi Univ s).Nonempty) :
-    piPremeasure m (pi Univ s) = ∏ i, m i (s i) := by
-  simp [hs]
+    piPremeasure m (pi Univ s) = ∏ i, m i (s i) := by simp [hs]
 
 theorem pi_premeasure_pi' {s : ∀ i, Set (α i)} : piPremeasure m (pi Univ s) = ∏ i, m i (s i) := by
   cases is_empty_or_nonempty ι
@@ -180,20 +178,18 @@ theorem pi_premeasure_pi' {s : ∀ i, Set (α i)} : piPremeasure m (pi Univ s) =
     
   cases' (pi univ s).eq_empty_or_nonempty with h h
   · rcases univ_pi_eq_empty_iff.mp h with ⟨i, hi⟩
-    have : ∃ i, m i (s i) = 0 :=
-      ⟨i, by
-        simp [hi]⟩
-    simpa [h, Finset.card_univ, zero_pow (fintype.card_pos_iff.mpr ‹_›), @eq_comm _ (0 : ℝ≥0∞), Finset.prod_eq_zero_iff]
+    have : ∃ i, m i (s i) = 0 := ⟨i, by simp [hi]⟩
+    simpa [h, Finsetₓ.card_univ, zero_pow (fintype.card_pos_iff.mpr ‹_›), @eq_comm _ (0 : ℝ≥0∞),
+      Finsetₓ.prod_eq_zero_iff]
     
   · simp [h]
     
 
 theorem pi_premeasure_pi_mono {s t : Set (∀ i, α i)} (h : s ⊆ t) : piPremeasure m s ≤ piPremeasure m t :=
-  Finset.prod_le_prod' fun i _ => (m i).mono' (image_subset _ h)
+  Finsetₓ.prod_le_prod' fun i _ => (m i).mono' (image_subset _ h)
 
 theorem pi_premeasure_pi_eval {s : Set (∀ i, α i)} : piPremeasure m (pi Univ fun i => eval i '' s) = piPremeasure m s :=
-  by
-  simp [pi_premeasure_pi']
+  by simp [pi_premeasure_pi']
 
 namespace OuterMeasure
 
@@ -299,7 +295,7 @@ theorem pi_caratheodory : MeasurableSpace.pi ≤ (OuterMeasure.pi fun i => (μ i
   apply bounded_by_caratheodory
   intro t
   simp_rw [pi_premeasure]
-  refine' Finset.prod_add_prod_le' (Finset.mem_univ i) _ _ _
+  refine' Finsetₓ.prod_add_prod_le' (Finsetₓ.mem_univ i) _ _ _
   · simp [image_inter_preimage, image_diff_preimage, measure_inter_add_diff _ hs, le_reflₓ]
     
   · rintro j - hj
@@ -324,12 +320,11 @@ theorem pi_pi_aux [∀ i, SigmaFinite (μ i)] (s : ∀ i, Set (α i)) (hs : ∀ 
   · rw [measure.pi, to_measure_apply _ _ (MeasurableSet.pi countable_univ fun i _ => hs i)]
     apply outer_measure.pi_pi_le
     
-  · haveI : Encodable ι := Fintype.toEncodable ι
+  · haveI : Encodable ι := Fintypeₓ.toEncodable ι
     rw [← pi'_pi μ s]
     simp_rw [← pi'_pi μ s, measure.pi, to_measure_apply _ _ (MeasurableSet.pi countable_univ fun i _ => hs i), ←
       to_outer_measure_apply]
-    suffices (pi' μ).toOuterMeasure ≤ outer_measure.pi fun i => (μ i).toOuterMeasure by
-      exact this _
+    suffices (pi' μ).toOuterMeasure ≤ outer_measure.pi fun i => (μ i).toOuterMeasure by exact this _
     clear hs s
     rw [outer_measure.le_pi]
     intro s hs
@@ -343,7 +338,7 @@ variable {μ}
 def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i).FiniteSpanningSetsIn (C i)) :
     (Measure.pi μ).FiniteSpanningSetsIn (pi Univ '' pi Univ C) := by
   haveI := fun i => (hμ i).SigmaFinite
-  haveI := Fintype.toEncodable ι
+  haveI := Fintypeₓ.toEncodable ι
   refine'
       ⟨fun n => pi univ fun i => (hμ i).Set ((decode (ι → ℕ) n).iget i), fun n => _, fun n => _,
         _⟩ <;>-- TODO (kmill) If this let comes before the refine, while the noncomputability checker
@@ -358,8 +353,7 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i).F
           measure.pi μ (pi univ fun i => to_measurable (μ i) ((hμ i).Set (e n i))) :=
         measure_mono (pi_mono fun i hi => subset_to_measurable _ _)
       _ = ∏ i, μ i (to_measurable (μ i) ((hμ i).Set (e n i))) := pi_pi_aux μ _ fun i => measurable_set_to_measurable _ _
-      _ = ∏ i, μ i ((hμ i).Set (e n i)) := by
-        simp only [measure_to_measurable]
+      _ = ∏ i, μ i ((hμ i).Set (e n i)) := by simp only [measure_to_measurable]
       _ < ∞ := Ennreal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
       
     
@@ -370,11 +364,7 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i).F
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- A measure on a finite product space equals the product measure if they are equal on rectangles
   with as sides sets that generate the corresponding σ-algebras. -/
-theorem pi_eq_generate_from {C : ∀ i, Set (Set (α i))}
-    (hC :
-      ∀ i,
-        generateFrom (C i) = by
-          apply_assumption)
+theorem pi_eq_generate_from {C : ∀ i, Set (Set (α i))} (hC : ∀ i, generateFrom (C i) = by apply_assumption)
     (h2C : ∀ i, IsPiSystem (C i)) (h3C : ∀ i, (μ i).FiniteSpanningSetsIn (C i)) {μν : Measure (∀ i, α i)}
     (h₁ : ∀ s : ∀ i, Set (α i), (∀ i, s i ∈ C i) → μν (pi Univ s) = ∏ i, μ i (s i)) : Measure.pi μ = μν := by
   have h4C : ∀ (i) (s : Set (α i)), s ∈ C i → MeasurableSet s := by
@@ -405,19 +395,16 @@ theorem pi'_eq_pi [Encodable ι] : pi' μ = Measure.pi μ :=
 
 @[simp]
 theorem pi_pi (s : ∀ i, Set (α i)) : Measure.pi μ (pi Univ s) = ∏ i, μ i (s i) := by
-  haveI : Encodable ι := Fintype.toEncodable ι
+  haveI : Encodable ι := Fintypeₓ.toEncodable ι
   rw [← pi'_eq_pi, pi'_pi]
 
-theorem pi_univ : Measure.pi μ Univ = ∏ i, μ i Univ := by
-  rw [← pi_univ, pi_pi μ]
+theorem pi_univ : Measure.pi μ Univ = ∏ i, μ i Univ := by rw [← pi_univ, pi_pi μ]
 
 theorem pi_ball [∀ i, MetricSpace (α i)] (x : ∀ i, α i) {r : ℝ} (hr : 0 < r) :
-    Measure.pi μ (Metric.Ball x r) = ∏ i, μ i (Metric.Ball (x i) r) := by
-  rw [ball_pi _ hr, pi_pi]
+    Measure.pi μ (Metric.Ball x r) = ∏ i, μ i (Metric.Ball (x i) r) := by rw [ball_pi _ hr, pi_pi]
 
 theorem pi_closed_ball [∀ i, MetricSpace (α i)] (x : ∀ i, α i) {r : ℝ} (hr : 0 ≤ r) :
-    Measure.pi μ (Metric.ClosedBall x r) = ∏ i, μ i (Metric.ClosedBall (x i) r) := by
-  rw [closed_ball_pi _ hr, pi_pi]
+    Measure.pi μ (Metric.ClosedBall x r) = ∏ i, μ i (Metric.ClosedBall (x i) r) := by rw [closed_ball_pi _ hr, pi_pi]
 
 instance pi.sigma_finite : SigmaFinite (Measure.pi μ) :=
   (FiniteSpanningSetsIn.pi fun i => (μ i).toFiniteSpanningSetsIn).SigmaFinite
@@ -426,7 +413,7 @@ theorem pi_of_empty {α : Type _} [IsEmpty α] {β : α → Type _} {m : ∀ a, 
     (μ : ∀ a : α, Measure (β a)) (x : ∀ a, β a := isEmptyElim) : Measure.pi μ = dirac x := by
   haveI : ∀ a, sigma_finite (μ a) := isEmptyElim
   refine' pi_eq fun s hs => _
-  rw [Fintype.prod_empty, dirac_apply_of_mem]
+  rw [Fintypeₓ.prod_empty, dirac_apply_of_mem]
   exact isEmptyElim
 
 theorem pi_eval_preimage_null {i : ι} {s : Set (α i)} (hs : μ i s = 0) : Measure.pi μ (eval i ⁻¹' s) = 0 := by
@@ -437,7 +424,7 @@ theorem pi_eval_preimage_null {i : ι} {s : Set (α i)} (hs : μ i s = 0) : Meas
   clear! s
   -- Now rewrite it as `set.pi`, and apply `pi_pi`
   rw [← univ_pi_update_univ, pi_pi]
-  apply Finset.prod_eq_zero (Finset.mem_univ i)
+  apply Finsetₓ.prod_eq_zero (Finsetₓ.mem_univ i)
   simp [hμt]
 
 theorem pi_hyperplane (i : ι) [HasNoAtoms (μ i)] (x : α i) : Measure.pi μ { f : ∀ i, α i | f i = x } = 0 :=
@@ -608,7 +595,7 @@ measures of corresponding sets (images or preimages) have equal measures and fun
 section MeasurePreserving
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem measure_preserving_pi_equiv_pi_subtype_prod {ι : Type u} {α : ι → Type v} [Fintype ι]
+theorem measure_preserving_pi_equiv_pi_subtype_prod {ι : Type u} {α : ι → Type v} [Fintypeₓ ι]
     {m : ∀ i, MeasurableSpace (α i)} (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)] (p : ι → Prop)
     [DecidablePred p] :
     MeasurePreserving (MeasurableEquiv.piEquivPiSubtypeProd α p) (Measure.pi μ)
@@ -620,9 +607,9 @@ theorem measure_preserving_pi_equiv_pi_subtype_prod {ι : Type u} {α : ι → T
   have : e ⁻¹' pi univ s = (pi univ fun i : { i // p i } => s i) ×ˢ pi univ fun i : { i // ¬p i } => s i :=
     Equivₓ.preimage_pi_equiv_pi_subtype_prod_symm_pi p s
   rw [e.map_apply, this, prod_prod, pi_pi, pi_pi]
-  exact Fintype.prod_subtype_mul_prod_subtype p fun i => μ i (s i)
+  exact Fintypeₓ.prod_subtype_mul_prod_subtype p fun i => μ i (s i)
 
-theorem volume_preserving_pi_equiv_pi_subtype_prod {ι : Type _} (α : ι → Type _) [Fintype ι] [∀ i, MeasureSpace (α i)]
+theorem volume_preserving_pi_equiv_pi_subtype_prod {ι : Type _} (α : ι → Type _) [Fintypeₓ ι] [∀ i, MeasureSpace (α i)]
     [∀ i, SigmaFinite (volume : Measure (α i))] (p : ι → Prop) [DecidablePred p] :
     MeasurePreserving (MeasurableEquiv.piEquivPiSubtypeProd α p) :=
   measure_preserving_pi_equiv_pi_subtype_prod (fun i => volume) p
@@ -649,7 +636,7 @@ theorem measure_preserving_fun_unique {β : Type u} {m : MeasurableSpace β} (μ
   set e := MeasurableEquiv.funUnique α β
   have : (pi_premeasure fun _ : α => μ.to_outer_measure) = measure.map e.symm μ := by
     ext1 s
-    rw [pi_premeasure, Fintype.prod_unique, to_outer_measure_apply, e.symm.map_apply]
+    rw [pi_premeasure, Fintypeₓ.prod_unique, to_outer_measure_apply, e.symm.map_apply]
     congr 1
     exact e.to_equiv.image_eq_preimage s
   simp only [measure.pi, outer_measure.pi, this, bounded_by_measure, to_outer_measure_to_measure]
@@ -671,9 +658,9 @@ theorem volume_preserving_pi_fin_two (α : Finₓ 2 → Type u) [∀ i, MeasureS
   measure_preserving_pi_fin_two _
 
 theorem measure_preserving_fin_two_arrow_vec {α : Type u} {m : MeasurableSpace α} (μ ν : Measure α) [SigmaFinite μ]
-    [SigmaFinite ν] : MeasurePreserving MeasurableEquiv.finTwoArrow (Measure.pi ![μ, ν]) (μ.Prod ν) := by
+    [SigmaFinite ν] : MeasurePreserving MeasurableEquiv.finTwoArrow (Measure.pi ![μ, ν]) (μ.Prod ν) :=
   haveI : ∀ i, sigma_finite (![μ, ν] i) := Finₓ.forall_fin_two.2 ⟨‹_›, ‹_›⟩
-  exact measure_preserving_pi_fin_two _
+  measure_preserving_pi_fin_two _
 
 theorem measure_preserving_fin_two_arrow {α : Type u} {m : MeasurableSpace α} (μ : Measure α) [SigmaFinite μ] :
     MeasurePreserving MeasurableEquiv.finTwoArrow (Measure.pi fun _ => μ) (μ.Prod μ) := by

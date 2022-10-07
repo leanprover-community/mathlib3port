@@ -107,9 +107,7 @@ def integral : giry.Algebra where
 end Meas
 
 instance Top.hasForgetToMeas : HasForget₂ Top.{u} Meas.{u} :=
-  BundledHom.mkHasForget₂ borel (fun X Y f => ⟨f.1, f.2.borel_measurable⟩)
-    (by
-      intros <;> rfl)
+  BundledHom.mkHasForget₂ borel (fun X Y f => ⟨f.1, f.2.borel_measurable⟩) (by intros <;> rfl)
 
 /-- The Borel functor, the canonical embedding of topological spaces into measurable spaces. -/
 @[reducible]

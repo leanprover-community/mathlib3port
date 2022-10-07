@@ -86,12 +86,7 @@ theorem Preadditive.exact_iff_homology_zero {A B C : V} (f : A ⟶ B) (g : B ⟶
     Exact f g ↔ ∃ w : f ≫ g = 0, Nonempty (homology f g w ≅ 0) :=
   ⟨fun h => ⟨h.w, ⟨cokernel.ofEpi _⟩⟩, fun h => by
     obtain ⟨w, ⟨i⟩⟩ := h
-    exact
-      ⟨w,
-        preadditive.epi_of_cokernel_zero
-          ((cancel_mono i.hom).mp
-            (by
-              ext))⟩⟩
+    exact ⟨w, preadditive.epi_of_cokernel_zero ((cancel_mono i.hom).mp (by ext))⟩⟩
 
 theorem Preadditive.exact_of_iso_of_exact {A₁ B₁ C₁ A₂ B₂ C₂ : V} (f₁ : A₁ ⟶ B₁) (g₁ : B₁ ⟶ C₁) (f₂ : A₂ ⟶ B₂)
     (g₂ : B₂ ⟶ C₂) (α : Arrow.mk f₁ ≅ Arrow.mk f₂) (β : Arrow.mk g₁ ≅ Arrow.mk g₂) (p : α.Hom.right = β.Hom.left)
@@ -139,7 +134,7 @@ theorem comp_eq_zero_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C) 
 theorem image_to_kernel_is_iso_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
     (p : imageSubobject f = kernelSubobject g) : IsIso (imageToKernel f g (comp_eq_zero_of_image_eq_kernel f g p)) := by
   refine' ⟨⟨subobject.of_le _ _ p.ge, _⟩⟩
-  dsimp' [imageToKernel]
+  dsimp [imageToKernel]
   simp only [subobject.of_le_comp_of_le, subobject.of_le_refl]
   simp
 
@@ -162,9 +157,7 @@ section
 variable [HasZeroMorphisms V] [HasEqualizers V]
 
 theorem exact_comp_hom_inv_comp (i : B ≅ D) (h : Exact f g) : Exact (f ≫ i.Hom) (i.inv ≫ g) := by
-  refine'
-    ⟨by
-      simp [h.w], _⟩
+  refine' ⟨by simp [h.w], _⟩
   rw [image_to_kernel_comp_hom_inv_comp]
   haveI := h.epi
   infer_instance
@@ -173,13 +166,10 @@ theorem exact_comp_inv_hom_comp (i : D ≅ B) (h : Exact f g) : Exact (f ≫ i.i
   exact_comp_hom_inv_comp i.symm h
 
 theorem exact_comp_hom_inv_comp_iff (i : B ≅ D) : Exact (f ≫ i.Hom) (i.inv ≫ g) ↔ Exact f g :=
-  ⟨fun h => by
-    simpa using exact_comp_inv_hom_comp i h, exact_comp_hom_inv_comp i⟩
+  ⟨fun h => by simpa using exact_comp_inv_hom_comp i h, exact_comp_hom_inv_comp i⟩
 
 theorem exact_epi_comp (hgh : Exact g h) [Epi f] : Exact (f ≫ g) h := by
-  refine'
-    ⟨by
-      simp [hgh.w], _⟩
+  refine' ⟨by simp [hgh.w], _⟩
   rw [image_to_kernel_comp_left]
   infer_instance
 
@@ -190,21 +180,13 @@ theorem exact_iso_comp [IsIso f] : Exact (f ≫ g) h ↔ Exact g h :=
     exact exact_epi_comp w, fun w => exact_epi_comp w⟩
 
 theorem exact_comp_mono (hfg : Exact f g) [Mono h] : Exact f (g ≫ h) := by
-  refine'
-    ⟨by
-      simp [hfg.w_assoc], _⟩
+  refine' ⟨by simp [hfg.w_assoc], _⟩
   rw [image_to_kernel_comp_right f g h hfg.w]
   infer_instance
 
 /-- The dual of this lemma is only true when `V` is abelian, see `abelian.exact_epi_comp_iff`. -/
 theorem exact_comp_mono_iff [Mono h] : Exact f (g ≫ h) ↔ Exact f g := by
-  refine'
-    ⟨fun hfg =>
-      ⟨zero_of_comp_mono h
-          (by
-            rw [category.assoc, hfg.1]),
-        _⟩,
-      fun h => exact_comp_mono h⟩
+  refine' ⟨fun hfg => ⟨zero_of_comp_mono h (by rw [category.assoc, hfg.1]), _⟩, fun h => exact_comp_mono h⟩
   rw [← (iso.eq_comp_inv _).1 (image_to_kernel_comp_mono _ _ h hfg.1)]
   haveI := hfg.2
   infer_instance
@@ -214,16 +196,14 @@ theorem exact_comp_iso [IsIso h] : Exact f (g ≫ h) ↔ Exact f g :=
   exact_comp_mono_iff
 
 theorem exact_kernel_subobject_arrow : Exact (kernelSubobject f).arrow f := by
-  refine'
-    ⟨by
-      simp , _⟩
+  refine' ⟨by simp, _⟩
   apply @is_iso.epi_of_iso _ _ _ _ _ _
   exact
     ⟨⟨factor_thru_image_subobject _, by
         ext
-        simp , by
+        simp, by
         ext
-        simp ⟩⟩
+        simp⟩⟩
 
 theorem exact_kernel_ι : Exact (kernel.ι f) f := by
   rw [← kernel_subobject_arrow', exact_iso_comp]
@@ -249,8 +229,7 @@ theorem kernel_ι_eq_zero_of_exact_zero_left (h : Exact (0 : A ⟶ B) g) : kerne
   simp [kernel_subobject_arrow_eq_zero_of_exact_zero_left A h]
 
 theorem exact_zero_left_of_mono [HasZeroObject V] [Mono g] : Exact (0 : A ⟶ B) g :=
-  ⟨by
-    simp , image_to_kernel_epi_of_zero_of_mono _⟩
+  ⟨by simp, image_to_kernel_epi_of_zero_of_mono _⟩
 
 end
 
@@ -289,10 +268,8 @@ section
 variable [HasZeroMorphisms V] [HasKernels V]
 
 theorem exact_of_zero {A C : V} (f : A ⟶ 0) (g : 0 ⟶ C) : Exact f g := by
-  obtain rfl : f = 0 := by
-    ext
-  obtain rfl : g = 0 := by
-    ext
+  obtain rfl : f = 0 := by ext
+  obtain rfl : g = 0 := by ext
   fconstructor
   · simp
     
@@ -300,12 +277,10 @@ theorem exact_of_zero {A C : V} (f : A ⟶ 0) (g : 0 ⟶ C) : Exact f g := by
     
 
 theorem exact_zero_mono {B C : V} (f : B ⟶ C) [Mono f] : Exact (0 : 0 ⟶ B) f :=
-  ⟨by
-    simp , inferInstance⟩
+  ⟨by simp, inferInstance⟩
 
 theorem exact_epi_zero {A B : V} (f : A ⟶ B) [Epi f] : Exact f (0 : B ⟶ 0) :=
-  ⟨by
-    simp , inferInstance⟩
+  ⟨by simp, inferInstance⟩
 
 end
 
@@ -315,11 +290,7 @@ variable [Preadditive V]
 
 theorem mono_iff_exact_zero_left [HasKernels V] {B C : V} (f : B ⟶ C) : Mono f ↔ Exact (0 : 0 ⟶ B) f :=
   ⟨fun h => exact_zero_mono _, fun h =>
-    Preadditive.mono_of_kernel_iso_zero
-      ((kernelSubobjectIso f).symm ≪≫
-        isoZeroOfEpiZero
-          (by
-            simpa using h.epi))⟩
+    Preadditive.mono_of_kernel_iso_zero ((kernelSubobjectIso f).symm ≪≫ isoZeroOfEpiZero (by simpa using h.epi))⟩
 
 theorem epi_iff_exact_zero_right [HasEqualizers V] {A B : V} (f : A ⟶ B) : Epi f ↔ Exact f (0 : B ⟶ 0) :=
   ⟨fun h => exact_epi_zero _, fun h => by

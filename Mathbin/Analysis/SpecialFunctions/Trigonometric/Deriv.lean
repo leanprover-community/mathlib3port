@@ -536,7 +536,7 @@ theorem deriv_cosh : deriv cosh = sinh :=
   funext fun x => (has_deriv_at_cosh x).deriv
 
 /-- `sinh` is strictly monotone. -/
-theorem sinh_strict_mono : StrictMono sinh :=
+theorem sinh_strict_mono : StrictMonoₓ sinh :=
   strict_mono_of_deriv_pos <| by
     rw [Real.deriv_sinh]
     exact cosh_pos
@@ -558,25 +558,21 @@ theorem sinh_lt_sinh : sinh x < sinh y ↔ x < y :=
   sinh_strict_mono.lt_iff_lt
 
 @[simp]
-theorem sinh_pos_iff : 0 < sinh x ↔ 0 < x := by
-  simpa only [sinh_zero] using @sinh_lt_sinh 0 x
+theorem sinh_pos_iff : 0 < sinh x ↔ 0 < x := by simpa only [sinh_zero] using @sinh_lt_sinh 0 x
 
 @[simp]
-theorem sinh_nonpos_iff : sinh x ≤ 0 ↔ x ≤ 0 := by
-  simpa only [sinh_zero] using @sinh_le_sinh x 0
+theorem sinh_nonpos_iff : sinh x ≤ 0 ↔ x ≤ 0 := by simpa only [sinh_zero] using @sinh_le_sinh x 0
 
 @[simp]
-theorem sinh_neg_iff : sinh x < 0 ↔ x < 0 := by
-  simpa only [sinh_zero] using @sinh_lt_sinh x 0
+theorem sinh_neg_iff : sinh x < 0 ↔ x < 0 := by simpa only [sinh_zero] using @sinh_lt_sinh x 0
 
 @[simp]
-theorem sinh_nonneg_iff : 0 ≤ sinh x ↔ 0 ≤ x := by
-  simpa only [sinh_zero] using @sinh_le_sinh 0 x
+theorem sinh_nonneg_iff : 0 ≤ sinh x ↔ 0 ≤ x := by simpa only [sinh_zero] using @sinh_le_sinh 0 x
 
 theorem abs_sinh (x : ℝ) : abs (sinh x) = sinh (abs x) := by
   cases le_totalₓ x 0 <;> simp [abs_of_nonneg, abs_of_nonpos, *]
 
-theorem cosh_strict_mono_on : StrictMonoOn cosh (Ici 0) :=
+theorem cosh_strict_mono_on : StrictMonoOnₓ cosh (Ici 0) :=
   ((convex_Ici _).strict_mono_on_of_deriv_pos continuous_cosh.ContinuousOn) fun x hx => by
     rw [interior_Ici, mem_Ioi] at hx
     rwa [deriv_cosh, sinh_pos_iff]
@@ -591,24 +587,14 @@ theorem cosh_lt_cosh : cosh x < cosh y ↔ abs x < abs y :=
 
 @[simp]
 theorem one_le_cosh (x : ℝ) : 1 ≤ cosh x :=
-  cosh_zero ▸
-    cosh_le_cosh.2
-      (by
-        simp only [_root_.abs_zero, _root_.abs_nonneg])
+  cosh_zero ▸ cosh_le_cosh.2 (by simp only [_root_.abs_zero, _root_.abs_nonneg])
 
 @[simp]
 theorem one_lt_cosh : 1 < cosh x ↔ x ≠ 0 :=
-  cosh_zero ▸
-    cosh_lt_cosh.trans
-      (by
-        simp only [_root_.abs_zero, abs_pos])
+  cosh_zero ▸ cosh_lt_cosh.trans (by simp only [_root_.abs_zero, abs_pos])
 
-theorem sinh_sub_id_strict_mono : StrictMono fun x => sinh x - x := by
-  refine'
-    strict_mono_of_odd_strict_mono_on_nonneg
-      (fun x => by
-        simp )
-      _
+theorem sinh_sub_id_strict_mono : StrictMonoₓ fun x => sinh x - x := by
+  refine' strict_mono_of_odd_strict_mono_on_nonneg (fun x => by simp) _
   refine' (convex_Ici _).strict_mono_on_of_deriv_pos _ fun x hx => _
   · exact (continuous_sinh.sub continuous_id).ContinuousOn
     
@@ -620,16 +606,14 @@ theorem sinh_sub_id_strict_mono : StrictMono fun x => sinh x - x := by
 @[simp]
 theorem self_le_sinh_iff : x ≤ sinh x ↔ 0 ≤ x :=
   calc
-    x ≤ sinh x ↔ sinh 0 - 0 ≤ sinh x - x := by
-      simp
+    x ≤ sinh x ↔ sinh 0 - 0 ≤ sinh x - x := by simp
     _ ↔ 0 ≤ x := sinh_sub_id_strict_mono.le_iff_le
     
 
 @[simp]
 theorem sinh_le_self_iff : sinh x ≤ x ↔ x ≤ 0 :=
   calc
-    sinh x ≤ x ↔ sinh x - x ≤ sinh 0 - 0 := by
-      simp
+    sinh x ≤ x ↔ sinh x - x ≤ sinh 0 - 0 := by simp
     _ ↔ x ≤ 0 := sinh_sub_id_strict_mono.le_iff_le
     
 

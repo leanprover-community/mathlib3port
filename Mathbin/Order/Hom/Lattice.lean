@@ -120,14 +120,12 @@ attribute [simp] map_top map_bot map_sup map_inf
 -- See note [lower instance priority]
 instance (priority := 100) SupHomClass.toOrderHomClass [SemilatticeSup α] [SemilatticeSup β] [SupHomClass F α β] :
     OrderHomClass F α β :=
-  ⟨fun f a b h => by
-    rw [← sup_eq_right, ← map_sup, sup_eq_right.2 h]⟩
+  ⟨fun f a b h => by rw [← sup_eq_right, ← map_sup, sup_eq_right.2 h]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) InfHomClass.toOrderHomClass [SemilatticeInf α] [SemilatticeInf β] [InfHomClass F α β] :
     OrderHomClass F α β :=
-  ⟨fun f a b h => by
-    rw [← inf_eq_left, ← map_inf, inf_eq_left.2 h]⟩
+  ⟨fun f a b h => by rw [← inf_eq_left, ← map_inf, inf_eq_left.2 h]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) SupBotHomClass.toBotHomClass [HasSup α] [HasSup β] [HasBot α] [HasBot β]
@@ -162,16 +160,12 @@ instance (priority := 100) BoundedLatticeHomClass.toBoundedOrderHomClass [Lattic
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toSupHomClass [SemilatticeSup α] [SemilatticeSup β] [OrderIsoClass F α β] :
     SupHomClass F α β :=
-  ⟨fun f a b =>
-    eq_of_forall_ge_iffₓ fun c => by
-      simp only [← le_map_inv_iff, sup_le_iff]⟩
+  ⟨fun f a b => eq_of_forall_ge_iffₓ fun c => by simp only [← le_map_inv_iff, sup_le_iff]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toInfHomClass [SemilatticeInf α] [SemilatticeInf β] [OrderIsoClass F α β] :
     InfHomClass F α β :=
-  ⟨fun f a b =>
-    eq_of_forall_le_iffₓ fun c => by
-      simp only [← map_inv_le_iff, le_inf_iff]⟩
+  ⟨fun f a b => eq_of_forall_le_iffₓ fun c => by simp only [← map_inv_le_iff, le_inf_iff]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toSupBotHomClass [SemilatticeSup α] [OrderBot α] [SemilatticeSup β]
@@ -195,15 +189,13 @@ instance (priority := 100) OrderIsoClass.toBoundedLatticeHomClass [Lattice α] [
 
 @[simp]
 theorem map_finset_sup [SemilatticeSup α] [OrderBot α] [SemilatticeSup β] [OrderBot β] [SupBotHomClass F α β] (f : F)
-    (s : Finset ι) (g : ι → α) : f (s.sup g) = s.sup (f ∘ g) :=
-  (Finset.cons_induction_on s (map_bot f)) fun i s _ h => by
-    rw [Finset.sup_cons, Finset.sup_cons, map_sup, h]
+    (s : Finsetₓ ι) (g : ι → α) : f (s.sup g) = s.sup (f ∘ g) :=
+  (Finsetₓ.cons_induction_on s (map_bot f)) fun i s _ h => by rw [Finsetₓ.sup_cons, Finsetₓ.sup_cons, map_sup, h]
 
 @[simp]
 theorem map_finset_inf [SemilatticeInf α] [OrderTop α] [SemilatticeInf β] [OrderTop β] [InfTopHomClass F α β] (f : F)
-    (s : Finset ι) (g : ι → α) : f (s.inf g) = s.inf (f ∘ g) :=
-  (Finset.cons_induction_on s (map_top f)) fun i s _ h => by
-    rw [Finset.inf_cons, Finset.inf_cons, map_inf, h]
+    (s : Finsetₓ ι) (g : ι → α) : f (s.inf g) = s.inf (f ∘ g) :=
+  (Finsetₓ.cons_induction_on s (map_top f)) fun i s _ h => by rw [Finsetₓ.inf_cons, Finsetₓ.inf_cons, map_inf, h]
 
 section BoundedLattice
 
@@ -211,8 +203,7 @@ variable [Lattice α] [BoundedOrder α] [Lattice β] [BoundedOrder β] [BoundedL
 
 include β
 
-theorem Disjoint.map (h : Disjoint a b) : Disjoint (f a) (f b) := by
-  rw [disjoint_iff, ← map_inf, h.eq_bot, map_bot]
+theorem Disjoint.map (h : Disjoint a b) : Disjoint (f a) (f b) := by rw [disjoint_iff, ← map_inf, h.eq_bot, map_bot]
 
 theorem Codisjoint.map (h : Codisjoint a b) : Codisjoint (f a) (f b) := by
   rw [codisjoint_iff, ← map_sup, h.eq_top, map_top]
@@ -228,14 +219,15 @@ variable [BooleanAlgebra α] [BooleanAlgebra β] [BoundedLatticeHomClass F α β
 
 include β
 
-theorem map_compl (a : α) : f (aᶜ) = f aᶜ :=
+/-- Special case of `map_compl` for boolean algebras. -/
+theorem map_compl' (a : α) : f (aᶜ) = f aᶜ :=
   (is_compl_compl.map _).compl_eq.symm
 
-theorem map_sdiff (a b : α) : f (a \ b) = f a \ f b := by
-  rw [sdiff_eq, sdiff_eq, map_inf, map_compl]
+/-- Special case of `map_sdiff` for boolean algebras. -/
+theorem map_sdiff' (a b : α) : f (a \ b) = f a \ f b := by rw [sdiff_eq, sdiff_eq, map_inf, map_compl']
 
-theorem map_symm_diff (a b : α) : f (a ∆ b) = f a ∆ f b := by
-  rw [symmDiff, symmDiff, map_sup, map_sdiff, map_sdiff]
+/-- Special case of `map_symm_diff` for boolean algebras. -/
+theorem map_symm_diff' (a b : α) : f (a ∆ b) = f a ∆ f b := by rw [symmDiff, symmDiff, map_sup, map_sdiff', map_sdiff']
 
 end BooleanAlgebra
 
@@ -271,8 +263,7 @@ variable [HasSup β] [HasSup γ] [HasSup δ]
 
 instance : SupHomClass (SupHom α β) α β where
   coe := SupHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_sup := SupHom.map_sup'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -316,8 +307,7 @@ theorem id_apply (a : α) : SupHom.id α a = a :=
 /-- Composition of `sup_hom`s as a `sup_hom`. -/
 def comp (f : SupHom β γ) (g : SupHom α β) : SupHom α γ where
   toFun := f ∘ g
-  map_sup' := fun a b => by
-    rw [comp_apply, map_sup, map_sup]
+  map_sup' := fun a b => by rw [comp_apply, map_sup, map_sup]
 
 @[simp]
 theorem coe_comp (f : SupHom β γ) (g : SupHom α β) : (f.comp g : α → γ) = f ∘ g :=
@@ -343,11 +333,7 @@ theorem cancel_right {g₁ g₂ : SupHom β γ} {f : SupHom α β} (hf : Surject
   ⟨fun h => SupHom.ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : SupHom β γ} {f₁ f₂ : SupHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    SupHom.ext fun a =>
-      hg <| by
-        rw [← SupHom.comp_apply, h, SupHom.comp_apply],
-    congr_arg _⟩
+  ⟨fun h => SupHom.ext fun a => hg <| by rw [← SupHom.comp_apply, h, SupHom.comp_apply], congr_arg _⟩
 
 end HasSup
 
@@ -430,8 +416,7 @@ variable [HasInf β] [HasInf γ] [HasInf δ]
 
 instance : InfHomClass (InfHom α β) α β where
   coe := InfHom.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_inf := InfHom.map_inf'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -475,8 +460,7 @@ theorem id_apply (a : α) : InfHom.id α a = a :=
 /-- Composition of `inf_hom`s as an `inf_hom`. -/
 def comp (f : InfHom β γ) (g : InfHom α β) : InfHom α γ where
   toFun := f ∘ g
-  map_inf' := fun a b => by
-    rw [comp_apply, map_inf, map_inf]
+  map_inf' := fun a b => by rw [comp_apply, map_inf, map_inf]
 
 @[simp]
 theorem coe_comp (f : InfHom β γ) (g : InfHom α β) : (f.comp g : α → γ) = f ∘ g :=
@@ -502,11 +486,7 @@ theorem cancel_right {g₁ g₂ : InfHom β γ} {f : InfHom α β} (hf : Surject
   ⟨fun h => InfHom.ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : InfHom β γ} {f₁ f₂ : InfHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    InfHom.ext fun a =>
-      hg <| by
-        rw [← InfHom.comp_apply, h, InfHom.comp_apply],
-    congr_arg _⟩
+  ⟨fun h => InfHom.ext fun a => hg <| by rw [← InfHom.comp_apply, h, InfHom.comp_apply], congr_arg _⟩
 
 end HasInf
 
@@ -668,11 +648,7 @@ theorem cancel_right {g₁ g₂ : SupBotHom β γ} {f : SupBotHom α β} (hf : S
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : SupBotHom β γ} {f₁ f₂ : SupBotHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    SupBotHom.ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => SupBotHom.ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end HasSup
 
@@ -798,11 +774,7 @@ theorem cancel_right {g₁ g₂ : InfTopHom β γ} {f : InfTopHom α β} (hf : S
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : InfTopHom β γ} {f₁ f₂ : InfTopHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    InfTopHom.ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => InfTopHom.ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end HasInf
 
@@ -849,8 +821,7 @@ def toInfHom (f : LatticeHom α β) : InfHom α β :=
 
 instance : LatticeHomClass (LatticeHom α β) α β where
   coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
-    obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
+  coe_injective' := fun f g h => by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
   map_sup := fun f => f.map_sup'
   map_inf := fun f => f.map_inf'
 
@@ -934,11 +905,7 @@ theorem cancel_right {g₁ g₂ : LatticeHom β γ} {f : LatticeHom α β} (hf :
 
 theorem cancel_left {g : LatticeHom β γ} {f₁ f₂ : LatticeHom α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    LatticeHom.ext fun a =>
-      hg <| by
-        rw [← LatticeHom.comp_apply, h, LatticeHom.comp_apply],
-    congr_arg _⟩
+  ⟨fun h => LatticeHom.ext fun a => hg <| by rw [← LatticeHom.comp_apply, h, LatticeHom.comp_apply], congr_arg _⟩
 
 end LatticeHom
 
@@ -964,9 +931,9 @@ def toLatticeHomClass : LatticeHomClass F α β :=
          }
 
 /-- Reinterpret an order homomorphism to a linear order as a `lattice_hom`. -/
-def toLatticeHom (f : F) : LatticeHom α β := by
+def toLatticeHom (f : F) : LatticeHom α β :=
   haveI : LatticeHomClass F α β := OrderHomClass.toLatticeHomClass α β
-  exact f
+  f
 
 @[simp]
 theorem coe_to_lattice_hom (f : F) : ⇑(toLatticeHom α β f) = f :=
@@ -1000,8 +967,7 @@ def toBoundedOrderHom (f : BoundedLatticeHom α β) : BoundedOrderHom α β :=
 
 instance : BoundedLatticeHomClass (BoundedLatticeHom α β) α β where
   coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
-    obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
+  coe_injective' := fun f g h => by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f <;> obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g <;> congr
   map_sup := fun f => f.map_sup'
   map_inf := fun f => f.map_inf'
   map_top := fun f => f.map_top'
@@ -1090,11 +1056,7 @@ theorem cancel_right {g₁ g₂ : BoundedLatticeHom β γ} {f : BoundedLatticeHo
 
 theorem cancel_left {g : BoundedLatticeHom β γ} {f₁ f₂ : BoundedLatticeHom α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end BoundedLatticeHom
 

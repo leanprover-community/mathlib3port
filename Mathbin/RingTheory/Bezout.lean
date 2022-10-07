@@ -35,10 +35,7 @@ variable {R}
 
 instance span_pair_is_principal [IsBezout R] (x y : R) : (Ideal.span {x, y} : Ideal R).IsPrincipal := by
   classical
-  exact
-    is_principal_of_fg (Ideal.span {x, y})
-      ⟨{x, y}, by
-        simp ⟩
+  exact is_principal_of_fg (Ideal.span {x, y}) ⟨{x, y}, by simp⟩
 
 theorem iff_span_pair_is_principal : IsBezout R ↔ ∀ x y : R, (Ideal.span {x, y} : Ideal R).IsPrincipal := by
   classical
@@ -69,16 +66,10 @@ theorem span_gcd (x y : R) : (Ideal.span {gcd x y} : Ideal R) = Ideal.span {x, y
   Ideal.span_singleton_generator _
 
 theorem gcd_dvd_left (x y : R) : gcd x y ∣ x :=
-  (Submodule.IsPrincipal.mem_iff_generator_dvd _).mp
-    (Ideal.subset_span
-      (by
-        simp ))
+  (Submodule.IsPrincipal.mem_iff_generator_dvd _).mp (Ideal.subset_span (by simp))
 
 theorem gcd_dvd_right (x y : R) : gcd x y ∣ y :=
-  (Submodule.IsPrincipal.mem_iff_generator_dvd _).mp
-    (Ideal.subset_span
-      (by
-        simp ))
+  (Submodule.IsPrincipal.mem_iff_generator_dvd _).mp (Ideal.subset_span (by simp))
 
 theorem dvd_gcd {x y z : R} (hx : z ∣ x) (hy : z ∣ y) : z ∣ gcd x y := by
   rw [← Ideal.span_singleton_le_span_singleton] at hx hy⊢
@@ -90,7 +81,7 @@ theorem gcd_eq_sum (x y : R) : ∃ a b : R, a * x + b * y = gcd x y :=
     (by
       rw [← span_gcd]
       apply Ideal.subset_span
-      simp )
+      simp)
 
 variable (R)
 
@@ -152,7 +143,7 @@ theorem tfae [IsBezout R] [IsDomain R] :
           ext1
           rw [hf, hf, e],
         map_rel_iff' := fun x y => by
-          dsimp'
+          dsimp
           rw [← Ideal.span_singleton_lt_span_singleton, ← hf, ← hf]
           rfl }
     

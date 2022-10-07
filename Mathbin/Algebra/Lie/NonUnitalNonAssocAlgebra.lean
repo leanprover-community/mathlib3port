@@ -60,12 +60,10 @@ instance (L : Type v) [Inhabited L] : Inhabited (CommutatorRing L) :=
   ‹Inhabited L›
 
 instance : LieRing (CommutatorRing L) :=
-  show LieRing L by
-    infer_instance
+  show LieRing L by infer_instance
 
 instance : LieAlgebra R (CommutatorRing L) :=
-  show LieAlgebra R L by
-    infer_instance
+  show LieAlgebra R L by infer_instance
 
 /-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 reinterpret the `smul_lie` law as an `is_scalar_tower`. -/

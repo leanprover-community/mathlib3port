@@ -81,7 +81,7 @@ theorem Tendsto.Ioo {l₁ l₂ : Filter α} [TendstoIxxClass Ioo l₁ l₂] {lb 
     (h₁ : Tendsto u₁ lb l₁) (h₂ : Tendsto u₂ lb l₁) : Tendsto (fun x => Ioo (u₁ x) (u₂ x)) lb l₂.smallSets :=
   TendstoIxxClass.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem tendsto_Ixx_class_principal {s t : Set α} {Ixx : α → α → Set α} :
     TendstoIxxClass Ixx (𝓟 s) (𝓟 t) ↔ ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), Ixx x y ⊆ t :=
   Iff.trans ⟨fun h => h.1, fun h => ⟨h⟩⟩ <| by
@@ -90,8 +90,7 @@ theorem tendsto_Ixx_class_principal {s t : Set α} {Ixx : α → α → Set α} 
 
 theorem tendsto_Ixx_class_inf {l₁ l₁' l₂ l₂' : Filter α} {Ixx} [h : TendstoIxxClass Ixx l₁ l₂]
     [h' : TendstoIxxClass Ixx l₁' l₂'] : TendstoIxxClass Ixx (l₁ ⊓ l₁') (l₂ ⊓ l₂') :=
-  ⟨by
-    simpa only [prod_inf_prod, small_sets_inf] using h.1.inf h'.1⟩
+  ⟨by simpa only [prod_inf_prod, small_sets_inf] using h.1.inf h'.1⟩
 
 theorem tendsto_Ixx_class_of_subset {l₁ l₂ : Filter α} {Ixx Ixx' : α → α → Set α} (h : ∀ a b, Ixx a b ⊆ Ixx' a b)
     [h' : TendstoIxxClass Ixx' l₁ l₂] : TendstoIxxClass Ixx l₁ l₂ :=
@@ -183,16 +182,13 @@ instance tendsto_Icc_pure_pure {a : α} : TendstoIxxClass Icc (pure a) (pure a :
   exact tendsto_Ixx_class_principal.2 ord_connected_singleton.out
 
 instance tendsto_Ico_pure_bot {a : α} : TendstoIxxClass Ico (pure a) ⊥ :=
-  ⟨by
-    simp ⟩
+  ⟨by simp⟩
 
 instance tendsto_Ioc_pure_bot {a : α} : TendstoIxxClass Ioc (pure a) ⊥ :=
-  ⟨by
-    simp ⟩
+  ⟨by simp⟩
 
 instance tendsto_Ioo_pure_bot {a : α} : TendstoIxxClass Ioo (pure a) ⊥ :=
-  ⟨by
-    simp ⟩
+  ⟨by simp⟩
 
 end PartialOrderₓ
 

@@ -75,7 +75,7 @@ instance [Monoidₓ ω] [IsLawfulMonad m] : IsLawfulMonad (WriterTₓ ω m) wher
     ext <;> rfl
   bind_assoc := by
     intros
-    simp' [(· >>= ·), WriterTₓ.bind, mul_assoc] with functor_norm
+    simp [(· >>= ·), WriterTₓ.bind, mul_assoc, functor_norm]
 
 @[inline]
 protected def lift [One ω] (a : m α) : WriterTₓ ω m α :=

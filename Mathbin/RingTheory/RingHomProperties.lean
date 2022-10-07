@@ -54,7 +54,7 @@ theorem RespectsIso.cancel_right_is_iso (hP : RespectsIso @P) {R S T : CommRing�
   ⟨fun H => by
     convert hP.1 (f ≫ g) (as_iso g).symm.commRingIsoToRingEquiv H
     change f = f ≫ g ≫ inv g
-    simp , hP.1 f (asIso g).commRingIsoToRingEquiv⟩
+    simp, hP.1 f (asIso g).commRingIsoToRingEquiv⟩
 
 theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S : Type _} (R' S' : Type _) [CommRingₓ R]
     [CommRingₓ S] [CommRingₓ R'] [CommRingₓ S'] [Algebra R R'] [Algebra S S'] (f : R →+* S) (r : R)
@@ -66,11 +66,11 @@ theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S 
   refine' (hP.cancel_right_is_iso (CommRingₓₓ.ofHom _) e₂.to_CommRing_iso.hom).symm.trans _
   rw [← eq_iff_iff]
   congr 1
-  dsimp' [CommRingₓₓ.ofHom, CommRingₓₓ.of, bundled.of]
+  dsimp [CommRingₓₓ.ofHom, CommRingₓₓ.of, bundled.of]
   refine' IsLocalization.ring_hom_ext (Submonoid.powers r) _
   ext1
   revert e₁ e₂
-  dsimp' [RingEquiv.toRingHom, IsLocalization.Away.map]
+  dsimp [RingEquiv.toRingHom, IsLocalization.Away.map]
   simp only [CategoryTheory.comp_apply, RingEquiv.refl_apply, IsLocalization.alg_equiv_apply,
     IsLocalization.ring_equiv_of_ring_equiv_apply, RingHom.coe_mk, RingEquiv.to_fun_eq_coe,
     IsLocalization.ring_equiv_of_ring_equiv_eq, IsLocalization.map_eq]

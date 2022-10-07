@@ -103,7 +103,7 @@ theorem list_decode_encode_list (l : List (L.term α)) : listDecodeₓ (l.bind l
           simp
           
       refine' (dif_pos fun i => Option.is_some_iff_exists.2 ⟨ts i, _⟩).trans _
-      · rw [Option.join_eq_some, h']
+      · rw [Option.join_eq_someₓ, h']
         
       refine' congr (congr rfl (congr rfl (congr rfl (funext fun i => Option.get_of_memₓ _ _)))) _
       · simp [h']
@@ -177,11 +177,10 @@ instance [Encodable α] [Encodable (Σi, L.Functions i)] : Encodable (L.term α)
     rw [← bind_singleton list_encode, list_decode_encode_list]
     simp only [Option.join, head', List.map, Option.some_bindₓ, id.def]
 
-theorem card_le_aleph_0 [h1 : Countable α] [h2 : L.CountableFunctions] : (#L.term α) ≤ ℵ₀ := by
-  refine' card_le.trans _
-  rw [max_le_iff]
+instance [h1 : Countable α] [h2 : Countable (Σl, L.Functions l)] : Countable (L.term α) := by
+  refine' mk_le_aleph_0_iff.1 (card_le.trans (max_le_iff.2 _))
   simp only [le_reflₓ, mk_sum, add_le_aleph_0, lift_le_aleph_0, true_andₓ]
-  exact ⟨mk_le_aleph_0, L.card_functions_le_aleph_0⟩
+  exact ⟨Cardinal.mk_le_aleph_0, Cardinal.mk_le_aleph_0⟩
 
 instance small [Small.{u} α] : Small.{u} (L.term α) :=
   small_of_injective list_encode_injective
@@ -209,15 +208,7 @@ def sigmaAllₓ : (Σn, L.BoundedFormula α n) → Σn, L.BoundedFormula α n
 /-- Applies `imp` to two elements of `(Σ n, L.bounded_formula α n)`,
 or returns `default` if not possible. -/
 def sigmaImpₓ : (Σn, L.BoundedFormula α n) → (Σn, L.BoundedFormula α n) → Σn, L.BoundedFormula α n
-  | ⟨m, φ⟩, ⟨n, ψ⟩ =>
-    if h : m = n then
-      ⟨m,
-        φ.imp
-          (Eq.mp
-            (by
-              rw [h])
-            ψ)⟩
-    else default
+  | ⟨m, φ⟩, ⟨n, ψ⟩ => if h : m = n then ⟨m, φ.imp (Eq.mp (by rw [h]) ψ)⟩ else default
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -234,26 +225,13 @@ def listDecodeₓ :
         { l' : List (Sum (Σk, L.term (Sum α (Finₓ k))) (Sum (Σn, L.Relations n) ℕ)) // l'.sizeof ≤ max 1 l.sizeof }
   | Sum.inr (Sum.inr (n + 2))::l => ⟨⟨n, falsum⟩, l, le_max_of_le_right le_add_self⟩
   | Sum.inl ⟨n₁, t₁⟩::Sum.inl ⟨n₂, t₂⟩::l =>
-    ⟨if h : n₁ = n₂ then
-        ⟨n₁,
-          equal t₁
-            (Eq.mp
-              (by
-                rw [h])
-              t₂)⟩
-      else default,
-      l, by
+    ⟨if h : n₁ = n₂ then ⟨n₁, equal t₁ (Eq.mp (by rw [h]) t₂)⟩ else default, l, by
       simp only [List.sizeof, ← add_assocₓ]
       exact le_max_of_le_right le_add_self⟩
   | Sum.inr (Sum.inl ⟨n, R⟩)::Sum.inr (Sum.inr k)::l =>
     ⟨if h : ∀ i : Finₓ n, ((l.map Sum.getLeft).nth i).join.isSome then
         if h' : ∀ i, (Option.getₓ (h i)).1 = k then
-          ⟨k,
-            BoundedFormula.rel R fun i =>
-              Eq.mp
-                (by
-                  rw [h' i])
-                (Option.getₓ (h i)).2⟩
+          ⟨k, BoundedFormula.rel R fun i => Eq.mp (by rw [h' i]) (Option.getₓ (h i)).2⟩
         else default
       else default,
       l.drop n, le_max_of_le_right (le_add_left (le_add_left (List.drop_sizeof_le _ _)))⟩
@@ -262,13 +240,8 @@ def listDecodeₓ :
       (↑(list_decode l).2 : List (Sum (Σk, L.term (Sum α (Finₓ k))) (Sum (Σn, L.Relations n) ℕ))).sizeof <
         1 + (1 + 1) + l.sizeof :=
       by
-      refine'
-        lt_of_le_of_ltₓ (list_decode l).2.2
-          (max_ltₓ _
-            (Nat.lt_add_of_pos_leftₓ
-              (by
-                decide)))
-      rw [add_assocₓ, add_commₓ, Nat.lt_succ_iffₓ, add_assocₓ]
+      refine' lt_of_le_of_ltₓ (list_decode l).2.2 (max_ltₓ _ (Nat.lt_add_of_pos_leftₓ (by decide)))
+      rw [add_assocₓ, add_commₓ, Nat.lt_succ_iff, add_assocₓ]
       exact le_self_add
     ⟨sigmaImpₓ (list_decode l).1 (list_decode (list_decode l).2).1, (list_decode (list_decode l).2).2,
       le_max_of_le_right

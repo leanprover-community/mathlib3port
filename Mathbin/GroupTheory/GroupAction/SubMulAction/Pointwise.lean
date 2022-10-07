@@ -109,10 +109,8 @@ instance : Monoidₓ (SubMulAction R M) :=
 
 theorem coe_pow (p : SubMulAction R M) : ∀ {n : ℕ} (hn : n ≠ 0), ↑(p ^ n) = (p ^ n : Set M)
   | 0, hn => (hn rfl).elim
-  | 1, hn => by
-    rw [pow_oneₓ, pow_oneₓ]
-  | n + 2, hn => by
-    rw [pow_succₓ _ (n + 1), pow_succₓ _ (n + 1), coe_mul, coe_pow n.succ_ne_zero]
+  | 1, hn => by rw [pow_oneₓ, pow_oneₓ]
+  | n + 2, hn => by rw [pow_succₓ _ (n + 1), pow_succₓ _ (n + 1), coe_mul, coe_pow n.succ_ne_zero]
 
 theorem subset_coe_pow (p : SubMulAction R M) : ∀ {n : ℕ}, (p ^ n : Set M) ⊆ ↑(p ^ n)
   | 0 => by

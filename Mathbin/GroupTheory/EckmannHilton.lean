@@ -37,11 +37,7 @@ structure IsUnital (m : X → X → X) (e : X) extends IsLeftId _ m e, IsRightId
 
 @[to_additive EckmannHilton.AddZeroClass.is_unital]
 theorem MulOneClass.is_unital [G : MulOneClassₓ X] : IsUnital (· * ·) (1 : X) :=
-  IsUnital.mk
-    (by
-      infer_instance)
-    (by
-      infer_instance)
+  IsUnital.mk (by infer_instance) (by infer_instance)
 
 variable {m₁ m₂ : X → X → X} {e₁ e₂ : X}
 
@@ -56,8 +52,7 @@ then they have the same unit elements.
 
 In fact, the two operations are the same, and give a commutative monoid structure,
 see `eckmann_hilton.comm_monoid`. -/
-theorem one : e₁ = e₂ := by
-  simpa only [h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id] using distrib e₂ e₁ e₁ e₂
+theorem one : e₁ = e₂ := by simpa only [h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id] using distrib e₂ e₁ e₁ e₂
 
 /-- If a type carries two unital binary operations that distribute over each other,
 then these operations are equal.
@@ -68,8 +63,7 @@ theorem mul : m₁ = m₂ := by
   calc
     m₁ a b = m₁ (m₂ a e₁) (m₂ e₁ b) := by
       simp only [one h₁ h₂ distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
-    _ = m₂ a b := by
-      simp only [distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
+    _ = m₂ a b := by simp only [distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
     
 
 /-- If a type carries two unital binary operations that distribute over each other,
@@ -77,16 +71,14 @@ then these operations are commutative.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
 theorem mul_comm : IsCommutative _ m₂ :=
-  ⟨fun a b => by
-    simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib e₂ a b e₂⟩
+  ⟨fun a b => by simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib e₂ a b e₂⟩
 
 /-- If a type carries two unital binary operations that distribute over each other,
 then these operations are associative.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
 theorem mul_assoc : IsAssociative _ m₂ :=
-  ⟨fun a b c => by
-    simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib a b e₂ c⟩
+  ⟨fun a b c => by simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib a b e₂ c⟩
 
 omit h₁ h₂ distrib
 

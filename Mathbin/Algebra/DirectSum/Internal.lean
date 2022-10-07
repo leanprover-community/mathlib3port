@@ -44,12 +44,10 @@ open DirectSum BigOperators
 variable {ι : Type _} {σ S R : Type _}
 
 instance AddCommMonoidₓ.ofSubmonoidOnSemiring [Semiringₓ R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ) :
-    ∀ i, AddCommMonoidₓ (A i) := fun i => by
-  infer_instance
+    ∀ i, AddCommMonoidₓ (A i) := fun i => by infer_instance
 
 instance AddCommGroupₓ.ofSubgroupOnRing [Ringₓ R] [SetLike σ R] [AddSubgroupClass σ R] (A : ι → σ) :
-    ∀ i, AddCommGroupₓ (A i) := fun i => by
-  infer_instance
+    ∀ i, AddCommGroupₓ (A i) := fun i => by infer_instance
 
 theorem SetLike.algebra_map_mem_graded [Zero ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R] (A : ι → Submodule S R)
     [SetLike.HasGradedOne A] (s : S) : algebraMap S R s ∈ A 0 := by
@@ -119,24 +117,143 @@ instance gcommRing [AddCommMonoidₓ ι] [CommRingₓ R] [SetLike σ R] [AddSubg
 
 end SetLike
 
+namespace DirectSum
+
+section coe
+
+variable [Semiringₓ R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
+
 /-- The canonical ring isomorphism between `⨁ i, A i` and `R`-/
-def DirectSum.coeRingHom [AddMonoidₓ ι] [Semiringₓ R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
-    [SetLike.GradedMonoid A] : (⨁ i, A i) →+* R :=
+def coeRingHom [AddMonoidₓ ι] [SetLike.GradedMonoid A] : (⨁ i, A i) →+* R :=
   DirectSum.toSemiring (fun i => AddSubmonoidClass.subtype (A i)) rfl fun _ _ _ _ => rfl
 
 /-- The canonical ring isomorphism between `⨁ i, A i` and `R`-/
 @[simp]
-theorem DirectSum.coe_ring_hom_of [AddMonoidₓ ι] [Semiringₓ R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
-    [SetLike.GradedMonoid A] (i : ι) (x : A i) : DirectSum.coeRingHom A (DirectSum.of (fun i => A i) i x) = x :=
+theorem coe_ring_hom_of [AddMonoidₓ ι] [SetLike.GradedMonoid A] (i : ι) (x : A i) :
+    (coeRingHom A : _ →+* R) (of (fun i => A i) i x) = x :=
   DirectSum.to_semiring_of _ _ _ _ _
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem DirectSum.coe_mul_apply [AddMonoidₓ ι] [Semiringₓ R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
-    [SetLike.GradedMonoid A] [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (r r' : ⨁ i, A i) (i : ι) :
-    ((r * r') i : R) = ∑ ij in (r.support ×ˢ r'.support).filter fun ij : ι × ι => ij.1 + ij.2 = i, r ij.1 * r' ij.2 :=
+theorem coe_mul_apply [AddMonoidₓ ι] [SetLike.GradedMonoid A] [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (r r' : ⨁ i, A i)
+    (n : ι) :
+    ((r * r') n : R) = ∑ ij in (r.support ×ˢ r'.support).filter fun ij : ι × ι => ij.1 + ij.2 = n, r ij.1 * r' ij.2 :=
   by
-  rw [DirectSum.mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, AddSubmonoidClass.coe_finset_sum]
-  simp_rw [DirectSum.coe_of_apply, ← Finset.sum_filter, SetLike.coe_ghas_mul]
+  rw [mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, AddSubmonoidClass.coe_finset_sum]
+  simp_rw [coe_of_apply, ← Finsetₓ.sum_filter, SetLike.coe_ghas_mul]
+
+theorem coe_mul_apply_eq_dfinsupp_sum [AddMonoidₓ ι] [SetLike.GradedMonoid A] [∀ (i : ι) (x : A i), Decidable (x ≠ 0)]
+    (r r' : ⨁ i, A i) (n : ι) :
+    ((r * r') n : R) = r.Sum fun i ri => r'.Sum fun j rj => if i + j = n then ri * rj else 0 := by
+  simp only [mul_eq_dfinsupp_sum, Dfinsupp.sum_apply]
+  iterate 2 
+  rw [Dfinsupp.sum, AddSubmonoidClass.coe_finset_sum]
+  congr
+  ext
+  dsimp only
+  split_ifs
+  · subst h
+    rw [of_eq_same]
+    rfl
+    
+  · rw [of_eq_of_ne _ _ _ _ h]
+    rfl
+    
+
+theorem coe_of_mul_apply_aux [AddMonoidₓ ι] [SetLike.GradedMonoid A] {i : ι} (r : A i) (r' : ⨁ i, A i) {j n : ι}
+    (H : ∀ x : ι, i + x = n ↔ x = j) : ((of _ i r * r') n : R) = r * r' j := by
+  classical
+  rw [coe_mul_apply_eq_dfinsupp_sum]
+  apply (Dfinsupp.sum_single_index _).trans
+  swap
+  · simp_rw [ZeroMemClass.coe_zero, zero_mul, if_t_t]
+    exact Dfinsupp.sum_zero
+    
+  simp_rw [Dfinsupp.sum, H, Finsetₓ.sum_ite_eq']
+  split_ifs
+  rfl
+  rw [dfinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, mul_zero]
+
+theorem coe_mul_of_apply_aux [AddMonoidₓ ι] [SetLike.GradedMonoid A] (r : ⨁ i, A i) {i : ι} (r' : A i) {j n : ι}
+    (H : ∀ x : ι, x + i = n ↔ x = j) : ((r * of _ i r') n : R) = r j * r' := by
+  classical
+  rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
+  apply (Dfinsupp.sum_single_index _).trans
+  swap
+  · simp_rw [ZeroMemClass.coe_zero, mul_zero, if_t_t]
+    exact Dfinsupp.sum_zero
+    
+  simp_rw [Dfinsupp.sum, H, Finsetₓ.sum_ite_eq']
+  split_ifs
+  rfl
+  rw [dfinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, zero_mul]
+
+theorem coe_of_mul_apply_add [AddLeftCancelMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r : A i) (r' : ⨁ i, A i)
+    (j : ι) : ((of _ i r * r') (i + j) : R) = r * r' j :=
+  coe_of_mul_apply_aux _ _ _ fun x => ⟨fun h => add_left_cancelₓ h, fun h => h ▸ rfl⟩
+
+theorem coe_mul_of_apply_add [AddRightCancelMonoid ι] [SetLike.GradedMonoid A] (r : ⨁ i, A i) {i : ι} (r' : A i)
+    (j : ι) : ((r * of _ i r') (j + i) : R) = r j * r' :=
+  coe_mul_of_apply_aux _ _ _ fun x => ⟨fun h => add_right_cancelₓ h, fun h => h ▸ rfl⟩
+
+end coe
+
+section CanonicallyOrderedAddMonoid
+
+variable [Semiringₓ R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
+
+variable [CanonicallyOrderedAddMonoid ι] [SetLike.GradedMonoid A]
+
+theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) (h : ¬i ≤ n) :
+    ((of _ i r * r') n : R) = 0 := by
+  classical
+  rw [coe_mul_apply_eq_dfinsupp_sum]
+  apply (Dfinsupp.sum_single_index _).trans
+  swap
+  · simp_rw [ZeroMemClass.coe_zero, zero_mul, if_t_t]
+    exact Dfinsupp.sum_zero
+    
+  · rw [Dfinsupp.sum, Finsetₓ.sum_ite_of_false _ _ fun x _ H => _, Finsetₓ.sum_const_zero]
+    exact h ((self_le_add_right i x).trans_eq H)
+    
+
+theorem coe_mul_of_apply_of_not_le (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) (h : ¬i ≤ n) :
+    ((r * of _ i r') n : R) = 0 := by
+  classical
+  rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
+  apply (Dfinsupp.sum_single_index _).trans
+  swap
+  · simp_rw [ZeroMemClass.coe_zero, mul_zero, if_t_t]
+    exact Dfinsupp.sum_zero
+    
+  · rw [Dfinsupp.sum, Finsetₓ.sum_ite_of_false _ _ fun x _ H => _, Finsetₓ.sum_const_zero]
+    exact h ((self_le_add_left i x).trans_eq H)
+    
+
+variable [Sub ι] [HasOrderedSub ι] [ContravariantClass ι ι (· + ·) (· ≤ ·)]
+
+/- The following two lemmas only require the same hypotheses as `eq_tsub_iff_add_eq_of_le`, but we
+  state them for `canonically_ordered_add_monoid` + the above three typeclasses for convenience. -/
+theorem coe_mul_of_apply_of_le (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) (h : i ≤ n) :
+    ((r * of _ i r') n : R) = r (n - i) * r' :=
+  coe_mul_of_apply_aux _ _ _ fun x => (eq_tsub_iff_add_eq_of_le h).symm
+
+theorem coe_of_mul_apply_of_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) (h : i ≤ n) :
+    ((of _ i r * r') n : R) = r * r' (n - i) :=
+  coe_of_mul_apply_aux _ _ _ fun x => by rw [eq_tsub_iff_add_eq_of_le h, add_commₓ]
+
+theorem coe_mul_of_apply (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) [Decidable (i ≤ n)] :
+    ((r * of _ i r') n : R) = if i ≤ n then r (n - i) * r' else 0 := by
+  split_ifs
+  exacts[coe_mul_of_apply_of_le _ _ _ n h, coe_mul_of_apply_of_not_le _ _ _ n h]
+
+theorem coe_of_mul_apply {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) [Decidable (i ≤ n)] :
+    ((of _ i r * r') n : R) = if i ≤ n then r * r' (n - i) else 0 := by
+  split_ifs
+  exacts[coe_of_mul_apply_of_le _ _ _ n h, coe_of_mul_apply_of_not_le _ _ _ n h]
+
+end CanonicallyOrderedAddMonoid
+
+end DirectSum
 
 /-! #### From `submodule`s -/
 

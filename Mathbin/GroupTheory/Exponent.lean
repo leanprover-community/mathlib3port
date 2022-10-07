@@ -3,6 +3,8 @@ Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
+import Mathbin.Data.Zmod.Quotient
+import Mathbin.GroupTheory.NoncommPiCoprod
 import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.Algebra.GcdMonoid.Finset
 import Mathbin.Algebra.PunitInstances
@@ -76,8 +78,7 @@ theorem exponent_exists_iff_ne_zero : ExponentExists G ↔ exponent G ≠ 0 := b
     
 
 @[to_additive]
-theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by
-  simp only [exponent_exists_iff_ne_zero, not_not]
+theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by simp only [exponent_exists_iff_ne_zero, not_not]
 
 @[to_additive]
 theorem exponent_eq_zero_of_order_zero {g : G} (hg : orderOf g = 0) : exponent G = 0 :=
@@ -85,7 +86,7 @@ theorem exponent_eq_zero_of_order_zero {g : G} (hg : orderOf g = 0) : exponent G
 
 @[to_additive exponent_nsmul_eq_zero]
 theorem pow_exponent_eq_one (g : G) : g ^ exponent G = 1 := by
-  by_cases' exponent_exists G
+  by_cases exponent_exists G
   · simp_rw [exponent, dif_pos h]
     exact (Nat.find_specₓ h).2 g
     
@@ -95,10 +96,8 @@ theorem pow_exponent_eq_one (g : G) : g ^ exponent G = 1 := by
 @[to_additive]
 theorem pow_eq_mod_exponent {n : ℕ} (g : G) : g ^ n = g ^ (n % exponent G) :=
   calc
-    g ^ n = g ^ (n % exponent G + exponent G * (n / exponent G)) := by
-      rw [Nat.mod_add_divₓ]
-    _ = g ^ (n % exponent G) := by
-      simp [pow_addₓ, pow_mulₓ, pow_exponent_eq_one]
+    g ^ n = g ^ (n % exponent G + exponent G * (n / exponent G)) := by rw [Nat.mod_add_divₓ]
+    _ = g ^ (n % exponent G) := by simp [pow_addₓ, pow_mulₓ, pow_exponent_eq_one]
     
 
 @[to_additive]
@@ -155,8 +154,8 @@ theorem exponent_dvd_of_forall_pow_eq_one (G) [Monoidₓ G] (n : ℕ) (hG : ∀ 
   linarith
 
 @[to_additive lcm_add_order_of_dvd_exponent]
-theorem lcm_order_of_dvd_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf ∣ exponent G := by
-  apply Finset.lcm_dvd
+theorem lcm_order_of_dvd_exponent [Fintypeₓ G] : (Finsetₓ.univ : Finsetₓ G).lcm orderOf ∣ exponent G := by
+  apply Finsetₓ.lcm_dvd
   intro g hg
   exact order_dvd_exponent g
 
@@ -165,9 +164,7 @@ theorem _root_.nat.prime.exists_order_of_eq_pow_factorization_exponent {p : ℕ}
     ∃ g : G, orderOf g = p ^ (exponent G).factorization p := by
   haveI := Fact.mk hp
   rcases eq_or_ne ((exponent G).factorization p) 0 with (h | h)
-  · refine'
-      ⟨1, by
-        rw [h, pow_zeroₓ, order_of_one]⟩
+  · refine' ⟨1, by rw [h, pow_zeroₓ, order_of_one]⟩
     
   have he : 0 < exponent G :=
     Ne.bot_lt fun ht => by
@@ -204,10 +201,10 @@ theorem exponent_ne_zero_iff_range_order_of_finite (h : ∀ g : G, 0 < orderOf g
     obtain ⟨m, ⟨t, rfl⟩, het⟩ := Set.Infinite.exists_nat_lt h (exponent G)
     exact pow_ne_one_of_lt_order_of' he het (pow_exponent_eq_one t)
     
-  · lift Set.Range orderOf to Finset ℕ using he with t ht
+  · lift Set.Range orderOf to Finsetₓ ℕ using he with t ht
     have htpos : 0 < t.prod id := by
-      refine' Finset.prod_pos fun a ha => _
-      rw [← Finset.mem_coe, ht] at ha
+      refine' Finsetₓ.prod_pos fun a ha => _
+      rw [← Finsetₓ.mem_coe, ht] at ha
       obtain ⟨k, rfl⟩ := ha
       exact h k
     suffices exponent G ∣ t.prod id by
@@ -216,8 +213,8 @@ theorem exponent_ne_zero_iff_range_order_of_finite (h : ∀ g : G, 0 < orderOf g
       exact htpos.ne' this
     refine' exponent_dvd_of_forall_pow_eq_one _ _ fun g => _
     rw [pow_eq_mod_order_of, Nat.mod_eq_zero_of_dvdₓ, pow_zeroₓ g]
-    apply Finset.dvd_prod_of_mem
-    rw [← Finset.mem_coe, ht]
+    apply Finsetₓ.dvd_prod_of_mem
+    rw [← Finsetₓ.mem_coe, ht]
     exact Set.mem_range_self g
     
 
@@ -228,10 +225,10 @@ theorem exponent_eq_zero_iff_range_order_of_infinite (h : ∀ g : G, 0 < orderOf
   rwa [Ne.def, not_iff_comm, Iff.comm] at this
 
 @[to_additive lcm_add_order_eq_exponent]
-theorem lcm_order_eq_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf = exponent G := by
+theorem lcm_order_eq_exponent [Fintypeₓ G] : (Finsetₓ.univ : Finsetₓ G).lcm orderOf = exponent G := by
   apply Nat.dvd_antisymm (lcm_order_of_dvd_exponent G)
   refine' exponent_dvd_of_forall_pow_eq_one G _ fun g => _
-  obtain ⟨m, hm⟩ : orderOf g ∣ finset.univ.lcm orderOf := Finset.dvd_lcm (Finset.mem_univ g)
+  obtain ⟨m, hm⟩ : orderOf g ∣ finset.univ.lcm orderOf := Finsetₓ.dvd_lcm (Finsetₓ.mem_univ g)
   rw [hm, pow_mulₓ, pow_order_of_eq_one, one_pow]
 
 end Monoidₓ
@@ -243,7 +240,7 @@ variable [LeftCancelMonoid G]
 @[to_additive]
 theorem exponent_ne_zero_of_finite [Finite G] : exponent G ≠ 0 := by
   cases nonempty_fintype G
-  simpa [← lcm_order_eq_exponent, Finset.lcm_eq_zero_iff] using fun x => (order_of_pos x).ne'
+  simpa [← lcm_order_eq_exponent, Finsetₓ.lcm_eq_zero_iff] using fun x => (order_of_pos x).ne'
 
 end LeftCancelMonoid
 
@@ -258,8 +255,7 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
   · rw [he, Set.Infinite.Nat.Sup_eq_zero <| (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
     
   have hne : (Set.Range (orderOf : G → ℕ)).Nonempty := ⟨1, 1, order_of_one⟩
-  have hfin : (Set.Range (orderOf : G → ℕ)).Finite := by
-    rwa [← exponent_ne_zero_iff_range_order_of_finite h]
+  have hfin : (Set.Range (orderOf : G → ℕ)).Finite := by rwa [← exponent_ne_zero_iff_range_order_of_finite h]
   obtain ⟨t, ht⟩ := hne.cSup_mem hfin
   apply Nat.dvd_antisymm _
   · rw [← ht]
@@ -283,7 +279,7 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
   have hcoprime : (orderOf (t ^ p ^ k)).Coprime (orderOf g) := by
     rw [hg, Nat.coprime_pow_right_iff (pos_of_gt hpe), Nat.coprime_commₓ]
     apply Or.resolve_right (Nat.coprime_or_dvd_of_prime hp _)
-    nth_rw 0[← pow_oneₓ p]
+    nth_rw 0 [← pow_oneₓ p]
     convert Nat.pow_succ_factorization_not_dvd (h <| t ^ p ^ k).ne' hp
     rw [hpk', Nat.factorization_div hpk]
     simp [hp]
@@ -309,16 +305,41 @@ section CancelCommMonoid
 variable [CancelCommMonoid G]
 
 @[to_additive]
-theorem exponent_eq_max'_order_of [Fintype G] :
-    exponent G =
-      ((@Finset.univ G _).Image orderOf).max'
-        ⟨1, by
-          simp ⟩ :=
+theorem exponent_eq_max'_order_of [Fintypeₓ G] : exponent G = ((@Finsetₓ.univ G _).Image orderOf).max' ⟨1, by simp⟩ :=
   by
-  rw [← Finset.Nonempty.cSup_eq_max', Finset.coe_image, Finset.coe_univ, Set.image_univ, ← supr]
+  rw [← Finsetₓ.Nonempty.cSup_eq_max', Finsetₓ.coe_image, Finsetₓ.coe_univ, Set.image_univ, ← supr]
   exact exponent_eq_supr_order_of order_of_pos
 
 end CancelCommMonoid
 
 end Monoidₓ
+
+section CommGroupₓ
+
+open Subgroup
+
+open BigOperators
+
+variable (G) [CommGroupₓ G] [Groupₓ.Fg G]
+
+@[to_additive]
+theorem card_dvd_exponent_pow_rank : Nat.card G ∣ Monoidₓ.exponent G ^ Groupₓ.rank G := by
+  obtain ⟨S, hS1, hS2⟩ := Groupₓ.rank_spec G
+  rw [← hS1, ← Fintypeₓ.card_coe, ← Finsetₓ.card_univ, ← Finsetₓ.prod_const]
+  let f : (∀ g : S, zpowers (g : G)) →* G := noncomm_pi_coprod fun s t h x y hx hy => mul_comm x y
+  have hf : Function.Surjective f := by
+    rw [← MonoidHom.range_top_iff_surjective, eq_top_iff, ← hS2, closure_le]
+    exact fun g hg => ⟨Pi.mulSingle ⟨g, hg⟩ ⟨g, mem_zpowers g⟩, noncomm_pi_coprod_mul_single _ _⟩
+  replace hf := nat_card_dvd_of_surjective f hf
+  rw [Nat.card_pi] at hf
+  refine' hf.trans (Finsetₓ.prod_dvd_prod_of_dvd _ _ fun g hg => _)
+  rw [← order_eq_card_zpowers']
+  exact Monoidₓ.order_dvd_exponent (g : G)
+
+@[to_additive]
+theorem card_dvd_exponent_pow_rank' {n : ℕ} (hG : ∀ g : G, g ^ n = 1) : Nat.card G ∣ n ^ Groupₓ.rank G :=
+  (card_dvd_exponent_pow_rank G).trans
+    (pow_dvd_pow_of_dvd (Monoidₓ.exponent_dvd_of_forall_pow_eq_one G n hG) (Groupₓ.rank G))
+
+end CommGroupₓ
 

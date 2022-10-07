@@ -35,8 +35,7 @@ theorem two_power_aleph_0 : 2 ^ aleph_0.{u} = continuum.{u} :=
   rfl
 
 @[simp]
-theorem lift_continuum : lift.{v} 𝔠 = 𝔠 := by
-  rw [← two_power_aleph_0, lift_two_power, lift_aleph_0, two_power_aleph_0]
+theorem lift_continuum : lift.{v} 𝔠 = 𝔠 := by rw [← two_power_aleph_0, lift_two_power, lift_aleph_0, two_power_aleph_0]
 
 /-!
 ### Inequalities
@@ -50,14 +49,12 @@ theorem aleph_0_le_continuum : ℵ₀ ≤ 𝔠 :=
   aleph_0_lt_continuum.le
 
 @[simp]
-theorem beth_one : beth 1 = 𝔠 := by
-  simpa using beth_succ 0
+theorem beth_one : beth 1 = 𝔠 := by simpa using beth_succ 0
 
 theorem nat_lt_continuum (n : ℕ) : ↑n < 𝔠 :=
   (nat_lt_aleph_0 n).trans aleph_0_lt_continuum
 
-theorem mk_set_nat : (#Set ℕ) = 𝔠 := by
-  simp
+theorem mk_set_nat : (#Set ℕ) = 𝔠 := by simp
 
 theorem continuum_pos : 0 < 𝔠 :=
   nat_lt_continuum 0

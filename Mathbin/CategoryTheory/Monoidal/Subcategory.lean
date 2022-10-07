@@ -36,12 +36,8 @@ variable {C : Type u} [Category.{v} C] [MonoidalCategory C] (P : C → Prop)
 /-- A property `C → Prop` is a monoidal predicate if it is closed under `𝟙_` and `⊗`.
 -/
 class MonoidalPredicate : Prop where
-  prop_id' : P (𝟙_ C) := by
-    run_tac
-      obviously
-  prop_tensor' : ∀ {X Y}, P X → P Y → P (X ⊗ Y) := by
-    run_tac
-      obviously
+  prop_id' : P (𝟙_ C) := by obviously
+  prop_tensor' : ∀ {X Y}, P X → P Y → P (X ⊗ Y) := by obviously
 
 restate_axiom monoidal_predicate.prop_id'
 
@@ -172,9 +168,7 @@ variable (P) [MonoidalClosed C]
 /-- A property `C → Prop` is a closed predicate if it is closed under taking internal homs
 -/
 class ClosedPredicate : Prop where
-  prop_ihom' : ∀ {X Y}, P X → P Y → P ((ihom X).obj Y) := by
-    run_tac
-      obviously
+  prop_ihom' : ∀ {X Y}, P X → P Y → P ((ihom X).obj Y) := by obviously
 
 restate_axiom closed_predicate.prop_ihom'
 

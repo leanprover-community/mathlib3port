@@ -78,8 +78,7 @@ theorem HomogeneousIdeal.is_homogeneous (I : HomogeneousIdeal 𝒜) : I.toIdeal.
 
 theorem HomogeneousIdeal.to_ideal_injective :
     Function.Injective (HomogeneousIdeal.toIdeal : HomogeneousIdeal 𝒜 → Ideal A) := fun ⟨x, hx⟩ ⟨y, hy⟩ (h : x = y) =>
-  by
-  simp [h]
+  by simp [h]
 
 instance HomogeneousIdeal.setLike : SetLike (HomogeneousIdeal 𝒜) A where
   coe := fun I => I.toIdeal
@@ -110,7 +109,7 @@ is the largest homogeneous ideal of `A` contained in `I`, as an ideal. -/
 def Ideal.homogeneousCore' (I : Ideal A) : Ideal A :=
   Ideal.span (coe '' ((coe : Subtype (IsHomogeneous 𝒜) → A) ⁻¹' I))
 
-theorem Ideal.homogeneous_core'_mono : Monotone (Ideal.homogeneousCore' 𝒜) := fun I J I_le_J =>
+theorem Ideal.homogeneous_core'_mono : Monotoneₓ (Ideal.homogeneousCore' 𝒜) := fun I J I_le_J =>
   Ideal.span_mono <| (Set.image_subset _) fun x => @I_le_J _
 
 theorem Ideal.homogeneous_core'_le : I.homogeneousCore' 𝒜 ≤ I :=
@@ -139,7 +138,7 @@ theorem Ideal.is_homogeneous_iff_subset_Inter : I.IsHomogeneous 𝒜 ↔ (I : Se
 theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ : IsHomogeneous 𝒜 x) (hx₂ : x ∈ I)
     (j : ι) : GradedRing.proj 𝒜 j (r * x) ∈ I := by
   classical
-  rw [← DirectSum.sum_support_decompose 𝒜 r, Finset.sum_mul, map_sum]
+  rw [← DirectSum.sum_support_decompose 𝒜 r, Finsetₓ.sum_mul, map_sum]
   apply Ideal.sum_mem
   intro k hk
   obtain ⟨i, hi⟩ := hx₁
@@ -175,7 +174,7 @@ def Ideal.homogeneousCore : HomogeneousIdeal 𝒜 :=
       rw [Subtype.image_preimage_coe] at h
       exact h.2⟩
 
-theorem Ideal.homogeneous_core_mono : Monotone (Ideal.homogeneousCore 𝒜) :=
+theorem Ideal.homogeneous_core_mono : Monotoneₓ (Ideal.homogeneousCore 𝒜) :=
   Ideal.homogeneous_core'_mono 𝒜
 
 theorem Ideal.to_ideal_homogeneous_core_le : (I.homogeneousCore 𝒜).toIdeal ≤ I :=
@@ -197,8 +196,7 @@ theorem Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self (h : I.IsHomogeneo
 
 @[simp]
 theorem HomogeneousIdeal.to_ideal_homogeneous_core_eq_self (I : HomogeneousIdeal 𝒜) : I.toIdeal.homogeneousCore 𝒜 = I :=
-  by
-  ext1 <;> convert Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self I.is_homogeneous
+  by ext1 <;> convert Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self I.is_homogeneous
 
 variable (𝒜 I)
 
@@ -235,8 +233,7 @@ theorem bot : Ideal.IsHomogeneous 𝒜 ⊥ := fun i r hr => by
   rw [hr, decompose_zero, zero_apply]
   apply Ideal.zero_mem
 
-theorem top : Ideal.IsHomogeneous 𝒜 ⊤ := fun i r hr => by
-  simp only [Submodule.mem_top]
+theorem top : Ideal.IsHomogeneous 𝒜 ⊤ := fun i r hr => by simp only [Submodule.mem_top]
 
 variable {𝒜}
 
@@ -362,15 +359,13 @@ theorem to_ideal_infi {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) : (⨅ i,
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 @[simp]
 theorem to_ideal_supr₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
-    (⨆ (i) (j), s i j).toIdeal = ⨆ (i) (j), (s i j).toIdeal := by
-  simp_rw [to_ideal_supr]
+    (⨆ (i) (j), s i j).toIdeal = ⨆ (i) (j), (s i j).toIdeal := by simp_rw [to_ideal_supr]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 @[simp]
 theorem to_ideal_infi₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
-    (⨅ (i) (j), s i j).toIdeal = ⨅ (i) (j), (s i j).toIdeal := by
-  simp_rw [to_ideal_infi]
+    (⨅ (i) (j), s i j).toIdeal = ⨅ (i) (j), (s i j).toIdeal := by simp_rw [to_ideal_infi]
 
 @[simp]
 theorem eq_top_iff (I : HomogeneousIdeal 𝒜) : I = ⊤ ↔ I.toIdeal = ⊤ :=
@@ -463,13 +458,11 @@ theorem Ideal.homogeneous_core_eq_Sup : I.homogeneousCore 𝒜 = sup { J : Homog
 theorem Ideal.homogeneous_core'_eq_Sup : I.homogeneousCore' 𝒜 = sup { J : Ideal A | J.IsHomogeneous 𝒜 ∧ J ≤ I } := by
   refine' (IsLub.Sup_eq _).symm
   apply IsGreatest.is_lub
-  have coe_mono : Monotone (to_ideal : HomogeneousIdeal 𝒜 → Ideal A) := fun x y => id
+  have coe_mono : Monotoneₓ (to_ideal : HomogeneousIdeal 𝒜 → Ideal A) := fun x y => id
   convert coe_mono.map_is_greatest (Ideal.homogeneousCore.gc 𝒜).is_greatest_u using 1
   ext
   rw [mem_image, mem_set_of_eq]
-  refine'
-    ⟨fun hI => ⟨⟨x, hI.1⟩, ⟨hI.2, rfl⟩⟩, by
-      rintro ⟨x, ⟨hx, rfl⟩⟩ <;> exact ⟨x.is_homogeneous, hx⟩⟩
+  refine' ⟨fun hI => ⟨⟨x, hI.1⟩, ⟨hI.2, rfl⟩⟩, by rintro ⟨x, ⟨hx, rfl⟩⟩ <;> exact ⟨x.is_homogeneous, hx⟩⟩
 
 end HomogeneousCore
 
@@ -507,7 +500,7 @@ theorem Ideal.le_to_ideal_homogeneous_hull : I ≤ (Ideal.homogeneousHull 𝒜 I
   use ⟨r, hr⟩
   rfl
 
-theorem Ideal.homogeneous_hull_mono : Monotone (Ideal.homogeneousHull 𝒜) := fun I J I_le_J => by
+theorem Ideal.homogeneous_hull_mono : Monotoneₓ (Ideal.homogeneousHull 𝒜) := fun I J I_le_J => by
   apply Ideal.span_mono
   rintro r ⟨hr1, ⟨x, hx⟩, rfl⟩
   refine' ⟨hr1, ⟨⟨x, I_le_J hx⟩, rfl⟩⟩
@@ -605,7 +598,7 @@ with `0` as i-th coordinate for all `i ≤ 0`, i.e. `{a | ∀ (i : ι), i ≤ 0 
 def HomogeneousIdeal.irrelevant : HomogeneousIdeal 𝒜 :=
   ⟨(GradedRing.projZeroRingHom 𝒜).ker, fun i r (hr : (decompose 𝒜 r 0 : A) = 0) => by
     change (decompose 𝒜 (decompose 𝒜 r _ : A) 0 : A) = 0
-    by_cases' h : i = 0
+    by_cases h:i = 0
     · rw [h, hr, decompose_zero, zero_apply, ZeroMemClass.coe_zero]
       
     · rw [decompose_of_mem_ne 𝒜 (SetLike.coe_mem _) h]

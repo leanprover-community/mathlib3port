@@ -56,13 +56,11 @@ theorem CompClosure.of {a b} (m₁ m₂ : a ⟶ b) (h : r m₁ m₂) : CompClosu
   simpa using comp_closure.intro (𝟙 _) m₁ m₂ (𝟙 _) h
 
 theorem comp_left {a b c : C} (f : a ⟶ b) : ∀ (g₁ g₂ : b ⟶ c) (h : CompClosure r g₁ g₂), CompClosure r (f ≫ g₁) (f ≫ g₂)
-  | _, _, ⟨x, m₁, m₂, y, h⟩ => by
-    simpa using comp_closure.intro (f ≫ x) m₁ m₂ y h
+  | _, _, ⟨x, m₁, m₂, y, h⟩ => by simpa using comp_closure.intro (f ≫ x) m₁ m₂ y h
 
 theorem comp_right {a b c : C} (g : b ⟶ c) :
     ∀ (f₁ f₂ : a ⟶ b) (h : CompClosure r f₁ f₂), CompClosure r (f₁ ≫ g) (f₂ ≫ g)
-  | _, _, ⟨x, m₁, m₂, y, h⟩ => by
-    simpa using comp_closure.intro x m₁ m₂ (y ≫ g) h
+  | _, _, ⟨x, m₁, m₂, y, h⟩ => by simpa using comp_closure.intro x m₁ m₂ (y ≫ g) h
 
 /-- Hom-sets of the quotient category. -/
 def Hom (s t : Quotient r) :=
@@ -153,9 +151,7 @@ def lift : Quotient r ⥤ D where
 
 /-- The original functor factors through the induced functor. -/
 def lift.isLift : functor r ⋙ lift r F H ≅ F :=
-  NatIso.ofComponents (fun X => Iso.refl _)
-    (by
-      tidy)
+  NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
 
 @[simp]
 theorem lift.is_lift_hom (X : C) : (lift.isLift r F H).Hom.app X = 𝟙 (F.obj X) :=
@@ -167,7 +163,7 @@ theorem lift.is_lift_inv (X : C) : (lift.isLift r F H).inv.app X = 𝟙 (F.obj X
 
 theorem lift_map_functor_map {X Y : C} (f : X ⟶ Y) : (lift r F H).map ((functor r).map f) = F.map f := by
   rw [← nat_iso.naturality_1 (lift.is_lift r F H)]
-  dsimp'
+  dsimp
   simp
 
 end Quotientₓ

@@ -226,10 +226,7 @@ begin
 end
 ```
 -/
-theorem CategoryTheory.elementwise_of {α} (hh : α) {β}
-    (x : Tactic.CalculatedProp β hh := by
-      run_tac
-        tactic.derive_elementwise_proof) :
+theorem CategoryTheory.elementwise_of {α} (hh : α) {β} (x : Tactic.CalculatedProp β hh := by derive_elementwise_proof) :
     β :=
   x
 

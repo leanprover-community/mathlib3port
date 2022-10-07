@@ -52,9 +52,7 @@ theorem sublists'_cons (a : α) (l : List α) : sublists'ₓ (a :: l) = sublists
 theorem mem_sublists' {s t : List α} : s ∈ sublists'ₓ t ↔ s <+ t := by
   induction' t with a t IH generalizing s
   · simp only [sublists'_nil, mem_singleton]
-    exact
-      ⟨fun h => by
-        rw [h], eq_nil_of_sublist_nil⟩
+    exact ⟨fun h => by rw [h], eq_nil_of_sublist_nil⟩
     
   simp only [sublists'_cons, mem_append, IH, mem_map]
   constructor <;> intro h
@@ -88,8 +86,7 @@ theorem sublists_singleton (a : α) : sublistsₓ [a] = [[], [a]] :=
 theorem sublists_aux₁_eq_sublists_aux :
     ∀ (l) (f : List α → List β), sublistsAux₁ l f = sublistsAux l fun ys r => f ys ++ r
   | [], f => rfl
-  | a :: l, f => by
-    rw [sublists_aux₁, sublists_aux] <;> simp only [*, append_assoc]
+  | a :: l, f => by rw [sublists_aux₁, sublists_aux] <;> simp only [*, append_assoc]
 
 theorem sublists_aux_cons_eq_sublists_aux₁ (l : List α) : sublistsAux l cons = sublistsAux₁ l fun x => [x] := by
   rw [sublists_aux₁_eq_sublists_aux] <;> rfl
@@ -122,10 +119,8 @@ theorem sublists_aux_cons_cons (l : List α) (a : α) :
 theorem sublists_aux₁_append :
     ∀ (l₁ l₂ : List α) (f : List α → List β),
       sublistsAux₁ (l₁ ++ l₂) f = sublistsAux₁ l₁ f ++ sublistsAux₁ l₂ fun x => f x ++ sublistsAux₁ l₁ (f ∘ (· ++ x))
-  | [], l₂, f => by
-    simp only [sublists_aux₁, nil_append, append_nil]
-  | a :: l₁, l₂, f => by
-    simp only [sublists_aux₁, cons_append, sublists_aux₁_append l₁, append_assoc] <;> rfl
+  | [], l₂, f => by simp only [sublists_aux₁, nil_append, append_nil]
+  | a :: l₁, l₂, f => by simp only [sublists_aux₁, cons_append, sublists_aux₁_append l₁, append_assoc] <;> rfl
 
 theorem sublists_aux₁_concat (l : List α) (a : α) (f : List α → List β) :
     sublistsAux₁ (l ++ [a]) f = sublistsAux₁ l f ++ f [a] ++ sublistsAux₁ l fun x => f (x ++ [a]) := by
@@ -135,8 +130,7 @@ theorem sublists_aux₁_bind :
     ∀ (l : List α) (f : List α → List β) (g : β → List γ),
       (sublistsAux₁ l f).bind g = sublistsAux₁ l fun x => (f x).bind g
   | [], f, g => rfl
-  | a :: l, f, g => by
-    simp only [sublists_aux₁, bind_append, sublists_aux₁_bind l]
+  | a :: l, f, g => by simp only [sublists_aux₁, bind_append, sublists_aux₁_bind l]
 
 theorem sublists_aux_cons_append (l₁ l₂ : List α) :
     sublistsAux (l₁ ++ l₂) cons =
@@ -206,10 +200,7 @@ theorem map_ret_sublist_sublists (l : List α) : map List.ret l <+ sublistsₓ l
     simp only [map, map_append, sublists_concat] <;>
       exact
         ((append_sublist_append_left _).2 <|
-              singleton_sublist.2 <|
-                mem_map.2
-                  ⟨[], mem_sublists.2 (nil_sublist _), by
-                    rfl⟩).trans
+              singleton_sublist.2 <| mem_map.2 ⟨[], mem_sublists.2 (nil_sublist _), by rfl⟩).trans
           ((append_sublist_append_right _).2 IH)
 
 /-! ### sublists_len -/
@@ -236,14 +227,10 @@ theorem sublists_len_aux_append {α β γ : Type _} :
   | n + 1, [], f, g, r, s => rfl
   | n + 1, a :: l, f, g, r, s => by
     unfold sublists_len_aux
-    rw
-      [show (g ∘ f) ∘ List.cons a = g ∘ f ∘ List.cons a by
-        rfl,
-      sublists_len_aux_append, sublists_len_aux_append]
+    rw [show (g ∘ f) ∘ List.cons a = g ∘ f ∘ List.cons a by rfl, sublists_len_aux_append, sublists_len_aux_append]
 
 theorem sublists_len_aux_eq {α β : Type _} (l : List α) (n) (f : List α → β) (r) :
-    sublistsLenAux n l f r = (sublistsLen n l).map f ++ r := by
-  rw [sublists_len, ← sublists_len_aux_append] <;> rfl
+    sublistsLenAux n l f r = (sublistsLen n l).map f ++ r := by rw [sublists_len, ← sublists_len_aux_append] <;> rfl
 
 theorem sublists_len_aux_zero {α : Type _} (l : List α) (f : List α → β) (r) : sublistsLenAux 0 l f r = f [] :: r := by
   cases l <;> rfl
@@ -263,12 +250,9 @@ theorem sublists_len_succ_cons {α : Type _} (n) (a : α) (l) :
 
 @[simp]
 theorem length_sublists_len {α : Type _} : ∀ (n) (l : List α), length (sublistsLen n l) = Nat.choose (length l) n
-  | 0, l => by
-    simp
-  | n + 1, [] => by
-    simp
-  | n + 1, a :: l => by
-    simp [-add_commₓ, Nat.choose, *] <;> apply add_commₓ
+  | 0, l => by simp
+  | n + 1, [] => by simp
+  | n + 1, a :: l => by simp [-add_commₓ, Nat.choose, *] <;> apply add_commₓ
 
 theorem sublists_len_sublist_sublists' {α : Type _} : ∀ (n) (l : List α), sublistsLen n l <+ sublists'ₓ l
   | 0, l => singleton_sublist.2 (mem_sublists'.2 (nil_sublist _))

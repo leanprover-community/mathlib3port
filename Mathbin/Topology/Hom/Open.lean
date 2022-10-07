@@ -127,11 +127,7 @@ theorem cancel_right {g₁ g₂ : β →CO γ} {f : α →CO β} (hf : Surjectiv
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : β →CO γ} {f₁ f₂ : α →CO β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end ContinuousOpenMap
 

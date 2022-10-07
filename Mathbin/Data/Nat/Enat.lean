@@ -52,7 +52,7 @@ theorem coe_sub (m n : ℕ) : ↑(m - n) = (m - n : ℕ∞) :=
 theorem coe_mul (m n : ℕ) : ↑(m * n) = (m * n : ℕ∞) :=
   WithTop.coe_mul
 
-instance : CanLift ℕ∞ ℕ :=
+instance canLift : CanLift ℕ∞ ℕ coe fun n => n ≠ ⊤ :=
   WithTop.canLift
 
 /-- Conversion of `ℕ∞` to `ℕ` sending `∞` to `0`. -/
@@ -63,16 +63,13 @@ def toNat : MonoidWithZeroHom ℕ∞ ℕ where
   map_mul' := WithTop.untop'_zero_mul
 
 @[simp]
-theorem succ_def (m : ℕ∞) : Order.succ m = m + 1 := by
-  cases m <;> rfl
+theorem succ_def (m : ℕ∞) : Order.succ m = m + 1 := by cases m <;> rfl
 
 theorem add_one_le_of_lt (h : m < n) : m + 1 ≤ n :=
   m.succ_def ▸ Order.succ_le_of_lt h
 
 theorem add_one_le_iff (hm : m ≠ ⊤) : m + 1 ≤ n ↔ m < n :=
-  m.succ_def ▸
-    (Order.succ_le_iff_of_not_is_max <| by
-      rwa [is_max_iff_eq_top])
+  m.succ_def ▸ (Order.succ_le_iff_of_not_is_max <| by rwa [is_max_iff_eq_top])
 
 theorem one_le_iff_pos : 1 ≤ n ↔ 0 < n :=
   add_one_le_iff WithTop.zero_ne_top

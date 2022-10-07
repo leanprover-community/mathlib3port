@@ -67,14 +67,12 @@ theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
       intro n IH
       rcases n with (_ | _ | n)
       -- n = 0
-      · suffices ∃ gp : pair ℚ, pair.mk (1 : K) 0 = gp.map coe by
-          simpa [continuants_aux]
+      · suffices ∃ gp : pair ℚ, pair.mk (1 : K) 0 = gp.map coe by simpa [continuants_aux]
         use pair.mk 1 0
         simp
         
       -- n = 1
-      · suffices ∃ conts : pair ℚ, pair.mk g.h 1 = conts.map coe by
-          simpa [continuants_aux]
+      · suffices ∃ conts : pair ℚ, pair.mk g.h 1 = conts.map coe by simpa [continuants_aux]
         use pair.mk ⌊v⌋ 1
         simp
         
@@ -174,27 +172,24 @@ theorem coe_of_rat_eq : ((IntFractPair.of q).mapFr coe : IntFractPair K) = IntFr
 theorem coe_stream_nth_rat_eq :
     ((IntFractPair.stream q n).map (mapFr coe) : Option <| IntFractPair K) = IntFractPair.stream v n := by
   induction' n with n IH
-  case nat.zero =>
-    simp [int_fract_pair.stream, coe_of_rat_eq v_eq_q]
-  case nat.succ =>
-    rw [v_eq_q] at IH
-    cases' stream_q_nth_eq : int_fract_pair.stream q n with ifp_n
-    case option.none =>
-      simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq]
-    case option.some =>
-      cases' ifp_n with b fr
-      cases' Decidable.em (fr = 0) with fr_zero fr_ne_zero
-      · simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_zero]
-        
-      · replace IH : some (int_fract_pair.mk b ↑fr) = int_fract_pair.stream (↑q) n
-        · rwa [stream_q_nth_eq] at IH
-          
-        have : (fr : K)⁻¹ = ((fr⁻¹ : ℚ) : K) := by
-          norm_cast
-        have coe_of_fr := coe_of_rat_eq this
-        simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
-        exact congr_arg some coe_of_fr
-        
+  case zero => simp [int_fract_pair.stream, coe_of_rat_eq v_eq_q]
+  case succ =>
+  rw [v_eq_q] at IH
+  cases' stream_q_nth_eq : int_fract_pair.stream q n with ifp_n
+  case none => simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq]
+  case some =>
+  cases' ifp_n with b fr
+  cases' Decidable.em (fr = 0) with fr_zero fr_ne_zero
+  · simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_zero]
+    
+  · replace IH : some (int_fract_pair.mk b ↑fr) = int_fract_pair.stream (↑q) n
+    · rwa [stream_q_nth_eq] at IH
+      
+    have : (fr : K)⁻¹ = ((fr⁻¹ : ℚ) : K) := by norm_cast
+    have coe_of_fr := coe_of_rat_eq this
+    simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
+    exact congr_arg some coe_of_fr
+    
 
 theorem coe_stream_rat_eq :
     ((IntFractPair.stream q).map (Option.map (mapFr coe)) : Streamₓ <| Option <| IntFractPair K) =
@@ -229,8 +224,7 @@ theorem coe_of_s_rat_eq : ((of q).s.map (Pair.map coe) : Seqₓₓ <| Pair K) = 
 theorem coe_of_rat_eq : (⟨(of q).h, (of q).s.map (Pair.map coe)⟩ : GeneralizedContinuedFraction K) = of v := by
   cases' gcf_v_eq : of v with h s
   subst v
-  obtain rfl : ↑⌊↑q⌋ = h := by
-    injection gcf_v_eq
+  obtain rfl : ↑⌊↑q⌋ = h := by injection gcf_v_eq
   simp [coe_of_h_rat_eq rfl, coe_of_s_rat_eq rfl, gcf_v_eq]
 
 theorem of_terminates_iff_of_rat_terminates {v : K} {q : ℚ} (v_eq_q : v = (q : K)) :
@@ -276,8 +270,7 @@ theorem stream_succ_nth_fr_num_lt_nth_fr_num_rat {ifp_n ifp_succ_n : IntFractPai
   obtain ⟨ifp_n', stream_nth_eq', ifp_n_fract_ne_zero, int_fract_pair.of_eq_ifp_succ_n⟩ :
     ∃ ifp_n', int_fract_pair.stream q n = some ifp_n' ∧ ifp_n'.fr ≠ 0 ∧ int_fract_pair.of ifp_n'.fr⁻¹ = ifp_succ_n
   exact succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq
-  have : ifp_n = ifp_n' := by
-    injection Eq.trans stream_nth_eq.symm stream_nth_eq'
+  have : ifp_n = ifp_n' := by injection Eq.trans stream_nth_eq.symm stream_nth_eq'
   cases this
   rw [← int_fract_pair.of_eq_ifp_succ_n]
   cases' nth_stream_fr_nonneg_lt_one stream_nth_eq with zero_le_ifp_n_fract ifp_n_fract_lt_one
@@ -288,20 +281,19 @@ theorem stream_nth_fr_num_le_fr_num_sub_n_rat :
     ∀ {ifp_n : IntFractPair ℚ}, IntFractPair.stream q n = some ifp_n → ifp_n.fr.num ≤ (IntFractPair.of q).fr.num - n :=
   by
   induction' n with n IH
-  case nat.zero =>
-    intro ifp_zero stream_zero_eq
-    have : int_fract_pair.of q = ifp_zero := by
-      injection stream_zero_eq
-    simp [le_reflₓ, this.symm]
-  case nat.succ =>
-    intro ifp_succ_n stream_succ_nth_eq
-    suffices ifp_succ_n.fr.num + 1 ≤ (int_fract_pair.of q).fr.num - n by
-      rw [Int.coe_nat_succ, sub_add_eq_sub_sub]
-      solve_by_elim [le_sub_right_of_add_le]
-    rcases succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq with ⟨ifp_n, stream_nth_eq, -⟩
-    have : ifp_succ_n.fr.num < ifp_n.fr.num := stream_succ_nth_fr_num_lt_nth_fr_num_rat stream_nth_eq stream_succ_nth_eq
-    have : ifp_succ_n.fr.num + 1 ≤ ifp_n.fr.num := Int.add_one_le_of_ltₓ this
-    exact le_transₓ this (IH stream_nth_eq)
+  case zero =>
+  intro ifp_zero stream_zero_eq
+  have : int_fract_pair.of q = ifp_zero := by injection stream_zero_eq
+  simp [le_reflₓ, this.symm]
+  case succ =>
+  intro ifp_succ_n stream_succ_nth_eq
+  suffices ifp_succ_n.fr.num + 1 ≤ (int_fract_pair.of q).fr.num - n by
+    rw [Int.coe_nat_succ, sub_add_eq_sub_sub]
+    solve_by_elim [le_sub_right_of_add_le]
+  rcases succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq with ⟨ifp_n, stream_nth_eq, -⟩
+  have : ifp_succ_n.fr.num < ifp_n.fr.num := stream_succ_nth_fr_num_lt_nth_fr_num_rat stream_nth_eq stream_succ_nth_eq
+  have : ifp_succ_n.fr.num + 1 ≤ ifp_n.fr.num := Int.add_one_le_of_ltₓ this
+  exact le_transₓ this (IH stream_nth_eq)
 
 theorem exists_nth_stream_eq_none_of_rat (q : ℚ) : ∃ n : ℕ, IntFractPair.stream q n = none := by
   let fract_q_num := (Int.fract q).num
@@ -317,8 +309,7 @@ theorem exists_nth_stream_eq_none_of_rat (q : ℚ) : ∃ n : ℕ, IntFractPair.s
     have : fract_q_num - n = -1 := by
       have : 0 ≤ fract_q_num := rat.num_nonneg_iff_zero_le.elim_right (Int.fract_nonneg q)
       simp [Int.nat_abs_of_nonneg this, sub_add_eq_sub_sub_swap, sub_right_comm]
-    have : ifp.fr.num ≤ -1 := by
-      rwa [this] at ifp_fr_num_le_q_fr_num_sub_n
+    have : ifp.fr.num ≤ -1 := by rwa [this] at ifp_fr_num_le_q_fr_num_sub_n
     have : 0 ≤ ifp.fr := (nth_stream_fr_nonneg_lt_one stream_nth_eq).left
     have : 0 ≤ ifp.fr.num := rat.num_nonneg_iff_zero_le.elim_right this
     linarith

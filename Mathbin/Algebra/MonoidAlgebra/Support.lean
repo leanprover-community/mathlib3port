@@ -14,7 +14,7 @@ universe u₁ u₂ u₃
 
 namespace MonoidAlgebra
 
-open Finset Finsupp
+open Finsetₓ Finsupp
 
 variable {k : Type u₁} {G : Type u₂} {R : Type u₃} [Semiringₓ k]
 
@@ -27,7 +27,7 @@ theorem support_mul_single [RightCancelSemigroup G] (f : MonoidAlgebra k G) (r :
     (x : G) : (f * single x r).Support = f.Support.map (mulRightEmbedding x) := by
   ext y
   simp only [mem_support_iff, mem_map, exists_propₓ, mul_right_embedding_apply]
-  by_cases' H : ∃ a, a * x = y
+  by_cases H:∃ a, a * x = y
   · rcases H with ⟨a, rfl⟩
     rw [mul_single_apply_aux f fun _ => mul_left_injₓ x]
     simp [hr]
@@ -41,7 +41,7 @@ theorem support_single_mul [LeftCancelSemigroup G] (f : MonoidAlgebra k G) (r : 
     (x : G) : (single x r * f : MonoidAlgebra k G).Support = f.Support.map (mulLeftEmbedding x) := by
   ext y
   simp only [mem_support_iff, mem_map, exists_propₓ, mul_left_embedding_apply]
-  by_cases' H : ∃ a, x * a = y
+  by_cases H:∃ a, x * a = y
   · rcases H with ⟨a, rfl⟩
     rw [single_mul_apply_aux f fun _ => mul_right_injₓ x]
     simp [hr]
@@ -65,7 +65,7 @@ end MonoidAlgebra
 
 namespace AddMonoidAlgebra
 
-open Finset Finsupp MulOpposite
+open Finsetₓ Finsupp MulOpposite
 
 variable {k : Type u₁} {G : Type u₂} {R : Type u₃} [Semiringₓ k]
 

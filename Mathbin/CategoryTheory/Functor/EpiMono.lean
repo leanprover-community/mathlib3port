@@ -150,20 +150,12 @@ instance (priority := 100) preserves_monomorphisms_of_is_right_adjoint (F : C �
 instance (priority := 100) reflects_monomorphisms_of_faithful (F : C ⥤ D) [Faithful F] :
     ReflectsMonomorphisms
       F where reflects := fun X Y f hf =>
-    ⟨fun Z g h hgh =>
-      F.map_injective
-        ((cancel_mono (F.map f)).1
-          (by
-            rw [← F.map_comp, hgh, F.map_comp]))⟩
+    ⟨fun Z g h hgh => F.map_injective ((cancel_mono (F.map f)).1 (by rw [← F.map_comp, hgh, F.map_comp]))⟩
 
 instance (priority := 100) reflects_epimorphisms_of_faithful (F : C ⥤ D) [Faithful F] :
     ReflectsEpimorphisms
       F where reflects := fun X Y f hf =>
-    ⟨fun Z g h hgh =>
-      F.map_injective
-        ((cancel_epi (F.map f)).1
-          (by
-            rw [← F.map_comp, hgh, F.map_comp]))⟩
+    ⟨fun Z g h hgh => F.map_injective ((cancel_epi (F.map f)).1 (by rw [← F.map_comp, hgh, F.map_comp]))⟩
 
 section
 
@@ -177,10 +169,8 @@ def splitEpiEquiv [Full F] [Faithful F] : SplitEpi f ≃ SplitEpi (F.map f) wher
     apply F.map_injective
     simp only [map_comp, image_preimage, map_id]
     apply split_epi.id
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
 
 @[simp]
 theorem is_split_epi_iff [Full F] [Faithful F] : IsSplitEpi (F.map f) ↔ IsSplitEpi f := by
@@ -200,10 +190,8 @@ def splitMonoEquiv [Full F] [Faithful F] : SplitMono f ≃ SplitMono (F.map f) w
     apply F.map_injective
     simp only [map_comp, image_preimage, map_id]
     apply split_mono.id
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
 
 @[simp]
 theorem is_split_mono_iff [Full F] [Faithful F] : IsSplitMono (F.map f) ↔ IsSplitMono f := by
@@ -233,6 +221,14 @@ theorem mono_map_iff_mono [hF₁ : PreservesMonomorphisms F] [hF₂ : ReflectsMo
   · intro h
     exact F.map_mono f
     
+
+/-- If `F : C ⥤ D` is an equivalence of categories and `C` is a `split_epi_category`,
+then `D` also is. -/
+def splitEpiCategoryImpOfIsEquivalence [IsEquivalence F] [SplitEpiCategory C] : SplitEpiCategory D :=
+  ⟨fun X Y f => by
+    intro
+    rw [← F.inv.is_split_epi_iff f]
+    apply is_split_epi_of_epi⟩
 
 end
 

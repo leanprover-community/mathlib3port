@@ -101,8 +101,7 @@ theorem norm_dslope_le_div_of_maps_to_ball (hd : DifferentiableOn ℂ f (Ball c 
     
   rcases exists_dual_vector ℂ _ hc with ⟨g, hg, hgf⟩
   have hg' : ∥g∥₊ = 1 := Nnreal.eq hg
-  have hg₀ : ∥g∥₊ ≠ 0 := by
-    simpa only [hg'] using one_ne_zero
+  have hg₀ : ∥g∥₊ ≠ 0 := by simpa only [hg'] using one_ne_zero
   calc
     ∥dslope f c z∥ = ∥dslope (g ∘ f) c z∥ := by
       rw [g.dslope_comp, hgf, IsROrC.norm_of_real, norm_norm]
@@ -119,14 +118,12 @@ theorem affine_of_maps_to_ball_of_exists_norm_dslope_eq_div [CompleteSpace E] [S
     (h_eq : ∥dslope f c z₀∥ = R₂ / R₁) : Set.EqOn f (fun z => f c + (z - c) • dslope f c z₀) (Ball c R₁) := by
   set g := dslope f c
   rintro z hz
-  by_cases' z = c
+  by_cases z = c
   · simp [h]
     
   have h_R₁ : 0 < R₁ := nonempty_ball.mp ⟨_, h_z₀⟩
   have g_le_div : ∀ z ∈ ball c R₁, ∥g z∥ ≤ R₂ / R₁ := fun z hz => norm_dslope_le_div_of_maps_to_ball hd h_maps hz
-  have g_max : IsMaxOn (norm ∘ g) (ball c R₁) z₀ :=
-    is_max_on_iff.mpr fun z hz => by
-      simpa [h_eq] using g_le_div z hz
+  have g_max : IsMaxOn (norm ∘ g) (ball c R₁) z₀ := is_max_on_iff.mpr fun z hz => by simpa [h_eq] using g_le_div z hz
   have g_diff : DifferentiableOn ℂ g (ball c R₁) :=
     (differentiable_on_dslope (is_open_ball.mem_nhds (mem_ball_self h_R₁))).mpr hd
   have : g z = g z₀ :=
@@ -174,22 +171,14 @@ center of this disk to itself, then the absolute value of the derivative of `f` 
 this disk is at most `1`. -/
 theorem abs_deriv_le_one_of_maps_to_ball (hd : DifferentiableOn ℂ f (Ball c R))
     (h_maps : MapsTo f (Ball c R) (Ball c R)) (hc : f c = c) (h₀ : 0 < R) : abs (deriv f c) ≤ 1 :=
-  (norm_deriv_le_div_of_maps_to_ball hd
-        (by
-          rwa [hc])
-        h₀).trans_eq
-    (div_self h₀.ne')
+  (norm_deriv_le_div_of_maps_to_ball hd (by rwa [hc]) h₀).trans_eq (div_self h₀.ne')
 
 /-- The **Schwarz Lemma**: if `f : ℂ → ℂ` sends an open disk to itself and the center `c` of this
 disk to itself, then for any point `z` of this disk we have `dist (f z) c ≤ dist z c`. -/
 theorem dist_le_dist_of_maps_to_ball_self (hd : DifferentiableOn ℂ f (Ball c R))
     (h_maps : MapsTo f (Ball c R) (Ball c R)) (hc : f c = c) (hz : z ∈ Ball c R) : dist (f z) c ≤ dist z c := by
   have hR : 0 < R := nonempty_ball.1 ⟨z, hz⟩
-  simpa only [hc, div_self hR.ne', one_mulₓ] using
-    dist_le_div_mul_dist_of_maps_to_ball hd
-      (by
-        rwa [hc])
-      hz
+  simpa only [hc, div_self hR.ne', one_mulₓ] using dist_le_div_mul_dist_of_maps_to_ball hd (by rwa [hc]) hz
 
 /-- The **Schwarz Lemma**: if `f : ℂ → ℂ` sends an open disk with center `0` to itself, the for any
 point `z` of this disk we have `abs (f z) ≤ abs z`. -/

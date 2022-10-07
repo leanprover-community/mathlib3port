@@ -30,7 +30,7 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
             | some mono_lem => tactic.i_to_expr mono_lem
             | none => do
               let n ← get_unused_name `mono
-              to_expr (pquote.1 (Monotone (%%ₓe))) >>= assert n
+              to_expr (pquote.1 (Monotoneₓ (%%ₓe))) >>= assert n
               -- In order to resolve implicit arguments in `%%e`,
                 -- we build (and discard) the expression `%%n %%hyp` before calling the `mono` tactic.
                 swap

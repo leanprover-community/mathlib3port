@@ -279,8 +279,7 @@ theorem snd_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (snd N P).comp (f.Pr
 
 @[simp, to_additive prod_unique]
 theorem prod_unique (f : M →ₙ* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
-  ext fun x => by
-    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.etaₓ]
+  ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.etaₓ]
 
 end Prod
 
@@ -325,8 +324,7 @@ theorem coprod_apply (p : M × N) : f.coprod g p = f p.1 * g p.2 :=
 @[to_additive]
 theorem comp_coprod {Q : Type _} [CommSemigroupₓ Q] (h : P →ₙ* Q) (f : M →ₙ* P) (g : N →ₙ* P) :
     h.comp (f.coprod g) = (h.comp f).coprod (h.comp g) :=
-  ext fun x => by
-    simp
+  ext fun x => by simp
 
 end Coprod
 
@@ -421,8 +419,7 @@ theorem snd_comp_prod (f : M →* N) (g : M →* P) : (snd N P).comp (f.Prod g) 
 
 @[simp, to_additive prod_unique]
 theorem prod_unique (f : M →* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
-  ext fun x => by
-    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.etaₓ]
+  ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.etaₓ]
 
 end Prod
 
@@ -466,18 +463,15 @@ theorem coprod_apply (p : M × N) : f.coprod g p = f p.1 * g p.2 :=
 
 @[simp, to_additive]
 theorem coprod_comp_inl : (f.coprod g).comp (inl M N) = f :=
-  ext fun x => by
-    simp [coprod_apply]
+  ext fun x => by simp [coprod_apply]
 
 @[simp, to_additive]
 theorem coprod_comp_inr : (f.coprod g).comp (inr M N) = g :=
-  ext fun x => by
-    simp [coprod_apply]
+  ext fun x => by simp [coprod_apply]
 
 @[simp, to_additive]
 theorem coprod_unique (f : M × N →* P) : (f.comp (inl M N)).coprod (f.comp (inr M N)) = f :=
-  ext fun x => by
-    simp [coprod_apply, inl_apply, inr_apply, ← map_mul]
+  ext fun x => by simp [coprod_apply, inl_apply, inr_apply, ← map_mul]
 
 @[simp, to_additive]
 theorem coprod_inl_inr {M N : Type _} [CommMonoidₓ M] [CommMonoidₓ N] : (inl M N).coprod (inr M N) = id (M × N) :=
@@ -486,8 +480,7 @@ theorem coprod_inl_inr {M N : Type _} [CommMonoidₓ M] [CommMonoidₓ N] : (inl
 @[to_additive]
 theorem comp_coprod {Q : Type _} [CommMonoidₓ Q] (h : P →* Q) (f : M →* P) (g : N →* P) :
     h.comp (f.coprod g) = (h.comp f).coprod (h.comp g) :=
-  ext fun x => by
-    simp
+  ext fun x => by simp
 
 end Coprod
 
@@ -542,14 +535,9 @@ variable {M N} [Monoidₓ M] [Monoidₓ N]
       "The additive monoid equivalence between additive units of a product\nof two additive monoids, and the product of the additive units of each additive monoid."]
 def prodUnits : (M × N)ˣ ≃* Mˣ × Nˣ where
   toFun := (Units.map (MonoidHom.fst M N)).Prod (Units.map (MonoidHom.snd M N))
-  invFun := fun u =>
-    ⟨(u.1, u.2), (↑u.1⁻¹, ↑u.2⁻¹), by
-      simp , by
-      simp ⟩
-  left_inv := fun u => by
-    simp
-  right_inv := fun ⟨u₁, u₂⟩ => by
-    simp [Units.map]
+  invFun := fun u => ⟨(u.1, u.2), (↑u.1⁻¹, ↑u.2⁻¹), by simp, by simp⟩
+  left_inv := fun u => by simp
+  right_inv := fun ⟨u₁, u₂⟩ => by simp [Units.map]
   map_mul' := MonoidHom.map_mul _
 
 end
@@ -567,10 +555,8 @@ Used mainly to define the natural topology of `αˣ`. -/
   simps]
 def embedProduct (α : Type _) [Monoidₓ α] : αˣ →* α × αᵐᵒᵖ where
   toFun := fun x => ⟨x, op ↑x⁻¹⟩
-  map_one' := by
-    simp only [inv_one, eq_self_iff_true, Units.coe_one, op_one, Prod.mk_eq_one, and_selfₓ]
-  map_mul' := fun x y => by
-    simp only [mul_inv_rev, op_mul, Units.coe_mul, Prod.mk_mul_mk]
+  map_one' := by simp only [inv_one, eq_self_iff_true, Units.coe_one, op_one, Prod.mk_eq_one, and_selfₓ]
+  map_mul' := fun x y => by simp only [mul_inv_rev, op_mul, Units.coe_mul, Prod.mk_mul_mk]
 
 @[to_additive]
 theorem embed_product_injective (α : Type _) [Monoidₓ α] : Function.Injective (embedProduct α) := fun a₁ a₂ h =>

@@ -140,7 +140,7 @@ of all opens contained in some `U i`.
 instance : Functor.Final (pairwiseToOpensLeCover U) :=
   ⟨fun V =>
     is_connected_of_zigzag fun A B => by
-      rcases A with ⟨⟨⟨⟩⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟨⟩⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩ <;> dsimp'  at *
+      rcases A with ⟨⟨⟨⟩⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟨⟩⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩ <;> dsimp at *
       · refine' ⟨[{ left := ⟨⟨⟩⟩, right := pair i i', Hom := (le_inf a.le b.le).Hom }, _], _, rfl⟩
         exact
           List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i i' }⟩)
@@ -181,12 +181,8 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
 (in fact, equal) to the diagram factored through `opens_le_cover U`.
 -/
 def pairwiseDiagramIso : Pairwise.diagram U ≅ pairwiseToOpensLeCover U ⋙ fullSubcategoryInclusion _ where
-  Hom :=
-    { app := by
-        rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
-  inv :=
-    { app := by
-        rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
+  Hom := { app := by rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
+  inv := { app := by rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
 
 /-- The cocone `pairwise.cocone U` with cocone point `supr U` over `pairwise.diagram U` is isomorphic
 to the cocone `opens_le_cover_cocone U` (with the same cocone point)
@@ -196,9 +192,7 @@ def pairwiseCoconeIso :
     (Pairwise.cocone U).op ≅
       (Cones.postcomposeEquivalence (NatIso.op (pairwiseDiagramIso U : _) : _)).Functor.obj
         ((opensLeCoverCocone U).op.whisker (pairwiseToOpensLeCover U).op) :=
-  Cones.ext (Iso.refl _)
-    (by
-      tidy)
+  Cones.ext (Iso.refl _) (by tidy)
 
 end SheafCondition
 
@@ -266,7 +260,7 @@ def generateEquivalenceOpensLe :
       CategoryTheory.Functor.ext
         (by
           rintro ⟨⟨_, _⟩, _⟩
-          dsimp'
+          dsimp
           congr <;> ext)
         (by
           intros

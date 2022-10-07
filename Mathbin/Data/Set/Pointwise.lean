@@ -197,8 +197,7 @@ section HasInvolutiveInv
 variable [HasInvolutiveInv α] {s t : Set α} {a : α}
 
 @[to_additive]
-theorem inv_mem_inv : a⁻¹ ∈ s⁻¹ ↔ a ∈ s := by
-  simp only [mem_inv, inv_invₓ]
+theorem inv_mem_inv : a⁻¹ ∈ s⁻¹ ↔ a ∈ s := by simp only [mem_inv, inv_invₓ]
 
 @[simp, to_additive]
 theorem nonempty_inv : s⁻¹.Nonempty ↔ s.Nonempty :=
@@ -219,20 +218,17 @@ theorem image_inv : Inv.inv '' s = s⁻¹ :=
 @[simp, to_additive]
 instance : HasInvolutiveInv (Set α) where
   inv := Inv.inv
-  inv_inv := fun s => by
-    simp only [← inv_preimage, preimage_preimage, inv_invₓ, preimage_id']
+  inv_inv := fun s => by simp only [← inv_preimage, preimage_preimage, inv_invₓ, preimage_id']
 
 @[simp, to_additive]
 theorem inv_subset_inv : s⁻¹ ⊆ t⁻¹ ↔ s ⊆ t :=
   (Equivₓ.inv α).Surjective.preimage_subset_preimage_iff
 
 @[to_additive]
-theorem inv_subset : s⁻¹ ⊆ t ↔ s ⊆ t⁻¹ := by
-  rw [← inv_subset_inv, inv_invₓ]
+theorem inv_subset : s⁻¹ ⊆ t ↔ s ⊆ t⁻¹ := by rw [← inv_subset_inv, inv_invₓ]
 
 @[simp, to_additive]
-theorem inv_singleton (a : α) : ({a} : Set α)⁻¹ = {a⁻¹} := by
-  rw [← image_inv, image_singleton]
+theorem inv_singleton (a : α) : ({a} : Set α)⁻¹ = {a⁻¹} := by rw [← image_inv, image_singleton]
 
 @[to_additive]
 theorem inv_range {ι : Sort _} {f : ι → α} : (Range f)⁻¹ = Range fun i => (f i)⁻¹ := by
@@ -242,8 +238,7 @@ theorem inv_range {ι : Sort _} {f : ι → α} : (Range f)⁻¹ = Range fun i =
 open MulOpposite
 
 @[to_additive]
-theorem image_op_inv : op '' s⁻¹ = (op '' s)⁻¹ := by
-  simp_rw [← image_inv, Function.Semiconj.set_image op_inv s]
+theorem image_op_inv : op '' s⁻¹ = (op '' s)⁻¹ := by simp_rw [← image_inv, Function.Semiconj.set_image op_inv s]
 
 end HasInvolutiveInv
 
@@ -411,7 +406,7 @@ theorem Finite.mul : s.Finite → t.Finite → (s * t).Finite :=
 
 /-- Multiplication preserves finiteness. -/
 @[to_additive "Addition preserves finiteness."]
-def fintypeMul [DecidableEq α] (s t : Set α) [Fintype s] [Fintype t] : Fintype (s * t : Set α) :=
+def fintypeMul [DecidableEq α] (s t : Set α) [Fintypeₓ s] [Fintypeₓ t] : Fintypeₓ (s * t : Set α) :=
   Set.fintypeImage2 _ _ _
 
 /-- The singleton operation as a `mul_hom`. -/
@@ -635,11 +630,8 @@ variable [MulOneClassₓ α]
 /-- `set α` is a `mul_one_class` under pointwise operations if `α` is. -/
 @[to_additive "`set α` is an `add_zero_class` under pointwise operations if `α` is."]
 protected def mulOneClass : MulOneClassₓ (Set α) :=
-  { Set.hasOne, Set.hasMul with
-    mul_one := fun s => by
-      simp only [← singleton_one, mul_singleton, mul_oneₓ, image_id'],
-    one_mul := fun s => by
-      simp only [← singleton_one, singleton_mul, one_mulₓ, image_id'] }
+  { Set.hasOne, Set.hasMul with mul_one := fun s => by simp only [← singleton_one, mul_singleton, mul_oneₓ, image_id'],
+    one_mul := fun s => by simp only [← singleton_one, singleton_mul, one_mulₓ, image_id'] }
 
 localized [Pointwise]
   attribute [instance]
@@ -679,11 +671,11 @@ protected def monoid : Monoidₓ (Set α) :=
 localized [Pointwise] attribute [instance] Set.monoid Set.addMonoid
 
 @[to_additive]
-instance decidableMemMul [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] [DecidablePred (· ∈ t)] :
+instance decidableMemMul [Fintypeₓ α] [DecidableEq α] [DecidablePred (· ∈ s)] [DecidablePred (· ∈ t)] :
     DecidablePred (· ∈ s * t) := fun _ => decidableOfIff _ mem_mul.symm
 
 @[to_additive]
-instance decidableMemPow [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) : DecidablePred (· ∈ s ^ n) := by
+instance decidableMemPow [Fintypeₓ α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) : DecidablePred (· ∈ s ^ n) := by
   induction' n with n ih
   · simp_rw [pow_zeroₓ, mem_one]
     infer_instance
@@ -771,15 +763,13 @@ theorem univ_mul_univ : (Univ : Set α) * univ = univ :=
 theorem nsmul_univ {α : Type _} [AddMonoidₓ α] : ∀ {n : ℕ}, n ≠ 0 → n • (Univ : Set α) = univ
   | 0 => fun h => (h rfl).elim
   | 1 => fun _ => one_nsmul _
-  | n + 2 => fun _ => by
-    rw [succ_nsmul, nsmul_univ n.succ_ne_zero, univ_add_univ]
+  | n + 2 => fun _ => by rw [succ_nsmul, nsmul_univ n.succ_ne_zero, univ_add_univ]
 
 @[simp, to_additive nsmul_univ]
 theorem univ_pow : ∀ {n : ℕ}, n ≠ 0 → (Univ : Set α) ^ n = univ
   | 0 => fun h => (h rfl).elim
   | 1 => fun _ => pow_oneₓ _
-  | n + 2 => fun _ => by
-    rw [pow_succₓ, univ_pow n.succ_ne_zero, univ_mul_univ]
+  | n + 2 => fun _ => by rw [pow_succₓ, univ_pow n.succ_ne_zero, univ_mul_univ]
 
 @[to_additive]
 protected theorem _root_.is_unit.set : IsUnit a → IsUnit ({a} : Set α) :=
@@ -891,19 +881,15 @@ variable [MulZeroClassₓ α] {s t : Set α}
 /-! Note that `set` is not a `mul_zero_class` because `0 * ∅ ≠ 0`. -/
 
 
-theorem mul_zero_subset (s : Set α) : s * 0 ⊆ 0 := by
-  simp [subset_def, mem_mul]
+theorem mul_zero_subset (s : Set α) : s * 0 ⊆ 0 := by simp [subset_def, mem_mul]
 
-theorem zero_mul_subset (s : Set α) : 0 * s ⊆ 0 := by
-  simp [subset_def, mem_mul]
+theorem zero_mul_subset (s : Set α) : 0 * s ⊆ 0 := by simp [subset_def, mem_mul]
 
 theorem Nonempty.mul_zero (hs : s.Nonempty) : s * 0 = 0 :=
-  s.mul_zero_subset.antisymm <| by
-    simpa [mem_mul] using hs
+  s.mul_zero_subset.antisymm <| by simpa [mem_mul] using hs
 
 theorem Nonempty.zero_mul (hs : s.Nonempty) : 0 * s = 0 :=
-  s.zero_mul_subset.antisymm <| by
-    simpa [mem_mul] using hs
+  s.zero_mul_subset.antisymm <| by simpa [mem_mul] using hs
 
 end MulZeroClassₓ
 
@@ -936,48 +922,37 @@ theorem is_unit_singleton (a : α) : IsUnit ({a} : Set α) :=
   (Groupₓ.is_unit a).Set
 
 @[simp, to_additive]
-theorem is_unit_iff_singleton : IsUnit s ↔ ∃ a, s = {a} := by
-  simp only [is_unit_iff, Groupₓ.is_unit, and_trueₓ]
+theorem is_unit_iff_singleton : IsUnit s ↔ ∃ a, s = {a} := by simp only [is_unit_iff, Groupₓ.is_unit, and_trueₓ]
 
 @[simp, to_additive]
-theorem image_mul_left : (· * ·) a '' t = (· * ·) a⁻¹ ⁻¹' t := by
-  rw [image_eq_preimage_of_inverse] <;> intro c <;> simp
+theorem image_mul_left : (· * ·) a '' t = (· * ·) a⁻¹ ⁻¹' t := by rw [image_eq_preimage_of_inverse] <;> intro c <;> simp
 
 @[simp, to_additive]
-theorem image_mul_right : (· * b) '' t = (· * b⁻¹) ⁻¹' t := by
-  rw [image_eq_preimage_of_inverse] <;> intro c <;> simp
+theorem image_mul_right : (· * b) '' t = (· * b⁻¹) ⁻¹' t := by rw [image_eq_preimage_of_inverse] <;> intro c <;> simp
 
 @[to_additive]
-theorem image_mul_left' : (fun b => a⁻¹ * b) '' t = (fun b => a * b) ⁻¹' t := by
-  simp
+theorem image_mul_left' : (fun b => a⁻¹ * b) '' t = (fun b => a * b) ⁻¹' t := by simp
 
 @[to_additive]
-theorem image_mul_right' : (· * b⁻¹) '' t = (· * b) ⁻¹' t := by
-  simp
+theorem image_mul_right' : (· * b⁻¹) '' t = (· * b) ⁻¹' t := by simp
 
 @[simp, to_additive]
-theorem preimage_mul_left_singleton : (· * ·) a ⁻¹' {b} = {a⁻¹ * b} := by
-  rw [← image_mul_left', image_singleton]
+theorem preimage_mul_left_singleton : (· * ·) a ⁻¹' {b} = {a⁻¹ * b} := by rw [← image_mul_left', image_singleton]
 
 @[simp, to_additive]
-theorem preimage_mul_right_singleton : (· * a) ⁻¹' {b} = {b * a⁻¹} := by
-  rw [← image_mul_right', image_singleton]
+theorem preimage_mul_right_singleton : (· * a) ⁻¹' {b} = {b * a⁻¹} := by rw [← image_mul_right', image_singleton]
 
 @[simp, to_additive]
-theorem preimage_mul_left_one : (· * ·) a ⁻¹' 1 = {a⁻¹} := by
-  rw [← image_mul_left', image_one, mul_oneₓ]
+theorem preimage_mul_left_one : (· * ·) a ⁻¹' 1 = {a⁻¹} := by rw [← image_mul_left', image_one, mul_oneₓ]
 
 @[simp, to_additive]
-theorem preimage_mul_right_one : (· * b) ⁻¹' 1 = {b⁻¹} := by
-  rw [← image_mul_right', image_one, one_mulₓ]
+theorem preimage_mul_right_one : (· * b) ⁻¹' 1 = {b⁻¹} := by rw [← image_mul_right', image_one, one_mulₓ]
 
 @[to_additive]
-theorem preimage_mul_left_one' : (fun b => a⁻¹ * b) ⁻¹' 1 = {a} := by
-  simp
+theorem preimage_mul_left_one' : (fun b => a⁻¹ * b) ⁻¹' 1 = {a} := by simp
 
 @[to_additive]
-theorem preimage_mul_right_one' : (· * b⁻¹) ⁻¹' 1 = {b} := by
-  simp
+theorem preimage_mul_right_one' : (· * b⁻¹) ⁻¹' 1 = {b} := by simp
 
 @[simp, to_additive]
 theorem mul_univ (hs : s.Nonempty) : s * (Univ : Set α) = univ :=
@@ -995,19 +970,15 @@ section GroupWithZeroₓ
 
 variable [GroupWithZeroₓ α] {s t : Set α}
 
-theorem div_zero_subset (s : Set α) : s / 0 ⊆ 0 := by
-  simp [subset_def, mem_div]
+theorem div_zero_subset (s : Set α) : s / 0 ⊆ 0 := by simp [subset_def, mem_div]
 
-theorem zero_div_subset (s : Set α) : 0 / s ⊆ 0 := by
-  simp [subset_def, mem_div]
+theorem zero_div_subset (s : Set α) : 0 / s ⊆ 0 := by simp [subset_def, mem_div]
 
 theorem Nonempty.div_zero (hs : s.Nonempty) : s / 0 = 0 :=
-  s.div_zero_subset.antisymm <| by
-    simpa [mem_div] using hs
+  s.div_zero_subset.antisymm <| by simpa [mem_div] using hs
 
 theorem Nonempty.zero_div (hs : s.Nonempty) : 0 / s = 0 :=
-  s.zero_div_subset.antisymm <| by
-    simpa [mem_div] using hs
+  s.zero_div_subset.antisymm <| by simpa [mem_div] using hs
 
 end GroupWithZeroₓ
 
@@ -1062,15 +1033,15 @@ variable {ι : Type _} [CommMonoidₓ α]
 
 /-- The n-ary version of `set.mem_mul`. -/
 @[to_additive " The n-ary version of `set.mem_add`. "]
-theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
+theorem mem_finset_prod (t : Finsetₓ ι) (f : ι → Set α) (a : α) :
     (a ∈ ∏ i in t, f i) ↔ ∃ (g : ι → α)(hg : ∀ {i}, i ∈ t → g i ∈ f i), (∏ i in t, g i) = a := by
   classical
-  induction' t using Finset.induction_on with i is hi ih generalizing a
-  · simp_rw [Finset.prod_empty, Set.mem_one]
+  induction' t using Finsetₓ.induction_on with i is hi ih generalizing a
+  · simp_rw [Finsetₓ.prod_empty, Set.mem_one]
     exact ⟨fun h => ⟨fun i => a, fun i => False.elim, h.symm⟩, fun ⟨f, _, hf⟩ => hf.symm⟩
     
-  rw [Finset.prod_insert hi, Set.mem_mul]
-  simp_rw [Finset.prod_insert hi]
+  rw [Finsetₓ.prod_insert hi, Set.mem_mul]
+  simp_rw [Finsetₓ.prod_insert hi]
   simp_rw [ih]
   constructor
   · rintro ⟨x, y, hx, ⟨g, hg, rfl⟩, rfl⟩
@@ -1082,15 +1053,15 @@ theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
     · rw [update_noteq (ne_of_mem_of_not_memₓ hj hi)]
       exact hg hj
       
-    rw [Finset.prod_update_of_not_mem hi, Function.update_same]
+    rw [Finsetₓ.prod_update_of_not_mem hi, Function.update_same]
     
   · rintro ⟨g, hg, rfl⟩
-    exact ⟨g i, is.prod g, hg (is.mem_insert_self _), ⟨g, fun i hi => hg (Finset.mem_insert_of_mem hi), rfl⟩, rfl⟩
+    exact ⟨g i, is.prod g, hg (is.mem_insert_self _), ⟨g, fun i hi => hg (Finsetₓ.mem_insert_of_mem hi), rfl⟩, rfl⟩
     
 
 /-- A version of `set.mem_finset_prod` with a simpler RHS for products over a fintype. -/
 @[to_additive " A version of `set.mem_finset_sum` with a simpler RHS for sums over a fintype. "]
-theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
+theorem mem_fintype_prod [Fintypeₓ ι] (f : ι → Set α) (a : α) :
     (a ∈ ∏ i, f i) ↔ ∃ (g : ι → α)(hg : ∀ i, g i ∈ f i), (∏ i, g i) = a := by
   rw [mem_finset_prod]
   simp
@@ -1145,18 +1116,18 @@ theorem multiset_prod_singleton {M : Type _} [CommMonoidₓ M] (s : Multiset M) 
 
 /-- An n-ary version of `set.mul_mem_mul`. -/
 @[to_additive " An n-ary version of `set.add_mem_add`. "]
-theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i ∈ t, g i ∈ f i) :
+theorem finset_prod_mem_finset_prod (t : Finsetₓ ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i ∈ t, g i ∈ f i) :
     (∏ i in t, g i) ∈ ∏ i in t, f i :=
   multiset_prod_mem_multiset_prod _ _ _ hg
 
 /-- An n-ary version of `set.mul_subset_mul`. -/
 @[to_additive " An n-ary version of `set.add_subset_add`. "]
-theorem finset_prod_subset_finset_prod (t : Finset ι) (f₁ f₂ : ι → Set α) (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) :
+theorem finset_prod_subset_finset_prod (t : Finsetₓ ι) (f₁ f₂ : ι → Set α) (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) :
     (∏ i in t, f₁ i) ⊆ ∏ i in t, f₂ i :=
   multiset_prod_subset_multiset_prod _ _ _ hf
 
 @[to_additive]
-theorem finset_prod_singleton {M ι : Type _} [CommMonoidₓ M] (s : Finset ι) (I : ι → M) :
+theorem finset_prod_singleton {M ι : Type _} [CommMonoidₓ M] (s : Finsetₓ ι) (I : ι → M) :
     (∏ i : ι in s, ({I i} : Set M)) = {∏ i : ι in s, I i} :=
   (map_prod (singletonMonoidHom : M →* Set M) _ _).symm
 
@@ -1467,8 +1438,7 @@ instance smul_comm_class [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ
 
 @[to_additive]
 instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
-    IsScalarTower α β (Set γ) where smul_assoc := fun a b T => by
-    simp only [← image_smul, image_image, smul_assoc]
+    IsScalarTower α β (Set γ) where smul_assoc := fun a b T => by simp only [← image_smul, image_image, smul_assoc]
 
 @[to_additive]
 instance is_scalar_tower' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
@@ -1488,9 +1458,7 @@ on `set β`. -/
       "An additive action of an additive monoid `α` on a type `β` gives an additive action\nof `set α` on `set β`"]
 protected def mulAction [Monoidₓ α] [MulAction α β] : MulAction (Set α) (Set β) where
   mul_smul := fun _ _ _ => image2_assoc mul_smul
-  one_smul := fun s =>
-    image2_singleton_left.trans <| by
-      simp_rw [one_smul, image_id']
+  one_smul := fun s => image2_singleton_left.trans <| by simp_rw [one_smul, image_id']
 
 /-- A multiplicative action of a monoid on a type `β` gives a multiplicative action on `set β`. -/
 @[to_additive "An additive action of an additive monoid on a type `β` gives an additive action\non `set β`."]
@@ -1508,17 +1476,13 @@ localized [Pointwise] attribute [instance] Set.mulActionSet Set.addActionSet Set
 multiplicative action on `set β`. -/
 protected def distribMulActionSet [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β] : DistribMulAction α (Set β) where
   smul_add := fun _ _ _ => image_image2_distrib <| smul_add _
-  smul_zero := fun _ =>
-    image_singleton.trans <| by
-      rw [smul_zero, singleton_zero]
+  smul_zero := fun _ => image_singleton.trans <| by rw [smul_zero, singleton_zero]
 
 /-- A multiplicative action of a monoid on a monoid `β` gives a multiplicative action on `set β`. -/
 protected def mulDistribMulActionSet [Monoidₓ α] [Monoidₓ β] [MulDistribMulAction α β] :
     MulDistribMulAction α (Set β) where
   smul_mul := fun _ _ _ => image_image2_distrib <| smul_mul' _
-  smul_one := fun _ =>
-    image_singleton.trans <| by
-      rw [smul_one, singleton_one]
+  smul_one := fun _ => image_singleton.trans <| by rw [smul_one, singleton_one]
 
 localized [Pointwise] attribute [instance] Set.distribMulActionSet Set.mulDistribMulActionSet
 
@@ -1687,19 +1651,15 @@ because `0 * ∅ ≠ 0`.
 -/
 
 
-theorem smul_zero_subset (s : Set α) : s • (0 : Set β) ⊆ 0 := by
-  simp [subset_def, mem_smul]
+theorem smul_zero_subset (s : Set α) : s • (0 : Set β) ⊆ 0 := by simp [subset_def, mem_smul]
 
-theorem zero_smul_subset (t : Set β) : (0 : Set α) • t ⊆ 0 := by
-  simp [subset_def, mem_smul]
+theorem zero_smul_subset (t : Set β) : (0 : Set α) • t ⊆ 0 := by simp [subset_def, mem_smul]
 
 theorem Nonempty.smul_zero (hs : s.Nonempty) : s • (0 : Set β) = 0 :=
-  s.smul_zero_subset.antisymm <| by
-    simpa [mem_smul] using hs
+  s.smul_zero_subset.antisymm <| by simpa [mem_smul] using hs
 
 theorem Nonempty.zero_smul (ht : t.Nonempty) : (0 : Set α) • t = 0 :=
-  t.zero_smul_subset.antisymm <| by
-    simpa [mem_smul] using ht
+  t.zero_smul_subset.antisymm <| by simpa [mem_smul] using ht
 
 /-- A nonempty set is scaled by zero to the singleton set containing 0. -/
 theorem zero_smul_set {s : Set β} (h : s.Nonempty) : (0 : α) • s = (0 : Set β) := by
@@ -1712,7 +1672,7 @@ theorem subsingleton_zero_smul_set (s : Set β) : ((0 : α) • s).Subsingleton 
   subsingleton_singleton.anti <| zero_smul_set_subset s
 
 theorem zero_mem_smul_set {t : Set β} {a : α} (h : (0 : β) ∈ t) : (0 : β) ∈ a • t :=
-  ⟨0, h, smul_zero' _ _⟩
+  ⟨0, h, smul_zero _⟩
 
 variable [NoZeroSmulDivisors α β] {a : α}
 
@@ -1728,7 +1688,7 @@ theorem zero_mem_smul_iff : (0 : β) ∈ s • t ↔ (0 : α) ∈ s ∧ t.Nonemp
   · rintro (⟨hs, b, hb⟩ | ⟨ht, a, ha⟩)
     · exact ⟨0, b, hs, hb, zero_smul _ _⟩
       
-    · exact ⟨a, 0, ha, ht, smul_zero' _ _⟩
+    · exact ⟨a, 0, ha, ht, smul_zero _⟩
       
     
 
@@ -1834,8 +1794,7 @@ section Monoidₓ
 variable [Monoidₓ α] [AddGroupₓ β] [DistribMulAction α β] (a : α) (s : Set α) (t : Set β)
 
 @[simp]
-theorem smul_set_neg : a • -t = -(a • t) := by
-  simp_rw [← image_smul, ← image_neg, image_image, smul_neg]
+theorem smul_set_neg : a • -t = -(a • t) := by simp_rw [← image_smul, ← image_neg, image_image, smul_neg]
 
 @[simp]
 protected theorem smul_neg : s • -t = -(s • t) := by
@@ -1849,8 +1808,7 @@ section Ringₓ
 variable [Ringₓ α] [AddCommGroupₓ β] [Module α β] (a : α) (s : Set α) (t : Set β)
 
 @[simp]
-theorem neg_smul_set : -a • t = -(a • t) := by
-  simp_rw [← image_smul, ← image_neg, image_image, neg_smul]
+theorem neg_smul_set : -a • t = -(a • t) := by simp_rw [← image_smul, ← image_neg, image_image, neg_smul]
 
 @[simp]
 protected theorem neg_smul : -s • t = -(s • t) := by
@@ -1904,23 +1862,16 @@ theorem sup_eq_closure (H K : Submonoid M) : H ⊔ K = closure (H * K) :=
   le_antisymmₓ
     (sup_le (fun h hh => subset_closure ⟨h, 1, hh, K.one_mem, mul_oneₓ h⟩) fun k hk =>
       subset_closure ⟨1, k, H.one_mem, hk, one_mulₓ k⟩)
-    (by
-      conv_rhs => rw [← closure_eq H, ← closure_eq K] <;> apply closure_mul_le)
+    (by conv_rhs => rw [← closure_eq H, ← closure_eq K] <;> apply closure_mul_le)
 
 @[to_additive]
 theorem pow_smul_mem_closure_smul {N : Type _} [CommMonoidₓ N] [MulAction M N] [IsScalarTower M N N] (r : M) (s : Set N)
     {x : N} (hx : x ∈ closure s) : ∃ n : ℕ, r ^ n • x ∈ closure (r • s) := by
   apply @closure_induction N _ s (fun x : N => ∃ n : ℕ, r ^ n • x ∈ closure (r • s)) _ hx
   · intro x hx
-    exact
-      ⟨1,
-        subset_closure
-          ⟨_, hx, by
-            rw [pow_oneₓ]⟩⟩
+    exact ⟨1, subset_closure ⟨_, hx, by rw [pow_oneₓ]⟩⟩
     
-  · exact
-      ⟨0, by
-        simpa using one_mem _⟩
+  · exact ⟨0, by simpa using one_mem _⟩
     
   · rintro x y ⟨nx, hx⟩ ⟨ny, hy⟩
     use nx + ny
@@ -1932,12 +1883,11 @@ end Submonoid
 
 namespace Groupₓ
 
-theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {B : ℕ} (h2 : ∀ n, f n ≤ B)
+theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotoneₓ f) {B : ℕ} (h2 : ∀ n, f n ≤ B)
     (h3 : ∀ n, f n = f (n + 1) → f (n + 1) = f (n + 2)) : ∀ k, B ≤ k → f k = f B := by
   have key : ∃ n : ℕ, n ≤ B ∧ f n = f (n + 1) := by
     contrapose! h2
-    suffices ∀ n : ℕ, n ≤ B + 1 → n ≤ f n by
-      exact ⟨B + 1, this (B + 1) (le_reflₓ (B + 1))⟩
+    suffices ∀ n : ℕ, n ≤ B + 1 → n ≤ f n by exact ⟨B + 1, this (B + 1) (le_reflₓ (B + 1))⟩
     exact fun n =>
       Nat.rec (fun h => Nat.zero_leₓ (f 0))
         (fun n ih h =>
@@ -1951,29 +1901,29 @@ theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {
     exact fun k hk => (key k (hn1.trans hk)).trans (key B hn1).symm
     
 
-variable {G : Type _} [Groupₓ G] [Fintype G] (S : Set G)
+variable {G : Type _} [Groupₓ G] [Fintypeₓ G] (S : Set G)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Interactive.lean:72:16: TODO classical! not yet supported
 @[to_additive]
 theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k)] :
-    ∀ k, Fintype.card G ≤ k → Fintype.card ↥(S ^ k) = Fintype.card ↥(S ^ Fintype.card G) := by
-  have hG : 0 < Fintype.card G := fintype.card_pos_iff.mpr ⟨1⟩
-  by_cases' hS : S = ∅
-  · refine' fun k hk => Fintype.card_congr _
+    ∀ k, Fintypeₓ.card G ≤ k → Fintypeₓ.card ↥(S ^ k) = Fintypeₓ.card ↥(S ^ Fintypeₓ.card G) := by
+  have hG : 0 < Fintypeₓ.card G := fintype.card_pos_iff.mpr ⟨1⟩
+  by_cases hS:S = ∅
+  · refine' fun k hk => Fintypeₓ.card_congr _
     rw [hS, empty_pow (ne_of_gtₓ (lt_of_lt_of_leₓ hG hk)), empty_pow (ne_of_gtₓ hG)]
     
   obtain ⟨a, ha⟩ := set.ne_empty_iff_nonempty.mp hS
   classical
-  have key : ∀ (a) (s t : Set G), (∀ b : G, b ∈ s → a * b ∈ t) → Fintype.card s ≤ Fintype.card t := by
-    refine' fun a s t h => Fintype.card_le_of_injective (fun ⟨b, hb⟩ => ⟨a * b, h b hb⟩) _
+  have key : ∀ (a) (s t : Set G), (∀ b : G, b ∈ s → a * b ∈ t) → Fintypeₓ.card s ≤ Fintypeₓ.card t := by
+    refine' fun a s t h => Fintypeₓ.card_le_of_injective (fun ⟨b, hb⟩ => ⟨a * b, h b hb⟩) _
     rintro ⟨b, hb⟩ ⟨c, hc⟩ hbc
     exact Subtype.ext (mul_left_cancelₓ (subtype.ext_iff.mp hbc))
-  have mono : Monotone (fun n => Fintype.card ↥(S ^ n) : ℕ → ℕ) :=
+  have mono : Monotoneₓ (fun n => Fintypeₓ.card ↥(S ^ n) : ℕ → ℕ) :=
     monotone_nat_of_le_succ fun n => key a _ _ fun b hb => Set.mul_mem_mul ha hb
   convert
     card_pow_eq_card_pow_card_univ_aux mono (fun n => set_fintype_card_le_univ (S ^ n)) fun n h =>
       le_antisymmₓ (mono (n + 1).le_succ) (key a⁻¹ _ _ _)
-  · simp only [Finset.filter_congr_decidable, Fintype.card_of_finset]
+  · simp only [Finsetₓ.filter_congr_decidable, Fintypeₓ.card_of_finset]
     
   replace h : {a} * S ^ n = S ^ (n + 1)
   · refine' Set.eq_of_subset_of_card_le _ (le_transₓ (ge_of_eqₓ h) _)
@@ -2045,8 +1995,7 @@ end Mul
 
 @[simp, to_additive]
 theorem swap_mem_mul_antidiagonal [CommSemigroupₓ α] {s t : Set α} {a : α} {x : α × α} :
-    x.swap ∈ Set.MulAntidiagonal s t a ↔ x ∈ Set.MulAntidiagonal t s a := by
-  simp [mul_comm, And.left_comm]
+    x.swap ∈ Set.MulAntidiagonal s t a ↔ x ∈ Set.MulAntidiagonal t s a := by simp [mul_comm, And.left_comm]
 
 namespace MulAntidiagonal
 
@@ -2113,7 +2062,7 @@ end MulAntidiagonal
 
 end Set
 
-namespace Finset
+namespace Finsetₓ
 
 variable [OrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsPwo) (ht : t.IsPwo) (a : α)
 
@@ -2122,7 +2071,7 @@ element in `t` that multiply to `a`, but its construction requires proofs that `
 well-ordered. -/
 @[to_additive
       "`finset.add_antidiagonal_of_is_wf hs ht a` is the set of all pairs of an element in\n`s` and an element in `t` that add to `a`, but its construction requires proofs that `s` and `t` are\nwell-ordered."]
-noncomputable def mulAntidiagonal : Finset (α × α) :=
+noncomputable def mulAntidiagonal : Finsetₓ (α × α) :=
   (Set.MulAntidiagonal.finite_of_is_pwo hs ht a).toFinset
 
 variable {hs ht a} {u : Set α} {hu : u.IsPwo} {x : α × α}
@@ -2140,7 +2089,7 @@ theorem mul_antidiagonal_mono_right (h : u ⊆ t) : mulAntidiagonal hs hu a ⊆ 
   Finite.to_finset_subset.2 <| Set.mul_antidiagonal_mono_right h
 
 @[simp, to_additive]
-theorem swap_mem_mul_antidiagonal : x.swap ∈ Finset.mulAntidiagonal hs ht a ↔ x ∈ Finset.mulAntidiagonal ht hs a := by
+theorem swap_mem_mul_antidiagonal : x.swap ∈ Finsetₓ.mulAntidiagonal hs ht a ↔ x ∈ Finsetₓ.mulAntidiagonal ht hs a := by
   simp [mul_comm, And.left_comm]
 
 @[to_additive]
@@ -2167,5 +2116,5 @@ theorem mul_antidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s 
     exact ⟨hs.min_mem _, ht.min_mem _, rfl⟩
     
 
-end Finset
+end Finsetₓ
 

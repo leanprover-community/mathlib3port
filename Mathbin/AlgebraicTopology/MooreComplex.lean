@@ -58,7 +58,7 @@ variable (X : SimplicialObject C)
 @[simp]
 def objX : ∀ n : ℕ, Subobject (X.obj (op (SimplexCategory.mk n)))
   | 0 => ⊤
-  | n + 1 => Finset.univ.inf fun k : Finₓ (n + 1) => kernelSubobject (X.δ k.succ)
+  | n + 1 => Finsetₓ.univ.inf fun k : Finₓ (n + 1) => kernelSubobject (X.δ k.succ)
 
 /-- The differentials in the normalized Moore complex.
 -/
@@ -75,17 +75,13 @@ def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
     -- A morphism `f` factors through the kernel of `g` exactly if `f ≫ g = 0`.
     apply kernel_subobject_factors
     -- Use a simplicial identity
-    dsimp' [obj_X]
+    dsimp [obj_X]
     erw [category.assoc, ← X.δ_comp_δ (Finₓ.zero_le i.succ), ← category.assoc]
     -- It's the first two factors which are zero.
     convert zero_comp
     -- We can rewrite the arrow out of the intersection of all the kernels as a composition
     -- of a morphism we don't care about with the arrow out of the kernel of `X.δ i.succ.succ`.
-    rw [←
-      factor_thru_arrow _ _
-        (finset_inf_arrow_factors Finset.univ _ i.succ
-          (by
-            simp ))]
+    rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finsetₓ.univ _ i.succ (by simp))]
     -- It's the second two factors which are zero.
     rw [category.assoc]
     convert comp_zero
@@ -95,24 +91,16 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   -- It's a pity we need to do a case split here;
     -- after the first simp the proofs are almost identical
     cases n <;>
-    dsimp'
+    dsimp
   · simp only [subobject.factor_thru_arrow_assoc]
     slice_lhs 2 3 => erw [← X.δ_comp_δ (Finₓ.zero_le 0)]
-    rw [←
-      factor_thru_arrow _ _
-        (finset_inf_arrow_factors Finset.univ _ (0 : Finₓ 2)
-          (by
-            simp ))]
+    rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finsetₓ.univ _ (0 : Finₓ 2) (by simp))]
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
     simp
     
   · simp [factor_thru_right]
     slice_lhs 2 3 => erw [← X.δ_comp_δ (Finₓ.zero_le 0)]
-    rw [←
-      factor_thru_arrow _ _
-        (finset_inf_arrow_factors Finset.univ _ (0 : Finₓ (n + 3))
-          (by
-            simp ))]
+    rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finsetₓ.univ _ (0 : Finₓ (n + 3)) (by simp))]
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
     simp
     
@@ -136,31 +124,23 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
   ChainComplex.ofHom _ _ _ _ _ _
     (fun n => by
       refine' factor_thru _ (arrow _ ≫ f.app (op (SimplexCategory.mk n))) _
-      cases n <;> dsimp'
+      cases n <;> dsimp
       · apply top_factors
         
       · refine' (finset_inf_factors _).mpr fun i m => _
         apply kernel_subobject_factors
         slice_lhs 2 3 => erw [← f.naturality]
-        rw [←
-          factor_thru_arrow _ _
-            (finset_inf_arrow_factors Finset.univ _ i
-              (by
-                simp ))]
+        rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finsetₓ.univ _ i (by simp))]
         slice_lhs 2 3 => erw [kernel_subobject_arrow_comp]
         simp
         )
     fun n => by
-    cases n <;> dsimp'
+    cases n <;> dsimp
     · ext
       simp
-      erw [f.naturality]
-      rfl
       
     · ext
       simp
-      erw [f.naturality]
-      rfl
       
 
 end NormalizedMooreComplex
@@ -184,7 +164,7 @@ def normalizedMooreComplex : SimplicialObject C ⥤ ChainComplex C ℕ where
   map_id' := fun X => by
     ext n
     cases n <;>
-      · dsimp'
+      · dsimp
         simp
         
   map_comp' := fun X Y Z f g => by
@@ -195,8 +175,7 @@ variable {C}
 
 @[simp]
 theorem normalized_Moore_complex_obj_d (X : SimplicialObject C) (n : ℕ) :
-    ((normalizedMooreComplex C).obj X).d (n + 1) n = NormalizedMooreComplex.objD X n := by
-  apply ChainComplex.of_d
+    ((normalizedMooreComplex C).obj X).d (n + 1) n = NormalizedMooreComplex.objD X n := by apply ChainComplex.of_d
 
 end AlgebraicTopology
 

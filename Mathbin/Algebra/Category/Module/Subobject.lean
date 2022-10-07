@@ -88,8 +88,7 @@ noncomputable def toKernelSubobject {M N : ModuleCat R} {f : M ⟶ N} : LinearMa
 
 @[simp]
 theorem to_kernel_subobject_arrow {M N : ModuleCat R} {f : M ⟶ N} (x : LinearMap.ker f) :
-    (kernelSubobject f).arrow (toKernelSubobject x) = x.1 := by
-  simp [to_kernel_subobject]
+    (kernelSubobject f).arrow (toKernelSubobject x) = x.1 := by simp [to_kernel_subobject]
 
 /-- An extensionality lemma showing that two elements of a cokernel by an image
 are equal if they differ by an element of the image.

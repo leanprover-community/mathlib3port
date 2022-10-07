@@ -31,15 +31,12 @@ namespace Submonoid
 
 @[to_additive]
 noncomputable instance [Monoidₓ M] : Groupₓ (IsUnit.submonoid M) :=
-  { show Monoidₓ (IsUnit.submonoid M) by
-      infer_instance with
-    inv := fun x => ⟨_, x.Prop.Unit⁻¹.IsUnit⟩, mul_left_inv := fun x => Subtype.eq x.Prop.Unit.inv_val }
+  { show Monoidₓ (IsUnit.submonoid M) by infer_instance with inv := fun x => ⟨_, x.Prop.Unit⁻¹.IsUnit⟩,
+    mul_left_inv := fun x => Subtype.eq x.Prop.Unit.inv_val }
 
 @[to_additive]
 noncomputable instance [CommMonoidₓ M] : CommGroupₓ (IsUnit.submonoid M) :=
-  { show Groupₓ (IsUnit.submonoid M) by
-      infer_instance with
-    mul_comm := fun a b => mul_comm a b }
+  { show Groupₓ (IsUnit.submonoid M) by infer_instance with mul_comm := fun a b => mul_comm a b }
 
 @[to_additive]
 theorem IsUnit.Submonoid.coe_inv [Monoidₓ M] (x : IsUnit.submonoid M) : ↑x⁻¹ = (↑x.Prop.Unit⁻¹ : M) :=
@@ -54,9 +51,7 @@ variable [Monoidₓ M] (S : Submonoid M)
 def leftInv : Submonoid M where
   Carrier := { x : M | ∃ y : S, x * y = 1 }
   one_mem' := ⟨1, mul_oneₓ 1⟩
-  mul_mem' := fun a b ⟨a', ha⟩ ⟨b', hb⟩ =>
-    ⟨b' * a', by
-      rw [coe_mul, ← mul_assoc, mul_assoc a, hb, mul_oneₓ, ha]⟩
+  mul_mem' := fun a b ⟨a', ha⟩ ⟨b', hb⟩ => ⟨b' * a', by rw [coe_mul, ← mul_assoc, mul_assoc a, hb, mul_oneₓ, ha]⟩
 
 @[to_additive]
 theorem left_inv_left_inv_le : S.left_inv.left_inv ≤ S := by
@@ -99,8 +94,7 @@ section CommMonoidₓ
 variable [CommMonoidₓ M] (S : Submonoid M)
 
 @[simp, to_additive]
-theorem from_left_inv_mul (x : S.left_inv) : (S.fromLeftInv x : M) * x = 1 := by
-  rw [mul_comm, mul_from_left_inv]
+theorem from_left_inv_mul (x : S.left_inv) : (S.fromLeftInv x : M) * x = 1 := by rw [mul_comm, mul_from_left_inv]
 
 @[to_additive]
 theorem left_inv_le_is_unit : S.left_inv ≤ IsUnit.submonoid M := fun x ⟨y, hx⟩ => ⟨⟨x, y, hx, mul_comm x y ▸ hx⟩, rfl⟩
@@ -133,16 +127,12 @@ noncomputable def leftInvEquiv : S.left_inv ≃* S :=
       exact ⟨x'.inv, x, hx ▸ x'.inv_val⟩,
     left_inv := fun x =>
       Subtype.eq <| by
-        dsimp'
+        dsimp
         generalize_proofs h
         rw [← h.some.mul_left_inj]
-        exact
-          h.some.inv_val.trans
-            ((S.mul_from_left_inv x).symm.trans
-              (by
-                rw [h.some_spec])),
+        exact h.some.inv_val.trans ((S.mul_from_left_inv x).symm.trans (by rw [h.some_spec])),
     right_inv := fun x => by
-      dsimp'
+      dsimp
       ext
       rw [from_left_inv_eq_iff]
       convert (hS x.prop).some.inv_val
@@ -157,12 +147,10 @@ theorem left_inv_equiv_symm_from_left_inv (x : S.left_inv) : (S.leftInvEquiv hS)
   (S.leftInvEquiv hS).left_inv x
 
 @[to_additive]
-theorem left_inv_equiv_mul (x : S.left_inv) : (S.leftInvEquiv hS x : M) * x = 1 := by
-  simp
+theorem left_inv_equiv_mul (x : S.left_inv) : (S.leftInvEquiv hS x : M) * x = 1 := by simp
 
 @[to_additive]
-theorem mul_left_inv_equiv (x : S.left_inv) : (x : M) * S.leftInvEquiv hS x = 1 := by
-  simp
+theorem mul_left_inv_equiv (x : S.left_inv) : (x : M) * S.leftInvEquiv hS x = 1 := by simp
 
 @[simp, to_additive]
 theorem left_inv_equiv_symm_mul (x : S) : ((S.leftInvEquiv hS).symm x : M) * x = 1 := by

@@ -28,12 +28,8 @@ variable {C}
 structure Modₓ (A : Mon_ C) where
   x : C
   act : A.x ⊗ X ⟶ X
-  one_act' : (A.one ⊗ 𝟙 X) ≫ act = (λ_ X).Hom := by
-    run_tac
-      obviously
-  assoc' : (A.mul ⊗ 𝟙 X) ≫ act = (α_ A.x A.x X).Hom ≫ (𝟙 A.x ⊗ act) ≫ act := by
-    run_tac
-      obviously
+  one_act' : (A.one ⊗ 𝟙 X) ≫ act = (λ_ X).Hom := by obviously
+  assoc' : (A.mul ⊗ 𝟙 X) ≫ act = (α_ A.x A.x X).Hom ≫ (𝟙 A.x ⊗ act) ≫ act := by obviously
 
 restate_axiom Modₓ.one_act'
 
@@ -47,17 +43,14 @@ variable {A : Mon_ C} (M : Modₓ A)
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem assoc_flip : (𝟙 A.x ⊗ M.act) ≫ M.act = (α_ A.x A.x M.x).inv ≫ (A.mul ⊗ 𝟙 M.x) ≫ M.act := by
-  simp
+theorem assoc_flip : (𝟙 A.x ⊗ M.act) ≫ M.act = (α_ A.x A.x M.x).inv ≫ (A.mul ⊗ 𝟙 M.x) ≫ M.act := by simp
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A morphism of module objects. -/
 @[ext]
 structure Hom (M N : Modₓ A) where
   Hom : M.x ⟶ N.x
-  act_hom' : M.act ≫ hom = (𝟙 A.x ⊗ hom) ≫ N.act := by
-    run_tac
-      obviously
+  act_hom' : M.act ≫ hom = (𝟙 A.x ⊗ hom) ≫ N.act := by obviously
 
 restate_axiom hom.act_hom'
 
@@ -130,7 +123,7 @@ def comap {A B : Mon_ C} (f : A ⟶ B) : Modₓ B ⥤ Modₓ A where
   map := fun M N g =>
     { Hom := g.Hom,
       act_hom' := by
-        dsimp'
+        dsimp
         slice_rhs 1 2 => rw [id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]
         slice_rhs 2 3 => rw [← g.act_hom]
         rw [category.assoc] }

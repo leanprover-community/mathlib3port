@@ -31,6 +31,10 @@ be satisfied by itself and all stricter types.
 ## Concrete homs
 
 * `complete_lattice.set_preimage`: `set.preimage` as a complete lattice homomorphism.
+
+## TODO
+
+Frame homs are Heyting homs.
 -/
 
 
@@ -95,8 +99,7 @@ theorem map_supr [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 theorem map_supr₂ [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
-    f (⨆ (i) (j), g i j) = ⨆ (i) (j), f (g i j) := by
-  simp_rw [map_supr]
+    f (⨆ (i) (j), g i j) = ⨆ (i) (j), f (g i j) := by simp_rw [map_supr]
 
 theorem map_infi [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ι → α) : f (⨅ i, g i) = ⨅ i, f (g i) := by
   rw [infi, infi, map_Inf, Set.range_comp]
@@ -104,24 +107,19 @@ theorem map_infi [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 theorem map_infi₂ [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
-    f (⨅ (i) (j), g i j) = ⨅ (i) (j), f (g i j) := by
-  simp_rw [map_infi]
+    f (⨅ (i) (j), g i j) = ⨅ (i) (j), f (g i j) := by simp_rw [map_infi]
 
 -- See note [lower instance priority]
 instance (priority := 100) SupHomClassₓ.toSupBotHomClass [CompleteLattice α] [CompleteLattice β] [SupHomClassₓ F α β] :
     SupBotHomClass F α β where
-  map_sup := fun f a b => by
-    rw [← Sup_pair, map_Sup, Set.image_pair, Sup_pair]
-  map_bot := fun f => by
-    rw [← Sup_empty, map_Sup, Set.image_empty, Sup_empty]
+  map_sup := fun f a b => by rw [← Sup_pair, map_Sup, Set.image_pair, Sup_pair]
+  map_bot := fun f => by rw [← Sup_empty, map_Sup, Set.image_empty, Sup_empty]
 
 -- See note [lower instance priority]
 instance (priority := 100) InfHomClassₓ.toInfTopHomClass [CompleteLattice α] [CompleteLattice β] [InfHomClassₓ F α β] :
     InfTopHomClass F α β where
-  map_inf := fun f a b => by
-    rw [← Inf_pair, map_Inf, Set.image_pair, Inf_pair]
-  map_top := fun f => by
-    rw [← Inf_empty, map_Inf, Set.image_empty, Inf_empty]
+  map_inf := fun f a b => by rw [← Inf_pair, map_Inf, Set.image_pair, Inf_pair]
+  map_top := fun f => by rw [← Inf_empty, map_Inf, Set.image_empty, Inf_empty]
 
 -- See note [lower instance priority]
 instance (priority := 100) FrameHomClass.toSupHomClass [CompleteLattice α] [CompleteLattice β] [FrameHomClass F α β] :
@@ -146,16 +144,12 @@ instance (priority := 100) CompleteLatticeHomClass.toBoundedLatticeHomClass [Com
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toSupHomClassₓ [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
     SupHomClassₓ F α β :=
-  ⟨fun f s =>
-    eq_of_forall_ge_iffₓ fun c => by
-      simp only [← le_map_inv_iff, Sup_le_iff, Set.ball_image_iff]⟩
+  ⟨fun f s => eq_of_forall_ge_iffₓ fun c => by simp only [← le_map_inv_iff, Sup_le_iff, Set.ball_image_iff]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toInfHomClassₓ [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
     InfHomClassₓ F α β :=
-  ⟨fun f s =>
-    eq_of_forall_le_iffₓ fun c => by
-      simp only [← map_inv_le_iff, le_Inf_iff, Set.ball_image_iff]⟩
+  ⟨fun f s => eq_of_forall_le_iffₓ fun c => by simp only [← map_inv_le_iff, le_Inf_iff, Set.ball_image_iff]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toCompleteLatticeHomClass [CompleteLattice α] [CompleteLattice β]
@@ -187,8 +181,7 @@ variable [HasSupₓ β] [HasSupₓ γ] [HasSupₓ δ]
 
 instance : SupHomClassₓ (SupHomₓ α β) α β where
   coe := SupHomₓ.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_Sup := SupHomₓ.map_Sup'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -214,8 +207,7 @@ variable (α)
 
 /-- `id` as a `Sup_hom`. -/
 protected def id : SupHomₓ α α :=
-  ⟨id, fun s => by
-    rw [id, Set.image_id]⟩
+  ⟨id, fun s => by rw [id, Set.image_id]⟩
 
 instance : Inhabited (SupHomₓ α α) :=
   ⟨SupHomₓ.id α⟩
@@ -233,8 +225,7 @@ theorem id_apply (a : α) : SupHomₓ.id α a = a :=
 /-- Composition of `Sup_hom`s as a `Sup_hom`. -/
 def comp (f : SupHomₓ β γ) (g : SupHomₓ α β) : SupHomₓ α γ where
   toFun := f ∘ g
-  map_Sup' := fun s => by
-    rw [comp_apply, map_Sup, map_Sup, Set.image_image]
+  map_Sup' := fun s => by rw [comp_apply, map_Sup, map_Sup, Set.image_image]
 
 @[simp]
 theorem coe_comp (f : SupHomₓ β γ) (g : SupHomₓ α β) : ⇑(f.comp g) = f ∘ g :=
@@ -260,11 +251,7 @@ theorem cancel_right {g₁ g₂ : SupHomₓ β γ} {f : SupHomₓ α β} (hf : S
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : SupHomₓ β γ} {f₁ f₂ : SupHomₓ α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end HasSupₓ
 
@@ -307,8 +294,7 @@ variable [HasInfₓ β] [HasInfₓ γ] [HasInfₓ δ]
 
 instance : InfHomClassₓ (InfHomₓ α β) α β where
   coe := InfHomₓ.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_Inf := InfHomₓ.map_Inf'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -334,8 +320,7 @@ variable (α)
 
 /-- `id` as an `Inf_hom`. -/
 protected def id : InfHomₓ α α :=
-  ⟨id, fun s => by
-    rw [id, Set.image_id]⟩
+  ⟨id, fun s => by rw [id, Set.image_id]⟩
 
 instance : Inhabited (InfHomₓ α α) :=
   ⟨InfHomₓ.id α⟩
@@ -353,8 +338,7 @@ theorem id_apply (a : α) : InfHomₓ.id α a = a :=
 /-- Composition of `Inf_hom`s as a `Inf_hom`. -/
 def comp (f : InfHomₓ β γ) (g : InfHomₓ α β) : InfHomₓ α γ where
   toFun := f ∘ g
-  map_Inf' := fun s => by
-    rw [comp_apply, map_Inf, map_Inf, Set.image_image]
+  map_Inf' := fun s => by rw [comp_apply, map_Inf, map_Inf, Set.image_image]
 
 @[simp]
 theorem coe_comp (f : InfHomₓ β γ) (g : InfHomₓ α β) : ⇑(f.comp g) = f ∘ g :=
@@ -380,11 +364,7 @@ theorem cancel_right {g₁ g₂ : InfHomₓ β γ} {f : InfHomₓ α β} (hf : S
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : InfHomₓ β γ} {f₁ f₂ : InfHomₓ α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end HasInfₓ
 
@@ -500,11 +480,7 @@ theorem cancel_right {g₁ g₂ : FrameHom β γ} {f : FrameHom α β} (hf : Sur
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : FrameHom β γ} {f₁ f₂ : FrameHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 instance : PartialOrderₓ (FrameHom α β) :=
   PartialOrderₓ.lift _ FunLike.coe_injective
@@ -520,8 +496,7 @@ variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] [Complet
 
 instance : CompleteLatticeHomClass (CompleteLatticeHom α β) α β where
   coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
-    obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
+  coe_injective' := fun f g h => by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
   map_Sup := fun f => f.map_Sup'
   map_Inf := fun f => f.map_Inf'
 
@@ -601,11 +576,7 @@ theorem cancel_right {g₁ g₂ : CompleteLatticeHom β γ} {f : CompleteLattice
 
 theorem cancel_left {g : CompleteLatticeHom β γ} {f₁ f₂ : CompleteLatticeHom α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h =>
-    ext fun a =>
-      hg <| by
-        rw [← comp_apply, h, comp_apply],
-    congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 
 end CompleteLatticeHom
 
@@ -714,12 +685,8 @@ namespace CompleteLatticeHom
 /-- `set.preimage` as a complete lattice homomorphism. -/
 def setPreimage (f : α → β) : CompleteLatticeHom (Set β) (Set α) where
   toFun := Preimage f
-  map_Sup' := fun s =>
-    preimage_sUnion.trans <| by
-      simp only [Set.Sup_eq_sUnion, Set.sUnion_image]
-  map_Inf' := fun s =>
-    preimage_sInter.trans <| by
-      simp only [Set.Inf_eq_sInter, Set.sInter_image]
+  map_Sup' := fun s => preimage_sUnion.trans <| by simp only [Set.Sup_eq_sUnion, Set.sUnion_image]
+  map_Inf' := fun s => preimage_sInter.trans <| by simp only [Set.Inf_eq_sInter, Set.sInter_image]
 
 @[simp]
 theorem coe_set_preimage (f : α → β) : ⇑(setPreimage f) = Preimage f :=

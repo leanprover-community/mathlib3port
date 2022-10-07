@@ -46,22 +46,17 @@ instance (n : ℕ) : CommSemigroupₓ (Finₓ (n + 1)) :=
       Finₓ.eq_of_veq
         (calc
           a * b % (n + 1) * c ≡ a * b * c [MOD n + 1] := (Nat.mod_modeq _ _).mul_right _
-          _ ≡ a * (b * c) [MOD n + 1] := by
-            rw [mul_assoc]
+          _ ≡ a * (b * c) [MOD n + 1] := by rw [mul_assoc]
           _ ≡ a * (b * c % (n + 1)) [MOD n + 1] := (Nat.mod_modeq _ _).symm.mul_left _
           ),
-    mul_comm := fun ⟨a, _⟩ ⟨b, _⟩ =>
-      Finₓ.eq_of_veq
-        (show a * b % (n + 1) = b * a % (n + 1) by
-          rw [mul_comm]) }
+    mul_comm := fun ⟨a, _⟩ ⟨b, _⟩ => Finₓ.eq_of_veq (show a * b % (n + 1) = b * a % (n + 1) by rw [mul_comm]) }
 
 private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Finₓ (n + 1), a * (b + c) = a * b + a * c :=
   fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
   Finₓ.eq_of_veq
     (calc
       a * ((b + c) % (n + 1)) ≡ a * (b + c) [MOD n + 1] := (Nat.mod_modeq _ _).mul_left _
-      _ ≡ a * b + a * c [MOD n + 1] := by
-        rw [mul_addₓ]
+      _ ≡ a * b + a * c [MOD n + 1] := by rw [mul_addₓ]
       _ ≡ a * b % (n + 1) + a * c % (n + 1) [MOD n + 1] := (Nat.mod_modeq _ _).symm.add (Nat.mod_modeq _ _).symm
       )
 
@@ -69,8 +64,7 @@ private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Finₓ (n + 1), a * (b 
 instance (n : ℕ) : CommRingₓ (Finₓ (n + 1)) :=
   { Finₓ.addMonoidWithOne, Finₓ.addCommGroup n, Finₓ.commSemigroup n with one_mul := Finₓ.one_mul,
     mul_one := Finₓ.mul_one, left_distrib := left_distrib_aux n,
-    right_distrib := fun a b c => by
-      rw [mul_comm, left_distrib_aux, mul_comm _ b, mul_comm] <;> rfl }
+    right_distrib := fun a b c => by rw [mul_comm, left_distrib_aux, mul_comm _ b, mul_comm] <;> rfl }
 
 end Finₓ
 
@@ -89,7 +83,7 @@ instance Zmod.hasRepr : ∀ n : ℕ, HasRepr (Zmod n)
 
 namespace Zmod
 
-instance fintype : ∀ (n : ℕ) [NeZero n], Fintype (Zmod n)
+instance fintype : ∀ (n : ℕ) [NeZero n], Fintypeₓ (Zmod n)
   | 0, h => (NeZero.ne 0 rfl).elim
   | n + 1, _ => Finₓ.fintype (n + 1)
 
@@ -97,11 +91,11 @@ instance infinite : Infinite (Zmod 0) :=
   Int.infinite
 
 @[simp]
-theorem card (n : ℕ) [Fintype (Zmod n)] : Fintype.card (Zmod n) = n := by
+theorem card (n : ℕ) [Fintypeₓ (Zmod n)] : Fintypeₓ.card (Zmod n) = n := by
   cases n
   · exact (not_finite (Zmod 0)).elim
     
-  · convert Fintype.card_fin (n + 1)
+  · convert Fintypeₓ.card_fin (n + 1)
     
 
 /- We define each field by cases, to ensure that the eta-expanded `zmod.comm_ring` is defeq to the

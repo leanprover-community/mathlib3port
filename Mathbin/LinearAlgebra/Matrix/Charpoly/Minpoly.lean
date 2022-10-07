@@ -20,9 +20,9 @@ open Polynomial Matrix
 
 variable {R : Type u} [CommRingₓ R]
 
-variable {n : Type v} [DecidableEq n] [Fintype n]
+variable {n : Type v} [DecidableEq n] [Fintypeₓ n]
 
-open Finset
+open Finsetₓ
 
 variable {M : Matrix n n R}
 
@@ -55,7 +55,7 @@ theorem charpoly_left_mul_matrix {K S : Type _} [Field K] [CommRingₓ S] [Algeb
     rw [← Polynomial.aeval_alg_hom_apply, aeval_self_charpoly]
     
   · intro q q_monic root_q
-    rw [Matrix.charpoly_degree_eq_dim, Fintype.card_fin, degree_eq_nat_degree q_monic.ne_zero]
+    rw [Matrix.charpoly_degree_eq_dim, Fintypeₓ.card_fin, degree_eq_nat_degree q_monic.ne_zero]
     apply with_bot.some_le_some.mpr
     exact h.dim_le_nat_degree_of_root q_monic.ne_zero root_q
     

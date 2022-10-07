@@ -45,7 +45,7 @@ open BigOperators
 
 open Nat Polynomial
 
-open Nat Finset
+open Nat Finsetₓ
 
 namespace Polynomial
 
@@ -67,8 +67,7 @@ theorem bernoulli_def (n : ℕ) :
 section Examples
 
 @[simp]
-theorem bernoulli_zero : bernoulli 0 = 1 := by
-  simp [bernoulli]
+theorem bernoulli_zero : bernoulli 0 = 1 := by simp [bernoulli]
 
 @[simp]
 theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = bernoulli n := by
@@ -84,8 +83,8 @@ theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n := by
   simp only [bernoulli, eval_finset_sum]
   simp only [← succ_eq_add_one, sum_range_succ, mul_oneₓ, cast_one, choose_self, (_root_.bernoulli _).mul_comm,
     sum_bernoulli, one_pow, mul_oneₓ, eval_C, eval_monomial]
-  by_cases' h : n = 1
-  · norm_num[h]
+  by_cases h:n = 1
+  · norm_num [h]
     
   · simp [h]
     exact bernoulli_eq_bernoulli'_of_ne_one h
@@ -98,11 +97,7 @@ theorem derivative_bernoulli_add_one (k : ℕ) : (bernoulli (k + 1)).derivative 
   -- LHS sum has an extra term, but the coefficient is zero:
   rw [range_add_one, sum_insert not_mem_range_self, tsub_self, cast_zero, mul_zero, map_zero, zero_addₓ, mul_sum]
   -- the rest of the sum is termwise equal:
-  refine'
-    sum_congr
-      (by
-        rfl)
-      fun m hm => _
+  refine' sum_congr (by rfl) fun m hm => _
   conv_rhs => rw [← Nat.cast_oneₓ, ← Nat.cast_addₓ, ← C_eq_nat_cast, C_mul_monomial, mul_comm]
   rw [mul_assoc, mul_assoc, ← Nat.cast_mulₓ, ← Nat.cast_mulₓ]
   congr 3
@@ -118,17 +113,22 @@ theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoull
 @[simp]
 theorem sum_bernoulli (n : ℕ) : (∑ k in range (n + 1), ((n + 1).choose k : ℚ) • bernoulli k) = monomial n (n + 1 : ℚ) :=
   by
-  simp_rw [bernoulli_def, Finset.smul_sum, Finset.range_eq_Ico, ← Finset.sum_Ico_Ico_comm, Finset.sum_Ico_eq_sum_range]
-  simp only [cast_succ, add_tsub_cancel_left, tsub_zero, zero_addₓ, LinearMap.map_add]
+  simp_rw [bernoulli_def, Finsetₓ.smul_sum, Finsetₓ.range_eq_Ico, ← Finsetₓ.sum_Ico_Ico_comm,
+    Finsetₓ.sum_Ico_eq_sum_range]
+  simp only [add_tsub_cancel_left, tsub_zero, zero_addₓ, LinearMap.map_add]
   simp_rw [smul_monomial, mul_comm (_root_.bernoulli _) _, smul_eq_mul, ← mul_assoc]
   conv_lhs =>
-    apply_congr skip conv =>
-      apply_congr skip rw [← Nat.cast_mulₓ,
-        choose_mul ((le_tsub_iff_left <| mem_range_le H).1 <| mem_range_le H_1) (le.intro rfl), Nat.cast_mulₓ,
-        add_commₓ x x_1, add_tsub_cancel_right, mul_assoc, mul_comm, ← smul_eq_mul, ← smul_monomial]rw [← sum_smul]
+  apply_congr
+  skip
+  conv =>
+  apply_congr
+  skip
+  rw [← Nat.cast_mulₓ, choose_mul ((le_tsub_iff_left <| mem_range_le H).1 <| mem_range_le H_1) (le.intro rfl),
+    Nat.cast_mulₓ, add_commₓ x x_1, add_tsub_cancel_right, mul_assoc, mul_comm, ← smul_eq_mul, ← smul_monomial]
+  rw [← sum_smul]
   rw [sum_range_succ_comm]
-  simp only [add_right_eq_selfₓ, cast_succ, mul_oneₓ, cast_one, cast_add, add_tsub_cancel_left, choose_succ_self_right,
-    one_smul, _root_.bernoulli_zero, sum_singleton, zero_addₓ, LinearMap.map_add, range_one]
+  simp only [add_right_eq_selfₓ, mul_oneₓ, cast_one, cast_add, add_tsub_cancel_left, choose_succ_self_right, one_smul,
+    _root_.bernoulli_zero, sum_singleton, zero_addₓ, LinearMap.map_add, range_one]
   apply sum_eq_zero fun x hx => _
   have f : ∀ x ∈ range n, ¬n + 1 - x = 1 := by
     rintro x H
@@ -145,9 +145,8 @@ theorem sum_bernoulli (n : ℕ) : (∑ k in range (n + 1), ((n + 1).choose k : �
 /-- Another version of `polynomial.sum_bernoulli`. -/
 theorem bernoulli_eq_sub_sum (n : ℕ) :
     (n.succ : ℚ) • bernoulli n =
-      monomial n (n.succ : ℚ) - ∑ k in Finset.range n, ((n + 1).choose k : ℚ) • bernoulli k :=
-  by
-  rw [Nat.cast_succₓ, ← sum_bernoulli n, sum_range_succ, add_sub_cancel', choose_succ_self_right, Nat.cast_succₓ]
+      monomial n (n.succ : ℚ) - ∑ k in Finsetₓ.range n, ((n + 1).choose k : ℚ) • bernoulli k :=
+  by rw [Nat.cast_succₓ, ← sum_bernoulli n, sum_range_succ, add_sub_cancel', choose_succ_self_right, Nat.cast_succₓ]
 
 /-- Another version of `bernoulli.sum_range_pow`. -/
 theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
@@ -183,11 +182,20 @@ theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) : (bernoulli n).eval (1 + x) 
   apply (mul_right_inj' nz).1
   rw [← smul_eq_mul, ← eval_smul, bernoulli_eq_sub_sum, mul_addₓ, ← smul_eq_mul, ← eval_smul, bernoulli_eq_sub_sum,
     eval_sub, eval_finset_sum]
-  conv_lhs => congr skip apply_congr skip rw [eval_smul, hd x_1 (mem_range.1 H)]
+  conv_lhs =>
+  congr
+  skip
+  apply_congr
+  skip
+  rw [eval_smul, hd x_1 (mem_range.1 H)]
   rw [eval_sub, eval_finset_sum]
   simp_rw [eval_smul, smul_add]
   rw [sum_add_distrib, sub_add, sub_eq_sub_iff_sub_eq_sub, _root_.add_sub_sub_cancel]
-  conv_rhs => congr skip congr rw [succ_eq_add_one, ← choose_succ_self_right d]
+  conv_rhs =>
+  congr
+  skip
+  congr
+  rw [succ_eq_add_one, ← choose_succ_self_right d]
   rw [Nat.cast_succₓ, ← smul_eq_mul, ← sum_range_succ _ d, eval_monomial_one_add_sub]
   simp_rw [smul_eq_mul]
 
@@ -214,10 +222,7 @@ theorem bernoulli_generating_function (t : A) :
   simp only [RingHom.map_sub, tsub_self, constant_coeff_one, constant_coeff_exp, coeff_zero_eq_constant_coeff, mul_zero,
     sub_self, add_zeroₓ]
   -- Let's multiply both sides by (n+1)! (OK because it's a unit)
-  have hnp1 : IsUnit ((n + 1)! : ℚ) :=
-    IsUnit.mk0 _
-      (by
-        exact_mod_cast factorial_ne_zero (n + 1))
+  have hnp1 : IsUnit ((n + 1)! : ℚ) := IsUnit.mk0 _ (by exact_mod_cast factorial_ne_zero (n + 1))
   rw [← (hnp1.map (algebraMap ℚ A)).mul_right_inj]
   -- do trivial rearrangements to make RHS (n+1)*t^n
   rw [mul_left_commₓ, ← RingHom.map_mul]
@@ -225,9 +230,9 @@ theorem bernoulli_generating_function (t : A) :
   rw [cast_mul, mul_assoc, mul_one_div_cancel (show (n ! : ℚ) ≠ 0 from cast_ne_zero.2 (factorial_ne_zero n)), mul_oneₓ,
     mul_comm (t ^ n), ← aeval_monomial, cast_add, cast_one]
   -- But this is the RHS of `sum_bernoulli_poly`
-  rw [← sum_bernoulli, Finset.mul_sum, AlgHom.map_sum]
+  rw [← sum_bernoulli, Finsetₓ.mul_sum, AlgHom.map_sum]
   -- and now we have to prove a sum is a sum, but all the terms are equal.
-  apply Finset.sum_congr rfl
+  apply Finsetₓ.sum_congr rfl
   -- The rest is just trivialities, hampered by the fact that we're coercing
   -- factorials and binomial coefficients between ℕ and ℚ and A.
   intro i hi

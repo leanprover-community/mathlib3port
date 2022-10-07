@@ -41,10 +41,8 @@ def MulHom.inverse [Mul M] [Mul N] (f : M →ₙ* N) (g : N → M) (h₁ : Funct
   toFun := g
   map_mul' := fun x y =>
     calc
-      g (x * y) = g (f (g x) * f (g y)) := by
-        rw [h₂ x, h₂ y]
-      _ = g (f (g x * g y)) := by
-        rw [f.map_mul]
+      g (x * y) = g (f (g x) * f (g y)) := by rw [h₂ x, h₂ y]
+      _ = g (f (g x * g y)) := by rw [f.map_mul]
       _ = g x * g y := h₁ _
       
 
@@ -52,12 +50,9 @@ def MulHom.inverse [Mul M] [Mul N] (f : M →ₙ* N) (g : N → M) (h₁ : Funct
 @[to_additive "The inverse of a bijective `add_monoid_hom` is an `add_monoid_hom`.", simps]
 def MonoidHom.inverse {A B : Type _} [Monoidₓ A] [Monoidₓ B] (f : A →* B) (g : B → A) (h₁ : Function.LeftInverse g f)
     (h₂ : Function.RightInverse g f) : B →* A :=
-  { (f : A →ₙ* B).inverse g h₁ h₂ with toFun := g,
-    map_one' := by
-      rw [← f.map_one, h₁] }
+  { (f : A →ₙ* B).inverse g h₁ h₂ with toFun := g, map_one' := by rw [← f.map_one, h₁] }
 
 /-- add_equiv α β is the type of an equiv α ≃ β which preserves addition. -/
-@[ancestor Equivₓ AddHom]
 structure AddEquiv (A B : Type _) [Add A] [Add B] extends A ≃ B, AddHom A B
 
 /-- `add_equiv_class F A B` states that `F` is a type of addition-preserving morphisms.
@@ -66,17 +61,17 @@ class AddEquivClass (F A B : Type _) [Add A] [Add B] extends EquivLike F A B whe
   map_add : ∀ (f : F) (a b), f (a + b) = f a + f b
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_equiv.to_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident add_equiv.to_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `mul_equiv α β` is the type of an equiv `α ≃ β` which preserves multiplication. -/
-@[ancestor Equivₓ MulHom, to_additive]
+@[to_additive]
 structure MulEquiv (M N : Type _) [Mul M] [Mul N] extends M ≃ N, M →ₙ* N
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident mul_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident mul_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident mul_equiv.to_mul_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident mul_equiv.to_mul_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `mul_equiv_class F A B` states that `F` is a type of multiplication-preserving morphisms.
 You should extend this class when you extend `mul_equiv`. -/
 @[to_additive]
@@ -106,8 +101,7 @@ instance (priority := 100) [MulOneClassₓ M] [MulOneClassₓ N] [MulEquivClass 
       calc
         e 1 = e 1 * 1 := (mul_oneₓ _).symm
         _ = e 1 * e (inv e (1 : N) : M) := congr_arg _ (right_inv e 1).symm
-        _ = e (inv e (1 : N)) := by
-          rw [← map_mul, one_mulₓ]
+        _ = e (inv e (1 : N)) := by rw [← map_mul, one_mulₓ]
         _ = 1 := right_inv e 1
          }
 
@@ -117,8 +111,7 @@ instance (priority := 100) toMonoidWithZeroHomClass {α β : Type _} [MulZeroOne
   { MulEquivClass.monoidHomClass _ with
     map_zero := fun e =>
       calc
-        e 0 = e 0 * e (EquivLike.inv e 0) := by
-          rw [← map_mul, zero_mul]
+        e 0 = e 0 * e (EquivLike.inv e 0) := by rw [← map_mul, zero_mul]
         _ = 0 := by
           convert mul_zero _
           exact EquivLike.right_inv e _
@@ -264,9 +257,7 @@ theorem refl_symm : (refl M).symm = refl M :=
 @[trans, to_additive "Transitivity of addition-preserving isomorphisms"]
 def trans (h1 : M ≃* N) (h2 : N ≃* P) : M ≃* P :=
   { h1.toEquiv.trans h2.toEquiv with
-    map_mul' := fun x y =>
-      show h2 (h1 (x * y)) = h2 (h1 x) * h2 (h1 y) by
-        rw [h1.map_mul, h2.map_mul] }
+    map_mul' := fun x y => show h2 (h1 (x * y)) = h2 (h1 x) * h2 (h1 y) by rw [h1.map_mul, h2.map_mul] }
 
 /-- `e.symm` is a right inverse of `e`, written as `e (e.symm y) = y`. -/
 @[simp, to_additive "`e.symm` is a right inverse of `e`, written as `e (e.symm y) = y`."]
@@ -550,6 +541,14 @@ def mapEquiv (h : M ≃* N) : Mˣ ≃* Nˣ :=
   { map h.toMonoidHom with invFun := map h.symm.toMonoidHom, left_inv := fun u => ext <| h.left_inv u,
     right_inv := fun u => ext <| h.right_inv u }
 
+@[simp]
+theorem map_equiv_symm (h : M ≃* N) : (mapEquiv h).symm = mapEquiv h.symm :=
+  rfl
+
+@[simp]
+theorem coe_map_equiv (h : M ≃* N) (x : Mˣ) : (mapEquiv h x : N) = h x :=
+  rfl
+
 /-- Left multiplication by a unit of a monoid is a permutation of the underlying type. -/
 @[to_additive "Left addition of an additive unit is a permutation of the underlying type.",
   simps (config := { fullyApplied := false }) apply]
@@ -659,10 +658,8 @@ theorem _root_.group.mul_right_bijective (a : G) : Function.Bijective (· * a) :
 protected def divLeft (a : G) : G ≃ G where
   toFun := fun b => a / b
   invFun := fun b => b⁻¹ * a
-  left_inv := fun b => by
-    simp [div_eq_mul_inv]
-  right_inv := fun b => by
-    simp [div_eq_mul_inv]
+  left_inv := fun b => by simp [div_eq_mul_inv]
+  right_inv := fun b => by simp [div_eq_mul_inv]
 
 @[to_additive]
 theorem div_left_eq_inv_trans_mul_left (a : G) : Equivₓ.divLeft a = (Equivₓ.inv G).trans (Equivₓ.mulLeft a) :=
@@ -673,10 +670,8 @@ theorem div_left_eq_inv_trans_mul_left (a : G) : Equivₓ.divLeft a = (Equivₓ.
 protected def divRight (a : G) : G ≃ G where
   toFun := fun b => b / a
   invFun := fun b => b * a
-  left_inv := fun b => by
-    simp [div_eq_mul_inv]
-  right_inv := fun b => by
-    simp [div_eq_mul_inv]
+  left_inv := fun b => by simp [div_eq_mul_inv]
+  right_inv := fun b => by simp [div_eq_mul_inv]
 
 @[to_additive]
 theorem div_right_eq_mul_right_inv (a : G) : Equivₓ.divRight a = Equivₓ.mulRight a⁻¹ :=

@@ -82,10 +82,10 @@ theorem char_lin_hom (V W : FdRep k G) (g : G) : (of (linHom V.ρ W.ρ)).charact
   rw [← char_iso (dual_tensor_iso_lin_hom _ _), char_tensor, Pi.mul_apply, char_dual]
   rfl
 
-variable [Fintype G] [Invertible (Fintype.card G : k)]
+variable [Fintypeₓ G] [Invertible (Fintypeₓ.card G : k)]
 
 theorem average_char_eq_finrank_invariants (V : FdRep k G) :
-    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g) = finrank k (invariants V.ρ) := by
+    (⅟ (Fintypeₓ.card G : k) • ∑ g : G, V.character g) = finrank k (invariants V.ρ) := by
   rw [← (is_proj_average_map V.ρ).trace]
   simp [character, GroupAlgebra.average, _root_.map_sum]
 

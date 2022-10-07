@@ -58,9 +58,7 @@ structure Presieve.CoverByImageStructure (G : C ⥤ D) {V U : D} (f : V ⟶ U) w
   obj : C
   lift : V ⟶ G.obj obj
   map : G.obj obj ⟶ U
-  fac' : lift ≫ map = f := by
-    run_tac
-      obviously
+  fac' : lift ≫ map = f := by obviously
 
 restate_axiom presieve.cover_by_image_structure.fac'
 
@@ -76,13 +74,10 @@ consisting of those arrows that factor through images of `G`.
 -/
 def Sieve.coverByImage (G : C ⥤ D) (U : D) : Sieve U :=
   ⟨Presieve.CoverByImage G U, fun X Y f ⟨⟨Z, f₁, f₂, (e : _ = _)⟩⟩ g =>
-    ⟨⟨Z, g ≫ f₁, f₂,
-        show (g ≫ f₁) ≫ f₂ = g ≫ f by
-          rw [category.assoc, ← e]⟩⟩⟩
+    ⟨⟨Z, g ≫ f₁, f₂, show (g ≫ f₁) ≫ f₂ = g ≫ f by rw [category.assoc, ← e]⟩⟩⟩
 
 theorem Presieve.in_cover_by_image (G : C ⥤ D) {X : D} {Y : C} (f : G.obj Y ⟶ X) : Presieve.CoverByImage G X f :=
-  ⟨⟨Y, 𝟙 _, f, by
-      simp ⟩⟩
+  ⟨⟨Y, 𝟙 _, f, by simp⟩⟩
 
 /-- A functor `G : (C, J) ⥤ (D, K)` is called `cover_dense` if for each object in `D`,
   there exists a covering sieve in `D` that factors through images of `G`.
@@ -272,7 +267,7 @@ noncomputable def sheafCoyonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
     apply H.is_cover
     intro Y' f' hf'
     change unop X ⟶ ℱ.obj (op (unop _)) at x
-    dsimp'
+    dsimp
     simp only [pushforward_family, functor.comp_map, coyoneda_obj_map, hom_over_app, category.assoc]
     congr 1
     conv_lhs => rw [← hf'.some.fac]
@@ -287,10 +282,7 @@ noncomputable def sheafYonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ
   let α := sheaf_coyoneda_hom H α
   refine' { app := _, naturality' := _ }
   · intro U
-    refine'
-      { app := fun X => (α.app X).app U,
-        naturality' := fun X Y f => by
-          simpa using congr_app (α.naturality f) U }
+    refine' { app := fun X => (α.app X).app U, naturality' := fun X Y f => by simpa using congr_app (α.naturality f) U }
     
   · intro U V i
     ext X x
@@ -304,10 +296,7 @@ between presheaves.
 noncomputable def sheafHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⟶ ℱ'.val :=
   let α' := sheafYonedaHom H α
   { app := fun X => yoneda.preimage (α'.app X),
-    naturality' := fun X Y f =>
-      yoneda.map_injective
-        (by
-          simpa using α'.naturality f) }
+    naturality' := fun X Y f => yoneda.map_injective (by simpa using α'.naturality f) }
 
 /-- Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of arbitrary category,
 where `G` is full and cover-dense, and `ℱ', ℱ` are sheaves,
@@ -323,8 +312,7 @@ noncomputable def presheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G
     exact ((presheaf_iso H (iso_over i (unop x))).app X).hom_inv_id
     exact ((presheaf_iso H (iso_over i (unop x))).app X).inv_hom_id
     infer_instance
-  haveI : is_iso (sheaf_hom H i.hom) := by
-    apply nat_iso.is_iso_of_is_iso_app
+  haveI : is_iso (sheaf_hom H i.hom) := by apply nat_iso.is_iso_of_is_iso_app
   apply as_iso (sheaf_hom H i.hom)
 
 /-- Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of arbitrary category,
@@ -380,7 +368,7 @@ theorem sheaf_hom_eq (α : ℱ ⟶ ℱ'.val) : sheafHom H (whiskerLeft G.op α) 
   apply sheaf_eq_amalgamation ℱ' (H.is_cover _)
   intro Y f hf
   conv_lhs => rw [← hf.some.fac]
-  dsimp'
+  dsimp
   simp
 
 /-- A full and cover-dense functor `G` induces an equivalence between morphisms into a sheaf and
@@ -423,7 +411,7 @@ instance Sites.Pullback.faithful [Faithful G] (Hp : CoverPreserving J K G) :
     intro ℱ ℱ' α β e
     ext1
     apply_fun fun e => e.val  at e
-    dsimp'  at e
+    dsimp at e
     rw [← H.sheaf_hom_eq α.val, ← H.sheaf_hom_eq β.val, e]
 
 end CoverDense
@@ -461,8 +449,7 @@ noncomputable def sheafEquivOfCoverPreservingCoverLifting : Sheaf J A ≌ Sheaf 
   exact
     { Functor := sites.pullback A Hd.compatible_preserving Hp, inverse := sites.copullback A Hl,
       unitIso := as_iso α.unit, counitIso := as_iso α.counit,
-      functor_unit_iso_comp' := fun ℱ => by
-        convert α.left_triangle_components }
+      functor_unit_iso_comp' := fun ℱ => by convert α.left_triangle_components }
 
 end CategoryTheory.CoverDense
 

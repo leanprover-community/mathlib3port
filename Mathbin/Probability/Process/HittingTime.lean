@@ -3,7 +3,7 @@ Copyright (c) 2022 Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 -/
-import Mathbin.Probability.Stopping
+import Mathbin.Probability.Process.Stopping
 
 /-!
 # Hitting time
@@ -60,7 +60,7 @@ theorem hitting_of_lt {m : ι} (h : m < n) : hitting u s n m ω = m := by
     push_neg
     intro j
     rw [Set.Icc_eq_empty_of_lt h]
-    simp only [Set.mem_empty_eq, IsEmpty.forall_iff]
+    simp only [Set.mem_empty_iff_false, IsEmpty.forall_iff]
   simp only [h_not, if_false]
 
 theorem hitting_le {m : ι} (ω : Ω) : hitting u s n m ω ≤ m := by
@@ -134,7 +134,7 @@ theorem hitting_mem_set [IsWellOrder ι (· < ·)] {m : ι} (h_exists : ∃ j �
 
 theorem hitting_mem_set_of_hitting_lt [IsWellOrder ι (· < ·)] {m : ι} (hl : hitting u s n m ω < m) :
     u (hitting u s n m ω) ω ∈ s := by
-  by_cases' h : ∃ j ∈ Set.Icc n m, u j ω ∈ s
+  by_cases h:∃ j ∈ Set.Icc n m, u j ω ∈ s
   · exact hitting_mem_set h
     
   · simp_rw [hitting, if_neg h] at hl
@@ -163,7 +163,7 @@ theorem hitting_le_iff_of_exists [IsWellOrder ι (· < ·)] {m : ι} (h_exists :
 
 theorem hitting_le_iff_of_lt [IsWellOrder ι (· < ·)] {m : ι} (i : ι) (hi : i < m) :
     hitting u s n m ω ≤ i ↔ ∃ j ∈ Set.Icc n i, u j ω ∈ s := by
-  by_cases' h_exists : ∃ j ∈ Set.Icc n m, u j ω ∈ s
+  by_cases h_exists:∃ j ∈ Set.Icc n m, u j ω ∈ s
   · rw [hitting_le_iff_of_exists h_exists]
     
   · simp_rw [hitting, if_neg h_exists]
@@ -196,7 +196,7 @@ theorem hitting_eq_hitting_of_exists {m₁ m₂ : ι} (h : m₁ ≤ m₂) (h' : 
         (cInf_le_cInf bdd_below_Icc.inter_of_left ⟨j, hj₁, hj₂⟩
           (Set.inter_subset_inter_left _ (Set.Icc_subset_Icc_right h)))
     refine' le_cInf ⟨j, Set.Icc_subset_Icc_right h hj₁, hj₂⟩ fun i hi => _
-    by_cases' hi' : i ≤ m₁
+    by_cases hi':i ≤ m₁
     · exact cInf_le bdd_below_Icc.inter_of_left ⟨⟨hi.1.1, hi'⟩, hi.2⟩
       
     · exact
@@ -206,7 +206,7 @@ theorem hitting_eq_hitting_of_exists {m₁ m₂ : ι} (h : m₁ ≤ m₂) (h' : 
   exact ⟨j, ⟨hj₁.1, hj₁.2.trans h⟩, hj₂⟩
 
 theorem hitting_mono {m₁ m₂ : ι} (hm : m₁ ≤ m₂) : hitting u s n m₁ ω ≤ hitting u s n m₂ ω := by
-  by_cases' h : ∃ j ∈ Set.Icc n m₁, u j ω ∈ s
+  by_cases h:∃ j ∈ Set.Icc n m₁, u j ω ∈ s
   · exact (hitting_eq_hitting_of_exists hm h).le
     
   · simp_rw [hitting, if_neg h]
@@ -267,7 +267,7 @@ theorem is_stopping_time_hitting_is_stopping_time [ConditionallyCompleteLinearOr
     simp [← exists_or_distrib, ← or_and_distrib_right, le_or_ltₓ]
   have h₂ : (⋃ i > n, { x | τ x = i } ∩ { x | hitting u s i N x ≤ n }) = ∅ := by
     ext x
-    simp only [gt_iff_ltₓ, Set.mem_Union, Set.mem_inter_eq, Set.mem_set_of_eq, exists_propₓ, Set.mem_empty_eq,
+    simp only [gt_iff_ltₓ, Set.mem_Union, Set.mem_inter_iff, Set.mem_set_of_eq, exists_propₓ, Set.mem_empty_iff_false,
       iff_falseₓ, not_exists, not_and, not_leₓ]
     rintro m hm rfl
     exact lt_of_lt_of_leₓ hm (le_hitting (hτbdd _) _)

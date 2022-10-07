@@ -190,6 +190,17 @@ protected structure Injective : Prop where
   onFunction {n} : Function.Injective fun f : L.Functions n => onFunction ϕ f
   onRelation {n} : Function.Injective fun R : L.Relations n => onRelation ϕ R
 
+/-- Pulls a `L`-structure along a language map `ϕ : L →ᴸ L'`, and then expands it
+  to an `L'`-structure arbitrarily. -/
+noncomputable def defaultExpansion (ϕ : L →ᴸ L')
+    [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.Range fun f : L.Functions n => onFunction ϕ f)]
+    [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.Range fun r : L.Relations n => onRelation ϕ r)] (M : Type _)
+    [Inhabited M] [L.Structure M] : L'.Structure M where
+  funMap := fun n f xs =>
+    if h' : f ∈ Set.Range fun f : L.Functions n => onFunction ϕ f then funMap h'.some xs else default
+  rel_map := fun n r xs =>
+    if h' : r ∈ Set.Range fun r : L.Relations n => onRelation ϕ r then RelMap h'.some xs else default
+
 /-- A language homomorphism is an expansion on a structure if it commutes with the interpretation of
 all symbols on that structure. -/
 class IsExpansionOn (M : Type _) [L.Structure M] [L'.Structure M] : Prop where
@@ -215,33 +226,11 @@ instance of_is_empty_is_expansion_on (M : Type _) [L.Structure M] [L'.Structure 
 
 instance sum_elim_is_expansion_on {L'' : Language} (ψ : L'' →ᴸ L') (M : Type _) [L.Structure M] [L'.Structure M]
     [L''.Structure M] [ϕ.IsExpansionOn M] [ψ.IsExpansionOn M] : (ϕ.sum_elim ψ).IsExpansionOn M :=
-  ⟨fun _ f _ =>
-    Sum.casesOn f
-      (by
-        simp )
-      (by
-        simp ),
-    fun _ R _ =>
-    Sum.casesOn R
-      (by
-        simp )
-      (by
-        simp )⟩
+  ⟨fun _ f _ => Sum.casesOn f (by simp) (by simp), fun _ R _ => Sum.casesOn R (by simp) (by simp)⟩
 
 instance sum_map_is_expansion_on {L₁ L₂ : Language} (ψ : L₁ →ᴸ L₂) (M : Type _) [L.Structure M] [L'.Structure M]
     [L₁.Structure M] [L₂.Structure M] [ϕ.IsExpansionOn M] [ψ.IsExpansionOn M] : (ϕ.sum_map ψ).IsExpansionOn M :=
-  ⟨fun _ f _ =>
-    Sum.casesOn f
-      (by
-        simp )
-      (by
-        simp ),
-    fun _ R _ =>
-    Sum.casesOn R
-      (by
-        simp )
-      (by
-        simp )⟩
+  ⟨fun _ f _ => Sum.casesOn f (by simp) (by simp), fun _ R _ => Sum.casesOn R (by simp) (by simp)⟩
 
 instance sum_inl_is_expansion_on (M : Type _) [L.Structure M] [L'.Structure M] :
     (Lhom.sumInl : L →ᴸ L.Sum L').IsExpansionOn M :=
@@ -261,10 +250,31 @@ theorem fun_map_sum_inr [(L'.Sum L).Structure M] [(Lhom.sumInr : L →ᴸ L'.Sum
     {x : Finₓ n → M} : @funMap (L'.Sum L) M _ n (Sum.inr f) x = funMap f x :=
   (Lhom.sumInr : L →ᴸ L'.Sum L).map_on_function f x
 
+theorem sum_inl_injective : (Lhom.sumInl : L →ᴸ L.Sum L').Injective :=
+  ⟨fun n => Sum.inl_injective, fun n => Sum.inl_injective⟩
+
+theorem sum_inr_injective : (Lhom.sumInr : L' →ᴸ L.Sum L').Injective :=
+  ⟨fun n => Sum.inr_injective, fun n => Sum.inr_injective⟩
+
 instance (priority := 100) is_expansion_on_reduct (ϕ : L →ᴸ L') (M : Type _) [L'.Structure M] :
-    @IsExpansionOn L L' ϕ M (ϕ.reduct M) _ := by
+    @IsExpansionOn L L' ϕ M (ϕ.reduct M) _ :=
   letI := ϕ.reduct M
-  exact ⟨fun _ f _ => rfl, fun _ R _ => rfl⟩
+  ⟨fun _ f _ => rfl, fun _ R _ => rfl⟩
+
+theorem Injective.is_expansion_on_default {ϕ : L →ᴸ L'}
+    [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.Range fun f : L.Functions n => onFunction ϕ f)]
+    [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.Range fun r : L.Relations n => onRelation ϕ r)] (h : ϕ.Injective)
+    (M : Type _) [Inhabited M] [L.Structure M] : @IsExpansionOn L L' ϕ M _ (ϕ.defaultExpansion M) := by
+  letI := ϕ.default_expansion M
+  refine' ⟨fun n f xs => _, fun n r xs => _⟩
+  · have hf : ϕ.on_function f ∈ Set.Range fun f : L.functions n => ϕ.on_function f := ⟨f, rfl⟩
+    refine' (dif_pos hf).trans _
+    rw [h.on_function hf.some_spec]
+    
+  · have hr : ϕ.on_relation r ∈ Set.Range fun r : L.relations n => ϕ.on_relation r := ⟨r, rfl⟩
+    refine' (dif_pos hr).trans _
+    rw [h.on_relation hr.some_spec]
+    
 
 end Lhom
 
@@ -332,8 +342,7 @@ instance is_relational_constants_on [ie : IsEmpty α] : IsRelational (constantsO
 instance is_empty_functions_constants_on_succ {n : ℕ} : IsEmpty ((constantsOn α).Functions (n + 1)) :=
   Nat.casesOn n Pempty.is_empty fun n => Nat.casesOn n Pempty.is_empty fun _ => Pempty.is_empty
 
-theorem card_constants_on : (constantsOn α).card = (#α) := by
-  simp
+theorem card_constants_on : (constantsOn α).card = (#α) := by simp
 
 /-- Gives a `constants_on α` structure to a type by assigning each constant a value. -/
 def constantsOn.structure (f : α → M) : (constantsOn α).Structure M :=
@@ -377,6 +386,9 @@ theorem card_with_constants : L[[α]].card = Cardinal.lift.{w'} L.card + Cardina
 def lhomWithConstants : L →ᴸ L[[α]] :=
   Lhom.sum_inl
 
+theorem Lhom_with_constants_injective : (L.lhomWithConstants α).Injective :=
+  Lhom.sum_inl_injective
+
 variable {α}
 
 /-- The constant symbol indexed by a particular element. -/
@@ -399,8 +411,7 @@ variable (L) (α)
 def Lequiv.addEmptyConstants [ie : IsEmpty α] : L ≃ᴸ L[[α]] where
   toLhom := lhomWithConstants L α
   invLhom := Lhom.sumElim (Lhom.id L) (Lhom.ofIsEmpty (constantsOn α) L)
-  left_inv := by
-    rw [Lhom_with_constants, Lhom.sum_elim_comp_inl]
+  left_inv := by rw [Lhom_with_constants, Lhom.sum_elim_comp_inl]
   right_inv := by
     simp only [Lhom.comp_sum_elim, Lhom_with_constants, Lhom.comp_id]
     exact trans (congr rfl (Subsingleton.elim _ _)) Lhom.sum_elim_inl_inr
@@ -423,8 +434,7 @@ def lhomWithConstantsMap (f : α → β) : L[[α]] →ᴸ L[[β]] :=
 
 @[simp]
 theorem Lhom.map_constants_comp_sum_inl {f : α → β} :
-    (L.lhomWithConstantsMap f).comp Lhom.sumInl = L.lhomWithConstants β := by
-  ext n f R <;> rfl
+    (L.lhomWithConstantsMap f).comp Lhom.sumInl = L.lhomWithConstants β := by ext n f R <;> rfl
 
 end
 

@@ -47,14 +47,8 @@ irreducible_def toPrincipalIdeal : Kˣ →* (FractionalIdeal R⁰ K)ˣ :=
       ⟨spanSingleton _ x, spanSingleton _ x⁻¹, by
         simp only [span_singleton_one, Units.mul_inv', span_singleton_mul_span_singleton], by
         simp only [span_singleton_one, Units.inv_mul', span_singleton_mul_span_singleton]⟩,
-    map_mul' := fun x y =>
-      ext
-        (by
-          simp only [Units.coe_mk, Units.coe_mul, span_singleton_mul_span_singleton]),
-    map_one' :=
-      ext
-        (by
-          simp only [span_singleton_one, Units.coe_mk, Units.coe_one]) }
+    map_mul' := fun x y => ext (by simp only [Units.coe_mk, Units.coe_mul, span_singleton_mul_span_singleton]),
+    map_one' := ext (by simp only [span_singleton_one, Units.coe_mk, Units.coe_one]) }
 
 attribute [local semireducible] toPrincipalIdeal
 
@@ -94,10 +88,8 @@ noncomputable def FractionalIdeal.mk0 [IsDedekindDomain R] : (Ideal R)⁰ →* (
   toFun := fun I =>
     Units.mk0 I
       ((FractionalIdeal.coe_to_fractional_ideal_ne_zero (le_reflₓ R⁰)).mpr (mem_non_zero_divisors_iff_ne_zero.mp I.2))
-  map_one' := by
-    simp
-  map_mul' := fun x y => by
-    simp
+  map_one' := by simp
+  map_mul' := fun x y => by simp
 
 /-- Send a nonzero ideal to the corresponding class in the class group. -/
 @[simps]
@@ -106,7 +98,7 @@ noncomputable def ClassGroup.mk0 [IsDedekindDomain R] : (Ideal R)⁰ →* ClassG
 
 variable {K}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ≠ » (0 : K))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » (0 : K))
 theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J : (Ideal R)⁰} :
     ClassGroup.mk0 K I = ClassGroup.mk0 K J ↔ ∃ (x : _)(_ : x ≠ (0 : K)), spanSingleton R⁰ x * I = J := by
   simp only [ClassGroup.mk0, MonoidHom.comp_apply, QuotientGroup.mk'_eq_mk']
@@ -204,11 +196,7 @@ theorem ClassGroup.mk_eq_one_iff {I : (FractionalIdeal R⁰ K)ˣ} :
     QuotientGroup.mk' (toPrincipalIdeal R K).range I = 1 ↔ (I : Submodule R K).IsPrincipal := by
   rw [← (QuotientGroup.mk' _).map_one, eq_comm, QuotientGroup.mk'_eq_mk']
   simp only [exists_propₓ, one_mulₓ, exists_eq_right, to_principal_ideal_eq_iff, MonoidHom.mem_range, coe_coe]
-  refine'
-    ⟨fun ⟨x, hx⟩ =>
-      ⟨⟨x, by
-          rw [← hx, coe_span_singleton]⟩⟩,
-      _⟩
+  refine' ⟨fun ⟨x, hx⟩ => ⟨⟨x, by rw [← hx, coe_span_singleton]⟩⟩, _⟩
   intro hI
   obtain ⟨x, hx⟩ := @Submodule.IsPrincipal.principal _ _ _ _ _ _ hI
   have hx' : (I : FractionalIdeal R⁰ K) = span_singleton R⁰ x := by
@@ -229,23 +217,23 @@ theorem ClassGroup.mk0_eq_one_iff [IsDedekindDomain R] {I : Ideal R} (hI : I ∈
 
 /-- The class group of principal ideal domain is finite (in fact a singleton).
 TODO: generalize to Dedekind domains -/
-instance [IsPrincipalIdealRing R] : Fintype (ClassGroup R K) where
+instance [IsPrincipalIdealRing R] : Fintypeₓ (ClassGroup R K) where
   elems := {1}
   complete := by
     rintro ⟨I⟩
-    rw [Finset.mem_singleton]
+    rw [Finsetₓ.mem_singleton]
     exact class_group.mk_eq_one_iff.mpr (I : FractionalIdeal R⁰ K).IsPrincipal
 
 /-- The class number of a principal ideal domain is `1`. -/
-theorem card_class_group_eq_one [IsPrincipalIdealRing R] : Fintype.card (ClassGroup R K) = 1 := by
-  rw [Fintype.card_eq_one_iff]
+theorem card_class_group_eq_one [IsPrincipalIdealRing R] : Fintypeₓ.card (ClassGroup R K) = 1 := by
+  rw [Fintypeₓ.card_eq_one_iff]
   use 1
   rintro ⟨I⟩
   exact class_group.mk_eq_one_iff.mpr (I : FractionalIdeal R⁰ K).IsPrincipal
 
 /-- The class number is `1` iff the ring of integers is a principal ideal domain. -/
-theorem card_class_group_eq_one_iff [IsDedekindDomain R] [Fintype (ClassGroup R K)] :
-    Fintype.card (ClassGroup R K) = 1 ↔ IsPrincipalIdealRing R := by
+theorem card_class_group_eq_one_iff [IsDedekindDomain R] [Fintypeₓ (ClassGroup R K)] :
+    Fintypeₓ.card (ClassGroup R K) = 1 ↔ IsPrincipalIdealRing R := by
   constructor
   swap
   · intros
@@ -253,11 +241,11 @@ theorem card_class_group_eq_one_iff [IsDedekindDomain R] [Fintype (ClassGroup R 
     assumption
     assumption
     
-  rw [Fintype.card_eq_one_iff]
+  rw [Fintypeₓ.card_eq_one_iff]
   rintro ⟨I, hI⟩
   have eq_one : ∀ J : ClassGroup R K, J = 1 := fun J => trans (hI J) (hI 1).symm
   refine' ⟨fun I => _⟩
-  by_cases' hI : I = ⊥
+  by_cases hI:I = ⊥
   · rw [hI]
     exact bot_is_principal
     

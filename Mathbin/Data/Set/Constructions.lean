@@ -33,9 +33,7 @@ namespace HasFiniteInter
 
 -- Satisfying the inhabited linter...
 instance : Inhabited (HasFiniteInter ({Set.Univ} : Set (Set α))) :=
-  ⟨⟨by
-      tauto, fun _ h1 _ h2 => by
-      simp [Set.mem_singleton_iff.1 h1, Set.mem_singleton_iff.1 h2]⟩⟩
+  ⟨⟨by tauto, fun _ h1 _ h2 => by simp [Set.mem_singleton_iff.1 h1, Set.mem_singleton_iff.1 h2]⟩⟩
 
 /-- The smallest set of sets containing `S` which is closed under finite intersections. -/
 inductive FiniteInterClosure : Set (Set α)
@@ -50,26 +48,22 @@ def finiteInterClosureHasFiniteInter : HasFiniteInter (FiniteInterClosure S) whe
 
 variable {S}
 
-theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) : ↑F ⊆ S → ⋂₀ (↑F : Set (Set α)) ∈ S := by
+theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finsetₓ (Set α)) : ↑F ⊆ S → ⋂₀ (↑F : Set (Set α)) ∈ S := by
   classical
-  refine' Finset.induction_on F (fun _ => _) _
+  refine' Finsetₓ.induction_on F (fun _ => _) _
   · simp [cond.univ_mem]
     
   · intro a s h1 h2 h3
-    suffices a ∩ ⋂₀ ↑s ∈ S by
-      simpa
-    exact cond.inter_mem (h3 (Finset.mem_insert_self a s)) (h2 fun x hx => h3 <| Finset.mem_insert_of_mem hx)
+    suffices a ∩ ⋂₀ ↑s ∈ S by simpa
+    exact cond.inter_mem (h3 (Finsetₓ.mem_insert_self a s)) (h2 fun x hx => h3 <| Finsetₓ.mem_insert_of_mem hx)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure[has_finite_inter.finite_inter_closure] (insert[has_insert.insert] A S))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure[has_finite_inter.finite_inter_closure] (insert[has_insert.insert] A S))
 theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) (P)
     (_ : P ∈ FiniteInterClosure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q := by
   induction' H with S h T1 T2 _ _ h1 h2
   · cases h
-    · exact
-        Or.inr
-          ⟨Set.Univ, cond.univ_mem, by
-            simpa⟩
+    · exact Or.inr ⟨Set.Univ, cond.univ_mem, by simpa⟩
       
     · exact Or.inl h
       
@@ -79,15 +73,9 @@ theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) (P)
   · rcases h1 with (h | ⟨Q, hQ, rfl⟩) <;> rcases h2 with (i | ⟨R, hR, rfl⟩)
     · exact Or.inl (cond.inter_mem h i)
       
-    · exact
-        Or.inr
-          ⟨T1 ∩ R, cond.inter_mem h hR, by
-            simp only [← Set.inter_assoc, Set.inter_comm _ A]⟩
+    · exact Or.inr ⟨T1 ∩ R, cond.inter_mem h hR, by simp only [← Set.inter_assoc, Set.inter_comm _ A]⟩
       
-    · exact
-        Or.inr
-          ⟨Q ∩ T2, cond.inter_mem hQ i, by
-            simp only [Set.inter_assoc]⟩
+    · exact Or.inr ⟨Q ∩ T2, cond.inter_mem hQ i, by simp only [Set.inter_assoc]⟩
       
     · exact
         Or.inr

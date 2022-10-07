@@ -41,7 +41,7 @@ open Set
 
 open BigOperators Pointwise
 
--- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`well_founded_submodule_lt] []
+-- ./././Mathport/Syntax/Translate/Command.lean:326:30: infer kinds are unsupported in Lean 4: #[`well_founded_submodule_lt] []
 /-- `is_artinian R M` is the proposition that `M` is an Artinian `R`-module,
 implemented as the well-foundedness of submodule inclusion.
 -/
@@ -85,11 +85,7 @@ theorem is_artinian_of_range_eq_ker [IsArtinian R M] [IsArtinian R P] (f : M →
     (hf : Function.Injective f) (hg : Function.Surjective g) (h : f.range = g.ker) : IsArtinian R N :=
   ⟨well_founded_lt_exact_sequence (IsArtinian.well_founded_submodule_lt _ _) (IsArtinian.well_founded_submodule_lt _ _)
       f.range (Submodule.map f) (Submodule.comap f) (Submodule.comap g) (Submodule.map g) (Submodule.gciMapComap hf)
-      (Submodule.giMapComap hg)
-      (by
-        simp [Submodule.map_comap_eq, inf_comm])
-      (by
-        simp [Submodule.comap_map_eq, h])⟩
+      (Submodule.giMapComap hg) (by simp [Submodule.map_comap_eq, inf_comm]) (by simp [Submodule.comap_map_eq, h])⟩
 
 instance is_artinian_prod [IsArtinian R M] [IsArtinian R P] : IsArtinian R (M × P) :=
   is_artinian_of_range_eq_ker (LinearMap.inl R M P) (LinearMap.snd R M P) LinearMap.inl_injective
@@ -152,11 +148,11 @@ theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] 
     exact ⟨fun hab x => le_transₓ hab, fun h => h _ le_rflₓ⟩
   exact
     ⟨⟨fun n => span R (coe ∘ f '' { m | n ≤ m }), fun x y => by
-        simp (config := { contextual := true })[le_antisymm_iffₓ, (this _ _).symm]⟩,
+        simp (config := { contextual := true }) [le_antisymm_iffₓ, (this _ _).symm]⟩,
       by
       intro a b
       conv_rhs => rw [Gt, lt_iff_le_not_leₓ, this, this, ← lt_iff_le_not_leₓ]
-      simp ⟩
+      simp⟩
 
 /-- A module is Artinian iff every nonempty set of submodules has a minimal submodule among them.
 -/
@@ -190,16 +186,9 @@ with disjoint kernel and range.
 -/
 theorem exists_endomorphism_iterate_ker_sup_range_eq_top (f : M →ₗ[R] M) :
     ∃ n : ℕ, n ≠ 0 ∧ (f ^ n).ker ⊔ (f ^ n).range = ⊤ := by
-  obtain ⟨n, w⟩ :=
-    monotone_stabilizes
-      (f.iterate_range.comp
-        ⟨fun n => n + 1, fun n m w => by
-          linarith⟩)
-  specialize
-    w (n + 1 + n)
-      (by
-        linarith)
-  dsimp'  at w
+  obtain ⟨n, w⟩ := monotone_stabilizes (f.iterate_range.comp ⟨fun n => n + 1, fun n m w => by linarith⟩)
+  specialize w (n + 1 + n) (by linarith)
+  dsimp at w
   refine' ⟨n + 1, Nat.succ_ne_zero _, _⟩
   simp_rw [eq_top_iff', mem_sup]
   intro x
@@ -226,7 +215,7 @@ theorem surjective_of_injective_endomorphism (f : M →ₗ[R] M) (s : Injective 
 theorem bijective_of_injective_endomorphism (f : M →ₗ[R] M) (s : Injective f) : Bijective f :=
   ⟨s, surjective_of_injective_endomorphism f s⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident n, ",", ident w, "⟩", ":", expr «expr∃ , »((n : exprℕ()),
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[["⟨", ident n, ",", ident w, "⟩", ":", expr «expr∃ , »((n : exprℕ()),
     ∀ m,
     «expr ≤ »(n, m) → «expr = »(order_dual.to_dual f «expr + »(m, 1), «expr⊤»()))]]
 /-- A sequence `f` of submodules of a artinian module,
@@ -237,7 +226,7 @@ theorem disjoint_partial_infs_eventually_top (f : ℕ → Submodule R M)
     (h : ∀ n, Disjoint (partialSups (OrderDual.toDual ∘ f) n) (OrderDual.toDual (f (n + 1)))) :
     ∃ n : ℕ, ∀ m, n ≤ m → f m = ⊤ := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident n, \",\", ident w, \"⟩\", \":\", expr «expr∃ , »((n : exprℕ()),\n    ∀ m,\n    «expr ≤ »(n, m) → «expr = »(order_dual.to_dual f «expr + »(m, 1), «expr⊤»()))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `rsuffices #[[\"⟨\", ident n, \",\", ident w, \"⟩\", \":\", expr «expr∃ , »((n : exprℕ()),\n    ∀ m,\n    «expr ≤ »(n, m) → «expr = »(order_dual.to_dual f «expr + »(m, 1), «expr⊤»()))]]"
   · use n + 1
     rintro (_ | m) p
     · cases p
@@ -265,7 +254,7 @@ theorem range_smul_pow_stabilizes (r : R) :
   monotone_stabilizes
     ⟨fun n => (r ^ n • LinearMap.id : M →ₗ[R] M).range, fun n m h x ⟨y, hy⟩ =>
       ⟨r ^ (m - n) • y, by
-        dsimp'  at hy⊢
+        dsimp at hy⊢
         rw [← smul_assoc, smul_eq_mul, ← pow_addₓ, ← hy, add_tsub_cancel_of_le h]⟩⟩
 
 variable {M}
@@ -273,9 +262,7 @@ variable {M}
 theorem exists_pow_succ_smul_dvd (r : R) (x : M) : ∃ (n : ℕ)(y : M), r ^ n.succ • y = r ^ n • x := by
   obtain ⟨n, hn⟩ := IsArtinian.range_smul_pow_stabilizes M r
   simp_rw [SetLike.ext_iff] at hn
-  exact
-    ⟨n, by
-      simpa using hn n.succ n.le_succ (r ^ n • x)⟩
+  exact ⟨n, by simpa using hn n.succ n.le_succ (r ^ n • x)⟩
 
 end IsArtinian
 
@@ -315,8 +302,7 @@ theorem Ringₓ.is_artinian_of_zero_eq_one {R} [Ringₓ R] (h01 : (0 : R) = 1) :
   inferInstance
 
 theorem is_artinian_of_submodule_of_artinian (R M) [Ringₓ R] [AddCommGroupₓ M] [Module R M] (N : Submodule R M)
-    (h : IsArtinian R M) : IsArtinian R N := by
-  infer_instance
+    (h : IsArtinian R M) : IsArtinian R N := by infer_instance
 
 theorem is_artinian_of_quotient_of_artinian (R) [Ringₓ R] (M) [AddCommGroupₓ M] [Module R M] (N : Submodule R M)
     (h : IsArtinian R M) : IsArtinian R (M ⧸ N) :=
@@ -342,7 +328,7 @@ theorem is_artinian_of_fg_of_artinian {R M} [Ringₓ R] [AddCommGroupₓ M] [Mod
     · intro f g
       apply Subtype.eq
       change (∑ i in s.attach, (f i + g i) • _) = _
-      simp only [add_smul, Finset.sum_add_distrib]
+      simp only [add_smul, Finsetₓ.sum_add_distrib]
       rfl
       
     · intro c f
@@ -358,8 +344,8 @@ theorem is_artinian_of_fg_of_artinian {R M} [Ringₓ R] [AddCommGroupₓ M] [Mod
   rcases hn with ⟨l, hl1, hl2⟩
   refine' ⟨fun x => l x, Subtype.ext _⟩
   change (∑ i in s.attach, l i • (i : M)) = n
-  rw [@Finset.sum_attach M M s _ fun i => l i • i, ← hl2, Finsupp.total_apply, Finsupp.sum, eq_comm]
-  refine' Finset.sum_subset hl1 fun x _ hx => _
+  rw [@Finsetₓ.sum_attach M M s _ fun i => l i • i, ← hl2, Finsupp.total_apply, Finsupp.sum, eq_comm]
+  refine' Finsetₓ.sum_subset hl1 fun x _ hx => _
   rw [Finsupp.not_mem_support_iff.1 hx, zero_smul]
 
 theorem is_artinian_of_fg_of_artinian' {R M} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [IsArtinianRing R]
@@ -418,15 +404,9 @@ theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R))
     exact lt_of_le_of_neₓ le_sup_left fun h => H <| h.symm ▸ le_sup_right
   have : Ideal.span {x} * Jac ^ (n + 1) ≤ ⊥
   calc
-    Ideal.span {x} * Jac ^ (n + 1) = Ideal.span {x} * Jac * Jac ^ n := by
-      rw [pow_succₓ, ← mul_assoc]
-    _ ≤ J * Jac ^ n :=
-      mul_le_mul
-        (by
-          rwa [mul_comm])
-        le_rflₓ
-    _ = ⊥ := by
-      simp [J]
+    Ideal.span {x} * Jac ^ (n + 1) = Ideal.span {x} * Jac * Jac ^ n := by rw [pow_succₓ, ← mul_assoc]
+    _ ≤ J * Jac ^ n := mul_le_mul (by rwa [mul_comm]) le_rflₓ
+    _ = ⊥ := by simp [J]
     
   refine' hxJ (mem_annihilator.2 fun y hy => (mem_bot R).1 _)
   refine' this (mul_mem_mul (mem_span_singleton_self x) _)
@@ -444,9 +424,7 @@ theorem localization_surjective : Function.Surjective (algebraMap R L) := by
   obtain ⟨r₁, s, rfl⟩ := IsLocalization.mk'_surjective S r'
   obtain ⟨r₂, h⟩ : ∃ r : R, IsLocalization.mk' L 1 s = algebraMap R L r
   swap
-  · exact
-      ⟨r₁ * r₂, by
-        rw [IsLocalization.mk'_eq_mul_mk'_one, map_mul, h]⟩
+  · exact ⟨r₁ * r₂, by rw [IsLocalization.mk'_eq_mul_mk'_one, map_mul, h]⟩
     
   obtain ⟨n, r, hr⟩ := IsArtinian.exists_pow_succ_smul_dvd (s : R) (1 : R)
   use r

@@ -58,10 +58,7 @@ variable {M}
 
 @[field_simps]
 theorem two_ne_zero' : (2 : M) ≠ 0 := by
-  have : ((2 : ℕ) : M) ≠ 0 :=
-    Nat.cast_ne_zero.2
-      (by
-        decide)
+  have : ((2 : ℕ) : M) ≠ 0 := Nat.cast_ne_zero.2 (by decide)
   rwa [Nat.cast_two] at this
 
 end
@@ -103,7 +100,7 @@ theorem nat_mul_inj' {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) (w : n 
   simpa [w] using nat_mul_inj h
 
 theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h => by
-  dsimp' [bit0]  at h
+  dsimp [bit0] at h
   simp only [(two_mul a).symm, (two_mul b).symm] at h
   refine' nat_mul_inj' _ two_ne_zero
   exact_mod_cast h
@@ -121,11 +118,7 @@ theorem bit1_eq_bit1 {a b : R} : bit1 a = bit1 b ↔ a = b :=
   bit1_injective.eq_iff
 
 @[simp]
-theorem bit1_eq_one {a : R} : bit1 a = 1 ↔ a = 0 := by
-  rw
-    [show (1 : R) = bit1 0 by
-      simp ,
-    bit1_eq_bit1]
+theorem bit1_eq_one {a : R} : bit1 a = 1 ↔ a = 0 := by rw [show (1 : R) = bit1 0 by simp, bit1_eq_bit1]
 
 @[simp]
 theorem one_eq_bit1 {a : R} : 1 = bit1 a ↔ a = 0 := by
@@ -139,26 +132,22 @@ section
 variable {R : Type _} [DivisionRing R] [CharZero R]
 
 @[simp]
-theorem half_add_self (a : R) : (a + a) / 2 = a := by
-  rw [← mul_two, mul_div_cancel a two_ne_zero']
+theorem half_add_self (a : R) : (a + a) / 2 = a := by rw [← mul_two, mul_div_cancel a two_ne_zero']
 
 @[simp]
-theorem add_halves' (a : R) : a / 2 + a / 2 = a := by
-  rw [← add_div, half_add_self]
+theorem add_halves' (a : R) : a / 2 + a / 2 = a := by rw [← add_div, half_add_self]
 
-theorem sub_half (a : R) : a - a / 2 = a / 2 := by
-  rw [sub_eq_iff_eq_add, add_halves']
+theorem sub_half (a : R) : a - a / 2 = a / 2 := by rw [sub_eq_iff_eq_add, add_halves']
 
-theorem half_sub (a : R) : a / 2 - a = -(a / 2) := by
-  rw [← neg_sub, sub_half]
+theorem half_sub (a : R) : a / 2 - a = -(a / 2) := by rw [← neg_sub, sub_half]
 
 end
 
 namespace WithTop
 
 instance {R : Type _} [AddMonoidWithOneₓ R] [CharZero R] :
-    CharZero (WithTop R) where cast_injective := fun m n h => by
-    rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
+    CharZero
+      (WithTop R) where cast_injective := fun m n h => by rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
 
 end WithTop
 
@@ -167,16 +156,11 @@ section RingHom
 variable {R S : Type _} [NonAssocSemiringₓ R] [NonAssocSemiringₓ S]
 
 theorem RingHom.char_zero (ϕ : R →+* S) [hS : CharZero S] : CharZero R :=
-  ⟨fun a b h =>
-    CharZero.cast_injective
-      (by
-        rw [← map_nat_cast ϕ, ← map_nat_cast ϕ, h])⟩
+  ⟨fun a b h => CharZero.cast_injective (by rw [← map_nat_cast ϕ, ← map_nat_cast ϕ, h])⟩
 
 theorem RingHom.char_zero_iff {ϕ : R →+* S} (hϕ : Function.Injective ϕ) : CharZero R ↔ CharZero S :=
-  ⟨fun hR =>
-    ⟨by
-      intro a b h <;> rwa [← @Nat.cast_inj R, ← hϕ.eq_iff, map_nat_cast ϕ, map_nat_cast ϕ]⟩,
-    fun hS => ϕ.char_zero⟩
+  ⟨fun hR => ⟨by intro a b h <;> rwa [← @Nat.cast_inj R, ← hϕ.eq_iff, map_nat_cast ϕ, map_nat_cast ϕ]⟩, fun hS =>
+    ϕ.char_zero⟩
 
 theorem RingHom.injective_nat (f : ℕ →+* R) [CharZero R] : Function.Injective f :=
   Subsingleton.elim (Nat.castRingHom _) f ▸ Nat.cast_injective

@@ -63,28 +63,18 @@ theorem mk'_num_denom (x : K) : mk' K (num A x) (denom A x) = x :=
 variable {A}
 
 theorem num_mul_denom_eq_num_iff_eq {x y : K} : x * algebraMap A K (denom A y) = algebraMap A K (num A y) ↔ x = y :=
-  ⟨fun h => by
-    simpa only [mk'_num_denom] using eq_mk'_iff_mul_eq.mpr h, fun h =>
-    eq_mk'_iff_mul_eq.mp
-      (by
-        rw [h, mk'_num_denom])⟩
+  ⟨fun h => by simpa only [mk'_num_denom] using eq_mk'_iff_mul_eq.mpr h, fun h =>
+    eq_mk'_iff_mul_eq.mp (by rw [h, mk'_num_denom])⟩
 
 theorem num_mul_denom_eq_num_iff_eq' {x y : K} : y * algebraMap A K (denom A x) = algebraMap A K (num A x) ↔ x = y :=
-  ⟨fun h => by
-    simpa only [eq_comm, mk'_num_denom] using eq_mk'_iff_mul_eq.mpr h, fun h =>
-    eq_mk'_iff_mul_eq.mp
-      (by
-        rw [h, mk'_num_denom])⟩
+  ⟨fun h => by simpa only [eq_comm, mk'_num_denom] using eq_mk'_iff_mul_eq.mpr h, fun h =>
+    eq_mk'_iff_mul_eq.mp (by rw [h, mk'_num_denom])⟩
 
 theorem num_mul_denom_eq_num_mul_denom_iff_eq {x y : K} : num A y * denom A x = num A x * denom A y ↔ x = y :=
-  ⟨fun h => by
-    simpa only [mk'_num_denom] using mk'_eq_of_eq h, fun h => by
-    rw [h]⟩
+  ⟨fun h => by simpa only [mk'_num_denom] using mk'_eq_of_eq h, fun h => by rw [h]⟩
 
 theorem eq_zero_of_num_eq_zero {x : K} (h : num A x = 0) : x = 0 :=
-  num_mul_denom_eq_num_iff_eq'.mp
-    (by
-      rw [zero_mul, h, RingHom.map_zero])
+  num_mul_denom_eq_num_iff_eq'.mp (by rw [zero_mul, h, RingHom.map_zero])
 
 theorem is_integer_of_is_unit_denom {x : K} (h : IsUnit (denom A x : A)) : IsInteger A x := by
   cases' h with d hd

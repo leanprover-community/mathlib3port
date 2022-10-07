@@ -45,22 +45,18 @@ def iso {X Y : A} (f : X ⟶ Y) : image (L.map f) ≅ L.obj (image f) :=
     { i := L.obj (Limits.image f), m := L.map <| Limits.image.ι _, m_mono := preserves_mono_of_preserves_limit _ _,
       e := L.map <| factorThruImage _,
       e_strong_epi := @strong_epi_of_epi _ _ _ <| preserves_epi_of_preserves_colimit L _,
-      fac' := by
-        rw [← L.map_comp, limits.image.fac] }
+      fac' := by rw [← L.map_comp, limits.image.fac] }
   IsImage.isoExt (Image.isImage (L.map f)) aux1.toMonoIsImage
 
 @[reassoc]
 theorem factor_thru_image_comp_hom {X Y : A} (f : X ⟶ Y) :
-    factorThruImage (L.map f) ≫ (iso L f).Hom = L.map (factorThruImage f) := by
-  simp
+    factorThruImage (L.map f) ≫ (iso L f).Hom = L.map (factorThruImage f) := by simp
 
 @[reassoc]
-theorem hom_comp_map_image_ι {X Y : A} (f : X ⟶ Y) : (iso L f).Hom ≫ L.map (image.ι f) = image.ι (L.map f) := by
-  simp
+theorem hom_comp_map_image_ι {X Y : A} (f : X ⟶ Y) : (iso L f).Hom ≫ L.map (image.ι f) = image.ι (L.map f) := by simp
 
 @[reassoc]
-theorem inv_comp_image_ι_map {X Y : A} (f : X ⟶ Y) : (iso L f).inv ≫ image.ι (L.map f) = L.map (image.ι f) := by
-  simp
+theorem inv_comp_image_ι_map {X Y : A} (f : X ⟶ Y) : (iso L f).inv ≫ image.ι (L.map f) = L.map (image.ι f) := by simp
 
 end PreservesImage
 

@@ -122,18 +122,17 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
             PartialFun.Iso.mk
               { toFun := fun a => ⟨some a, some_ne_none a⟩, invFun := fun a => get <| ne_none_iff_is_some.1 a.2,
                 left_inv := fun a => get_some _ _,
-                right_inv := fun a => by
-                  simp only [Subtype.val_eq_coe, some_get, Subtype.coe_eta] })
+                right_inv := fun a => by simp only [Subtype.val_eq_coe, some_get, Subtype.coe_eta] })
           fun X Y f =>
           Pfun.ext fun a b => by
             unfold_projs
-            dsimp'
+            dsimp
             rw [Part.bind_some]
             refine' (part.mem_bind_iff.trans _).trans pfun.mem_to_subtype_iff.symm
             obtain ⟨b | b, hb⟩ := b
             · exact (hb rfl).elim
               
-            dsimp'
+            dsimp
             simp_rw [Part.mem_some_iff, Subtype.mk_eq_mk, exists_propₓ, some_inj, exists_eq_right']
             refine' part.mem_to_option.symm.trans _
             exact eq_comm)
@@ -143,8 +142,7 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
                 invFun := fun a => if h : a = X.point then none else some ⟨_, h⟩,
                 left_inv := fun a =>
                   (Option.recOn a (dif_pos rfl)) fun a =>
-                    (dif_neg a.2).trans <| by
-                      simp only [Option.elimₓ, Subtype.val_eq_coe, Subtype.coe_eta],
+                    (dif_neg a.2).trans <| by simp only [Option.elimₓ, Subtype.val_eq_coe, Subtype.coe_eta],
                 right_inv := fun a => by
                   change Option.elimₓ _ _ (dite _ _ _) = _
                   split_ifs
@@ -159,7 +157,7 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
             funext fun a =>
               (Option.recOn a f.map_point.symm) fun a => by
                 unfold_projs
-                dsimp'
+                dsimp
                 change Option.elimₓ _ _ _ = _
                 rw [Part.elim_to_option]
                 split_ifs
@@ -173,9 +171,5 @@ adding a point. -/
 @[simps]
 noncomputable def typeToPartialFunIsoPartialFunToPointed : typeToPartialFun ⋙ partialFunToPointed ≅ typeToPointed :=
   (NatIso.ofComponents fun X => { Hom := ⟨id, rfl⟩, inv := ⟨id, rfl⟩, hom_inv_id' := rfl, inv_hom_id' := rfl })
-    fun X Y f =>
-    Pointed.Hom.ext _ _ <|
-      funext fun a =>
-        (Option.recOn a rfl) fun a => by
-          convert Part.some_to_option _
+    fun X Y f => Pointed.Hom.ext _ _ <| funext fun a => (Option.recOn a rfl) fun a => by convert Part.some_to_option _
 

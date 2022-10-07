@@ -72,34 +72,26 @@ along those maps.
 def pushforwardEq {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) : f _* ℱ ≅ g _* ℱ :=
   isoWhiskerRight (NatIso.op (Opens.mapIso f g h).symm) ℱ
 
-theorem pushforward_eq' {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) : f _* ℱ = g _* ℱ := by
-  rw [h]
+theorem pushforward_eq' {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) : f _* ℱ = g _* ℱ := by rw [h]
 
 @[simp]
 theorem pushforward_eq_hom_app {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) (U) :
     (pushforwardEq h ℱ).Hom.app U =
       ℱ.map
         (by
-          dsimp' [functor.op]
+          dsimp [functor.op]
           apply Quiver.Hom.op
           apply eq_to_hom
           rw [h]) :=
-  by
-  simp [pushforward_eq]
+  by simp [pushforward_eq]
 
 theorem pushforward_eq'_hom_app {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) (U) :
-    NatTrans.app (eqToHom (pushforward_eq' h ℱ)) U =
-      ℱ.map
-        (eqToHom
-          (by
-            rw [h])) :=
-  by
-  simpa [eq_to_hom_map]
+    NatTrans.app (eqToHom (pushforward_eq' h ℱ)) U = ℱ.map (eqToHom (by rw [h])) := by simpa [eq_to_hom_map]
 
 @[simp]
 theorem pushforward_eq_rfl {X Y : Top.{w}} (f : X ⟶ Y) (ℱ : X.Presheaf C) (U) :
     (pushforwardEq (rfl : f = f) ℱ).Hom.app (op U) = 𝟙 _ := by
-  dsimp' [pushforward_eq]
+  dsimp [pushforward_eq]
   simp
 
 theorem pushforward_eq_eq {X Y : Top.{w}} {f g : X ⟶ Y} (h₁ h₂ : f = g) (ℱ : X.Presheaf C) :
@@ -122,18 +114,17 @@ theorem id_eq : 𝟙 X _* ℱ = ℱ := by
 
 @[simp]
 theorem id_hom_app' (U) (p) : (id ℱ).Hom.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by
-  dsimp' [id]
+  dsimp [id]
   simp
 
 attribute [local tidy] tactic.op_induction'
 
 @[simp]
-theorem id_hom_app (U) : (id ℱ).Hom.app U = ℱ.map (eqToHom (Opens.op_map_id_obj U)) := by
-  tidy
+theorem id_hom_app (U) : (id ℱ).Hom.app U = ℱ.map (eqToHom (Opens.op_map_id_obj U)) := by tidy
 
 @[simp]
 theorem id_inv_app' (U) (p) : (id ℱ).inv.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by
-  dsimp' [id]
+  dsimp [id]
   simp
 
 /-- The natural isomorphism between
@@ -147,12 +138,12 @@ theorem comp_eq {Y Z : Top.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g) _* ℱ =
 
 @[simp]
 theorem comp_hom_app {Y Z : Top.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) (U) : (comp ℱ f g).Hom.app U = 𝟙 _ := by
-  dsimp' [comp]
+  dsimp [comp]
   tidy
 
 @[simp]
 theorem comp_inv_app {Y Z : Top.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) (U) : (comp ℱ f g).inv.app U = 𝟙 _ := by
-  dsimp' [comp]
+  dsimp [comp]
   tidy
 
 end Pushforward
@@ -212,36 +203,26 @@ variable {X Y : Top.{v}} (ℱ : Y.Presheaf C)
 /-- The pullback along the identity is isomorphic to the original presheaf. -/
 def id : pullbackObj (𝟙 _) ℱ ≅ ℱ :=
   NatIso.ofComponents
-    (fun U =>
-      pullbackObjObjOfImageOpen (𝟙 _) ℱ (unop U)
-          (by
-            simpa using U.unop.2) ≪≫
-        ℱ.mapIso
-          (eqToIso
-            (by
-              simp )))
+    (fun U => pullbackObjObjOfImageOpen (𝟙 _) ℱ (unop U) (by simpa using U.unop.2) ≪≫ ℱ.mapIso (eqToIso (by simp)))
     fun U V i => by
     ext
     simp
     erw [colimit.pre_desc_assoc]
     erw [colimit.ι_desc_assoc]
     erw [colimit.ι_desc_assoc]
-    dsimp'
+    dsimp
     simp only [← ℱ.map_comp]
     congr
 
 theorem id_inv_app (U : Opens Y) :
     (id ℱ).inv.app (op U) =
       colimit.ι (Lan.diagram (Opens.map (𝟙 Y)).op ℱ (op U))
-        (@CostructuredArrow.mk _ _ _ _ _ (op U) _
-          (eqToHom
-            (by
-              simp ))) :=
+        (@CostructuredArrow.mk _ _ _ _ _ (op U) _ (eqToHom (by simp))) :=
   by
   rw [← category.id_comp ((id ℱ).inv.app (op U)), ← nat_iso.app_inv, iso.comp_inv_eq]
-  dsimp' [id]
+  dsimp [id]
   rw [colimit.ι_desc_assoc]
-  dsimp'
+  dsimp
   rw [← ℱ.map_comp, ← ℱ.map_id]
   rfl
 
@@ -294,13 +275,9 @@ def toPushforwardOfIso {X Y : Top} (H : X ≅ Y) {ℱ : X.Presheaf C} {𝒢 : Y.
 theorem to_pushforward_of_iso_app {X Y : Top} (H₁ : X ≅ Y) {ℱ : X.Presheaf C} {𝒢 : Y.Presheaf C} (H₂ : H₁.Hom _* ℱ ⟶ 𝒢)
     (U : (Opens X)ᵒᵖ) :
     (toPushforwardOfIso H₁ H₂).app U =
-      ℱ.map
-          (eqToHom
-            (by
-              simp [opens.map, Set.preimage_preimage])) ≫
-        H₂.app (op ((Opens.map H₁.inv).obj (unop U))) :=
+      ℱ.map (eqToHom (by simp [opens.map, Set.preimage_preimage])) ≫ H₂.app (op ((Opens.map H₁.inv).obj (unop U))) :=
   by
-  delta' to_pushforward_of_iso
+  delta to_pushforward_of_iso
   simp only [Equivₓ.to_fun_as_coe, nat_trans.comp_app, equivalence.equivalence_mk'_unit, eq_to_hom_map, eq_to_hom_op,
     eq_to_hom_trans, presheaf_equiv_of_iso_unit_iso_hom_app_app, equivalence.to_adjunction,
     equivalence.equivalence_mk'_counit, presheaf_equiv_of_iso_inverse_map_app,
@@ -318,13 +295,8 @@ def pushforwardToOfIso {X Y : Top} (H₁ : X ≅ Y) {ℱ : Y.Presheaf C} {𝒢 :
 theorem pushforward_to_of_iso_app {X Y : Top} (H₁ : X ≅ Y) {ℱ : Y.Presheaf C} {𝒢 : X.Presheaf C} (H₂ : ℱ ⟶ H₁.Hom _* 𝒢)
     (U : (Opens X)ᵒᵖ) :
     (pushforwardToOfIso H₁ H₂).app U =
-      H₂.app (op ((Opens.map H₁.inv).obj (unop U))) ≫
-        𝒢.map
-          (eqToHom
-            (by
-              simp [opens.map, Set.preimage_preimage])) :=
-  by
-  simpa [pushforward_to_of_iso, equivalence.to_adjunction]
+      H₂.app (op ((Opens.map H₁.inv).obj (unop U))) ≫ 𝒢.map (eqToHom (by simp [opens.map, Set.preimage_preimage])) :=
+  by simpa [pushforward_to_of_iso, equivalence.to_adjunction]
 
 end Iso
 

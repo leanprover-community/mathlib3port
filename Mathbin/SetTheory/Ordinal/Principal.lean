@@ -48,8 +48,7 @@ def Principal (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) : Prop :=
   ∀ ⦃a b⦄, a < o → b < o → op a b < o
 
 theorem principal_iff_principal_swap {op : Ordinal → Ordinal → Ordinal} {o : Ordinal} :
-    Principal op o ↔ Principal (Function.swap op) o := by
-  constructor <;> exact fun h a b ha hb => h hb ha
+    Principal op o ↔ Principal (Function.swap op) o := by constructor <;> exact fun h a b ha hb => h hb ha
 
 theorem principal_zero {op : Ordinal → Ordinal → Ordinal} : Principal op 0 := fun a _ h =>
   (Ordinal.not_lt_zero a h).elim
@@ -92,15 +91,7 @@ def blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) : Ordinal :=
 
 theorem lt_blsub₂ (op : Ordinal → Ordinal → Ordinal) {o : Ordinal} {a b : Ordinal} (ha : a < o) (hb : b < o) :
     op a b < blsub₂ op o := by
-  convert
-    lt_lsub _
-      (Prod.mk
-        (enum (· < ·) a
-          (by
-            rwa [type_lt]))
-        (enum (· < ·) b
-          (by
-            rwa [type_lt])))
+  convert lt_lsub _ (Prod.mk (enum (· < ·) a (by rwa [type_lt])) (enum (· < ·) b (by rwa [type_lt])))
   simp only [typein_enum]
 
 theorem principal_nfp_blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) :
@@ -167,7 +158,7 @@ theorem principal_add_iff_add_left_eq_self {o : Ordinal} : Principal (· + ·) o
 
 theorem exists_lt_add_of_not_principal_add {a} (ha : ¬Principal (· + ·) a) :
     ∃ (b c : _)(hb : b < a)(hc : c < a), b + c = a := by
-  unfold principal  at ha
+  unfold principal at ha
   push_neg  at ha
   rcases ha with ⟨b, c, hb, hc, H⟩
   refine' ⟨b, _, hb, lt_of_le_of_neₓ (sub_le_self a b) fun hab => _, Ordinal.add_sub_cancel_of_le hb.le⟩
@@ -372,14 +363,11 @@ theorem mul_lt_omega_opow {a b c : Ordinal} (c0 : 0 < c) (ha : a < (omega^c)) (h
 
 theorem mul_omega_opow_opow {a b : Ordinal} (a0 : 0 < a) (h : a < (omega^omega^b)) :
     a * (omega^omega^b) = (omega^omega^b) := by
-  by_cases' b0 : b = 0
+  by_cases b0:b = 0
   · rw [b0, opow_zero, opow_one] at h⊢
     exact mul_omega a0 h
     
-  refine'
-    le_antisymmₓ _
-      (by
-        simpa only [one_mulₓ] using mul_le_mul_right' (one_le_iff_pos.2 a0) (omega^omega^b))
+  refine' le_antisymmₓ _ (by simpa only [one_mulₓ] using mul_le_mul_right' (one_le_iff_pos.2 a0) (omega^omega^b))
   rcases(lt_opow_of_limit omega_ne_zero (opow_is_limit_left omega_is_limit b0)).1 h with ⟨x, xb, ax⟩
   apply (mul_le_mul_right' (le_of_ltₓ ax) _).trans
   rw [← opow_add, add_omega_opow xb]
@@ -417,8 +405,7 @@ theorem principal_mul_iff_le_two_or_omega_opow_opow {o : Ordinal} :
     
 
 theorem mul_omega_dvd {a : Ordinal} (a0 : 0 < a) (ha : a < omega) : ∀ {b}, omega ∣ b → a * b = b
-  | _, ⟨b, rfl⟩ => by
-    rw [← mul_assoc, mul_omega a0 ha]
+  | _, ⟨b, rfl⟩ => by rw [← mul_assoc, mul_omega a0 ha]
 
 theorem mul_eq_opow_log_succ {a b : Ordinal.{u}} (ha : a ≠ 0) (hb : Principal (· * ·) b) (hb₂ : 2 < b) :
     a * b = (b^succ (log b a)) := by

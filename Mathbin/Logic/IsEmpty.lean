@@ -76,8 +76,7 @@ instance Sigma.is_empty_left {α} [IsEmpty α] {E : α → Type _} : IsEmpty (Si
   Function.is_empty Sigma.fst
 
 -- Test that `pi.is_empty` finds this instance.
-example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) := by
-  infer_instance
+example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) := by infer_instance
 
 /-- Eliminate out of a type that `is_empty` (without using projection notation). -/
 @[elabAsElim]
@@ -128,8 +127,7 @@ theorem not_is_empty_iff : ¬IsEmpty α ↔ Nonempty α :=
   not_iff_comm.mp not_nonempty_iff
 
 @[simp]
-theorem is_empty_Prop {p : Prop} : IsEmpty p ↔ ¬p := by
-  simp only [← not_nonempty_iff, nonempty_Prop]
+theorem is_empty_Prop {p : Prop} : IsEmpty p ↔ ¬p := by simp only [← not_nonempty_iff, nonempty_Prop]
 
 @[simp]
 theorem is_empty_pi {π : α → Sort _} : IsEmpty (∀ a, π a) ↔ ∃ a, IsEmpty (π a) := by
@@ -164,12 +162,10 @@ theorem is_empty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty 
   simp only [← not_nonempty_iff, nonempty_psumₓ, not_or_distrib]
 
 @[simp]
-theorem is_empty_ulift {α} : IsEmpty (ULift α) ↔ IsEmpty α := by
-  simp only [← not_nonempty_iff, nonempty_uliftₓ]
+theorem is_empty_ulift {α} : IsEmpty (ULift α) ↔ IsEmpty α := by simp only [← not_nonempty_iff, nonempty_uliftₓ]
 
 @[simp]
-theorem is_empty_plift {α} : IsEmpty (Plift α) ↔ IsEmpty α := by
-  simp only [← not_nonempty_iff, nonempty_pliftₓ]
+theorem is_empty_plift {α} : IsEmpty (Plift α) ↔ IsEmpty α := by simp only [← not_nonempty_iff, nonempty_pliftₓ]
 
 theorem well_founded_of_empty {α} [IsEmpty α] (r : α → α → Prop) : WellFounded r :=
   ⟨isEmptyElim⟩

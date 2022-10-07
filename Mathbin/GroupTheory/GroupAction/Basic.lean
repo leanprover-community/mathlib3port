@@ -55,8 +55,7 @@ theorem mem_orbit (b : β) (x : α) : x • b ∈ Orbit α b :=
 
 @[simp, to_additive]
 theorem mem_orbit_self (b : β) : b ∈ Orbit α b :=
-  ⟨1, by
-    simp [MulAction.one_smul]⟩
+  ⟨1, by simp [MulAction.one_smul]⟩
 
 @[to_additive]
 theorem orbit_nonempty (b : β) : Set.Nonempty (Orbit α b) :=
@@ -124,9 +123,7 @@ variable (α) {β}
 def Stabilizer.submonoid (b : β) : Submonoid α where
   Carrier := { a | a • b = b }
   one_mem' := one_smul _ b
-  mul_mem' := fun a a' (ha : a • b = b) (hb : a' • b = b) =>
-    show (a * a') • b = b by
-      rw [← smul_smul, hb, ha]
+  mul_mem' := fun a a' (ha : a • b = b) (hb : a' • b = b) => show (a * a') • b = b by rw [← smul_smul, hb, ha]
 
 @[simp, to_additive]
 theorem mem_stabilizer_submonoid_iff {b : β} {a : α} : a ∈ Stabilizer.submonoid α b ↔ a • b = b :=
@@ -139,14 +136,11 @@ theorem orbit_eq_univ [IsPretransitive α β] (x : β) : Orbit α x = Set.Univ :
 variable {α} {β}
 
 @[to_additive]
-theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (Orbit α a)] :
-    a ∈ FixedPoints α β ↔ Fintype.card (Orbit α a) = 1 := by
-  rw [Fintype.card_eq_one_iff, mem_fixed_points]
+theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintypeₓ (Orbit α a)] :
+    a ∈ FixedPoints α β ↔ Fintypeₓ.card (Orbit α a) = 1 := by
+  rw [Fintypeₓ.card_eq_one_iff, mem_fixed_points]
   constructor
-  · exact fun h =>
-      ⟨⟨a, mem_orbit_self _⟩, fun ⟨b, ⟨x, hx⟩⟩ =>
-        Subtype.eq <| by
-          simp [h x, hx.symm]⟩
+  · exact fun h => ⟨⟨a, mem_orbit_self _⟩, fun ⟨b, ⟨x, hx⟩⟩ => Subtype.eq <| by simp [h x, hx.symm]⟩
     
   · intro h x
     rcases h with ⟨⟨z, hz⟩, hz₁⟩
@@ -169,10 +163,7 @@ A subgroup. -/
 @[to_additive
       "The stabilizer of an element under an action, i.e. what sends the element to itself.\nAn additive subgroup."]
 def stabilizer (b : β) : Subgroup α :=
-  { Stabilizer.submonoid α b with
-    inv_mem' := fun a (ha : a • b = b) =>
-      show a⁻¹ • b = b by
-        rw [inv_smul_eq_iff, ha] }
+  { Stabilizer.submonoid α b with inv_mem' := fun a (ha : a • b = b) => show a⁻¹ • b = b by rw [inv_smul_eq_iff, ha] }
 
 variable {α} {β}
 
@@ -192,8 +183,7 @@ theorem smul_orbit (a : α) (b : β) : a • Orbit α b = Orbit α b :=
 theorem orbit_smul (a : α) (b : β) : Orbit α (a • b) = Orbit α b :=
   (orbit_smul_subset a b).antisymm <|
     calc
-      Orbit α b = Orbit α (a⁻¹ • a • b) := by
-        rw [inv_smul_smul]
+      Orbit α b = Orbit α (a⁻¹ • a • b) := by rw [inv_smul_smul]
       _ ⊆ Orbit α (a • b) := orbit_smul_subset _ _
       
 
@@ -213,12 +203,10 @@ theorem orbit_eq_iff {a b : β} : Orbit α a = Orbit α b ↔ a ∈ Orbit α b :
 variable (α) {β}
 
 @[to_additive]
-theorem mem_orbit_smul (g : α) (a : β) : a ∈ Orbit α (g • a) := by
-  simp only [orbit_smul, mem_orbit_self]
+theorem mem_orbit_smul (g : α) (a : β) : a ∈ Orbit α (g • a) := by simp only [orbit_smul, mem_orbit_self]
 
 @[to_additive]
-theorem smul_mem_orbit_smul (g h : α) (a : β) : g • a ∈ Orbit α (h • a) := by
-  simp only [orbit_smul, mem_orbit]
+theorem smul_mem_orbit_smul (g h : α) (a : β) : g • a ∈ Orbit α (h • a) := by simp only [orbit_smul, mem_orbit]
 
 variable (α) (β)
 
@@ -227,9 +215,8 @@ variable (α) (β)
 def orbitRel : Setoidₓ β where
   R := fun a b => a ∈ Orbit α b
   iseqv :=
-    ⟨mem_orbit_self, fun a b => by
-      simp [orbit_eq_iff.symm, eq_comm], fun a b => by
-      simp (config := { contextual := true })[orbit_eq_iff.symm, eq_comm]⟩
+    ⟨mem_orbit_self, fun a b => by simp [orbit_eq_iff.symm, eq_comm], fun a b => by
+      simp (config := { contextual := true }) [orbit_eq_iff.symm, eq_comm]⟩
 
 attribute [local instance] orbit_rel
 
@@ -253,9 +240,7 @@ theorem quotient_preimage_image_eq_union_mul (U : Set β) :
     rw [Set.mem_Union] at hx
     obtain ⟨a, u, hu₁, hu₂⟩ := hx
     rw [Set.mem_preimage, Set.mem_image_iff_bex]
-    refine'
-      ⟨a⁻¹ • x, _, by
-        simp only [Quotientₓ.eq] <;> use a⁻¹⟩
+    refine' ⟨a⁻¹ • x, _, by simp only [Quotientₓ.eq] <;> use a⁻¹⟩
     rw [← hu₂]
     convert hu₁
     simp only [inv_smul_smul]

@@ -44,8 +44,7 @@ theorem mk_derivationₗ_C (f : σ → A) (r : R) : mkDerivationₗ R f (c r) = 
   (mk_derivationₗ_monomial f _ _).trans (smul_zero _)
 
 theorem mk_derivationₗ_X (f : σ → A) (i : σ) : mkDerivationₗ R f (x i) = f i :=
-  (mk_derivationₗ_monomial f _ _).trans <| by
-    simp
+  (mk_derivationₗ_monomial f _ _).trans <| by simp
 
 @[simp]
 theorem derivation_C (D : Derivation R (MvPolynomial σ R) A) (a : R) : D (c a) = 0 :=
@@ -53,8 +52,7 @@ theorem derivation_C (D : Derivation R (MvPolynomial σ R) A) (a : R) : D (c a) 
 
 @[simp]
 theorem derivation_C_mul (D : Derivation R (MvPolynomial σ R) A) (a : R) (f : MvPolynomial σ R) :
-    D (c a * f) = a • D f := by
-  rw [C_mul', D.map_smul]
+    D (c a * f) = a • D f := by rw [C_mul', D.map_smul]
 
 /-- If two derivations agree on `X i`, `i ∈ s`, then they agree on all polynomials from
 `mv_polynomial.supported R s`. -/
@@ -97,13 +95,11 @@ theorem leibniz_iff_X (D : MvPolynomial σ R →ₗ[R] A) (h₁ : D 1 = 0) :
       
   intro p q
   induction q using MvPolynomial.induction_on
-  case h_C c =>
-    rw [mul_comm, C_mul', hC, smul_zero, zero_addₓ, D.map_smul, C_eq_smul_one, smul_one_smul]
+  case h_C c => rw [mul_comm, C_mul', hC, smul_zero, zero_addₓ, D.map_smul, C_eq_smul_one, smul_one_smul]
   case h_add q₁ q₂ h₁ h₂ =>
-    simp only [mul_addₓ, map_add, h₁, h₂, smul_add, add_smul]
-    abel
-  case h_X q i hq =>
-    simp only [this, ← mul_assoc, hq, mul_smul, smul_add, smul_comm (X i), add_assocₓ]
+  simp only [mul_addₓ, map_add, h₁, h₂, smul_add, add_smul]
+  abel
+  case h_X q i hq => simp only [this, ← mul_assoc, hq, mul_smul, smul_add, smul_comm (X i), add_assocₓ]
 
 variable (R)
 
@@ -126,8 +122,8 @@ def mkDerivation (f : σ → A) : Derivation R (MvPolynomial σ R) A where
         · simp
           ]
       rw [tsub_self, add_tsub_cancel_right, Nat.cast_oneₓ, ← C_apply, C_1, one_smul, add_commₓ, Finsupp.smul_sum]
-      refine' congr_arg2ₓ (· + ·) rfl (Finset.sum_congr rfl fun j hj => _)
-      dsimp' only
+      refine' congr_arg2ₓ (· + ·) rfl (Finsetₓ.sum_congr rfl fun j hj => _)
+      dsimp only
       rw [smul_smul, monomial_mul, one_mulₓ, add_commₓ s, add_tsub_assoc_of_le]
       rwa [Finsupp.single_le_iff, Nat.succ_le_iff, pos_iff_ne_zero, ← Finsupp.mem_support_iff]
 

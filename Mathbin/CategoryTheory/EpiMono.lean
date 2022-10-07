@@ -41,9 +41,7 @@ Every split monomorphism is a monomorphism.
 @[ext, nolint has_nonempty_instance]
 structure SplitMono {X Y : C} (f : X ⟶ Y) where
   retraction : Y ⟶ X
-  id' : f ≫ retraction = 𝟙 X := by
-    run_tac
-      obviously
+  id' : f ≫ retraction = 𝟙 X := by obviously
 
 restate_axiom split_mono.id'
 
@@ -66,9 +64,7 @@ Every split epimorphism is an epimorphism.
 @[ext, nolint has_nonempty_instance]
 structure SplitEpi {X Y : C} (f : X ⟶ Y) where
   section_ : Y ⟶ X
-  id' : section_ ≫ f = 𝟙 Y := by
-    run_tac
-      obviously
+  id' : section_ ≫ f = 𝟙 Y := by obviously
 
 restate_axiom split_epi.id'
 
@@ -99,10 +95,7 @@ instance retraction_is_split_epi {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] : 
 
 /-- A split mono which is epi is an iso. -/
 theorem is_iso_of_epi_of_is_split_mono {X Y : C} (f : X ⟶ Y) [IsSplitMono f] [Epi f] : IsIso f :=
-  ⟨⟨retraction f,
-      ⟨by
-        simp , by
-        simp [← cancel_epi f]⟩⟩⟩
+  ⟨⟨retraction f, ⟨by simp, by simp [← cancel_epi f]⟩⟩⟩
 
 /-- The chosen section of a split epimorphism.
 (Note that `section` is a reserved keyword, so we append an underscore.)
@@ -123,10 +116,7 @@ instance section_is_split_mono {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] : IsS
 
 /-- A split epi which is mono is an iso. -/
 theorem is_iso_of_mono_of_is_split_epi {X Y : C} (f : X ⟶ Y) [Mono f] [IsSplitEpi f] : IsIso f :=
-  ⟨⟨section_ f,
-      ⟨by
-        simp [← cancel_mono f], by
-        simp ⟩⟩⟩
+  ⟨⟨section_ f, ⟨by simp [← cancel_mono f], by simp⟩⟩⟩
 
 /-- Every iso is a split mono. -/
 instance (priority := 100) IsSplitMono.of_iso {X Y : C} (f : X ⟶ Y) [IsIso f] : IsSplitMono f :=
@@ -156,12 +146,7 @@ instance (priority := 100) IsSplitEpi.epi {X Y : C} (f : X ⟶ Y) [hf : IsSplitE
 
 /-- Every split mono whose retraction is mono is an iso. -/
 theorem IsIso.of_mono_retraction' {X Y : C} {f : X ⟶ Y} (hf : SplitMono f) [mono <| hf.retraction] : IsIso f :=
-  ⟨⟨hf.retraction,
-      ⟨by
-        simp ,
-        (cancel_mono_id <| hf.retraction).mp
-          (by
-            simp )⟩⟩⟩
+  ⟨⟨hf.retraction, ⟨by simp, (cancel_mono_id <| hf.retraction).mp (by simp)⟩⟩⟩
 
 /-- Every split mono whose retraction is mono is an iso. -/
 theorem IsIso.of_mono_retraction {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] [hf' : mono <| retraction f] : IsIso f :=
@@ -169,12 +154,7 @@ theorem IsIso.of_mono_retraction {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] [h
 
 /-- Every split epi whose section is epi is an iso. -/
 theorem IsIso.of_epi_section' {X Y : C} {f : X ⟶ Y} (hf : SplitEpi f) [epi <| hf.section_] : IsIso f :=
-  ⟨⟨hf.section_,
-      ⟨(cancel_epi_id <| hf.section_).mp
-          (by
-            simp ),
-        by
-        simp ⟩⟩⟩
+  ⟨⟨hf.section_, ⟨(cancel_epi_id <| hf.section_).mp (by simp), by simp⟩⟩⟩
 
 /-- Every split epi whose section is epi is an iso. -/
 theorem IsIso.of_epi_section {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] [hf' : epi <| section_ f] : IsIso f :=
@@ -222,15 +202,13 @@ variable {D : Type u₂} [Category.{v₂} D]
 @[simps]
 def SplitMono.map {X Y : C} {f : X ⟶ Y} (sm : SplitMono f) (F : C ⥤ D) : SplitMono (F.map f) where
   retraction := F.map sm.retraction
-  id' := by
-    rw [← functor.map_comp, split_mono.id, Functor.map_id]
+  id' := by rw [← functor.map_comp, split_mono.id, Functor.map_id]
 
 /-- Split epimorphisms are also absolute epimorphisms. -/
 @[simps]
 def SplitEpi.map {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) (F : C ⥤ D) : SplitEpi (F.map f) where
   section_ := F.map se.section_
-  id' := by
-    rw [← functor.map_comp, split_epi.id, Functor.map_id]
+  id' := by rw [← functor.map_comp, split_epi.id, Functor.map_id]
 
 instance {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] (F : C ⥤ D) : IsSplitMono (F.map f) :=
   IsSplitMono.mk' (hf.exists_split_mono.some.map F)

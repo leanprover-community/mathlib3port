@@ -27,7 +27,7 @@ rectangular box, induction
 -/
 
 
-open Set Finset Function Filter Metric
+open Set Finsetₓ Function Filter Metric
 
 open Classical TopologicalSpace Filter Ennreal
 
@@ -46,14 +46,14 @@ def splitCenterBox (I : Box ι) (s : Set ι) : Box ι where
   lower := s.piecewise (fun i => (I.lower i + I.upper i) / 2) I.lower
   upper := s.piecewise I.upper fun i => (I.lower i + I.upper i) / 2
   lower_lt_upper := fun i => by
-    dunfold Set.piecewise
+    dsimp only [Set.piecewise]
     split_ifs <;> simp only [left_lt_add_div_two, add_div_two_lt_right, I.lower_lt_upper]
 
 theorem mem_split_center_box {s : Set ι} {y : ι → ℝ} :
     y ∈ I.splitCenterBox s ↔ y ∈ I ∧ ∀ i, (I.lower i + I.upper i) / 2 < y i ↔ i ∈ s := by
   simp only [split_center_box, mem_def, ← forall_and_distrib]
   refine' forall_congrₓ fun i => _
-  dunfold Set.piecewise
+  dsimp only [Set.piecewise]
   split_ifs with hs <;> simp only [hs, iff_trueₓ, iff_falseₓ, not_ltₓ]
   exacts[⟨fun H => ⟨⟨(left_lt_add_div_two.2 (I.lower_lt_upper i)).trans H.1, H.2⟩, H.1⟩, fun H => ⟨H.2, H.1.2⟩⟩,
     ⟨fun H => ⟨⟨H.1, H.2.trans (add_div_two_lt_right.2 (I.lower_lt_upper i)).le⟩, H.2⟩, fun H => ⟨H.1.1, H.2⟩⟩]
@@ -90,7 +90,7 @@ theorem Union_coe_split_center_box (I : Box ι) : (⋃ s, (I.splitCenterBox s : 
 @[simp]
 theorem upper_sub_lower_split_center_box (I : Box ι) (s : Set ι) (i : ι) :
     (I.splitCenterBox s).upper i - (I.splitCenterBox s).lower i = (I.upper i - I.lower i) / 2 := by
-  by_cases' hs : i ∈ s <;> field_simp [split_center_box, hs, mul_two, two_mul]
+  by_cases hs:i ∈ s <;> field_simp [split_center_box, hs, mul_two, two_mul]
 
 /-- Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
 hold true.
@@ -123,13 +123,9 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J �
   set J : ℕ → box ι := fun m => ((fun J => split_center_box J (s J))^[m]) I
   have J_succ : ∀ m, J (m + 1) = split_center_box (J m) (s <| J m) := fun m => iterate_succ_apply' _ _ _
   -- Now we prove some properties of `J`
-  have hJmono : Antitone J :=
-    antitone_nat_of_succ_le fun n => by
-      simpa [J_succ] using split_center_box_le _ _
+  have hJmono : Antitoneₓ J := antitone_nat_of_succ_le fun n => by simpa [J_succ] using split_center_box_le _ _
   have hJle : ∀ m, J m ≤ I := fun m => hJmono (zero_le m)
-  have hJp : ∀ m, ¬p (J m) := fun m =>
-    Nat.recOn m hpI fun m => by
-      simpa only [J_succ] using hs (J m) (hJle m)
+  have hJp : ∀ m, ¬p (J m) := fun m => Nat.recOn m hpI fun m => by simpa only [J_succ] using hs (J m) (hJle m)
   have hJsub : ∀ m i, (J m).upper i - (J m).lower i = (I.upper i - I.lower i) / 2 ^ m := by
     intro m i
     induction' m with m ihm
@@ -151,8 +147,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J �
   have hJlz : tendsto (fun m => (J m).lower) at_top (𝓝 z) :=
     tendsto_at_top_csupr (antitone_lower.comp hJmono) ⟨I.upper, fun x ⟨m, hm⟩ => hm ▸ (hJl_mem m).2⟩
   have hJuz : tendsto (fun m => (J m).upper) at_top (𝓝 z) := by
-    suffices tendsto (fun m => (J m).upper - (J m).lower) at_top (𝓝 0) by
-      simpa using hJlz.add this
+    suffices tendsto (fun m => (J m).upper - (J m).lower) at_top (𝓝 0) by simpa using hJlz.add this
     refine' tendsto_pi_nhds.2 fun i => _
     simpa [hJsub] using tendsto_const_nhds.div_at_top (tendsto_pow_at_top_at_top_of_one_lt (@one_lt_two ℝ _ _))
   replace hJlz : tendsto (fun m => (J m).lower) at_top (𝓝[Icc I.lower I.upper] z)

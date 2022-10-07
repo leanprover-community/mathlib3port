@@ -91,10 +91,7 @@ abbrev HasCoproduct (f : β → C) :=
 def mkFanLimit {f : β → C} (t : Fan f) (lift : ∀ s : Fan f, s.x ⟶ t.x)
     (fac : ∀ (s : Fan f) (j : β), lift s ≫ t.proj j = s.proj j)
     (uniq : ∀ (s : Fan f) (m : s.x ⟶ t.x) (w : ∀ j : β, m ≫ t.proj j = s.proj j), m = lift s) : IsLimit t :=
-  { lift,
-    fac' := fun s j => by
-      convert fac s j.as <;> simp ,
-    uniq' := fun s m w => uniq s m fun j => w (Discrete.mk j) }
+  { lift, fac' := fun s j => by convert fac s j.as <;> simp, uniq' := fun s m w => uniq s m fun j => w (Discrete.mk j) }
 
 section
 
@@ -138,17 +135,11 @@ abbrev Sigma.ι (f : β → C) [HasCoproduct f] (b : β) : f b ⟶ ∐ f :=
 
 /-- The fan constructed of the projections from the product is limiting. -/
 def productIsProduct (f : β → C) [HasProduct f] : IsLimit (Fan.mk _ (Pi.π f)) :=
-  IsLimit.ofIsoLimit (limit.isLimit (Discrete.functor f))
-    (Cones.ext (Iso.refl _)
-      (by
-        tidy))
+  IsLimit.ofIsoLimit (limit.isLimit (Discrete.functor f)) (Cones.ext (Iso.refl _) (by tidy))
 
 /-- The cofan constructed of the inclusions from the coproduct is colimiting. -/
 def coproductIsCoproduct (f : β → C) [HasCoproduct f] : IsColimit (Cofan.mk _ (Sigma.ι f)) :=
-  IsColimit.ofIsoColimit (colimit.isColimit (Discrete.functor f))
-    (Cocones.ext (Iso.refl _)
-      (by
-        tidy))
+  IsColimit.ofIsoColimit (colimit.isColimit (Discrete.functor f)) (Cocones.ext (Iso.refl _) (by tidy))
 
 /-- A collection of morphisms `P ⟶ f b` induces a morphism `P ⟶ ∏ f`. -/
 abbrev Pi.lift {f : β → C} [HasProduct f] {P : C} (p : ∀ b, P ⟶ f b) : P ⟶ ∏ f :=
@@ -168,7 +159,7 @@ instance Pi.map_mono {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, 
     mono <| Pi.map p :=
   @Limits.lim_map_mono _ _ _ _ _
     (by
-      dsimp'
+      dsimp
       infer_instance)
 
 /-- Construct an isomorphism between categorical products (indexed by the same type)
@@ -187,7 +178,7 @@ instance Sigma.map_epi {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : �
     epi <| Sigma.map p :=
   @Limits.colim_map_epi _ _ _ _ _
     (by
-      dsimp'
+      dsimp
       infer_instance)
 
 /-- Construct an isomorphism between categorical coproducts (indexed by the same type)
@@ -212,12 +203,12 @@ theorem pi_comparison_comp_π [HasProduct f] [HasProduct fun b => G.obj (f b)] (
     piComparison G f ≫ Pi.π _ b = G.map (Pi.π f b) :=
   limit.lift_π _ (Discrete.mk b)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem map_lift_pi_comparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (P : C) (g : ∀ j, P ⟶ f j) :
     G.map (Pi.lift g) ≫ piComparison G f = Pi.lift fun j => G.map (g j) := by
   ext
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
   simp [← G.map_comp]
 
 /-- The comparison morphism for the coproduct of `f`. This is an iso iff `G` preserves the coproduct
@@ -230,12 +221,12 @@ theorem ι_comp_sigma_comparison [HasCoproduct f] [HasCoproduct fun b => G.obj (
     Sigma.ι _ b ≫ sigmaComparison G f = G.map (Sigma.ι f b) :=
   colimit.ι_desc _ (Discrete.mk b)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem sigma_comparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (P : C) (g : ∀ j, f j ⟶ P) :
     sigmaComparison G f ≫ G.map (Sigma.desc g) = Sigma.desc fun j => G.map (g j) := by
   ext
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
   simp [← G.map_comp]
 
 end Comparison
@@ -283,17 +274,17 @@ def limitConeOfUnique : LimitCone (Discrete.functor f) where
         { app := fun j =>
             eqToHom
               (by
-                dsimp'
+                dsimp
                 congr ) } }
   IsLimit :=
     { lift := fun s => s.π.app default,
       fac' := fun s j => by
         have w := (s.π.naturality (eq_to_hom (Unique.default_eq _))).symm
-        dsimp'  at w
+        dsimp at w
         simpa [eq_to_hom_map] using w,
       uniq' := fun s m w => by
         specialize w default
-        dsimp'  at w
+        dsimp at w
         simpa using w }
 
 instance (priority := 100) has_product_unique : HasProduct f :=
@@ -304,7 +295,7 @@ instance (priority := 100) has_product_unique : HasProduct f :=
 def productUniqueIso : ∏ f ≅ f default :=
   IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitConeOfUnique f).IsLimit
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]
 /-- The colimit cocone for the coproduct over an index type with exactly one term. -/
 @[simps]
 def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where
@@ -315,18 +306,18 @@ def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where
             eqToHom
               (by
                 trace
-                  "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
-                dsimp'
+                  "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
+                dsimp
                 congr ) } }
   IsColimit :=
     { desc := fun s => s.ι.app default,
       fac' := fun s j => by
         have w := s.ι.naturality (eq_to_hom (Unique.eq_default _))
-        dsimp'  at w
+        dsimp at w
         simpa [eq_to_hom_map] using w,
       uniq' := fun s m w => by
         specialize w default
-        dsimp'  at w
+        dsimp at w
         simpa using w }
 
 instance (priority := 100) has_coproduct_unique : HasCoproduct f :=
@@ -353,15 +344,14 @@ def Pi.reindex : piObj (f ∘ ε) ≅ piObj f :=
 
 @[simp, reassoc]
 theorem Pi.reindex_hom_π (b : β) : (Pi.reindex ε f).Hom ≫ Pi.π f (ε b) = Pi.π (f ∘ ε) b := by
-  dsimp' [pi.reindex]
+  dsimp [pi.reindex]
   simp only [has_limit.iso_of_equivalence_hom_π, discrete.nat_iso_inv_app, equivalence.equivalence_mk'_counit,
     discrete.equivalence_counit_iso, discrete.nat_iso_hom_app, eq_to_iso.hom, eq_to_hom_map]
-  dsimp'
+  dsimp
   simpa [eq_to_hom_map] using limit.w (discrete.functor (f ∘ ε)) (discrete.eq_to_hom' (ε.symm_apply_apply b))
 
 @[simp, reassoc]
-theorem Pi.reindex_inv_π (b : β) : (Pi.reindex ε f).inv ≫ Pi.π (f ∘ ε) b = Pi.π f (ε b) := by
-  simp [iso.inv_comp_eq]
+theorem Pi.reindex_inv_π (b : β) : (Pi.reindex ε f).inv ≫ Pi.π (f ∘ ε) b = Pi.π f (ε b) := by simp [iso.inv_comp_eq]
 
 end
 
@@ -375,10 +365,10 @@ def Sigma.reindex : sigmaObj (f ∘ ε) ≅ sigmaObj f :=
 
 @[simp, reassoc]
 theorem Sigma.ι_reindex_hom (b : β) : Sigma.ι (f ∘ ε) b ≫ (Sigma.reindex ε f).Hom = Sigma.ι f (ε b) := by
-  dsimp' [sigma.reindex]
+  dsimp [sigma.reindex]
   simp only [has_colimit.iso_of_equivalence_hom_π, equivalence.equivalence_mk'_unit, discrete.equivalence_unit_iso,
     discrete.nat_iso_hom_app, eq_to_iso.hom, eq_to_hom_map, discrete.nat_iso_inv_app]
-  dsimp'
+  dsimp
   simp [eq_to_hom_map, ← colimit.w (discrete.functor f) (discrete.eq_to_hom' (ε.apply_symm_apply (ε b)))]
 
 @[simp, reassoc]

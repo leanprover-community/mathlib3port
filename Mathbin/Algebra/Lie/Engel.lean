@@ -101,8 +101,7 @@ theorem lie_top_eq_of_span_sup_eq_top (N : LieSubmodule R L M) :
     simp only [SetLike.mem_coe, Submodule.span_union, Submodule.mem_sup]
     exact
       ⟨t • ⁅x, n⁆, Submodule.subset_span ⟨t • n, N.smul_mem' t hn, lie_smul t x n⟩, ⁅z, n⁆,
-        Submodule.subset_span ⟨z, hz, n, hn, rfl⟩, by
-        simp ⟩
+        Submodule.subset_span ⟨z, hz, n, hn, rfl⟩, by simp⟩
     
   · rcases hz with (⟨m, hm, rfl⟩ | ⟨y, hy, m, hm, rfl⟩)
     exacts[⟨x, m, hm, rfl⟩, ⟨y, m, hm, rfl⟩]
@@ -114,8 +113,7 @@ theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ} (hxn : toEndomo
     ∀ l,
       ((⊤ : LieIdeal R L).lcs M (i + l) : Submodule R M) ≤
         (I.lcs M j : Submodule R M).map (to_endomorphism R L M x ^ l) ⊔ (I.lcs M (j + 1) : Submodule R M)
-    by
-    simpa only [bot_sup_eq, LieIdeal.incl_coe, Submodule.map_zero, hxn] using this n
+    by simpa only [bot_sup_eq, LieIdeal.incl_coe, Submodule.map_zero, hxn] using this n
   intro l
   induction' l with l ih
   · simp only [add_zeroₓ, LieIdeal.lcs_succ, pow_zeroₓ, LinearMap.one_eq_id, Submodule.map_id]
@@ -135,8 +133,7 @@ theorem is_nilpotent_of_is_nilpotent_span_sup_eq_top (hnp : IsNilpotent <| toEnd
     (hIM : IsNilpotent R I M) : IsNilpotent R L M := by
   obtain ⟨n, hn⟩ := hnp
   obtain ⟨k, hk⟩ := hIM
-  have hk' : I.lcs M k = ⊥ := by
-    simp only [← coe_to_submodule_eq_iff, I.coe_lcs_eq, hk, bot_coe_submodule]
+  have hk' : I.lcs M k = ⊥ := by simp only [← coe_to_submodule_eq_iff, I.coe_lcs_eq, hk, bot_coe_submodule]
   suffices ∀ l, lower_central_series R L M (l * n) ≤ I.lcs M l by
     use k * n
     simpa [hk'] using this k
@@ -170,8 +167,7 @@ variable {R L}
 theorem LieAlgebra.is_engelian_of_subsingleton [Subsingleton L] : LieAlgebra.IsEngelian R L := by
   intro M _i1 _i2 _i3 _i4 h
   use 1
-  suffices (⊤ : LieIdeal R L) = ⊥ by
-    simp [this]
+  suffices (⊤ : LieIdeal R L) = ⊥ by simp [this]
   haveI := (LieSubmodule.subsingleton_iff R L L).mpr inferInstance
   apply Subsingleton.elim
 

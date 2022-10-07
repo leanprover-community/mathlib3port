@@ -97,19 +97,15 @@ theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono �
     have : h c = 0 :=
       suffices δ (h c) = 0 from zero_of_map_zero _ (pseudo_injective_of_mono _) _ this
       calc
-        δ (h c) = h' (γ c) := by
-          rw [← comp_apply, ← comm₃, comp_apply]
-        _ = h' 0 := by
-          rw [hc]
+        δ (h c) = h' (γ c) := by rw [← comp_apply, ← comm₃, comp_apply]
+        _ = h' 0 := by rw [hc]
         _ = 0 := apply_zero _
         
     (Exists.elim ((pseudo_exact_of_exact hgh).2 _ this)) fun b hb =>
       have : g' (β b) = 0 :=
         calc
-          g' (β b) = γ (g b) := by
-            rw [← comp_apply, comm₂, comp_apply]
-          _ = γ c := by
-            rw [hb]
+          g' (β b) = γ (g b) := by rw [← comp_apply, comm₂, comp_apply]
+          _ = γ c := by rw [hb]
           _ = 0 := hc
           
       (Exists.elim ((pseudo_exact_of_exact hf'g').2 _ this)) fun a' ha' =>
@@ -117,16 +113,13 @@ theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono �
           have : f a = b :=
             suffices β (f a) = β b from pseudo_injective_of_mono _ this
             calc
-              β (f a) = f' (α a) := by
-                rw [← comp_apply, ← comm₁, comp_apply]
-              _ = f' a' := by
-                rw [ha]
+              β (f a) = f' (α a) := by rw [← comp_apply, ← comm₁, comp_apply]
+              _ = f' a' := by rw [ha]
               _ = β b := ha'
               
           calc
             c = g b := hb.symm
-            _ = g (f a) := by
-              rw [this]
+            _ = g (f a) := by rw [this]
             _ = 0 := (pseudo_exact_of_exact hfg).1 _
             
 
@@ -153,56 +146,37 @@ theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) 
     have hf'r : f' ≫ r = 0 :=
       Limits.zero_of_epi_comp α <|
         calc
-          α ≫ f' ≫ r = f ≫ β ≫ r := by
-            rw [reassoc_of comm₁]
-          _ = f ≫ 0 := by
-            rw [hβr]
+          α ≫ f' ≫ r = f ≫ β ≫ r := by rw [reassoc_of comm₁]
+          _ = f ≫ 0 := by rw [hβr]
           _ = 0 := HasZeroMorphisms.comp_zero _ _
           
     let y : R ⟶ pushout r g' := pushout.inl
     let z : C' ⟶ pushout r g' := pushout.inr
     have : Mono y :=
-      mono_inl_of_factor_thru_epi_mono_factorization r g' (cokernel.π f') (cokernel.desc f' g' hf'g'.w)
-        (by
-          simp )
-        (cokernel.desc f' r hf'r)
-        (by
-          simp )
-        _ (colimit.isColimit _)
+      mono_inl_of_factor_thru_epi_mono_factorization r g' (cokernel.π f') (cokernel.desc f' g' hf'g'.w) (by simp)
+        (cokernel.desc f' r hf'r) (by simp) _ (colimit.isColimit _)
     have hz : g ≫ γ ≫ z = 0 :=
       calc
-        g ≫ γ ≫ z = β ≫ g' ≫ z := by
-          rw [← reassoc_of comm₂]
-        _ = β ≫ r ≫ y := by
-          rw [← pushout.condition]
-        _ = 0 ≫ y := by
-          rw [reassoc_of hβr]
+        g ≫ γ ≫ z = β ≫ g' ≫ z := by rw [← reassoc_of comm₂]
+        _ = β ≫ r ≫ y := by rw [← pushout.condition]
+        _ = 0 ≫ y := by rw [reassoc_of hβr]
         _ = 0 := HasZeroMorphisms.zero_comp _ _
         
     let v : pushout r g' ⟶ pushout (γ ≫ z) (h ≫ δ) := pushout.inl
     let w : D' ⟶ pushout (γ ≫ z) (h ≫ δ) := pushout.inr
     have : Mono v :=
-      mono_inl_of_factor_thru_epi_mono_factorization _ _ (cokernel.π g) (cokernel.desc g h hgh.w ≫ δ)
-        (by
-          simp )
-        (cokernel.desc _ _ hz)
-        (by
-          simp )
-        _ (colimit.isColimit _)
+      mono_inl_of_factor_thru_epi_mono_factorization _ _ (cokernel.π g) (cokernel.desc g h hgh.w ≫ δ) (by simp)
+        (cokernel.desc _ _ hz) (by simp) _ (colimit.isColimit _)
     have hzv : z ≫ v = h' ≫ w :=
       (cancel_epi γ).1 <|
         calc
-          γ ≫ z ≫ v = h ≫ δ ≫ w := by
-            rw [← category.assoc, pushout.condition, category.assoc]
-          _ = γ ≫ h' ≫ w := by
-            rw [reassoc_of comm₃]
+          γ ≫ z ≫ v = h ≫ δ ≫ w := by rw [← category.assoc, pushout.condition, category.assoc]
+          _ = γ ≫ h' ≫ w := by rw [reassoc_of comm₃]
           
     suffices (r ≫ y) ≫ v = 0 from zero_of_comp_mono _ (zero_of_comp_mono _ this)
     calc
-      (r ≫ y) ≫ v = g' ≫ z ≫ v := by
-        rw [pushout.condition, category.assoc]
-      _ = g' ≫ h' ≫ w := by
-        rw [hzv]
+      (r ≫ y) ≫ v = g' ≫ z ≫ v := by rw [pushout.condition, category.assoc]
+      _ = g' ≫ h' ≫ w := by rw [hzv]
       _ = 0 ≫ w := hg'h'.w_assoc _
       _ = 0 := HasZeroMorphisms.zero_comp _ _
       
@@ -233,10 +207,8 @@ A' --f'-> B' --g'-> C' --h'-> D' --i'-> E'
 ```
 -/
 theorem is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso : IsIso γ :=
-  have : Mono γ := by
-    apply mono_of_epi_of_mono_of_mono comm₁ comm₂ comm₃ hfg hgh hf'g' <;> infer_instance
-  have : Epi γ := by
-    apply epi_of_epi_of_epi_of_mono comm₂ comm₃ comm₄ hhi hg'h' hh'i' <;> infer_instance
+  have : Mono γ := by apply mono_of_epi_of_mono_of_mono comm₁ comm₂ comm₃ hfg hgh hf'g' <;> infer_instance
+  have : Epi γ := by apply epi_of_epi_of_epi_of_mono comm₂ comm₃ comm₄ hhi hg'h' hh'i' <;> infer_instance
   is_iso_of_mono_of_epi _
 
 end Five

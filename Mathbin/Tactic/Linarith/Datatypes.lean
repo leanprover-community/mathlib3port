@@ -311,9 +311,7 @@ unsafe def certificate_oracle : Type :=
 unsafe structure linarith_config : Type where
   discharger : tactic Unit := sorry
   restrict_type : Option Type := none
-  restrict_type_reflect : reflected _ restrict_type := by
-    run_tac
-      tactic.apply_instance
+  restrict_type_reflect : reflected _ restrict_type := by infer_instance
   exfalso : Bool := true
   Transparency : Tactic.Transparency := reducible
   split_hypotheses : Bool := true

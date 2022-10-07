@@ -131,11 +131,11 @@ theorem decompose_symm_add (x y : ⨁ i, ℳ i) :
   map_add (decomposeAddEquiv ℳ).symm x y
 
 @[simp]
-theorem decompose_sum {ι'} (s : Finset ι') (f : ι' → M) : decompose ℳ (∑ i in s, f i) = ∑ i in s, decompose ℳ (f i) :=
+theorem decompose_sum {ι'} (s : Finsetₓ ι') (f : ι' → M) : decompose ℳ (∑ i in s, f i) = ∑ i in s, decompose ℳ (f i) :=
   map_sum (decomposeAddEquiv ℳ) f s
 
 @[simp]
-theorem decompose_symm_sum {ι'} (s : Finset ι') (f : ι' → ⨁ i, ℳ i) :
+theorem decompose_symm_sum {ι'} (s : Finsetₓ ι') (f : ι' → ⨁ i, ℳ i) :
     (decompose ℳ).symm (∑ i in s, f i) = ∑ i in s, (decompose ℳ).symm (f i) :=
   map_sum (decomposeAddEquiv ℳ).symm f s
 
@@ -154,8 +154,7 @@ the statement of `decompose_neg` with `@eq (⨁ i, ℳ i) (decompose ℳ (-x)) (
 instead of `decompose ℳ (-x) = -decompose ℳ x`, which forces the typeclasses needed by `⨁ i, ℳ i` to
 be found by unification rather than synthesis, then everything works fine without this instance. -/
 instance addCommGroupSetLike [AddCommGroupₓ M] [SetLike σ M] [AddSubgroupClass σ M] (ℳ : ι → σ) :
-    AddCommGroupₓ (⨁ i, ℳ i) := by
-  infer_instance
+    AddCommGroupₓ (⨁ i, ℳ i) := by infer_instance
 
 section AddCommGroupₓ
 

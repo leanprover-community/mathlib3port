@@ -24,9 +24,9 @@ namespace QuadraticForm
 
 open BigOperators
 
-open Real Finset
+open Real Finsetₓ
 
-variable {ι : Type _} [Fintype ι]
+variable {ι : Type _} [Fintypeₓ ι]
 
 /-- The isometry between a weighted sum of squares with weights `u` on the
 (non-zero) real numbers and the weighted sum of squares with weights `sign ∘ u`. -/
@@ -46,7 +46,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
     (∑ i : ι, v i • ((is_unit_iff_ne_zero.2 <| hu' i).Unit : ℝ) • (Pi.basisFun ℝ ι) i) j =
       v j • (sign (u j) * u j) ^ -(1 / 2 : ℝ) :=
     by
-    rw [Finset.sum_apply, sum_eq_single j, Pi.basis_fun_apply, IsUnit.unit_spec, LinearMap.std_basis_apply,
+    rw [Finsetₓ.sum_apply, sum_eq_single j, Pi.basis_fun_apply, IsUnit.unit_spec, LinearMap.std_basis_apply,
       Pi.smul_apply, Pi.smul_apply, Function.update_same, smul_eq_mul, smul_eq_mul, smul_eq_mul, mul_oneₓ]
     intro i _ hij
     rw [Pi.basis_fun_apply, LinearMap.std_basis_apply, Pi.smul_apply, Pi.smul_apply, Function.update_noteq hij.symm,
@@ -59,17 +59,14 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
   split_ifs
   · simp only [h, zero_smul, zero_mul, Real.sign_zero]
     
-  have hwu : w j = u j := by
-    simp only [u, dif_neg h, Units.coe_mk0]
+  have hwu : w j = u j := by simp only [u, dif_neg h, Units.coe_mk0]
   simp only [hwu, Units.coe_mk0]
   suffices
     (u j : ℝ).sign * v j * v j = (sign (u j) * u j) ^ -(1 / 2 : ℝ) * (sign (u j) * u j) ^ -(1 / 2 : ℝ) * u j * v j * v j
     by
     erw [← mul_assoc, this]
     ring
-  rw [← Real.rpow_add (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _),
-    show -(1 / 2 : ℝ) + -(1 / 2) = -1 by
-      ring,
+  rw [← Real.rpow_add (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _), show -(1 / 2 : ℝ) + -(1 / 2) = -1 by ring,
     Real.rpow_neg_one, mul_inv, inv_sign, mul_assoc (sign (u j)) (u j)⁻¹, inv_mul_cancel (Units.ne_zero _), mul_oneₓ]
   infer_instance
 

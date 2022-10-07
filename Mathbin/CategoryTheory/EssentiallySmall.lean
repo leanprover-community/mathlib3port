@@ -77,9 +77,7 @@ theorem essentially_small_self : EssentiallySmall.{max w v u} C :=
 See `shrink_homs C` for a category instance where every hom set has been replaced by a small model.
 -/
 class LocallySmall (C : Type u) [Category.{v} C] : Prop where
-  hom_small : ∀ X Y : C, Small.{w} (X ⟶ Y) := by
-    run_tac
-      tactic.apply_instance
+  hom_small : ∀ X Y : C, Small.{w} (X ⟶ Y) := by infer_instance
 
 instance (C : Type u) [Category.{v} C] [LocallySmall.{w} C] (X Y : C) : Small (X ⟶ Y) :=
   LocallySmall.hom_small X Y
@@ -164,13 +162,8 @@ noncomputable def inverse : ShrinkHoms C ⥤ C where
 -/
 @[simps]
 noncomputable def equivalence : C ≌ ShrinkHoms C :=
-  Equivalence.mk (functor C) (inverse C)
-    (NatIso.ofComponents (fun X => Iso.refl X)
-      (by
-        tidy))
-    (NatIso.ofComponents (fun X => Iso.refl X)
-      (by
-        tidy))
+  Equivalence.mk (functor C) (inverse C) (NatIso.ofComponents (fun X => Iso.refl X) (by tidy))
+    (NatIso.ofComponents (fun X => Iso.refl X) (by tidy))
 
 end ShrinkHoms
 

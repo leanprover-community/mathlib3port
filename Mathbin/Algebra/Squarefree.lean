@@ -45,9 +45,7 @@ theorem squarefree_one [CommMonoidₓ R] : Squarefree (1 : R) :=
 @[simp]
 theorem not_squarefree_zero [MonoidWithZeroₓ R] [Nontrivial R] : ¬Squarefree (0 : R) := by
   erw [not_forall]
-  exact
-    ⟨0, by
-      simp ⟩
+  exact ⟨0, by simp⟩
 
 theorem Squarefree.ne_zero [MonoidWithZeroₓ R] [Nontrivial R] {m : R} (hm : Squarefree (m : R)) : m ≠ 0 := by
   rintro rfl
@@ -96,11 +94,7 @@ variable [CancelCommMonoidWithZero R] [WfDvdMonoid R]
 theorem finite_prime_left {a b : R} (ha : Prime a) (hb : b ≠ 0) : multiplicity.Finite a b := by
   classical
   revert hb
-  refine'
-    WfDvdMonoid.induction_on_irreducible b
-      (by
-        contradiction)
-      (fun u hu hu' => _) fun b p hb hp ih hpb => _
+  refine' WfDvdMonoid.induction_on_irreducible b (by contradiction) (fun u hu hu' => _) fun b p hb hp ih hpb => _
   · rw [multiplicity.finite_iff_dom, multiplicity.is_unit_right ha.not_unit hu]
     exact PartEnat.dom_coe 0
     
@@ -131,10 +125,7 @@ theorem irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree (r 
     
   intro h
   rcases eq_or_ne r 0 with (rfl | hr)
-  · exact
-      Or.inl
-        (by
-          simpa using h)
+  · exact Or.inl (by simpa using h)
     
   right
   intro x hx
@@ -164,14 +155,14 @@ variable [CancelCommMonoidWithZero R] [Nontrivial R] [UniqueFactorizationMonoid 
 variable [NormalizationMonoid R]
 
 theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x ≠ 0) :
-    Squarefree x ↔ Multiset.Nodup (normalizedFactors x) := by
+    Squarefree x ↔ Multiset.Nodupₓ (normalizedFactors x) := by
   have drel : DecidableRel (Dvd.Dvd : R → R → Prop) := by
     classical
     infer_instance
   haveI := drel
   rw [multiplicity.squarefree_iff_multiplicity_le_one, Multiset.nodup_iff_count_le_one]
   constructor <;> intro h a
-  · by_cases' hmem : a ∈ normalized_factors x
+  · by_cases hmem:a ∈ normalized_factors x
     · have ha := irreducible_of_normalized_factor _ hmem
       rcases h a with (h | h)
       · rw [← normalize_normalized_factor _ hmem]
@@ -187,7 +178,7 @@ theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x 
     
   · rw [or_iff_not_imp_right]
     intro hu
-    by_cases' h0 : a = 0
+    by_cases h0:a = 0
     · simp [h0, x0]
       
     rcases WfDvdMonoid.exists_irreducible_factor hu h0 with ⟨b, hib, hdvd⟩
@@ -199,10 +190,10 @@ theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x 
 
 theorem dvd_pow_iff_dvd_of_squarefree {x y : R} {n : ℕ} (hsq : Squarefree x) (h0 : n ≠ 0) : x ∣ y ^ n ↔ x ∣ y := by
   classical
-  by_cases' hx : x = 0
+  by_cases hx:x = 0
   · simp [hx, pow_eq_zero_iff (Nat.pos_of_ne_zeroₓ h0)]
     
-  by_cases' hy : y = 0
+  by_cases hy:y = 0
   · simp [hy, zero_pow (Nat.pos_of_ne_zeroₓ h0)]
     
   refine' ⟨fun h => _, fun h => h.pow h0⟩

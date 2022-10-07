@@ -85,8 +85,7 @@ theorem vadd_vsub (g : G) (p : P) : g +ᵥ p -ᵥ p = g :=
 
 /-- If the same point added to two group elements produces equal
 results, those group elements are equal. -/
-theorem vadd_right_cancel {g1 g2 : G} (p : P) (h : g1 +ᵥ p = g2 +ᵥ p) : g1 = g2 := by
-  rw [← vadd_vsub g1, h, vadd_vsub]
+theorem vadd_right_cancel {g1 g2 : G} (p : P) (h : g1 +ᵥ p = g2 +ᵥ p) : g1 = g2 := by rw [← vadd_vsub g1, h, vadd_vsub]
 
 @[simp]
 theorem vadd_right_cancel_iff {g1 g2 : G} (p : P) : g1 +ᵥ p = g2 +ᵥ p ↔ g1 = g2 :=
@@ -105,12 +104,10 @@ theorem vadd_vsub_assoc (g : G) (p1 p2 : P) : g +ᵥ p1 -ᵥ p2 = g + (p1 -ᵥ p
 
 /-- Subtracting a point from itself produces 0. -/
 @[simp]
-theorem vsub_self (p : P) : p -ᵥ p = (0 : G) := by
-  rw [← zero_addₓ (p -ᵥ p), ← vadd_vsub_assoc, vadd_vsub]
+theorem vsub_self (p : P) : p -ᵥ p = (0 : G) := by rw [← zero_addₓ (p -ᵥ p), ← vadd_vsub_assoc, vadd_vsub]
 
 /-- If subtracting two points produces 0, they are equal. -/
-theorem eq_of_vsub_eq_zero {p1 p2 : P} (h : p1 -ᵥ p2 = (0 : G)) : p1 = p2 := by
-  rw [← vsub_vadd p1 p2, h, zero_vadd]
+theorem eq_of_vsub_eq_zero {p1 p2 : P} (h : p1 -ᵥ p2 = (0 : G)) : p1 = p2 := by rw [← vsub_vadd p1 p2, h, zero_vadd]
 
 /-- Subtracting two points produces 0 if and only if they are
 equal. -/
@@ -237,18 +234,12 @@ variable {G : Type _} {P : Type _} {G' : Type _} {P' : Type _} [AddGroupₓ G] [
 
 instance : AddTorsor (G × G') (P × P') where
   vadd := fun v p => (v.1 +ᵥ p.1, v.2 +ᵥ p.2)
-  zero_vadd := fun p => by
-    simp
-  add_vadd := by
-    simp [add_vadd]
+  zero_vadd := fun p => by simp
+  add_vadd := by simp [add_vadd]
   vsub := fun p₁ p₂ => (p₁.1 -ᵥ p₂.1, p₁.2 -ᵥ p₂.2)
   Nonempty := Prod.nonempty
-  vsub_vadd' := fun p₁ p₂ =>
-    show (p₁.1 -ᵥ p₂.1 +ᵥ p₂.1, _) = p₁ by
-      simp
-  vadd_vsub' := fun v p =>
-    show (v.1 +ᵥ p.1 -ᵥ p.1, v.2 +ᵥ p.2 -ᵥ p.2) = v by
-      simp
+  vsub_vadd' := fun p₁ p₂ => show (p₁.1 -ᵥ p₂.1 +ᵥ p₂.1, _) = p₁ by simp
+  vadd_vsub' := fun v p => show (v.1 +ᵥ p.1 -ᵥ p.1, v.2 +ᵥ p.2 -ᵥ p.2) = v by simp
 
 @[simp]
 theorem fst_vadd (v : G × G') (p : P × P') : (v +ᵥ p).1 = v.1 +ᵥ p.1 :=
@@ -321,10 +312,8 @@ theorem coe_vadd_const_symm (p : P) : ⇑(vaddConst p).symm = fun p' => p' -ᵥ 
 def constVsub (p : P) : P ≃ G where
   toFun := (· -ᵥ ·) p
   invFun := fun v => -v +ᵥ p
-  left_inv := fun p' => by
-    simp
-  right_inv := fun v => by
-    simp [vsub_vadd_eq_vsub_sub]
+  left_inv := fun p' => by simp
+  right_inv := fun v => by simp [vsub_vadd_eq_vsub_sub]
 
 @[simp]
 theorem coe_const_vsub (p : P) : ⇑(constVsub p) = (· -ᵥ ·) p :=
@@ -340,10 +329,8 @@ variable (P)
 def constVadd (v : G) : Equivₓ.Perm P where
   toFun := (· +ᵥ ·) v
   invFun := (· +ᵥ ·) (-v)
-  left_inv := fun p => by
-    simp [vadd_vadd]
-  right_inv := fun p => by
-    simp [vadd_vadd]
+  left_inv := fun p => by simp [vadd_vadd]
+  right_inv := fun p => by simp [vadd_vadd]
 
 @[simp]
 theorem coe_const_vadd (v : G) : ⇑(constVadd P v) = (· +ᵥ ·) v :=
@@ -369,7 +356,7 @@ def constVaddHom : Multiplicative G →* Equivₓ.Perm P where
 
 variable {P}
 
-open Function
+open _Root_.Function
 
 /-- Point reflection in `x` as a permutation. -/
 def pointReflection (x : P) : Perm P :=
@@ -380,16 +367,14 @@ theorem point_reflection_apply (x y : P) : pointReflection x y = x -ᵥ y +ᵥ x
 
 @[simp]
 theorem point_reflection_symm (x : P) : (pointReflection x).symm = pointReflection x :=
-  ext <| by
-    simp [point_reflection]
+  ext <| by simp [point_reflection]
 
 @[simp]
 theorem point_reflection_self (x : P) : pointReflection x x = x :=
   vsub_vadd _ _
 
 theorem point_reflection_involutive (x : P) : Involutive (pointReflection x : P → P) := fun y =>
-  (Equivₓ.apply_eq_iff_eq_symm_apply _).2 <| by
-    rw [point_reflection_symm]
+  (Equivₓ.apply_eq_iff_eq_symm_apply _).2 <| by rw [point_reflection_symm]
 
 /-- `x` is the only fixed point of `point_reflection x`. This lemma requires
 `x + x = y + y ↔ x = y`. There is no typeclass to use here, so we add it as an explicit argument. -/

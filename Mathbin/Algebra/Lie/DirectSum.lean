@@ -74,7 +74,7 @@ def lieModuleOf [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁ i, M i :=
   { lof R ι M j with
     map_lie' := fun x m => by
       ext i
-      by_cases' h : j = i
+      by_cases h:j = i
       · rw [← h]
         simp
         
@@ -84,8 +84,7 @@ def lieModuleOf [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁ i, M i :=
 /-- The projection map onto one component, as a morphism of Lie modules. -/
 def lieModuleComponent (j : ι) : (⨁ i, M i) →ₗ⁅R,L⁆ M j :=
   { component R ι M j with
-    map_lie' := fun x m => by
-      simp only [component, lapply_apply, lie_module_bracket_apply, LinearMap.to_fun_eq_coe] }
+    map_lie' := fun x m => by simp only [component, lapply_apply, lie_module_bracket_apply, LinearMap.to_fun_eq_coe] }
 
 end Modules
 
@@ -132,7 +131,7 @@ def lieAlgebraOf [DecidableEq ι] (j : ι) : L j →ₗ⁅R⁆ ⨁ i, L i :=
   { lof R ι L j with toFun := of L j,
     map_lie' := fun x y => by
       ext i
-      by_cases' h : j = i
+      by_cases h:j = i
       · rw [← h]
         simp [of]
         
@@ -143,8 +142,7 @@ def lieAlgebraOf [DecidableEq ι] (j : ι) : L j →ₗ⁅R⁆ ⨁ i, L i :=
 @[simps]
 def lieAlgebraComponent (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
   { component R ι L j with toFun := component R ι L j,
-    map_lie' := fun x y => by
-      simp only [component, bracket_apply, lapply_apply, LinearMap.to_fun_eq_coe] }
+    map_lie' := fun x y => by simp only [component, bracket_apply, lapply_apply, LinearMap.to_fun_eq_coe] }
 
 @[ext]
 theorem lie_algebra_ext {x y : ⨁ i, L i} (h : ∀ i, lieAlgebraComponent R ι L i x = lieAlgebraComponent R ι L i y) :
@@ -158,7 +156,7 @@ theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : 
   intro k
   rw [LieHom.map_lie]
   simp only [component, of, lapply_apply, single_add_hom_apply, lie_algebra_component_apply, single_apply, zero_apply]
-  by_cases' hik : i = k
+  by_cases hik:i = k
   · simp only [dif_neg, not_false_iff, lie_zero, hik.symm, hij]
     
   · simp only [dif_neg, not_false_iff, zero_lie, hik]
@@ -173,7 +171,7 @@ theorem lie_of_of_eq [DecidableEq ι] {i j : ι} (hij : j = i) (x : L i) (y : L 
 @[simp]
 theorem lie_of [DecidableEq ι] {i j : ι} (x : L i) (y : L j) :
     ⁅of L i x, of L j y⁆ = if hij : j = i then lieAlgebraOf R ι L i ⁅x, hij.recOn y⁆ else 0 := by
-  by_cases' hij : j = i
+  by_cases hij:j = i
   · simp only [lie_of_of_eq R ι L hij x y, hij, dif_pos, not_false_iff, lie_algebra_of_apply]
     
   · simp only [lie_of_of_ne R ι L hij x y, hij, dif_neg, not_false_iff]

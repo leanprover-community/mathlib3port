@@ -124,12 +124,10 @@ theorem Inf_mul : inf (s * t) = inf s * inf t :=
     (OrderIso.mulLeft _).symm.to_galois_connection
 
 @[to_additive]
-theorem Sup_div : sup (s / t) = sup s / inf t := by
-  simp_rw [div_eq_mul_inv, Sup_mul, Sup_inv]
+theorem Sup_div : sup (s / t) = sup s / inf t := by simp_rw [div_eq_mul_inv, Sup_mul, Sup_inv]
 
 @[to_additive]
-theorem Inf_div : inf (s / t) = inf s / sup t := by
-  simp_rw [div_eq_mul_inv, Inf_mul, Inf_inv]
+theorem Inf_div : inf (s / t) = inf s / sup t := by simp_rw [div_eq_mul_inv, Inf_mul, Inf_inv]
 
 end Groupₓ
 

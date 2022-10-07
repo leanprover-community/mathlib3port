@@ -21,16 +21,14 @@ variable {α R : Type _} [MeasurableSpace α] [LinearOrderedRing R] [FloorRing R
   [MeasurableSpace R]
 
 theorem Int.measurable_floor [OpensMeasurableSpace R] : Measurable (Int.floor : R → ℤ) :=
-  measurable_to_countable fun x => by
-    simpa only [Int.preimage_floor_singleton] using measurable_set_Ico
+  measurable_to_countable fun x => by simpa only [Int.preimage_floor_singleton] using measurable_set_Ico
 
 @[measurability]
 theorem Measurable.floor [OpensMeasurableSpace R] {f : α → R} (hf : Measurable f) : Measurable fun x => ⌊f x⌋ :=
   Int.measurable_floor.comp hf
 
 theorem Int.measurable_ceil [OpensMeasurableSpace R] : Measurable (Int.ceil : R → ℤ) :=
-  measurable_to_countable fun x => by
-    simpa only [Int.preimage_ceil_singleton] using measurable_set_Ioc
+  measurable_to_countable fun x => by simpa only [Int.preimage_ceil_singleton] using measurable_set_Ioc
 
 @[measurability]
 theorem Measurable.ceil [OpensMeasurableSpace R] {f : α → R} (hf : Measurable f) : Measurable fun x => ⌈f x⌉ :=
@@ -58,16 +56,14 @@ variable {α R : Type _} [MeasurableSpace α] [LinearOrderedSemiring R] [FloorSe
   [OrderTopology R] [MeasurableSpace R] [OpensMeasurableSpace R] {f : α → R}
 
 theorem Nat.measurable_floor : Measurable (Nat.floor : R → ℕ) :=
-  measurable_to_countable fun n => by
-    cases eq_or_ne ⌊n⌋₊ 0 <;> simp [*, Nat.preimage_floor_of_ne_zero]
+  measurable_to_countable fun n => by cases eq_or_ne ⌊n⌋₊ 0 <;> simp [*, Nat.preimage_floor_of_ne_zero]
 
 @[measurability]
 theorem Measurable.nat_floor (hf : Measurable f) : Measurable fun x => ⌊f x⌋₊ :=
   Nat.measurable_floor.comp hf
 
 theorem Nat.measurable_ceil : Measurable (Nat.ceil : R → ℕ) :=
-  measurable_to_countable fun n => by
-    cases eq_or_ne ⌈n⌉₊ 0 <;> simp [*, Nat.preimage_ceil_of_ne_zero]
+  measurable_to_countable fun n => by cases eq_or_ne ⌈n⌉₊ 0 <;> simp [*, Nat.preimage_ceil_of_ne_zero]
 
 @[measurability]
 theorem Measurable.nat_ceil (hf : Measurable f) : Measurable fun x => ⌈f x⌉₊ :=

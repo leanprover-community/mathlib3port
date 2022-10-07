@@ -26,7 +26,7 @@ sides of the equivalence are `fintype`s.
 -/
 
 
-variable {α β : Type _} [Fintype α] [DecidableEq β] (e : Equivₓ.Perm α) (f : α ↪ β)
+variable {α β : Type _} [Fintypeₓ α] [DecidableEq β] (e : Equivₓ.Perm α) (f : α ↪ β)
 
 /-- Computably turn an embedding `f : α ↪ β` into an equiv `α ≃ set.range f`,
 if `α` is a `fintype`. Has poor computational performance, due to exhaustive searching in
@@ -34,9 +34,7 @@ constructed inverse. When a better inverse is known, use `equiv.of_left_inverse'
 `equiv.of_left_inverse` instead. This is the computable version of `equiv.of_injective`.
 -/
 def Function.Embedding.toEquivRange : α ≃ Set.Range f :=
-  ⟨fun a => ⟨f a, Set.mem_range_self a⟩, f.invOfMemRange, fun _ => by
-    simp , fun _ => by
-    simp ⟩
+  ⟨fun a => ⟨f a, Set.mem_range_self a⟩, f.invOfMemRange, fun _ => by simp, fun _ => by simp⟩
 
 @[simp]
 theorem Function.Embedding.to_equiv_range_apply (a : α) : f.toEquivRange a = ⟨f a, Set.mem_range_self a⟩ :=
@@ -44,8 +42,7 @@ theorem Function.Embedding.to_equiv_range_apply (a : α) : f.toEquivRange a = �
 
 @[simp]
 theorem Function.Embedding.to_equiv_range_symm_apply_self (a : α) :
-    f.toEquivRange.symm ⟨f a, Set.mem_range_self a⟩ = a := by
-  simp [Equivₓ.symm_apply_eq]
+    f.toEquivRange.symm ⟨f a, Set.mem_range_self a⟩ = a := by simp [Equivₓ.symm_apply_eq]
 
 theorem Function.Embedding.to_equiv_range_eq_of_injective : f.toEquivRange = Equivₓ.ofInjective f f.Injective := by
   ext
@@ -75,9 +72,8 @@ theorem Equivₓ.Perm.via_fintype_embedding_apply_not_mem_range {b : β} (h : b 
   rwa [Equivₓ.Perm.viaFintypeEmbedding, Equivₓ.Perm.extend_domain_apply_not_subtype]
 
 @[simp]
-theorem Equivₓ.Perm.via_fintype_embedding_sign [DecidableEq α] [Fintype β] :
-    Equivₓ.Perm.sign (e.viaFintypeEmbedding f) = Equivₓ.Perm.sign e := by
-  simp [Equivₓ.Perm.viaFintypeEmbedding]
+theorem Equivₓ.Perm.via_fintype_embedding_sign [DecidableEq α] [Fintypeₓ β] :
+    Equivₓ.Perm.sign (e.viaFintypeEmbedding f) = Equivₓ.Perm.sign e := by simp [Equivₓ.Perm.viaFintypeEmbedding]
 
 namespace Equivₓ
 
@@ -89,7 +85,7 @@ is an equivalence between the complement of those subtypes.
 See also `equiv.compl`, for a computable version when a term of type
 `{e' : α ≃ α // ∀ x : {x // p x}, e' x = e x}` is known. -/
 noncomputable def toCompl (e : { x // p x } ≃ { x // q x }) : { x // ¬p x } ≃ { x // ¬q x } :=
-  Classical.choice (Fintype.card_eq.mp (Fintype.card_compl_eq_card_compl _ _ (Fintype.card_congr e)))
+  Classical.choice (Fintypeₓ.card_eq.mp (Fintypeₓ.card_compl_eq_card_compl _ _ (Fintypeₓ.card_congr e)))
 
 /-- If `e` is an equivalence between two subtypes of a fintype `α`, `e.extend_subtype`
 is a permutation of `α` acting like `e` on the subtypes and doing something arbitrary outside.
@@ -100,7 +96,7 @@ noncomputable abbrev extendSubtype (e : { x // p x } ≃ { x // q x }) : Perm α
 
 theorem extend_subtype_apply_of_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : p x) : e.extendSubtype x = e ⟨x, hx⟩ :=
   by
-  dunfold extend_subtype
+  dsimp only [extend_subtype]
   simp only [subtype_congr, Equivₓ.trans_apply, Equivₓ.sum_congr_apply]
   rw [sum_compl_apply_symm_of_pos _ _ hx, Sum.map_inl, sum_compl_apply_inl]
 
@@ -110,7 +106,7 @@ theorem extend_subtype_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : p x) : 
 
 theorem extend_subtype_apply_of_not_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : ¬p x) :
     e.extendSubtype x = e.toCompl ⟨x, hx⟩ := by
-  dunfold extend_subtype
+  dsimp only [extend_subtype]
   simp only [subtype_congr, Equivₓ.trans_apply, Equivₓ.sum_congr_apply]
   rw [sum_compl_apply_symm_of_neg _ _ hx, Sum.map_inr, sum_compl_apply_inr]
 

@@ -49,7 +49,7 @@ so on.
 -/
 
 
-open MeasureTheory Filter Finset
+open MeasureTheory Filter Finsetₓ
 
 noncomputable section
 
@@ -62,14 +62,8 @@ namespace ProbabilityTheory
 /-- Two functions defined on two (possibly different) measure spaces are identically distributed if
 their image measures coincide. This only makes sense when the functions are ae measurable
 (as otherwise the image measures are not defined), so we require this as well in the definition. -/
-structure IdentDistrib (f : α → γ) (g : β → γ)
-  (μ : Measureₓ α := by
-    run_tac
-      volume_tac)
-  (ν : Measureₓ β := by
-    run_tac
-      volume_tac) :
-  Prop where
+structure IdentDistrib (f : α → γ) (g : β → γ) (μ : Measureₓ α := by exact MeasureTheory.MeasureSpace.volume)
+  (ν : Measureₓ β := by exact MeasureTheory.MeasureSpace.volume) : Prop where
   ae_measurable_fst : AeMeasurable f μ
   ae_measurable_snd : AeMeasurable g ν
   map_eq : Measure.map f μ = Measure.map g ν
@@ -156,7 +150,7 @@ theorem lintegral_eq {f : α → ℝ≥0∞} {g : β → ℝ≥0∞} (h : IdentD
 
 theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace γ] [BorelSpace γ]
     (h : IdentDistrib f g μ ν) : (∫ x, f x ∂μ) = ∫ x, g x ∂ν := by
-  by_cases' hf : ae_strongly_measurable f μ
+  by_cases hf:ae_strongly_measurable f μ
   · have A : ae_strongly_measurable id (measure.map f μ) := by
       rw [ae_strongly_measurable_iff_ae_measurable_separable]
       rcases(ae_strongly_measurable_iff_ae_measurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
@@ -178,10 +172,10 @@ theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace 
 
 theorem snorm_eq [NormedAddCommGroup γ] [OpensMeasurableSpace γ] (h : IdentDistrib f g μ ν) (p : ℝ≥0∞) :
     snorm f p μ = snorm g p ν := by
-  by_cases' h0 : p = 0
+  by_cases h0:p = 0
   · simp [h0]
     
-  by_cases' h_top : p = ∞
+  by_cases h_top:p = ∞
   · simp only [h_top, snorm, snorm_ess_sup, Ennreal.top_ne_zero, eq_self_iff_true, if_true, if_false]
     apply ess_sup_eq
     exact h.comp (measurable_coe_nnreal_ennreal.comp measurable_nnnorm)
@@ -270,7 +264,7 @@ theorem Memℒp.uniform_integrable_of_ident_distrib_aux {ι : Type _} {f : ι �
     (hp' : p ≠ ∞) (hℒp : Memℒp (f j) p μ) (hfmeas : ∀ i, StronglyMeasurable (f i))
     (hf : ∀ i, IdentDistrib (f i) (f j) μ μ) : UniformIntegrable f p μ := by
   refine' uniform_integrable_of' hp hp' hfmeas fun ε hε => _
-  by_cases' hι : Nonempty ι
+  by_cases hι:Nonempty ι
   swap
   · exact ⟨0, fun i => False.elim (hι <| Nonempty.intro i)⟩
     
@@ -288,8 +282,7 @@ theorem Memℒp.uniform_integrable_of_ident_distrib_aux {ι : Type _} {f : ι �
   rw [← snorm_map_measure _ (hf i).ae_measurable_fst, (hf i).map_eq, snorm_map_measure _ (hf j).ae_measurable_fst]
   · rfl
     
-  all_goals
-    exact ae_strongly_measurable_id.indicator (measurable_set_le measurable_const measurable_nnnorm)
+  all_goals exact ae_strongly_measurable_id.indicator (measurable_set_le measurable_const measurable_nnnorm)
 
 /-- A sequence of identically distributed Lᵖ functions is p-uniformly integrable. -/
 theorem Memℒp.uniform_integrable_of_ident_distrib {ι : Type _} {f : ι → α → E} {j : ι} {p : ℝ≥0∞} (hp : 1 ≤ p)

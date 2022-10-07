@@ -67,15 +67,14 @@ instance NoetherianSpace.set [h : NoetherianSpace α] (s : Set α) : NoetherianS
   rintro ⟨_, x, hx, rfl⟩ hx' hx''
   refine' le_antisymmₓ (Set.preimage_mono (_ : (⟨x, hx⟩ : opens α) ≤ U)) hx''
   refine' sup_eq_right.mp (hU' (⟨x, hx⟩ ⊔ U) _ le_sup_right)
-  dsimp' [Set.Preimage]
+  dsimp [Set.Preimage]
   rw [map_sup]
   convert hx'
   exact sup_eq_left.mpr hx''
 
 variable (α)
 
-example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by
-  refine' OrderIso.compl (Set α)
+example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl (Set α)
 
 theorem noetherian_space_tfae :
     Tfae
@@ -102,6 +101,17 @@ theorem noetherian_space_tfae :
 
 variable {α β}
 
+instance {α} : NoetherianSpace (CofiniteTopology α) := by
+  simp only [noetherian_space_iff_opens, is_compact_iff_ultrafilter_le_nhds, CofiniteTopology.nhds_eq,
+    Ultrafilter.le_sup_iff]
+  intro s f hs
+  rcases f.le_cofinite_or_eq_pure with (hf | ⟨a, rfl⟩)
+  · rcases Filter.nonempty_of_mem (Filter.le_principal_iff.1 hs) with ⟨a, ha⟩
+    exact ⟨a, ha, Or.inr hf⟩
+    
+  · exact ⟨a, filter.le_principal_iff.mp hs, Or.inl le_rflₓ⟩
+    
+
 theorem NoetherianSpace.is_compact [h : NoetherianSpace α] (s : Set α) : IsCompact s :=
   let H := (noetherian_space_tfae α).out 0 2
   H.mp h s
@@ -118,12 +128,10 @@ theorem noetherian_space_iff_of_homeomorph (f : α ≃ₜ β) : NoetherianSpace 
     @noetherian_space_of_surjective _ _ h f.symm f.symm.Continuous f.symm.Surjective⟩
 
 theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continuous f) : NoetherianSpace (Set.Range f) :=
-  noetherian_space_of_surjective (Set.codRestrict f _ Set.mem_range_self)
-    (by
-      continuity)
-    fun ⟨a, b, h⟩ => ⟨b, Subtype.ext h⟩
+  noetherian_space_of_surjective (Set.codRestrict f _ Set.mem_range_self) (by continuity) fun ⟨a, b, h⟩ =>
+    ⟨b, Subtype.ext h⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem noetherian_space_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_ : t ⊆ s), IsCompact t := by
   rw [(noetherian_space_tfae s).out 0 2]
   constructor
@@ -156,29 +164,29 @@ attribute [local instance] noetherian_space.discrete
 
 /-- Spaces that are both Noetherian and Hausdorff is finite. -/
 theorem NoetherianSpace.finite [NoetherianSpace α] [T2Space α] : Finite α := by
-  letI : Fintype α := Set.fintypeOfFiniteUniv (noetherian_space.is_compact Set.Univ).finite_of_discrete
+  letI : Fintypeₓ α := Set.fintypeOfFiniteUniv (noetherian_space.is_compact Set.Univ).finite_of_discrete
   infer_instance
 
 instance (priority := 100) Finite.to_noetherian_space [Finite α] : NoetherianSpace α :=
   ⟨Finite.well_founded_of_trans_of_irrefl _⟩
 
 theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Closeds α) :
-    ∃ S : Finset (Closeds α), (∀ k : S, IsIrreducible (k : Set α)) ∧ s = S.sup id := by
+    ∃ S : Finsetₓ (Closeds α), (∀ k : S, IsIrreducible (k : Set α)) ∧ s = S.sup id := by
   classical
   have := ((noetherian_space_tfae α).out 0 1).mp inferInstance
   apply WellFounded.induction this s
   clear s
   intro s H
-  by_cases' h₁ : IsPreirreducible s.1
+  by_cases h₁:IsPreirreducible s.1
   cases h₂ : s.1.eq_empty_or_nonempty
   · use ∅
     refine' ⟨fun k => k.2.elim, _⟩
-    rw [Finset.sup_empty]
+    rw [Finsetₓ.sup_empty]
     ext1
     exact h
     
   · use {s}
-    simp only [coe_coe, Finset.sup_singleton, id.def, eq_self_iff_true, and_trueₓ]
+    simp only [coe_coe, Finsetₓ.sup_singleton, id.def, eq_self_iff_true, and_trueₓ]
     rintro ⟨k, hk⟩
     cases finset.mem_singleton.mp hk
     exact ⟨h, h₁⟩
@@ -192,7 +200,7 @@ theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Clos
     · cases' finset.mem_union.mp k.2 with h' h'
       exacts[hS₁ ⟨k, h'⟩, hS₂ ⟨k, h'⟩]
       
-    · rwa [Finset.sup_union, ← hS₁', ← hS₂', ← inf_sup_left, left_eq_inf]
+    · rwa [Finsetₓ.sup_union, ← hS₁', ← hS₂', ← inf_sup_left, left_eq_inf]
       
     
 
@@ -205,18 +213,15 @@ theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] :
     rw [show IrreducibleComponent = coe ∘ f from funext hf, Set.range_comp]
     exact (Set.Finite.intro inferInstance).Image _
   intro x
-  obtain ⟨z, hz, hz'⟩ : ∃ (z : Set α)(H : z ∈ Finset.image coe S), IrreducibleComponent x ⊆ z := by
+  obtain ⟨z, hz, hz'⟩ : ∃ (z : Set α)(H : z ∈ Finsetₓ.image coe S), IrreducibleComponent x ⊆ z := by
     convert is_irreducible_iff_sUnion_closed.mp is_irreducible_irreducible_component (S.image coe) _ _
     · infer_instance
       
-    · simp only [Finset.mem_image, exists_propₓ, forall_exists_index, and_imp]
+    · simp only [Finsetₓ.mem_image, exists_propₓ, forall_exists_index, and_imp]
       rintro _ z hz rfl
       exact z.2
       
-    · exact
-        (Set.subset_univ _).trans
-          ((congr_arg coe hS₂).trans <| by
-              simp ).Subset
+    · exact (Set.subset_univ _).trans ((congr_arg coe hS₂).trans <| by simp).Subset
       
   obtain ⟨s, hs, e⟩ := finset.mem_image.mp hz
   rw [← e] at hz'

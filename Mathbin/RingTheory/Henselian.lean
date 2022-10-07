@@ -183,7 +183,7 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
     let c : ℕ → R := fun n => Nat.recOn n a₀ fun _ b => b - f.eval b * Ring.inverse (f'.eval b)
     have hc : ∀ n, c (n + 1) = c n - f.eval (c n) * Ring.inverse (f'.eval (c n)) := by
       intro n
-      dsimp' only [c, Nat.rec_add_one]
+      dsimp only [c, Nat.rec_add_one]
       rfl
     -- we now spend some time determining properties of the sequence `c : ℕ → R`
     -- `hc_mod`: for every `n`, we have `c n ≡ a₀ [SMOD I]`
@@ -215,22 +215,21 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
       rw [← taylor_eval_sub (c n), hc]
       simp only [sub_eq_add_neg, add_neg_cancel_comm]
       rw [eval_eq_sum, sum_over_range' _ _ _ (lt_add_of_pos_right _ zero_lt_two), ←
-        Finset.sum_range_add_sum_Ico _ (Nat.le_add_leftₓ _ _)]
+        Finsetₓ.sum_range_add_sum_Ico _ (Nat.le_add_leftₓ _ _)]
       swap
       · intro i
         rw [zero_mul]
         
       refine' Ideal.add_mem _ _ _
-      · simp only [Finset.sum_range_succ, taylor_coeff_one, mul_oneₓ, pow_oneₓ, taylor_coeff_zero, mul_neg,
-          Finset.sum_singleton, Finset.range_one, pow_zeroₓ]
+      · simp only [Finsetₓ.sum_range_succ, taylor_coeff_one, mul_oneₓ, pow_oneₓ, taylor_coeff_zero, mul_neg,
+          Finsetₓ.sum_singleton, Finsetₓ.range_one, pow_zeroₓ]
         rw [mul_left_commₓ, Ring.mul_inverse_cancel _ (hf'c n), mul_oneₓ, add_neg_selfₓ]
         exact Ideal.zero_mem _
         
       · refine' Submodule.sum_mem _ _
-        simp only [Finset.mem_Ico]
+        simp only [Finsetₓ.mem_Ico]
         rintro i ⟨h2i, hi⟩
-        have aux : n + 2 ≤ i * (n + 1) := by
-          trans 2 * (n + 1) <;> nlinarith only [h2i]
+        have aux : n + 2 ≤ i * (n + 1) := by trans 2 * (n + 1) <;> nlinarith only [h2i]
         refine' Ideal.mul_mem_left _ _ (Ideal.pow_le_pow aux _)
         rw [pow_mul']
         refine' Ideal.pow_mem_pow ((Ideal.neg_mem_iff _).2 <| Ideal.mul_mem_right _ _ ih) _
@@ -255,8 +254,7 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
     obtain ⟨a, ha⟩ := IsPrecomplete.prec' c aux
     refine' ⟨a, _, _⟩
     · show f.is_root a
-      suffices ∀ n, f.eval a ≡ 0 [SMOD (I ^ n • ⊤ : Ideal R)] by
-        exact IsHausdorff.haus' _ this
+      suffices ∀ n, f.eval a ≡ 0 [SMOD (I ^ n • ⊤ : Ideal R)] by exact IsHausdorff.haus' _ this
       intro n
       specialize ha n
       rw [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_oneₓ] at ha⊢

@@ -97,10 +97,7 @@ private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →*
           ,
       map_one' := rfl }
   invFun := fun F x => F (Multiplicative.ofAdd ({x} : Multiset α))
-  left_inv := fun f =>
-    funext fun x =>
-      show (Multiset.map f {x}).Prod = _ by
-        simp
+  left_inv := fun f => funext fun x => show (Multiset.map f {x}).Prod = _ by simp
   right_inv := fun F =>
     MonoidHom.ext fun x =>
       let F' := F.toAdditive''
@@ -121,13 +118,8 @@ theorem lift_of (x : α) : lift f (of x) = f x :=
 @[simp]
 theorem lift_comp_of (f : FreeCommRing α →+* R) : lift (f ∘ of) = f :=
   RingHom.ext fun x =>
-    FreeCommRing.induction_on x
-      (by
-        rw [RingHom.map_neg, RingHom.map_one, f.map_neg, f.map_one])
-      (lift_of _)
-      (fun x y ihx ihy => by
-        rw [RingHom.map_add, f.map_add, ihx, ihy])
-      fun x y ihx ihy => by
+    FreeCommRing.induction_on x (by rw [RingHom.map_neg, RingHom.map_one, f.map_neg, f.map_one]) (lift_of _)
+      (fun x y ihx ihy => by rw [RingHom.map_add, f.map_add, ihx, ihy]) fun x y ihx ihy => by
       rw [RingHom.map_mul, f.map_mul, ihx, ihy]
 
 @[ext]
@@ -177,9 +169,7 @@ theorem is_supported_one : IsSupported 1 s :=
 
 theorem is_supported_int {i : ℤ} {s : Set α} : IsSupported (↑i) s :=
   Int.induction_on i is_supported_zero
-    (fun i hi => by
-      rw [Int.cast_add, Int.cast_oneₓ] <;> exact is_supported_add hi is_supported_one)
-    fun i hi => by
+    (fun i hi => by rw [Int.cast_add, Int.cast_oneₓ] <;> exact is_supported_add hi is_supported_one) fun i hi => by
     rw [Int.cast_sub, Int.cast_oneₓ] <;> exact is_supported_sub hi is_supported_one
 
 end IsSupported
@@ -232,8 +222,7 @@ theorem is_supported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
   apply Ne.symm Int.zero_ne_one
   rcases this with ⟨w, H⟩
   rw [← Polynomial.C_eq_int_cast] at H
-  have : polynomial.X.coeff 1 = (Polynomial.c ↑w).coeff 1 := by
-    rw [H]
+  have : polynomial.X.coeff 1 = (Polynomial.c ↑w).coeff 1 := by rw [H]
   rwa [Polynomial.coeff_C, if_neg (one_ne_zero : 1 ≠ 0), Polynomial.coeff_X, if_pos rfl] at this
 
 theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)] (hxs : IsSupported x s) :
@@ -264,10 +253,9 @@ theorem exists_finite_support (x : FreeCommRing α) : ∃ s : Set α, Set.Finite
       is_supported_mul (is_supported_upwards hxs <| Set.subset_union_left s t)
         (is_supported_upwards hxt <| Set.subset_union_right s t)⟩
 
-theorem exists_finset_support (x : FreeCommRing α) : ∃ s : Finset α, IsSupported x ↑s :=
+theorem exists_finset_support (x : FreeCommRing α) : ∃ s : Finsetₓ α, IsSupported x ↑s :=
   let ⟨s, hfs, hxs⟩ := exists_finite_support x
-  ⟨hfs.toFinset, by
-    rwa [Set.Finite.coe_to_finset]⟩
+  ⟨hfs.toFinset, by rwa [Set.Finite.coe_to_finset]⟩
 
 end FreeCommRing
 
@@ -377,9 +365,8 @@ def freeCommRingEquivMvPolynomialInt : FreeCommRing α ≃+* MvPolynomial α ℤ
     (MvPolynomial.eval₂Hom (Int.castRingHom (FreeCommRing α)) FreeCommRing.of)
     (by
       ext
-      simp )
-    (by
-      ext <;> simp )
+      simp)
+    (by ext <;> simp)
 
 /-- The free commutative ring on the empty type is isomorphic to `ℤ`. -/
 def freeCommRingPemptyEquivInt : FreeCommRing Pempty.{u + 1} ≃+* ℤ :=

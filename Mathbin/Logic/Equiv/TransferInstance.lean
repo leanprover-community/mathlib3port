@@ -92,9 +92,10 @@ the one obtained by transporting a multiplicative structure on `β` back along `
 -/
 @[to_additive
       "An equivalence `e : α ≃ β` gives a additive equivalence `α ≃+ β`\nwhere the additive structure on `α` is\nthe one obtained by transporting an additive structure on `β` back along `e`."]
-def mulEquiv (e : α ≃ β) [Mul β] : by
+def mulEquiv (e : α ≃ β) [Mul β] :
     letI := Equivₓ.hasMul e
-    exact α ≃* β := by
+    α ≃* β :=
+  by
   intros
   exact
     { e with
@@ -108,9 +109,10 @@ theorem mul_equiv_apply (e : α ≃ β) [Mul β] (a : α) : (mulEquiv e) a = e a
   rfl
 
 @[to_additive]
-theorem mul_equiv_symm_apply (e : α ≃ β) [Mul β] (b : β) : by
+theorem mul_equiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
     letI := Equivₓ.hasMul e
-    exact (MulEquiv e).symm b = e.symm b := by
+    (MulEquiv e).symm b = e.symm b :=
+  by
   intros
   rfl
 
@@ -239,19 +241,13 @@ protected def nonUnitalSemiring [NonUnitalSemiringₓ β] : NonUnitalSemiringₓ
 
 /-- Transfer `add_monoid_with_one` across an `equiv` -/
 protected def addMonoidWithOne [AddMonoidWithOneₓ β] : AddMonoidWithOneₓ α :=
-  { e.AddMonoid, e.HasOne with natCast := fun n => e.symm n,
-    nat_cast_zero :=
-      show e.symm _ = _ by
-        simp [zero_def],
-    nat_cast_succ := fun n =>
-      show e.symm _ = e.symm (e (e.symm _) + _) by
-        simp [add_def, one_def] }
+  { e.AddMonoid, e.HasOne with natCast := fun n => e.symm n, nat_cast_zero := show e.symm _ = _ by simp [zero_def],
+    nat_cast_succ := fun n => show e.symm _ = e.symm (e (e.symm _) + _) by simp [add_def, one_def] }
 
 /-- Transfer `add_group_with_one` across an `equiv` -/
 protected def addGroupWithOne [AddGroupWithOneₓ β] : AddGroupWithOneₓ α :=
   { e.AddMonoidWithOne, e.AddGroup with intCast := fun n => e.symm n,
-    int_cast_of_nat := fun n => by
-      rw [Int.cast_coe_nat] <;> rfl,
+    int_cast_of_nat := fun n => by rw [Int.cast_coe_nat] <;> rfl,
     int_cast_neg_succ_of_nat := fun n =>
       congr_arg e.symm <| (Int.cast_neg_succ_of_nat _).trans <| congr_arg _ (e.apply_symm_apply _).symm }
 
@@ -386,24 +382,18 @@ variable [Monoidₓ R]
 
 /-- Transfer `mul_action` across an `equiv` -/
 protected def mulAction (e : α ≃ β) [MulAction R β] : MulAction R α :=
-  { e.HasSmul R with
-    one_smul := by
-      simp [smul_def],
-    mul_smul := by
-      simp [smul_def, mul_smul] }
+  { e.HasSmul R with one_smul := by simp [smul_def], mul_smul := by simp [smul_def, mul_smul] }
 
 /-- Transfer `distrib_mul_action` across an `equiv` -/
-protected def distribMulAction (e : α ≃ β) [AddCommMonoidₓ β] : by
+protected def distribMulAction (e : α ≃ β) [AddCommMonoidₓ β] :
     letI := Equivₓ.addCommMonoid e
-    exact ∀ [DistribMulAction R β], DistribMulAction R α := by
+    ∀ [DistribMulAction R β], DistribMulAction R α :=
+  by
   intros
   letI := Equivₓ.addCommMonoid e
   exact
-    ({ Equivₓ.mulAction R e with
-      smul_zero := by
-        simp [zero_def, smul_def],
-      smul_add := by
-        simp [add_def, smul_def, smul_add] } :
+    ({ Equivₓ.mulAction R e with smul_zero := by simp [zero_def, smul_def],
+      smul_add := by simp [add_def, smul_def, smul_add] } :
       DistribMulAction R α)
 
 end
@@ -413,16 +403,14 @@ section
 variable [Semiringₓ R]
 
 /-- Transfer `module` across an `equiv` -/
-protected def module (e : α ≃ β) [AddCommMonoidₓ β] : by
+protected def module (e : α ≃ β) [AddCommMonoidₓ β] :
     letI := Equivₓ.addCommMonoid e
-    exact ∀ [Module R β], Module R α := by
+    ∀ [Module R β], Module R α :=
+  by
   intros
   exact
-    ({ Equivₓ.distribMulAction R e with
-      zero_smul := by
-        simp [zero_def, smul_def],
-      add_smul := by
-        simp [add_def, smul_def, add_smul] } :
+    ({ Equivₓ.distribMulAction R e with zero_smul := by simp [zero_def, smul_def],
+      add_smul := by simp [add_def, smul_def, add_smul] } :
       Module R α)
 
 /-- An equivalence `e : α ≃ β` gives a linear equivalence `α ≃ₗ[R] β`
@@ -448,9 +436,10 @@ section
 variable [CommSemiringₓ R]
 
 /-- Transfer `algebra` across an `equiv` -/
-protected def algebra (e : α ≃ β) [Semiringₓ β] : by
+protected def algebra (e : α ≃ β) [Semiringₓ β] :
     letI := Equivₓ.semiring e
-    exact ∀ [Algebra R β], Algebra R α := by
+    ∀ [Algebra R β], Algebra R α :=
+  by
   intros
   fapply RingHom.toAlgebra'
   · exact ((RingEquiv e).symm : β →+* α).comp (algebraMap R β)
@@ -458,7 +447,7 @@ protected def algebra (e : α ≃ β) [Semiringₓ β] : by
   · intro r x
     simp only [Function.comp_app, RingHom.coe_comp]
     have p := ring_equiv_symm_apply e
-    dsimp'  at p
+    dsimp at p
     erw [p]
     clear p
     apply (RingEquiv e).Injective
@@ -493,9 +482,9 @@ end Equivₓ
 namespace RingEquiv
 
 protected theorem local_ring {A B : Type _} [CommSemiringₓ A] [LocalRing A] [CommSemiringₓ B] (e : A ≃+* B) :
-    LocalRing B := by
+    LocalRing B :=
   haveI := e.symm.to_equiv.nontrivial
-  exact LocalRing.of_surjective (e : A →+* B) e.surjective
+  LocalRing.of_surjective (e : A →+* B) e.surjective
 
 end RingEquiv
 

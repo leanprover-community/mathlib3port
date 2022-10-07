@@ -84,8 +84,7 @@ theorem not_mem_zero (x : List α) : x ∉ (0 : Language α) :=
   id
 
 @[simp]
-theorem mem_one (x : List α) : x ∈ (1 : Language α) ↔ x = [] := by
-  rfl
+theorem mem_one (x : List α) : x ∈ (1 : Language α) ↔ x = [] := by rfl
 
 theorem nil_mem_one : [] ∈ (1 : Language α) :=
   Set.mem_singleton _
@@ -121,14 +120,11 @@ instance : Semiringₓ (Language α) where
   zero_mul := fun _ => image2_empty_left
   mul_zero := fun _ => image2_empty_right
   one := 1
-  one_mul := fun l => by
-    simp [mul_def, one_def]
-  mul_one := fun l => by
-    simp [mul_def, one_def]
+  one_mul := fun l => by simp [mul_def, one_def]
+  mul_one := fun l => by simp [mul_def, one_def]
   natCast := fun n => if n = 0 then 0 else 1
   nat_cast_zero := rfl
-  nat_cast_succ := fun n => by
-    cases n <;> simp [Nat.castₓ, add_def, zero_def]
+  nat_cast_succ := fun n => by cases n <;> simp [Nat.castₓ, add_def, zero_def]
   left_distrib := fun _ _ _ => image2_union_right
   right_distrib := fun _ _ _ => image2_union_left
 
@@ -145,21 +141,17 @@ def map (f : α → β) : Language α →+* Language β where
   map_mul' := fun _ _ => image_image2_distrib <| map_appendₓ _
 
 @[simp]
-theorem map_id (l : Language α) : map id l = l := by
-  simp [map]
+theorem map_id (l : Language α) : map id l = l := by simp [map]
 
 @[simp]
-theorem map_map (g : β → γ) (f : α → β) (l : Language α) : map g (map f l) = map (g ∘ f) l := by
-  simp [map, image_image]
+theorem map_map (g : β → γ) (f : α → β) (l : Language α) : map g (map f l) = map (g ∘ f) l := by simp [map, image_image]
 
 theorem star_def_nonempty (l : Language α) :
     l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l ∧ y ≠ [] } := by
   ext x
   constructor
   · rintro ⟨S, rfl, h⟩
-    refine'
-      ⟨S.filter fun l => ¬List.empty l, by
-        simp , fun y hy => _⟩
+    refine' ⟨S.filter fun l => ¬List.empty l, by simp, fun y hy => _⟩
     rw [mem_filter, empty_iff_eq_nil] at hy
     exact ⟨h y hy.1, hy.2⟩
     

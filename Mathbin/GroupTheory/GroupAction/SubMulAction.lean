@@ -46,8 +46,7 @@ namespace SubMulAction
 variable [HasSmul R M]
 
 instance : SetLike (SubMulAction R M) M :=
-  ⟨SubMulAction.Carrier, fun p q h => by
-    cases p <;> cases q <;> congr⟩
+  ⟨SubMulAction.Carrier, fun p q h => by cases p <;> cases q <;> congr⟩
 
 @[simp]
 theorem mem_carrier {p : SubMulAction R M} {x : M} : x ∈ p.Carrier ↔ x ∈ (p : Set M) :=
@@ -106,8 +105,7 @@ theorem coe_mk (x : M) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : M) = x :=
 variable (p)
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
-protected def subtype : p →[R] M := by
-  refine' { toFun := coe.. } <;> simp [coe_smul]
+protected def subtype : p →[R] M := by refine' { toFun := coe.. } <;> simp [coe_smul]
 
 @[simp]
 theorem subtype_apply (x : p) : p.Subtype x = x :=

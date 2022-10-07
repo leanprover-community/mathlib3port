@@ -61,7 +61,21 @@ instance top_monoid_units [TopologicalSemiring R] [InducedUnits R] : HasContinuo
 
 end TopologicalRing
 
-variable (K : Type _) [DivisionRing K] [TopologicalSpace K]
+variable {K : Type _} [DivisionRing K] [TopologicalSpace K]
+
+/-- Left-multiplication by a nonzero element of a topological division ring is proper, i.e.,
+inverse images of compact sets are compact. -/
+theorem Filter.tendsto_cocompact_mul_left₀ [HasContinuousMul K] {a : K} (ha : a ≠ 0) :
+    Filter.Tendsto (fun x : K => a * x) (Filter.cocompact K) (Filter.cocompact K) :=
+  Filter.tendsto_cocompact_mul_left (inv_mul_cancel ha)
+
+/-- Right-multiplication by a nonzero element of a topological division ring is proper, i.e.,
+inverse images of compact sets are compact. -/
+theorem Filter.tendsto_cocompact_mul_right₀ [HasContinuousMul K] {a : K} (ha : a ≠ 0) :
+    Filter.Tendsto (fun x : K => x * a) (Filter.cocompact K) (Filter.cocompact K) :=
+  Filter.tendsto_cocompact_mul_right (mul_inv_cancel ha)
+
+variable (K)
 
 /-- A topological division ring is a division ring with a topology where all operations are
     continuous, including inversion. -/
@@ -127,8 +141,7 @@ def affineHomeomorph (a b : 𝕜) (h : a ≠ 0) : 𝕜 ≃ₜ 𝕜 where
   left_inv := fun x => by
     simp only [add_sub_cancel]
     exact mul_div_cancel_left x h
-  right_inv := fun y => by
-    simp [mul_div_cancel' _ h]
+  right_inv := fun y => by simp [mul_div_cancel' _ h]
 
 end affineHomeomorph
 

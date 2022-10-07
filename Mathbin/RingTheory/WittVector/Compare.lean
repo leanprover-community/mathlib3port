@@ -46,8 +46,7 @@ theorem eq_of_le_of_cast_pow_eq_zero [CharP R p] (i : ℕ) (hin : i ≤ n) (hpi 
   contrapose! hpi
   replace hin := lt_of_le_of_neₓ hin hpi
   clear hpi
-  have : (↑p ^ i : TruncatedWittVector p n R) = WittVector.truncate n (↑p ^ i) := by
-    rw [RingHom.map_pow, map_nat_cast]
+  have : (↑p ^ i : TruncatedWittVector p n R) = WittVector.truncate n (↑p ^ i) := by rw [RingHom.map_pow, map_nat_cast]
   rw [this, ext_iff, not_forall]
   clear this
   use ⟨i, hin⟩
@@ -59,8 +58,7 @@ section Iso
 
 variable (p n) {R}
 
-theorem card_zmod : Fintype.card (TruncatedWittVector p n (Zmod p)) = p ^ n := by
-  rw [card, Zmod.card]
+theorem card_zmod : Fintypeₓ.card (TruncatedWittVector p n (Zmod p)) = p ^ n := by rw [card, Zmod.card]
 
 theorem char_p_zmod : CharP (TruncatedWittVector p n (Zmod p)) (p ^ n) :=
   char_p_of_prime_pow_injective _ _ _ (card_zmod _ _) (eq_of_le_of_cast_pow_eq_zero p n (Zmod p))
@@ -76,11 +74,7 @@ def zmodEquivTrunc : Zmod (p ^ n) ≃+* TruncatedWittVector p n (Zmod p) :=
   Zmod.ringEquiv (TruncatedWittVector p n (Zmod p)) (card_zmod _ _)
 
 theorem zmod_equiv_trunc_apply {x : Zmod (p ^ n)} :
-    zmodEquivTrunc p n x =
-      Zmod.castHom
-        (by
-          rfl)
-        (TruncatedWittVector p n (Zmod p)) x :=
+    zmodEquivTrunc p n x = Zmod.castHom (by rfl) (TruncatedWittVector p n (Zmod p)) x :=
   rfl
 
 /-- The following diagram commutes:
@@ -102,8 +96,7 @@ theorem commutes {m : ℕ} (hm : n ≤ m) :
 
 theorem commutes' {m : ℕ} (hm : n ≤ m) (x : Zmod (p ^ m)) :
     truncate hm (zmodEquivTrunc p m x) = zmodEquivTrunc p n (Zmod.castHom (pow_dvd_pow p hm) _ x) :=
-  show (truncate hm).comp (zmodEquivTrunc p m).toRingHom x = _ by
-    rw [commutes _ _ hm] <;> rfl
+  show (truncate hm).comp (zmodEquivTrunc p m).toRingHom x = _ by rw [commutes _ _ hm] <;> rfl
 
 theorem commutes_symm' {m : ℕ} (hm : n ≤ m) (x : TruncatedWittVector p m (Zmod p)) :
     (zmodEquivTrunc p n).symm (truncate hm x) = Zmod.castHom (pow_dvd_pow p hm) _ ((zmodEquivTrunc p m).symm x) := by
@@ -126,8 +119,7 @@ and the horizontal arrow at the bottom is `truncated_witt_vector.truncate`.
 theorem commutes_symm {m : ℕ} (hm : n ≤ m) :
     (zmodEquivTrunc p n).symm.toRingHom.comp (truncate hm) =
       (Zmod.castHom (pow_dvd_pow p hm) _).comp (zmodEquivTrunc p m).symm.toRingHom :=
-  by
-  ext <;> apply commutes_symm'
+  by ext <;> apply commutes_symm'
 
 end Iso
 
@@ -151,8 +143,7 @@ theorem to_zmod_pow_compat (m n : ℕ) (h : m ≤ n) :
   calc
     (Zmod.castHom _ (Zmod (p ^ m))).comp ((zmodEquivTrunc p n).symm.toRingHom.comp (truncate n)) =
         ((zmodEquivTrunc p m).symm.toRingHom.comp (TruncatedWittVector.truncate h)).comp (truncate n) :=
-      by
-      rw [commutes_symm, RingHom.comp_assoc]
+      by rw [commutes_symm, RingHom.comp_assoc]
     _ = (zmodEquivTrunc p m).symm.toRingHom.comp (truncate m) := by
       rw [RingHom.comp_assoc, truncate_comp_witt_vector_truncate]
     
@@ -166,8 +157,7 @@ def toPadicInt : 𝕎 (Zmod p) →+* ℤ_[p] :=
 theorem zmod_equiv_trunc_compat (k₁ k₂ : ℕ) (hk : k₁ ≤ k₂) :
     (TruncatedWittVector.truncate hk).comp ((zmodEquivTrunc p k₂).toRingHom.comp (PadicInt.toZmodPow k₂)) =
       (zmodEquivTrunc p k₁).toRingHom.comp (PadicInt.toZmodPow k₁) :=
-  by
-  rw [← RingHom.comp_assoc, commutes, RingHom.comp_assoc, PadicInt.zmod_cast_comp_to_zmod_pow]
+  by rw [← RingHom.comp_assoc, commutes, RingHom.comp_assoc, PadicInt.zmod_cast_comp_to_zmod_pow]
 
 /-- `from_padic_int` uses `witt_vector.lift` to lift `truncated_witt_vector.zmod_equiv_trunc`
 composed with `padic_int.to_zmod_pow` to a ring hom `ℤ_[p] →+* 𝕎 (zmod p)`.
@@ -194,8 +184,7 @@ theorem from_padic_int_comp_to_padic_int : (fromPadicInt p).comp (toPadicInt p) 
     RingEquiv.to_ring_hom_comp_symm_to_ring_hom]
 
 theorem from_padic_int_comp_to_padic_int_ext (x) : (fromPadicInt p).comp (toPadicInt p) x = RingHom.id (𝕎 (Zmod p)) x :=
-  by
-  rw [from_padic_int_comp_to_padic_int]
+  by rw [from_padic_int_comp_to_padic_int]
 
 /-- The ring of Witt vectors over `zmod p` is isomorphic to the ring of `p`-adic integers. This
 equivalence is witnessed by `witt_vector.to_padic_int` with inverse `witt_vector.from_padic_int`.

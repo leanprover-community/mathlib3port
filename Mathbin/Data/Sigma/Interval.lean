@@ -18,7 +18,7 @@ Do the same for the lexicographical order
 -/
 
 
-open Finset Function
+open Finsetₓ Function
 
 namespace Sigma
 
@@ -38,26 +38,18 @@ instance : LocallyFiniteOrder (Σi, α i) where
   finsetIoo := sigmaLift fun _ => ioo
   finset_mem_Icc := fun ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ => by
     simp_rw [mem_sigma_lift, le_def, mem_Icc, exists_and_distrib_leftₓ, ← exists_and_distrib_rightₓ, ← exists_propₓ]
-    exact
-      bex_congr fun _ _ => by
-        constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
+    exact bex_congr fun _ _ => by constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
   finset_mem_Ico := fun ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ => by
     simp_rw [mem_sigma_lift, le_def, lt_def, mem_Ico, exists_and_distrib_leftₓ, ← exists_and_distrib_rightₓ, ←
       exists_propₓ]
-    exact
-      bex_congr fun _ _ => by
-        constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
+    exact bex_congr fun _ _ => by constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
   finset_mem_Ioc := fun ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ => by
     simp_rw [mem_sigma_lift, le_def, lt_def, mem_Ioc, exists_and_distrib_leftₓ, ← exists_and_distrib_rightₓ, ←
       exists_propₓ]
-    exact
-      bex_congr fun _ _ => by
-        constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
+    exact bex_congr fun _ _ => by constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
   finset_mem_Ioo := fun ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ => by
     simp_rw [mem_sigma_lift, lt_def, mem_Ioo, exists_and_distrib_leftₓ, ← exists_and_distrib_rightₓ, ← exists_propₓ]
-    exact
-      bex_congr fun _ _ => by
-        constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
+    exact bex_congr fun _ _ => by constructor <;> rintro ⟨⟨⟩, ht⟩ <;> exact ⟨rfl, ht⟩
 
 section
 

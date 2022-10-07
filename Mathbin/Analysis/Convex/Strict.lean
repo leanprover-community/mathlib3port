@@ -133,7 +133,7 @@ variable [TopologicalSpace β] [LinearOrderedCancelAddCommMonoid β] [OrderTopol
 
 theorem strict_convex_Iic (r : β) : StrictConvex 𝕜 (Iic r) := by
   rintro x (hx : x ≤ r) y (hy : y ≤ r) hxy a b ha hb hab
-  refine' (subset_interior_iff_subset_of_open is_open_Iio).2 Iio_subset_Iic_self _
+  refine' is_open_Iio.subset_interior_iff.2 Iio_subset_Iic_self _
   rw [← Convex.combo_self hab r]
   obtain rfl | hx := hx.eq_or_lt
   · exact add_lt_add_left (smul_lt_smul_of_pos (hy.lt_of_ne hxy.symm) hb) _
@@ -289,8 +289,7 @@ theorem StrictConvex.eq_of_open_segment_subset_frontier [Nontrivial 𝕜] [Dense
 
 theorem StrictConvex.add_smul_mem (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hxy : x + y ∈ s) (hy : y ≠ 0) {t : 𝕜}
     (ht₀ : 0 < t) (ht₁ : t < 1) : x + t • y ∈ Interior s := by
-  have h : x + t • y = (1 - t) • x + t • (x + y) := by
-    rw [smul_add, ← add_assocₓ, ← add_smul, sub_add_cancel, one_smul]
+  have h : x + t • y = (1 - t) • x + t • (x + y) := by rw [smul_add, ← add_assocₓ, ← add_smul, sub_add_cancel, one_smul]
   rw [h]
   refine' hs hx hxy (fun h => hy <| add_left_cancelₓ _) (sub_pos_of_lt ht₁) ht₀ (sub_add_cancel _ _)
   exact x
@@ -298,11 +297,7 @@ theorem StrictConvex.add_smul_mem (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hxy
 
 theorem StrictConvex.smul_mem_of_zero_mem (hs : StrictConvex 𝕜 s) (zero_mem : (0 : E) ∈ s) (hx : x ∈ s) (hx₀ : x ≠ 0)
     {t : 𝕜} (ht₀ : 0 < t) (ht₁ : t < 1) : t • x ∈ Interior s := by
-  simpa using
-    hs.add_smul_mem zero_mem
-      (by
-        simpa using hx)
-      hx₀ ht₀ ht₁
+  simpa using hs.add_smul_mem zero_mem (by simpa using hx) hx₀ ht₀ ht₁
 
 theorem StrictConvex.add_smul_sub_mem (h : StrictConvex 𝕜 s) (hx : x ∈ s) (hy : y ∈ s) (hxy : x ≠ y) {t : 𝕜}
     (ht₀ : 0 < t) (ht₁ : t < 1) : x + t • (y - x) ∈ Interior s := by

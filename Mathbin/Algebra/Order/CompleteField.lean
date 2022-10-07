@@ -51,12 +51,12 @@ open Function Ratₓ Real Set
 
 open Classical Pointwise
 
--- ./././Mathport/Syntax/Translate/Command.lean:351:11: unsupported: advanced extends in structure
+-- ./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure
 /-- A field which is both linearly ordered and conditionally complete with respect to the order.
 This axiomatizes the reals. -/
-@[protect_proj, ancestor LinearOrderedField ConditionallyCompleteLinearOrder]
+@[protect_proj]
 class ConditionallyCompleteLinearOrderedField (α : Type _) extends
-  "./././Mathport/Syntax/Translate/Command.lean:351:11: unsupported: advanced extends in structure",
+  "./././Mathport/Syntax/Translate/Command.lean:353:11: unsupported: advanced extends in structure",
   ConditionallyCompleteLinearOrder α
 
 -- see Note [lower instance priority]
@@ -128,8 +128,7 @@ end DivisionRing
 
 variable (β) [LinearOrderedField β] {a a₁ a₂ : α} {b : β} {q : ℚ}
 
-theorem cut_map_coe (q : ℚ) : CutMap β (q : α) = coe '' { r : ℚ | (r : β) < q } := by
-  simp_rw [cut_map, Ratₓ.cast_lt]
+theorem cut_map_coe (q : ℚ) : CutMap β (q : α) = coe '' { r : ℚ | (r : β) < q } := by simp_rw [cut_map, Ratₓ.cast_lt]
 
 variable [Archimedean α]
 
@@ -138,25 +137,17 @@ theorem cut_map_nonempty (a : α) : (CutMap β a).Nonempty :=
 
 theorem cut_map_bdd_above (a : α) : BddAbove (CutMap β a) := by
   obtain ⟨q, hq⟩ := exists_rat_gt a
-  exact
-    ⟨q,
-      ball_image_iff.2 fun r hr => by
-        exact_mod_cast (hq.trans' hr).le⟩
+  exact ⟨q, ball_image_iff.2 fun r hr => by exact_mod_cast (hq.trans' hr).le⟩
 
 theorem cut_map_add (a b : α) : CutMap β (a + b) = CutMap β a + CutMap β b := by
   refine' (image_subset_iff.2 fun q hq => _).antisymm _
   · rw [mem_set_of_eq, ← sub_lt_iff_lt_add] at hq
     obtain ⟨q₁, hq₁q, hq₁ab⟩ := exists_rat_btwn hq
-    refine' ⟨q₁, q - q₁, _, _, add_sub_cancel'_right _ _⟩ <;>
-      try
-          norm_cast <;>
-        rwa [coe_mem_cut_map_iff]
+    refine' ⟨q₁, q - q₁, _, _, add_sub_cancel'_right _ _⟩ <;> try norm_cast <;> rwa [coe_mem_cut_map_iff]
     exact_mod_cast sub_lt.mp hq₁q
     
   · rintro _ ⟨_, _, ⟨qa, ha, rfl⟩, ⟨qb, hb, rfl⟩, rfl⟩
-    refine'
-      ⟨qa + qb, _, by
-        norm_cast⟩
+    refine' ⟨qa + qb, _, by norm_cast⟩
     rw [mem_set_of_eq, cast_add]
     exact add_lt_add ha hb
     
@@ -183,7 +174,7 @@ def inducedMap (x : α) : β :=
 
 variable [Archimedean α]
 
-theorem induced_map_mono : Monotone (inducedMap α β) := fun a b h =>
+theorem induced_map_mono : Monotoneₓ (inducedMap α β) := fun a b h =>
   cSup_le_cSup (cut_map_bdd_above β _) (cut_map_nonempty β _) (cut_map_mono β h)
 
 theorem induced_map_rat (q : ℚ) : inducedMap α β (q : α) = q := by
@@ -198,12 +189,10 @@ theorem induced_map_rat (q : ℚ) : inducedMap α β (q : α) = q := by
     
 
 @[simp]
-theorem induced_map_zero : inducedMap α β 0 = 0 := by
-  exact_mod_cast induced_map_rat α β 0
+theorem induced_map_zero : inducedMap α β 0 = 0 := by exact_mod_cast induced_map_rat α β 0
 
 @[simp]
-theorem induced_map_one : inducedMap α β 1 = 1 := by
-  exact_mod_cast induced_map_rat α β 1
+theorem induced_map_one : inducedMap α β 1 = 1 := by exact_mod_cast induced_map_rat α β 1
 
 variable {α β} {a : α} {b : β} {q : ℚ}
 
@@ -222,8 +211,7 @@ theorem coe_lt_induced_map_iff : (q : β) < inducedMap α β a ↔ (q : α) < a 
 
 theorem lt_induced_map_iff : b < inducedMap α β a ↔ ∃ q : ℚ, b < q ∧ (q : α) < a :=
   ⟨fun h => (exists_rat_btwn h).imp fun q => And.imp_right coe_lt_induced_map_iff.1, fun ⟨q, hbq, hqa⟩ =>
-    hbq.trans <| by
-      rwa [coe_lt_induced_map_iff]⟩
+    hbq.trans <| by rwa [coe_lt_induced_map_iff]⟩
 
 @[simp]
 theorem induced_map_self (b : β) : inducedMap β β b = b :=
@@ -255,9 +243,7 @@ theorem le_induced_map_mul_self_of_mem_cut_map (ha : 0 < a) (b : β) (hb : b ∈
   exact_mod_cast hqq'.le
   rw [pow_two] at hqa⊢
   exact
-    mul_self_le_mul_self
-      (by
-        exact_mod_cast hq'.le)
+    mul_self_le_mul_self (by exact_mod_cast hq'.le)
       (le_cSup (cut_map_bdd_above β a) <| coe_mem_cut_map_iff.2 <| lt_of_mul_self_lt_mul_self ha.le hqa)
 
 /-- Preparatory lemma for `induced_ring_hom`. -/
@@ -274,12 +260,7 @@ theorem exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self (ha : 0 < a) (b :
   rw [pow_two] at hqa⊢
   push_cast
   obtain ⟨q', hq', hqa'⟩ := lt_induced_map_iff.1 (lt_of_mul_self_lt_mul_self _ hqa)
-  exact
-    mul_self_lt_mul_self
-      (by
-        exact_mod_cast hq.le)
-      (hqa'.trans' <| by
-        assumption_mod_cast)
+  exact mul_self_lt_mul_self (by exact_mod_cast hq.le) (hqa'.trans' <| by assumption_mod_cast)
   exact induced_map_nonneg ha.le
 
 variable (α β)
@@ -357,17 +338,11 @@ section Real
 
 variable {R S : Type _} [OrderedRing R] [LinearOrderedRing S]
 
-theorem ring_hom_monotone (hR : ∀ r : R, 0 ≤ r → ∃ s : R, s ^ 2 = r) (f : R →+* S) : Monotone f := by
-  intro a b hab
-  apply le_of_sub_nonneg
-  obtain ⟨s, hs⟩ := hR (b - a) (sub_nonneg.mpr hab)
-  calc
-    f b - f a = f (b - a) := (RingHom.map_sub _ _ _).symm
-    _ = f (s ^ 2) := by
-      rw [← hs]
-    _ = f s ^ 2 := RingHom.map_pow _ _ _
-    _ ≥ 0 := sq_nonneg _
-    
+theorem ring_hom_monotone (hR : ∀ r : R, 0 ≤ r → ∃ s : R, s ^ 2 = r) (f : R →+* S) : Monotoneₓ f :=
+  (monotone_iff_map_nonneg f).2 fun r h => by
+    obtain ⟨s, rfl⟩ := hR r h
+    rw [map_pow]
+    apply sq_nonneg
 
 /-- There exists no nontrivial ring homomorphism `ℝ →+* ℝ`. -/
 instance Real.RingHom.unique : Unique (ℝ →+* ℝ) where

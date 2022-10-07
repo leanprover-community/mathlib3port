@@ -18,12 +18,12 @@ variable {R : Type _} {S : Type _} {M : Type _} {N : Type _}
 namespace Prod
 
 instance smulWithZero [Zero R] [Zero M] [Zero N] [SmulWithZero R M] [SmulWithZero R N] : SmulWithZero R (M × N) :=
-  { Prod.hasSmul with smul_zero := fun r => Prod.extₓ (smul_zero' _ _) (smul_zero' _ _),
+  { Prod.hasSmul with smul_zero := fun r => Prod.extₓ (smul_zero _) (smul_zero _),
     zero_smul := fun ⟨m, n⟩ => Prod.extₓ (zero_smul _ _) (zero_smul _ _) }
 
 instance mulActionWithZero [MonoidWithZeroₓ R] [Zero M] [Zero N] [MulActionWithZero R M] [MulActionWithZero R N] :
     MulActionWithZero R (M × N) :=
-  { Prod.mulAction with smul_zero := fun r => Prod.extₓ (smul_zero' _ _) (smul_zero' _ _),
+  { Prod.mulAction with smul_zero := fun r => Prod.extₓ (smul_zero _) (smul_zero _),
     zero_smul := fun ⟨m, n⟩ => Prod.extₓ (zero_smul _ _) (zero_smul _ _) }
 
 instance {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R M] [Module R N] : Module R (M × N) :=

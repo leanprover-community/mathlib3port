@@ -42,7 +42,7 @@ theorem _root_.set.infinite.nat.Sup_eq_zero {s : Set ℕ} (h : s.Infinite) : sup
 theorem Inf_eq_zero {s : Set ℕ} : inf s = 0 ↔ 0 ∈ s ∨ s = ∅ := by
   cases eq_empty_or_nonempty s
   · subst h
-    simp only [or_trueₓ, eq_self_iff_true, iff_trueₓ, Inf, HasInfₓ.inf, mem_empty_eq, exists_false, dif_neg,
+    simp only [or_trueₓ, eq_self_iff_true, iff_trueₓ, Inf, HasInfₓ.inf, mem_empty_iff_false, exists_false, dif_neg,
       not_false_iff]
     
   · have := ne_empty_iff_nonempty.mpr h
@@ -56,8 +56,7 @@ theorem Inf_empty : inf ∅ = 0 := by
   rfl
 
 @[simp]
-theorem infi_of_empty {ι : Sort _} [IsEmpty ι] (f : ι → ℕ) : infi f = 0 := by
-  rw [infi_of_empty', Inf_empty]
+theorem infi_of_empty {ι : Sort _} [IsEmpty ι] (f : ι → ℕ) : infi f = 0 := by rw [infi_of_empty', Inf_empty]
 
 theorem Inf_mem {s : Set ℕ} (h : s.Nonempty) : inf s ∈ s := by
   rw [Nat.Inf_def h]
@@ -112,16 +111,12 @@ instance : Lattice ℕ :=
 noncomputable instance : ConditionallyCompleteLinearOrderBot ℕ :=
   { (inferInstance : OrderBot ℕ), (LinearOrderₓ.toLattice : Lattice ℕ), (inferInstance : LinearOrderₓ ℕ) with
     sup := sup, inf := inf,
-    le_cSup := fun s a hb ha => by
-      rw [Sup_def hb] <;> revert a ha <;> exact @Nat.find_specₓ _ _ hb,
-    cSup_le := fun s a hs ha => by
-      rw [Sup_def ⟨a, ha⟩] <;> exact Nat.find_min'ₓ _ ha,
-    le_cInf := fun s a hs hb => by
-      rw [Inf_def hs] <;> exact hb (@Nat.find_specₓ (fun n => n ∈ s) _ _),
-    cInf_le := fun s a hb ha => by
-      rw [Inf_def ⟨a, ha⟩] <;> exact Nat.find_min'ₓ _ ha,
+    le_cSup := fun s a hb ha => by rw [Sup_def hb] <;> revert a ha <;> exact @Nat.find_specₓ _ _ hb,
+    cSup_le := fun s a hs ha => by rw [Sup_def ⟨a, ha⟩] <;> exact Nat.find_min'ₓ _ ha,
+    le_cInf := fun s a hs hb => by rw [Inf_def hs] <;> exact hb (@Nat.find_specₓ (fun n => n ∈ s) _ _),
+    cInf_le := fun s a hb ha => by rw [Inf_def ⟨a, ha⟩] <;> exact Nat.find_min'ₓ _ ha,
     cSup_empty := by
-      simp only [Sup_def, Set.mem_empty_eq, forall_const, forall_prop_of_false, not_false_iff, exists_const]
+      simp only [Sup_def, Set.mem_empty_iff_false, forall_const, forall_prop_of_false, not_false_iff, exists_const]
       apply bot_unique (Nat.find_min'ₓ _ _)
       trivial }
 
@@ -155,7 +150,7 @@ theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < inf { m | p m }) : inf { 
   refine'
     le_cInf ⟨m + n, _⟩ fun b hb =>
       le_of_not_ltₓ fun hbn => ne_of_mem_of_not_memₓ _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
-  · dsimp'
+  · dsimp
     rwa [add_tsub_cancel_right]
     
   · exact hb

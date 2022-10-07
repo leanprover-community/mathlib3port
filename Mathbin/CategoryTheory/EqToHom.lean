@@ -39,8 +39,7 @@ variable {C : Type u₁} [Category.{v₁} C]
 It is typically better to use this, rather than rewriting by the equality then using `𝟙 _`
 which usually leads to dependent type theory hell.
 -/
-def eqToHom {X Y : C} (p : X = Y) : X ⟶ Y := by
-  rw [p] <;> exact 𝟙 _
+def eqToHom {X Y : C} (p : X = Y) : X ⟶ Y := by rw [p] <;> exact 𝟙 _
 
 @[simp]
 theorem eq_to_hom_refl (X : C) (p : X = X) : eqToHom p = 𝟙 X :=
@@ -51,6 +50,14 @@ theorem eq_to_hom_trans {X Y Z : C} (p : X = Y) (q : Y = Z) : eqToHom p ≫ eqTo
   cases p
   cases q
   simp
+
+theorem comp_eq_to_hom_iff {X Y Y' : C} (p : Y = Y') (f : X ⟶ Y) (g : X ⟶ Y') :
+    f ≫ eqToHom p = g ↔ f = g ≫ eqToHom p.symm :=
+  { mp := fun h => h ▸ by simp, mpr := fun h => by simp [eq_whisker h (eq_to_hom p)] }
+
+theorem eq_to_hom_comp_iff {X X' Y : C} (p : X = X') (f : X ⟶ Y) (g : X' ⟶ Y) :
+    eqToHom p ≫ g = f ↔ g = eqToHom p.symm ≫ f :=
+  { mp := fun h => h ▸ by simp, mpr := fun h => h ▸ by simp [whisker_eq _ h] }
 
 /-- If we (perhaps unintentionally) perform equational rewriting on
 the source object of a morphism,
@@ -84,9 +91,7 @@ It is typically better to use this, rather than rewriting by the equality then u
 which usually leads to dependent type theory hell.
 -/
 def eqToIso {X Y : C} (p : X = Y) : X ≅ Y :=
-  ⟨eqToHom p, eqToHom p.symm, by
-    simp , by
-    simp ⟩
+  ⟨eqToHom p, eqToHom p.symm, by simp, by simp⟩
 
 @[simp]
 theorem eqToIso.hom {X Y : C} (p : X = Y) : (eqToIso p).Hom = eqToHom p :=
@@ -152,36 +157,17 @@ theorem hext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X) (h_map : ∀ (X 
   Functor.ext h_obj fun _ _ f => (conj_eq_to_hom_iff_heq _ _ (h_obj _) (h_obj _)).2 <| h_map _ _ f
 
 -- Using equalities between functors.
-theorem congr_obj {F G : C ⥤ D} (h : F = G) (X) : F.obj X = G.obj X := by
-  subst h
+theorem congr_obj {F G : C ⥤ D} (h : F = G) (X) : F.obj X = G.obj X := by subst h
 
 theorem congr_hom {F G : C ⥤ D} (h : F = G) {X Y} (f : X ⟶ Y) :
-    F.map f = eqToHom (congr_obj h X) ≫ G.map f ≫ eqToHom (congr_obj h Y).symm := by
-  subst h <;> simp
+    F.map f = eqToHom (congr_obj h X) ≫ G.map f ≫ eqToHom (congr_obj h Y).symm := by subst h <;> simp
 
 theorem congr_inv_of_congr_hom (F G : C ⥤ D) {X Y : C} (e : X ≅ Y) (hX : F.obj X = G.obj X) (hY : F.obj Y = G.obj Y)
-    (h₂ :
-      F.map e.Hom =
-        eqToHom
-            (by
-              rw [hX]) ≫
-          G.map e.Hom ≫
-            eqToHom
-              (by
-                rw [hY])) :
-    F.map e.inv =
-      eqToHom
-          (by
-            rw [hY]) ≫
-        G.map e.inv ≫
-          eqToHom
-            (by
-              rw [hX]) :=
-  by
+    (h₂ : F.map e.Hom = eqToHom (by rw [hX]) ≫ G.map e.Hom ≫ eqToHom (by rw [hY])) :
+    F.map e.inv = eqToHom (by rw [hY]) ≫ G.map e.inv ≫ eqToHom (by rw [hX]) := by
   simp only [← is_iso.iso.inv_hom e, functor.map_inv, h₂, is_iso.inv_comp, inv_eq_to_hom, category.assoc]
 
-theorem congr_map (F : C ⥤ D) {X Y : C} {f g : X ⟶ Y} (h : f = g) : F.map f = F.map g := by
-  rw [h]
+theorem congr_map (F : C ⥤ D) {X Y : C} {f g : X ⟶ Y} (h : f = g) : F.map f = F.map g := by rw [h]
 
 section HEq
 
@@ -194,8 +180,7 @@ theorem map_comp_heq (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y) (hz : F.o
   congr
 
 theorem map_comp_heq' (hobj : ∀ X : C, F.obj X = G.obj X) (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.map f) (G.map f)) :
-    HEq (F.map (f ≫ g)) (G.map (f ≫ g)) := by
-  rw [functor.hext hobj fun _ _ => hmap]
+    HEq (F.map (f ≫ g)) (G.map (f ≫ g)) := by rw [functor.hext hobj fun _ _ => hmap]
 
 theorem precomp_map_heq (H : E ⥤ C) (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.map f) (G.map f)) {X Y : E} (f : X ⟶ Y) :
     HEq ((H ⋙ F).map f) ((H ⋙ G).map f) :=
@@ -203,15 +188,14 @@ theorem precomp_map_heq (H : E ⥤ C) (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.ma
 
 theorem postcomp_map_heq (H : D ⥤ E) (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y)
     (hmap : HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) := by
-  dsimp'
+  dsimp
   congr
 
 theorem postcomp_map_heq' (H : D ⥤ E) (hobj : ∀ X : C, F.obj X = G.obj X)
     (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) := by
   rw [functor.hext hobj fun _ _ => hmap]
 
-theorem hcongr_hom {F G : C ⥤ D} (h : F = G) {X Y} (f : X ⟶ Y) : HEq (F.map f) (G.map f) := by
-  subst h
+theorem hcongr_hom {F G : C ⥤ D} (h : F = G) {X Y} (f : X ⟶ Y) : HEq (F.map f) (G.map f) := by subst h
 
 end HEq
 
@@ -233,8 +217,7 @@ theorem eq_to_iso_map (F : C ⥤ D) {X Y : C} (p : X = Y) : F.mapIso (eqToIso p)
 
 @[simp]
 theorem eq_to_hom_app {F G : C ⥤ D} (h : F = G) (X : C) : (eqToHom h : F ⟶ G).app X = eqToHom (Functor.congr_obj h X) :=
-  by
-  subst h <;> rfl
+  by subst h <;> rfl
 
 theorem NatTrans.congr {F G : C ⥤ D} (α : F ⟶ G) {X Y : C} (h : X = Y) :
     α.app X = F.map (eqToHom h) ≫ α.app Y ≫ G.map (eqToHom h.symm) := by

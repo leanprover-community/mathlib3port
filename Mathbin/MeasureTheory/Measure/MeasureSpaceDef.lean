@@ -127,8 +127,7 @@ theorem to_outer_measure_injective : Injective (toOuterMeasure : Measure α → 
 
 @[ext]
 theorem ext (h : ∀ s, MeasurableSet s → μ₁ s = μ₂ s) : μ₁ = μ₂ :=
-  to_outer_measure_injective <| by
-    rw [← trimmed, outer_measure.trim_congr h, trimmed]
+  to_outer_measure_injective <| by rw [← trimmed, outer_measure.trim_congr h, trimmed]
 
 theorem ext_iff : μ₁ = μ₂ ↔ ∀ s, MeasurableSet s → μ₁ s = μ₂ s :=
   ⟨by
@@ -144,8 +143,7 @@ theorem coe_to_outer_measure : ⇑μ.toOuterMeasure = μ :=
 theorem to_outer_measure_apply (s : Set α) : μ.toOuterMeasure s = μ s :=
   rfl
 
-theorem measure_eq_trim (s : Set α) : μ s = μ.toOuterMeasure.trim s := by
-  rw [μ.trimmed] <;> rfl
+theorem measure_eq_trim (s : Set α) : μ s = μ.toOuterMeasure.trim s := by rw [μ.trimmed] <;> rfl
 
 theorem measure_eq_infi (s : Set α) : μ s = ⨅ (t) (st : s ⊆ t) (ht : MeasurableSet t), μ t := by
   rw [measure_eq_trim, outer_measure.trim_eq_infi] <;> rfl
@@ -211,12 +209,12 @@ theorem measure_bUnion_le {s : Set β} (hs : s.Countable) (f : β → Set α) : 
   rw [bUnion_eq_Union]
   apply measure_Union_le
 
-theorem measure_bUnion_finset_le (s : Finset β) (f : β → Set α) : μ (⋃ b ∈ s, f b) ≤ ∑ p in s, μ (f p) := by
-  rw [← Finset.sum_attach, Finset.attach_eq_univ, ← tsum_fintype]
+theorem measure_bUnion_finset_le (s : Finsetₓ β) (f : β → Set α) : μ (⋃ b ∈ s, f b) ≤ ∑ p in s, μ (f p) := by
+  rw [← Finsetₓ.sum_attach, Finsetₓ.attach_eq_univ, ← tsum_fintype]
   exact measure_bUnion_le s.countable_to_set f
 
-theorem measure_Union_fintype_le [Fintype β] (f : β → Set α) : μ (⋃ b, f b) ≤ ∑ p, μ (f p) := by
-  convert measure_bUnion_finset_le Finset.univ f
+theorem measure_Union_fintype_le [Fintypeₓ β] (f : β → Set α) : μ (⋃ b, f b) ≤ ∑ p, μ (f p) := by
+  convert measure_bUnion_finset_le Finsetₓ.univ f
   simp
 
 theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite) (hfin : ∀ i ∈ s, μ (f i) ≠ ∞) :
@@ -269,8 +267,7 @@ theorem measure_union_ne_top (hs : μ s ≠ ∞) (ht : μ t ≠ ∞) : μ (s ∪
 
 @[simp]
 theorem measure_union_eq_top_iff : μ (s ∪ t) = ∞ ↔ μ s = ∞ ∨ μ t = ∞ :=
-  not_iff_not.1 <| by
-    simp only [← lt_top_iff_ne_top, ← Ne.def, not_or_distrib, measure_union_lt_top_iff]
+  not_iff_not.1 <| by simp only [← lt_top_iff_ne_top, ← Ne.def, not_or_distrib, measure_union_lt_top_iff]
 
 theorem exists_measure_pos_of_not_measure_Union_null [Countable β] {s : β → Set α} (hs : μ (⋃ n, s n) ≠ 0) :
     ∃ n, 0 < μ (s n) := by
@@ -295,10 +292,8 @@ theorem measure_inter_null_of_null_left {S : Set α} (T : Set α) (h : μ S = 0)
 /-- The “almost everywhere” filter of co-null sets. -/
 def Measure.ae {α} {m : MeasurableSpace α} (μ : Measure α) : Filter α where
   Sets := { s | μ (sᶜ) = 0 }
-  univ_sets := by
-    simp
-  inter_sets := fun s t hs ht => by
-    simp only [compl_inter, mem_set_of_eq] <;> exact measure_union_null hs ht
+  univ_sets := by simp
+  inter_sets := fun s t hs ht => by simp only [compl_inter, mem_set_of_eq] <;> exact measure_union_null hs ht
   sets_of_superset := fun s t hs hst => measure_mono_null (Set.compl_subset_compl.2 hst) hs
 
 -- mathport name: «expr∀ᵐ ∂ , »
@@ -319,8 +314,7 @@ theorem mem_ae_iff {s : Set α} : s ∈ μ.ae ↔ μ (sᶜ) = 0 :=
 theorem ae_iff {p : α → Prop} : (∀ᵐ a ∂μ, p a) ↔ μ { a | ¬p a } = 0 :=
   Iff.rfl
 
-theorem compl_mem_ae_iff {s : Set α} : sᶜ ∈ μ.ae ↔ μ s = 0 := by
-  simp only [mem_ae_iff, compl_compl]
+theorem compl_mem_ae_iff {s : Set α} : sᶜ ∈ μ.ae ↔ μ s = 0 := by simp only [mem_ae_iff, compl_compl]
 
 theorem frequently_ae_iff {p : α → Prop} : (∃ᵐ a ∂μ, p a) ↔ μ { a | p a } ≠ 0 :=
   not_congr compl_mem_ae_iff
@@ -367,8 +361,7 @@ theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐ x ∂μ, f x < g x)
 
 @[simp]
 theorem ae_eq_empty : s =ᵐ[μ] (∅ : Set α) ↔ μ s = 0 :=
-  eventually_eq_empty.trans <| by
-    simp only [ae_iff, not_not, set_of_mem_eq]
+  eventually_eq_empty.trans <| by simp only [ae_iff, not_not, set_of_mem_eq]
 
 @[simp]
 theorem ae_eq_univ : s =ᵐ[μ] (Univ : Set α) ↔ μ (sᶜ) = 0 :=
@@ -377,8 +370,7 @@ theorem ae_eq_univ : s =ᵐ[μ] (Univ : Set α) ↔ μ (sᶜ) = 0 :=
 theorem ae_le_set : s ≤ᵐ[μ] t ↔ μ (s \ t) = 0 :=
   calc
     s ≤ᵐ[μ] t ↔ ∀ᵐ x ∂μ, x ∈ s → x ∈ t := Iff.rfl
-    _ ↔ μ (s \ t) = 0 := by
-      simp [ae_iff] <;> rfl
+    _ ↔ μ (s \ t) = 0 := by simp [ae_iff] <;> rfl
     
 
 theorem ae_le_set_inter {s' t' : Set α} (h : s ≤ᵐ[μ] t) (h' : s' ≤ᵐ[μ] t') : (s ∩ s' : Set α) ≤ᵐ[μ] (t ∩ t' : Set α) :=
@@ -402,19 +394,16 @@ theorem ae_eq_set_inter {s' t' : Set α} (h : s =ᵐ[μ] t) (h' : s' =ᵐ[μ] t'
 
 @[to_additive]
 theorem _root_.set.mul_indicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set α} (h : s.mulIndicator f =ᵐ[μ] 1) :
-    μ (s ∩ Function.MulSupport f) = 0 := by
-  simpa [Filter.EventuallyEq, ae_iff] using h
+    μ (s ∩ Function.MulSupport f) = 0 := by simpa [Filter.EventuallyEq, ae_iff] using h
 
 /-- If `s ⊆ t` modulo a set of measure `0`, then `μ s ≤ μ t`. -/
 @[mono]
 theorem measure_mono_ae (H : s ≤ᵐ[μ] t) : μ s ≤ μ t :=
   calc
     μ s ≤ μ (s ∪ t) := measure_mono <| subset_union_left s t
-    _ = μ (t ∪ s \ t) := by
-      rw [union_diff_self, Set.union_comm]
+    _ = μ (t ∪ s \ t) := by rw [union_diff_self, Set.union_comm]
     _ ≤ μ t + μ (s \ t) := measure_union_le _ _
-    _ = μ t := by
-      rw [ae_le_set.1 H, add_zeroₓ]
+    _ = μ t := by rw [ae_le_set.1 H, add_zeroₓ]
     
 
 alias measure_mono_ae ← _root_.filter.eventually_le.measure_le
@@ -428,8 +417,8 @@ alias measure_congr ← _root_.filter.eventually_eq.measure_eq
 theorem measure_mono_null_ae (H : s ≤ᵐ[μ] t) (ht : μ t = 0) : μ s = 0 :=
   nonpos_iff_eq_zero.1 <| ht ▸ H.measure_le
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊇ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (t «expr ⊇ » s)
 /-- A measurable set `t ⊇ s` such that `μ t = μ s`. It even satisfies `μ (t ∩ u) = μ (s ∩ u)` for
 any measurable set `u` if `μ s ≠ ∞`, see `measure_to_measurable_inter`.
 (This property holds without the assumption `μ s ≠ ∞` when the space is sigma-finite,
@@ -476,7 +465,7 @@ class MeasureSpace (α : Type _) extends MeasurableSpace α where
 export MeasureSpace (volume)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident volume]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident volume]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 section MeasureSpace
 
 -- mathport name: «expr∀ᵐ , »
@@ -513,6 +502,7 @@ function. We define this property, called `ae_measurable f μ`. It's properties 
 
 variable {m : MeasurableSpace α} [MeasurableSpace β] {f g : α → β} {μ ν : Measureₓ α}
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic measure_theory.volume_tac
 /-- A function is almost everywhere measurable if it coincides almost everywhere with a measurable
 function. -/
 def AeMeasurable {m : MeasurableSpace α} (f : α → β)

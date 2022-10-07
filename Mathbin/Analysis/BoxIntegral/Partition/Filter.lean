@@ -162,7 +162,7 @@ integral, rectangular box, partition, filter
 -/
 
 
-open Set Function Filter Metric Finset Bool
+open Set Function Filter Metric Finsetₓ Bool
 
 open Classical TopologicalSpace Filter Nnreal
 
@@ -170,7 +170,7 @@ noncomputable section
 
 namespace BoxIntegral
 
-variable {ι : Type _} [Fintype ι] {I J : Box ι} {c c₁ c₂ : ℝ≥0} {r r₁ r₂ : (ι → ℝ) → ioi (0 : ℝ)}
+variable {ι : Type _} [Fintypeₓ ι] {I J : Box ι} {c c₁ c₂ : ℝ≥0} {r r₁ r₂ : (ι → ℝ) → ioi (0 : ℝ)}
   {π π₁ π₂ : TaggedPrepartition I}
 
 open TaggedPrepartition
@@ -255,11 +255,9 @@ require an upper estimate on the distortion of all boxes of the partition. -/
 def gP : IntegrationParams :=
   ⊥
 
-theorem Henstock_le_Riemann : Henstock ≤ Riemann := by
-  decide
+theorem Henstock_le_Riemann : Henstock ≤ Riemann := by decide
 
-theorem Henstock_le_McShane : Henstock ≤ McShane := by
-  decide
+theorem Henstock_le_McShane : Henstock ≤ McShane := by decide
 
 theorem GP_le : GP ≤ l :=
   bot_le
@@ -316,8 +314,7 @@ def toFilterUnion (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) 
   ⨆ c : ℝ≥0, l.toFilterDistortionUnion I c π₀
 
 theorem r_cond_of_bRiemann_eq_ff {ι} (l : IntegrationParams) (hl : l.bRiemann = ff) {r : (ι → ℝ) → ioi (0 : ℝ)} :
-    l.RCond r := by
-  simp [r_cond, hl]
+    l.RCond r := by simp [r_cond, hl]
 
 theorem to_filter_inf_Union_eq (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
     l.toFilter I ⊓ 𝓟 { π | π.Union = π₀.Union } = l.toFilterUnion I π₀ :=
@@ -339,7 +336,7 @@ theorem MemBaseSet.exists_common_compl (h₁ : l.MemBaseSet I c₁ r₁ π₁) (
       π.Union = I \ π₁.Union ∧ (l.bDistortion → π.distortion ≤ c₁) ∧ (l.bDistortion → π.distortion ≤ c₂) :=
   by
   wlog (discharger := tactic.skip) hc : c₁ ≤ c₂ := le_totalₓ c₁ c₂ using c₁ c₂ r₁ r₂ π₁ π₂, c₂ c₁ r₂ r₁ π₂ π₁
-  · by_cases' hD : (l.bDistortion : Prop)
+  · by_cases hD:(l.bDistortion : Prop)
     · rcases h₁.4 hD with ⟨π, hπU, hπc⟩
       exact ⟨π, hπU, fun _ => hπc, fun _ => hπc.trans hc⟩
       
@@ -355,9 +352,7 @@ protected theorem MemBaseSet.union_compl_to_subordinate (hπ₁ : l.MemBaseSet I
     l.MemBaseSet I c r₁ (π₁.unionComplToSubordinate π₂ hU r₂) :=
   ⟨hπ₁.1.disjUnion ((π₂.is_subordinate_to_subordinate r₂).mono hle) _, fun h =>
     (hπ₁.2 h).disjUnion (π₂.is_Henstock_to_subordinate _) _, fun h =>
-    (distortion_union_compl_to_subordinate _ _ _ _).trans_le (max_leₓ (hπ₁.3 h) (hc h)), fun _ =>
-    ⟨⊥, by
-      simp ⟩⟩
+    (distortion_union_compl_to_subordinate _ _ _ _).trans_le (max_leₓ (hπ₁.3 h) (hc h)), fun _ => ⟨⊥, by simp⟩⟩
 
 protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι → Prop) : l.MemBaseSet I c r (π.filter p) :=
   by
@@ -366,19 +361,17 @@ protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι �
       (distortion_filter_le _ _).trans (hπ.3 hD), fun hD => _⟩
   rcases hπ.4 hD with ⟨π₁, hπ₁U, hc⟩
   set π₂ := π.filter fun J => ¬p J
-  have : Disjoint π₁.Union π₂.Union := by
-    simpa [π₂, hπ₁U] using disjoint_sdiff_self_left.mono_right sdiff_le
+  have : Disjoint π₁.Union π₂.Union := by simpa [π₂, hπ₁U] using disjoint_sdiff_self_left.mono_right sdiff_le
   refine' ⟨π₁.disj_union π₂.to_prepartition this, _, _⟩
-  · suffices ↑I \ π.Union ∪ π.Union \ (π.filter p).Union = ↑I \ (π.filter p).Union by
-      simpa [*]
-    have : (π.filter p).Union ⊆ π.Union := bUnion_subset_bUnion_left (Finset.filter_subset _ _)
+  · suffices ↑I \ π.Union ∪ π.Union \ (π.filter p).Union = ↑I \ (π.filter p).Union by simpa [*]
+    have : (π.filter p).Union ⊆ π.Union := bUnion_subset_bUnion_left (Finsetₓ.filter_subset _ _)
     ext x
     fconstructor
     · rintro (⟨hxI, hxπ⟩ | ⟨hxπ, hxp⟩)
       exacts[⟨hxI, mt (@this x) hxπ⟩, ⟨π.Union_subset hxπ, hxp⟩]
       
     · rintro ⟨hxI, hxp⟩
-      by_cases' hxπ : x ∈ π.Union
+      by_cases hxπ:x ∈ π.Union
       exacts[Or.inr ⟨hxπ, hxp⟩, Or.inl ⟨hxI, hxπ⟩]
       
     
@@ -392,7 +385,7 @@ theorem bUnion_tagged_mem_base_set {π : Prepartition I} {πi : ∀ J, TaggedPre
   refine'
     ⟨tagged_prepartition.is_subordinate_bUnion_tagged.2 fun J hJ => (h J hJ).1, fun hH =>
       tagged_prepartition.is_Henstock_bUnion_tagged.2 fun J hJ => (h J hJ).2 hH, fun hD => _, fun hD => _⟩
-  · rw [prepartition.distortion_bUnion_tagged, Finset.sup_le_iff]
+  · rw [prepartition.distortion_bUnion_tagged, Finsetₓ.sup_le_iff]
     exact fun J hJ => (h J hJ).3 hD
     
   · refine' ⟨_, _, hc hD⟩
@@ -423,8 +416,7 @@ theorem to_filter_Union_mono (I : Box ι) {l₁ l₂ : IntegrationParams} (h : l
   supr_mono fun c => inf_le_inf_right _ <| to_filter_distortion_mono _ h le_rflₓ
 
 theorem to_filter_Union_congr (I : Box ι) (l : IntegrationParams) {π₁ π₂ : Prepartition I} (h : π₁.Union = π₂.Union) :
-    l.toFilterUnion I π₁ = l.toFilterUnion I π₂ := by
-  simp only [to_filter_Union, to_filter_distortion_Union, h]
+    l.toFilterUnion I π₁ = l.toFilterUnion I π₂ := by simp only [to_filter_Union, to_filter_distortion_Union, h]
 
 theorem has_basis_to_filter_distortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) :
     (l.toFilterDistortion I c).HasBasis l.RCond fun r => { π | l.MemBaseSet I c r π } :=
@@ -455,8 +447,7 @@ theorem has_basis_to_filter_Union_top (l : IntegrationParams) (I : Box ι) :
 theorem has_basis_to_filter (l : IntegrationParams) (I : Box ι) :
     (l.toFilter I).HasBasis (fun r : ℝ≥0 → (ι → ℝ) → ioi (0 : ℝ) => ∀ c, l.RCond (r c)) fun r =>
       { π | ∃ c, l.MemBaseSet I c (r c) π } :=
-  by
-  simpa only [set_of_exists] using has_basis_supr (l.has_basis_to_filter_distortion I)
+  by simpa only [set_of_exists] using has_basis_supr (l.has_basis_to_filter_distortion I)
 
 theorem tendsto_embed_box_to_filter_Union_top (l : IntegrationParams) (h : I ≤ J) :
     Tendsto (TaggedPrepartition.embedBox I J h) (l.toFilterUnion I ⊤) (l.toFilterUnion J (Prepartition.single J I h)) :=
@@ -488,8 +479,7 @@ theorem exists_mem_base_set_le_Union_eq (l : IntegrationParams) (π₀ : Prepart
 theorem exists_mem_base_set_is_partition (l : IntegrationParams) (I : Box ι) (hc : I.distortion ≤ c)
     (r : (ι → ℝ) → ioi (0 : ℝ)) : ∃ π, l.MemBaseSet I c r π ∧ π.IsPartition := by
   rw [← prepartition.distortion_top] at hc
-  have hc' : (⊤ : prepartition I).compl.distortion ≤ c := by
-    simp
+  have hc' : (⊤ : prepartition I).compl.distortion ≤ c := by simp
   simpa [is_partition_iff_Union_eq] using l.exists_mem_base_set_le_Union_eq ⊤ hc hc' r
 
 theorem to_filter_distortion_Union_ne_bot (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I)

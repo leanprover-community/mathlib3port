@@ -66,8 +66,7 @@ theorem coe_nat_le_rec (m n : ℕ) (h : m ≤ n) : (natLeRec f' m n h : G' m →
     
 
 instance natLeRec.directed_system : DirectedSystem G' fun i j h => natLeRec f' i j h :=
-  ⟨fun i x h => congr (congr rfl (Nat.le_rec_on_self _)) rfl, fun i j k ij jk => by
-    simp [Nat.le_rec_on_trans ij jk]⟩
+  ⟨fun i x h => congr (congr rfl (Nat.le_rec_on_self _)) rfl, fun i j k ij jk => by simp [Nat.le_rec_on_trans ij jk]⟩
 
 end DirectedSystem
 
@@ -114,12 +113,12 @@ noncomputable def sigmaStructure [IsDirected ι (· ≤ ·)] [Nonempty ι] : L.S
   funMap := fun n F x =>
     ⟨_,
       funMap F
-        (unify f x (Classical.choose (Fintype.bdd_above_range fun a => (x a).1))
-          (Classical.choose_spec (Fintype.bdd_above_range fun a => (x a).1)))⟩
+        (unify f x (Classical.choose (Fintypeₓ.bdd_above_range fun a => (x a).1))
+          (Classical.choose_spec (Fintypeₓ.bdd_above_range fun a => (x a).1)))⟩
   rel_map := fun n R x =>
     RelMap R
-      (unify f x (Classical.choose (Fintype.bdd_above_range fun a => (x a).1))
-        (Classical.choose_spec (Fintype.bdd_above_range fun a => (x a).1)))
+      (unify f x (Classical.choose (Fintypeₓ.bdd_above_range fun a => (x a).1))
+        (Classical.choose_spec (Fintypeₓ.bdd_above_range fun a => (x a).1)))
 
 end DirectLimit
 
@@ -164,11 +163,11 @@ theorem rel_map_unify_equiv {n : ℕ} (R : L.Relations n) (x : Finₓ n → Σi,
 
 variable [Nonempty ι]
 
-theorem exists_unify_eq {α : Type _} [Fintype α] {x y : α → Σi, G i} (xy : x ≈ y) :
+theorem exists_unify_eq {α : Type _} [Fintypeₓ α] {x y : α → Σi, G i} (xy : x ≈ y) :
     ∃ (i : ι)(hx : i ∈ UpperBounds (Range (Sigma.fst ∘ x)))(hy : i ∈ UpperBounds (Range (Sigma.fst ∘ y))),
       unify f x i hx = unify f y i hy :=
   by
-  obtain ⟨i, hi⟩ := Fintype.bdd_above_range (Sum.elim (fun a => (x a).1) fun a => (y a).1)
+  obtain ⟨i, hi⟩ := Fintypeₓ.bdd_above_range (Sum.elim (fun a => (x a).1) fun a => (y a).1)
   rw [sum.elim_range, upper_bounds_union] at hi
   simp_rw [← Function.comp_applyₓ Sigma.fst _] at hi
   exact ⟨i, hi.1, hi.2, funext fun a => (equiv_iff G f _ _).1 (xy a)⟩
@@ -176,12 +175,12 @@ theorem exists_unify_eq {α : Type _} [Fintype α] {x y : α → Σi, G i} (xy :
 theorem fun_map_equiv_unify {n : ℕ} (F : L.Functions n) (x : Finₓ n → Σi, G i) (i : ι)
     (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
     @funMap _ _ (sigmaStructure G f) _ F x ≈ ⟨_, funMap F (unify f x i hi)⟩ :=
-  fun_map_unify_equiv G f F x (Classical.choose (Fintype.bdd_above_range fun a => (x a).1)) i _ hi
+  fun_map_unify_equiv G f F x (Classical.choose (Fintypeₓ.bdd_above_range fun a => (x a).1)) i _ hi
 
 theorem rel_map_equiv_unify {n : ℕ} (R : L.Relations n) (x : Finₓ n → Σi, G i) (i : ι)
     (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
     @RelMap _ _ (sigmaStructure G f) _ R x = RelMap R (unify f x i hi) :=
-  rel_map_unify_equiv G f R x (Classical.choose (Fintype.bdd_above_range fun a => (x a).1)) i _ hi
+  rel_map_unify_equiv G f R x (Classical.choose (Fintypeₓ.bdd_above_range fun a => (x a).1)) i _ hi
 
 /-- The direct limit `setoid` respects the structure `sigma_structure`, so quotienting by it
   gives rise to a valid structure. -/
@@ -206,7 +205,7 @@ noncomputable instance structure : L.Structure (DirectLimit G f) :=
 theorem fun_map_quotient_mk_sigma_mk {n : ℕ} {F : L.Functions n} {i : ι} {x : Finₓ n → G i} :
     (funMap F fun a => (⟦⟨i, x a⟩⟧ : DirectLimit G f)) = ⟦⟨i, funMap F x⟩⟧ := by
   simp only [Function.comp_app, fun_map_quotient_mk, Quotientₓ.eq]
-  obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i (Classical.choose (Fintype.bdd_above_range fun a : Finₓ n => i))
+  obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i (Classical.choose (Fintypeₓ.bdd_above_range fun a : Finₓ n => i))
   refine' ⟨k, jk, ik, _⟩
   simp only [embedding.map_fun, comp_unify]
   rfl
@@ -215,12 +214,12 @@ theorem fun_map_quotient_mk_sigma_mk {n : ℕ} {F : L.Functions n} {i : ι} {x :
 theorem rel_map_quotient_mk_sigma_mk {n : ℕ} {R : L.Relations n} {i : ι} {x : Finₓ n → G i} :
     (RelMap R fun a => (⟦⟨i, x a⟩⟧ : DirectLimit G f)) = RelMap R x := by
   rw [rel_map_quotient_mk]
-  obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i (Classical.choose (Fintype.bdd_above_range fun a : Finₓ n => i))
+  obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i (Classical.choose (Fintypeₓ.bdd_above_range fun a : Finₓ n => i))
   rw [rel_map_equiv_unify G f R (fun a => ⟨i, x a⟩) i, unify_sigma_mk_self]
 
-theorem exists_quotient_mk_sigma_mk_eq {α : Type _} [Fintype α] (x : α → DirectLimit G f) :
+theorem exists_quotient_mk_sigma_mk_eq {α : Type _} [Fintypeₓ α] (x : α → DirectLimit G f) :
     ∃ (i : ι)(y : α → G i), x = Quotientₓ.mk ∘ Sigma.mk i ∘ y := by
-  obtain ⟨i, hi⟩ := Fintype.bdd_above_range fun a => (x a).out.1
+  obtain ⟨i, hi⟩ := Fintypeₓ.bdd_above_range fun a => (x a).out.1
   refine' ⟨i, unify f (Quotientₓ.out ∘ x) i hi, _⟩
   ext a
   rw [Quotientₓ.eq_mk_iff_out, Function.comp_app, unify, equiv_iff G f _]
@@ -254,8 +253,7 @@ theorem of_f {i j : ι} {hij : i ≤ j} {x : G i} : of L ι G f j (f i j hij x) 
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
 theorem exists_of (z : DirectLimit G f) : ∃ i x, of L ι G f i x = z :=
-  ⟨z.out.1, z.out.2, by
-    simp ⟩
+  ⟨z.out.1, z.out.2, by simp⟩
 
 @[elabAsElim]
 protected theorem induction_on {C : DirectLimit G f → Prop} (z : DirectLimit G f) (ih : ∀ i x, C (of L ι G f i x)) :
@@ -304,17 +302,12 @@ theorem lift_quotient_mk_sigma_mk {i} (x : G i) : lift L ι G f g Hg ⟦⟨i, x�
   change (lift L ι G f g Hg).toFun ⟦⟨i, x⟩⟧ = _
   simp only [lift, Quotientₓ.lift_mk]
 
-theorem lift_of {i} (x : G i) : lift L ι G f g Hg (of L ι G f i x) = g i x := by
-  simp
+theorem lift_of {i} (x : G i) : lift L ι G f g Hg (of L ι G f i x) = g i x := by simp
 
 theorem lift_unique (F : DirectLimit G f ↪[L] P) (x) :
     F x =
-      lift L ι G f (fun i => F.comp <| of L ι G f i)
-        (fun i j hij x => by
-          rw [F.comp_apply, F.comp_apply, of_f])
-        x :=
-  (DirectLimit.induction_on x) fun i x => by
-    rw [lift_of] <;> rfl
+      lift L ι G f (fun i => F.comp <| of L ι G f i) (fun i j hij x => by rw [F.comp_apply, F.comp_apply, of_f]) x :=
+  (DirectLimit.induction_on x) fun i x => by rw [lift_of] <;> rfl
 
 /-- The direct limit of countably many countably generated structures is countably generated. -/
 theorem cg {ι : Type _} [Encodable ι] [Preorderₓ ι] [IsDirected ι (· ≤ ·)] [Nonempty ι] {G : ι → Type w}

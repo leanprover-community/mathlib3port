@@ -68,8 +68,7 @@ def toΓSpecFun : X → PrimeSpectrum (Γ.obj (op X)) := fun x =>
   comap (X.ΓToStalk x) (LocalRing.closedPoint (X.Presheaf.stalk x))
 
 theorem not_mem_prime_iff_unit_in_stalk (r : Γ.obj (op X)) (x : X) :
-    r ∉ (X.toΓSpecFun x).asIdeal ↔ IsUnit (X.ΓToStalk x r) := by
-  erw [LocalRing.mem_maximal_ideal, not_not]
+    r ∉ (X.toΓSpecFun x).asIdeal ↔ IsUnit (X.ΓToStalk x r) := by erw [LocalRing.mem_maximal_ideal, not_not]
 
 /-- The preimage of a basic open in `Spec Γ(X)` under the unit is the basic
 open in `X` defined by the same element (they are equal as sets). -/
@@ -173,10 +172,7 @@ theorem to_Γ_Spec_SheafedSpace_app_spec (r : Γ.obj (op X)) :
 theorem to_stalk_stalk_map_to_Γ_Spec (x : X) :
     toStalk _ _ ≫ PresheafedSpace.stalkMap X.toΓSpecSheafedSpace x = X.ΓToStalk x := by
   rw [PresheafedSpace.stalk_map]
-  erw [←
-    to_open_germ _ (basic_open (1 : Γ.obj (op X)))
-      ⟨X.to_Γ_Spec_fun x, by
-        rw [basic_open_one] <;> trivial⟩]
+  erw [← to_open_germ _ (basic_open (1 : Γ.obj (op X))) ⟨X.to_Γ_Spec_fun x, by rw [basic_open_one] <;> trivial⟩]
   rw [← category.assoc, category.assoc (to_open _ _)]
   erw [stalk_functor_map_germ]
   rw [← category.assoc (to_open _ _), X.to_Γ_Spec_SheafedSpace_app_spec 1]
@@ -198,7 +194,7 @@ def toΓSpec : X ⟶ Spec.locallyRingedSpaceObj (Γ.obj (op X)) where
     let S := (structure_sheaf _).Presheaf.stalk p
     rintro (t : S) ht
     obtain ⟨⟨r, s⟩, he⟩ := IsLocalization.surj p.as_ideal.prime_compl t
-    dsimp'  at he
+    dsimp at he
     apply is_unit_of_mul_is_unit_left
     rw [he]
     refine' IsLocalization.map_units S (⟨r, _⟩ : p.as_ideal.prime_compl)
@@ -245,7 +241,7 @@ def identityToΓSpec : 𝟭 LocallyRingedSpace.{u} ⟶ Γ.rightOp ⋙ Spec.to_Lo
     symm
     apply LocallyRingedSpace.comp_ring_hom_ext
     · ext1 x
-      dsimp' [Spec.Top_map, LocallyRingedSpace.to_Γ_Spec_fun]
+      dsimp [Spec.Top_map, LocallyRingedSpace.to_Γ_Spec_fun]
       rw [← LocalRing.comap_closed_point (PresheafedSpace.stalk_map _ x), ← PrimeSpectrum.comap_comp_apply, ←
         PrimeSpectrum.comap_comp_apply]
       congr 2
@@ -300,14 +296,12 @@ attribute [local semireducible] Spec.to_LocallyRingedSpace
 /-- The adjunction `Γ ⊣ Spec` from `CommRingᵒᵖ` to `Scheme`. -/
 def adjunction : Scheme.Γ.rightOp ⊣ Scheme.Spec :=
   locallyRingedSpaceAdjunction.restrictFullyFaithful Scheme.forgetToLocallyRingedSpace (𝟭 _)
-    (NatIso.ofComponents (fun X => Iso.refl _) fun _ _ f => by
-      simpa)
-    (NatIso.ofComponents (fun X => Iso.refl _) fun _ _ f => by
-      simpa)
+    (NatIso.ofComponents (fun X => Iso.refl _) fun _ _ f => by simpa)
+    (NatIso.ofComponents (fun X => Iso.refl _) fun _ _ f => by simpa)
 
 theorem adjunction_hom_equiv_apply {X : Scheme} {R : CommRingₓₓᵒᵖ} (f : (op <| Scheme.Γ.obj <| op X) ⟶ R) :
     ΓSpec.adjunction.homEquiv X R f = locallyRingedSpaceAdjunction.homEquiv X.1 R f := by
-  dsimp' [adjunction, adjunction.restrict_fully_faithful]
+  dsimp [adjunction, adjunction.restrict_fully_faithful]
   simp
 
 theorem adjunction_hom_equiv (X : Scheme) (R : CommRingₓₓᵒᵖ) :
@@ -351,7 +345,7 @@ theorem adjunction_unit_app_app_top (X : Scheme) :
       ((ΓSpec.adjunction.Unit.app X).val.c.app (op ⊤)) (specΓIdentity.Hom.app (X.Presheaf.obj (op ⊤))) :=
   by
   have := congr_app Γ_Spec.adjunction.left_triangle X
-  dsimp'  at this
+  dsimp at this
   rw [← is_iso.eq_comp_inv] at this
   simp only [Γ_Spec.LocallyRingedSpace_adjunction_counit, nat_trans.op_app, category.id_comp,
     Γ_Spec.adjunction_counit_app] at this

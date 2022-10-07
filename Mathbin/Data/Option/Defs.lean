@@ -38,11 +38,9 @@ theorem mem_iff {a : α} {b : Option α} : a ∈ b ↔ b = a :=
 theorem is_none_iff_eq_none {o : Option α} : o.isNone = tt ↔ o = none :=
   ⟨Option.eq_none_of_is_none, fun e => e.symm ▸ rfl⟩
 
-theorem some_inj {a b : α} : some a = some b ↔ a = b := by
-  simp
+theorem some_inj {a b : α} : some a = some b ↔ a = b := by simp
 
-theorem mem_some_iff {α : Type _} {a b : α} : a ∈ some b ↔ b = a := by
-  simp
+theorem mem_some_iff {α : Type _} {a b : α} : a ∈ some b ↔ b = a := by simp
 
 /-- `o = none` is decidable even if the wrapped type does not have decidable equality.
 
@@ -54,16 +52,11 @@ def decidableEqNone {o : Option α} : Decidable (o = none) :=
   decidableOfDecidableOfIff (Bool.decidableEq _ _) is_none_iff_eq_none
 
 instance decidableForallMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∀ a ∈ o, p a)
-  | none =>
-    isTrue
-      (by
-        simp [false_implies_iff])
+  | none => isTrue (by simp [false_implies_iff])
   | some a => if h : p a then is_true fun o e => some_inj.1 e ▸ h else is_false <| mt (fun H => H _ rfl) h
 
 instance decidableExistsMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∃ a ∈ o, p a)
-  | none =>
-    isFalse fun ⟨a, ⟨h, _⟩⟩ => by
-      cases h
+  | none => isFalse fun ⟨a, ⟨h, _⟩⟩ => by cases h
   | some a => if h : p a then is_true <| ⟨_, rfl, h⟩ else is_false fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
 
 /-- Inhabited `get` function. Returns `a` if the input is `some a`, otherwise returns `default`. -/
@@ -91,8 +84,7 @@ def toList : Option α → List α
   | some a => [a]
 
 @[simp]
-theorem mem_to_list {a : α} {o : Option α} : a ∈ toList o ↔ a ∈ o := by
-  cases o <;> simp [to_list, eq_comm]
+theorem mem_to_list {a : α} {o : Option α} : a ∈ toList o ↔ a ∈ o := by cases o <;> simp [to_list, eq_comm]
 
 /-- Two arguments failsafe function. Returns `f a b` if the inputs are `some a` and `some b`, and
 "does nothing" otherwise. -/
@@ -109,31 +101,28 @@ def liftOrGet (f : α → α → α) : Option α → Option α → Option α
 
 -- lift f
 instance lift_or_get_comm (f : α → α → α) [h : IsCommutative α f] : IsCommutative (Option α) (liftOrGet f) :=
-  ⟨fun a b => by
-    cases a <;> cases b <;> simp [lift_or_get, h.comm]⟩
+  ⟨fun a b => by cases a <;> cases b <;> simp [lift_or_get, h.comm]⟩
 
 instance lift_or_get_assoc (f : α → α → α) [h : IsAssociative α f] : IsAssociative (Option α) (liftOrGet f) :=
-  ⟨fun a b c => by
-    cases a <;> cases b <;> cases c <;> simp [lift_or_get, h.assoc]⟩
+  ⟨fun a b c => by cases a <;> cases b <;> cases c <;> simp [lift_or_get, h.assoc]⟩
 
 instance lift_or_get_idem (f : α → α → α) [h : IsIdempotent α f] : IsIdempotent (Option α) (liftOrGet f) :=
-  ⟨fun a => by
-    cases a <;> simp [lift_or_get, h.idempotent]⟩
+  ⟨fun a => by cases a <;> simp [lift_or_get, h.idempotent]⟩
 
 instance lift_or_get_is_left_id (f : α → α → α) : IsLeftId (Option α) (liftOrGet f) none :=
-  ⟨fun a => by
-    cases a <;> simp [lift_or_get]⟩
+  ⟨fun a => by cases a <;> simp [lift_or_get]⟩
 
 instance lift_or_get_is_right_id (f : α → α → α) : IsRightId (Option α) (liftOrGet f) none :=
-  ⟨fun a => by
-    cases a <;> simp [lift_or_get]⟩
+  ⟨fun a => by cases a <;> simp [lift_or_get]⟩
 
 /-- Lifts a relation `α → β → Prop` to a relation `option α → option β → Prop` by just adding
 `none ~ none`. -/
 inductive Rel (r : α → β → Prop) : Option α → Option β → Prop
-  | /-- If `a ~ b`, then `some a ~ some b` -/
+  |
+  /-- If `a ~ b`, then `some a ~ some b` -/
   some {a b} : r a b → rel (some a) (some b)
-  | /-- `none ~ none` -/
+  |
+  /-- `none ~ none` -/
   none : rel none none
 
 /-- Partial bind. If for some `x : option α`, `f : Π (a : α), a ∈ x → option β` is a

@@ -19,13 +19,13 @@ This refines files `data.list.nat_antidiagonal` and `data.multiset.nat_antidiago
 -/
 
 
-namespace Finset
+namespace Finsetₓ
 
 namespace Nat
 
 /-- The antidiagonal of a natural number `n` is
     the finset of pairs `(i, j)` such that `i + j = n`. -/
-def antidiagonal (n : ℕ) : Finset (ℕ × ℕ) :=
+def antidiagonal (n : ℕ) : Finsetₓ (ℕ × ℕ) :=
   ⟨Multiset.Nat.antidiagonal n, Multiset.Nat.nodup_antidiagonal n⟩
 
 /-- A pair (i, j) is contained in the antidiagonal of `n` if and only if `i + j = n`. -/
@@ -35,8 +35,7 @@ theorem mem_antidiagonal {n : ℕ} {x : ℕ × ℕ} : x ∈ antidiagonal n ↔ x
 
 /-- The cardinality of the antidiagonal of `n` is `n + 1`. -/
 @[simp]
-theorem card_antidiagonal (n : ℕ) : (antidiagonal n).card = n + 1 := by
-  simp [antidiagonal]
+theorem card_antidiagonal (n : ℕ) : (antidiagonal n).card = n + 1 := by simp [antidiagonal]
 
 /-- The antidiagonal of `0` is the list `[(0, 0)]` -/
 @[simp]
@@ -47,8 +46,7 @@ theorem antidiagonal_succ (n : ℕ) :
     antidiagonal (n + 1) =
       cons (0, n + 1)
         ((antidiagonal n).map (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ (Function.Embedding.refl _)))
-        (by
-          simp ) :=
+        (by simp) :=
   by
   apply eq_of_veq
   rw [cons_val, map_val]
@@ -59,8 +57,7 @@ theorem antidiagonal_succ' (n : ℕ) :
     antidiagonal (n + 1) =
       cons (n + 1, 0)
         ((antidiagonal n).map (Function.Embedding.prodMap (Function.Embedding.refl _) ⟨Nat.succ, Nat.succ_injective⟩))
-        (by
-          simp ) :=
+        (by simp) :=
   by
   apply eq_of_veq
   rw [cons_val, map_val]
@@ -72,18 +69,15 @@ theorem antidiagonal_succ_succ' {n : ℕ} :
         (cons (n + 2, 0)
             ((antidiagonal n).map
               (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ ⟨Nat.succ, Nat.succ_injective⟩)) <|
-          by
-          simp )
-        (by
-          simp ) :=
+          by simp)
+        (by simp) :=
   by
-  simp_rw [antidiagonal_succ (n + 1), antidiagonal_succ', Finset.map_cons, map_map]
+  simp_rw [antidiagonal_succ (n + 1), antidiagonal_succ', Finsetₓ.map_cons, map_map]
   rfl
 
 theorem map_swap_antidiagonal {n : ℕ} :
     (antidiagonal n).map ⟨Prod.swap, Prod.swap_right_inverse.Injective⟩ = antidiagonal n :=
-  eq_of_veq <| by
-    simp [antidiagonal, Multiset.Nat.map_swap_antidiagonal]
+  eq_of_veq <| by simp [antidiagonal, Multiset.Nat.map_swap_antidiagonal]
 
 /-- A point in the antidiagonal is determined by its first co-ordinate. -/
 theorem antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal n) (hq : q ∈ antidiagonal n) :
@@ -107,7 +101,7 @@ theorem filter_fst_eq_antidiagonal (n m : ℕ) :
   ext ⟨x, y⟩
   simp only [mem_filter, nat.mem_antidiagonal]
   split_ifs with h h
-  · simp (config := { contextual := true })[and_comm, eq_tsub_iff_add_eq_of_le h, add_commₓ]
+  · simp (config := { contextual := true }) [and_comm, eq_tsub_iff_add_eq_of_le h, add_commₓ]
     
   · rw [not_leₓ] at h
     simp only [not_mem_empty, iff_falseₓ, not_and]
@@ -120,7 +114,7 @@ theorem filter_snd_eq_antidiagonal (n m : ℕ) :
     ext
     simp
   rw [← map_swap_antidiagonal]
-  simp [map_filter, this, filter_fst_eq_antidiagonal, apply_iteₓ (Finset.map _)]
+  simp [map_filter, this, filter_fst_eq_antidiagonal, apply_iteₓ (Finsetₓ.map _)]
 
 section EquivProd
 
@@ -140,5 +134,5 @@ end EquivProd
 
 end Nat
 
-end Finset
+end Finsetₓ
 

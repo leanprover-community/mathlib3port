@@ -133,18 +133,17 @@ theorem normalize_aux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f �
   apply @congr_fun _ _ fun p => normalize_aux p f
   clear p
   induction η
-  case vcomp =>
-    apply Eq.trans <;> assumption
+  case vcomp => apply Eq.trans <;> assumption
   -- p ≠ nil required! See the docstring of `normalize_aux`.
-  case whisker_left _ _ _ _ _ _ _ ih =>
-    funext
-    apply congr_fun ih
+case whisker_left _ _ _ _ _ _ _ ih =>
+  funext
+  apply congr_fun ih
   case whisker_right _ _ _ _ _ _ _ ih =>
-    funext
-    apply congr_arg2ₓ _ (congr_fun ih p) rfl
+  funext
+  apply congr_arg2ₓ _ (congr_fun ih p) rfl
   all_goals
-    funext
-    rfl
+  funext
+  rfl
 
 /-- The 2-isomorphism `normalize_iso p f` is natural in `f`. -/
 theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f ⟶ g) :
@@ -153,38 +152,34 @@ theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f 
   by
   rcases η with ⟨⟩
   induction η
-  case id =>
-    simp
+  case id => simp
   case vcomp _ _ _ _ _ _ _ ihf ihg =>
-    rw [mk_vcomp, bicategory.whisker_left_comp]
-    slice_lhs 2 3 => rw [ihg]
-    slice_lhs 1 2 => rw [ihf]
-    simp
+  rw [mk_vcomp, bicategory.whisker_left_comp]
+  slice_lhs 2 3 => rw [ihg]
+  slice_lhs 1 2 => rw [ihf]
+  simp
   case whisker_left _ _ _ _ _ _ _ ih =>
-    -- p ≠ nil required! See the docstring of `normalize_aux`.
-    dsimp'
-    simp_rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc, ih, assoc]
+  -- p ≠ nil required! See the docstring of `normalize_aux`.
+  dsimp
+  simp_rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc, ih, assoc]
   case whisker_right _ _ _ _ _ h η ih =>
-    dsimp'
-    rw [associator_inv_naturality_middle_assoc, ← comp_whisker_right_assoc, ih, comp_whisker_right]
-    have := dcongr_arg (fun x => (normalize_iso x h).Hom) (normalize_aux_congr p (Quot.mk _ η))
-    dsimp'  at this
-    simp [this]
+  dsimp
+  rw [associator_inv_naturality_middle_assoc, ← comp_whisker_right_assoc, ih, comp_whisker_right]
+  have := dcongr_arg (fun x => (normalize_iso x h).Hom) (normalize_aux_congr p (Quot.mk _ η))
+  dsimp at this
+  simp [this]
   all_goals
-    dsimp'
-    dsimp' [id_def, comp_def]
-    simp
+  dsimp
+  dsimp [id_def, comp_def]
+  simp
 
 @[simp]
 theorem normalize_aux_nil_comp {a b c : B} (f : Hom a b) (g : Hom b c) :
     normalizeAuxₓ nil (f.comp g) = (normalizeAuxₓ nil f).comp (normalizeAuxₓ nil g) := by
   induction g generalizing a
-  case id =>
-    rfl
-  case of =>
-    rfl
-  case comp _ _ _ g _ ihf ihg =>
-    erw [ihg (f.comp g), ihf f, ihg g, comp_assoc]
+  case id => rfl
+  case of => rfl
+  case comp _ _ _ g _ ihf ihg => erw [ihg (f.comp g), ihf f, ihg g, comp_assoc]
 
 /-- The normalization pseudofunctor for the free bicategory on a quiver `B`. -/
 def normalize (B : Type u) [Quiver.{v + 1} B] : Pseudofunctor (FreeBicategory B) (LocallyDiscrete (Paths B)) where
@@ -206,10 +201,7 @@ def normalizeUnitIso (a b : FreeBicategory B) : 𝟭 (a ⟶ b) ≅ (normalize B)
 /-- Normalization as an equivalence of categories. -/
 def normalizeEquiv (a b : B) : Hom a b ≌ Discrete (Path.{v + 1} a b) :=
   Equivalence.mk ((normalize _).mapFunctor a b) (inclusionPath a b) (normalizeUnitIso a b)
-    (Discrete.natIso fun f =>
-      eqToIso
-        (by
-          induction f <;> induction f <;> tidy))
+    (Discrete.natIso fun f => eqToIso (by induction f <;> induction f <;> tidy))
 
 /-- The coherence theorem for bicategories. -/
 instance locally_thin {a b : FreeBicategory B} (f g : a ⟶ b) : Subsingleton (f ⟶ g) :=

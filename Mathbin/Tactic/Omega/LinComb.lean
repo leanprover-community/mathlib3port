@@ -30,12 +30,9 @@ def linComb : List Nat → List Term → Term
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} (ns), (∀ t ∈ ts, 0 ≤ Term.val v t) → 0 ≤ (linComb ns ts).val v
-  | [], [], h => by
-    simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
-  | [], _::_, h => by
-    simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
-  | _::_, [], h => by
-    simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
+  | [], [], h => by simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
+  | [], _::_, h => by simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
+  | _::_, [], h => by simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
   | t::ts, n::ns, h => by
     have : 0 ≤ ↑n * term.val v t + term.val v (lin_comb ns ts) := by
       apply add_nonneg
@@ -64,7 +61,7 @@ theorem unsat_of_unsat_lin_comb (ns : List Nat) (ts : List Term) : UnsatLinComb 
   have h3 := lin_comb_holds ns h2.right
   cases' h1 with hl hr
   cases' lin_comb ns ts with b as
-  unfold term.val  at h3
+  unfold term.val at h3
   rw [coeffs.val_eq_zero hr, add_zeroₓ, ← not_ltₓ] at h3
   apply h3 hl
 

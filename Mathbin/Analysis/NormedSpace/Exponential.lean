@@ -8,6 +8,7 @@ import Mathbin.Analysis.Analytic.Basic
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Data.Nat.Choose.Cast
 import Mathbin.Data.Finset.NoncommProd
+import Mathbin.Topology.Algebra.Algebra
 
 /-!
 # Exponential in a Banach algebra
@@ -86,8 +87,7 @@ noncomputable def exp (x : 𝔸) : 𝔸 :=
 
 variable {𝕂}
 
-theorem exp_series_apply_eq (x : 𝔸) (n : ℕ) : (expSeries 𝕂 𝔸 n fun _ => x) = (n !⁻¹ : 𝕂) • x ^ n := by
-  simp [expSeries]
+theorem exp_series_apply_eq (x : 𝔸) (n : ℕ) : (expSeries 𝕂 𝔸 n fun _ => x) = (n !⁻¹ : 𝕂) • x ^ n := by simp [expSeries]
 
 theorem exp_series_apply_eq' (x : 𝔸) : (fun n => expSeries 𝕂 𝔸 n fun _ => x) = fun n => (n !⁻¹ : 𝕂) • x ^ n :=
   funext (exp_series_apply_eq x)
@@ -98,13 +98,13 @@ theorem exp_series_sum_eq (x : 𝔸) : (expSeries 𝕂 𝔸).Sum x = ∑' n : �
 theorem exp_eq_tsum : exp 𝕂 = fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n :=
   funext exp_series_sum_eq
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
 @[simp]
 theorem exp_zero [T2Space 𝔸] : exp 𝕂 (0 : 𝔸) = 1 := by
   suffices (fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n) 0 = ∑' n : ℕ, if n = 0 then 1 else 0 by
-    have key : ∀ (n) (_ : n ∉ ({0} : Finset ℕ)), (if n = 0 then (1 : 𝔸) else 0) = 0 := fun n hn =>
+    have key : ∀ (n) (_ : n ∉ ({0} : Finsetₓ ℕ)), (if n = 0 then (1 : 𝔸) else 0) = 0 := fun n hn =>
       if_neg (finset.not_mem_singleton.mp hn)
-    rw [exp_eq_tsum, this, tsum_eq_sum key, Finset.sum_singleton]
+    rw [exp_eq_tsum, this, tsum_eq_sum key, Finsetₓ.sum_singleton]
     simp
   refine' tsum_congr fun n => _
   split_ifs with h h <;> simp [h]
@@ -205,7 +205,7 @@ theorem continuous_on_exp : ContinuousOn (exp 𝕂 : 𝔸 → 𝔸) (Emetric.Bal
 
 theorem analytic_at_exp_of_mem_ball (x : 𝔸) (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
     AnalyticAt 𝕂 (exp 𝕂) x := by
-  by_cases' h : (expSeries 𝕂 𝔸).radius = 0
+  by_cases h:(expSeries 𝕂 𝔸).radius = 0
   · rw [h] at hx
     exact (Ennreal.not_lt_zero hx).elim
     
@@ -221,9 +221,12 @@ theorem exp_add_of_commute_of_mem_ball [CharZero 𝕂] {x y : 𝔸} (hxy : Commu
   rw [exp_eq_tsum,
     tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm (norm_exp_series_summable_of_mem_ball' x hx)
       (norm_exp_series_summable_of_mem_ball' y hy)]
-  dsimp' only
-  conv_lhs => congr ext rw [hxy.add_pow' _, Finset.smul_sum]
-  refine' tsum_congr fun n => (Finset.sum_congr rfl) fun kl hkl => _
+  dsimp only
+  conv_lhs =>
+  congr
+  ext
+  rw [hxy.add_pow' _, Finsetₓ.smul_sum]
+  refine' tsum_congr fun n => (Finsetₓ.sum_congr rfl) fun kl hkl => _
   rw [nsmul_eq_smul_cast 𝕂, smul_smul, smul_mul_smul, ← finset.nat.mem_antidiagonal.mp hkl, Nat.cast_add_choose,
     finset.nat.mem_antidiagonal.mp hkl]
   congr 1
@@ -259,14 +262,14 @@ theorem map_exp_of_mem_ball {F} [RingHomClass F 𝔸 𝔹] (f : F) (hf : Continu
     (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) : f (exp 𝕂 x) = exp 𝕂 (f x) := by
   rw [exp_eq_tsum, exp_eq_tsum]
   refine' ((exp_series_summable_of_mem_ball' _ hx).HasSum.map f hf).tsum_eq.symm.trans _
-  dsimp' only [Function.comp]
+  dsimp only [Function.comp]
   simp_rw [one_div, map_inv_nat_cast_smul f 𝕂 𝕂, map_pow]
 
 end CompleteAlgebra
 
 theorem algebra_map_exp_comm_of_mem_ball [CompleteSpace 𝕂] (x : 𝕂)
     (hx : x ∈ Emetric.Ball (0 : 𝕂) (expSeries 𝕂 𝕂).radius) : algebraMap 𝕂 𝔸 (exp 𝕂 x) = exp 𝕂 (algebraMap 𝕂 𝔸 x) :=
-  map_exp_of_mem_ball _ (algebraMapClm _ _).Continuous _ hx
+  map_exp_of_mem_ball _ (continuous_algebra_map 𝕂 𝔸) _ hx
 
 end AnyFieldAnyAlgebra
 
@@ -294,9 +297,9 @@ theorem exp_series_div_has_sum_exp_of_mem_ball [CompleteSpace 𝔸] (x : 𝔸)
 variable {𝕂}
 
 theorem exp_neg_of_mem_ball [CharZero 𝕂] [CompleteSpace 𝔸] {x : 𝔸}
-    (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) : exp 𝕂 (-x) = (exp 𝕂 x)⁻¹ := by
+    (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) : exp 𝕂 (-x) = (exp 𝕂 x)⁻¹ :=
   letI := invertibleExpOfMemBall hx
-  exact inv_of_eq_inv (exp 𝕂 x)
+  inv_of_eq_inv (exp 𝕂 x)
 
 end AnyFieldDivisionAlgebra
 
@@ -393,24 +396,24 @@ theorem is_unit_exp (x : 𝔸) : IsUnit (exp 𝕂 x) :=
 theorem inv_of_exp (x : 𝔸) [Invertible (exp 𝕂 x)] : ⅟ (exp 𝕂 x) = exp 𝕂 (-x) :=
   inv_of_exp_of_mem_ball <| (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
 
-theorem Ringₓ.inverse_exp (x : 𝔸) : Ring.inverse (exp 𝕂 x) = exp 𝕂 (-x) := by
+theorem Ringₓ.inverse_exp (x : 𝔸) : Ring.inverse (exp 𝕂 x) = exp 𝕂 (-x) :=
   letI := invertibleExp 𝕂 x
-  exact Ringₓ.inverse_invertible _
+  Ringₓ.inverse_invertible _
 
 end
 
 /-- In a Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ`, if a family of elements `f i` mutually
 commute then `exp 𝕂 (∑ i, f i) = ∏ i, exp 𝕂 (f i)`. -/
-theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → 𝔸) (h : ∀ i ∈ s, ∀ j ∈ s, Commute (f i) (f j)) :
+theorem exp_sum_of_commute {ι} (s : Finsetₓ ι) (f : ι → 𝔸) (h : ∀ i ∈ s, ∀ j ∈ s, Commute (f i) (f j)) :
     exp 𝕂 (∑ i in s, f i) = s.noncommProd (fun i => exp 𝕂 (f i)) fun i hi j hj => (h i hi j hj).exp 𝕂 := by
   classical
-  induction' s using Finset.induction_on with a s ha ih
+  induction' s using Finsetₓ.induction_on with a s ha ih
   · simp
     
-  rw [Finset.noncomm_prod_insert_of_not_mem _ _ _ _ ha, Finset.sum_insert ha, exp_add_of_commute, ih]
+  rw [Finsetₓ.noncomm_prod_insert_of_not_mem _ _ _ _ ha, Finsetₓ.sum_insert ha, exp_add_of_commute, ih]
   refine' Commute.sum_right _ _ _ _
   intro i hi
-  exact h _ (Finset.mem_insert_self _ _) _ (Finset.mem_insert_of_mem hi)
+  exact h _ (Finsetₓ.mem_insert_self _ _) _ (Finsetₓ.mem_insert_of_mem hi)
 
 theorem exp_nsmul (n : ℕ) (x : 𝔸) : exp 𝕂 (n • x) = exp 𝕂 x ^ n := by
   induction' n with n ih
@@ -444,17 +447,17 @@ theorem Prod.snd_exp [CompleteSpace 𝔹] (x : 𝔸 × 𝔹) : (exp 𝕂 x).snd 
   map_exp _ (RingHom.snd 𝔸 𝔹) continuous_snd x
 
 @[simp]
-theorem Pi.exp_apply {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [∀ i, NormedRing (𝔸 i)] [∀ i, NormedAlgebra 𝕂 (𝔸 i)]
-    [∀ i, CompleteSpace (𝔸 i)] (x : ∀ i, 𝔸 i) (i : ι) : exp 𝕂 x i = exp 𝕂 (x i) := by
-  -- Lean struggles to infer this instance due to it wanting `[Π i, semi_normed_ring (𝔸 i)]`
-  letI : NormedAlgebra 𝕂 (∀ i, 𝔸 i) := Pi.normedAlgebra _
-  exact map_exp _ (Pi.evalRingHom 𝔸 i) (continuous_apply _) x
+theorem Pi.exp_apply {ι : Type _} {𝔸 : ι → Type _} [Fintypeₓ ι] [∀ i, NormedRing (𝔸 i)] [∀ i, NormedAlgebra 𝕂 (𝔸 i)]
+    [∀ i, CompleteSpace (𝔸 i)] (x : ∀ i, 𝔸 i) (i : ι) : exp 𝕂 x i = exp 𝕂 (x i) :=
+  letI-- Lean struggles to infer this instance due to it wanting `[Π i, semi_normed_ring (𝔸 i)]`
+   : NormedAlgebra 𝕂 (∀ i, 𝔸 i) := Pi.normedAlgebra _
+  map_exp _ (Pi.evalRingHom 𝔸 i) (continuous_apply _) x
 
-theorem Pi.exp_def {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [∀ i, NormedRing (𝔸 i)] [∀ i, NormedAlgebra 𝕂 (𝔸 i)]
+theorem Pi.exp_def {ι : Type _} {𝔸 : ι → Type _} [Fintypeₓ ι] [∀ i, NormedRing (𝔸 i)] [∀ i, NormedAlgebra 𝕂 (𝔸 i)]
     [∀ i, CompleteSpace (𝔸 i)] (x : ∀ i, 𝔸 i) : exp 𝕂 x = fun i => exp 𝕂 (x i) :=
   funext <| Pi.exp_apply 𝕂 x
 
-theorem Function.update_exp {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [DecidableEq ι] [∀ i, NormedRing (𝔸 i)]
+theorem Function.update_exp {ι : Type _} {𝔸 : ι → Type _} [Fintypeₓ ι] [DecidableEq ι] [∀ i, NormedRing (𝔸 i)]
     [∀ i, NormedAlgebra 𝕂 (𝔸 i)] [∀ i, CompleteSpace (𝔸 i)] (x : ∀ i, 𝔸 i) (j : ι) (xj : 𝔸 j) :
     Function.update (exp 𝕂 x) j (exp 𝕂 xj) = exp 𝕂 (Function.update x j xj) := by
   ext i
@@ -516,8 +519,8 @@ theorem exp_add {x y : 𝔸} : exp 𝕂 (x + y) = exp 𝕂 x * exp 𝕂 y :=
     ((exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _)
 
 /-- A version of `exp_sum_of_commute` for a commutative Banach-algebra. -/
-theorem exp_sum {ι} (s : Finset ι) (f : ι → 𝔸) : exp 𝕂 (∑ i in s, f i) = ∏ i in s, exp 𝕂 (f i) := by
-  rw [exp_sum_of_commute, Finset.noncomm_prod_eq_prod]
+theorem exp_sum {ι} (s : Finsetₓ ι) (f : ι → 𝔸) : exp 𝕂 (∑ i in s, f i) = ∏ i in s, exp 𝕂 (f i) := by
+  rw [exp_sum_of_commute, Finsetₓ.noncomm_prod_eq_prod]
   exact fun i hi j hj => Commute.all _ _
 
 end CommAlgebra

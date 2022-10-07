@@ -38,6 +38,8 @@ noncomputable section
 
 open IsROrC LinearMap ContinuousLinearMap InnerProductSpace
 
+open LinearMap (ker range)
+
 open RealInnerProductSpace Nnreal
 
 universe u
@@ -55,7 +57,7 @@ theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * �
   rcases coercive with ⟨C, C_ge_0, coercivity⟩
   refine' ⟨C, C_ge_0, _⟩
   intro v
-  by_cases' h : 0 < ∥v∥
+  by_cases h:0 < ∥v∥
   · refine' (mul_le_mul_right h).mp _
     calc
       C * ∥v∥ * ∥v∥ ≤ B v v := coercivity v
@@ -63,8 +65,7 @@ theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * �
       _ ≤ ∥B♯ v∥ * ∥v∥ := real_inner_le_norm (B♯ v) v
       
     
-  · have : v = 0 := by
-      simpa using h
+  · have : v = 0 := by simpa using h
     simp [this]
     
 
@@ -75,18 +76,18 @@ theorem antilipschitz (coercive : IsCoercive B) : ∃ C : ℝ≥0, 0 < C ∧ Ant
   simp_rw [Real.coe_to_nnreal', max_eq_left_of_ltₓ (inv_pos.mpr C_pos), ← inv_mul_le_iff (inv_pos.mpr C_pos)]
   simpa using below_bound
 
-theorem ker_eq_bot (coercive : IsCoercive B) : B♯.ker = ⊥ := by
-  rw [← ker_coe, LinearMap.ker_eq_bot]
+theorem ker_eq_bot (coercive : IsCoercive B) : ker B♯ = ⊥ := by
+  rw [LinearMapClass.ker_eq_bot]
   rcases coercive.antilipschitz with ⟨_, _, antilipschitz⟩
   exact antilipschitz.injective
 
-theorem closed_range (coercive : IsCoercive B) : IsClosed (B♯.range : Set V) := by
+theorem closed_range (coercive : IsCoercive B) : IsClosed (range B♯ : Set V) := by
   rcases coercive.antilipschitz with ⟨_, _, antilipschitz⟩
   exact antilipschitz.is_closed_range B♯.UniformContinuous
 
-theorem range_eq_top (coercive : IsCoercive B) : B♯.range = ⊤ := by
+theorem range_eq_top (coercive : IsCoercive B) : range B♯ = ⊤ := by
   haveI := coercive.closed_range.complete_space_coe
-  rw [← B♯.range.orthogonal_orthogonal]
+  rw [← (range B♯).orthogonal_orthogonal]
   rw [Submodule.eq_top_iff']
   intro v w mem_w_orthogonal
   rcases coercive with ⟨C, C_pos, coercivity⟩

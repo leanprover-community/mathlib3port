@@ -146,20 +146,20 @@ theorem Age.joint_embedding : JointEmbedding (L.Age M) := fun N hN P hP =>
 
 /-- The age of a countable structure is essentially countable (has countably many isomorphism
 classes). -/
-theorem Age.countable_quotient (h : (Univ : Set M).Countable) : (Quotientₓ.mk '' L.Age M).Countable := by
+theorem Age.countable_quotient [h : Countable M] : (Quotientₓ.mk '' L.Age M).Countable := by
+  classical
   refine'
-    Eq.mp (congr rfl (Set.ext _)) ((countable_set_of_finite_subset h).Image fun s => ⟦⟨closure L s, inferInstance⟩⟧)
-  rw [forall_quotient_iff]
-  intro N
-  simp only [subset_univ, and_trueₓ, mem_image, mem_set_of_eq, Quotientₓ.eq]
+    (congr_arg _ (Set.ext <| forall_quotient_iff.2 fun N => _)).mp
+      (countable_range fun s : Finsetₓ M => ⟦⟨closure L (s : Set M), inferInstance⟩⟧)
+  simp only [mem_image, mem_range, mem_set_of_eq, Quotientₓ.eq]
   constructor
-  · rintro ⟨s, hs1, hs2⟩
-    use bundled.of ↥(closure L s)
-    exact ⟨⟨(fg_iff_Structure_fg _).1 (fg_closure hs1), ⟨Subtype _⟩⟩, hs2⟩
+  · rintro ⟨s, hs⟩
+    use bundled.of ↥(closure L (s : Set M))
+    exact ⟨⟨(fg_iff_Structure_fg _).1 (fg_closure s.finite_to_set), ⟨Subtype _⟩⟩, hs⟩
     
   · rintro ⟨P, ⟨⟨s, hs⟩, ⟨PM⟩⟩, hP2⟩
-    refine' ⟨PM '' s, Set.Finite.image PM s.finite_to_set, Setoidₓ.trans _ hP2⟩
-    rw [← embedding.coe_to_hom, closure_image PM.to_hom, hs, ← hom.range_eq_map]
+    refine' ⟨s.image PM, Setoidₓ.trans _ hP2⟩
+    rw [← embedding.coe_to_hom, Finsetₓ.coe_image, closure_image PM.to_hom, hs, ← hom.range_eq_map]
     exact ⟨PM.equiv_range.symm⟩
     
 
@@ -175,14 +175,14 @@ theorem age_direct_limit {ι : Type w} [Preorderₓ ι] [IsDirected ι (· ≤ �
   · rintro ⟨Mfg, ⟨e⟩⟩
     obtain ⟨s, hs⟩ := Mfg.range e.to_hom
     let out := @Quotientₓ.out _ (direct_limit.setoid G f)
-    obtain ⟨i, hi⟩ := Finset.exists_le (s.image (Sigma.fst ∘ out))
+    obtain ⟨i, hi⟩ := Finsetₓ.exists_le (s.image (Sigma.fst ∘ out))
     have e' := (direct_limit.of L ι G f i).equivRange.symm.toEmbedding
     refine' ⟨i, Mfg, ⟨e'.comp ((substructure.inclusion _).comp e.equiv_range.to_embedding)⟩⟩
     rw [← hs, closure_le]
     intro x hx
-    refine' ⟨f (out x).1 i (hi (out x).1 (Finset.mem_image_of_mem _ hx)) (out x).2, _⟩
+    refine' ⟨f (out x).1 i (hi (out x).1 (Finsetₓ.mem_image_of_mem _ hx)) (out x).2, _⟩
     rw [embedding.coe_to_hom, direct_limit.of_apply, Quotientₓ.mk_eq_iff_out,
-      direct_limit.equiv_iff G f _ (hi (out x).1 (Finset.mem_image_of_mem _ hx)), DirectedSystem.map_self]
+      direct_limit.equiv_iff G f _ (hi (out x).1 (Finsetₓ.mem_image_of_mem _ hx)), DirectedSystem.map_self]
     rfl
     
   · rintro ⟨i, Mfg, ⟨e⟩⟩
@@ -215,8 +215,8 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
   · exact (hFP _ n).some
     
 
-theorem exists_countable_is_age_of_iff [L.CountableFunctions] :
-    (∃ M : Bundled.{w} L.Structure, (Univ : Set M).Countable ∧ L.Age M = K) ↔
+theorem exists_countable_is_age_of_iff [Countable (Σl, L.Functions l)] :
+    (∃ M : Bundled.{w} L.Structure, Countable M ∧ L.Age M = K) ↔
       K.Nonempty ∧
         (∀ M N : Bundled.{w} L.Structure, Nonempty (M ≃[L] N) → (M ∈ K ↔ N ∈ K)) ∧
           (Quotientₓ.mk '' K).Countable ∧
@@ -226,13 +226,12 @@ theorem exists_countable_is_age_of_iff [L.CountableFunctions] :
   · rintro ⟨M, h1, h2, rfl⟩
     skip
     refine'
-      ⟨age.nonempty M, age.is_equiv_invariant L M, age.countable_quotient M h1, fun N hN => hN.1, age.hereditary M,
+      ⟨age.nonempty M, age.is_equiv_invariant L M, age.countable_quotient M, fun N hN => hN.1, age.hereditary M,
         age.joint_embedding M⟩
     
   · rintro ⟨Kn, eqinv, cq, hfg, hp, jep⟩
     obtain ⟨M, hM, rfl⟩ := exists_cg_is_age_of Kn eqinv cq hfg hp jep
-    haveI : Countable M := Structure.cg_iff_countable.1 hM
-    exact ⟨M, to_countable _, rfl⟩
+    exact ⟨M, Structure.cg_iff_countable.1 hM, rfl⟩
     
 
 variable {K} (L) (M)
@@ -246,9 +245,9 @@ variable {L} (K)
 
 /-- A structure `M` is a Fraïssé limit for a class `K` if it is countably generated,
 ultrahomogeneous, and has age `K`. -/
-structure IsFraisseLimit [CountableFunctions L] : Prop where
+@[protect_proj]
+structure IsFraisseLimit [Countable (Σl, L.Functions l)] [Countable M] : Prop where
   ultrahomogeneous : IsUltrahomogeneous L M
-  Countable : (Univ : Set M).Countable
   Age : L.Age M = K
 
 variable {L} {M}
@@ -269,16 +268,15 @@ theorem IsUltrahomogeneous.amalgamation_age (h : L.IsUltrahomogeneous M) : Amalg
   simp only [embedding.comp_apply, equiv.coe_to_embedding, substructure.coe_inclusion, Set.coe_inclusion,
     embedding.equiv_range_apply, hgn]
 
-theorem IsUltrahomogeneous.age_is_fraisse (hc : (Univ : Set M).Countable) (h : L.IsUltrahomogeneous M) :
-    IsFraisse (L.Age M) :=
-  ⟨Age.nonempty M, fun _ hN => hN.1, Age.is_equiv_invariant L M, Age.countable_quotient M hc, Age.hereditary M,
+theorem IsUltrahomogeneous.age_is_fraisse [Countable M] (h : L.IsUltrahomogeneous M) : IsFraisse (L.Age M) :=
+  ⟨Age.nonempty M, fun _ hN => hN.1, Age.is_equiv_invariant L M, Age.countable_quotient M, Age.hereditary M,
     Age.joint_embedding M, h.amalgamation_age⟩
 
 namespace IsFraisseLimit
 
 /-- If a class has a Fraïssé limit, it must be Fraïssé. -/
-theorem is_fraisse [CountableFunctions L] (h : IsFraisseLimit K M) : IsFraisse K :=
-  (congr rfl h.Age).mp (h.ultrahomogeneous.age_is_fraisse h.Countable)
+theorem is_fraisse [Countable (Σl, L.Functions l)] [Countable M] (h : IsFraisseLimit K M) : IsFraisse K :=
+  (congr rfl h.Age).mp h.ultrahomogeneous.age_is_fraisse
 
 end IsFraisseLimit
 

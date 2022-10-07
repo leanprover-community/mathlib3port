@@ -44,19 +44,16 @@ structure OplaxNatTrans (F G : OplaxFunctor B C) where
   naturality {a b : B} (f : a ⟶ b) : F.map f ≫ app b ⟶ app a ≫ G.map f
   naturality_naturality' :
     ∀ {a b : B} {f g : a ⟶ b} (η : f ⟶ g), F.map₂ η ▷ app b ≫ naturality g = naturality f ≫ app a ◁ G.map₂ η := by
-    run_tac
-      obviously
+    obviously
   naturality_id' :
     ∀ a : B, naturality (𝟙 a) ≫ app a ◁ G.map_id a = F.map_id a ▷ app a ≫ (λ_ (app a)).Hom ≫ (ρ_ (app a)).inv := by
-    run_tac
-      obviously
+    obviously
   naturality_comp' :
     ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c),
       naturality (f ≫ g) ≫ app a ◁ G.map_comp f g =
         F.map_comp f g ▷ app c ≫
           (α_ _ _ _).Hom ≫ F.map f ◁ naturality g ≫ (α_ _ _ _).inv ≫ naturality f ▷ G.map g ≫ (α_ _ _ _).Hom := by
-    run_tac
-      obviously
+    obviously
 
 restate_axiom oplax_nat_trans.naturality_naturality'
 
@@ -97,8 +94,7 @@ theorem whisker_left_naturality_naturality (f : a' ⟶ G.obj a) {g h : a ⟶ b} 
 theorem whisker_right_naturality_naturality {f g : a ⟶ b} (β : f ⟶ g) (h : G.obj b ⟶ a') :
     F.map₂ β ▷ η.app b ▷ h ≫ η.naturality g ▷ h =
       η.naturality f ▷ h ≫ (α_ _ _ _).Hom ≫ η.app a ◁ G.map₂ β ▷ h ≫ (α_ _ _ _).inv :=
-  by
-  rw [← comp_whisker_right, naturality_naturality, comp_whisker_right, whisker_assoc]
+  by rw [← comp_whisker_right, naturality_naturality, comp_whisker_right, whisker_assoc]
 
 @[simp, reassoc]
 theorem whisker_left_naturality_comp (f : a' ⟶ G.obj a) (g : a ⟶ b) (h : b ⟶ c) :
@@ -106,8 +102,7 @@ theorem whisker_left_naturality_comp (f : a' ⟶ G.obj a) (g : a ⟶ b) (h : b �
       f ◁ G.map_comp g h ▷ θ.app c ≫
         f ◁ (α_ _ _ _).Hom ≫
           f ◁ G.map g ◁ θ.naturality h ≫ f ◁ (α_ _ _ _).inv ≫ f ◁ θ.naturality g ▷ H.map h ≫ f ◁ (α_ _ _ _).Hom :=
-  by
-  simp_rw [← bicategory.whisker_left_comp, naturality_comp]
+  by simp_rw [← bicategory.whisker_left_comp, naturality_comp]
 
 @[simp, reassoc]
 theorem whisker_right_naturality_comp (f : a ⟶ b) (g : b ⟶ c) (h : G.obj c ⟶ a') :
@@ -126,8 +121,7 @@ theorem whisker_right_naturality_comp (f : a ⟶ b) (g : b ⟶ c) (h : G.obj c �
 theorem whisker_left_naturality_id (f : a' ⟶ G.obj a) :
     f ◁ θ.naturality (𝟙 a) ≫ f ◁ θ.app a ◁ H.map_id a =
       f ◁ G.map_id a ▷ θ.app a ≫ f ◁ (λ_ (θ.app a)).Hom ≫ f ◁ (ρ_ (θ.app a)).inv :=
-  by
-  simp_rw [← bicategory.whisker_left_comp, naturality_id]
+  by simp_rw [← bicategory.whisker_left_comp, naturality_id]
 
 @[simp, reassoc]
 theorem whisker_right_naturality_id (f : G.obj a ⟶ a') :
@@ -192,8 +186,7 @@ for each 1-morphism `f : a ⟶ b`.
 structure Modification (η θ : F ⟶ G) where
   app (a : B) : η.app a ⟶ θ.app a
   naturality' : ∀ {a b : B} (f : a ⟶ b), F.map f ◁ app b ≫ θ.naturality f = η.naturality f ≫ app a ▷ G.map f := by
-    run_tac
-      obviously
+    obviously
 
 restate_axiom modification.naturality'
 
@@ -227,8 +220,7 @@ theorem whisker_left_naturality (f : a' ⟶ F.obj b) (g : b ⟶ c) :
 theorem whisker_right_naturality (f : a ⟶ b) (g : G.obj b ⟶ a') :
     F.map f ◁ Γ.app b ▷ g ≫ (α_ _ _ _).inv ≫ θ.naturality f ▷ g =
       (α_ _ _ _).inv ≫ η.naturality f ▷ g ≫ Γ.app a ▷ G.map f ▷ g :=
-  by
-  simp_rw [associator_inv_naturality_middle_assoc, ← comp_whisker_right, naturality]
+  by simp_rw [associator_inv_naturality_middle_assoc, ← comp_whisker_right, naturality]
 
 end
 

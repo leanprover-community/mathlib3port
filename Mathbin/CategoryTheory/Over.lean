@@ -46,12 +46,10 @@ namespace Over
 variable {X : T}
 
 @[ext]
-theorem OverMorphism.ext {X : T} {U V : Over X} {f g : U ⟶ V} (h : f.left = g.left) : f = g := by
-  tidy
+theorem OverMorphism.ext {X : T} {U V : Over X} {f g : U ⟶ V} (h : f.left = g.left) : f = g := by tidy
 
 @[simp]
-theorem over_right (U : Over X) : U.right = ⟨⟨⟩⟩ := by
-  tidy
+theorem over_right (U : Over X) : U.right = ⟨⟨⟩⟩ := by tidy
 
 @[simp]
 theorem id_left (U : Over X) : CommaMorphism.left (𝟙 U) = 𝟙 U.left :=
@@ -62,8 +60,7 @@ theorem comp_left (a b c : Over X) (f : a ⟶ b) (g : b ⟶ c) : (f ≫ g).left 
   rfl
 
 @[simp, reassoc]
-theorem w {A B : Over X} (f : A ⟶ B) : f.left ≫ B.Hom = A.Hom := by
-  have := f.w <;> tidy
+theorem w {A B : Over X} (f : A ⟶ B) : f.left ≫ B.Hom = A.Hom := by have := f.w <;> tidy
 
 /-- To give an object in the over category, it suffices to give a morphism with codomain `X`. -/
 @[simps left Hom]
@@ -87,22 +84,14 @@ end
 /-- To give a morphism in the over category, it suffices to give an arrow fitting in a commutative
     triangle. -/
 @[simps]
-def homMk {U V : Over X} (f : U.left ⟶ V.left)
-    (w : f ≫ V.Hom = U.Hom := by
-      run_tac
-        obviously) :
-    U ⟶ V :=
+def homMk {U V : Over X} (f : U.left ⟶ V.left) (w : f ≫ V.Hom = U.Hom := by obviously) : U ⟶ V :=
   CostructuredArrow.homMk f w
 
 /-- Construct an isomorphism in the over category given isomorphisms of the objects whose forward
 direction gives a commutative triangle.
 -/
 @[simps]
-def isoMk {f g : Over X} (hl : f.left ≅ g.left)
-    (hw : hl.Hom ≫ g.Hom = f.Hom := by
-      run_tac
-        obviously) :
-    f ≅ g :=
+def isoMk {f g : Over X} (hl : f.left ≅ g.left) (hw : hl.Hom ≫ g.Hom = f.Hom := by obviously) : f ≅ g :=
   CostructuredArrow.isoMk hl hw
 
 section
@@ -156,23 +145,11 @@ theorem map_map_left : ((map f).map g).left = g.left :=
 
 /-- Mapping by the identity morphism is just the identity functor. -/
 def mapId : map (𝟙 Y) ≅ 𝟭 _ :=
-  NatIso.ofComponents
-    (fun X =>
-      isoMk (Iso.refl _)
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun X => isoMk (Iso.refl _) (by tidy)) (by tidy)
 
 /-- Mapping by the composite morphism `f ≫ g` is the same as mapping by `f` then by `g`. -/
 def mapComp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map f ⋙ map g :=
-  NatIso.ofComponents
-    (fun X =>
-      isoMk (Iso.refl _)
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun X => isoMk (Iso.refl _) (by tidy)) (by tidy)
 
 end
 
@@ -180,8 +157,7 @@ instance forget_reflects_iso :
     ReflectsIsomorphisms
       (forget
         X) where reflects := fun Y Z f t =>
-    ⟨⟨over.hom_mk (inv ((forget X).map f)) ((as_iso ((forget X).map f)).inv_comp_eq.2 (over.w f).symm), by
-        tidy⟩⟩
+    ⟨⟨over.hom_mk (inv ((forget X).map f)) ((as_iso ((forget X).map f)).inv_comp_eq.2 (over.w f).symm), by tidy⟩⟩
 
 instance forget_faithful : Faithful (forget X) where
 
@@ -212,10 +188,9 @@ instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left :
   let l' : mk (m ≫ f.hom) ⟶ f :=
     hom_mk l
       (by
-        dsimp'
+        dsimp
         rw [← over.w k, reassoc_of a])
-  suffices l' = hom_mk m by
-    apply congr_arg comma_morphism.left this
+  suffices l' = hom_mk m by apply congr_arg comma_morphism.left this
   rw [← cancel_mono k]
   ext
   apply a
@@ -247,27 +222,14 @@ def iteratedSliceEquiv : Over f ≌ Over f.left where
   Functor := iteratedSliceForward f
   inverse := iteratedSliceBackward f
   unitIso :=
-    NatIso.ofComponents
-      (fun g =>
-        Over.isoMk
-          (Over.isoMk (Iso.refl _)
-            (by
-              tidy))
-          (by
-            tidy))
-      fun X Y g => by
+    NatIso.ofComponents (fun g => Over.isoMk (Over.isoMk (Iso.refl _) (by tidy)) (by tidy)) fun X Y g => by
       ext
-      dsimp'
+      dsimp
       simp
   counitIso :=
-    NatIso.ofComponents
-      (fun g =>
-        Over.isoMk (Iso.refl _)
-          (by
-            tidy))
-      fun X Y g => by
+    NatIso.ofComponents (fun g => Over.isoMk (Iso.refl _) (by tidy)) fun X Y g => by
       ext
-      dsimp'
+      dsimp
       simp
 
 theorem iterated_slice_forward_forget : iteratedSliceForward f ⋙ forget f.left = forget f ⋙ forget X :=
@@ -286,10 +248,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 @[simps]
 def post (F : T ⥤ D) : Over X ⥤ Over (F.obj X) where
   obj := fun Y => mk <| F.map Y.Hom
-  map := fun Y₁ Y₂ f =>
-    { left := F.map f.left,
-      w' := by
-        tidy <;> erw [← F.map_comp, w] }
+  map := fun Y₁ Y₂ f => { left := F.map f.left, w' := by tidy <;> erw [← F.map_comp, w] }
 
 end
 
@@ -309,12 +268,10 @@ namespace Under
 variable {X : T}
 
 @[ext]
-theorem UnderMorphism.ext {X : T} {U V : Under X} {f g : U ⟶ V} (h : f.right = g.right) : f = g := by
-  tidy
+theorem UnderMorphism.ext {X : T} {U V : Under X} {f g : U ⟶ V} (h : f.right = g.right) : f = g := by tidy
 
 @[simp]
-theorem under_left (U : Under X) : U.left = ⟨⟨⟩⟩ := by
-  tidy
+theorem under_left (U : Under X) : U.left = ⟨⟨⟩⟩ := by tidy
 
 @[simp]
 theorem id_right (U : Under X) : CommaMorphism.right (𝟙 U) = 𝟙 U.right :=
@@ -325,8 +282,7 @@ theorem comp_right (a b c : Under X) (f : a ⟶ b) (g : b ⟶ c) : (f ≫ g).rig
   rfl
 
 @[simp, reassoc]
-theorem w {A B : Under X} (f : A ⟶ B) : A.Hom ≫ f.right = B.Hom := by
-  have := f.w <;> tidy
+theorem w {A B : Under X} (f : A ⟶ B) : A.Hom ≫ f.right = B.Hom := by have := f.w <;> tidy
 
 /-- To give an object in the under category, it suffices to give an arrow with domain `X`. -/
 @[simps right Hom]
@@ -336,11 +292,7 @@ def mk {X Y : T} (f : X ⟶ Y) : Under X :=
 /-- To give a morphism in the under category, it suffices to give a morphism fitting in a
     commutative triangle. -/
 @[simps]
-def homMk {U V : Under X} (f : U.right ⟶ V.right)
-    (w : U.Hom ≫ f = V.Hom := by
-      run_tac
-        obviously) :
-    U ⟶ V :=
+def homMk {U V : Under X} (f : U.right ⟶ V.right) (w : U.Hom ≫ f = V.Hom := by obviously) : U ⟶ V :=
   StructuredArrow.homMk f w
 
 /-- Construct an isomorphism in the over category given isomorphisms of the objects whose forward
@@ -404,23 +356,11 @@ theorem map_map_right : ((map f).map g).right = g.right :=
 
 /-- Mapping by the identity morphism is just the identity functor. -/
 def mapId : map (𝟙 Y) ≅ 𝟭 _ :=
-  NatIso.ofComponents
-    (fun X =>
-      isoMk (Iso.refl _)
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun X => isoMk (Iso.refl _) (by tidy)) (by tidy)
 
 /-- Mapping by the composite morphism `f ≫ g` is the same as mapping by `f` then by `g`. -/
 def mapComp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ map f :=
-  NatIso.ofComponents
-    (fun X =>
-      isoMk (Iso.refl _)
-        (by
-          tidy))
-    (by
-      tidy)
+  NatIso.ofComponents (fun X => isoMk (Iso.refl _) (by tidy)) (by tidy)
 
 end
 
@@ -428,8 +368,7 @@ instance forget_reflects_iso :
     ReflectsIsomorphisms
       (forget
         X) where reflects := fun Y Z f t =>
-    ⟨⟨under.hom_mk (inv ((under.forget X).map f)) ((is_iso.comp_inv_eq _).2 (under.w f).symm), by
-        tidy⟩⟩
+    ⟨⟨under.hom_mk (inv ((under.forget X).map f)) ((is_iso.comp_inv_eq _).2 (under.w f).symm), by tidy⟩⟩
 
 instance forget_faithful : Faithful (forget X) where
 
@@ -460,10 +399,9 @@ instance epi_right_of_epi {f g : Under X} (k : f ⟶ g) [Epi k] : Epi k.right :=
   let l' : g ⟶ mk (g.hom ≫ m) :=
     hom_mk l
       (by
-        dsimp'
+        dsimp
         rw [← under.w k, category.assoc, a, category.assoc])
-  suffices l' = hom_mk m by
-    apply congr_arg comma_morphism.right this
+  suffices l' = hom_mk m by apply congr_arg comma_morphism.right this
   rw [← cancel_epi k]
   ext
   apply a
@@ -476,10 +414,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 @[simps]
 def post {X : T} (F : T ⥤ D) : Under X ⥤ Under (F.obj X) where
   obj := fun Y => mk <| F.map Y.Hom
-  map := fun Y₁ Y₂ f =>
-    { right := F.map f.right,
-      w' := by
-        tidy <;> erw [← F.map_comp, w] }
+  map := fun Y₁ Y₂ f => { right := F.map f.right, w' := by tidy <;> erw [← F.map_comp, w] }
 
 end
 

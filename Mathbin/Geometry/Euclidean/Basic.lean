@@ -87,8 +87,7 @@ theorem continuous_at_angle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
   Real.continuous_arccos.ContinuousAt.comp <|
     continuous_inner.ContinuousAt.div
       ((continuous_norm.comp continuous_fst).mul (continuous_norm.comp continuous_snd)).ContinuousAt
-      (by
-        simp [hx1, hx2])
+      (by simp [hx1, hx2])
 
 theorem angle_smul_smul {c : ℝ} (hc : c ≠ 0) (x y : V) : angle (c • x) (c • y) = angle x y := by
   have : c * c ≠ 0 := mul_ne_zero hc hc
@@ -97,8 +96,11 @@ theorem angle_smul_smul {c : ℝ} (hc : c ≠ 0) (x y : V) : angle (c • x) (c 
 
 @[simp]
 theorem _root_.linear_isometry.angle_map {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] (f : E →ₗᵢ[ℝ] F)
-    (u v : E) : angle (f u) (f v) = angle u v := by
-  rw [angle, angle, f.inner_map_map, f.norm_map, f.norm_map]
+    (u v : E) : angle (f u) (f v) = angle u v := by rw [angle, angle, f.inner_map_map, f.norm_map, f.norm_map]
+
+@[simp, norm_cast]
+theorem _root_.submodule.angle_coe {s : Submodule ℝ V} (x y : s) : angle (x : V) (y : V) = angle x y :=
+  s.subtypeₗᵢ.angle_map x y
 
 theorem IsConformalMap.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] {f' : E →L[ℝ] F}
     (h : IsConformalMap f') (u v : E) : angle (f' u) (f' v) = angle u v := by
@@ -142,8 +144,7 @@ theorem angle_neg_right (x y : V) : angle x (-y) = π - angle x y := by
   rw [← Real.arccos_neg, norm_neg, inner_neg_right, neg_div]
 
 /-- The angle between the negation of a vector and another vector. -/
-theorem angle_neg_left (x y : V) : angle (-x) y = π - angle x y := by
-  rw [← angle_neg_neg, neg_negₓ, angle_neg_right]
+theorem angle_neg_left (x y : V) : angle (-x) y = π - angle x y := by rw [← angle_neg_neg, neg_negₓ, angle_neg_right]
 
 /-- The angle between the zero vector and a vector. -/
 @[simp]
@@ -200,24 +201,20 @@ theorem angle_smul_left_of_neg (x y : V) {r : ℝ} (hr : r < 0) : angle (r • x
 product of their norms. -/
 theorem cos_angle_mul_norm_mul_norm (x y : V) : Real.cos (angle x y) * (∥x∥ * ∥y∥) = inner x y := by
   rw [cos_angle, div_mul_cancel_of_imp]
-  simp (config := { contextual := true })[or_imp_distrib]
+  simp (config := { contextual := true }) [or_imp_distrib]
 
 /-- The sine of the angle between two vectors, multiplied by the
 product of their norms. -/
 theorem sin_angle_mul_norm_mul_norm (x y : V) :
     Real.sin (angle x y) * (∥x∥ * ∥y∥) = Real.sqrt (inner x x * inner y y - inner x y * inner x y) := by
   unfold angle
-  rw
-    [Real.sin_arccos (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x y)).1
+  rw [Real.sin_arccos (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x y)).1
       (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x y)).2,
     ← Real.sqrt_mul_self (mul_nonneg (norm_nonneg x) (norm_nonneg y)), ← Real.sqrt_mul' _ (mul_self_nonneg _), sq,
     Real.sqrt_mul_self (mul_nonneg (norm_nonneg x) (norm_nonneg y)), real_inner_self_eq_norm_mul_norm,
     real_inner_self_eq_norm_mul_norm]
-  by_cases' h : ∥x∥ * ∥y∥ = 0
-  · rw
-      [show ∥x∥ * ∥x∥ * (∥y∥ * ∥y∥) = ∥x∥ * ∥y∥ * (∥x∥ * ∥y∥) by
-        ring,
-      h, mul_zero, mul_zero, zero_sub]
+  by_cases h:∥x∥ * ∥y∥ = 0
+  · rw [show ∥x∥ * ∥x∥ * (∥y∥ * ∥y∥) = ∥x∥ * ∥y∥ * (∥x∥ * ∥y∥) by ring, h, mul_zero, mul_zero, zero_sub]
     cases' eq_zero_or_eq_zero_of_mul_eq_zero h with hx hy
     · rw [norm_eq_zero] at hx
       rw [hx, inner_zero_left, zero_mul, neg_zero]
@@ -251,8 +248,7 @@ theorem angle_add_angle_eq_pi_of_angle_eq_pi {x y : V} (z : V) (h : angle x y = 
 /-- Two vectors have inner product 0 if and only if the angle between
 them is π/2. -/
 theorem inner_eq_zero_iff_angle_eq_pi_div_two (x y : V) : ⟪x, y⟫ = 0 ↔ angle x y = π / 2 :=
-  Iff.symm <| by
-    simp (config := { contextual := true })[angle, or_imp_distrib]
+  Iff.symm <| by simp (config := { contextual := true }) [angle, or_imp_distrib]
 
 /-- If the angle between two vectors is π, the inner product equals the negative product
 of the norms. -/
@@ -309,10 +305,8 @@ theorem norm_sub_eq_add_norm_iff_angle_eq_pi {x y : V} (hx : x ≠ 0) (hy : y �
   obtain ⟨hxy₁, hxy₂⟩ := norm_nonneg (x - y), add_nonneg (norm_nonneg x) (norm_nonneg y)
   rw [← sq_eq_sq hxy₁ hxy₂, norm_sub_pow_two_real] at h
   calc
-    inner x y = (∥x∥ ^ 2 + ∥y∥ ^ 2 - (∥x∥ + ∥y∥) ^ 2) / 2 := by
-      linarith
-    _ = -(∥x∥ * ∥y∥) := by
-      ring
+    inner x y = (∥x∥ ^ 2 + ∥y∥ ^ 2 - (∥x∥ + ∥y∥) ^ 2) / 2 := by linarith
+    _ = -(∥x∥ * ∥y∥) := by ring
     
 
 /-- The norm of the sum of two non-zero vectors equals the sum of their norms
@@ -324,10 +318,8 @@ theorem norm_add_eq_add_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y 
   obtain ⟨hxy₁, hxy₂⟩ := norm_nonneg (x + y), add_nonneg (norm_nonneg x) (norm_nonneg y)
   rw [← sq_eq_sq hxy₁ hxy₂, norm_add_pow_two_real] at h
   calc
-    inner x y = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by
-      linarith
-    _ = ∥x∥ * ∥y∥ := by
-      ring
+    inner x y = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by linarith
+    _ = ∥x∥ * ∥y∥ := by ring
     
 
 /-- The norm of the difference of two non-zero vectors equals the absolute value
@@ -341,10 +333,8 @@ theorem norm_sub_eq_abs_sub_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy 
     exact sq_abs (∥x∥ - ∥y∥)
   rw [norm_sub_pow_two_real] at h1
   calc
-    inner x y = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by
-      linarith
-    _ = ∥x∥ * ∥y∥ := by
-      ring
+    inner x y = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by linarith
+    _ = ∥x∥ * ∥y∥ := by ring
     
 
 /-- The norm of the sum of two vectors equals the norm of their difference if and only if
@@ -388,10 +378,8 @@ localized [EuclideanGeometry] notation "∠" => EuclideanGeometry.angle
 theorem continuous_at_angle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2.2 ≠ x.2.1) :
     ContinuousAt (fun y : P × P × P => ∠ y.1 y.2.1 y.2.2) x := by
   let f : P × P × P → V × V := fun y => (y.1 -ᵥ y.2.1, y.2.2 -ᵥ y.2.1)
-  have hf1 : (f x).1 ≠ 0 := by
-    simp [hx12]
-  have hf2 : (f x).2 ≠ 0 := by
-    simp [hx32]
+  have hf1 : (f x).1 ≠ 0 := by simp [hx12]
+  have hf2 : (f x).2 ≠ 0 := by simp [hx32]
   exact
     (InnerProductGeometry.continuous_at_angle hf1 hf2).comp
       ((continuous_fst.vsub continuous_snd.fst).prod_mk (continuous_snd.snd.vsub continuous_snd.fst)).ContinuousAt
@@ -400,6 +388,13 @@ theorem continuous_at_angle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2
 theorem _root_.affine_isometry.angle_map {V₂ P₂ : Type _} [InnerProductSpace ℝ V₂] [MetricSpace P₂]
     [NormedAddTorsor V₂ P₂] (f : P →ᵃⁱ[ℝ] P₂) (p₁ p₂ p₃ : P) : ∠ (f p₁) (f p₂) (f p₃) = ∠ p₁ p₂ p₃ := by
   simp_rw [angle, ← AffineIsometry.map_vsub, LinearIsometry.angle_map]
+
+@[simp, norm_cast]
+theorem _root_.affine_subspace.angle_coe {s : AffineSubspace ℝ P} (p₁ p₂ p₃ : s) :
+    haveI : Nonempty s := ⟨p₁⟩
+    ∠ (p₁ : P) (p₂ : P) (p₃ : P) = ∠ p₁ p₂ p₃ :=
+  haveI : Nonempty s := ⟨p₁⟩
+  s.subtypeₐᵢ.angle_map p₁ p₂ p₃
 
 /-- The angle at a point does not depend on the order of the other two
 points. -/
@@ -421,8 +416,7 @@ theorem angle_eq_left (p1 p2 : P) : ∠ p1 p1 p2 = π / 2 := by
   exact angle_zero_left _
 
 /-- The angle ∠ABB at a point. -/
-theorem angle_eq_right (p1 p2 : P) : ∠ p1 p2 p2 = π / 2 := by
-  rw [angle_comm, angle_eq_left]
+theorem angle_eq_right (p1 p2 : P) : ∠ p1 p2 p2 = π / 2 := by rw [angle_comm, angle_eq_left]
 
 /-- The angle ∠ABA at a point. -/
 theorem angle_eq_of_ne {p1 p2 : P} (h : p1 ≠ p2) : ∠ p1 p2 p1 = 0 :=
@@ -430,7 +424,7 @@ theorem angle_eq_of_ne {p1 p2 : P} (h : p1 ≠ p2) : ∠ p1 p2 p1 = 0 :=
 
 /-- If the angle ∠ABC at a point is π, the angle ∠BAC is 0. -/
 theorem angle_eq_zero_of_angle_eq_pi_left {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : ∠ p2 p1 p3 = 0 := by
-  unfold angle  at h
+  unfold angle at h
   rw [angle_eq_pi_iff] at h
   rcases h with ⟨hp1p2, ⟨r, ⟨hr, hpr⟩⟩⟩
   unfold angle
@@ -447,7 +441,7 @@ theorem angle_eq_zero_of_angle_eq_pi_right {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π
 
 /-- If ∠BCD = π, then ∠ABC = ∠ABD. -/
 theorem angle_eq_angle_of_angle_eq_pi (p1 : P) {p2 p3 p4 : P} (h : ∠ p2 p3 p4 = π) : ∠ p1 p2 p3 = ∠ p1 p2 p4 := by
-  unfold angle  at *
+  unfold angle at *
   rcases angle_eq_pi_iff.1 h with ⟨hp2p3, ⟨r, ⟨hr, hpr⟩⟩⟩
   rw [eq_comm]
   convert angle_smul_right_of_pos (p1 -ᵥ p2) (p3 -ᵥ p2) (add_pos (neg_pos_of_neg hr) zero_lt_one)
@@ -457,7 +451,7 @@ theorem angle_eq_angle_of_angle_eq_pi (p1 : P) {p2 p3 p4 : P} (h : ∠ p2 p3 p4 
 /-- If ∠BCD = π, then ∠ACB + ∠ACD = π. -/
 theorem angle_add_angle_eq_pi_of_angle_eq_pi (p1 : P) {p2 p3 p4 : P} (h : ∠ p2 p3 p4 = π) :
     ∠ p1 p3 p2 + ∠ p1 p3 p4 = π := by
-  unfold angle  at h
+  unfold angle at h
   rw [angle_comm p1 p3 p2, angle_comm p1 p3 p4]
   unfold angle
   exact angle_add_angle_eq_pi_of_angle_eq_pi _ h
@@ -474,10 +468,7 @@ theorem left_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) 
   by_contra heq
   rw [dist_eq_zero] at heq
   rw [HEq, angle_eq_left] at h
-  exact
-    Real.pi_ne_zero
-      (by
-        linarith)
+  exact Real.pi_ne_zero (by linarith)
 
 /-- If ∠ABC = π then dist C B ≠ 0. -/
 theorem right_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : dist p3 p2 ≠ 0 :=
@@ -528,8 +519,7 @@ theorem angle_left_midpoint_eq_pi_div_two_of_dist_eq {p1 p2 p3 : P} (h : dist p3
     ∠ p3 (midpoint ℝ p1 p2) p1 = π / 2 := by
   let m : P := midpoint ℝ p1 p2
   have h1 : p3 -ᵥ p1 = p3 -ᵥ m - (p1 -ᵥ m) := (vsub_sub_vsub_cancel_right p3 p1 m).symm
-  have h2 : p3 -ᵥ p2 = p3 -ᵥ m + (p1 -ᵥ m) := by
-    rw [left_vsub_midpoint, ← midpoint_vsub_right, vsub_add_vsub_cancel]
+  have h2 : p3 -ᵥ p2 = p3 -ᵥ m + (p1 -ᵥ m) := by rw [left_vsub_midpoint, ← midpoint_vsub_right, vsub_add_vsub_cancel]
   rw [dist_eq_norm_vsub V p3 p1, dist_eq_norm_vsub V p3 p2, h1, h2] at h
   exact (norm_add_eq_norm_sub_iff_angle_eq_pi_div_two (p3 -ᵥ m) (p1 -ᵥ m)).mp h.symm
 
@@ -541,19 +531,19 @@ theorem angle_right_midpoint_eq_pi_div_two_of_dist_eq {p1 p2 p3 : P} (h : dist p
 
 /-- The inner product of two vectors given with `weighted_vsub`, in
 terms of the pairwise distances. -/
-theorem inner_weighted_vsub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁ → ℝ} (p₁ : ι₁ → P) (h₁ : (∑ i in s₁, w₁ i) = 0)
-    {ι₂ : Type _} {s₂ : Finset ι₂} {w₂ : ι₂ → ℝ} (p₂ : ι₂ → P) (h₂ : (∑ i in s₂, w₂ i) = 0) :
+theorem inner_weighted_vsub {ι₁ : Type _} {s₁ : Finsetₓ ι₁} {w₁ : ι₁ → ℝ} (p₁ : ι₁ → P) (h₁ : (∑ i in s₁, w₁ i) = 0)
+    {ι₂ : Type _} {s₂ : Finsetₓ ι₂} {w₂ : ι₂ → ℝ} (p₂ : ι₂ → P) (h₂ : (∑ i in s₂, w₂ i) = 0) :
     inner (s₁.weightedVsub p₁ w₁) (s₂.weightedVsub p₂ w₂) =
       (-∑ i₁ in s₁, ∑ i₂ in s₂, w₁ i₁ * w₂ i₂ * (dist (p₁ i₁) (p₂ i₂) * dist (p₁ i₁) (p₂ i₂))) / 2 :=
   by
-  rw [Finset.weighted_vsub_apply, Finset.weighted_vsub_apply, inner_sum_smul_sum_smul_of_sum_eq_zero _ h₁ _ h₂]
+  rw [Finsetₓ.weighted_vsub_apply, Finsetₓ.weighted_vsub_apply, inner_sum_smul_sum_smul_of_sum_eq_zero _ h₁ _ h₂]
   simp_rw [vsub_sub_vsub_cancel_right]
   rcongr i₁ i₂ <;> rw [dist_eq_norm_vsub V (p₁ i₁) (p₂ i₂)]
 
 /-- The distance between two points given with `affine_combination`,
 in terms of the pairwise distances between the points in that
 combination. -/
-theorem dist_affine_combination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι → ℝ} (p : ι → P) (h₁ : (∑ i in s, w₁ i) = 1)
+theorem dist_affine_combination {ι : Type _} {s : Finsetₓ ι} {w₁ w₂ : ι → ℝ} (p : ι → P) (h₁ : (∑ i in s, w₁ i) = 1)
     (h₂ : (∑ i in s, w₂ i) = 1) : by
     have a₁ := s.affine_combination p w₁ <;>
       have a₂ := s.affine_combination p w₂ <;>
@@ -562,9 +552,8 @@ theorem dist_affine_combination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι �
             (-∑ i₁ in s, ∑ i₂ in s, (w₁ - w₂) i₁ * (w₁ - w₂) i₂ * (dist (p i₁) (p i₂) * dist (p i₁) (p i₂))) / 2 :=
   by
   rw [dist_eq_norm_vsub V (s.affine_combination p w₁) (s.affine_combination p w₂), ← inner_self_eq_norm_mul_norm,
-    Finset.affine_combination_vsub]
-  have h : (∑ i in s, (w₁ - w₂) i) = 0 := by
-    simp_rw [Pi.sub_apply, Finset.sum_sub_distrib, h₁, h₂, sub_self]
+    Finsetₓ.affine_combination_vsub]
+  have h : (∑ i in s, (w₁ - w₂) i) = 0 := by simp_rw [Pi.sub_apply, Finsetₓ.sum_sub_distrib, h₁, h₂, sub_self]
   exact inner_weighted_vsub p h p h
 
 /-- Suppose that `c₁` is equidistant from `p₁` and `p₂`, and the same
@@ -574,16 +563,22 @@ diagonals of a kite are orthogonal.) -/
 theorem inner_vsub_vsub_of_dist_eq_of_dist_eq {c₁ c₂ p₁ p₂ : P} (hc₁ : dist p₁ c₁ = dist p₂ c₁)
     (hc₂ : dist p₁ c₂ = dist p₂ c₂) : ⟪c₂ -ᵥ c₁, p₂ -ᵥ p₁⟫ = 0 := by
   have h : ⟪c₂ -ᵥ c₁ + (c₂ -ᵥ c₁), p₂ -ᵥ p₁⟫ = 0 := by
-    conv_lhs => congr congr rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₁]skip rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₂]
+    conv_lhs =>
+    congr
+    congr
+    rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₁]
+    skip
+    rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₂]
     rw [sub_add_sub_comm, inner_sub_left]
-    conv_lhs => congr rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₂]skip rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₁]
+    conv_lhs =>
+    congr
+    rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₂]
+    skip
+    rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₁]
     rw [dist_comm p₁, dist_comm p₂, dist_eq_norm_vsub V _ p₁, dist_eq_norm_vsub V _ p₂, ←
       real_inner_add_sub_eq_zero_iff] at hc₁ hc₂
     simp_rw [← neg_vsub_eq_vsub_rev c₁, ← neg_vsub_eq_vsub_rev c₂, sub_neg_eq_add, neg_add_eq_sub, hc₁, hc₂, sub_zero]
-  simpa [inner_add_left, ← mul_two,
-    (by
-      norm_num : (2 : ℝ) ≠ 0)] using
-    h
+  simpa [inner_add_left, ← mul_two, (by norm_num : (2 : ℝ) ≠ 0)] using h
 
 /-- The squared distance between points on a line (expressed as a
 multiple of a fixed vector added to a point) and another point,
@@ -601,8 +596,7 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
   conv_lhs =>
     rw [← mul_self_inj_of_nonneg dist_nonneg dist_nonneg, dist_smul_vadd_sq, ← sub_eq_zero, add_sub_assoc,
       dist_eq_norm_vsub V p₁ p₂, ← real_inner_self_eq_norm_mul_norm, sub_self]
-  have hvi : ⟪v, v⟫ ≠ 0 := by
-    simpa using hv
+  have hvi : ⟪v, v⟫ ≠ 0 := by simpa using hv
   have hd : discrim ⟪v, v⟫ (2 * ⟪v, p₁ -ᵥ p₂⟫) 0 = 2 * inner v (p₁ -ᵥ p₂) * (2 * inner v (p₁ -ᵥ p₂)) := by
     rw [discrim]
     ring
@@ -635,10 +629,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
       fin_cases i <;> simp [b, hc.symm, hp.symm]
       
     · intro i j hij
-      fin_cases i <;>
-        fin_cases j <;>
-          try
-            exact False.elim (hij rfl)
+      fin_cases i <;> fin_cases j <;> try exact False.elim (hij rfl)
       · exact ho
         
       · rw [real_inner_comm]
@@ -655,14 +646,13 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
       · exact vsub_mem_direction hp₂s hp₁s
         
       
-    · rw [finrank_span_eq_card hb, Fintype.card_fin, hd]
+    · rw [finrank_span_eq_card hb, Fintypeₓ.card_fin, hd]
       
   have hv : ∀ v ∈ s.direction, ∃ t₁ t₂ : ℝ, v = t₁ • (c₂ -ᵥ c₁) + t₂ • (p₂ -ᵥ p₁) := by
     intro v hv
     have hr : Set.Range b = {c₂ -ᵥ c₁, p₂ -ᵥ p₁} := by
-      have hu : (Finset.univ : Finset (Finₓ 2)) = {0, 1} := by
-        decide
-      rw [← Fintype.coe_image_univ, hu]
+      have hu : (Finsetₓ.univ : Finsetₓ (Finₓ 2)) = {0, 1} := by decide
+      rw [← Fintypeₓ.coe_image_univ, hu]
       simp
       rfl
     rw [← hbs, hr, Submodule.mem_span_insert] at hv
@@ -675,10 +665,8 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
     vsub_eq_zero_iff_eq, hc.symm, or_falseₓ] at hop
   rw [hop, zero_smul, zero_addₓ, ← eq_vadd_iff_vsub_eq] at hpt
   subst hpt
-  have hp' : (p₂ -ᵥ p₁ : V) ≠ 0 := by
-    simp [hp.symm]
-  have hp₂ : dist ((1 : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁) c₁ = r₁ := by
-    simp [hp₂c₁]
+  have hp' : (p₂ -ᵥ p₁ : V) ≠ 0 := by simp [hp.symm]
+  have hp₂ : dist ((1 : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁) c₁ = r₁ := by simp [hp₂c₁]
   rw [← hp₁c₁, dist_smul_vadd_eq_dist _ _ hp'] at hpc₁ hp₂
   simp only [one_ne_zero, false_orₓ] at hp₂
   rw [hp₂.symm] at hpc₁
@@ -690,13 +678,12 @@ most two points). -/
 theorem eq_of_dist_eq_of_dist_eq_of_finrank_eq_two [FiniteDimensional ℝ V] (hd : finrank ℝ V = 2) {c₁ c₂ p₁ p₂ p : P}
     {r₁ r₂ : ℝ} (hc : c₁ ≠ c₂) (hp : p₁ ≠ p₂) (hp₁c₁ : dist p₁ c₁ = r₁) (hp₂c₁ : dist p₂ c₁ = r₁)
     (hpc₁ : dist p c₁ = r₁) (hp₁c₂ : dist p₁ c₂ = r₂) (hp₂c₂ : dist p₂ c₂ = r₂) (hpc₂ : dist p c₂ = r₂) :
-    p = p₁ ∨ p = p₂ := by
-  have hd' : finrank ℝ (⊤ : AffineSubspace ℝ P).direction = 2 := by
+    p = p₁ ∨ p = p₂ :=
+  haveI hd' : finrank ℝ (⊤ : AffineSubspace ℝ P).direction = 2 := by
     rw [direction_top, finrank_top]
     exact hd
-  exact
-    eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two hd' (mem_top ℝ V _) (mem_top ℝ V _) (mem_top ℝ V _)
-      (mem_top ℝ V _) (mem_top ℝ V _) hc hp hp₁c₁ hp₂c₁ hpc₁ hp₁c₂ hp₂c₂ hpc₂
+  eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two hd' (mem_top ℝ V _) (mem_top ℝ V _) (mem_top ℝ V _) (mem_top ℝ V _)
+    (mem_top ℝ V _) hc hp hp₁c₁ hp₂c₁ hpc₁ hp₁c₂ hp₂c₂ hpc₂
 
 variable {V}
 
@@ -978,8 +965,7 @@ theorem reflection_apply (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace 
   rfl
 
 theorem eq_reflection_of_eq_subspace {s s' : AffineSubspace ℝ P} [Nonempty s] [Nonempty s'] [CompleteSpace s.direction]
-    [CompleteSpace s'.direction] (h : s = s') (p : P) : (reflection s p : P) = (reflection s' p : P) := by
-  subst h
+    [CompleteSpace s'.direction] (h : s = s') (p : P) : (reflection s p : P) = (reflection s' p : P) := by subst h
 
 /-- Reflecting twice in the same subspace. -/
 @[simp]
@@ -990,8 +976,7 @@ theorem reflection_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteS
       ∀ b : V, (_root_.orthogonal_projection s.direction) b = 0 → reflection s (reflection s (b +ᵥ a)) = b +ᵥ a :=
     by
     intro a b h
-    have : (a : P) -ᵥ (b +ᵥ a) = -b := by
-      rw [vsub_vadd_eq_vsub_sub, vsub_self, zero_sub]
+    have : (a : P) -ᵥ (b +ᵥ a) = -b := by rw [vsub_vadd_eq_vsub_sub, vsub_self, zero_sub]
     simp [reflection, h, this]
   rw [← vsub_vadd p (orthogonalProjection s p)]
   exact this (orthogonalProjection s p) _ (orthogonal_projection_vsub_orthogonal_projection s p)
@@ -1125,7 +1110,10 @@ theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
     simp
     
   · rw [H, dist_eq_norm_vsub V p₂, vsub_vadd_eq_vsub_sub, dist_eq_norm_vsub V p₂]
-    conv_lhs => congr congr rw [← one_smul ℝ (p₂ -ᵥ p₁ : V)]
+    conv_lhs =>
+    congr
+    congr
+    rw [← one_smul ℝ (p₂ -ᵥ p₁ : V)]
     rw [← sub_smul, norm_smul]
     norm_num
     
@@ -1140,12 +1128,8 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
   rw [Set.forall_range_iff] at hv
   have hv0 : v ≠ 0 := by
     intro h
-    have he : p 1 = p 0 := by
-      simpa [h] using hv 1
-    exact
-      (by
-          decide : (1 : Finₓ 3) ≠ 0)
-        (hpi he)
+    have he : p 1 = p 0 := by simpa [h] using hv 1
+    exact (by decide : (1 : Finₓ 3) ≠ 0) (hpi he)
   rcases hs with ⟨c, r, hs⟩
   have hs' := fun i => hs (p i) (Set.mem_of_mem_of_subset (Set.mem_range_self _) hps)
   choose f hf using hv
@@ -1168,18 +1152,8 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
     intro i hi
     have hsdi := hsd i
     simpa [hfn0, hi] using hsdi
-  have hf12 : f 1 = f 2 := by
-    rw
-      [hfn0' 1
-        (by
-          decide),
-      hfn0' 2
-        (by
-          decide)]
-  exact
-    (by
-        decide : (1 : Finₓ 3) ≠ 2)
-      (hfi hf12)
+  have hf12 : f 1 = f 2 := by rw [hfn0' 1 (by decide), hfn0' 2 (by decide)]
+  exact (by decide : (1 : Finₓ 3) ≠ 2) (hfi hf12)
 
 end EuclideanGeometry
 

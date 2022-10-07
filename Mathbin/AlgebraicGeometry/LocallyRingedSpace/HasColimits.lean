@@ -158,11 +158,10 @@ theorem image_basic_open_image_preimage :
   · suffices
       (TopologicalSpace.Opens.map f.1.base).obj (image_basic_open f g U s) =
         (TopologicalSpace.Opens.map g.1.base).obj (image_basic_open f g U s)
-      by
-      injection this
-    delta' image_basic_open
+      by injection this
+    delta image_basic_open
     rw [preimage_basic_open f, preimage_basic_open g]
-    dsimp' only [functor.op, unop_op]
+    dsimp only [functor.op, unop_op]
     rw [← comp_apply, ← SheafedSpace.comp_c_app', ← comp_apply, ← SheafedSpace.comp_c_app',
       SheafedSpace.congr_app (coequalizer.condition f.1 g.1), comp_apply]
     erw [X.to_RingedSpace.basic_open_res]
@@ -177,7 +176,7 @@ theorem image_basic_open_image_open : IsOpen ((coequalizer.π f.1 g.1).base '' (
     Top.coequalizer_is_open_iff, ← Set.preimage_comp]
   erw [← coe_comp]
   rw [preserves_coequalizer.iso_hom, ι_comp_coequalizer_comparison]
-  dsimp' only [SheafedSpace.forget]
+  dsimp only [SheafedSpace.forget]
   rw [image_basic_open_image_preimage]
   exact (image_basic_open f g U s).2
 
@@ -230,8 +229,7 @@ theorem is_local_ring_hom_stalk_map_congr {X Y : RingedSpace} (f g : X ⟶ Y) (H
 noncomputable def coequalizerCoforkIsColimit : IsColimit (coequalizerCofork f g) := by
   apply cofork.is_colimit.mk'
   intro s
-  have e : f.val ≫ s.π.val = g.val ≫ s.π.val := by
-    injection s.condition
+  have e : f.val ≫ s.π.val = g.val ≫ s.π.val := by injection s.condition
   use coequalizer.desc s.π.1 e
   · intro x
     rcases(Top.epi_iff_surjective (coequalizer.π f.val g.val).base).mp inferInstance x with ⟨y, rfl⟩
@@ -270,7 +268,7 @@ noncomputable instance preservesCoequalizer : PreservesColimitsOfShape WalkingPa
     apply preserves_colimit_of_iso_diagram _ (diagram_iso_parallel_pair F).symm
     apply preserves_colimit_of_preserves_colimit_cocone (coequalizer_cofork_is_colimit _ _)
     apply (is_colimit_map_cocone_cofork_equiv _ _).symm _
-    dsimp' only [forget_to_SheafedSpace]
+    dsimp only [forget_to_SheafedSpace]
     exact coequalizer_is_coequalizer _ _⟩
 
 end HasCoequalizer

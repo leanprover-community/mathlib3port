@@ -66,14 +66,13 @@ variable {a}
 theorem ext {I J : Ideal α} (h : ∀ x, x ∈ I ↔ x ∈ J) : I = J :=
   Submodule.ext h
 
-theorem sum_mem (I : Ideal α) {ι : Type _} {t : Finset ι} {f : ι → α} : (∀ c ∈ t, f c ∈ I) → (∑ i in t, f i) ∈ I :=
+theorem sum_mem (I : Ideal α) {ι : Type _} {t : Finsetₓ ι} {f : ι → α} : (∀ c ∈ t, f c ∈ I) → (∑ i in t, f i) ∈ I :=
   Submodule.sum_mem I
 
 theorem eq_top_of_unit_mem (x y : α) (hx : x ∈ I) (h : y * x = 1) : I = ⊤ :=
   eq_top_iff.2 fun z _ =>
     calc
-      z = z * (y * x) := by
-        simp [h]
+      z = z * (y * x) := by simp [h]
       _ = z * y * x := Eq.symm <| mul_assoc z y x
       _ ∈ I := I.mul_mem_left _ hx
       
@@ -83,11 +82,7 @@ theorem eq_top_of_is_unit_mem {x} (hx : x ∈ I) (h : IsUnit x) : I = ⊤ :=
   eq_top_of_unit_mem I x y hx hy
 
 theorem eq_top_iff_one : I = ⊤ ↔ (1 : α) ∈ I :=
-  ⟨by
-    rintro rfl <;> trivial, fun h =>
-    eq_top_of_unit_mem _ _ 1 h
-      (by
-        simp )⟩
+  ⟨by rintro rfl <;> trivial, fun h => eq_top_of_unit_mem _ _ 1 h (by simp)⟩
 
 theorem ne_top_iff_one : I ≠ ⊤ ↔ (1 : α) ∉ I :=
   not_congr I.eq_top_iff_one
@@ -157,15 +152,18 @@ theorem span_eq_bot {s : Set α} : span s = ⊥ ↔ ∀ x ∈ s, (x : α) = 0 :=
 theorem span_singleton_eq_bot {x} : span ({x} : Set α) = ⊥ ↔ x = 0 :=
   Submodule.span_singleton_eq_bot
 
-@[simp]
-theorem span_zero : span (0 : Set α) = ⊥ := by
-  rw [← Set.singleton_zero, span_singleton_eq_bot]
+theorem span_singleton_ne_top {α : Type _} [CommSemiringₓ α] {x : α} (hx : ¬IsUnit x) : Ideal.span ({x} : Set α) ≠ ⊤ :=
+  (Ideal.ne_top_iff_one _).mpr fun h1 =>
+    let ⟨y, hy⟩ := Ideal.mem_span_singleton'.mp h1
+    hx ⟨⟨x, y, mul_comm y x ▸ hy, hy⟩, rfl⟩
 
 @[simp]
-theorem span_one : span (1 : Set α) = ⊤ := by
-  rw [← Set.singleton_one, span_singleton_one]
+theorem span_zero : span (0 : Set α) = ⊥ := by rw [← Set.singleton_zero, span_singleton_eq_bot]
 
-theorem span_eq_top_iff_finite (s : Set α) : span s = ⊤ ↔ ∃ s' : Finset α, ↑s' ⊆ s ∧ span (s' : Set α) = ⊤ := by
+@[simp]
+theorem span_one : span (1 : Set α) = ⊤ := by rw [← Set.singleton_one, span_singleton_one]
+
+theorem span_eq_top_iff_finite (s : Set α) : span s = ⊤ ↔ ∃ s' : Finsetₓ α, ↑s' ⊆ s ∧ span (s' : Set α) = ⊤ := by
   simp_rw [eq_top_iff_one]
   exact ⟨Submodule.mem_span_finite_of_mem_span, fun ⟨s', h₁, h₂⟩ => span_mono h₁ h₂⟩
 
@@ -200,8 +198,8 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
     exact Or.cases_on (hI.mem_or_mem H) id ih
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ∉ » I)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (y «expr ∉ » I)
 theorem not_is_prime_iff {I : Ideal α} : ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I := by
   simp_rw [Ideal.is_prime_iff, not_and_distrib, Ne.def, not_not, not_forall, not_or_distrib]
   exact
@@ -211,14 +209,8 @@ theorem zero_ne_one_of_proper {I : Ideal α} (h : I ≠ ⊤) : (0 : α) ≠ 1 :=
   I.ne_top_iff_one.1 h <| hz ▸ I.zero_mem
 
 theorem bot_prime {R : Type _} [Ringₓ R] [IsDomain R] : (⊥ : Ideal R).IsPrime :=
-  ⟨fun h =>
-    one_ne_zero
-      (by
-        rwa [Ideal.eq_top_iff_one, Submodule.mem_bot] at h),
-    fun x y h =>
-    mul_eq_zero.mp
-      (by
-        simpa only [Submodule.mem_bot] using h)⟩
+  ⟨fun h => one_ne_zero (by rwa [Ideal.eq_top_iff_one, Submodule.mem_bot] at h), fun x y h =>
+    mul_eq_zero.mp (by simpa only [Submodule.mem_bot] using h)⟩
 
 /-- An ideal is maximal if it is maximal in the collection of proper ideals. -/
 class IsMaximal (I : Ideal α) : Prop where
@@ -356,9 +348,7 @@ theorem mul_unit_mem_iff_mem {x y : α} (hy : IsUnit y) : x * y ∈ I ↔ x ∈ 
   mul_comm y x ▸ unit_mul_mem_iff_mem I hy
 
 theorem mem_span_singleton {x y : α} : x ∈ span ({y} : Set α) ↔ y ∣ x :=
-  mem_span_singleton'.trans <|
-    exists_congr fun _ => by
-      rw [eq_comm, mul_comm]
+  mem_span_singleton'.trans <| exists_congr fun _ => by rw [eq_comm, mul_comm]
 
 theorem span_singleton_le_span_singleton {x y : α} : span ({x} : Set α) ≤ span ({y} : Set α) ↔ y ∣ x :=
   span_le.trans <| singleton_subset_iff.trans mem_span_singleton
@@ -412,9 +402,7 @@ theorem factors_decreasing [CommRingₓ β] [IsDomain β] (b₁ b₂ : β) (h₁
     span ({b₁ * b₂} : Set β) < span {b₁} :=
   (lt_of_le_not_leₓ (Ideal.span_le.2 <| singleton_subset_iff.2 <| Ideal.mem_span_singleton.2 ⟨b₂, rfl⟩)) fun h =>
     h₂ <|
-      is_unit_of_dvd_one _ <|
-        (mul_dvd_mul_iff_left h₁).1 <| by
-          rwa [mul_oneₓ, ← Ideal.span_singleton_le_span_singleton]
+      is_unit_of_dvd_one _ <| (mul_dvd_mul_iff_left h₁).1 <| by rwa [mul_oneₓ, ← Ideal.span_singleton_le_span_singleton]
 
 variable (b)
 
@@ -424,11 +412,7 @@ theorem mul_mem_right (h : a ∈ I) : a * b ∈ I :=
 variable {b}
 
 theorem pow_mem_of_mem (ha : a ∈ I) (n : ℕ) (hn : 0 < n) : a ^ n ∈ I :=
-  Nat.casesOn n
-    (Not.elim
-      (by
-        decide))
-    (fun m hm => (pow_succₓ a m).symm ▸ I.mul_mem_right (a ^ m) ha) hn
+  Nat.casesOn n (Not.elim (by decide)) (fun m hm => (pow_succₓ a m).symm ▸ I.mul_mem_right (a ^ m) ha) hn
 
 theorem IsPrime.mul_mem_iff_mem_or_mem {I : Ideal α} (hI : I.IsPrime) : ∀ {x y : α}, x * y ∈ I ↔ x ∈ I ∨ y ∈ I :=
   fun x y =>
@@ -444,12 +428,12 @@ theorem pow_multiset_sum_mem_span_pow (s : Multiset α) (n : ℕ) :
   induction' s using Multiset.induction_on with a s hs
   · simp
     
-  simp only [Finset.coe_insert, Multiset.map_cons, Multiset.to_finset_cons, Multiset.sum_cons, Multiset.card_cons,
+  simp only [Finsetₓ.coe_insert, Multiset.map_cons, Multiset.to_finset_cons, Multiset.sum_cons, Multiset.card_cons,
     add_pow]
   refine' Submodule.sum_mem _ _
   intro c hc
   rw [mem_span_insert]
-  by_cases' h : n + 1 ≤ c
+  by_cases h:n + 1 ≤ c
   · refine'
       ⟨a ^ (c - (n + 1)) * s.sum ^ ((s.card + 1) * n + 1 - c) * ((s.card + 1) * n + 1).choose c, 0,
         Submodule.zero_mem _, _⟩
@@ -468,13 +452,13 @@ theorem pow_multiset_sum_mem_span_pow (s : Multiset α) (n : ℕ) :
     exact mul_mem_left _ _ hs
     
 
-theorem sum_pow_mem_span_pow {ι} (s : Finset ι) (f : ι → α) (n : ℕ) :
+theorem sum_pow_mem_span_pow {ι} (s : Finsetₓ ι) (f : ι → α) (n : ℕ) :
     (∑ i in s, f i) ^ (s.card * n + 1) ∈ span ((fun i => f i ^ (n + 1)) '' s) := by
   convert pow_multiset_sum_mem_span_pow (s.1.map f) n
   · rw [Multiset.card_map]
     rfl
     
-  rw [Multiset.map_map, Multiset.to_finset_map, Finset.val_to_finset, Finset.coe_image]
+  rw [Multiset.map_map, Multiset.to_finset_map, Finsetₓ.val_to_finset, Finsetₓ.coe_image]
 
 theorem span_pow_eq_top (s : Set α) (hs : span s = ⊤) (n : ℕ) : span ((fun x => x ^ n) '' s) = ⊤ := by
   rw [eq_top_iff_one]
@@ -493,7 +477,7 @@ theorem span_pow_eq_top (s : Set α) (hs : span s = ⊤) (n : ℕ) : span ((fun 
   rw [hf, one_pow] at this
   refine' span_le.mpr _ this
   rintro _ hx
-  simp_rw [Finset.mem_coe, Set.mem_image] at hx
+  simp_rw [Finsetₓ.mem_coe, Set.mem_image] at hx
   rcases hx with ⟨x, hx, rfl⟩
   have : span ({x ^ (n + 1)} : Set α) ≤ span ((fun x : α => x ^ (n + 1)) '' s) := by
     rw [span_le, Set.singleton_subset_iff]
@@ -545,7 +529,7 @@ theorem eq_bot_or_top : I = ⊥ ∨ I = ⊤ := by
   intro h1
   rw [eq_bot_iff]
   intro r hr
-  by_cases' H : r = 0
+  by_cases H:r = 0
   · simpa
     
   simpa [H, h1] using I.mul_mem_left r⁻¹ hr
@@ -554,11 +538,8 @@ theorem eq_bot_of_prime [h : I.IsPrime] : I = ⊥ :=
   or_iff_not_imp_right.mp I.eq_bot_or_top h.1
 
 theorem bot_is_maximal : IsMaximal (⊥ : Ideal K) :=
-  ⟨⟨fun h =>
-      absurd ((eq_top_iff_one (⊤ : Ideal K)).mp rfl)
-        (by
-          rw [← h] <;> simp ),
-      fun I hI => or_iff_not_imp_left.mp (eq_bot_or_top I) (ne_of_gtₓ hI)⟩⟩
+  ⟨⟨fun h => absurd ((eq_top_iff_one (⊤ : Ideal K)).mp rfl) (by rw [← h] <;> simp), fun I hI =>
+      or_iff_not_imp_left.mp (eq_bot_or_top I) (ne_of_gtₓ hI)⟩⟩
 
 end Ideal
 
@@ -570,8 +551,7 @@ namespace Ideal
 
 theorem mul_sub_mul_mem {R : Type _} [CommRingₓ R] (I : Ideal R) {a b c d : R} (h1 : a - b ∈ I) (h2 : c - d ∈ I) :
     a * c - b * d ∈ I := by
-  rw
-    [show a * c - b * d = (a - b) * c + b * (c - d) by
+  rw [show a * c - b * d = (a - b) * c + b * (c - d) by
       rw [sub_mul, mul_sub]
       abel]
   exact I.add_mem (I.mul_mem_right _ h1) (I.mul_mem_left _ h2)
@@ -587,7 +567,7 @@ variable {R : Type _} [CommRingₓ R]
 theorem not_is_field_of_subsingleton {R : Type _} [Ringₓ R] [Subsingleton R] : ¬IsField R := fun ⟨⟨x, y, hxy⟩, _, _⟩ =>
   hxy (Subsingleton.elim x y)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
 theorem exists_not_is_unit_of_not_is_field [Nontrivial R] (hf : ¬IsField R) : ∃ (x : _)(_ : x ≠ (0 : R)), ¬IsUnit x :=
   by
   have : ¬_ := fun h => hf ⟨exists_pair_ne R, mul_comm, h⟩

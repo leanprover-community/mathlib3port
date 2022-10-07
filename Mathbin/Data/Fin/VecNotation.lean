@@ -103,13 +103,11 @@ theorem cons_val_zero' (h : 0 < m.succ) (x : α) (u : Finₓ m → α) : vecCons
   rfl
 
 @[simp]
-theorem cons_val_succ (x : α) (u : Finₓ m → α) (i : Finₓ m) : vecCons x u i.succ = u i := by
-  simp [vec_cons]
+theorem cons_val_succ (x : α) (u : Finₓ m → α) (i : Finₓ m) : vecCons x u i.succ = u i := by simp [vec_cons]
 
 @[simp]
 theorem cons_val_succ' {i : ℕ} (h : i.succ < m.succ) (x : α) (u : Finₓ m → α) :
-    vecCons x u ⟨i.succ, h⟩ = u ⟨i, Nat.lt_of_succ_lt_succₓ h⟩ := by
-  simp only [vec_cons, Finₓ.cons, Finₓ.cases_succ']
+    vecCons x u ⟨i.succ, h⟩ = u ⟨i, Nat.lt_of_succ_lt_succₓ h⟩ := by simp only [vec_cons, Finₓ.cons, Finₓ.cases_succ']
 
 @[simp]
 theorem head_cons (x : α) (u : Finₓ m → α) : vecHead (vecCons x u) = x :=
@@ -130,8 +128,7 @@ theorem cons_head_tail (u : Finₓ m.succ → α) : vecCons (vecHead u) (vecTail
 
 @[simp]
 theorem range_cons (x : α) (u : Finₓ n → α) : Set.Range (vecCons x u) = {x} ∪ Set.Range u :=
-  Set.ext fun y => by
-    simp [Finₓ.exists_fin_succ, eq_comm]
+  Set.ext fun y => by simp [Finₓ.exists_fin_succ, eq_comm]
 
 @[simp]
 theorem range_empty (u : Finₓ 0 → α) : Set.Range u = ∅ :=
@@ -162,20 +159,18 @@ theorem cons_val_fin_one (x : α) (u : Finₓ 0 → α) (i : Finₓ 1) : vecCons
 theorem cons_fin_one (x : α) (u : Finₓ 0 → α) : vecCons x u = fun _ => x :=
   funext (cons_val_fin_one x u)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
 unsafe instance _root_.pi_fin.reflect [reflected_univ.{u}] [reflected _ α] [has_reflect α] :
     ∀ {n}, has_reflect (Finₓ n → α)
   | 0, v =>
     (Subsingleton.elim vecEmpty v).rec
-      ((by
-            trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]" :
+      ((by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
             reflected _ @vecEmpty.{u}).subst
         (quote.1 α))
   | n + 1, v =>
     (cons_head_tail v).rec <|
-      (by
-            trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]" :
+      (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
             reflected _ @vecCons.{u}).subst₄
         (quote.1 α) (quote.1 n) (quote.1 _) (_root_.pi_fin.reflect _)
 
@@ -202,11 +197,7 @@ theorem empty_append (v : Finₓ n → α) : Finₓ.append (zero_addₓ _).symm 
 @[simp]
 theorem cons_append (ho : o + 1 = m + 1 + n) (x : α) (u : Finₓ m → α) (v : Finₓ n → α) :
     Finₓ.append ho (vecCons x u) v =
-      vecCons x
-        (Finₓ.append
-          (by
-            rwa [add_assocₓ, add_commₓ 1, ← add_assocₓ, add_right_cancel_iffₓ] at ho)
-          u v) :=
+      vecCons x (Finₓ.append (by rwa [add_assocₓ, add_commₓ 1, ← add_assocₓ, add_right_cancel_iffₓ] at ho) u v) :=
   by
   ext i
   simp_rw [Finₓ.append]
@@ -283,13 +274,11 @@ theorem vec_head_vec_alt1 (hm : m + 2 = n + 1 + (n + 1)) (v : Finₓ (m + 2) →
 
 @[simp]
 theorem cons_vec_bit0_eq_alt0 (x : α) (u : Finₓ n → α) (i : Finₓ (n + 1)) :
-    vecCons x u (bit0 i) = vecAlt0 rfl (Finₓ.append rfl (vecCons x u) (vecCons x u)) i := by
-  rw [vec_alt0_append]
+    vecCons x u (bit0 i) = vecAlt0 rfl (Finₓ.append rfl (vecCons x u) (vecCons x u)) i := by rw [vec_alt0_append]
 
 @[simp]
 theorem cons_vec_bit1_eq_alt1 (x : α) (u : Finₓ n → α) (i : Finₓ (n + 1)) :
-    vecCons x u (bit1 i) = vecAlt1 rfl (Finₓ.append rfl (vecCons x u) (vecCons x u)) i := by
-  rw [vec_alt1_append]
+    vecCons x u (bit1 i) = vecAlt1 rfl (Finₓ.append rfl (vecCons x u) (vecCons x u)) i := by rw [vec_alt1_append]
 
 @[simp]
 theorem cons_vec_alt0 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Finₓ m → α) :
@@ -312,8 +301,7 @@ theorem cons_vec_alt0 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Finₓ m
 -- Although proved by simp, extracting element 8 of a five-element
 -- vector does not work by simp unless this lemma is present.
 @[simp]
-theorem empty_vec_alt0 (α) {h} : vecAlt0 h (![] : Finₓ 0 → α) = ![] := by
-  simp
+theorem empty_vec_alt0 (α) {h} : vecAlt0 h (![] : Finₓ 0 → α) = ![] := by simp
 
 @[simp]
 theorem cons_vec_alt1 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Finₓ m → α) :
@@ -336,8 +324,7 @@ theorem cons_vec_alt1 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Finₓ m
 -- Although proved by simp, extracting element 9 of a five-element
 -- vector does not work by simp unless this lemma is present.
 @[simp]
-theorem empty_vec_alt1 (α) {h} : vecAlt1 h (![] : Finₓ 0 → α) = ![] := by
-  simp
+theorem empty_vec_alt1 (α) {h} : vecAlt1 h (![] : Finₓ 0 → α) = ![] := by simp
 
 end Val
 
@@ -378,8 +365,7 @@ theorem add_cons (v : Finₓ n.succ → α) (y : α) (w : Finₓ n → α) :
 
 @[simp]
 theorem cons_add_cons (x : α) (v : Finₓ n → α) (y : α) (w : Finₓ n → α) :
-    vecCons x v + vecCons y w = vecCons (x + y) (v + w) := by
-  simp
+    vecCons x v + vecCons y w = vecCons (x + y) (v + w) := by simp
 
 @[simp]
 theorem head_add (a b : Finₓ n.succ → α) : vecHead (a + b) = vecHead a + vecHead b :=
@@ -413,8 +399,7 @@ theorem sub_cons (v : Finₓ n.succ → α) (y : α) (w : Finₓ n → α) :
 
 @[simp]
 theorem cons_sub_cons (x : α) (v : Finₓ n → α) (y : α) (w : Finₓ n → α) :
-    vecCons x v - vecCons y w = vecCons (x - y) (v - w) := by
-  simp
+    vecCons x v - vecCons y w = vecCons (x - y) (v - w) := by simp
 
 @[simp]
 theorem head_sub (a b : Finₓ n.succ → α) : vecHead (a - b) = vecHead a - vecHead b :=
@@ -455,9 +440,8 @@ theorem cons_eq_zero_iff {v : Finₓ n → α} {x : α} : vecCons x v = 0 ↔ x 
   ⟨fun h =>
     ⟨congr_fun h 0, by
       convert congr_arg vec_tail h
-      simp ⟩,
-    fun ⟨hx, hv⟩ => by
-    simp [hx, hv]⟩
+      simp⟩,
+    fun ⟨hx, hv⟩ => by simp [hx, hv]⟩
 
 open Classical
 

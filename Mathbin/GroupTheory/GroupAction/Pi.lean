@@ -103,22 +103,32 @@ instance mulAction' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} [∀ i, MulA
   mul_smul := fun r s f => funext fun i => mul_smul _ _ _
   one_smul := fun f => funext fun i => one_smul _ _
 
-instance distribMulAction (α) {m : Monoidₓ α} {n : ∀ i, AddMonoidₓ <| f i} [∀ i, DistribMulAction α <| f i] :
-    @DistribMulAction α (∀ i : I, f i) m (@Pi.addMonoid I f n) :=
-  { Pi.mulAction _ with smul_zero := fun c => funext fun i => smul_zero _,
-    smul_add := fun c f g => funext fun i => smul_add _ _ _ }
+instance smulZeroClass (α) {n : ∀ i, Zero <| f i} [∀ i, SmulZeroClass α <| f i] :
+    @SmulZeroClass α (∀ i : I, f i) (@Pi.hasZero I f n) where smul_zero := fun c => funext fun i => smul_zero _
 
-instance distribMulAction' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} {n : ∀ i, AddMonoidₓ <| g i}
-    [∀ i, DistribMulAction (f i) (g i)] :
-    @DistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) (@Pi.addMonoid I g n) where
-  smul_add := by
-    intros
-    ext x
-    apply smul_add
-  smul_zero := by
+instance smulZeroClass' {g : I → Type _} {n : ∀ i, Zero <| g i} [∀ i, SmulZeroClass (f i) (g i)] :
+    @SmulZeroClass (∀ i, f i) (∀ i : I, g i) (@Pi.hasZero I g n) where smul_zero := by
     intros
     ext x
     apply smul_zero
+
+instance distribSmul (α) {n : ∀ i, AddZeroClassₓ <| f i} [∀ i, DistribSmul α <| f i] :
+    @DistribSmul α (∀ i : I, f i) (@Pi.addZeroClass I f n) where smul_add := fun c f g => funext fun i => smul_add _ _ _
+
+instance distribSmul' {g : I → Type _} {n : ∀ i, AddZeroClassₓ <| g i} [∀ i, DistribSmul (f i) (g i)] :
+    @DistribSmul (∀ i, f i) (∀ i : I, g i) (@Pi.addZeroClass I g n) where smul_add := by
+    intros
+    ext x
+    apply smul_add
+
+instance distribMulAction (α) {m : Monoidₓ α} {n : ∀ i, AddMonoidₓ <| f i} [∀ i, DistribMulAction α <| f i] :
+    @DistribMulAction α (∀ i : I, f i) m (@Pi.addMonoid I f n) :=
+  { Pi.mulAction _, Pi.distribSmul _ with }
+
+instance distribMulAction' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} {n : ∀ i, AddMonoidₓ <| g i}
+    [∀ i, DistribMulAction (f i) (g i)] :
+    @DistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) (@Pi.addMonoid I g n) :=
+  { Pi.mulAction', Pi.distribSmul' with }
 
 theorem single_smul {α} [Monoidₓ α] [∀ i, AddMonoidₓ <| f i] [∀ i, DistribMulAction α <| f i] [DecidableEq I] (i : I)
     (r : α) (x : f i) : single i (r • x) = r • single i x :=
@@ -192,8 +202,7 @@ section Extend
 @[to_additive]
 theorem Function.extend_smul {R α β γ : Type _} [HasSmul R γ] (r : R) (f : α → β) (g : α → γ) (e : β → γ) :
     Function.extendₓ f (r • g) (r • e) = r • Function.extendₓ f g e :=
-  funext fun _ => by
-    convert (apply_diteₓ ((· • ·) r) _ _ _).symm
+  funext fun _ => by convert (apply_diteₓ ((· • ·) r) _ _ _).symm
 
 end Extend
 

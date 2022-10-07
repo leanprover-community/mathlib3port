@@ -42,17 +42,14 @@ theorem hom_congr_apply {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) 
   rfl
 
 theorem hom_congr_comp {X Y Z X₁ Y₁ Z₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) (γ : Z ≅ Z₁) (f : X ⟶ Y) (g : Y ⟶ Z) :
-    α.homCongr γ (f ≫ g) = α.homCongr β f ≫ β.homCongr γ g := by
-  simp
+    α.homCongr γ (f ≫ g) = α.homCongr β f ≫ β.homCongr γ g := by simp
 
 @[simp]
-theorem hom_congr_refl {X Y : C} (f : X ⟶ Y) : (Iso.refl X).homCongr (Iso.refl Y) f = f := by
-  simp
+theorem hom_congr_refl {X Y : C} (f : X ⟶ Y) : (Iso.refl X).homCongr (Iso.refl Y) f = f := by simp
 
 @[simp]
 theorem hom_congr_trans {X₁ Y₁ X₂ Y₂ X₃ Y₃ : C} (α₁ : X₁ ≅ X₂) (β₁ : Y₁ ≅ Y₂) (α₂ : X₂ ≅ X₃) (β₂ : Y₂ ≅ Y₃)
-    (f : X₁ ⟶ Y₁) : (α₁ ≪≫ α₂).homCongr (β₁ ≪≫ β₂) f = (α₁.homCongr β₁).trans (α₂.homCongr β₂) f := by
-  simp
+    (f : X₁ ⟶ Y₁) : (α₁ ≪≫ α₂).homCongr (β₁ ≪≫ β₂) f = (α₁.homCongr β₁).trans (α₂.homCongr β₂) f := by simp
 
 @[simp]
 theorem hom_congr_symm {X₁ Y₁ X₂ Y₂ : C} (α : X₁ ≅ X₂) (β : Y₁ ≅ Y₂) : (α.homCongr β).symm = α.symm.homCongr β.symm :=
@@ -85,8 +82,7 @@ theorem trans_conj {Z : C} (β : Y ≅ Z) (f : End X) : (α ≪≫ β).conj f = 
   hom_congr_trans α α β β f
 
 @[simp]
-theorem symm_self_conj (f : End X) : α.symm.conj (α.conj f) = f := by
-  rw [← trans_conj, α.self_symm_id, refl_conj]
+theorem symm_self_conj (f : End X) : α.symm.conj (α.conj f) = f := by rw [← trans_conj, α.self_symm_id, refl_conj]
 
 @[simp]
 theorem self_symm_conj (f : End Y) : α.conj (α.symm.conj f) = f :=
@@ -100,8 +96,7 @@ theorem conj_pow (f : End X) (n : ℕ) : α.conj (f ^ n) = α.conj f ^ n :=
 def conjAut : Aut X ≃* Aut Y :=
   (Aut.unitsEndEquivAut X).symm.trans <| (Units.mapEquiv α.conj).trans <| Aut.unitsEndEquivAut Y
 
-theorem conj_Aut_apply (f : Aut X) : α.conjAut f = α.symm ≪≫ f ≪≫ α := by
-  cases f <;> cases α <;> ext <;> rfl
+theorem conj_Aut_apply (f : Aut X) : α.conjAut f = α.symm ≪≫ f ≪≫ α := by cases f <;> cases α <;> ext <;> rfl
 
 @[simp]
 theorem conj_Aut_hom (f : Aut X) : (α.conjAut f).Hom = α.conj f.Hom :=
@@ -136,8 +131,7 @@ universe v₁ u₁
 variable {C : Type u} [Category.{v} C] {D : Type u₁} [Category.{v₁} D] (F : C ⥤ D)
 
 theorem map_hom_congr {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) (f : X ⟶ Y) :
-    F.map (Iso.homCongr α β f) = Iso.homCongr (F.mapIso α) (F.mapIso β) (F.map f) := by
-  simp
+    F.map (Iso.homCongr α β f) = Iso.homCongr (F.mapIso α) (F.mapIso β) (F.map f) := by simp
 
 theorem map_conj {X Y : C} (α : X ≅ Y) (f : End X) : F.map (α.conj f) = (F.mapIso α).conj (F.map f) :=
   map_hom_congr F α α f

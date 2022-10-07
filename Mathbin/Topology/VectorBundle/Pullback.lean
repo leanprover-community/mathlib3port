@@ -26,8 +26,7 @@ variable {B' : Type _} (f : B' → B)
 instance [∀ x : B, TopologicalSpace (E' x)] : ∀ x : B', TopologicalSpace ((f *ᵖ E') x) := by
   delta_instance bundle.pullback
 
-instance [∀ x : B, AddCommMonoidₓ (E' x)] : ∀ x : B', AddCommMonoidₓ ((f *ᵖ E') x) := by
-  delta_instance bundle.pullback
+instance [∀ x : B, AddCommMonoidₓ (E' x)] : ∀ x : B', AddCommMonoidₓ ((f *ᵖ E') x) := by delta_instance bundle.pullback
 
 instance [Semiringₓ R] [∀ x : B, AddCommMonoidₓ (E' x)] [∀ x, Module R (E' x)] : ∀ x : B', Module R ((f *ᵖ E') x) := by
   delta_instance bundle.pullback
@@ -97,15 +96,15 @@ def TopologicalVectorBundle.Trivialization.pullback (e : Trivialization 𝕜 F E
     (Pullback.continuous_proj E f).ContinuousOn.Prod
       (continuous_snd.comp_continuous_on <| e.ContinuousOn.comp (Pullback.continuous_lift E f).ContinuousOn Subset.rfl)
   continuous_inv_fun := by
-    dsimp' only
+    dsimp only
     simp_rw [(inducing_pullback_total_space_embedding E f).continuous_on_iff, Function.comp,
       pullback_total_space_embedding, total_space.proj_mk]
-    dsimp' only [total_space.proj_mk]
+    dsimp only [total_space.proj_mk]
     refine'
       continuous_on_fst.prod
         (e.continuous_on_symm.comp ((map_continuous f).prod_map continuous_id).ContinuousOn subset.rfl)
   source_eq := by
-    dsimp' only
+    dsimp only
     rw [e.source_eq]
     rfl
   target_eq := rfl

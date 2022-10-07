@@ -219,7 +219,7 @@ theorem apply_mul_single (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 1 = 1) (i 
 @[to_additive apply_single₂]
 theorem apply_mul_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 1 1 = 1) (i : I) (x : f i) (y : g i) (j : I) :
     f' j (mulSingle i x j) (mulSingle i y j) = mulSingle i (f' i x y) j := by
-  by_cases' h : j = i
+  by_cases h:j = i
   · subst h
     simp only [mul_single_eq_same]
     
@@ -270,26 +270,22 @@ section Extend
 
 @[to_additive]
 theorem extend_one [One γ] (f : α → β) : Function.extendₓ f (1 : α → γ) (1 : β → γ) = 1 :=
-  funext fun _ => by
-    apply if_t_t _ _
+  funext fun _ => by apply if_t_t _ _
 
 @[to_additive]
 theorem extend_mul [Mul γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
     Function.extendₓ f (g₁ * g₂) (e₁ * e₂) = Function.extendₓ f g₁ e₁ * Function.extendₓ f g₂ e₂ :=
-  funext fun _ => by
-    convert (apply_dite2 (· * ·) _ _ _ _ _).symm
+  funext fun _ => by convert (apply_dite2 (· * ·) _ _ _ _ _).symm
 
 @[to_additive]
 theorem extend_inv [Inv γ] (f : α → β) (g : α → γ) (e : β → γ) :
     Function.extendₓ f g⁻¹ e⁻¹ = (Function.extendₓ f g e)⁻¹ :=
-  funext fun _ => by
-    convert (apply_diteₓ Inv.inv _ _ _).symm
+  funext fun _ => by convert (apply_diteₓ Inv.inv _ _ _).symm
 
 @[to_additive]
 theorem extend_div [Div γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
     Function.extendₓ f (g₁ / g₂) (e₁ / e₂) = Function.extendₓ f g₁ e₁ / Function.extendₓ f g₂ e₂ :=
-  funext fun _ => by
-    convert (apply_dite2 (· / ·) _ _ _ _ _).symm
+  funext fun _ => by convert (apply_dite2 (· / ·) _ _ _ _ _).symm
 
 end Extend
 
@@ -314,8 +310,7 @@ def uniqueOfSurjectiveOne (α : Type _) {β : Type _} [One β] (h : Function.Sur
 @[to_additive Subsingleton.pi_single_eq]
 theorem Subsingleton.pi_mul_single_eq {α : Type _} [DecidableEq I] [Subsingleton I] [One α] (i : I) (x : α) :
     Pi.mulSingle i x = fun _ => x :=
-  funext fun j => by
-    rw [Subsingleton.elim j i, Pi.mul_single_eq_same]
+  funext fun j => by rw [Subsingleton.elim j i, Pi.mul_single_eq_same]
 
 namespace Sum
 

@@ -35,15 +35,12 @@ local infixr:25 " →ₛ " => SimpleFunc
 
 variable {α G : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup G] {f : α → G}
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr G]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr G]]
 theorem Memℒp.fin_strongly_measurable_of_strongly_measurable (hf : Memℒp f p μ) (hf_meas : StronglyMeasurable f)
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) : FinStronglyMeasurable f μ := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr G]]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr G]]"
   haveI : separable_space (Set.Range f ∪ {0} : Set G) := hf_meas.separable_space_range_union_singleton
-  let fs :=
-    simple_func.approx_on f hf_meas.measurable (Set.Range f ∪ {0}) 0
-      (by
-        simp )
+  let fs := simple_func.approx_on f hf_meas.measurable (Set.Range f ∪ {0}) 0 (by simp)
   refine' ⟨fs, _, _⟩
   · have h_fs_Lp : ∀ n, mem_ℒp (fs n) p μ := simple_func.mem_ℒp_approx_on_range hf_meas.measurable hf
     exact fun n => (fs n).measure_support_lt_top_of_mem_ℒp (h_fs_Lp n) hp_ne_zero hp_ne_top

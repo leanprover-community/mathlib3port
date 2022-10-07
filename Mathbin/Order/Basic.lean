@@ -431,7 +431,7 @@ theorem Preorderₓ.to_has_le_injective {α : Type _} : Function.Injective (@Pre
   injection h with h_le
   have : A_lt = B_lt := by
     funext a b
-    dsimp' [(· ≤ ·)]  at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le
+    dsimp [(· ≤ ·)] at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le
     simp [A_lt_iff_le_not_le, B_lt_iff_le_not_le, h_le]
   congr
 
@@ -564,7 +564,7 @@ class HasCompl (α : Type _) where
 
 export HasCompl (compl)
 
--- ./././Mathport/Syntax/Translate/Command.lean:405:9: unsupported: advanced prec syntax «expr + »(max[], 1)
+-- ./././Mathport/Syntax/Translate/Command.lean:407:9: unsupported: advanced prec syntax «expr + »(max[], 1)
 -- mathport name: «expr ᶜ»
 postfix:999 "ᶜ" => compl
 
@@ -599,23 +599,22 @@ instance Pi.preorderₓ {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (
   { Pi.hasLe with le_refl := fun a i => le_reflₓ (a i), le_trans := fun a b c h₁ h₂ i => le_transₓ (h₁ i) (h₂ i) }
 
 theorem Pi.lt_defₓ {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] {x y : ∀ i, α i} :
-    x < y ↔ x ≤ y ∧ ∃ i, x i < y i := by
-  simp (config := { contextual := true })[lt_iff_le_not_leₓ, Pi.le_def]
+    x < y ↔ x ≤ y ∧ ∃ i, x i < y i := by simp (config := { contextual := true }) [lt_iff_le_not_leₓ, Pi.le_def]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem le_update_iffₓ {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_iffₓ {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_update_iffₓ {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i}
     {i : ι} {a b : α i} : Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j := by
-  simp (config := { contextual := true })[update_le_iffₓ]
+  simp (config := { contextual := true }) [update_le_iffₓ]
 
 instance Pi.partialOrder {ι : Type u} {α : ι → Type v} [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (∀ i, α i) :=
   { Pi.preorderₓ with le_antisymm := fun f g h1 h2 => funext fun b => (h1 b).antisymm (h2 b) }
@@ -831,7 +830,7 @@ theorem mk_lt_mk_iff_rightₓ : (a, b₁) < (a, b₂) ↔ b₁ < b₂ :=
 
 theorem lt_iffₓ : x < y ↔ x.1 < y.1 ∧ x.2 ≤ y.2 ∨ x.1 ≤ y.1 ∧ x.2 < y.2 := by
   refine' ⟨fun h => _, _⟩
-  · by_cases' h₁ : y.1 ≤ x.1
+  · by_cases h₁:y.1 ≤ x.1
     · exact Or.inr ⟨h.1.1, h.1.2.lt_of_not_le fun h₂ => h.2 ⟨h₁, h₂⟩⟩
       
     · exact Or.inl ⟨h.1.1.lt_of_not_le h₁, h.1.2⟩
@@ -905,11 +904,7 @@ instance : LinearOrderₓ PUnit := by
       { le := fun _ _ => True, lt := fun _ _ => False, max := fun _ _ => star, min := fun _ _ => star,
         DecidableEq := PUnit.decidableEq, decidableLe := fun _ _ => Decidable.true,
         decidableLt := fun _ _ => Decidable.false } <;>
-    intros <;>
-      first |
-        trivial|
-        simp only [eq_iff_true_of_subsingleton, not_true, and_falseₓ]|
-        exact Or.inl trivialₓ
+    intros <;> first |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_falseₓ]|exact Or.inl trivialₓ
 
 theorem max_eq : max a b = star :=
   rfl

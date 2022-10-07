@@ -41,11 +41,11 @@ It also contains data for the unique homomorphism `ℕ → R`.
 class AddMonoidWithOneₓ (R : Type u) extends HasNatCast R, AddMonoidₓ R, One R where
   natCast := Nat.unaryCast
   nat_cast_zero : nat_cast 0 = (0 : R) := by
-    run_tac
-      control_laws_tac
+    intros
+    rfl
   nat_cast_succ : ∀ n, nat_cast (n + 1) = (nat_cast n + 1 : R) := by
-    run_tac
-      control_laws_tac
+    intros
+    rfl
 
 /-- Canonical homomorphism from `ℕ` to a additive monoid `R` with a `1`. -/
 protected def Nat.castₓ {R : Type u} [HasNatCast R] : ℕ → R :=
@@ -120,8 +120,7 @@ namespace Nat
 variable {R : Type _}
 
 @[simp, norm_cast]
-theorem cast_oneₓ [AddMonoidWithOneₓ R] : ((1 : ℕ) : R) = 1 := by
-  rw [cast_succ, cast_zero, zero_addₓ]
+theorem cast_oneₓ [AddMonoidWithOneₓ R] : ((1 : ℕ) : R) = 1 := by rw [cast_succ, cast_zero, zero_addₓ]
 
 @[simp, norm_cast]
 theorem cast_addₓ [AddMonoidWithOneₓ R] (m n : ℕ) : ((m + n : ℕ) : R) = m + n := by
@@ -153,8 +152,7 @@ theorem cast_bit0 [AddMonoidWithOneₓ R] (n : ℕ) : ((bit0 n : ℕ) : R) = bit
 theorem cast_bit1 [AddMonoidWithOneₓ R] (n : ℕ) : ((bit1 n : ℕ) : R) = bit1 n := by
   rw [bit1, cast_add_one, cast_bit0] <;> rfl
 
-theorem cast_two [AddMonoidWithOneₓ R] : ((2 : ℕ) : R) = 2 := by
-  rw [cast_add_one, cast_one, bit0]
+theorem cast_two [AddMonoidWithOneₓ R] : ((2 : ℕ) : R) = 2 := by rw [cast_add_one, cast_one, bit0]
 
 attribute [simp, norm_cast] Int.nat_abs_of_nat
 
@@ -168,9 +166,7 @@ protected def AddMonoidWithOneₓ.unary {R : Type _} [AddMonoidₓ R] [One R] : 
 /-- `add_monoid_with_one` implementation using binary recursion. -/
 @[reducible]
 protected def AddMonoidWithOneₓ.binary {R : Type _} [AddMonoidₓ R] [One R] : AddMonoidWithOneₓ R :=
-  { ‹One R›, ‹AddMonoidₓ R› with natCast := Nat.binCast,
-    nat_cast_zero := by
-      simp [Nat.binCast, Nat.castₓ],
+  { ‹One R›, ‹AddMonoidₓ R› with natCast := Nat.binCast, nat_cast_zero := by simp [Nat.binCast, Nat.castₓ],
     nat_cast_succ := fun n => by
       simp only [Nat.castₓ]
       letI : AddMonoidWithOneₓ R := AddMonoidWithOneₓ.unary

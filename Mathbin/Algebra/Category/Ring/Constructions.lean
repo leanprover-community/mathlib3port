@@ -134,10 +134,7 @@ def punitIsTerminal : IsTerminal (CommRingₓₓ.of.{u} PUnit) := by
 instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRingₓₓ.{u} := by
   apply has_strict_terminal_objects_of_terminal_is_strict (CommRingₓₓ.of PUnit)
   intro X f
-  refine'
-    ⟨⟨by
-        tidy, by
-        ext, _⟩⟩
+  refine' ⟨⟨by tidy, by ext, _⟩⟩
   ext
   have e : (0 : X) = 1 := by
     rw [← f.map_one, ← f.map_zero]
@@ -148,8 +145,7 @@ instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRin
 
 theorem subsingleton_of_is_terminal {X : CommRingₓₓ} (hX : IsTerminal X) : Subsingleton X :=
   (hX.uniqueUpToIso punitIsTerminal).commRingIsoToRingEquiv.toEquiv.subsingleton_congr.mpr
-    (show Subsingleton PUnit by
-      infer_instance)
+    (show Subsingleton PUnit by infer_instance)
 
 /-- `ℤ` is the initial object of `CommRing`. -/
 def zIsInitial : IsInitial (CommRingₓₓ.of ℤ) := by

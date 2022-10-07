@@ -26,14 +26,14 @@ def Fermat42 (a b c : ℤ) : Prop :=
 namespace Fermat42
 
 theorem comm {a b c : ℤ} : Fermat42 a b c ↔ Fermat42 b a c := by
-  delta' Fermat42
+  delta Fermat42
   rw [add_commₓ]
   tauto
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«expr ^ »(k, 4), H)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr f42.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr ^ »(k, 4), H)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr f42.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
 theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a) (k * b) (k ^ 2 * c) := by
-  delta' Fermat42
+  delta Fermat42
   constructor
   · intro f42
     constructor
@@ -44,7 +44,7 @@ theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a
       
     · have H : a ^ 4 + b ^ 4 = c ^ 2 := f42.2.2
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«expr ^ »(k, 4), H)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr * »(«expr ^ »(k, 4), H)], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
       
     
   · intro f42
@@ -56,15 +56,13 @@ theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a
       
     apply (mul_right_inj' (pow_ne_zero 4 hk0)).mp
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr f42.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr f42.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
     
 
 theorem ne_zero {a b c : ℤ} (h : Fermat42 a b c) : c ≠ 0 := by
   apply ne_zero_pow two_ne_zero _
   apply ne_of_gtₓ
-  rw [← h.2.2,
-    (by
-      ring : a ^ 4 + b ^ 4 = (a ^ 2) ^ 2 + (b ^ 2) ^ 2)]
+  rw [← h.2.2, (by ring : a ^ 4 + b ^ 4 = (a ^ 2) ^ 2 + (b ^ 2) ^ 2)]
   exact add_pos (sq_pos_of_ne_zero _ (pow_ne_zero 2 h.1)) (sq_pos_of_ne_zero _ (pow_ne_zero 2 h.2.1))
 
 /-- We say a solution to `a ^ 4 + b ^ 4 = c ^ 2` is minimal if there is no other solution with
@@ -168,11 +166,11 @@ theorem Int.coprime_of_sq_sum' {r s : ℤ} (h : IsCoprime r s) : IsCoprime (r ^ 
 
 namespace Fermat42
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr h.1.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr ht1], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr + »(«expr + »(«expr * »(«expr - »(«expr- »(b), «expr * »(2, b')), hb2'), ht2),
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr h.1.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr ht1], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr + »(«expr + »(«expr * »(«expr - »(«expr- »(b), «expr * »(2, b')), hb2'), ht2),
     «expr * »(«expr * »(2, m), htt2))],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args
 -- If we have a solution to a ^ 4 + b ^ 4 = c ^ 2, we can construct a smaller one. This
 -- implies there can't be a smallest solution.
 theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 < c) : False := by
@@ -180,9 +178,9 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   -- a ^ 2 = m ^ 2 - n ^ 2, b ^ 2 = 2 * m * n and c = m ^ 2 + n ^ 2
   -- first the formula:
   have ht : PythagoreanTriple (a ^ 2) (b ^ 2) c := by
-    delta' PythagoreanTriple
+    delta PythagoreanTriple
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr h.1.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr h.1.2.2], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
   -- coprime requirement:
   have h2 : Int.gcdₓ (a ^ 2) (b ^ 2) = 1 := int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal h).pow
   -- in order to reduce the possibilities we get from the classification of pythagorean triples
@@ -195,16 +193,14 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   -- a = r ^ 2 - s ^ 2, n = 2 * r * s and m = r ^ 2 + s ^ 2
   -- formula:
   have htt : PythagoreanTriple a n m := by
-    delta' PythagoreanTriple
+    delta PythagoreanTriple
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr ht1], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr ht1], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
   -- a and n are coprime, because a ^ 2 = m ^ 2 - n ^ 2 and m and n are coprime.
   have h3 : Int.gcdₓ a n = 1 := by
     apply int.gcd_eq_one_iff_coprime.mpr
     apply @IsCoprime.of_mul_left_left _ _ _ a
-    rw [← sq, ht1,
-      (by
-        ring : m ^ 2 - n ^ 2 = m ^ 2 + -n * n)]
+    rw [← sq, ht1, (by ring : m ^ 2 - n ^ 2 = m ^ 2 + -n * n)]
     exact (int.gcd_eq_one_iff_coprime.mp ht4).pow_left.add_mul_right_left (-n)
   -- m is positive because b is non-zero and b ^ 2 = 2 * m * n and we already have 0 ≤ m.
   have hb20 : b ^ 2 ≠ 0 := mt pow_eq_zero h.1.2.1
@@ -223,20 +219,14 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     exact int.gcd_eq_one_iff_coprime.mpr (Int.coprime_of_sq_sum' (int.gcd_eq_one_iff_coprime.mp htt4))
   -- b is even because b ^ 2 = 2 * m * n.
   have hb2 : 2 ∣ b := by
-    apply
-      @Int.Prime.dvd_pow' _ 2 _
-        (by
-          norm_num : Nat.Prime 2)
+    apply @Int.Prime.dvd_pow' _ 2 _ (by norm_num : Nat.Prime 2)
     rw [ht2, mul_assoc]
     exact dvd_mul_right 2 (m * n)
   cases' hb2 with b' hb2'
   have hs : b' ^ 2 = m * (r * s) := by
-    apply
-      (mul_right_inj'
-          (by
-            norm_num : (4 : ℤ) ≠ 0)).mp
+    apply (mul_right_inj' (by norm_num : (4 : ℤ) ≠ 0)).mp
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr + »(«expr + »(«expr * »(«expr - »(«expr- »(b), «expr * »(2, b')), hb2'), ht2),\n    «expr * »(«expr * »(2, m), htt2))],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in linear_combination #[[expr «expr + »(«expr + »(«expr * »(«expr - »(«expr- »(b), «expr * »(2, b')), hb2'), ht2),\n    «expr * »(«expr * »(2, m), htt2))],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
   have hrsz : r * s ≠ 0 := by
     -- because b ^ 2 is not zero and (b / 2) ^ 2 = m * (r * s)
     by_contra hrsz
@@ -271,12 +261,9 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     by_contra h1
     rw [h1] at hs
     have h2 : b' ^ 2 ≤ 0 := by
-      rw [hs,
-        (by
-          ring : -(d ^ 2) * m = -(d ^ 2 * m))]
+      rw [hs, (by ring : -(d ^ 2) * m = -(d ^ 2 * m))]
       exact neg_nonpos.mpr ((zero_le_mul_right h4).mpr (sq_nonneg d))
-    have h2' : 0 ≤ b' ^ 2 := by
-      apply sq_nonneg b'
+    have h2' : 0 ≤ b' ^ 2 := by apply sq_nonneg b'
     exact absurd (lt_of_le_of_neₓ h2' (Ne.symm (pow_ne_zero _ h2b0))) (not_lt.mpr h2)
   replace hd : r * s = d ^ 2
   · apply Or.resolve_right hd hd'
@@ -306,8 +293,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
         ring
         
   -- from m = r ^ 2 + s ^ 2 we now get a new solution to a ^ 4 + b ^ 4 = c ^ 2:
-  have hh : i ^ 2 = j ^ 4 + k ^ 4 := by
-    rw [← hi, htt3, hj2, hk2]
+  have hh : i ^ 2 = j ^ 4 + k ^ 4 := by rw [← hi, htt3, hj2, hk2]
   have hn : n ≠ 0 := by
     rw [ht2] at hb20
     apply right_ne_zero_of_mul hb20

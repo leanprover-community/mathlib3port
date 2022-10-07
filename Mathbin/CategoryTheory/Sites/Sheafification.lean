@@ -72,9 +72,7 @@ theorem refine_apply {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq P T)
 /-- Pull back a term of `meq P S` with respect to a morphism `f : Y ⟶ X` in `C`. -/
 def pullback {Y X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : Meq P S) (f : Y ⟶ X) : Meq P ((J.pullback f).obj S) :=
   ⟨fun I => x ⟨_, I.f ≫ f, I.hf⟩, fun I =>
-    x.condition
-      ⟨I.y₁, I.y₂, I.z, I.g₁, I.g₂, I.f₁ ≫ f, I.f₂ ≫ f, I.h₁, I.h₂, by
-        simp [reassoc_of I.w]⟩⟩
+    x.condition ⟨I.y₁, I.y₂, I.z, I.g₁, I.g₂, I.f₁ ≫ f, I.f₂ ≫ f, I.h₁, I.h₂, by simp [reassoc_of I.w]⟩⟩
 
 @[simp]
 theorem pullback_apply {Y X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : Meq P S) (f : Y ⟶ X)
@@ -89,7 +87,7 @@ theorem pullback_refine {Y X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (h : S �
 /-- Make a term of `meq P S`. -/
 def mk {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : P.obj (op X)) : Meq P S :=
   ⟨fun I => P.map I.f.op x, fun I => by
-    dsimp'
+    dsimp
     simp only [← comp_apply, ← P.map_comp, ← op_comp, I.w]⟩
 
 theorem mk_apply {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : P.obj (op X)) (I : S.arrow) : mk S x I = P.map I.f.op x :=
@@ -138,7 +136,7 @@ def mk {X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : Meq P S) : (J.plusObj P)
 
 theorem res_mk_eq_mk_pullback {Y X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : Meq P S) (f : Y ⟶ X) :
     (J.plusObj P).map f.op (mk x) = mk (x.pullback f) := by
-  dsimp' [mk, plus_obj]
+  dsimp [mk, plus_obj]
   simp only [← comp_apply, colimit.ι_pre, ι_colim_map_assoc]
   simp_rw [comp_apply]
   congr 1
@@ -152,43 +150,41 @@ theorem res_mk_eq_mk_pullback {Y X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x :
 
 theorem to_plus_mk {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : P.obj (op X)) : (J.toPlus P).app _ x = mk (Meq.mk S x) :=
   by
-  dsimp' [mk, to_plus]
+  dsimp [mk, to_plus]
   let e : S ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
   rw [← colimit.w _ e.op]
-  delta' cover.to_multiequalizer
+  delta cover.to_multiequalizer
   simp only [comp_apply]
   congr 1
-  dsimp' [diagram]
+  dsimp [diagram]
   apply concrete.multiequalizer_ext
   intro i
   simpa only [← comp_apply, category.assoc, multiequalizer.lift_ι, category.comp_id, meq.equiv_symm_eq_apply]
 
 theorem to_plus_apply {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : Meq P S) (I : S.arrow) :
     (J.toPlus P).app _ (x I) = (J.plusObj P).map I.f.op (mk x) := by
-  dsimp' only [to_plus, plus_obj]
-  delta' cover.to_multiequalizer
-  dsimp' [mk]
+  dsimp only [to_plus, plus_obj]
+  delta cover.to_multiequalizer
+  dsimp [mk]
   simp only [← comp_apply, colimit.ι_pre, ι_colim_map_assoc]
   simp only [comp_apply]
-  dsimp' only [functor.op]
+  dsimp only [functor.op]
   let e : (J.pullback I.f).obj (unop (op S)) ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
   rw [← colimit.w _ e.op]
   simp only [comp_apply]
   congr 1
   apply concrete.multiequalizer_ext
   intro i
-  dsimp' [diagram]
+  dsimp [diagram]
   simp only [← comp_apply, category.assoc, multiequalizer.lift_ι, category.comp_id, meq.equiv_symm_eq_apply]
-  let RR : S.relation :=
-    ⟨_, _, _, i.f, 𝟙 _, I.f, i.f ≫ I.f, I.hf, sieve.downward_closed _ I.hf _, by
-      simp ⟩
+  let RR : S.relation := ⟨_, _, _, i.f, 𝟙 _, I.f, i.f ≫ I.f, I.hf, sieve.downward_closed _ I.hf _, by simp⟩
   cases I
   erw [x.condition RR]
   simpa [RR]
 
 theorem to_plus_eq_mk {X : C} {P : Cᵒᵖ ⥤ D} (x : P.obj (op X)) : (J.toPlus P).app _ x = mk (Meq.mk ⊤ x) := by
-  dsimp' [mk, to_plus]
-  delta' cover.to_multiequalizer
+  dsimp [mk, to_plus]
+  delta cover.to_multiequalizer
   simp only [comp_apply]
   congr 1
   apply_fun meq.equiv P ⊤
@@ -201,7 +197,7 @@ theorem exists_rep {X : C} {P : Cᵒᵖ ⥤ D} (x : (J.plusObj P).obj (op X)) : 
   obtain ⟨S, y, h⟩ := concrete.colimit_exists_rep (J.diagram P X) x
   use S.unop, meq.equiv _ _ y
   rw [← h]
-  dsimp' [mk]
+  dsimp [mk]
   simp
 
 theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq P S) (y : Meq P T) :
@@ -214,10 +210,10 @@ theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq 
     apply_fun multiequalizer.ι (W.unop.index P) I  at hh
     convert hh
     all_goals
-      dsimp' [diagram]
-      simp only [← comp_apply, multiequalizer.lift_ι, category.comp_id, meq.equiv_symm_eq_apply]
-      cases I
-      rfl
+    dsimp [diagram]
+    simp only [← comp_apply, multiequalizer.lift_ι, category.comp_id, meq.equiv_symm_eq_apply]
+    cases I
+    rfl
     
   · rintro ⟨S, h1, h2, e⟩
     apply concrete.colimit_rep_eq_of_exists
@@ -227,10 +223,10 @@ theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq 
     apply_fun fun ee => ee i  at e
     convert e
     all_goals
-      dsimp' [diagram]
-      simp only [← comp_apply, multiequalizer.lift_ι, meq.equiv_symm_eq_apply]
-      cases i
-      rfl
+    dsimp [diagram]
+    simp only [← comp_apply, multiequalizer.lift_ι, meq.equiv_symm_eq_apply]
+    cases i
+    rfl
     
 
 /-- `P⁺` is always separated. -/
@@ -277,14 +273,12 @@ theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) (x y : (J.plusObj P).obj
   apply_fun fun e => e IW  at hh
   convert hh
   · let Rx : Sx.relation :=
-      ⟨I.Y, I.Y, I.Y, 𝟙 _, 𝟙 _, I.f, I.to_middle_hom ≫ I.from_middle_hom, _, _, by
-        simp [I.middle_spec]⟩
+      ⟨I.Y, I.Y, I.Y, 𝟙 _, 𝟙 _, I.f, I.to_middle_hom ≫ I.from_middle_hom, _, _, by simp [I.middle_spec]⟩
     have := x.condition Rx
     simpa using this
     
   · let Ry : Sy.relation :=
-      ⟨I.Y, I.Y, I.Y, 𝟙 _, 𝟙 _, I.f, I.to_middle_hom ≫ I.from_middle_hom, _, _, by
-        simp [I.middle_spec]⟩
+      ⟨I.Y, I.Y, I.Y, 𝟙 _, 𝟙 _, I.f, I.to_middle_hom ≫ I.from_middle_hom, _, _, by simp [I.middle_spec]⟩
     have := y.condition Ry
     simpa using this
     
@@ -364,7 +358,7 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
           )
   use e0, 𝟙 _
   ext IV
-  dsimp' only [meq.refine_apply, meq.pullback_apply, w]
+  dsimp only [meq.refine_apply, meq.pullback_apply, w]
   let IA : B.arrow := ⟨_, (IV.f ≫ II.f) ≫ I.f, _⟩
   swap
   · refine' ⟨I.Y, _, _, I.hf, _, rfl⟩
@@ -416,7 +410,7 @@ theorem is_sheaf_of_sep (P : Cᵒᵖ ⥤ D)
       
     rw [← ht]
     ext i
-    dsimp'
+    dsimp
     rw [← comp_apply, multiequalizer.lift_ι]
     rfl
     
@@ -451,18 +445,18 @@ def sheafifyMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.sheafify P ⟶ J.sheafi
 
 @[simp]
 theorem sheafify_map_id (P : Cᵒᵖ ⥤ D) : J.sheafifyMap (𝟙 P) = 𝟙 (J.sheafify P) := by
-  dsimp' [sheafify_map, sheafify]
+  dsimp [sheafify_map, sheafify]
   simp
 
 @[simp]
 theorem sheafify_map_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) :
     J.sheafifyMap (η ≫ γ) = J.sheafifyMap η ≫ J.sheafifyMap γ := by
-  dsimp' [sheafify_map, sheafify]
+  dsimp [sheafify_map, sheafify]
   simp
 
 @[simp, reassoc]
 theorem to_sheafify_naturality {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : η ≫ J.toSheafify _ = J.toSheafify _ ≫ J.sheafifyMap η := by
-  dsimp' [sheafify_map, sheafify, to_sheafify]
+  dsimp [sheafify_map, sheafify, to_sheafify]
   simp
 
 variable (D)
@@ -492,11 +486,9 @@ theorem to_sheafification_app (P : Cᵒᵖ ⥤ D) : (J.toSheafification D).app P
 variable {D}
 
 theorem is_iso_to_sheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : IsIso (J.toSheafify P) := by
-  dsimp' [to_sheafify]
-  haveI : is_iso (J.to_plus P) := by
-    apply is_iso_to_plus_of_is_sheaf J P hP
-  haveI : is_iso ((J.plus_functor D).map (J.to_plus P)) := by
-    apply functor.map_is_iso
+  dsimp [to_sheafify]
+  haveI : is_iso (J.to_plus P) := by apply is_iso_to_plus_of_is_sheaf J P hP
+  haveI : is_iso ((J.plus_functor D).map (J.to_plus P)) := by apply functor.map_is_iso
   exact @is_iso.comp_is_iso _ _ _ _ _ (J.to_plus P) ((J.plus_functor D).map (J.to_plus P)) _ _
 
 /-- If `P` is a sheaf, then `P` is isomorphic to `J.sheafify P`. -/
@@ -516,7 +508,7 @@ def sheafifyLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q
 @[simp, reassoc]
 theorem to_sheafify_sheafify_lift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) :
     J.toSheafify P ≫ sheafifyLift J η hQ = η := by
-  dsimp' only [sheafify_lift, to_sheafify]
+  dsimp only [sheafify_lift, to_sheafify]
   simp
 
 theorem sheafify_lift_unique {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) (γ : J.sheafify P ⟶ Q) :
@@ -583,11 +575,11 @@ def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
       hom_equiv_naturality_left_symm' := by
         intro P Q R η γ
         ext1
-        dsimp'
+        dsimp
         symm
         apply J.sheafify_map_sheafify_lift,
       hom_equiv_naturality_right' := fun P Q R η γ => by
-        dsimp'
+        dsimp
         rw [category.assoc] }
 
 instance sheafToPresheafIsRightAdjoint : IsRightAdjoint (sheafToPresheaf J D) :=

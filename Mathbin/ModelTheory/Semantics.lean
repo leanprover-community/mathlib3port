@@ -124,8 +124,8 @@ theorem realize_restrict_var [DecidableEq α] {t : L.term α} {s : Set α} (h : 
   induction' t with _ _ _ _ ih
   · rfl
     
-  · simp_rw [var_finset, Finset.coe_bUnion, Set.Union_subset_iff] at h
-    exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
+  · simp_rw [var_finset, Finsetₓ.coe_bUnion, Set.Union_subset_iff] at h
+    exact congr rfl (funext fun i => ih i (h i (Finsetₓ.mem_univ i)))
     
 
 @[simp]
@@ -135,8 +135,8 @@ theorem realize_restrict_var_left [DecidableEq α] {γ : Type _} {t : L.term (Su
   induction' t with a _ _ _ ih
   · cases a <;> rfl
     
-  · simp_rw [var_finset_left, Finset.coe_bUnion, Set.Union_subset_iff] at h
-    exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
+  · simp_rw [var_finset_left, Finsetₓ.coe_bUnion, Set.Union_subset_iff] at h
+    exact congr rfl (funext fun i => ih i (h i (Finsetₓ.mem_univ i)))
     
 
 @[simp]
@@ -246,12 +246,10 @@ theorem realize_bd_equal (t₁ t₂ : L.term (Sum α (Finₓ l))) :
   Iff.rfl
 
 @[simp]
-theorem realize_top : (⊤ : L.BoundedFormula α l).realize v xs ↔ True := by
-  simp [HasTop.top]
+theorem realize_top : (⊤ : L.BoundedFormula α l).realize v xs ↔ True := by simp [HasTop.top]
 
 @[simp]
-theorem realize_inf : (φ ⊓ ψ).realize v xs ↔ φ.realize v xs ∧ ψ.realize v xs := by
-  simp [HasInf.inf, realize]
+theorem realize_inf : (φ ⊓ ψ).realize v xs ↔ φ.realize v xs ∧ ψ.realize v xs := by simp [HasInf.inf, realize]
 
 @[simp]
 theorem realize_foldr_inf (l : List (L.BoundedFormula α n)) (v : α → M) (xs : Finₓ n → M) :
@@ -263,8 +261,7 @@ theorem realize_foldr_inf (l : List (L.BoundedFormula α n)) (v : α → M) (xs 
     
 
 @[simp]
-theorem realize_imp : (φ.imp ψ).realize v xs ↔ φ.realize v xs → ψ.realize v xs := by
-  simp only [realize]
+theorem realize_imp : (φ.imp ψ).realize v xs ↔ φ.realize v xs → ψ.realize v xs := by simp only [realize]
 
 @[simp]
 theorem realize_rel {k : ℕ} {R : L.Relations k} {ts : Finₓ k → L.term _} :
@@ -382,12 +379,11 @@ theorem realize_lift_at {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → 
     
   · simp only [map_term_rel, realize, ih1 hmn, ih2 hmn]
     
-  · have h : k + 1 + n' = k + n' + 1 := by
-      rw [add_assocₓ, add_commₓ 1 n', ← add_assocₓ]
+  · have h : k + 1 + n' = k + n' + 1 := by rw [add_assocₓ, add_commₓ 1 n', ← add_assocₓ]
     simp only [map_term_rel, realize, realize_cast_le_of_eq h, ih3 (hmn.trans k.succ.le_succ)]
     refine' forall_congrₓ fun x => iff_eq_eq.mpr (congr rfl (funext (Finₓ.lastCases _ fun i => _)))
     · simp only [Function.comp_app, coe_last, snoc_last]
-      by_cases' k < m
+      by_cases k < m
       · rw [if_pos h]
         refine' (congr rfl (ext _)).trans (snoc_last _ _)
         simp only [coe_cast, coe_cast_add, coe_last, self_eq_add_rightₓ]
@@ -429,8 +425,7 @@ theorem realize_subst {φ : L.BoundedFormula α n} {tf : α → L.term β} {v : 
         · rfl
           
         )
-    (by
-      simp )
+    (by simp)
 
 @[simp]
 theorem realize_restrict_free_var [DecidableEq α] {n : ℕ} {φ : L.BoundedFormula α n} {s : Set α}
@@ -491,7 +486,7 @@ theorem realize_to_prenex_imp_right {φ ψ : L.BoundedFormula α n} (hφ : IsQf 
     · rintro ⟨a, ha⟩ h
       exact ⟨a, ha h⟩
       
-    · by_cases' φ.realize v xs
+    · by_cases φ.realize v xs
       · obtain ⟨a, ha⟩ := h' h
         exact ⟨a, fun _ => ha⟩
         
@@ -515,7 +510,7 @@ theorem realize_to_prenex_imp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex φ
     · rintro ⟨a, ha⟩ h
       exact ha (h a)
       
-    · by_cases' ψ.realize v xs
+    · by_cases ψ.realize v xs
       · inhabit M
         exact ⟨default, fun h'' => h⟩
         
@@ -606,9 +601,7 @@ theorem realize_imp : (φ.imp ψ).realize v ↔ φ.realize v → ψ.realize v :=
 @[simp]
 theorem realize_rel {k : ℕ} {R : L.Relations k} {ts : Finₓ k → L.term α} :
     (R.Formula ts).realize v ↔ RelMap R fun i => (ts i).realize v :=
-  BoundedFormula.realize_rel.trans
-    (by
-      simp )
+  BoundedFormula.realize_rel.trans (by simp)
 
 @[simp]
 theorem realize_rel₁ {R : L.Relations 1} {t : L.term _} : (R.formula₁ t).realize v ↔ RelMap R ![t.realize v] := by
@@ -739,8 +732,7 @@ theorem Theory.realize_sentence_of_mem [M ⊨ T] {φ : L.Sentence} (h : φ ∈ T
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem Lhom.on_Theory_model [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (T : L.Theory) :
-    M ⊨ φ.OnTheory T ↔ M ⊨ T := by
-  simp [Theory.model_iff, Lhom.on_Theory]
+    M ⊨ φ.OnTheory T ↔ M ⊨ T := by simp [Theory.model_iff, Lhom.on_Theory]
 
 variable {M} {T}
 
@@ -759,7 +751,7 @@ theorem Model.mono {T' : L.Theory} (h : M ⊨ T') (hs : T ⊆ T') : M ⊨ T :=
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Model.union {T' : L.Theory} (h : M ⊨ T) (h' : M ⊨ T') : M ⊨ T ∪ T' := by
-  simp only [model_iff, Set.mem_union_eq] at *
+  simp only [model_iff, Set.mem_union] at *
   exact fun φ hφ => hφ.elim (h _) (h' _)
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -771,12 +763,15 @@ theorem model_union_iff {T' : L.Theory} : M ⊨ T ∪ T' ↔ M ⊨ T ∧ M ⊨ T
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem model_singleton_iff {φ : L.Sentence} : M ⊨ ({φ} : L.Theory) ↔ M ⊨ φ := by
-  simp
+theorem model_singleton_iff {φ : L.Sentence} : M ⊨ ({φ} : L.Theory) ↔ M ⊨ φ := by simp
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem model_iff_subset_complete_theory : M ⊨ T ↔ T ⊆ L.CompleteTheory M :=
   T.model_iff
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem CompleteTheory.subset [MT : M ⊨ T] : T ⊆ L.CompleteTheory M :=
+  model_iff_subset_complete_theory.1 MT
 
 end Theory
 
@@ -993,8 +988,8 @@ instance model_nonempty [h : Nonempty M] : M ⊨ L.NonemptyTheory :=
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem model_distinct_constants_theory {M : Type w} [L[[α]].Structure M] (s : Set α) :
     M ⊨ L.DistinctConstantsTheory s ↔ Set.InjOn (fun i : α => (L.con i : M)) s := by
-  simp only [distinct_constants_theory, Theory.model_iff, Set.mem_image, Set.mem_inter_eq, Set.mem_prod,
-    Set.mem_compl_eq, Prod.existsₓ, forall_exists_index, and_imp]
+  simp only [distinct_constants_theory, Theory.model_iff, Set.mem_image, Set.mem_inter_iff, Set.mem_prod,
+    Set.mem_compl_iff, Prod.existsₓ, forall_exists_index, and_imp]
   refine' ⟨fun h a as b bs ab => _, _⟩
   · contrapose! ab
     have h' := h _ a b as bs ab rfl

@@ -81,9 +81,7 @@ theorem bot_rel_eq_left_rel (H : Subgroup G) : (setoid ↑(⊥ : Subgroup G) ↑
     rwa [one_mulₓ, inv_mul_cancel_leftₓ]
     
   · rintro (h : a⁻¹ * b ∈ H)
-    exact
-      ⟨1, rfl, a⁻¹ * b, h, by
-        rw [one_mulₓ, mul_inv_cancel_left]⟩
+    exact ⟨1, rfl, a⁻¹ * b, h, by rw [one_mulₓ, mul_inv_cancel_left]⟩
     
 
 theorem rel_bot_eq_right_group_rel (H : Subgroup G) :
@@ -96,9 +94,7 @@ theorem rel_bot_eq_right_group_rel (H : Subgroup G) :
     rwa [mul_oneₓ, mul_inv_cancel_rightₓ]
     
   · rintro (h : b * a⁻¹ ∈ H)
-    exact
-      ⟨b * a⁻¹, h, 1, rfl, by
-        rw [mul_oneₓ, inv_mul_cancel_right]⟩
+    exact ⟨b * a⁻¹, h, 1, rfl, by rw [mul_oneₓ, inv_mul_cancel_right]⟩
     
 
 /-- Create a doset out of an element of `H \ G / K`-/

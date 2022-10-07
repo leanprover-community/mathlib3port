@@ -47,8 +47,7 @@ theorem integrable_on_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (
     · exact (continuous_exp.comp (continuous_const.mul (continuous_pow 2))).ContinuousOn
       
     
-  · have B : (0 : ℝ) < 1 / 2 := by
-      norm_num
+  · have B : (0 : ℝ) < 1 / 2 := by norm_num
     apply integrable_of_is_O_exp_neg B _ (is_o.is_O (rpow_mul_exp_neg_mul_sq_is_o_exp_neg hb _))
     intro x hx
     have N : x ≠ 0 := by
@@ -79,8 +78,7 @@ theorem integrable_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs 
     
 
 theorem integrable_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ => exp (-b * x ^ 2) := by
-  have A : (-1 : ℝ) < 0 := by
-    norm_num
+  have A : (-1 : ℝ) < 0 := by norm_num
   convert integrable_rpow_mul_exp_neg_mul_sq hb A
   simp
 
@@ -95,8 +93,7 @@ theorem integrable_exp_neg_mul_sq_iff {b : ℝ} : (Integrable fun x : ℝ => exp
   simpa using this.trans_lt h.2
 
 theorem integrable_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ => x * exp (-b * x ^ 2) := by
-  have A : (-1 : ℝ) < 1 := by
-    norm_num
+  have A : (-1 : ℝ) < 1 := by norm_num
   convert integrable_rpow_mul_exp_neg_mul_sq hb A
   simp
 
@@ -154,8 +151,7 @@ theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) 
       conv_rhs => rw [← one_mulₓ (p.1 ^ 2), ← sin_sq_add_cos_sq p.2]
       ring_exp
     _ = π / b := by
-      have : 0 ≤ π + π := by
-        linarith [Real.pi_pos]
+      have : 0 ≤ π + π := by linarith [Real.pi_pos]
       simp only [integral_const, measure.restrict_apply', measurable_set_Ioo, univ_inter, this, sub_neg_eq_add,
         Algebra.id.smul_eq_mul, mul_oneₓ, volume_Ioo, two_mul, Ennreal.to_real_of_real, integral_mul_exp_neg_mul_sq hb,
         one_mulₓ]

@@ -62,13 +62,11 @@ variable [Abelian C]
 def descFOne {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResolution Z) :
     J.cocomplex.x 1 ⟶ I.cocomplex.x 1 :=
   Exact.desc (descFZero f I J ≫ I.cocomplex.d 0 1) (J.ι.f 0) (J.cocomplex.d 0 1) (Abelian.Exact.op _ _ J.exact₀)
-    (by
-      simp [← category.assoc, desc_f_zero])
+    (by simp [← category.assoc, desc_f_zero])
 
 @[simp]
 theorem desc_f_one_zero_comm {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResolution Z) :
-    J.cocomplex.d 0 1 ≫ descFOne f I J = descFZero f I J ≫ I.cocomplex.d 0 1 := by
-  simp [desc_f_zero, desc_f_one]
+    J.cocomplex.d 0 1 ≫ descFOne f I J = descFZero f I J ≫ I.cocomplex.d 0 1 := by simp [desc_f_zero, desc_f_one]
 
 /-- Auxiliary construction for `desc`. -/
 def descFSucc {Y Z : C} (I : InjectiveResolution Y) (J : InjectiveResolution Z) (n : ℕ)
@@ -77,11 +75,8 @@ def descFSucc {Y Z : C} (I : InjectiveResolution Y) (J : InjectiveResolution Z) 
     Σ'g'' : J.cocomplex.x (n + 2) ⟶ I.cocomplex.x (n + 2),
       J.cocomplex.d (n + 1) (n + 2) ≫ g'' = g' ≫ I.cocomplex.d (n + 1) (n + 2) :=
   ⟨@Exact.desc C _ _ _ _ _ _ _ _ _ (g' ≫ I.cocomplex.d (n + 1) (n + 2)) (J.cocomplex.d n (n + 1))
-      (J.cocomplex.d (n + 1) (n + 2)) (Abelian.Exact.op _ _ (J.exact _))
-      (by
-        simp [← category.assoc, w]),
-    by
-    simp ⟩
+      (J.cocomplex.d (n + 1) (n + 2)) (Abelian.Exact.op _ _ (J.exact _)) (by simp [← category.assoc, w]),
+    by simp⟩
 
 /-- A morphism in `C` descends to a chain map between injective resolutions. -/
 def desc {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResolution Z) : J.cocomplex ⟶ I.cocomplex :=
@@ -94,7 +89,7 @@ theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : I
     J.ι ≫ desc f I J = (CochainComplex.single₀ C).map f ≫ I.ι := by
   ext n
   rcases n with (_ | _ | n) <;>
-    · dsimp' [desc, desc_f_one, desc_f_zero]
+    · dsimp [desc, desc_f_one, desc_f_zero]
       simp
       
 
@@ -110,9 +105,7 @@ def descHomotopyZeroZero {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveRes
 def descHomotopyZeroOne {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
     (f : I.cocomplex ⟶ J.cocomplex) (comm : I.ι ≫ f = (0 : _ ⟶ J.cocomplex)) : I.cocomplex.x 2 ⟶ J.cocomplex.x 1 :=
   Exact.desc (f.f 1 - descHomotopyZeroZero f comm ≫ J.cocomplex.d 0 1) (I.cocomplex.d 0 1) (I.cocomplex.d 1 2)
-    (Abelian.Exact.op _ _ (I.exact _))
-    (by
-      simp [desc_homotopy_zero_zero, ← category.assoc])
+    (Abelian.Exact.op _ _ (I.exact _)) (by simp [desc_homotopy_zero_zero, ← category.assoc])
 
 /-- An auxiliary definition for `desc_homotopy_zero`. -/
 def descHomotopyZeroSucc {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
@@ -131,27 +124,15 @@ def descHomotopyZeroSucc {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveRes
 /-- Any descent of the zero morphism is homotopic to zero. -/
 def descHomotopyZero {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z} (f : I.cocomplex ⟶ J.cocomplex)
     (comm : I.ι ≫ f = 0) : Homotopy f 0 :=
-  Homotopy.mkCoinductive _ (descHomotopyZeroZero f comm)
-    (by
-      simp [desc_homotopy_zero_zero])
-    (descHomotopyZeroOne f comm)
-    (by
-      simp [desc_homotopy_zero_one])
-    fun n ⟨g, g', w⟩ =>
-    ⟨descHomotopyZeroSucc f n g g'
-        (by
-          simp only [w, add_commₓ]),
-      by
-      simp [desc_homotopy_zero_succ, w]⟩
+  Homotopy.mkCoinductive _ (descHomotopyZeroZero f comm) (by simp [desc_homotopy_zero_zero])
+    (descHomotopyZeroOne f comm) (by simp [desc_homotopy_zero_one]) fun n ⟨g, g', w⟩ =>
+    ⟨descHomotopyZeroSucc f n g g' (by simp only [w, add_commₓ]), by simp [desc_homotopy_zero_succ, w]⟩
 
 /-- Two descents of the same morphism are homotopic. -/
 def descHomotopy {Y Z : C} (f : Y ⟶ Z) {I : InjectiveResolution Y} {J : InjectiveResolution Z}
     (g h : I.cocomplex ⟶ J.cocomplex) (g_comm : I.ι ≫ g = (CochainComplex.single₀ C).map f ≫ J.ι)
     (h_comm : I.ι ≫ h = (CochainComplex.single₀ C).map f ≫ J.ι) : Homotopy g h :=
-  Homotopy.equivSubZero.invFun
-    (descHomotopyZero _
-      (by
-        simp [g_comm, h_comm]))
+  Homotopy.equivSubZero.invFun (descHomotopyZero _ (by simp [g_comm, h_comm]))
 
 /-- The descent of the identity morphism is homotopic to the identity cochain map. -/
 def descIdHomotopy (X : C) (I : InjectiveResolution X) : Homotopy (desc (𝟙 X) I I) (𝟙 I.cocomplex) := by
@@ -168,11 +149,9 @@ def homotopyEquiv {X : C} (I J : InjectiveResolution X) : HomotopyEquiv I.cocomp
   Hom := desc (𝟙 X) J I
   inv := desc (𝟙 X) I J
   homotopyHomInvId :=
-    (descCompHomotopy (𝟙 X) (𝟙 X) I J I).symm.trans <| by
-      simpa [category.id_comp] using desc_id_homotopy _ _
+    (descCompHomotopy (𝟙 X) (𝟙 X) I J I).symm.trans <| by simpa [category.id_comp] using desc_id_homotopy _ _
   homotopyInvHomId :=
-    (descCompHomotopy (𝟙 X) (𝟙 X) J I J).symm.trans <| by
-      simpa [category.id_comp] using desc_id_homotopy _ _
+    (descCompHomotopy (𝟙 X) (𝟙 X) J I J).symm.trans <| by simpa [category.id_comp] using desc_id_homotopy _ _
 
 @[simp, reassoc]
 theorem homotopy_equiv_hom_ι {X : C} (I J : InjectiveResolution X) : I.ι ≫ (homotopyEquiv I J).Hom = J.ι := by
@@ -231,11 +210,7 @@ section
 variable [Abelian C] [EnoughInjectives C]
 
 theorem exact_f_d {X Y : C} (f : X ⟶ Y) : Exact f (d f) :=
-  (Abelian.exact_iff _ _).2 <|
-    ⟨by
-      simp ,
-      zero_of_comp_mono (ι _) <| by
-        rw [category.assoc, kernel.condition]⟩
+  (Abelian.exact_iff _ _).2 <| ⟨by simp, zero_of_comp_mono (ι _) <| by rw [category.assoc, kernel.condition]⟩
 
 end
 
@@ -270,15 +245,12 @@ irreducible_def of (Z : C) : InjectiveResolution Z :=
           simp only [of_cocomplex_d, eq_self_iff_true, eq_to_hom_refl, category.comp_id, dite_eq_ite, if_true,
             comp_zero]
           exact (exact_f_d (injective.ι Z)).w)
-        fun n _ =>
-        ⟨0, by
-          ext⟩,
+        fun n _ => ⟨0, by ext⟩,
     Injective := by
       rintro (_ | _ | _ | n) <;>
         · apply injective.injective_under
           ,
-    exact₀ := by
-      simpa using exact_f_d (injective.ι Z),
+    exact₀ := by simpa using exact_f_d (injective.ι Z),
     exact := by
       rintro (_ | n) <;>
         · simp

@@ -103,7 +103,7 @@ theorem int_valuation_zero_le (x : nonZeroDivisors R) : 0 < v.intValuationDef x 
 /-- The `v`-adic valuation on `R` is bounded above by 1. -/
 theorem int_valuation_le_one (x : R) : v.intValuationDef x ≤ 1 := by
   rw [int_valuation_def]
-  by_cases' hx : x = 0
+  by_cases hx:x = 0
   · rw [if_pos hx]
     exact WithZero.zero_le 1
     
@@ -122,10 +122,7 @@ theorem int_valuation_lt_one_iff_dvd (r : R) : v.intValuationDef r < 1 ↔ v.asI
     have h : (Ideal.span {r} : Ideal R) ≠ 0 := by
       rw [Ne.def, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact hr
-    apply
-      Associates.count_ne_zero_iff_dvd h
-        (by
-          apply v.irreducible)
+    apply Associates.count_ne_zero_iff_dvd h (by apply v.irreducible)
     
 
 /-- The `v`-adic valuation of `r ∈ R` is less than `multiplicative.of_add (-n)` if and only if
@@ -138,9 +135,7 @@ theorem int_valuation_le_pow_iff_dvd (r : R) (n : ℕ) :
     
   · rw [WithZero.coe_le_coe, of_add_le, neg_le_neg_iff, Int.coe_nat_leₓ, Ideal.dvd_span_singleton, ←
       Associates.le_singleton_iff,
-      Associates.prime_pow_dvd_iff_le (associates.mk_ne_zero'.mpr hr)
-        (by
-          apply v.associates_irreducible)]
+      Associates.prime_pow_dvd_iff_le (associates.mk_ne_zero'.mpr hr) (by apply v.associates_irreducible)]
     
 
 /-- The `v`-adic valuation of `0 : R` equals 0. -/
@@ -150,30 +145,22 @@ theorem IntValuation.map_zero' : v.intValuationDef 0 = 0 :=
 /-- The `v`-adic valuation of `1 : R` equals 1. -/
 theorem IntValuation.map_one' : v.intValuationDef 1 = 1 := by
   rw [v.int_valuation_def_if_neg (zero_ne_one.symm : (1 : R) ≠ 0), Ideal.span_singleton_one, ← Ideal.one_eq_top,
-    Associates.mk_one, Associates.factors_one,
-    Associates.count_zero
-      (by
-        apply v.associates_irreducible),
+    Associates.mk_one, Associates.factors_one, Associates.count_zero (by apply v.associates_irreducible),
     Int.coe_nat_zero, neg_zero, of_add_zero, WithZero.coe_one]
 
 /-- The `v`-adic valuation of a product equals the product of the valuations. -/
 theorem IntValuation.map_mul' (x y : R) : v.intValuationDef (x * y) = v.intValuationDef x * v.intValuationDef y := by
   simp only [int_valuation_def]
-  by_cases' hx : x = 0
+  by_cases hx:x = 0
   · rw [hx, zero_mul, if_pos (Eq.refl _), zero_mul]
     
-  · by_cases' hy : y = 0
+  · by_cases hy:y = 0
     · rw [hy, mul_zero, if_pos (Eq.refl _), mul_zero]
       
     · rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ← of_add_add, ←
         Ideal.span_singleton_mul_span_singleton, ← Associates.mk_mul_mk, ← neg_add,
-        Associates.count_mul
-          (by
-            apply associates.mk_ne_zero'.mpr hx)
-          (by
-            apply associates.mk_ne_zero'.mpr hy)
-          (by
-            apply v.associates_irreducible)]
+        Associates.count_mul (by apply associates.mk_ne_zero'.mpr hx) (by apply associates.mk_ne_zero'.mpr hy)
+          (by apply v.associates_irreducible)]
       rfl
       
     
@@ -186,19 +173,19 @@ theorem IntValuation.le_max_iff_min_le {a b c : ℕ} :
 /-- The `v`-adic valuation of a sum is bounded above by the maximum of the valuations. -/
 theorem IntValuation.map_add_le_max' (x y : R) :
     v.intValuationDef (x + y) ≤ max (v.intValuationDef x) (v.intValuationDef y) := by
-  by_cases' hx : x = 0
+  by_cases hx:x = 0
   · rw [hx, zero_addₓ]
     conv_rhs => rw [int_valuation_def, if_pos (Eq.refl _)]
     rw [max_eq_rightₓ (WithZero.zero_le (v.int_valuation_def y))]
     exact le_reflₓ _
     
-  · by_cases' hy : y = 0
+  · by_cases hy:y = 0
     · rw [hy, add_zeroₓ]
       conv_rhs => rw [max_commₓ, int_valuation_def, if_pos (Eq.refl _)]
       rw [max_eq_rightₓ (WithZero.zero_le (v.int_valuation_def x))]
       exact le_reflₓ _
       
-    · by_cases' hxy : x + y = 0
+    · by_cases hxy:x + y = 0
       · rw [int_valuation_def, if_pos hxy]
         exact zero_le'
         
@@ -300,9 +287,9 @@ theorem valuation_exists_uniformizer : ∃ π : K, v.Valuation π = Multiplicati
   exact hr
 
 /-- Uniformizers are nonzero. -/
-theorem valuation_uniformizer_ne_zero : Classical.choose (v.valuation_exists_uniformizer K) ≠ 0 := by
-  have hu := Classical.choose_spec (v.valuation_exists_uniformizer K)
-  exact (Valuation.ne_zero_iff _).mp (ne_of_eq_of_ne hu WithZero.coe_ne_zero)
+theorem valuation_uniformizer_ne_zero : Classical.choose (v.valuation_exists_uniformizer K) ≠ 0 :=
+  haveI hu := Classical.choose_spec (v.valuation_exists_uniformizer K)
+  (Valuation.ne_zero_iff _).mp (ne_of_eq_of_ne hu WithZero.coe_ne_zero)
 
 /-! ### Completions with respect to adic valuations
 

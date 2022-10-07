@@ -114,11 +114,11 @@ theorem coe_Inf {S : Set (Closeds α)} : (↑(inf S) : Set α) = ⋂ i ∈ S, �
   rfl
 
 @[simp, norm_cast]
-theorem coe_finset_sup (f : ι → Closeds α) (s : Finset ι) : (↑(s.sup f) : Set α) = s.sup (coe ∘ f) :=
+theorem coe_finset_sup (f : ι → Closeds α) (s : Finsetₓ ι) : (↑(s.sup f) : Set α) = s.sup (coe ∘ f) :=
   map_finset_sup (⟨⟨coe, coe_sup⟩, coe_bot⟩ : SupBotHom (Closeds α) (Set α)) _ _
 
 @[simp, norm_cast]
-theorem coe_finset_inf (f : ι → Closeds α) (s : Finset ι) : (↑(s.inf f) : Set α) = s.inf (coe ∘ f) :=
+theorem coe_finset_inf (f : ι → Closeds α) (s : Finsetₓ ι) : (↑(s.inf f) : Set α) = s.inf (coe ∘ f) :=
   map_finset_inf (⟨⟨coe, coe_inf⟩, coe_top⟩ : InfTopHom (Closeds α) (Set α)) _ _
 
 theorem infi_def {ι} (s : ι → Closeds α) : (⨅ i, s i) = ⟨⋂ i, s i, is_closed_Inter fun i => (s i).2⟩ := by
@@ -128,26 +128,21 @@ theorem infi_def {ι} (s : ι → Closeds α) : (⨅ i, s i) = ⟨⋂ i, s i, is
 
 @[simp]
 theorem infi_mk {ι} (s : ι → Set α) (h : ∀ i, IsClosed (s i)) :
-    (⨅ i, ⟨s i, h i⟩ : Closeds α) = ⟨⋂ i, s i, is_closed_Inter h⟩ := by
-  simp [infi_def]
+    (⨅ i, ⟨s i, h i⟩ : Closeds α) = ⟨⋂ i, s i, is_closed_Inter h⟩ := by simp [infi_def]
 
 @[simp, norm_cast]
-theorem coe_infi {ι} (s : ι → Closeds α) : ((⨅ i, s i : Closeds α) : Set α) = ⋂ i, s i := by
-  simp [infi_def]
+theorem coe_infi {ι} (s : ι → Closeds α) : ((⨅ i, s i : Closeds α) : Set α) = ⋂ i, s i := by simp [infi_def]
 
 @[simp]
-theorem mem_infi {ι} {x : α} {s : ι → Closeds α} : x ∈ infi s ↔ ∀ i, x ∈ s i := by
-  simp [← SetLike.mem_coe]
+theorem mem_infi {ι} {x : α} {s : ι → Closeds α} : x ∈ infi s ↔ ∀ i, x ∈ s i := by simp [← SetLike.mem_coe]
 
 @[simp]
-theorem mem_Inf {S : Set (Closeds α)} {x : α} : x ∈ inf S ↔ ∀ s ∈ S, x ∈ s := by
-  simp_rw [Inf_eq_infi, mem_infi]
+theorem mem_Inf {S : Set (Closeds α)} {x : α} : x ∈ inf S ↔ ∀ s ∈ S, x ∈ s := by simp_rw [Inf_eq_infi, mem_infi]
 
 instance : Coframe (Closeds α) :=
   { Closeds.completeLattice with inf := inf,
     infi_sup_le_sup_Inf := fun a s =>
-      (SetLike.coe_injective <| by
-          simp only [coe_sup, coe_infi, coe_Inf, Set.union_Inter₂]).le }
+      (SetLike.coe_injective <| by simp only [coe_sup, coe_infi, coe_Inf, Set.union_Inter₂]).le }
 
 end Closeds
 

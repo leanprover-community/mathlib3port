@@ -56,7 +56,7 @@ localized [BoxIntegral] notation:25 ι " →ᵇᵃ[" I "] " M => BoxIntegral.Box
 
 namespace BoxAdditiveMap
 
-open Box Prepartition Finset
+open Box Prepartition Finsetₓ
 
 variable {N : Type _} [AddCommMonoidₓ M] [AddCommMonoidₓ N] {I₀ : WithTop (Box ι)} {I J : Box ι} {i : ι}
 
@@ -93,14 +93,10 @@ instance : Inhabited (ι →ᵇᵃ[I₀] M) :=
   ⟨0⟩
 
 instance : Add (ι →ᵇᵃ[I₀] M) :=
-  ⟨fun f g =>
-    ⟨f + g, fun I hI π hπ => by
-      simp only [Pi.add_apply, sum_add_distrib, sum_partition_boxes _ hI hπ]⟩⟩
+  ⟨fun f g => ⟨f + g, fun I hI π hπ => by simp only [Pi.add_apply, sum_add_distrib, sum_partition_boxes _ hI hπ]⟩⟩
 
 instance {R} [Monoidₓ R] [DistribMulAction R M] : HasSmul R (ι →ᵇᵃ[I₀] M) :=
-  ⟨fun r f =>
-    ⟨r • f, fun I hI π hπ => by
-      simp only [Pi.smul_apply, ← smul_sum, sum_partition_boxes _ hI hπ]⟩⟩
+  ⟨fun r f => ⟨r • f, fun I hI π hπ => by simp only [Pi.smul_apply, ← smul_sum, sum_partition_boxes _ hI hπ]⟩⟩
 
 instance : AddCommMonoidₓ (ι →ᵇᵃ[I₀] M) :=
   Function.Injective.addCommMonoid _ coe_injective rfl (fun _ _ => rfl) fun _ _ => rfl
@@ -118,7 +114,7 @@ def restrict (f : ι →ᵇᵃ[I₀] M) (I : WithTop (Box ι)) (hI : I ≤ I₀)
 
 /-- If `f : box ι → M` is box additive on partitions of the form `split I i x`, then it is box
 additive. -/
-def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
+def ofMapSplitAdd [Fintypeₓ ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
     (hf :
       ∀ I : Box ι,
         ↑I ≤ I₀ →
@@ -127,31 +123,30 @@ def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
   refine' ⟨f, _⟩
   replace hf : ∀ I : box ι, ↑I ≤ I₀ → ∀ s, (∑ J in (split_many I s).boxes, f J) = f I
   · intro I hI s
-    induction' s using Finset.induction_on with a s ha ihs
+    induction' s using Finsetₓ.induction_on with a s ha ihs
     · simp
       
     rw [split_many_insert, inf_split, ← ihs, bUnion_boxes, sum_bUnion_boxes]
-    refine' Finset.sum_congr rfl fun J' hJ' => _
-    by_cases' h : a.2 ∈ Ioo (J'.lower a.1) (J'.upper a.1)
+    refine' Finsetₓ.sum_congr rfl fun J' hJ' => _
+    by_cases h:a.2 ∈ Ioo (J'.lower a.1) (J'.upper a.1)
     · rw [sum_split_boxes]
       exact hf _ ((WithTop.coe_le_coe.2 <| le_of_mem _ hJ').trans hI) h
       
-    · rw [split_of_not_mem_Ioo h, top_boxes, Finset.sum_singleton]
+    · rw [split_of_not_mem_Ioo h, top_boxes, Finsetₓ.sum_singleton]
       
     
   intro I hI π hπ
   have Hle : ∀ J ∈ π, ↑J ≤ I₀ := fun J hJ => (WithTop.coe_le_coe.2 <| π.le_of_mem hJ).trans hI
   rcases hπ.exists_split_many_le with ⟨s, hs⟩
   rw [← hf _ hI, ← inf_of_le_right hs, inf_split_many, bUnion_boxes, sum_bUnion_boxes]
-  exact Finset.sum_congr rfl fun J hJ => (hf _ (Hle _ hJ) _).symm
+  exact Finsetₓ.sum_congr rfl fun J hJ => (hf _ (Hle _ hJ) _).symm
 
 /-- If `g : M → N` is an additive map and `f` is a box additive map, then `g ∘ f` is a box additive
 map. -/
 @[simps (config := { fullyApplied := false })]
 def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) : ι →ᵇᵃ[I₀] N where
   toFun := g ∘ f
-  sum_partition_boxes' := fun I hI π hπ => by
-    rw [← g.map_sum, f.sum_partition_boxes hI hπ]
+  sum_partition_boxes' := fun I hI π hπ => by rw [← g.map_sum, f.sum_partition_boxes hI hπ]
 
 /-- If `f` is a box additive function on subboxes of `I` and `π₁`, `π₂` are two prepartitions of
 `I` that cover the same part of `I`, then `∑ J in π₁.boxes, f J = ∑ J in π₂.boxes, f J`. -/
@@ -164,12 +159,11 @@ theorem sum_boxes_congr [Finite ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I�
   rw [h] at h₁
   calc
     (∑ J in π₁.boxes, f J) = ∑ J in π₁.boxes, ∑ J' in (split_many J s).boxes, f J' :=
-      Finset.sum_congr rfl fun J hJ => (f.sum_partition_boxes _ (is_partition_split_many _ _)).symm
+      Finsetₓ.sum_congr rfl fun J hJ => (f.sum_partition_boxes _ (is_partition_split_many _ _)).symm
     _ = ∑ J in (π₁.bUnion fun J => split_many J s).boxes, f J := (sum_bUnion_boxes _ _ _).symm
-    _ = ∑ J in (π₂.bUnion fun J => split_many J s).boxes, f J := by
-      rw [h₁, h₂]
+    _ = ∑ J in (π₂.bUnion fun J => split_many J s).boxes, f J := by rw [h₁, h₂]
     _ = ∑ J in π₂.boxes, ∑ J' in (split_many J s).boxes, f J' := sum_bUnion_boxes _ _ _
-    _ = ∑ J in π₂.boxes, f J := Finset.sum_congr rfl fun J hJ => f.sum_partition_boxes _ (is_partition_split_many _ _)
+    _ = ∑ J in π₂.boxes, f J := Finsetₓ.sum_congr rfl fun J hJ => f.sum_partition_boxes _ (is_partition_split_many _ _)
     
   exacts[(WithTop.coe_le_coe.2 <| π₁.le_of_mem hJ).trans hI, (WithTop.coe_le_coe.2 <| π₂.le_of_mem hJ).trans hI]
 

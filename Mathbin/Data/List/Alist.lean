@@ -56,8 +56,7 @@ namespace Alist
 
 @[ext]
 theorem ext : ∀ {s t : Alist β}, s.entries = t.entries → s = t
-  | ⟨l₁, h₁⟩, ⟨l₂, h₂⟩, H => by
-    congr
+  | ⟨l₁, h₁⟩, ⟨l₂, h₂⟩, H => by congr
 
 theorem ext_iff {s t : Alist β} : s = t ↔ s.entries = t.entries :=
   ⟨congr_arg _, ext⟩
@@ -227,8 +226,7 @@ theorem insert_entries {a} {b : β a} {s : Alist β} : (insert a b s).entries = 
   rfl
 
 theorem insert_entries_of_neg {a} {b : β a} {s : Alist β} (h : a ∉ s) : (insert a b s).entries = ⟨a, b⟩ :: s.entries :=
-  by
-  rw [insert_entries, kerase_of_not_mem_keys h]
+  by rw [insert_entries, kerase_of_not_mem_keys h]
 
 @[simp]
 theorem insert_empty (a) (b : β a) : insert a b ∅ = singleton a b :=
@@ -243,8 +241,7 @@ theorem keys_insert {a} {b : β a} (s : Alist β) : (insert a b s).keys = a :: s
   simp [insert, keys, keys_kerase]
 
 theorem perm_insert {a} {b : β a} {s₁ s₂ : Alist β} (p : s₁.entries ~ s₂.entries) :
-    (insert a b s₁).entries ~ (insert a b s₂).entries := by
-  simp only [insert_entries] <;> exact p.kinsert s₁.nodupkeys
+    (insert a b s₁).entries ~ (insert a b s₂).entries := by simp only [insert_entries] <;> exact p.kinsert s₁.nodupkeys
 
 @[simp]
 theorem lookup_insert {a} {b : β a} (s : Alist β) : lookup a (insert a b s) = some b := by
@@ -260,7 +257,7 @@ theorem lookup_to_alist {a} (s : List (Sigma β)) : lookup a s.toAlist = s.looku
 
 @[simp]
 theorem insert_insert {a} {b b' : β a} (s : Alist β) : (s.insert a b).insert a b' = s.insert a b' := by
-  ext : 1 <;> simp only [Alist.insert_entries, List.kerase_cons_eq] <;> constructorm* _ ∧ _ <;> rfl
+  ext : 1 <;> simp only [Alist.insert_entries, List.kerase_cons_eq] <;> constructorm*_ ∧ _ <;> rfl
 
 theorem insert_insert_of_ne {a a'} {b : β a} {b' : β a'} (s : Alist β) (h : a ≠ a') :
     ((s.insert a b).insert a' b').entries ~ ((s.insert a' b').insert a b).entries := by
@@ -285,8 +282,7 @@ theorem to_alist_cons (a : α) (b : β a) (xs : List (Sigma β)) : List.toAlist 
 
 /-- Erase a key from the map, and return the corresponding value, if found. -/
 def extract (a : α) (s : Alist β) : Option (β a) × Alist β :=
-  have : (kextract a s.entries).2.Nodupkeys := by
-    rw [kextract_eq_lookup_kerase] <;> exact s.nodupkeys.kerase _
+  have : (kextract a s.entries).2.Nodupkeys := by rw [kextract_eq_lookup_kerase] <;> exact s.nodupkeys.kerase _
   match kextract a s.entries, this with
   | (b, l), h => (b, ⟨l, h⟩)
 
@@ -316,16 +312,14 @@ theorem empty_union {s : Alist β} : (∅ : Alist β) ∪ s = s :=
 
 @[simp]
 theorem union_empty {s : Alist β} : s ∪ (∅ : Alist β) = s :=
-  ext <| by
-    simp
+  ext <| by simp
 
 @[simp]
 theorem mem_union {a} {s₁ s₂ : Alist β} : a ∈ s₁ ∪ s₂ ↔ a ∈ s₁ ∨ a ∈ s₂ :=
   mem_keys_kunion
 
 theorem perm_union {s₁ s₂ s₃ s₄ : Alist β} (p₁₂ : s₁.entries ~ s₂.entries) (p₃₄ : s₃.entries ~ s₄.entries) :
-    (s₁ ∪ s₃).entries ~ (s₂ ∪ s₄).entries := by
-  simp [p₁₂.kunion s₃.nodupkeys p₃₄]
+    (s₁ ∪ s₃).entries ~ (s₂ ∪ s₄).entries := by simp [p₁₂.kunion s₃.nodupkeys p₃₄]
 
 theorem union_erase (a : α) (s₁ s₂ : Alist β) : erase a (s₁ ∪ s₂) = erase a s₁ ∪ erase a s₂ :=
   ext kunion_kerase.symm
@@ -347,13 +341,11 @@ theorem mem_lookup_union_middle {a} {b : β a} {s₁ s₂ s₃ : Alist β} :
     b ∈ lookup a (s₁ ∪ s₃) → a ∉ s₂ → b ∈ lookup a (s₁ ∪ s₂ ∪ s₃) :=
   mem_lookup_kunion_middle
 
-theorem insert_union {a} {b : β a} {s₁ s₂ : Alist β} : insert a b (s₁ ∪ s₂) = insert a b s₁ ∪ s₂ := by
-  ext <;> simp
+theorem insert_union {a} {b : β a} {s₁ s₂ : Alist β} : insert a b (s₁ ∪ s₂) = insert a b s₁ ∪ s₂ := by ext <;> simp
 
 theorem union_assoc {s₁ s₂ s₃ : Alist β} : (s₁ ∪ s₂ ∪ s₃).entries ~ (s₁ ∪ (s₂ ∪ s₃)).entries :=
   lookup_ext (Alist.nodupkeys _) (Alist.nodupkeys _)
-    (by
-      simp [Decidable.not_or_iff_and_not, or_assocₓ, and_or_distrib_left, and_assocₓ])
+    (by simp [Decidable.not_or_iff_and_not, or_assocₓ, and_or_distrib_left, and_assocₓ])
 
 end
 

@@ -27,13 +27,7 @@ theorem nth_mem (i : Finₓ n) (v : Vector α n) : v.nth i ∈ v.toList := by
 
 theorem mem_iff_nth (v : Vector α n) : a ∈ v.toList ↔ ∃ i, v.nth i = a := by
   simp only [List.mem_iff_nth_le, Finₓ.exists_iff, Vector.nth_eq_nth_le] <;>
-    exact
-      ⟨fun ⟨i, hi, h⟩ =>
-        ⟨i, by
-          rwa [to_list_length] at hi, h⟩,
-        fun ⟨i, hi, h⟩ =>
-        ⟨i, by
-          rwa [to_list_length], h⟩⟩
+    exact ⟨fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length] at hi, h⟩, fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length], h⟩⟩
 
 theorem not_mem_nil : a ∉ (Vector.nil : Vector α 0).toList :=
   id

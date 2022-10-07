@@ -58,12 +58,8 @@ variable {T : Type u₃} [Category.{v₃} T]
 /-- The objects of the comma category are triples of an object `left : A`, an object
    `right : B` and a morphism `hom : L.obj left ⟶ R.obj right`.  -/
 structure Comma (L : A ⥤ T) (R : B ⥤ T) : Type max u₁ u₂ v₃ where
-  left : A := by
-    run_tac
-      obviously
-  right : B := by
-    run_tac
-      obviously
+  left : A := by obviously
+  right : B := by obviously
   Hom : L.obj left ⟶ R.obj right
 
 -- Satisfying the inhabited linter
@@ -77,15 +73,9 @@ variable {L : A ⥤ T} {R : B ⥤ T}
 -/
 @[ext]
 structure CommaMorphism (X Y : Comma L R) where
-  left : X.left ⟶ Y.left := by
-    run_tac
-      obviously
-  right : X.right ⟶ Y.right := by
-    run_tac
-      obviously
-  w' : L.map left ≫ Y.Hom = X.Hom ≫ R.map right := by
-    run_tac
-      obviously
+  left : X.left ⟶ Y.left := by obviously
+  right : X.right ⟶ Y.right := by obviously
+  w' : L.map left ≫ Y.Hom = X.Hom ≫ R.map right := by obviously
 
 -- Satisfying the inhabited linter
 instance CommaMorphism.inhabited [Inhabited (Comma L R)] : Inhabited (CommaMorphism (default : Comma L R) default) :=
@@ -236,28 +226,19 @@ variable {C : Type u₄} [Category.{v₄} C] {D : Type u₅} [Category.{v₅} D]
 @[simps]
 def preLeft (F : C ⥤ A) (L : A ⥤ T) (R : B ⥤ T) : Comma (F ⋙ L) R ⥤ Comma L R where
   obj := fun X => { left := F.obj X.left, right := X.right, Hom := X.Hom }
-  map := fun X Y f =>
-    { left := F.map f.left, right := f.right,
-      w' := by
-        simpa using f.w }
+  map := fun X Y f => { left := F.map f.left, right := f.right, w' := by simpa using f.w }
 
 /-- The functor `(F ⋙ L, R) ⥤ (L, R)` -/
 @[simps]
 def preRight (L : A ⥤ T) (F : C ⥤ B) (R : B ⥤ T) : Comma L (F ⋙ R) ⥤ Comma L R where
   obj := fun X => { left := X.left, right := F.obj X.right, Hom := X.Hom }
-  map := fun X Y f =>
-    { left := f.left, right := F.map f.right,
-      w' := by
-        simp }
+  map := fun X Y f => { left := f.left, right := F.map f.right, w' := by simp }
 
 /-- The functor `(L, R) ⥤ (L ⋙ F, R ⋙ F)` -/
 @[simps]
 def post (L : A ⥤ T) (R : B ⥤ T) (F : T ⥤ C) : Comma L R ⥤ Comma (L ⋙ F) (R ⋙ F) where
   obj := fun X => { left := X.left, right := X.right, Hom := F.map X.Hom }
-  map := fun X Y f =>
-    { left := f.left, right := f.right,
-      w' := by
-        simp only [functor.comp_map, ← F.map_comp, f.w] }
+  map := fun X Y f => { left := f.left, right := f.right, w' := by simp only [functor.comp_map, ← F.map_comp, f.w] }
 
 end
 

@@ -17,6 +17,8 @@ In this file, we establish various propreties related to the spectrum of element
 -- mathport name: «expr ⋆»
 local postfix:max "⋆" => star
 
+section
+
 open TopologicalSpace Ennreal
 
 open Filter Ennreal Spectrum CstarRing
@@ -124,8 +126,7 @@ theorem nnnorm_apply_le (a : A) : ∥(φ a : B)∥₊ ≤ ∥a∥₊ := by
   suffices ∀ s : A, IsSelfAdjoint s → ∥φ s∥₊ ≤ ∥s∥₊ by
     exact
       nonneg_le_nonneg_of_sq_le_sq zero_le'
-        (by
-          simpa only [nnnorm_star_mul_self, map_star, map_mul] using this _ (IsSelfAdjoint.star_mul_self a))
+        (by simpa only [nnnorm_star_mul_self, map_star, map_mul] using this _ (IsSelfAdjoint.star_mul_self a))
   · intro s hs
     simpa only [hs.spectral_radius_eq_nnnorm, (hs.star_hom_apply φ).spectral_radius_eq_nnnorm, coe_le_coe] using
       show spectralRadius ℂ (φ s) ≤ spectralRadius ℂ s from supr_le_supr_of_subset (AlgHom.spectrum_apply_subset φ s)
@@ -140,9 +141,44 @@ See note [lower instance priority] -/
 noncomputable instance (priority := 100) : ContinuousLinearMapClass F ℂ A B :=
   { AlgHomClass.linearMapClass with
     map_continuous := fun φ =>
-      AddMonoidHomClass.continuous_of_bound φ 1
-        (by
-          simpa only [one_mulₓ] using nnnorm_apply_le φ) }
+      AddMonoidHomClass.continuous_of_bound φ 1 (by simpa only [one_mulₓ] using nnnorm_apply_le φ) }
 
 end StarAlgHom
+
+end
+
+namespace WeakDual
+
+open ContinuousMap Complex
+
+open ComplexStarModule
+
+variable {F A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [Nontrivial A] [CompleteSpace A] [StarRing A] [CstarRing A]
+  [StarModule ℂ A] [hF : AlgHomClass F ℂ A ℂ]
+
+include hF
+
+/-- This instance is provided instead of `star_alg_hom_class` to avoid type class inference loops.
+See note [lower instance priority] -/
+noncomputable instance (priority := 100) : StarHomClass F A ℂ where
+  coe := fun φ => φ
+  coe_injective' := FunLike.coe_injective'
+  map_star := fun φ a => by
+    suffices hsa : ∀ s : selfAdjoint A, (φ s)⋆ = φ s
+    · rw [← real_part_add_I_smul_imaginary_part a]
+      simp only [map_add, map_smul, star_add, star_smul, hsa, selfAdjoint.star_coe_eq]
+      
+    · intro s
+      have := AlgHom.apply_mem_spectrum φ (s : A)
+      rw [selfAdjoint.coe_re_map_spectrum s] at this
+      rcases this with ⟨⟨_, _⟩, _, heq⟩
+      rw [← HEq, IsROrC.star_def, IsROrC.conj_of_real]
+      
+
+/-- This is not an instance to avoid type class inference loops. See
+`weak_dual.complex.star_hom_class`. -/
+noncomputable def _root_.alg_hom_class.star_alg_hom_class : StarAlgHomClass F ℂ A ℂ :=
+  { hF, WeakDual.Complex.starHomClass with }
+
+end WeakDual
 

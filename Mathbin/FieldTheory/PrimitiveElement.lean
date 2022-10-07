@@ -57,13 +57,12 @@ theorem exists_primitive_element_of_finite_top [Finite E] : ∃ α : E, F⟮⟯ 
   use α
   apply eq_top_iff.mpr
   rintro x -
-  by_cases' hx : x = 0
+  by_cases hx:x = 0
   · rw [hx]
     exact F⟮⟯.zero_mem
     
   · obtain ⟨n, hn⟩ := set.mem_range.mp (hα (Units.mk0 x hx))
-    rw
-      [show x = α ^ n by
+    rw [show x = α ^ n by
         norm_cast
         rw [hn, Units.coe_mk0]]
     exact zpow_mem (mem_adjoin_simple_self F ↑α) n
@@ -71,9 +70,9 @@ theorem exists_primitive_element_of_finite_top [Finite E] : ∃ α : E, F⟮⟯ 
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
 /-- Primitive element theorem for finite dimensional extension of a finite field. -/
-theorem exists_primitive_element_of_finite_bot [Finite F] [FiniteDimensional F E] : ∃ α : E, F⟮⟯ = ⊤ := by
+theorem exists_primitive_element_of_finite_bot [Finite F] [FiniteDimensional F E] : ∃ α : E, F⟮⟯ = ⊤ :=
   haveI : Finite E := finite_of_finite F E
-  exact exists_primitive_element_of_finite_top F E
+  exists_primitive_element_of_finite_top F E
 
 end PrimitiveElementFinite
 
@@ -91,7 +90,7 @@ theorem primitive_element_inf_aux_exists_c (f g : F[X]) :
   let s := (sf.bind fun α' => sg.map fun β' => -(α' - α) / (β' - β)).toFinset
   let s' := s.preimage ϕ fun x hx y hy h => ϕ.injective h
   obtain ⟨c, hc⟩ := Infinite.exists_not_mem_finset s'
-  simp_rw [Finset.mem_preimage, Multiset.mem_to_finset, Multiset.mem_bind, Multiset.mem_map] at hc
+  simp_rw [Finsetₓ.mem_preimage, Multiset.mem_to_finset, Multiset.mem_bind, Multiset.mem_map] at hc
   push_neg  at hc
   exact ⟨c, hc⟩
 
@@ -130,8 +129,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
       have α_in_Fγ : α ∈ F⟮⟯ := by
         rw [← add_sub_cancel α (c • β)]
         exact F⟮⟯.sub_mem (mem_adjoin_simple_self F γ) (F⟮⟯.toSubalgebra.smul_mem β_in_Fγ c)
-      exact fun x hx => by
-        cases hx <;> cases hx <;> cases hx <;> assumption
+      exact fun x hx => by cases hx <;> cases hx <;> cases hx <;> assumption
       
     · rw [adjoin_simple_le_iff]
       have α_in_Fαβ : α ∈ F⟮⟯ := subset_adjoin F {α, β} (Set.mem_insert α {β})
@@ -182,7 +180,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
     ring
   rw [← eq_X_sub_C_of_separable_of_root_eq h_sep h_root h_splits h_roots]
   trans EuclideanDomain.gcd (_ : E[X]) (_ : E[X])
-  · dsimp' only [p]
+  · dsimp only [p]
     convert (gcd_map (algebraMap F⟮⟯ E)).symm
     
   · simpa [map_comp, Polynomial.map_map, ← IsScalarTower.algebra_map_eq, h]
@@ -204,7 +202,7 @@ variable [IsSeparable F E]
 /-- Primitive element theorem: a finite separable field extension `E` of `F` has a
   primitive element, i.e. there is an `α ∈ E` such that `F⟮α⟯ = (⊤ : subalgebra F E)`.-/
 theorem exists_primitive_element : ∃ α : E, F⟮⟯ = ⊤ := by
-  rcases is_empty_or_nonempty (Fintype F) with (F_inf | ⟨⟨F_finite⟩⟩)
+  rcases is_empty_or_nonempty (Fintypeₓ F) with (F_inf | ⟨⟨F_finite⟩⟩)
   · let P : IntermediateField F E → Prop := fun K => ∃ α : E, F⟮⟯ = K
     have base : P ⊥ := ⟨0, adjoin_zero⟩
     have ih : ∀ (K : IntermediateField F E) (x : E), P K → P (K⟮⟯.restrictScalars F) := by
@@ -236,7 +234,7 @@ end Field
 
 @[simp]
 theorem AlgHom.card (F E K : Type _) [Field F] [Field E] [Field K] [IsAlgClosed K] [Algebra F E] [FiniteDimensional F E]
-    [IsSeparable F E] [Algebra F K] : Fintype.card (E →ₐ[F] K) = finrank F E := by
+    [IsSeparable F E] [Algebra F K] : Fintypeₓ.card (E →ₐ[F] K) = finrank F E := by
   convert
     (AlgHom.card_of_power_basis (Field.powerBasisOfFiniteOfSeparable F E) (IsSeparable.separable _ _)
           (IsAlgClosed.splits_codomain _)).trans

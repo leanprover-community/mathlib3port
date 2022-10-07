@@ -33,7 +33,7 @@ by a sequence of simple functions.
 -/
 
 
-open Set Function Filter TopologicalSpace Ennreal Emetric Finset
+open Set Function Filter TopologicalSpace Ennreal Emetric Finsetₓ
 
 open Classical TopologicalSpace Ennreal MeasureTheory BigOperators
 
@@ -99,12 +99,12 @@ theorem edist_nearest_pt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N)
   · simp only [nearest_pt, nearest_pt_ind_succ, map_apply]
     split_ifs
     · rcases hk.eq_or_lt with (rfl | hk)
-      exacts[le_rflₓ, (h k (Nat.lt_succ_iffₓ.1 hk)).le]
+      exacts[le_rflₓ, (h k (Nat.lt_succ_iff.1 hk)).le]
       
     · push_neg  at h
       rcases h with ⟨l, hlN, hxl⟩
       rcases hk.eq_or_lt with (rfl | hk)
-      exacts[(ihN hlN).trans hxl, ihN (Nat.lt_succ_iffₓ.1 hk)]
+      exacts[(ihN hlN).trans hxl, ihN (Nat.lt_succ_iff.1 hk)]
       
     
 
@@ -132,8 +132,7 @@ theorem approx_on_zero {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : 
 theorem approx_on_mem {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [SeparableSpace s] (n : ℕ)
     (x : β) : approxOn f hf s y₀ h₀ n x ∈ s := by
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
-  suffices ∀ n, (Nat.casesOn n y₀ (coe ∘ dense_seq s) : α) ∈ s by
-    apply this
+  suffices ∀ n, (Nat.casesOn n y₀ (coe ∘ dense_seq s) : α) ∈ s by apply this
   rintro (_ | n)
   exacts[h₀, Subtype.mem _]
 
@@ -155,7 +154,7 @@ theorem tendsto_approx_on {f : β → α} (hf : Measurable f) {s : Set α} {y₀
 theorem edist_approx_on_mono {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [SeparableSpace s]
     (x : β) {m n : ℕ} (h : m ≤ n) : edist (approxOn f hf s y₀ h₀ n x) (f x) ≤ edist (approxOn f hf s y₀ h₀ m x) (f x) :=
   by
-  dsimp' only [approx_on, coe_comp, (· ∘ ·)]
+  dsimp only [approx_on, coe_comp, (· ∘ ·)]
   exact edist_nearest_pt_le _ _ ((nearest_pt_ind_le _ _ _).trans h)
 
 theorem edist_approx_on_le {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [SeparableSpace s] (x : β)

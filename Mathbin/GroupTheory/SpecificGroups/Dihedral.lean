@@ -58,8 +58,7 @@ private def inv : DihedralGroup n → DihedralGroup n
 -/
 instance : Groupₓ (DihedralGroup n) where
   mul := mul
-  mul_assoc := by
-    rintro (a | a) (b | b) (c | c) <;> simp only [mul] <;> ring
+  mul_assoc := by rintro (a | a) (b | b) (c | c) <;> simp only [mul] <;> ring
   one := one
   one_mul := by
     rintro (a | a)
@@ -103,24 +102,21 @@ private def fintype_helper : Sum (Zmod n) (Zmod n) ≃ DihedralGroup n where
     match i with
     | Sum.inl j => r j
     | Sum.inr j => sr j
-  left_inv := by
-    rintro (x | x) <;> rfl
-  right_inv := by
-    rintro (x | x) <;> rfl
+  left_inv := by rintro (x | x) <;> rfl
+  right_inv := by rintro (x | x) <;> rfl
 
 /-- If `0 < n`, then `dihedral_group n` is a finite group.
 -/
-instance [NeZero n] : Fintype (DihedralGroup n) :=
-  Fintype.ofEquiv _ fintypeHelper
+instance [NeZero n] : Fintypeₓ (DihedralGroup n) :=
+  Fintypeₓ.ofEquiv _ fintypeHelper
 
 instance : Nontrivial (DihedralGroup n) :=
-  ⟨⟨r 0, sr 0, by
-      decide⟩⟩
+  ⟨⟨r 0, sr 0, by decide⟩⟩
 
 /-- If `0 < n`, then `dihedral_group n` has `2n` elements.
 -/
-theorem card [NeZero n] : Fintype.card (DihedralGroup n) = 2 * n := by
-  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, Zmod.card, two_mul]
+theorem card [NeZero n] : Fintypeₓ.card (DihedralGroup n) = 2 * n := by
+  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintypeₓ.card_sum, Zmod.card, two_mul]
 
 @[simp]
 theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k := by
@@ -141,8 +137,7 @@ theorem r_one_pow_n : r (1 : Zmod n) ^ n = 1 := by
   exact Zmod.nat_cast_self _
 
 @[simp]
-theorem sr_mul_self (i : Zmod n) : sr i * sr i = 1 := by
-  rw [sr_mul_sr, sub_self, one_def]
+theorem sr_mul_self (i : Zmod n) : sr i * sr i = 1 := by rw [sr_mul_sr, sub_self, one_def]
 
 /-- If `0 < n`, then `sr i` has order 2.
 -/

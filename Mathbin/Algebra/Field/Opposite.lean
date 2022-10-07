@@ -7,19 +7,33 @@ import Mathbin.Algebra.Field.Basic
 import Mathbin.Algebra.Ring.Opposite
 
 /-!
-# Field structure on the multiplicative opposite
+# Field structure on the multiplicative/additive opposite
 -/
 
 
 variable (α : Type _)
 
-namespace MulOpposite
+instance [DivisionSemiring α] : DivisionSemiring αᵐᵒᵖ :=
+  { MulOpposite.groupWithZero α, MulOpposite.semiring α with }
 
 instance [DivisionRing α] : DivisionRing αᵐᵒᵖ :=
   { MulOpposite.groupWithZero α, MulOpposite.ring α with }
 
+instance [Semifield α] : Semifield αᵐᵒᵖ :=
+  { MulOpposite.divisionSemiring α, MulOpposite.commSemiring α with }
+
 instance [Field α] : Field αᵐᵒᵖ :=
   { MulOpposite.divisionRing α, MulOpposite.commRing α with }
 
-end MulOpposite
+instance [DivisionSemiring α] : DivisionSemiring αᵃᵒᵖ :=
+  { AddOpposite.groupWithZero α, AddOpposite.semiring α with }
+
+instance [DivisionRing α] : DivisionRing αᵃᵒᵖ :=
+  { AddOpposite.groupWithZero α, AddOpposite.ring α with }
+
+instance [Semifield α] : Semifield αᵃᵒᵖ :=
+  { AddOpposite.divisionSemiring α, AddOpposite.commSemiring α with }
+
+instance [Field α] : Field αᵃᵒᵖ :=
+  { AddOpposite.divisionRing α, AddOpposite.commRing α with }
 

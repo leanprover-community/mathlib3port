@@ -53,12 +53,11 @@ protected theorem unique [PartialOrderₓ α] [Preorderₓ β] {f : α → β} {
     (h₂ : IsOrderRightAdjoint f g₂) : g₁ = g₂ :=
   funext fun y => (h₁ y).unique (h₂ y)
 
-theorem right_mono [Preorderₓ α] [Preorderₓ β] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g) : Monotone g :=
+theorem right_mono [Preorderₓ α] [Preorderₓ β] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g) : Monotoneₓ g :=
   fun y₁ y₂ hy => ((h y₁).mono (h y₂)) fun x hx => le_transₓ hx hy
 
 theorem order_iso_comp [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g)
-    (e : β ≃o γ) : IsOrderRightAdjoint (e ∘ f) (g ∘ e.symm) := fun y => by
-  simpa [e.le_symm_apply] using h (e.symm y)
+    (e : β ≃o γ) : IsOrderRightAdjoint (e ∘ f) (g ∘ e.symm) := fun y => by simpa [e.le_symm_apply] using h (e.symm y)
 
 theorem comp_order_iso [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g)
     (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) := by

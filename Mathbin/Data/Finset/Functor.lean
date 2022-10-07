@@ -23,7 +23,7 @@ universe u
 
 open Function
 
-namespace Finset
+namespace Finsetₓ
 
 /-! ### Functor -/
 
@@ -34,14 +34,14 @@ variable {α β : Type u} [∀ P, Decidable P]
 
 /-- Because `finset.image` requires a `decidable_eq` instance for the target type, we can only
 construct `functor finset` when working classically. -/
-instance : Functor Finset where map := fun α β f s => s.Image f
+instance : Functor Finsetₓ where map := fun α β f s => s.Image f
 
-instance : IsLawfulFunctor Finset where
+instance : IsLawfulFunctor Finsetₓ where
   id_map := fun α s => image_id
   comp_map := fun α β γ f g s => image_image.symm
 
 @[simp]
-theorem fmap_def {s : Finset α} (f : α → β) : f <$> s = s.Image f :=
+theorem fmap_def {s : Finsetₓ α} (f : α → β) : f <$> s = s.Image f :=
   rfl
 
 end Functor
@@ -49,11 +49,11 @@ end Functor
 /-! ### Pure -/
 
 
-instance : Pure Finset :=
+instance : Pure Finsetₓ :=
   ⟨fun α x => {x}⟩
 
 @[simp]
-theorem pure_def {α} : (pure : α → Finset α) = singleton :=
+theorem pure_def {α} : (pure : α → Finsetₓ α) = singleton :=
   rfl
 
 /-! ### Applicative functor -/
@@ -63,24 +63,24 @@ section Applicativeₓ
 
 variable {α β : Type u} [∀ P, Decidable P]
 
-instance : Applicativeₓ Finset :=
-  { Finset.functor, Finset.hasPure with seq := fun α β t s => t.sup fun f => s.Image f,
+instance : Applicativeₓ Finsetₓ :=
+  { Finsetₓ.functor, Finsetₓ.hasPure with seq := fun α β t s => t.sup fun f => s.Image f,
     seqLeft := fun α β s t => if t = ∅ then ∅ else s, seqRight := fun α β s t => if s = ∅ then ∅ else t }
 
 @[simp]
-theorem seq_def (s : Finset α) (t : Finset (α → β)) : t <*> s = t.sup fun f => s.Image f :=
+theorem seq_def (s : Finsetₓ α) (t : Finsetₓ (α → β)) : t <*> s = t.sup fun f => s.Image f :=
   rfl
 
 @[simp]
-theorem seq_left_def (s : Finset α) (t : Finset β) : s <* t = if t = ∅ then ∅ else s :=
+theorem seq_left_def (s : Finsetₓ α) (t : Finsetₓ β) : s <* t = if t = ∅ then ∅ else s :=
   rfl
 
 @[simp]
-theorem seq_right_def (s : Finset α) (t : Finset β) : s *> t = if s = ∅ then ∅ else t :=
+theorem seq_right_def (s : Finsetₓ α) (t : Finsetₓ β) : s *> t = if s = ∅ then ∅ else t :=
   rfl
 
-instance : IsLawfulApplicative Finset :=
-  { Finset.is_lawful_functor with
+instance : IsLawfulApplicative Finsetₓ :=
+  { Finsetₓ.is_lawful_functor with
     seq_left_eq := fun α β s t => by
       rw [seq_def, fmap_def, seq_left_def]
       obtain rfl | ht := t.eq_empty_or_nonempty
@@ -103,11 +103,7 @@ instance : IsLawfulApplicative Finset :=
         
       · ext a
         rw [if_neg hs.ne_empty, mem_sup]
-        refine'
-          ⟨fun ha =>
-            ⟨id, mem_image_const_self.2 hs, by
-              rwa [image_id]⟩,
-            _⟩
+        refine' ⟨fun ha => ⟨id, mem_image_const_self.2 hs, by rwa [image_id]⟩, _⟩
         rintro ⟨f, hf, ha⟩
         rw [mem_image] at hf ha
         obtain ⟨b, hb, rfl⟩ := ha
@@ -129,8 +125,8 @@ instance : IsLawfulApplicative Finset :=
          }
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-instance : IsCommApplicative Finset :=
-  { Finset.is_lawful_applicative with
+instance : IsCommApplicative Finsetₓ :=
+  { Finsetₓ.is_lawful_applicative with
     commutative_prod := fun α β s t => by
       simp_rw [seq_def, fmap_def, sup_image, sup_eq_bUnion]
       change (s.bUnion fun a => t.image fun b => (a, b)) = t.bUnion fun b => s.image fun a => (a, b)
@@ -146,15 +142,15 @@ section Monadₓ
 
 variable [∀ P, Decidable P]
 
-instance : Monadₓ Finset :=
-  { Finset.applicative with bind := fun α β => @sup _ _ _ _ }
+instance : Monadₓ Finsetₓ :=
+  { Finsetₓ.applicative with bind := fun α β => @sup _ _ _ _ }
 
 @[simp]
-theorem bind_def {α β} : (· >>= ·) = @sup (Finset α) β _ _ :=
+theorem bind_def {α β} : (· >>= ·) = @sup (Finsetₓ α) β _ _ :=
   rfl
 
-instance : IsLawfulMonad Finset :=
-  { Finset.is_lawful_applicative with bind_pure_comp_eq_map := fun α β f s => sup_singleton'' _ _,
+instance : IsLawfulMonad Finsetₓ :=
+  { Finsetₓ.is_lawful_applicative with bind_pure_comp_eq_map := fun α β f s => sup_singleton'' _ _,
     bind_map_eq_seq := fun α β t s => rfl, pure_bind := fun α β t s => sup_singleton,
     bind_assoc := fun α β γ s f g => by
       convert sup_bUnion _ _
@@ -169,8 +165,8 @@ section Alternativeₓ
 
 variable [∀ P, Decidable P]
 
-instance : Alternativeₓ Finset :=
-  { Finset.applicative with orelse := fun α => (· ∪ ·), failure := fun α => ∅ }
+instance : Alternativeₓ Finsetₓ :=
+  { Finsetₓ.applicative with orelse := fun α => (· ∪ ·), failure := fun α => ∅ }
 
 end Alternativeₓ
 
@@ -183,11 +179,11 @@ variable {α β γ : Type u} {F G : Type u → Type u} [Applicativeₓ F] [Appli
   [IsCommApplicative G]
 
 /-- Traverse function for `finset`. -/
-def traverse [DecidableEq β] (f : α → F β) (s : Finset α) : F (Finset β) :=
+def traverse [DecidableEq β] (f : α → F β) (s : Finsetₓ α) : F (Finsetₓ β) :=
   Multiset.toFinset <$> Multiset.traverse f s.1
 
 @[simp]
-theorem id_traverse [DecidableEq α] (s : Finset α) : traverse id.mk s = s := by
+theorem id_traverse [DecidableEq α] (s : Finsetₓ α) : traverse id.mk s = s := by
   rw [traverse, Multiset.id_traverse]
   exact s.val_to_finset
 
@@ -197,13 +193,13 @@ open Classical
 theorem map_comp_coe (h : α → β) : Functor.map h ∘ Multiset.toFinset = Multiset.toFinset ∘ Functor.map h :=
   funext fun s => image_to_finset
 
-theorem map_traverse (g : α → G β) (h : β → γ) (s : Finset α) :
+theorem map_traverse (g : α → G β) (h : β → γ) (s : Finsetₓ α) :
     Functor.map h <$> traverse g s = traverse (Functor.map h ∘ g) s := by
   unfold traverse
-  simp' only [map_comp_coe] with functor_norm
+  simp only [map_comp_coe, functor_norm]
   rw [IsLawfulFunctor.comp_map, Multiset.map_traverse]
 
 end Traversable
 
-end Finset
+end Finsetₓ
 

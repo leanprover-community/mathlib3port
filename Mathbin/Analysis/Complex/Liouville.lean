@@ -55,8 +55,7 @@ theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F
     ∥deriv f c∥ = ∥(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z∥ :=
       congr_arg norm (deriv_eq_smul_circle_integral hR hf)
     _ ≤ R * (C / (R * R)) := circleIntegral.norm_two_pi_I_inv_smul_integral_le_of_norm_le_const hR.le this
-    _ = C / R := by
-      rw [mul_div_left_comm, div_self_mul_self', div_eq_mul_inv]
+    _ = C / R := by rw [mul_div_left_comm, div_self_mul_self', div_eq_mul_inv]
     
 
 /-- If `f` is complex differentiable on an open disc of radius `R > 0`, is continuous on its
@@ -102,8 +101,7 @@ open Complex
 theorem apply_eq_apply_of_bounded {f : E → F} (hf : Differentiable ℂ f) (hb : Bounded (Range f)) (z w : E) :
     f z = f w := by
   set g : ℂ → F := f ∘ fun t : ℂ => t • (w - z) + z
-  suffices g 0 = g 1 by
-    simpa [g]
+  suffices g 0 = g 1 by simpa [g]
   apply liouville_theorem_aux
   exacts[hf.comp ((differentiable_id.smul_const (w - z)).AddConst z), hb.mono (range_comp_subset_range _ _)]
 

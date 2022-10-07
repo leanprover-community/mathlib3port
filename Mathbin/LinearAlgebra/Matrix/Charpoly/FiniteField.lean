@@ -18,22 +18,22 @@ open Polynomial Matrix
 
 open Polynomial
 
-variable {n : Type _} [DecidableEq n] [Fintype n]
+variable {n : Type _} [DecidableEq n] [Fintypeₓ n]
 
 @[simp]
-theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
-    (M ^ Fintype.card K).charpoly = M.charpoly := by
+theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintypeₓ K] (M : Matrix n n K) :
+    (M ^ Fintypeₓ.card K).charpoly = M.charpoly := by
   cases (is_empty_or_nonempty n).symm
   · cases' CharP.exists K with p hp
     letI := hp
     rcases FiniteField.card K p with ⟨⟨k, kpos⟩, ⟨hp, hk⟩⟩
     haveI : Fact p.prime := ⟨hp⟩
-    dsimp'  at hk
+    dsimp at hk
     rw [hk] at *
     apply (frobenius_inj K[X] p).iterate k
     repeat'
-      rw [iterate_frobenius]
-      rw [← hk]
+    rw [iterate_frobenius]
+    rw [← hk]
     rw [← FiniteField.expand_card]
     unfold charpoly
     rw [AlgHom.map_det, ← coe_det_monoid_hom, ← (det_monoid_hom : Matrix n n K[X] →* K[X]).map_pow]
@@ -53,10 +53,10 @@ theorem Zmod.charpoly_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (Zmod p)
   have h := FiniteField.Matrix.charpoly_pow_card M
   rwa [Zmod.card] at h
 
-theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
-    trace (M ^ Fintype.card K) = trace M ^ Fintype.card K := by
+theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintypeₓ K] (M : Matrix n n K) :
+    trace (M ^ Fintypeₓ.card K) = trace M ^ Fintypeₓ.card K := by
   cases is_empty_or_nonempty n
-  · simp [zero_pow Fintype.card_pos, Matrix.trace]
+  · simp [zero_pow Fintypeₓ.card_pos, Matrix.trace]
     
   rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff, FiniteField.Matrix.charpoly_pow_card,
     FiniteField.pow_card]

@@ -48,20 +48,18 @@ variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedAddCommGroup E] [Nor
 -/
 
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]
 /-- If `μ` is a probability measure on `α`, `s` is a convex closed set in `E`, and `f` is an
 integrable function sending `μ`-a.e. points to `s`, then the expected value of `f` belongs to `s`:
 `∫ x, f x ∂μ ∈ s`. See also `convex.sum_mem` for a finite sum version of this lemma. -/
 theorem Convex.integral_mem [IsProbabilityMeasure μ] (hs : Convex ℝ s) (hsc : IsClosed s) (hf : ∀ᵐ x ∂μ, f x ∈ s)
     (hfi : Integrable f μ) : (∫ x, f x ∂μ) ∈ s := by
-  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr E]]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `borelize #[[expr E]]"
   rcases hfi.ae_strongly_measurable with ⟨g, hgm, hfg⟩
   haveI : separable_space (range g ∩ s : Set E) := (hgm.is_separable_range.mono (inter_subset_left _ _)).SeparableSpace
   obtain ⟨y₀, h₀⟩ : (range g ∩ s).Nonempty := by
     rcases(hf.and hfg).exists with ⟨x₀, h₀⟩
-    exact
-      ⟨f x₀, by
-        simp only [h₀.2, mem_range_self], h₀.1⟩
+    exact ⟨f x₀, by simp only [h₀.2, mem_range_self], h₀.1⟩
   rw [integral_congr_ae hfg]
   rw [integrable_congr hfg] at hfi
   have hg : ∀ᵐ x ∂μ, g x ∈ Closure (range g ∩ s) := by
@@ -221,10 +219,10 @@ theorem ae_eq_const_or_exists_average_ne_compl [IsFiniteMeasure μ] (hfi : Integ
   refine' hfi.ae_eq_of_forall_set_integral_eq _ _ (integrable_const _) fun t ht ht' => _
   clear ht'
   simp only [const_apply, set_integral_const]
-  by_cases' h₀ : μ t = 0
+  by_cases h₀:μ t = 0
   · rw [restrict_eq_zero.2 h₀, integral_zero_measure, h₀, Ennreal.zero_to_real, zero_smul]
     
-  by_cases' h₀' : μ (tᶜ) = 0
+  by_cases h₀':μ (tᶜ) = 0
   · rw [← ae_eq_univ] at h₀'
     rw [restrict_congr_set h₀', restrict_univ, measure_congr h₀', measure_smul_average]
     
@@ -239,7 +237,7 @@ theorem Convex.average_mem_interior_of_set [IsFiniteMeasure μ] (hs : Convex ℝ
     (hfi : Integrable f μ) (ht : (⨍ x in t, f x ∂μ) ∈ Interior s) : (⨍ x, f x ∂μ) ∈ Interior s := by
   rw [← measure_to_measurable] at h0
   rw [← restrict_to_measurable (measure_ne_top μ t)] at ht
-  by_cases' h0' : μ (to_measurable μ tᶜ) = 0
+  by_cases h0':μ (to_measurable μ tᶜ) = 0
   · rw [← ae_eq_univ] at h0'
     rwa [restrict_congr_set h0', restrict_univ] at ht
     
@@ -303,7 +301,7 @@ theorem ae_eq_const_or_norm_average_lt_of_norm_le_const [StrictConvexSpace ℝ E
     simp only [average_congr this, Pi.zero_apply, average_zero]
     exact Or.inl this
     
-  by_cases' hfi : integrable f μ
+  by_cases hfi:integrable f μ
   swap
   · simp [average_def', integral_undef hfi, hC0, Ennreal.to_real_pos_iff]
     
@@ -326,8 +324,7 @@ theorem ae_eq_const_or_norm_integral_lt_of_norm_le_const [StrictConvexSpace ℝ 
   · left
     simp [h₀]
     
-  have hμ : 0 < (μ univ).toReal := by
-    simp [Ennreal.to_real_pos_iff, pos_iff_ne_zero, h₀, measure_lt_top]
+  have hμ : 0 < (μ univ).toReal := by simp [Ennreal.to_real_pos_iff, pos_iff_ne_zero, h₀, measure_lt_top]
   refine' (ae_eq_const_or_norm_average_lt_of_norm_le_const h_le).imp_right fun H => _
   rwa [average_def', norm_smul, norm_inv, Real.norm_eq_abs, abs_of_pos hμ, ← div_eq_inv_mul, div_lt_iff' hμ] at H
 

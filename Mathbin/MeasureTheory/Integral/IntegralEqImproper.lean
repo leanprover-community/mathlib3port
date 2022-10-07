@@ -232,9 +232,7 @@ theorem AeCover.restrict {φ : ι → Set α} (hφ : AeCover μ l φ) {s : Set �
 theorem ae_cover_restrict_of_ae_imp {s : Set α} {φ : ι → Set α} (hs : MeasurableSet s)
     (ae_eventually_mem : ∀ᵐ x ∂μ, x ∈ s → ∀ᶠ n in l, x ∈ φ n) (measurable : ∀ n, MeasurableSet <| φ n) :
     AeCover (μ.restrict s) l φ :=
-  { ae_eventually_mem := by
-      rwa [ae_restrict_iff' hs],
-    Measurable }
+  { ae_eventually_mem := by rwa [ae_restrict_iff' hs], Measurable }
 
 theorem AeCover.inter_restrict {φ : ι → Set α} (hφ : AeCover μ l φ) {s : Set α} (hs : MeasurableSet s) :
     AeCover (μ.restrict s) l fun i => φ i ∩ s :=
@@ -297,11 +295,11 @@ section Lintegral
 
 variable {α ι : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι}
 
-private theorem lintegral_tendsto_of_monotone_of_nat {φ : ℕ → Set α} (hφ : AeCover μ atTop φ) (hmono : Monotone φ)
+private theorem lintegral_tendsto_of_monotone_of_nat {φ : ℕ → Set α} (hφ : AeCover μ atTop φ) (hmono : Monotoneₓ φ)
     {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) : Tendsto (fun i => ∫⁻ x in φ i, f x ∂μ) atTop (𝓝 <| ∫⁻ x, f x ∂μ) :=
   let F := fun n => (φ n).indicator f
   have key₁ : ∀ n, AeMeasurable (F n) μ := fun n => hfm.indicator (hφ.Measurable n)
-  have key₂ : ∀ᵐ x : α ∂μ, Monotone fun n => F n x :=
+  have key₂ : ∀ᵐ x : α ∂μ, Monotoneₓ fun n => F n x :=
     ae_of_all _ fun x i j hij => indicator_le_indicator_of_subset (hmono hij) (fun x => zero_le <| f x) x
   have key₃ : ∀ᵐ x : α ∂μ, Tendsto (fun n => F n x) atTop (𝓝 (f x)) := hφ.ae_tendsto_indicator f
   (lintegral_tendsto_of_tendsto_of_monotone key₁ key₂ key₃).congr fun n => lintegral_indicator f (hφ.Measurable n)
@@ -361,16 +359,12 @@ theorem AeCover.integrable_of_lintegral_nnnorm_tendsto [l.ne_bot] [l.IsCountably
 theorem AeCover.integrable_of_lintegral_nnnorm_bounded' [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0) (hfm : AeStronglyMeasurable f μ)
     (hbounded : ∀ᶠ i in l, (∫⁻ x in φ i, ∥f x∥₊ ∂μ) ≤ I) : Integrable f μ :=
-  hφ.integrable_of_lintegral_nnnorm_bounded I hfm
-    (by
-      simpa only [Ennreal.of_real_coe_nnreal] using hbounded)
+  hφ.integrable_of_lintegral_nnnorm_bounded I hfm (by simpa only [Ennreal.of_real_coe_nnreal] using hbounded)
 
 theorem AeCover.integrable_of_lintegral_nnnorm_tendsto' [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0) (hfm : AeStronglyMeasurable f μ)
     (htendsto : Tendsto (fun i => ∫⁻ x in φ i, ∥f x∥₊ ∂μ) l (𝓝 I)) : Integrable f μ :=
-  hφ.integrable_of_lintegral_nnnorm_tendsto I hfm
-    (by
-      simpa only [Ennreal.of_real_coe_nnreal] using htendsto)
+  hφ.integrable_of_lintegral_nnnorm_tendsto I hfm (by simpa only [Ennreal.of_real_coe_nnreal] using htendsto)
 
 theorem AeCover.integrable_of_integral_norm_bounded [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfi : ∀ i, IntegrableOn f (φ i) μ)
@@ -379,7 +373,10 @@ theorem AeCover.integrable_of_integral_norm_bounded [l.ne_bot] [l.IsCountablyGen
   refine' hφ.integrable_of_lintegral_nnnorm_bounded I hfm _
   conv at hbounded in integral _ _ =>
     rw [integral_eq_lintegral_of_nonneg_ae (ae_of_all _ fun x => @norm_nonneg E _ (f x)) hfm.norm.restrict]
-  conv at hbounded in Ennreal.ofReal _ => dsimp rw [← coe_nnnorm]rw [Ennreal.of_real_coe_nnreal]
+  conv at hbounded in Ennreal.ofReal _ =>
+    dsimp
+    rw [← coe_nnnorm]
+    rw [Ennreal.of_real_coe_nnreal]
   refine' hbounded.mono fun i hi => _
   rw [← Ennreal.of_real_to_real (ne_top_of_lt (hfi i).2)]
   apply Ennreal.of_real_le_of_real hi

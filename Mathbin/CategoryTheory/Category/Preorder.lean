@@ -94,11 +94,9 @@ def opHomOfLe {x y : Xᵒᵖ} (h : unop x ≤ unop y) : y ⟶ x :=
 theorem le_of_op_hom {x y : Xᵒᵖ} (h : x ⟶ y) : unop y ≤ unop x :=
   h.unop.le
 
-instance uniqueToTop [OrderTop X] {x : X} : Unique (x ⟶ ⊤) := by
-  tidy
+instance uniqueToTop [OrderTop X] {x : X} : Unique (x ⟶ ⊤) := by tidy
 
-instance uniqueFromBot [OrderBot X] {x : X} : Unique (⊥ ⟶ x) := by
-  tidy
+instance uniqueFromBot [OrderBot X] {x : X} : Unique (⊥ ⟶ x) := by tidy
 
 end CategoryTheory
 
@@ -108,12 +106,12 @@ variable {X : Type u} {Y : Type v} [Preorderₓ X] [Preorderₓ Y]
 
 /-- A monotone function between preorders induces a functor between the associated categories.
 -/
-def Monotone.functor {f : X → Y} (h : Monotone f) : X ⥤ Y where
+def Monotoneₓ.functor {f : X → Y} (h : Monotoneₓ f) : X ⥤ Y where
   obj := f
   map := fun x₁ x₂ g => (h g.le).Hom
 
 @[simp]
-theorem Monotone.functor_obj {f : X → Y} (h : Monotone f) : h.Functor.obj = f :=
+theorem Monotoneₓ.functor_obj {f : X → Y} (h : Monotoneₓ f) : h.Functor.obj = f :=
   rfl
 
 /-- A galois connection between preorders induces an adjunction between the associated categories.
@@ -121,10 +119,7 @@ theorem Monotone.functor_obj {f : X → Y} (h : Monotone f) : h.Functor.obj = f 
 def GaloisConnection.adjunction {l : X → Y} {u : Y → X} (gc : GaloisConnection l u) :
     gc.monotone_l.Functor ⊣ gc.monotone_u.Functor :=
   CategoryTheory.Adjunction.mkOfHomEquiv
-    { homEquiv := fun X Y =>
-        ⟨fun f => (gc.le_u f.le).Hom, fun f => (gc.l_le f.le).Hom, by
-          tidy, by
-          tidy⟩ }
+    { homEquiv := fun X Y => ⟨fun f => (gc.le_u f.le).Hom, fun f => (gc.l_le f.le).Hom, by tidy, by tidy⟩ }
 
 end
 
@@ -137,7 +132,7 @@ variable {X : Type u} {Y : Type v} [Preorderₓ X] [Preorderₓ Y]
 /-- A functor between preorder categories is monotone.
 -/
 @[mono]
-theorem Functor.monotone (f : X ⥤ Y) : Monotone f.obj := fun x y hxy => (f.map hxy.Hom).le
+theorem Functor.monotone (f : X ⥤ Y) : Monotoneₓ f.obj := fun x y hxy => (f.map hxy.Hom).le
 
 /-- An adjunction between preorder categories induces a galois connection.
 -/

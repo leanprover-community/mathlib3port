@@ -75,7 +75,7 @@ theorem injective (f : α → β) (hf : Injective f) : Injective (mapFun f : �
 theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 𝕎 α → 𝕎 β) := fun x =>
   ⟨mk _ fun n => Classical.choose <| hf <| x.coeff n, by
     ext n
-    dsimp' [map_fun]
+    dsimp [map_fun]
     rw [Classical.choose_spec (hf (x.coeff n))]⟩
 
 variable (f : R →+* S) (x y : 𝕎 R)
@@ -125,12 +125,10 @@ theorem pow (n : ℕ) : mapFun f (x ^ n) = mapFun f x ^ n := by
     map_fun_tac
 
 theorem nat_cast (n : ℕ) : mapFun f (n : 𝕎 R) = n :=
-  show mapFun f n.unaryCast = coe n by
-    induction n <;> simp [*, Nat.unaryCast, add, one, zero] <;> rfl
+  show mapFun f n.unaryCast = coe n by induction n <;> simp [*, Nat.unaryCast, add, one, zero] <;> rfl
 
 theorem int_cast (n : ℤ) : mapFun f (n : 𝕎 R) = n :=
-  show mapFun f n.castDef = coe n by
-    cases n <;> simp [*, Int.castDef, add, one, neg, zero, nat_cast] <;> rfl
+  show mapFun f n.castDef = coe n by cases n <;> simp [*, Int.castDef, add, one, neg, zero, nat_cast] <;> rfl
 
 end MapFun
 
@@ -181,11 +179,9 @@ theorem matrix_vec_empty_coeff {R} (i j) : @coeff p R (Matrix.vecEmpty i) j = (M
 
 include hp
 
-private theorem ghost_fun_zero : ghostFun (0 : 𝕎 R) = 0 := by
-  ghost_fun_tac 0, ![]
+private theorem ghost_fun_zero : ghostFun (0 : 𝕎 R) = 0 := by ghost_fun_tac 0, ![]
 
-private theorem ghost_fun_one : ghostFun (1 : 𝕎 R) = 1 := by
-  ghost_fun_tac 1, ![]
+private theorem ghost_fun_one : ghostFun (1 : 𝕎 R) = 1 := by ghost_fun_tac 1, ![]
 
 private theorem ghost_fun_add : ghostFun (x + y) = ghostFun x + ghostFun y := by
   ghost_fun_tac X 0 + X 1, ![x.coeff, y.coeff]
@@ -200,21 +196,17 @@ private theorem ghost_fun_sub : ghostFun (x - y) = ghostFun x - ghostFun y := by
 private theorem ghost_fun_mul : ghostFun (x * y) = ghostFun x * ghostFun y := by
   ghost_fun_tac X 0 * X 1, ![x.coeff, y.coeff]
 
-private theorem ghost_fun_neg : ghostFun (-x) = -ghostFun x := by
-  ghost_fun_tac -X 0, ![x.coeff]
+private theorem ghost_fun_neg : ghostFun (-x) = -ghostFun x := by ghost_fun_tac -X 0, ![x.coeff]
 
 private theorem ghost_fun_int_cast (i : ℤ) : ghostFun (i : 𝕎 R) = i :=
   show ghostFun i.castDef = _ by
     cases i <;> simp [*, Int.castDef, ghost_fun_nat_cast, ghost_fun_neg, -Pi.coe_nat, -Pi.coe_int]
 
-private theorem ghost_fun_nsmul (m : ℕ) : ghostFun (m • x) = m • ghostFun x := by
-  ghost_fun_tac m • X 0, ![x.coeff]
+private theorem ghost_fun_nsmul (m : ℕ) : ghostFun (m • x) = m • ghostFun x := by ghost_fun_tac m • X 0, ![x.coeff]
 
-private theorem ghost_fun_zsmul (m : ℤ) : ghostFun (m • x) = m • ghostFun x := by
-  ghost_fun_tac m • X 0, ![x.coeff]
+private theorem ghost_fun_zsmul (m : ℤ) : ghostFun (m • x) = m • ghostFun x := by ghost_fun_tac m • X 0, ![x.coeff]
 
-private theorem ghost_fun_pow (m : ℕ) : ghostFun (x ^ m) = ghostFun x ^ m := by
-  ghost_fun_tac X 0 ^ m, ![x.coeff]
+private theorem ghost_fun_pow (m : ℕ) : ghostFun (x ^ m) = ghostFun x ^ m := by ghost_fun_tac X 0 ^ m, ![x.coeff]
 
 end GhostFun
 
@@ -324,10 +316,8 @@ end Invertible
 @[simps]
 noncomputable def constantCoeff : 𝕎 R →+* R where
   toFun := fun x => x.coeff 0
-  map_zero' := by
-    simp
-  map_one' := by
-    simp
+  map_zero' := by simp
+  map_one' := by simp
   map_add' := add_coeff_zero
   map_mul' := mul_coeff_zero
 

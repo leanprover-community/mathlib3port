@@ -5,6 +5,8 @@ Authors: Johan Commelin
 -/
 import Mathbin.Data.Fintype.Order
 import Mathbin.Order.Category.LinearOrder
+import Mathbin.CategoryTheory.Limits.Shapes.Images
+import Mathbin.CategoryTheory.Limits.Shapes.RegularMono
 
 /-!
 # Nonempty finite linear orders
@@ -16,18 +18,16 @@ This is the index category for simplicial objects.
 
 universe u v
 
-open CategoryTheory
+open CategoryTheory CategoryTheory.Limits
 
 /-- A typeclass for nonempty finite linear orders. -/
-class NonemptyFinLinOrd (α : Type _) extends Fintype α, LinearOrderₓ α where
-  Nonempty : Nonempty α := by
-    run_tac
-      tactic.apply_instance
+class NonemptyFinLinOrd (α : Type _) extends Fintypeₓ α, LinearOrderₓ α where
+  Nonempty : Nonempty α := by infer_instance
 
 attribute [instance] NonemptyFinLinOrd.nonempty
 
 instance (priority := 100) NonemptyFinLinOrd.toBoundedOrder (α : Type _) [NonemptyFinLinOrd α] : BoundedOrder α :=
-  Fintype.toBoundedOrder α
+  Fintypeₓ.toBoundedOrder α
 
 instance PUnit.nonemptyFinLinOrd : NonemptyFinLinOrd PUnit where
 
@@ -94,6 +94,103 @@ def dual : NonemptyFinLinOrdₓ ⥤ NonemptyFinLinOrdₓ where
 def dualEquiv : NonemptyFinLinOrdₓ ≌ NonemptyFinLinOrdₓ :=
   Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+
+theorem mono_iff_injective {A B : NonemptyFinLinOrdₓ.{u}} (f : A ⟶ B) : Mono f ↔ Function.Injective f := by
+  refine' ⟨_, concrete_category.mono_of_injective f⟩
+  intro
+  intro a₁ a₂ h
+  let X : NonemptyFinLinOrdₓ.{u} := ⟨ULift (Finₓ 1)⟩
+  let g₁ : X ⟶ A := ⟨fun x => a₁, fun x₁ x₂ h => by rfl⟩
+  let g₂ : X ⟶ A := ⟨fun x => a₂, fun x₁ x₂ h => by rfl⟩
+  change g₁ (ULift.up (0 : Finₓ 1)) = g₂ (ULift.up (0 : Finₓ 1))
+  have eq : g₁ ≫ f = g₂ ≫ f := by
+    ext x
+    exact h
+  rw [cancel_mono] at eq
+  rw [Eq]
+
+theorem epi_iff_surjective {A B : NonemptyFinLinOrdₓ.{u}} (f : A ⟶ B) : Epi f ↔ Function.Surjective f := by
+  constructor
+  · intro
+    by_contra' hf'
+    rcases hf' with ⟨m, hm⟩
+    let Y : NonemptyFinLinOrdₓ.{u} := ⟨ULift (Finₓ 2)⟩
+    let p₁ : B ⟶ Y :=
+      ⟨fun b => if b < m then ULift.up 0 else ULift.up 1, fun x₁ x₂ h => by
+        simp only
+        split_ifs with h₁ h₂ h₂
+        any_goals apply Finₓ.zero_le
+        · exfalso
+          exact h₁ (lt_of_le_of_ltₓ h h₂)
+          
+        · rfl
+          ⟩
+    let p₂ : B ⟶ Y :=
+      ⟨fun b => if b ≤ m then ULift.up 0 else ULift.up 1, fun x₁ x₂ h => by
+        simp only
+        split_ifs with h₁ h₂ h₂
+        any_goals apply Finₓ.zero_le
+        · exfalso
+          exact h₁ (h.trans h₂)
+          
+        · rfl
+          ⟩
+    have h : p₁ m = p₂ m := by
+      congr
+      rw [← cancel_epi f]
+      ext a : 2
+      simp only [comp_apply, OrderHom.coe_fun_mk]
+      split_ifs with h₁ h₂ h₂
+      any_goals rfl
+      · exfalso
+        exact h₂ (le_of_ltₓ h₁)
+        
+      · exfalso
+        exact hm a (eq_of_le_of_not_lt h₂ h₁)
+        
+    simpa only [OrderHom.coe_fun_mk, lt_self_iff_falseₓ, if_false, le_reflₓ, if_true, ULift.up_inj,
+      Finₓ.one_eq_zero_iff] using h
+    
+  · intro h
+    exact concrete_category.epi_of_surjective f h
+    
+
+instance : SplitEpiCategory NonemptyFinLinOrdₓ.{u} :=
+  ⟨fun X Y f hf => by
+    have H : ∀ y : Y, Nonempty (f ⁻¹' {y}) := by
+      rw [epi_iff_surjective] at hf
+      intro y
+      exact Nonempty.intro ⟨(hf y).some, (hf y).some_spec⟩
+    let φ : Y → X := fun y => (H y).some.1
+    have hφ : ∀ y : Y, f (φ y) = y := fun y => (H y).some.2
+    refine' is_split_epi.mk' ⟨⟨φ, _⟩, _⟩
+    swap
+    · ext b
+      apply hφ
+      
+    · intro a b
+      contrapose
+      intro h
+      simp only [not_leₓ] at h⊢
+      suffices b ≤ a by
+        apply lt_of_le_of_neₓ this
+        intro h'
+        exfalso
+        simpa only [h', lt_self_iff_falseₓ] using h
+      simpa only [hφ] using f.monotone (le_of_ltₓ h)
+      ⟩
+
+instance : HasStrongEpiMonoFactorisations NonemptyFinLinOrdₓ.{u} :=
+  ⟨fun X Y f => by
+    let I : NonemptyFinLinOrdₓ.{u} := ⟨Set.Image (coeFn f) ⊤, ⟨⟩⟩
+    let e : X ⟶ I := ⟨fun x => ⟨f x, ⟨x, by tidy⟩⟩, fun x₁ x₂ h => f.monotone h⟩
+    let m : I ⟶ Y := ⟨fun y => y, by tidy⟩
+    haveI : epi e := by
+      rw [epi_iff_surjective]
+      tidy
+    haveI : strong_epi e := strong_epi_of_epi e
+    haveI : mono m := concrete_category.mono_of_injective _ (by tidy)
+    exact Nonempty.intro { i, m, e }⟩
 
 end NonemptyFinLinOrdₓ
 

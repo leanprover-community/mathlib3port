@@ -82,15 +82,15 @@ def adj : toKleisli T ⊣ fromKleisli T :=
     { homEquiv := fun X Y => Equivₓ.refl (X ⟶ T.obj Y),
       hom_equiv_naturality_left_symm' := fun X Y Z f g => by
         unfold_projs
-        dsimp'
+        dsimp
         rw [category.assoc, ← T.η.naturality_assoc g, functor.id_map]
-        dsimp'
+        dsimp
         simp [monad.left_unit] }
 
 /-- The composition of the adjunction gives the original functor. -/
 def toKleisliCompFromKleisliIsoSelf : toKleisli T ⋙ fromKleisli T ≅ T :=
   NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
-    dsimp'
+    dsimp
     simp
 
 end Adjunction
@@ -116,8 +116,7 @@ instance Cokleisli.category : Category (Cokleisli U) where
   Hom := fun X Y : C => (U : C ⥤ C).obj X ⟶ Y
   id := fun X => U.ε.app X
   comp := fun X Y Z f g => U.δ.app X ≫ (U : C ⥤ C).map f ≫ g
-  id_comp' := fun X Y f => by
-    rw [U.right_counit_assoc]
+  id_comp' := fun X Y f => by rw [U.right_counit_assoc]
   assoc' := fun W X Y Z f g h => by
     unfold_projs
     simp only [functor.map_comp, ← category.assoc, U.δ.naturality_assoc, functor.comp_map, U.coassoc]
@@ -141,7 +140,7 @@ def fromCokleisli : Cokleisli U ⥤ C where
   map_id' := fun X => U.right_counit _
   map_comp' := fun X Y Z f g => by
     unfold_projs
-    dsimp'
+    dsimp
     simp only [functor.map_comp, ← category.assoc]
     rw [comonad.coassoc]
     simp only [category.assoc, nat_trans.naturality, functor.comp_map]
@@ -152,15 +151,15 @@ def adj : fromCokleisli U ⊣ toCokleisli U :=
     { homEquiv := fun X Y => Equivₓ.refl (U.obj X ⟶ Y),
       hom_equiv_naturality_right' := fun X Y Z f g => by
         unfold_projs
-        dsimp'
+        dsimp
         erw [← category.assoc (U.map f), U.ε.naturality]
-        dsimp'
+        dsimp
         simp only [← category.assoc, comonad.left_counit, category.id_comp] }
 
 /-- The composition of the adjunction gives the original functor. -/
 def toCokleisliCompFromCokleisliIsoSelf : toCokleisli U ⋙ fromCokleisli U ≅ U :=
   NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
-    dsimp'
+    dsimp
     simp
 
 end Adjunction

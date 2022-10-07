@@ -87,13 +87,11 @@ instance : Groupₓ (QuaternionGroup n) where
     rintro (i | i) (j | j) (k | k) <;> simp only [mul] <;> abel
     simp only [neg_mul, one_mulₓ, Int.cast_oneₓ, zsmul_eq_mul, Int.cast_neg, add_right_injₓ]
     calc
-      -(n : Zmod (2 * n)) = 0 - n := by
-        rw [zero_sub]
+      -(n : Zmod (2 * n)) = 0 - n := by rw [zero_sub]
       _ = 2 * n - n := by
         norm_cast
         simp
-      _ = n := by
-        ring
+      _ = n := by ring
       
   one := one
   one_mul := by
@@ -146,10 +144,8 @@ private def fintype_helper : Sum (Zmod (2 * n)) (Zmod (2 * n)) ≃ QuaternionGro
     match i with
     | Sum.inl j => a j
     | Sum.inr j => xa j
-  left_inv := by
-    rintro (x | x) <;> rfl
-  right_inv := by
-    rintro (x | x) <;> rfl
+  left_inv := by rintro (x | x) <;> rfl
+  right_inv := by rintro (x | x) <;> rfl
 
 /-- The special case that more or less by definition `quaternion_group 0` is isomorphic to the
 infinite dihedral group. -/
@@ -159,29 +155,26 @@ def quaternionGroupZeroEquivDihedralGroupZero : QuaternionGroup 0 ≃* DihedralG
     match i with
     | DihedralGroup.r j => a j
     | DihedralGroup.sr j => xa j
-  left_inv := by
-    rintro (k | k) <;> rfl
-  right_inv := by
-    rintro (k | k) <;> rfl
+  left_inv := by rintro (k | k) <;> rfl
+  right_inv := by rintro (k | k) <;> rfl
   map_mul' := by
     rintro (k | k) (l | l) <;>
-      · dsimp'
+      · dsimp
         simp
         
 
 /-- If `0 < n`, then `quaternion_group n` is a finite group.
 -/
-instance [NeZero n] : Fintype (QuaternionGroup n) :=
-  Fintype.ofEquiv _ fintypeHelper
+instance [NeZero n] : Fintypeₓ (QuaternionGroup n) :=
+  Fintypeₓ.ofEquiv _ fintypeHelper
 
 instance : Nontrivial (QuaternionGroup n) :=
-  ⟨⟨a 0, xa 0, by
-      decide⟩⟩
+  ⟨⟨a 0, xa 0, by decide⟩⟩
 
 /-- If `0 < n`, then `quaternion_group n` has `4n` elements.
 -/
-theorem card [NeZero n] : Fintype.card (QuaternionGroup n) = 4 * n := by
-  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, Zmod.card, two_mul]
+theorem card [NeZero n] : Fintypeₓ.card (QuaternionGroup n) = 4 * n := by
+  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintypeₓ.card_sum, Zmod.card, two_mul]
   ring
 
 @[simp]
@@ -203,8 +196,7 @@ theorem a_one_pow_n : (a 1 : QuaternionGroup n) ^ (2 * n) = 1 := by
   exact Zmod.nat_cast_self _
 
 @[simp]
-theorem xa_sq (i : Zmod (2 * n)) : xa i ^ 2 = a n := by
-  simp [sq]
+theorem xa_sq (i : Zmod (2 * n)) : xa i ^ 2 = a n := by simp [sq]
 
 @[simp]
 theorem xa_pow_four (i : Zmod (2 * n)) : xa i ^ 4 = 1 := by

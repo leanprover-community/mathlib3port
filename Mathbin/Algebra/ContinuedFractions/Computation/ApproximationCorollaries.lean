@@ -98,34 +98,27 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, abs
     suffices : 1 / (B * nB) < ε
     exact lt_of_le_of_ltₓ abs_v_sub_conv_le this
     -- show that `0 < (B * nB)` and then multiply by `B * nB` to get rid of the division
-    have nB_ineq : (fib (n + 2) : K) ≤ nB := by
-      have : ¬g.terminated_at (n + 1 - 1) := not_terminated_at_n
-      exact succ_nth_fib_le_of_nth_denom (Or.inr this)
-    have B_ineq : (fib (n + 1) : K) ≤ B := by
-      have : ¬g.terminated_at (n - 1) := mt (terminated_stable n.pred_le) not_terminated_at_n
-      exact succ_nth_fib_le_of_nth_denom (Or.inr this)
-    have zero_lt_B : 0 < B := by
-      have : (0 : K) < fib (n + 1) := by
-        exact_mod_cast fib_pos n.zero_lt_succ
-      exact lt_of_lt_of_leₓ this B_ineq
+    have nB_ineq : (fib (n + 2) : K) ≤ nB :=
+      haveI : ¬g.terminated_at (n + 1 - 1) := not_terminated_at_n
+      succ_nth_fib_le_of_nth_denom (Or.inr this)
+    have B_ineq : (fib (n + 1) : K) ≤ B :=
+      haveI : ¬g.terminated_at (n - 1) := mt (terminated_stable n.pred_le) not_terminated_at_n
+      succ_nth_fib_le_of_nth_denom (Or.inr this)
+    have zero_lt_B : 0 < B :=
+      haveI : (0 : K) < fib (n + 1) := by exact_mod_cast fib_pos n.zero_lt_succ
+      lt_of_lt_of_leₓ this B_ineq
     have zero_lt_mul_conts : 0 < B * nB := by
-      have : 0 < nB := by
-        have : (0 : K) < fib (n + 2) := by
-          exact_mod_cast fib_pos (n + 1).zero_lt_succ
-        exact lt_of_lt_of_leₓ this nB_ineq
+      have : 0 < nB :=
+        haveI : (0 : K) < fib (n + 2) := by exact_mod_cast fib_pos (n + 1).zero_lt_succ
+        lt_of_lt_of_leₓ this nB_ineq
       solve_by_elim [mul_pos]
     suffices : 1 < ε * (B * nB)
     exact (div_lt_iff zero_lt_mul_conts).elim_right this
     -- use that `N ≥ n` was obtained from the archimedean property to show the following
     have one_lt_ε_mul_N : 1 < ε * n := by
       have one_lt_ε_mul_N' : 1 < ε * (N' : K) := (div_lt_iff' ε_pos).elim_left one_div_ε_lt_N'
-      have : (N' : K) ≤ N := by
-        exact_mod_cast le_max_leftₓ _ _
-      have : ε * N' ≤ ε * n :=
-        (mul_le_mul_left ε_pos).elim_right
-          (le_transₓ this
-            (by
-              exact_mod_cast n_ge_N))
+      have : (N' : K) ≤ N := by exact_mod_cast le_max_leftₓ _ _
+      have : ε * N' ≤ ε * n := (mul_le_mul_left ε_pos).elim_right (le_transₓ this (by exact_mod_cast n_ge_N))
       exact lt_of_lt_of_leₓ one_lt_ε_mul_N' this
     suffices : ε * n ≤ ε * (B * nB)
     exact lt_of_lt_of_leₓ one_lt_ε_mul_N this
@@ -134,23 +127,12 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, abs
     exact (mul_le_mul_left ε_pos).elim_right this
     show (n : K) ≤ B * nB
     calc
-      (n : K) ≤ fib n := by
-        exact_mod_cast le_fib_self <| le_transₓ (le_max_rightₓ N' 5) n_ge_N
-      _ ≤ fib (n + 1) := by
-        exact_mod_cast fib_le_fib_succ
-      _ ≤ fib (n + 1) * fib (n + 1) := by
-        exact_mod_cast (fib (n + 1)).le_mul_self
+      (n : K) ≤ fib n := by exact_mod_cast le_fib_self <| le_transₓ (le_max_rightₓ N' 5) n_ge_N
+      _ ≤ fib (n + 1) := by exact_mod_cast fib_le_fib_succ
+      _ ≤ fib (n + 1) * fib (n + 1) := by exact_mod_cast (fib (n + 1)).le_mul_self
       _ ≤ fib (n + 1) * fib (n + 2) :=
-        mul_le_mul_of_nonneg_left
-          (by
-            exact_mod_cast fib_le_fib_succ)
-          (by
-            exact_mod_cast (fib (n + 1)).zero_le)
-      _ ≤ B * nB :=
-        mul_le_mul B_ineq nB_ineq
-          (by
-            exact_mod_cast (fib (n + 2)).zero_le)
-          (le_of_ltₓ zero_lt_B)
+        mul_le_mul_of_nonneg_left (by exact_mod_cast fib_le_fib_succ) (by exact_mod_cast (fib (n + 1)).zero_le)
+      _ ≤ B * nB := mul_le_mul B_ineq nB_ineq (by exact_mod_cast (fib (n + 2)).zero_le) (le_of_ltₓ zero_lt_B)
       
     
 

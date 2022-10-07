@@ -76,7 +76,7 @@ theorem smul_pos_iff_of_neg (hc : c < 0) : 0 < c • a ↔ a < 0 := by
 theorem smul_nonpos_of_nonpos_of_nonneg (hc : c ≤ 0) (ha : 0 ≤ a) : c • a ≤ 0 :=
   calc
     c • a ≤ c • 0 := smul_le_smul_of_nonpos ha hc
-    _ = 0 := smul_zero' M c
+    _ = 0 := smul_zero c
     
 
 theorem smul_nonneg_of_nonpos_of_nonpos (hc : c ≤ 0) (ha : a ≤ 0) : 0 ≤ c • a :=
@@ -88,9 +88,9 @@ alias smul_neg_iff_of_pos ↔ _ smul_neg_of_pos_of_neg
 
 alias smul_neg_iff_of_neg ↔ _ smul_neg_of_neg_of_pos
 
-theorem antitone_smul_left (hc : c ≤ 0) : Antitone (HasSmul.smul c : M → M) := fun a b h => smul_le_smul_of_nonpos h hc
+theorem antitone_smul_left (hc : c ≤ 0) : Antitoneₓ (HasSmul.smul c : M → M) := fun a b h => smul_le_smul_of_nonpos h hc
 
-theorem strict_anti_smul_left (hc : c < 0) : StrictAnti (HasSmul.smul c : M → M) := fun a b h =>
+theorem strict_anti_smul_left (hc : c < 0) : StrictAntiₓ (HasSmul.smul c : M → M) := fun a b h =>
   smul_lt_smul_of_neg h hc
 
 /-- Binary **rearrangement inequality**. -/
@@ -133,13 +133,21 @@ theorem smul_le_smul_iff_of_neg (hc : c < 0) : c • a ≤ c • b ↔ b ≤ a :
   rw [← neg_negₓ c, neg_smul, neg_smul (-c), neg_le_neg_iff]
   exact smul_le_smul_iff_of_pos (neg_pos_of_neg hc)
 
-theorem smul_lt_iff_of_neg (hc : c < 0) : c • a < b ↔ c⁻¹ • b < a := by
-  rw [← neg_negₓ c, ← neg_negₓ a, neg_smul_neg, inv_neg, neg_smul _ b, neg_lt_neg_iff]
-  exact smul_lt_iff_of_pos (neg_pos_of_neg hc)
+theorem inv_smul_le_iff_of_neg (h : c < 0) : c⁻¹ • a ≤ b ↔ c • b ≤ a := by
+  rw [← smul_le_smul_iff_of_neg h, smul_inv_smul₀ h.ne]
+  infer_instance
 
-theorem lt_smul_iff_of_neg (hc : c < 0) : a < c • b ↔ b < c⁻¹ • a := by
-  rw [← neg_negₓ c, ← neg_negₓ b, neg_smul_neg, inv_neg, neg_smul _ a, neg_lt_neg_iff]
-  exact lt_smul_iff_of_pos (neg_pos_of_neg hc)
+theorem inv_smul_lt_iff_of_neg (h : c < 0) : c⁻¹ • a < b ↔ c • b < a := by
+  rw [← smul_lt_smul_iff_of_neg h, smul_inv_smul₀ h.ne]
+  infer_instance
+
+theorem smul_inv_le_iff_of_neg (h : c < 0) : a ≤ c⁻¹ • b ↔ b ≤ c • a := by
+  rw [← smul_le_smul_iff_of_neg h, smul_inv_smul₀ h.ne]
+  infer_instance
+
+theorem smul_inv_lt_iff_of_neg (h : c < 0) : a < c⁻¹ • b ↔ b < c • a := by
+  rw [← smul_lt_smul_iff_of_neg h, smul_inv_smul₀ h.ne]
+  infer_instance
 
 variable (M)
 

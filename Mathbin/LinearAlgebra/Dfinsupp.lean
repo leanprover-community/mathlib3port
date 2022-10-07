@@ -46,7 +46,7 @@ variable [AddCommMonoidₓ N] [Module R N]
 include dec_ι
 
 /-- `dfinsupp.mk` as a `linear_map`. -/
-def lmk (s : Finset ι) : (∀ i : (↑s : Set ι), M i) →ₗ[R] Π₀ i, M i where
+def lmk (s : Finsetₓ ι) : (∀ i : (↑s : Set ι), M i) →ₗ[R] Π₀ i, M i where
   toFun := mk s
   map_add' := fun _ _ => mk_add
   map_smul' := fun c x => mk_smul c x
@@ -78,7 +78,7 @@ def lapply (i : ι) : (Π₀ i, M i) →ₗ[R] M i where
 include dec_ι
 
 @[simp]
-theorem lmk_apply (s : Finset ι) (x) : (lmk s : _ →ₗ[R] Π₀ i, M i) x = mk s x :=
+theorem lmk_apply (s : Finsetₓ ι) (x) : (lmk s : _ →ₗ[R] Π₀ i, M i) x = mk s x :=
   rfl
 
 @[simp]
@@ -120,7 +120,7 @@ def lsum [Semiringₓ S] [Module S N] [SmulCommClass R S N] : (∀ i, M i →ₗ
   toFun := fun F =>
     { toFun := sumAddHom fun i => (F i).toAddMonoidHom, map_add' := (liftAddHom fun i => (F i).toAddMonoidHom).map_add,
       map_smul' := fun c f => by
-        dsimp'
+        dsimp
         apply Dfinsupp.induction f
         · rw [smul_zero, AddMonoidHom.map_zero, smul_zero]
           
@@ -190,11 +190,7 @@ theorem sum_map_range_index.linear_map [∀ (i : ι) (x : β₁ i), Decidable (x
     [∀ (i : ι) (x : β₂ i), Decidable (x ≠ 0)] {f : ∀ i, β₁ i →ₗ[R] β₂ i} {h : ∀ i, β₂ i →ₗ[R] N} {l : Π₀ i, β₁ i} :
     Dfinsupp.lsum ℕ h (mapRange.linearMap f l) = Dfinsupp.lsum ℕ (fun i => (h i).comp (f i)) l := by
   simpa [Dfinsupp.sum_add_hom_apply] using
-    @sum_map_range_index ι N _ _ _ _ _ _ _ _ (fun i => f i)
-      (fun i => by
-        simp )
-      l (fun i => h i) fun i => by
-      simp
+    @sum_map_range_index ι N _ _ _ _ _ _ _ _ (fun i => f i) (fun i => by simp) l (fun i => h i) fun i => by simp
 
 omit dec_ι
 
@@ -278,7 +274,7 @@ theorem bsupr_eq_range_dfinsupp_lsum (p : ι → Prop) [DecidablePred p] (S : ι
   · rintro x ⟨v, rfl⟩
     refine' dfinsupp_sum_add_hom_mem _ _ _ fun i hi => _
     refine' mem_supr_of_mem i _
-    by_cases' hp : p i
+    by_cases hp:p i
     · simp [hp]
       
     · simp [hp]
@@ -304,7 +300,7 @@ open BigOperators
 
 omit dec_ι
 
-theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N) (a : N) :
+theorem mem_supr_finset_iff_exists_sum {s : Finsetₓ ι} (p : ι → Submodule R N) (a : N) :
     (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, (∑ i in s, (μ i : N)) = a := by
   classical
   rw [Submodule.mem_supr_iff_exists_dfinsupp']
@@ -312,7 +308,7 @@ theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
   · use fun i => ⟨μ i, (supr_const_le : _ ≤ p i) (coe_mem <| μ i)⟩
     rw [← hμ]
     symm
-    apply Finset.sum_subset
+    apply Finsetₓ.sum_subset
     · intro x
       contrapose
       intro hx
@@ -339,8 +335,8 @@ theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
         
       
     simp only [Dfinsupp.sum]
-    rw [Finset.sum_subset support_mk_subset, ← hμ]
-    exact Finset.sum_congr rfl fun x hx => congr_arg coe <| mk_of_mem hx
+    rw [Finsetₓ.sum_subset support_mk_subset, ← hμ]
+    exact Finsetₓ.sum_congr rfl fun x hx => congr_arg coe <| mk_of_mem hx
     · intro x _ hx
       rw [mem_support_iff, not_ne_iff] at hx
       rw [hx]

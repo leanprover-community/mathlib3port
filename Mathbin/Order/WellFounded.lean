@@ -140,7 +140,7 @@ variable {β : Type _} [LinearOrderₓ β] (h : WellFounded ((· < ·) : β → 
 theorem min_le {x : β} {s : Set β} (hx : x ∈ s) (hne : s.Nonempty := ⟨x, hx⟩) : h.min s hne ≤ x :=
   not_ltₓ.1 <| h.not_lt_min _ _ hx
 
-private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g)
+private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMonoₓ f) (hg : StrictMonoₓ g)
     (hfg : Set.Range f = Set.Range g) {b : β} (H : ∀ a < b, f a = g a) : f b ≤ g b := by
   obtain ⟨c, hc⟩ : g b ∈ Set.Range f := by
     rw [hfg]
@@ -156,7 +156,7 @@ private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMo
 
 include h
 
-theorem eq_strict_mono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g) :
+theorem eq_strict_mono_iff_eq_range {f g : β → γ} (hf : StrictMonoₓ f) (hg : StrictMonoₓ g) :
     Set.Range f = Set.Range g ↔ f = g :=
   ⟨fun hfg => by
     funext a
@@ -166,7 +166,7 @@ theorem eq_strict_mono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : 
         (eq_strict_mono_iff_eq_range_aux hg hf hfg.symm fun a hab => (H a hab).symm),
     congr_arg _⟩
 
-theorem self_le_of_strict_mono {f : β → β} (hf : StrictMono f) : ∀ n, n ≤ f n := by
+theorem self_le_of_strict_mono {f : β → β} (hf : StrictMonoₓ f) : ∀ n, n ≤ f n := by
   by_contra' h₁
   have h₂ := h.min_mem _ h₁
   exact h.not_lt_min _ h₁ (hf h₂) h₂

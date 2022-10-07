@@ -106,7 +106,7 @@ theorem IsDiag.conj_transpose [Semiringₓ α] [StarRing α] {A : Matrix n n α}
 theorem is_diag_conj_transpose_iff [Semiringₓ α] [StarRing α] {A : Matrix n n α} : Aᴴ.IsDiag ↔ A.IsDiag :=
   ⟨fun ha => by
     convert ha.conj_transpose
-    simp , IsDiag.conj_transpose⟩
+    simp, IsDiag.conj_transpose⟩
 
 theorem IsDiag.submatrix [Zero α] {A : Matrix n n α} (ha : A.IsDiag) {f : m → n} (hf : Injective f) :
     (A.submatrix f f).IsDiag := fun i j h => ha (hf.Ne h)
@@ -124,7 +124,7 @@ theorem IsDiag.kronecker [MulZeroClassₓ α] {A : Matrix m m α} {B : Matrix n 
 
 theorem IsDiag.is_symm [Zero α] {A : Matrix n n α} (h : A.IsDiag) : A.IsSymm := by
   ext i j
-  by_cases' g : i = j
+  by_cases g:i = j
   · rw [g]
     
   simp [h g, h (Ne.symm g)]
@@ -168,11 +168,11 @@ theorem IsDiag.from_blocks_of_is_symm [Zero α] {A : Matrix m m α} {C : Matrix 
   rw [← (is_symm_from_blocks_iff.1 h).2.1]
   exact ha.from_blocks hd
 
-theorem mul_transpose_self_is_diag_iff_has_orthogonal_rows [Fintype n] [Mul α] [AddCommMonoidₓ α] {A : Matrix m n α} :
+theorem mul_transpose_self_is_diag_iff_has_orthogonal_rows [Fintypeₓ n] [Mul α] [AddCommMonoidₓ α] {A : Matrix m n α} :
     (A ⬝ Aᵀ).IsDiag ↔ A.HasOrthogonalRows :=
   Iff.rfl
 
-theorem transpose_mul_self_is_diag_iff_has_orthogonal_cols [Fintype m] [Mul α] [AddCommMonoidₓ α] {A : Matrix m n α} :
+theorem transpose_mul_self_is_diag_iff_has_orthogonal_cols [Fintypeₓ m] [Mul α] [AddCommMonoidₓ α] {A : Matrix m n α} :
     (Aᵀ ⬝ A).IsDiag ↔ A.HasOrthogonalCols :=
   Iff.rfl
 

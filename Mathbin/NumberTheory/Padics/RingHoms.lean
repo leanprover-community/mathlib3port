@@ -81,8 +81,7 @@ theorem mod_part_lt_p : modPart p r < p := by
     
 
 theorem mod_part_nonneg : 0 ≤ modPart p r :=
-  Int.mod_nonnegₓ _ <| by
-    exact_mod_cast hp_prime.1.ne_zero
+  Int.mod_nonnegₓ _ <| by exact_mod_cast hp_prime.1.ne_zero
 
 theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.denom : ℤ_[p]) := by
   rw [is_unit_iff]
@@ -90,7 +89,7 @@ theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.deno
   rw [← not_ltₓ, val_eq_coe, coe_nat_cast]
   intro norm_denom_lt
   have hr : ∥(r * r.denom : ℚ_[p])∥ = ∥(r.num : ℚ_[p])∥ := by
-    rw_mod_cast[@Ratₓ.mul_denom_eq_num r]
+    rw_mod_cast [@Ratₓ.mul_denom_eq_num r]
     rfl
   rw [padicNormE.mul] at hr
   have key : ∥(r.num : ℚ_[p])∥ < 1 := by
@@ -132,7 +131,7 @@ theorem norm_sub_mod_part (h : ∥(r : ℚ_[p])∥ ≤ 1) : ∥(⟨r, h⟩ - mod
     simp only [sub_mul, Int.cast_coe_nat, eq_int_cast, Int.cast_mul, sub_left_inj, Int.cast_sub]
     apply Subtype.coe_injective
     simp only [coe_mul, Subtype.coe_mk, coe_nat_cast]
-    rw_mod_cast[@Ratₓ.mul_denom_eq_num r]
+    rw_mod_cast [@Ratₓ.mul_denom_eq_num r]
     rfl
   exact norm_sub_mod_part_aux r h
 
@@ -159,12 +158,7 @@ theorem zmod_congr_of_sub_mem_max_ideal (x : ℤ_[p]) (m n : ℕ) (hm : x - m �
   have := zmod_congr_of_sub_mem_span_aux 1 x m n
   simp only [pow_oneₓ] at this
   specialize this hm hn
-  apply_fun
-    Zmod.castHom
-      (show p ∣ p ^ 1 by
-        rw [pow_oneₓ])
-      (Zmod p)
-     at this
+  apply_fun Zmod.castHom (show p ∣ p ^ 1 by rw [pow_oneₓ]) (Zmod p)  at this
   simp only [map_int_cast] at this
   simpa only [Int.cast_coe_nat] using this
 
@@ -172,12 +166,11 @@ variable (x : ℤ_[p])
 
 theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximalIdeal ℤ_[p] := by
   simp only [maximal_ideal_eq_span_p, Ideal.mem_span_singleton, ← norm_lt_one_iff_dvd]
-  obtain ⟨r, hr⟩ := rat_dense (x : ℚ_[p]) zero_lt_one
+  obtain ⟨r, hr⟩ := rat_dense p (x : ℚ_[p]) zero_lt_one
   have H : ∥(r : ℚ_[p])∥ ≤ 1 := by
     rw [norm_sub_rev] at hr
     calc
-      _ = ∥(r : ℚ_[p]) - x + x∥ := by
-        ring_nf
+      _ = ∥(r : ℚ_[p]) - x + x∥ := by ring_nf
       _ ≤ _ := padicNormE.nonarchimedean _ _
       _ ≤ _ := max_leₓ (le_of_ltₓ hr) x.2
       
@@ -188,9 +181,7 @@ theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximalIdeal ℤ_[p]
   · exact_mod_cast hnp
     
   simp only [norm_def, coe_sub, Subtype.coe_mk, coe_nat_cast] at hn⊢
-  rw
-    [show (x - n : ℚ_[p]) = x - r + (r - n) by
-      ring]
+  rw [show (x - n : ℚ_[p]) = x - r + (r - n) by ring]
   apply lt_of_le_of_ltₓ (padicNormE.nonarchimedean _ _)
   apply max_ltₓ hr
   simpa using hn
@@ -273,7 +264,7 @@ This coercion is only a ring homomorphism if it coerces into a ring whose charac
 -/
 theorem to_zmod_spec (z : ℤ_[p]) : z - (toZmod z : ℤ_[p]) ∈ maximalIdeal ℤ_[p] := by
   convert sub_zmod_repr_mem z using 2
-  dsimp' [to_zmod, to_zmod_hom]
+  dsimp [to_zmod, to_zmod_hom]
   rcases exists_eq_add_of_lt hp_prime.1.Pos with ⟨p', rfl⟩
   change ↑(Zmod.val _) = _
   simp only [Zmod.val_nat_cast, add_zeroₓ, add_def, Nat.cast_inj, zero_addₓ]
@@ -289,7 +280,7 @@ theorem ker_to_zmod : (toZmod : ℤ_[p] →+* Zmod p).ker = maximalIdeal ℤ_[p]
     
   · intro h
     rw [← sub_zero x] at h
-    dsimp' [to_zmod, to_zmod_hom]
+    dsimp [to_zmod, to_zmod_hom]
     convert zmod_congr_of_sub_mem_max_ideal x _ 0 _ h
     norm_cast
     apply sub_zmod_repr_mem
@@ -311,8 +302,7 @@ theorem appr_lt (x : ℤ_[p]) (n : ℕ) : x.appr n < p ^ n := by
   · simp only [appr, succ_pos', pow_zeroₓ]
     
   simp only [appr, map_nat_cast, Zmod.nat_cast_self, RingHom.map_pow, Int.natAbs, RingHom.map_mul]
-  have hp : p ^ n < p ^ (n + 1) := by
-    apply pow_lt_pow hp_prime.1.one_lt (lt_add_one n)
+  have hp : p ^ n < p ^ (n + 1) := by apply pow_lt_pow hp_prime.1.one_lt (lt_add_one n)
   split_ifs with h
   · apply lt_transₓ (ih _) hp
     
@@ -330,10 +320,10 @@ theorem appr_lt (x : ℤ_[p]) (n : ℕ) : x.appr n < p ^ n := by
       
     
 
-theorem appr_mono (x : ℤ_[p]) : Monotone x.appr := by
+theorem appr_mono (x : ℤ_[p]) : Monotoneₓ x.appr := by
   apply monotone_nat_of_le_succ
   intro n
-  dsimp' [appr]
+  dsimp [appr]
   split_ifs
   · rfl
     
@@ -346,7 +336,7 @@ theorem dvd_appr_sub_appr (x : ℤ_[p]) (m n : ℕ) (h : m ≤ n) : p ^ m ∣ x.
   · simp only [add_zeroₓ, tsub_self, dvd_zero]
     
   rw [Nat.succ_eq_add_one, ← add_assocₓ]
-  dsimp' [appr]
+  dsimp [appr]
   split_ifs with h
   · exact ih
     
@@ -361,7 +351,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
   · simp only [is_unit_one, IsUnit.dvd, pow_zeroₓ, forall_true_iff]
     
   intro x
-  dsimp' only [appr]
+  dsimp only [appr]
   split_ifs with h
   · rw [h]
     apply dvd_zero
@@ -374,10 +364,10 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
     rintro rfl
     simp only [mul_zero] at hc
     contradiction
-  conv_rhs => congr simp only [hc]
-  rw
-    [show (x - ↑(appr x n)).Valuation = (↑p ^ n * c).Valuation by
-      rw [hc]]
+  conv_rhs =>
+  congr
+  simp only [hc]
+  rw [show (x - ↑(appr x n)).Valuation = (↑p ^ n * c).Valuation by rw [hc]]
   rw [valuation_p_pow_mul _ _ hc', add_sub_cancel', pow_succ'ₓ, ← mul_sub]
   apply mul_dvd_mul_left
   obtain hc0 | hc0 := c.valuation.nat_abs.eq_zero_or_pos
@@ -405,7 +395,7 @@ def toZmodPow (n : ℕ) : ℤ_[p] →+* Zmod (p ^ n) :=
     (by
       intros
       convert appr_spec n _ using 1
-      simp )
+      simp)
     (by
       intro x a b ha hb
       apply zmod_congr_of_sub_mem_span n x a b
@@ -422,13 +412,13 @@ theorem ker_to_zmod_pow (n : ℕ) : (toZmodPow n : ℤ_[p] →+* Zmod (p ^ n)).k
     suffices x.appr n = 0 by
       convert appr_spec n x
       simp only [this, sub_zero, cast_zero]
-    dsimp' [to_zmod_pow, to_zmod_hom]  at h
+    dsimp [to_zmod_pow, to_zmod_hom] at h
     rw [Zmod.nat_coe_zmod_eq_zero_iff_dvd] at h
     apply eq_zero_of_dvd_of_lt h (appr_lt _ _)
     
   · intro h
     rw [← sub_zero x] at h
-    dsimp' [to_zmod_pow, to_zmod_hom]
+    dsimp [to_zmod_pow, to_zmod_hom]
     rw [zmod_congr_of_sub_mem_span n x _ 0 _ h, cast_zero]
     apply appr_spec
     
@@ -502,8 +492,7 @@ and `f n r = (k : zmod (p ^ n))`.
 def nthHom (r : R) : ℕ → ℤ := fun n => (f n r : Zmod (p ^ n)).val
 
 @[simp]
-theorem nth_hom_zero : nthHom f 0 = 0 := by
-  simp [nth_hom] <;> rfl
+theorem nth_hom_zero : nthHom f 0 = 0 := by simp [nth_hom] <;> rfl
 
 variable {f}
 
@@ -514,7 +503,7 @@ include f_compat
 theorem pow_dvd_nth_hom_sub (r : R) (i j : ℕ) (h : i ≤ j) : ↑p ^ i ∣ nthHom f r j - nthHom f r i := by
   specialize f_compat i j h
   rw [← Int.coe_nat_pow, ← Zmod.int_coe_zmod_eq_zero_iff_dvd, Int.cast_sub]
-  dsimp' [nth_hom]
+  dsimp [nth_hom]
   rw [← f_compat, RingHom.comp_apply]
   simp only [Zmod.cast_id, Zmod.cast_hom_apply, sub_self, Zmod.nat_cast_val, Zmod.int_cast_cast]
 
@@ -541,13 +530,8 @@ theorem nth_hom_seq_one : nthHomSeq f_compat 1 ≈ 1 := by
   change _ < _ at hε
   use 1
   intro j hj
-  haveI : Fact (1 < p ^ j) :=
-    ⟨Nat.one_lt_pow _ _
-        (by
-          linarith)
-        hp_prime.1.one_lt⟩
-  suffices ((1 : Zmod (p ^ j)) : ℚ) = 1 by
-    simp [nth_hom_seq, nth_hom, this, hε]
+  haveI : Fact (1 < p ^ j) := ⟨Nat.one_lt_pow _ _ (by linarith) hp_prime.1.one_lt⟩
+  suffices ((1 : Zmod (p ^ j)) : ℚ) = 1 by simp [nth_hom_seq, nth_hom, this, hε]
   rw [Zmod.cast_eq_val, Zmod.val_one, Nat.cast_oneₓ]
 
 theorem nth_hom_seq_add (r s : R) : nthHomSeq f_compat (r + s) ≈ nthHomSeq f_compat r + nthHomSeq f_compat s := by
@@ -555,10 +539,10 @@ theorem nth_hom_seq_add (r s : R) : nthHomSeq f_compat (r + s) ≈ nthHomSeq f_c
   obtain ⟨n, hn⟩ := exists_pow_neg_lt_rat p hε
   use n
   intro j hj
-  dsimp' [nth_hom_seq]
+  dsimp [nth_hom_seq]
   apply lt_of_le_of_ltₓ _ hn
   rw [← Int.cast_add, ← Int.cast_sub, ← padicNorm.dvd_iff_norm_le, ← Zmod.int_coe_zmod_eq_zero_iff_dvd]
-  dsimp' [nth_hom]
+  dsimp [nth_hom]
   simp only [Zmod.nat_cast_val, RingHom.map_add, Int.cast_sub, Zmod.int_cast_cast, Int.cast_add]
   rw [Zmod.cast_add (show p ^ n ∣ p ^ j from pow_dvd_pow _ hj), sub_self]
   · infer_instance
@@ -569,10 +553,10 @@ theorem nth_hom_seq_mul (r s : R) : nthHomSeq f_compat (r * s) ≈ nthHomSeq f_c
   obtain ⟨n, hn⟩ := exists_pow_neg_lt_rat p hε
   use n
   intro j hj
-  dsimp' [nth_hom_seq]
+  dsimp [nth_hom_seq]
   apply lt_of_le_of_ltₓ _ hn
   rw [← Int.cast_mul, ← Int.cast_sub, ← padicNorm.dvd_iff_norm_le, ← Zmod.int_coe_zmod_eq_zero_iff_dvd]
-  dsimp' [nth_hom]
+  dsimp [nth_hom]
   simp only [Zmod.nat_cast_val, RingHom.map_mul, Int.cast_sub, Zmod.int_cast_cast, Int.cast_mul]
   rw [Zmod.cast_mul (show p ^ n ∣ p ^ j from pow_dvd_pow _ hj), sub_self]
   · infer_instance
@@ -596,8 +580,7 @@ theorem lim_nth_hom_spec (r : R) : ∀ ε : ℝ, 0 < ε → ∃ N : ℕ, ∀ n �
   norm_cast
   exact hN _ hn
 
-theorem lim_nth_hom_zero : limNthHom f_compat 0 = 0 := by
-  simp [lim_nth_hom] <;> rfl
+theorem lim_nth_hom_zero : limNthHom f_compat 0 = 0 := by simp [lim_nth_hom] <;> rfl
 
 theorem lim_nth_hom_one : limNthHom f_compat 1 = 1 :=
   Subtype.ext <| Quot.sound <| nth_hom_seq_one _
@@ -627,7 +610,7 @@ theorem lift_sub_val_mem_span (r : R) (n : ℕ) : lift f_compat r - (f n r).val 
     lim_nth_hom_spec f_compat r _ (show (0 : ℝ) < p ^ (-n : ℤ) from Nat.zpow_pos_of_pos hp_prime.1.Pos _)
   have := le_of_ltₓ (hk (max n k) (le_max_rightₓ _ _))
   rw [norm_le_pow_iff_mem_span_pow] at this
-  dsimp' [lift]
+  dsimp [lift]
   rw [sub_eq_sub_add_sub (lim_nth_hom f_compat r) _ ↑(nth_hom f r (max n k))]
   apply Ideal.add_mem _ _ this
   rw [Ideal.mem_span_singleton]

@@ -67,19 +67,13 @@ structure Hom (X Y : Grothendieck F) where
 
 @[ext]
 theorem ext {X Y : Grothendieck F} (f g : Hom X Y) (w_base : f.base = g.base)
-    (w_fiber :
-      eqToHom
-            (by
-              rw [w_base]) ≫
-          f.fiber =
-        g.fiber) :
-    f = g := by
+    (w_fiber : eqToHom (by rw [w_base]) ≫ f.fiber = g.fiber) : f = g := by
   cases f <;> cases g
   congr
-  dsimp'  at w_base
+  dsimp at w_base
   induction w_base
   rfl
-  dsimp'  at w_base
+  dsimp at w_base
   induction w_base
   simpa using w_fiber
 
@@ -88,10 +82,7 @@ theorem ext {X Y : Grothendieck F} (f g : Hom X Y) (w_base : f.base = g.base)
 @[simps]
 def id (X : Grothendieck F) : Hom X X where
   base := 𝟙 X.base
-  fiber :=
-    eqToHom
-      (by
-        erw [CategoryTheory.Functor.map_id, functor.id_obj X.fiber])
+  fiber := eqToHom (by erw [CategoryTheory.Functor.map_id, functor.id_obj X.fiber])
 
 instance (X : Grothendieck F) : Inhabited (Hom X X) :=
   ⟨id X⟩
@@ -101,11 +92,7 @@ instance (X : Grothendieck F) : Inhabited (Hom X X) :=
 @[simps]
 def comp {X Y Z : Grothendieck F} (f : Hom X Y) (g : Hom Y Z) : Hom X Z where
   base := f.base ≫ g.base
-  fiber :=
-    eqToHom
-        (by
-          erw [functor.map_comp, functor.comp_obj]) ≫
-      (F.map g.base).map f.fiber ≫ g.fiber
+  fiber := eqToHom (by erw [functor.map_comp, functor.comp_obj]) ≫ (F.map g.base).map f.fiber ≫ g.fiber
 
 attribute [local simp] eq_to_hom_map
 
@@ -115,7 +102,7 @@ instance : Category (Grothendieck F) where
   comp := fun X Y Z f g => Grothendieck.comp f g
   comp_id' := fun X Y f => by
     ext
-    · dsimp'
+    · dsimp
       -- We need to turn `F.map_id` (which is an equation between functors)
       -- into a natural isomorphism.
       rw [← nat_iso.naturality_2 (eq_to_iso (F.map_id Y.base)) f.fiber]
@@ -123,14 +110,13 @@ instance : Category (Grothendieck F) where
       
     · simp
       
-  id_comp' := fun X Y f => by
-    ext <;> simp
+  id_comp' := fun X Y f => by ext <;> simp
   assoc' := fun W X Y Z f g h => by
     ext
     swap
     · simp
       
-    · dsimp'
+    · dsimp
       rw [← nat_iso.naturality_2 (eq_to_iso (F.map_comp _ _)) f.fiber]
       simp
       rfl
@@ -138,21 +124,12 @@ instance : Category (Grothendieck F) where
 
 @[simp]
 theorem id_fiber' (X : Grothendieck F) :
-    Hom.fiber (𝟙 X) =
-      eqToHom
-        (by
-          erw [CategoryTheory.Functor.map_id, functor.id_obj X.fiber]) :=
+    Hom.fiber (𝟙 X) = eqToHom (by erw [CategoryTheory.Functor.map_id, functor.id_obj X.fiber]) :=
   id_fiber X
 
-theorem congr {X Y : Grothendieck F} {f g : X ⟶ Y} (h : f = g) :
-    f.fiber =
-      eqToHom
-          (by
-            subst h) ≫
-        g.fiber :=
-  by
+theorem congr {X Y : Grothendieck F} {f g : X ⟶ Y} (h : f = g) : f.fiber = eqToHom (by subst h) ≫ g.fiber := by
   subst h
-  dsimp'
+  dsimp
   simp
 
 section
@@ -198,10 +175,10 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements wher
         exact iso.refl _)
       (by
         rintro ⟨_, ⟨⟩⟩ ⟨_, ⟨⟩⟩ ⟨base, ⟨⟨f⟩⟩⟩
-        dsimp'  at *
+        dsimp at *
         subst f
         ext
-        simp )
+        simp)
   counitIso :=
     NatIso.ofComponents
       (fun X => by
@@ -209,13 +186,13 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements wher
         exact iso.refl _)
       (by
         rintro ⟨⟩ ⟨⟩ ⟨f, e⟩
-        dsimp'  at *
+        dsimp at *
         subst e
         ext
-        simp )
+        simp)
   functor_unit_iso_comp' := by
     rintro ⟨_, ⟨⟩⟩
-    dsimp'
+    dsimp
     simp
     rfl
 

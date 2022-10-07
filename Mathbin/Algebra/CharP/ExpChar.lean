@@ -112,8 +112,7 @@ theorem exp_char_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ 
     cases' CharP.exists R with p hp
     have p_ne_zero : p ≠ 0 := by
       intro p_zero
-      have : CharP R 0 := by
-        rwa [← p_zero]
+      have : CharP R 0 := by rwa [← p_zero]
       have : q = 1 := exp_char_one_of_char_zero R q
       contradiction
     have p_eq_q : p = q := (char_eq_exp_char_iff R p q).mpr (char_prime_of_ne_zero R p_ne_zero)

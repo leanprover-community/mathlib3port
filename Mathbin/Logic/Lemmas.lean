@@ -23,14 +23,12 @@ variable {α : Sort _} {p q r : Prop} [Decidable p] [Decidable q] {a b c : α}
 theorem dite_dite_distrib_left {a : p → α} {b : ¬p → q → α} {c : ¬p → ¬q → α} :
     (dite p a fun hp => dite q (b hp) (c hp)) =
       dite q (fun hq => (dite p a) fun hp => b hp hq) fun hq => (dite p a) fun hp => c hp hq :=
-  by
-  split_ifs <;> rfl
+  by split_ifs <;> rfl
 
 theorem dite_dite_distrib_right {a : p → q → α} {b : p → ¬q → α} {c : ¬p → α} :
     dite p (fun hp => dite q (a hp) (b hp)) c =
       dite q (fun hq => dite p (fun hp => a hp hq) c) fun hq => dite p (fun hp => b hp hq) c :=
-  by
-  split_ifs <;> rfl
+  by split_ifs <;> rfl
 
 theorem ite_dite_distrib_left {a : α} {b : q → α} {c : ¬q → α} :
     ite p a (dite q b c) = dite q (fun hq => ite p a <| b hq) fun hq => ite p a <| c hq :=

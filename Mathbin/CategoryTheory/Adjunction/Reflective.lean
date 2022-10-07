@@ -133,8 +133,7 @@ theorem unit_comp_partial_bijective_symm_apply [Reflective i] (A : C) {B : C} (h
 
 theorem unit_comp_partial_bijective_symm_natural [Reflective i] (A : C) {B B' : C} (h : B ⟶ B') (hB : B ∈ i.EssImage)
     (hB' : B' ∈ i.EssImage) (f : i.obj ((leftAdjoint i).obj A) ⟶ B) :
-    (unitCompPartialBijective A hB').symm (f ≫ h) = (unitCompPartialBijective A hB).symm f ≫ h := by
-  simp
+    (unitCompPartialBijective A hB').symm (f ≫ h) = (unitCompPartialBijective A hB).symm f ≫ h := by simp
 
 theorem unit_comp_partial_bijective_natural [Reflective i] (A : C) {B B' : C} (h : B ⟶ B') (hB : B ∈ i.EssImage)
     (hB' : B' ∈ i.EssImage) (f : A ⟶ B) :
@@ -151,7 +150,7 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImageSubcategory where
     NatIso.ofComponents (fun X => (as_iso <| (ofRightAdjoint i).counit.app X).symm)
       (by
         intro X Y f
-        dsimp'
+        dsimp
         simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.assoc]
         exact ((of_right_adjoint i).counit.naturality _).symm)
   counitIso :=
@@ -163,7 +162,7 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImageSubcategory where
         exact functor.ess_image.unit_is_iso X.property)
       (by
         intro X Y f
-        dsimp'
+        dsimp
         rw [is_iso.comp_inv_eq, assoc]
         have h := ((of_right_adjoint i).Unit.naturality f).symm
         rw [functor.id_map] at h

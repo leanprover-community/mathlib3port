@@ -176,17 +176,16 @@ def NatTrans.mapHomotopyCategory {F G : V ⥤ W} [F.Additive] [G.Additive] (α :
     F.mapHomotopyCategory c ⟶ G.mapHomotopyCategory c where
   app := fun C => (HomotopyCategory.quotient W c).map ((NatTrans.mapHomologicalComplex α c).app C.as)
   naturality' := fun C D f => by
-    dsimp'
+    dsimp
     simp only [← functor.map_comp]
     congr 1
     ext
-    dsimp'
+    dsimp
     simp
 
 @[simp]
 theorem NatTrans.map_homotopy_category_id (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
-    NatTrans.mapHomotopyCategory (𝟙 F) c = 𝟙 (F.mapHomotopyCategory c) := by
-  tidy
+    NatTrans.mapHomotopyCategory (𝟙 F) c = 𝟙 (F.mapHomotopyCategory c) := by tidy
 
 @[simp]
 theorem NatTrans.map_homotopy_category_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive] [G.Additive] [H.Additive]

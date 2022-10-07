@@ -36,7 +36,7 @@ theorem quotient_map_proj_Icc : QuotientMap (projIcc a b h) :=
       ⟨fun hs => hs.Preimage continuous_proj_Icc, fun hs =>
         ⟨_, hs, by
           ext
-          simp ⟩⟩⟩
+          simp⟩⟩⟩
 
 @[simp]
 theorem continuous_Icc_extend_iff {f : Icc a b → β} : Continuous (iccExtend h f) ↔ Continuous f :=

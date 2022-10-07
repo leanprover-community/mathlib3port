@@ -98,12 +98,10 @@ theorem dependent_iff : Dependent f ↔ ¬LinearIndependent K (Projectivization.
     
 
 /-- Dependence is the negation of independence. -/
-theorem dependent_iff_not_independent : Dependent f ↔ ¬Independent f := by
-  rw [dependent_iff, independent_iff]
+theorem dependent_iff_not_independent : Dependent f ↔ ¬Independent f := by rw [dependent_iff, independent_iff]
 
 /-- Independence is the negation of dependence. -/
-theorem independent_iff_not_dependent : Independent f ↔ ¬Dependent f := by
-  rw [dependent_iff_not_independent, not_not]
+theorem independent_iff_not_dependent : Independent f ↔ ¬Dependent f := by rw [dependent_iff_not_independent, not_not]
 
 /-- Two points in a projective space are dependent if and only if they are equal. -/
 @[simp]

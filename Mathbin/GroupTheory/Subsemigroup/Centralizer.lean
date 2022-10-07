@@ -38,25 +38,22 @@ theorem mem_centralizer_iff [Mul M] {c : M} : c ∈ Centralizer S ↔ ∀ m ∈ 
   Iff.rfl
 
 @[to_additive decidable_mem_add_centralizer]
-instance decidableMemCentralizer [Mul M] [DecidableEq M] [Fintype M] [DecidablePred (· ∈ S)] :
+instance decidableMemCentralizer [Mul M] [DecidableEq M] [Fintypeₓ M] [DecidablePred (· ∈ S)] :
     DecidablePred (· ∈ Centralizer S) := fun _ => decidableOfIff' _ mem_centralizer_iff
 
 variable (S)
 
 @[simp, to_additive zero_mem_add_centralizer]
-theorem one_mem_centralizer [MulOneClassₓ M] : (1 : M) ∈ Centralizer S := by
-  simp [mem_centralizer_iff]
+theorem one_mem_centralizer [MulOneClassₓ M] : (1 : M) ∈ Centralizer S := by simp [mem_centralizer_iff]
 
 @[simp]
-theorem zero_mem_centralizer [MulZeroClassₓ M] : (0 : M) ∈ Centralizer S := by
-  simp [mem_centralizer_iff]
+theorem zero_mem_centralizer [MulZeroClassₓ M] : (0 : M) ∈ Centralizer S := by simp [mem_centralizer_iff]
 
 variable {S} {a b : M}
 
 @[simp, to_additive add_mem_add_centralizer]
 theorem mul_mem_centralizer [Semigroupₓ M] (ha : a ∈ Centralizer S) (hb : b ∈ Centralizer S) : a * b ∈ Centralizer S :=
-  fun g hg => by
-  rw [mul_assoc, ← hb g hg, ← mul_assoc, ha g hg, mul_assoc]
+  fun g hg => by rw [mul_assoc, ← hb g hg, ← mul_assoc, ha g hg, mul_assoc]
 
 @[simp, to_additive neg_mem_add_centralizer]
 theorem inv_mem_centralizer [Groupₓ M] (ha : a ∈ Centralizer S) : a⁻¹ ∈ Centralizer S := fun g hg => by
@@ -64,8 +61,7 @@ theorem inv_mem_centralizer [Groupₓ M] (ha : a ∈ Centralizer S) : a⁻¹ ∈
 
 @[simp]
 theorem add_mem_centralizer [Distribₓ M] (ha : a ∈ Centralizer S) (hb : b ∈ Centralizer S) : a + b ∈ Centralizer S :=
-  fun c hc => by
-  rw [add_mulₓ, mul_addₓ, ha c hc, hb c hc]
+  fun c hc => by rw [add_mulₓ, mul_addₓ, ha c hc, hb c hc]
 
 @[simp]
 theorem neg_mem_centralizer [Mul M] [HasDistribNeg M] (ha : a ∈ Centralizer S) : -a ∈ Centralizer S := fun c hc => by
@@ -77,8 +73,7 @@ theorem inv_mem_centralizer₀ [GroupWithZeroₓ M] (ha : a ∈ Centralizer S) :
     (fun h => by
       rw [h, inv_zero]
       exact zero_mem_centralizer S)
-    fun ha0 c hc => by
-    rw [mul_inv_eq_iff_eq_mul₀ ha0, mul_assoc, eq_inv_mul_iff_mul_eq₀ ha0, ha c hc]
+    fun ha0 c hc => by rw [mul_inv_eq_iff_eq_mul₀ ha0, mul_assoc, eq_inv_mul_iff_mul_eq₀ ha0, ha c hc]
 
 @[simp, to_additive sub_mem_add_centralizer]
 theorem div_mem_centralizer [Groupₓ M] (ha : a ∈ Centralizer S) (hb : b ∈ Centralizer S) : a / b ∈ Centralizer S := by
@@ -131,7 +126,7 @@ theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀ g ∈ S, g * z
   Iff.rfl
 
 @[to_additive]
-instance decidableMemCentralizer [DecidableEq M] [Fintype M] [DecidablePred (· ∈ S)] :
+instance decidableMemCentralizer [DecidableEq M] [Fintypeₓ M] [DecidablePred (· ∈ S)] :
     DecidablePred (· ∈ centralizer S) := fun _ => decidableOfIff' _ mem_centralizer_iff
 
 @[to_additive]

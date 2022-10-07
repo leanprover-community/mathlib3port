@@ -54,7 +54,7 @@ namespace OrderDual
 
 instance [Zero R] [AddZeroClassₓ M] [h : SmulWithZero R M] : SmulWithZero R Mᵒᵈ :=
   { OrderDual.hasSmul with zero_smul := fun m => OrderDual.rec (zero_smul _) m,
-    smul_zero := fun r => OrderDual.rec (smul_zero' _) r }
+    smul_zero := fun r => OrderDual.rec smul_zero r }
 
 instance [Monoidₓ R] [MulAction R M] : MulAction R Mᵒᵈ :=
   { OrderDual.hasSmul with one_smul := fun m => OrderDual.rec (one_smul _) m,
@@ -65,7 +65,7 @@ instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [MulActionWithZero R M] : MulAct
 
 instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R Mᵒᵈ where
   smul_add := fun k a => OrderDual.rec (fun a' b => OrderDual.rec (smul_add _ _) b) a
-  smul_zero := fun r => OrderDual.rec smul_zero r
+  smul_zero := fun r => OrderDual.rec (@smul_zero _ M _ _) r
 
 instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] : OrderedSmul R Mᵒᵈ where
   smul_lt_smul_of_pos := fun a b => @OrderedSmul.smul_lt_smul_of_pos R M _ _ _ _ b a
@@ -93,7 +93,7 @@ theorem smul_le_smul_of_nonneg (h₁ : a ≤ b) (h₂ : 0 ≤ c) : c • a ≤ c
 
 theorem smul_nonneg (hc : 0 ≤ c) (ha : 0 ≤ a) : 0 ≤ c • a :=
   calc
-    (0 : M) = c • (0 : M) := (smul_zero' M c).symm
+    (0 : M) = c • (0 : M) := (smul_zero c).symm
     _ ≤ c • a := smul_le_smul_of_nonneg ha hc
     
 
@@ -104,11 +104,7 @@ theorem eq_of_smul_eq_smul_of_pos_of_le (h₁ : c • a = c • b) (hc : 0 < c) 
   hle.lt_or_eq.resolve_left fun hlt => (smul_lt_smul_of_pos hlt hc).Ne h₁
 
 theorem lt_of_smul_lt_smul_of_nonneg (h : c • a < c • b) (hc : 0 ≤ c) : a < b :=
-  hc.eq_or_lt.elim
-    (fun hc =>
-      False.elim <|
-        lt_irreflₓ (0 : M) <| by
-          rwa [← hc, zero_smul, zero_smul] at h)
+  hc.eq_or_lt.elim (fun hc => False.elim <| lt_irreflₓ (0 : M) <| by rwa [← hc, zero_smul, zero_smul] at h)
     (OrderedSmul.lt_of_smul_lt_smul_of_pos h)
 
 theorem smul_lt_smul_iff_of_pos (hc : 0 < c) : c • a < c • b ↔ a < b :=
@@ -116,16 +112,15 @@ theorem smul_lt_smul_iff_of_pos (hc : 0 < c) : c • a < c • b ↔ a < b :=
 
 theorem smul_pos_iff_of_pos (hc : 0 < c) : 0 < c • a ↔ 0 < a :=
   calc
-    0 < c • a ↔ c • 0 < c • a := by
-      rw [smul_zero']
+    0 < c • a ↔ c • 0 < c • a := by rw [smul_zero]
     _ ↔ 0 < a := smul_lt_smul_iff_of_pos hc
     
 
 alias smul_pos_iff_of_pos ↔ _ smul_pos
 
-theorem monotone_smul_left (hc : 0 ≤ c) : Monotone (HasSmul.smul c : M → M) := fun a b h => smul_le_smul_of_nonneg h hc
+theorem monotone_smul_left (hc : 0 ≤ c) : Monotoneₓ (HasSmul.smul c : M → M) := fun a b h => smul_le_smul_of_nonneg h hc
 
-theorem strict_mono_smul_left (hc : 0 < c) : StrictMono (HasSmul.smul c : M → M) := fun a b h =>
+theorem strict_mono_smul_left (hc : 0 < c) : StrictMonoₓ (HasSmul.smul c : M → M) := fun a b h =>
   smul_lt_smul_of_pos h hc
 
 theorem smul_lower_bounds_subset_lower_bounds_smul (hc : 0 ≤ c) : c • LowerBounds s ⊆ LowerBounds (c • s) :=
@@ -145,7 +140,7 @@ end OrderedSmul
 /-- To prove that a linear ordered monoid is an ordered module, it suffices to verify only the first
 axiom of `ordered_smul`. -/
 theorem OrderedSmul.mk'' [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid M] [SmulWithZero 𝕜 M]
-    (h : ∀ ⦃c : 𝕜⦄, 0 < c → StrictMono fun a : M => c • a) : OrderedSmul 𝕜 M :=
+    (h : ∀ ⦃c : 𝕜⦄, 0 < c → StrictMonoₓ fun a : M => c • a) : OrderedSmul 𝕜 M :=
   { smul_lt_smul_of_pos := fun a b c hab hc => h hc hab,
     lt_of_smul_lt_smul_of_pos := fun a b c hab hc => (h hc).lt_iff_lt.1 hab }
 
@@ -175,11 +170,8 @@ instance LinearOrderedSemiring.to_ordered_smul {R : Type _} [LinearOrderedSemiri
 
 section LinearOrderedSemifield
 
-variable [LinearOrderedSemifield 𝕜]
-
-section OrderedAddCommMonoid
-
-variable [OrderedAddCommMonoid M] [OrderedAddCommMonoid N] [MulActionWithZero 𝕜 M] [MulActionWithZero 𝕜 N]
+variable [LinearOrderedSemifield 𝕜] [OrderedAddCommMonoid M] [OrderedAddCommMonoid N] [MulActionWithZero 𝕜 M]
+  [MulActionWithZero 𝕜 N]
 
 /-- To prove that a vector space over a linear ordered field is ordered, it suffices to verify only
 the first axiom of `ordered_smul`. -/
@@ -211,43 +203,27 @@ instance Pi.ordered_smul' [OrderedSmul 𝕜 M] : OrderedSmul 𝕜 (ι → M) :=
 instance Pi.ordered_smul'' : OrderedSmul 𝕜 (ι → 𝕜) :=
   @Pi.ordered_smul' ι 𝕜 𝕜 _ _ _ _
 
-end OrderedAddCommMonoid
-
-section OrderedAddCommGroup
-
-variable [OrderedAddCommGroup M] [MulActionWithZero 𝕜 M] [OrderedSmul 𝕜 M] {s : Set M} {a b : M} {c : 𝕜}
+variable [OrderedSmul 𝕜 M] {s : Set M} {a b : M} {c : 𝕜}
 
 theorem smul_le_smul_iff_of_pos (hc : 0 < c) : c • a ≤ c • b ↔ a ≤ b :=
   ⟨fun h => inv_smul_smul₀ hc.ne' a ▸ inv_smul_smul₀ hc.ne' b ▸ smul_le_smul_of_nonneg h (inv_nonneg.2 hc.le), fun h =>
     smul_le_smul_of_nonneg h hc.le⟩
 
-theorem smul_lt_iff_of_pos (hc : 0 < c) : c • a < b ↔ a < c⁻¹ • b :=
-  calc
-    c • a < b ↔ c • a < c • c⁻¹ • b := by
-      rw [smul_inv_smul₀ hc.ne']
-    _ ↔ a < c⁻¹ • b := smul_lt_smul_iff_of_pos hc
-    
+theorem inv_smul_le_iff (h : 0 < c) : c⁻¹ • a ≤ b ↔ a ≤ c • b := by
+  rw [← smul_le_smul_iff_of_pos h, smul_inv_smul₀ h.ne']
+  infer_instance
 
-theorem lt_smul_iff_of_pos (hc : 0 < c) : a < c • b ↔ c⁻¹ • a < b :=
-  calc
-    a < c • b ↔ c • c⁻¹ • a < c • b := by
-      rw [smul_inv_smul₀ hc.ne']
-    _ ↔ c⁻¹ • a < b := smul_lt_smul_iff_of_pos hc
-    
+theorem inv_smul_lt_iff (h : 0 < c) : c⁻¹ • a < b ↔ a < c • b := by
+  rw [← smul_lt_smul_iff_of_pos h, smul_inv_smul₀ h.ne']
+  infer_instance
 
-theorem smul_le_iff_of_pos (hc : 0 < c) : c • a ≤ b ↔ a ≤ c⁻¹ • b :=
-  calc
-    c • a ≤ b ↔ c • a ≤ c • c⁻¹ • b := by
-      rw [smul_inv_smul₀ hc.ne']
-    _ ↔ a ≤ c⁻¹ • b := smul_le_smul_iff_of_pos hc
-    
+theorem le_inv_smul_iff (h : 0 < c) : a ≤ c⁻¹ • b ↔ c • a ≤ b := by
+  rw [← smul_le_smul_iff_of_pos h, smul_inv_smul₀ h.ne']
+  infer_instance
 
-theorem le_smul_iff_of_pos (hc : 0 < c) : a ≤ c • b ↔ c⁻¹ • a ≤ b :=
-  calc
-    a ≤ c • b ↔ c • c⁻¹ • a ≤ c • b := by
-      rw [smul_inv_smul₀ hc.ne']
-    _ ↔ c⁻¹ • a ≤ b := smul_le_smul_iff_of_pos hc
-    
+theorem lt_inv_smul_iff (h : 0 < c) : a < c⁻¹ • b ↔ c • a < b := by
+  rw [← smul_lt_smul_iff_of_pos h, smul_inv_smul₀ h.ne']
+  infer_instance
 
 variable (M)
 
@@ -277,8 +253,6 @@ theorem bdd_below_smul_iff_of_pos (hc : 0 < c) : BddBelow (c • s) ↔ BddBelow
 @[simp]
 theorem bdd_above_smul_iff_of_pos (hc : 0 < c) : BddAbove (c • s) ↔ BddAbove s :=
   (OrderIso.smulLeft _ hc).bdd_above_image
-
-end OrderedAddCommGroup
 
 end LinearOrderedSemifield
 

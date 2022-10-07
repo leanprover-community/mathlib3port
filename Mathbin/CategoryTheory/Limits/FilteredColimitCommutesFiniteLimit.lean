@@ -67,7 +67,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
   -- These elements of the colimit have representatives somewhere:
   obtain ⟨kx, x, rfl⟩ := jointly_surjective'.{v, v} x
   obtain ⟨ky, y, rfl⟩ := jointly_surjective'.{v, v} y
-  dsimp'  at x y
+  dsimp at x y
   -- Since the images of `x` and `y` are equal in a limit, they are equal componentwise
   -- (indexed by `j : J`),
   replace h := fun j => congr_arg (limit.π (curry.obj F ⋙ colim) j) h
@@ -85,43 +85,19 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
     fun j => (h j).some_spec.some_spec.some_spec
   -- We now use that `K` is filtered, picking some point to the right of all these
   -- morphisms `f j` and `g j`.
-  let O : Finset K := finset.univ.image k ∪ {kx, ky}
-  have kxO : kx ∈ O :=
-    finset.mem_union.mpr
-      (Or.inr
-        (by
-          simp ))
-  have kyO : ky ∈ O :=
-    finset.mem_union.mpr
-      (Or.inr
-        (by
-          simp ))
-  have kjO : ∀ j, k j ∈ O := fun j =>
-    finset.mem_union.mpr
-      (Or.inl
-        (by
-          simp ))
-  let H : Finset (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
-    (Finset.univ.Image fun j : J =>
-        ⟨kx, k j, kxO,
-          finset.mem_union.mpr
-            (Or.inl
-              (by
-                simp )),
-          f j⟩) ∪
-      Finset.univ.Image fun j : J =>
-        ⟨ky, k j, kyO,
-          finset.mem_union.mpr
-            (Or.inl
-              (by
-                simp )),
-          g j⟩
+  let O : Finsetₓ K := finset.univ.image k ∪ {kx, ky}
+  have kxO : kx ∈ O := finset.mem_union.mpr (Or.inr (by simp))
+  have kyO : ky ∈ O := finset.mem_union.mpr (Or.inr (by simp))
+  have kjO : ∀ j, k j ∈ O := fun j => finset.mem_union.mpr (Or.inl (by simp))
+  let H : Finsetₓ (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+    (Finsetₓ.univ.Image fun j : J => ⟨kx, k j, kxO, finset.mem_union.mpr (Or.inl (by simp)), f j⟩) ∪
+      Finsetₓ.univ.Image fun j : J => ⟨ky, k j, kyO, finset.mem_union.mpr (Or.inl (by simp)), g j⟩
   obtain ⟨S, T, W⟩ := is_filtered.sup_exists O H
   have fH : ∀ j, (⟨kx, k j, kxO, kjO j, f j⟩ : Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H := fun j =>
     finset.mem_union.mpr
       (Or.inl
         (by
-          simp only [true_andₓ, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true, Finset.mem_image, heq_iff_eq]
+          simp only [true_andₓ, Finsetₓ.mem_univ, eq_self_iff_true, exists_prop_of_true, Finsetₓ.mem_image, heq_iff_eq]
           refine' ⟨j, rfl, _⟩
           simp only [heq_iff_eq]
           exact ⟨rfl, rfl, rfl⟩))
@@ -129,7 +105,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
     finset.mem_union.mpr
       (Or.inr
         (by
-          simp only [true_andₓ, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true, Finset.mem_image, heq_iff_eq]
+          simp only [true_andₓ, Finsetₓ.mem_univ, eq_self_iff_true, exists_prop_of_true, Finsetₓ.mem_image, heq_iff_eq]
           refine' ⟨j, rfl, _⟩
           simp only [heq_iff_eq]
           exact ⟨rfl, rfl, rfl⟩))
@@ -173,10 +149,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
   -- As a first step, we use that `K` is filtered to pick some point `k' : K` above all the `k j`
   let k' : K := is_filtered.sup (finset.univ.image k) ∅
   -- and name the morphisms as `g j : k j ⟶ k'`.
-  have g : ∀ j, k j ⟶ k' := fun j =>
-    is_filtered.to_sup (finset.univ.image k) ∅
-      (by
-        simp )
+  have g : ∀ j, k j ⟶ k' := fun j => is_filtered.to_sup (finset.univ.image k) ∅ (by simp)
   clear_value k'
   -- Recalling that the components of `x`, which are indexed by `j : J`, are "coherent",
   -- in other words preserved by morphisms in the `J` direction,
@@ -208,7 +181,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
     fun j j' f => by
     have q : ((curry.obj F).obj j').map (gf f) (F.map _ (y j')) = ((curry.obj F).obj j').map (hf f) (F.map _ (y j)) :=
       (w f).some_spec.some_spec.some_spec
-    dsimp'  at q
+    dsimp at q
     simp_rw [← functor_to_types.map_comp_apply] at q
     convert q <;> simp only [comp_id]
   clear_value kf gf hf
@@ -223,15 +196,15 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
     finset.mem_union.mpr
       (Or.inl
         (by
-          rw [Finset.mem_bUnion]
-          refine' ⟨j, Finset.mem_univ j, _⟩
-          rw [Finset.mem_bUnion]
-          refine' ⟨j', Finset.mem_univ j', _⟩
-          rw [Finset.mem_image]
-          refine' ⟨f, Finset.mem_univ _, _⟩
+          rw [Finsetₓ.mem_bUnion]
+          refine' ⟨j, Finsetₓ.mem_univ j, _⟩
+          rw [Finsetₓ.mem_bUnion]
+          refine' ⟨j', Finsetₓ.mem_univ j', _⟩
+          rw [Finsetₓ.mem_image]
+          refine' ⟨f, Finsetₓ.mem_univ _, _⟩
           rfl))
   have k'O : k' ∈ O := finset.mem_union.mpr (Or.inr (finset.mem_singleton.mpr rfl))
-  let H : Finset (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+  let H : Finsetₓ (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
     finset.univ.bUnion fun j : J =>
       finset.univ.bUnion fun j' : J =>
         finset.univ.bUnion fun f : j ⟶ j' => {⟨k', kf f, k'O, kfO f, gf f⟩, ⟨k', kf f, k'O, kfO f, hf f⟩}
@@ -245,21 +218,21 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
     swap
     exact k'O
     swap
-    · rw [Finset.mem_bUnion]
-      refine' ⟨j₁, Finset.mem_univ _, _⟩
-      rw [Finset.mem_bUnion]
-      refine' ⟨j₂, Finset.mem_univ _, _⟩
-      rw [Finset.mem_bUnion]
-      refine' ⟨f, Finset.mem_univ _, _⟩
-      simp only [true_orₓ, eq_self_iff_true, and_selfₓ, Finset.mem_insert, heq_iff_eq]
+    · rw [Finsetₓ.mem_bUnion]
+      refine' ⟨j₁, Finsetₓ.mem_univ _, _⟩
+      rw [Finsetₓ.mem_bUnion]
+      refine' ⟨j₂, Finsetₓ.mem_univ _, _⟩
+      rw [Finsetₓ.mem_bUnion]
+      refine' ⟨f, Finsetₓ.mem_univ _, _⟩
+      simp only [true_orₓ, eq_self_iff_true, and_selfₓ, Finsetₓ.mem_insert, heq_iff_eq]
       
-    · rw [Finset.mem_bUnion]
-      refine' ⟨j₃, Finset.mem_univ _, _⟩
-      rw [Finset.mem_bUnion]
-      refine' ⟨j₄, Finset.mem_univ _, _⟩
-      rw [Finset.mem_bUnion]
-      refine' ⟨f', Finset.mem_univ _, _⟩
-      simp only [eq_self_iff_true, or_trueₓ, and_selfₓ, Finset.mem_insert, Finset.mem_singleton, heq_iff_eq]
+    · rw [Finsetₓ.mem_bUnion]
+      refine' ⟨j₃, Finsetₓ.mem_univ _, _⟩
+      rw [Finsetₓ.mem_bUnion]
+      refine' ⟨j₄, Finsetₓ.mem_univ _, _⟩
+      rw [Finsetₓ.mem_bUnion]
+      refine' ⟨f', Finsetₓ.mem_univ _, _⟩
+      simp only [eq_self_iff_true, or_trueₓ, and_selfₓ, Finsetₓ.mem_insert, Finsetₓ.mem_singleton, heq_iff_eq]
       
   clear_value i
   clear s' i' H kfO k'O O
@@ -268,7 +241,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
   · -- We construct the pre-image (which, recall is meant to be a point
     -- in the colimit (over `K`) of the limits (over `J`)) via a representative at `k''`.
     apply colimit.ι (curry.obj (swap K J ⋙ F) ⋙ limits.lim) k'' _
-    dsimp'
+    dsimp
     -- This representative is meant to be an element of a limit,
     -- so we need to construct a family of elements in `F.obj (j, k'')` for varying `j`,
     -- then show that are coherent with respect to morphisms in the `j` direction.
@@ -278,21 +251,19 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
       exact fun j => F.map (⟨𝟙 j, g j ≫ gf (𝟙 j) ≫ i (𝟙 j)⟩ : (j, k j) ⟶ (j, k'')) (y j)
       
     · -- After which it's just a calculation, using `s` and `wf`, to see they are coherent.
-      dsimp'
+      dsimp
       intro j j' f
       simp only [← functor_to_types.map_comp_apply, prod_comp, id_comp, comp_id]
       calc
         F.map ((f, g j ≫ gf (𝟙 j) ≫ i (𝟙 j)) : (j, k j) ⟶ (j', k'')) (y j) =
             F.map ((f, g j ≫ hf f ≫ i f) : (j, k j) ⟶ (j', k'')) (y j) :=
-          by
-          rw [s (𝟙 j) f]
+          by rw [s (𝟙 j) f]
         _ = F.map ((𝟙 j', i f) : (j', kf f) ⟶ (j', k'')) (F.map ((f, g j ≫ hf f) : (j, k j) ⟶ (j', kf f)) (y j)) := by
           rw [← functor_to_types.map_comp_apply, prod_comp, comp_id, assoc]
         _ =
             F.map ((𝟙 j', i f) : (j', kf f) ⟶ (j', k''))
               (F.map ((𝟙 j', g j' ≫ gf f) : (j', k j') ⟶ (j', kf f)) (y j')) :=
-          by
-          rw [← wf f]
+          by rw [← wf f]
         _ = F.map ((𝟙 j', g j' ≫ gf f ≫ i f) : (j', k j') ⟶ (j', k'')) (y j') := by
           rw [← functor_to_types.map_comp_apply, prod_comp, id_comp, assoc]
         _ = F.map ((𝟙 j', g j' ≫ gf (𝟙 j') ≫ i (𝟙 j')) : (j', k j') ⟶ (j', k'')) (y j') := by
@@ -317,7 +288,7 @@ instance colimit_limit_to_limit_colimit_is_iso : IsIso (colimitLimitToLimitColim
 
 instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) : IsIso (colimitLimitToLimitColimitCone F) := by
   have : is_iso (colimit_limit_to_limit_colimit_cone F).Hom := by
-    dsimp' only [colimit_limit_to_limit_colimit_cone]
+    dsimp only [colimit_limit_to_limit_colimit_cone]
     infer_instance
   apply cones.cone_iso_of_hom_iso
 
@@ -346,10 +317,10 @@ variable [ReflectsLimitsOfShape J (forget C)] [PreservesColimitsOfShape K (forge
 
 variable [PreservesLimitsOfShape J (forget C)]
 
-noncomputable instance filteredColimPreservesFiniteLimits : PreservesLimitsOfShape J (colim : (K ⥤ C) ⥤ _) := by
+noncomputable instance filteredColimPreservesFiniteLimits : PreservesLimitsOfShape J (colim : (K ⥤ C) ⥤ _) :=
   haveI : preserves_limits_of_shape J ((colim : (K ⥤ C) ⥤ _) ⋙ forget C) :=
     preserves_limits_of_shape_of_nat_iso (preserves_colimit_nat_iso _).symm
-  exact preserves_limits_of_shape_of_reflects_of_preserves _ (forget C)
+  preserves_limits_of_shape_of_reflects_of_preserves _ (forget C)
 
 end
 
@@ -380,14 +351,14 @@ theorem ι_colimit_limit_iso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
     colimit.ι (limit F) a ≫ (colimitLimitIso F).Hom ≫ limit.π (colimit F.flip) b =
       (limit.π F b).app a ≫ (colimit.ι F.flip a).app b :=
   by
-  dsimp' [colimit_limit_iso]
+  dsimp [colimit_limit_iso]
   simp only [functor.map_cone_π_app, iso.symm_hom, limits.limit.cone_point_unique_up_to_iso_hom_comp_assoc,
     limits.limit.cone_π, limits.colimit.ι_map_assoc, limits.colimit_flip_iso_comp_colim_inv_app, assoc,
     limits.has_limit.iso_of_nat_iso_hom_π]
   congr 1
   simp only [← category.assoc, iso.comp_inv_eq, limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom,
     limits.has_colimit.iso_of_nat_iso_ι_hom, nat_iso.of_components_hom_app]
-  dsimp'
+  dsimp
   simp
 
 end

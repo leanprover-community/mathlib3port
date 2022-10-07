@@ -96,7 +96,7 @@ theorem disjointed_rec_zero {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ �
   rfl
 
 -- TODO: Find a useful statement of `disjointed_rec_succ`.
-theorem Monotone.disjointed_eq {f : ℕ → α} (hf : Monotone f) (n : ℕ) : disjointed f (n + 1) = f (n + 1) \ f n := by
+theorem Monotoneₓ.disjointed_eq {f : ℕ → α} (hf : Monotoneₓ f) (n : ℕ) : disjointed f (n + 1) = f (n + 1) \ f n := by
   rw [disjointed_succ, hf.partial_sups_eq]
 
 @[simp]
@@ -148,7 +148,7 @@ theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f 
   simp_rw [disjointed_succ, partial_sups_eq_bsupr, sdiff_eq, compl_supr]
   congr
   ext i
-  rw [Nat.lt_succ_iffₓ]
+  rw [Nat.lt_succ_iff]
 
 end CompleteBooleanAlgebra
 

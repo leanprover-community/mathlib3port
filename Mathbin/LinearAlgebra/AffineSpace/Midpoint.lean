@@ -137,35 +137,29 @@ theorem midpoint_self (x : P) : midpoint R x x = x :=
 @[simp]
 theorem midpoint_add_self (x y : V) : midpoint R x y + midpoint R x y = x + y :=
   calc
-    midpoint R x y +ᵥ midpoint R x y = midpoint R x y +ᵥ midpoint R y x := by
-      rw [midpoint_comm]
-    _ = x + y := by
-      rw [midpoint_vadd_midpoint, vadd_eq_add, vadd_eq_add, add_commₓ, midpoint_self]
+    midpoint R x y +ᵥ midpoint R x y = midpoint R x y +ᵥ midpoint R y x := by rw [midpoint_comm]
+    _ = x + y := by rw [midpoint_vadd_midpoint, vadd_eq_add, vadd_eq_add, add_commₓ, midpoint_self]
     
 
 theorem midpoint_zero_add (x y : V) : midpoint R 0 (x + y) = midpoint R x y :=
-  (midpoint_eq_midpoint_iff_vsub_eq_vsub R).2 <| by
-    simp [sub_add_eq_sub_sub_swap]
+  (midpoint_eq_midpoint_iff_vsub_eq_vsub R).2 <| by simp [sub_add_eq_sub_sub_swap]
 
 theorem midpoint_eq_smul_add (x y : V) : midpoint R x y = (⅟ 2 : R) • (x + y) := by
   rw [midpoint_eq_iff, point_reflection_apply, vsub_eq_sub, vadd_eq_add, sub_add_eq_add_sub, ← two_smul R, smul_smul,
     mul_inv_of_self, one_smul, add_sub_cancel']
 
 @[simp]
-theorem midpoint_self_neg (x : V) : midpoint R x (-x) = 0 := by
-  rw [midpoint_eq_smul_add, add_neg_selfₓ, smul_zero]
+theorem midpoint_self_neg (x : V) : midpoint R x (-x) = 0 := by rw [midpoint_eq_smul_add, add_neg_selfₓ, smul_zero]
 
 @[simp]
-theorem midpoint_neg_self (x : V) : midpoint R (-x) x = 0 := by
-  simpa using midpoint_self_neg R (-x)
+theorem midpoint_neg_self (x : V) : midpoint R (-x) x = 0 := by simpa using midpoint_self_neg R (-x)
 
 @[simp]
 theorem midpoint_sub_add (x y : V) : midpoint R (x - y) (x + y) = x := by
   rw [sub_eq_add_neg, ← vadd_eq_add, ← vadd_eq_add, ← midpoint_vadd_midpoint] <;> simp
 
 @[simp]
-theorem midpoint_add_sub (x y : V) : midpoint R (x + y) (x - y) = x := by
-  rw [midpoint_comm] <;> simp
+theorem midpoint_add_sub (x y : V) : midpoint R (x + y) (x - y) = x := by rw [midpoint_comm] <;> simp
 
 end
 
@@ -174,8 +168,7 @@ theorem line_map_inv_two {R : Type _} {V P : Type _} [DivisionRing R] [CharZero 
   rfl
 
 theorem line_map_one_half {R : Type _} {V P : Type _} [DivisionRing R] [CharZero R] [AddCommGroupₓ V] [Module R V]
-    [AddTorsor V P] (a b : P) : lineMap a b (1 / 2 : R) = midpoint R a b := by
-  rw [one_div, line_map_inv_two]
+    [AddTorsor V P] (a b : P) : lineMap a b (1 / 2 : R) = midpoint R a b := by rw [one_div, line_map_inv_two]
 
 theorem homothety_inv_of_two {R : Type _} {V P : Type _} [CommRingₓ R] [Invertible (2 : R)] [AddCommGroupₓ V]
     [Module R V] [AddTorsor V P] (a b : P) : homothety a (⅟ 2 : R) b = midpoint R a b :=
@@ -186,8 +179,7 @@ theorem homothety_inv_two {k : Type _} {V P : Type _} [Field k] [CharZero k] [Ad
   rfl
 
 theorem homothety_one_half {k : Type _} {V P : Type _} [Field k] [CharZero k] [AddCommGroupₓ V] [Module k V]
-    [AddTorsor V P] (a b : P) : homothety a (1 / 2 : k) b = midpoint k a b := by
-  rw [one_div, homothety_inv_two]
+    [AddTorsor V P] (a b : P) : homothety a (1 / 2 : k) b = midpoint k a b := by rw [one_div, homothety_inv_two]
 
 @[simp]
 theorem pi_midpoint_apply {k ι : Type _} {V : ∀ i : ι, Type _} {P : ∀ i : ι, Type _} [Field k] [Invertible (2 : k)]
@@ -206,13 +198,10 @@ def ofMapMidpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x y)
   map_zero' := h0
   map_add' := fun x y =>
     calc
-      f (x + y) = f 0 + f (x + y) := by
-        rw [h0, zero_addₓ]
+      f (x + y) = f 0 + f (x + y) := by rw [h0, zero_addₓ]
       _ = midpoint R' (f 0) (f (x + y)) + midpoint R' (f 0) (f (x + y)) := (midpoint_add_self _ _ _).symm
-      _ = f (midpoint R x y) + f (midpoint R x y) := by
-        rw [← hm, midpoint_zero_add]
-      _ = f x + f y := by
-        rw [hm, midpoint_add_self]
+      _ = f (midpoint R x y) + f (midpoint R x y) := by rw [← hm, midpoint_zero_add]
+      _ = f x + f y := by rw [hm, midpoint_add_self]
       
 
 @[simp]

@@ -51,8 +51,7 @@ def IsGδ (s : Set α) : Prop :=
 
 /-- An open set is a Gδ set. -/
 theorem IsOpen.is_Gδ {s : Set α} (h : IsOpen s) : IsGδ s :=
-  ⟨{s}, by
-    simp [h], countable_singleton _, (Set.sInter_singleton _).symm⟩
+  ⟨{s}, by simp [h], countable_singleton _, (Set.sInter_singleton _).symm⟩
 
 @[simp]
 theorem is_Gδ_empty : IsGδ (∅ : Set α) :=
@@ -64,14 +63,10 @@ theorem is_Gδ_univ : IsGδ (Univ : Set α) :=
 
 theorem is_Gδ_bInter_of_open {I : Set ι} (hI : I.Countable) {f : ι → Set α} (hf : ∀ i ∈ I, IsOpen (f i)) :
     IsGδ (⋂ i ∈ I, f i) :=
-  ⟨f '' I, by
-    rwa [ball_image_iff], hI.Image _, by
-    rw [sInter_image]⟩
+  ⟨f '' I, by rwa [ball_image_iff], hI.Image _, by rw [sInter_image]⟩
 
 theorem is_Gδ_Inter_of_open [Encodable ι] {f : ι → Set α} (hf : ∀ i, IsOpen (f i)) : IsGδ (⋂ i, f i) :=
-  ⟨Range f, by
-    rwa [forall_range_iff], countable_range _, by
-    rw [sInter_range]⟩
+  ⟨Range f, by rwa [forall_range_iff], countable_range _, by rw [sInter_range]⟩
 
 /-- The intersection of an encodable family of Gδ sets is a Gδ set. -/
 theorem is_Gδ_Inter [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s i)) : IsGδ (⋂ i, s i) := by
@@ -105,11 +100,7 @@ theorem IsGδ.union {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∪ 
 
 /-- The union of finitely many Gδ sets is a Gδ set. -/
 theorem is_Gδ_bUnion {s : Set ι} (hs : s.Finite) {f : ι → Set α} (h : ∀ i ∈ s, IsGδ (f i)) : IsGδ (⋃ i ∈ s, f i) := by
-  refine'
-    finite.induction_on hs
-      (by
-        simp )
-      _ h
+  refine' finite.induction_on hs (by simp) _ h
   simp only [ball_insert_iff, bUnion_insert]
   exact fun a s _ _ ihs H => H.1.union (ihs H.2)
 
@@ -136,7 +127,7 @@ theorem Set.Finite.is_Gδ_compl {s : Set α} (hs : s.Finite) : IsGδ (sᶜ) :=
 theorem Set.Subsingleton.is_Gδ_compl {s : Set α} (hs : s.Subsingleton) : IsGδ (sᶜ) :=
   hs.Finite.is_Gδ_compl
 
-theorem Finset.is_Gδ_compl (s : Finset α) : IsGδ (sᶜ : Set α) :=
+theorem Finsetₓ.is_Gδ_compl (s : Finsetₓ α) : IsGδ (sᶜ : Set α) :=
   s.finite_to_set.is_Gδ_compl
 
 open TopologicalSpace

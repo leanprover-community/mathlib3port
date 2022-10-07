@@ -250,34 +250,22 @@ theorem mul_le_of_le_one_left' [CovariantClass α α (swap (· * ·)) (· ≤ ·
 @[simp, to_additive le_add_iff_nonneg_right]
 theorem le_mul_iff_one_le_right' [CovariantClass α α (· * ·) (· ≤ ·)] [ContravariantClass α α (· * ·) (· ≤ ·)] (a : α)
     {b : α} : a ≤ a * b ↔ 1 ≤ b :=
-  Iff.trans
-    (by
-      rw [mul_oneₓ])
-    (mul_le_mul_iff_left a)
+  Iff.trans (by rw [mul_oneₓ]) (mul_le_mul_iff_left a)
 
 @[simp, to_additive le_add_iff_nonneg_left]
 theorem le_mul_iff_one_le_left' [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
     [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] (a : α) {b : α} : a ≤ b * a ↔ 1 ≤ b :=
-  Iff.trans
-    (by
-      rw [one_mulₓ])
-    (mul_le_mul_iff_right a)
+  Iff.trans (by rw [one_mulₓ]) (mul_le_mul_iff_right a)
 
 @[simp, to_additive add_le_iff_nonpos_right]
 theorem mul_le_iff_le_one_right' [CovariantClass α α (· * ·) (· ≤ ·)] [ContravariantClass α α (· * ·) (· ≤ ·)] (a : α)
     {b : α} : a * b ≤ a ↔ b ≤ 1 :=
-  Iff.trans
-    (by
-      rw [mul_oneₓ])
-    (mul_le_mul_iff_left a)
+  Iff.trans (by rw [mul_oneₓ]) (mul_le_mul_iff_left a)
 
 @[simp, to_additive add_le_iff_nonpos_left]
 theorem mul_le_iff_le_one_left' [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
     [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b : α} : a * b ≤ b ↔ a ≤ 1 :=
-  Iff.trans
-    (by
-      rw [one_mulₓ])
-    (mul_le_mul_iff_right b)
+  Iff.trans (by rw [one_mulₓ]) (mul_le_mul_iff_right b)
 
 end LE
 
@@ -316,34 +304,22 @@ theorem mul_lt_of_lt_one_left' [CovariantClass α α (swap (· * ·)) (· < ·)]
 @[simp, to_additive lt_add_iff_pos_right]
 theorem lt_mul_iff_one_lt_right' [CovariantClass α α (· * ·) (· < ·)] [ContravariantClass α α (· * ·) (· < ·)] (a : α)
     {b : α} : a < a * b ↔ 1 < b :=
-  Iff.trans
-    (by
-      rw [mul_oneₓ])
-    (mul_lt_mul_iff_left a)
+  Iff.trans (by rw [mul_oneₓ]) (mul_lt_mul_iff_left a)
 
 @[simp, to_additive lt_add_iff_pos_left]
 theorem lt_mul_iff_one_lt_left' [CovariantClass α α (swap (· * ·)) (· < ·)]
     [ContravariantClass α α (swap (· * ·)) (· < ·)] (a : α) {b : α} : a < b * a ↔ 1 < b :=
-  Iff.trans
-    (by
-      rw [one_mulₓ])
-    (mul_lt_mul_iff_right a)
+  Iff.trans (by rw [one_mulₓ]) (mul_lt_mul_iff_right a)
 
 @[simp, to_additive add_lt_iff_neg_left]
 theorem mul_lt_iff_lt_one_left' [CovariantClass α α (· * ·) (· < ·)] [ContravariantClass α α (· * ·) (· < ·)]
     {a b : α} : a * b < a ↔ b < 1 :=
-  Iff.trans
-    (by
-      rw [mul_oneₓ])
-    (mul_lt_mul_iff_left a)
+  Iff.trans (by rw [mul_oneₓ]) (mul_lt_mul_iff_left a)
 
 @[simp, to_additive add_lt_iff_neg_right]
 theorem mul_lt_iff_lt_one_right' [CovariantClass α α (swap (· * ·)) (· < ·)]
     [ContravariantClass α α (swap (· * ·)) (· < ·)] {a : α} (b : α) : a * b < b ↔ a < 1 :=
-  Iff.trans
-    (by
-      rw [one_mulₓ])
-    (mul_lt_mul_iff_right b)
+  Iff.trans (by rw [one_mulₓ]) (mul_lt_mul_iff_right b)
 
 end LT
 
@@ -763,8 +739,7 @@ theorem mul_eq_one_iff' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantC
       have : b ≤ 1 := hab ▸ le_mul_of_one_le_of_le ha le_rflₓ
       have : b = 1 := le_antisymmₓ this hb
       And.intro ‹a = 1› ‹b = 1›)
-    fun ⟨ha', hb'⟩ => by
-    rw [ha', hb', mul_oneₓ]
+    fun ⟨ha', hb'⟩ => by rw [ha', hb', mul_oneₓ]
 
 section Left
 
@@ -801,7 +776,7 @@ section LinearOrderₓ
 variable [LinearOrderₓ α]
 
 theorem exists_square_le [CovariantClass α α (· * ·) (· < ·)] (a : α) : ∃ b : α, b * b ≤ a := by
-  by_cases' h : a < 1
+  by_cases h:a < 1
   · use a
     have : a * a < a * 1 := mul_lt_mul_left' h a
     rw [mul_oneₓ] at this
@@ -881,57 +856,57 @@ section Mono
 variable [Mul α] [Preorderₓ α] [Preorderₓ β] {f g : β → α} {s : Set β}
 
 @[to_additive const_add]
-theorem Monotone.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : Monotone f) (a : α) :
-    Monotone fun x => a * f x := fun x y h => mul_le_mul_left' (hf h) a
+theorem Monotoneₓ.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : Monotoneₓ f) (a : α) :
+    Monotoneₓ fun x => a * f x := fun x y h => mul_le_mul_left' (hf h) a
 
 @[to_additive const_add]
-theorem MonotoneOn.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : MonotoneOn f s) (a : α) :
-    MonotoneOn (fun x => a * f x) s := fun x hx y hy h => mul_le_mul_left' (hf hx hy h) a
+theorem MonotoneOnₓ.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : MonotoneOnₓ f s) (a : α) :
+    MonotoneOnₓ (fun x => a * f x) s := fun x hx y hy h => mul_le_mul_left' (hf hx hy h) a
 
 @[to_additive const_add]
-theorem Antitone.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : Antitone f) (a : α) :
-    Antitone fun x => a * f x := fun x y h => mul_le_mul_left' (hf h) a
+theorem Antitoneₓ.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : Antitoneₓ f) (a : α) :
+    Antitoneₓ fun x => a * f x := fun x y h => mul_le_mul_left' (hf h) a
 
 @[to_additive const_add]
-theorem AntitoneOn.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : AntitoneOn f s) (a : α) :
-    AntitoneOn (fun x => a * f x) s := fun x hx y hy h => mul_le_mul_left' (hf hx hy h) a
+theorem AntitoneOnₓ.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : AntitoneOnₓ f s) (a : α) :
+    AntitoneOnₓ (fun x => a * f x) s := fun x hx y hy h => mul_le_mul_left' (hf hx hy h) a
 
 @[to_additive add_const]
-theorem Monotone.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : Monotone f) (a : α) :
-    Monotone fun x => f x * a := fun x y h => mul_le_mul_right' (hf h) a
+theorem Monotoneₓ.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : Monotoneₓ f) (a : α) :
+    Monotoneₓ fun x => f x * a := fun x y h => mul_le_mul_right' (hf h) a
 
 @[to_additive add_const]
-theorem MonotoneOn.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : MonotoneOn f s) (a : α) :
-    MonotoneOn (fun x => f x * a) s := fun x hx y hy h => mul_le_mul_right' (hf hx hy h) a
+theorem MonotoneOnₓ.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : MonotoneOnₓ f s) (a : α) :
+    MonotoneOnₓ (fun x => f x * a) s := fun x hx y hy h => mul_le_mul_right' (hf hx hy h) a
 
 @[to_additive add_const]
-theorem Antitone.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : Antitone f) (a : α) :
-    Antitone fun x => f x * a := fun x y h => mul_le_mul_right' (hf h) a
+theorem Antitoneₓ.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : Antitoneₓ f) (a : α) :
+    Antitoneₓ fun x => f x * a := fun x y h => mul_le_mul_right' (hf h) a
 
 @[to_additive add_const]
-theorem AntitoneOn.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : AntitoneOn f s) (a : α) :
-    AntitoneOn (fun x => f x * a) s := fun x hx y hy h => mul_le_mul_right' (hf hx hy h) a
+theorem AntitoneOnₓ.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : AntitoneOnₓ f s) (a : α) :
+    AntitoneOnₓ (fun x => f x * a) s := fun x hx y hy h => mul_le_mul_right' (hf hx hy h) a
 
 /-- The product of two monotone functions is monotone. -/
 @[to_additive add "The sum of two monotone functions is monotone."]
-theorem Monotone.mul' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : Monotone f)
-    (hg : Monotone g) : Monotone fun x => f x * g x := fun x y h => mul_le_mul' (hf h) (hg h)
+theorem Monotoneₓ.mul' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
+    (hf : Monotoneₓ f) (hg : Monotoneₓ g) : Monotoneₓ fun x => f x * g x := fun x y h => mul_le_mul' (hf h) (hg h)
 
 /-- The product of two monotone functions is monotone. -/
 @[to_additive add "The sum of two monotone functions is monotone."]
-theorem MonotoneOn.mul' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
-    (hf : MonotoneOn f s) (hg : MonotoneOn g s) : MonotoneOn (fun x => f x * g x) s := fun x hx y hy h =>
+theorem MonotoneOnₓ.mul' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
+    (hf : MonotoneOnₓ f s) (hg : MonotoneOnₓ g s) : MonotoneOnₓ (fun x => f x * g x) s := fun x hx y hy h =>
   mul_le_mul' (hf hx hy h) (hg hx hy h)
 
 /-- The product of two antitone functions is antitone. -/
 @[to_additive add "The sum of two antitone functions is antitone."]
-theorem Antitone.mul' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : Antitone f)
-    (hg : Antitone g) : Antitone fun x => f x * g x := fun x y h => mul_le_mul' (hf h) (hg h)
+theorem Antitoneₓ.mul' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
+    (hf : Antitoneₓ f) (hg : Antitoneₓ g) : Antitoneₓ fun x => f x * g x := fun x y h => mul_le_mul' (hf h) (hg h)
 
 /-- The product of two antitone functions is antitone. -/
 @[to_additive add "The sum of two antitone functions is antitone."]
-theorem AntitoneOn.mul' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
-    (hf : AntitoneOn f s) (hg : AntitoneOn g s) : AntitoneOn (fun x => f x * g x) s := fun x hx y hy h =>
+theorem AntitoneOnₓ.mul' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
+    (hf : AntitoneOnₓ f s) (hg : AntitoneOnₓ g s) : AntitoneOnₓ (fun x => f x * g x) s := fun x hx y hy h =>
   mul_le_mul' (hf hx hy h) (hg hx hy h)
 
 section Left
@@ -939,19 +914,19 @@ section Left
 variable [CovariantClass α α (· * ·) (· < ·)]
 
 @[to_additive const_add]
-theorem StrictMono.const_mul' (hf : StrictMono f) (c : α) : StrictMono fun x => c * f x := fun a b ab =>
+theorem StrictMonoₓ.const_mul' (hf : StrictMonoₓ f) (c : α) : StrictMonoₓ fun x => c * f x := fun a b ab =>
   mul_lt_mul_left' (hf ab) c
 
 @[to_additive const_add]
-theorem StrictMonoOn.const_mul' (hf : StrictMonoOn f s) (c : α) : StrictMonoOn (fun x => c * f x) s :=
+theorem StrictMonoOnₓ.const_mul' (hf : StrictMonoOnₓ f s) (c : α) : StrictMonoOnₓ (fun x => c * f x) s :=
   fun a ha b hb ab => mul_lt_mul_left' (hf ha hb ab) c
 
 @[to_additive const_add]
-theorem StrictAnti.const_mul' (hf : StrictAnti f) (c : α) : StrictAnti fun x => c * f x := fun a b ab =>
+theorem StrictAntiₓ.const_mul' (hf : StrictAntiₓ f) (c : α) : StrictAntiₓ fun x => c * f x := fun a b ab =>
   mul_lt_mul_left' (hf ab) c
 
 @[to_additive const_add]
-theorem StrictAntiOn.const_mul' (hf : StrictAntiOn f s) (c : α) : StrictAntiOn (fun x => c * f x) s :=
+theorem StrictAntiOnₓ.const_mul' (hf : StrictAntiOnₓ f s) (c : α) : StrictAntiOnₓ (fun x => c * f x) s :=
   fun a ha b hb ab => mul_lt_mul_left' (hf ha hb ab) c
 
 end Left
@@ -961,102 +936,102 @@ section Right
 variable [CovariantClass α α (swap (· * ·)) (· < ·)]
 
 @[to_additive add_const]
-theorem StrictMono.mul_const' (hf : StrictMono f) (c : α) : StrictMono fun x => f x * c := fun a b ab =>
+theorem StrictMonoₓ.mul_const' (hf : StrictMonoₓ f) (c : α) : StrictMonoₓ fun x => f x * c := fun a b ab =>
   mul_lt_mul_right' (hf ab) c
 
 @[to_additive add_const]
-theorem StrictMonoOn.mul_const' (hf : StrictMonoOn f s) (c : α) : StrictMonoOn (fun x => f x * c) s :=
+theorem StrictMonoOnₓ.mul_const' (hf : StrictMonoOnₓ f s) (c : α) : StrictMonoOnₓ (fun x => f x * c) s :=
   fun a ha b hb ab => mul_lt_mul_right' (hf ha hb ab) c
 
 @[to_additive add_const]
-theorem StrictAnti.mul_const' (hf : StrictAnti f) (c : α) : StrictAnti fun x => f x * c := fun a b ab =>
+theorem StrictAntiₓ.mul_const' (hf : StrictAntiₓ f) (c : α) : StrictAntiₓ fun x => f x * c := fun a b ab =>
   mul_lt_mul_right' (hf ab) c
 
 @[to_additive add_const]
-theorem StrictAntiOn.mul_const' (hf : StrictAntiOn f s) (c : α) : StrictAntiOn (fun x => f x * c) s :=
+theorem StrictAntiOnₓ.mul_const' (hf : StrictAntiOnₓ f s) (c : α) : StrictAntiOnₓ (fun x => f x * c) s :=
   fun a ha b hb ab => mul_lt_mul_right' (hf ha hb ab) c
 
 end Right
 
 /-- The product of two strictly monotone functions is strictly monotone. -/
 @[to_additive add "The sum of two strictly monotone functions is strictly monotone."]
-theorem StrictMono.mul' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
-    (hf : StrictMono f) (hg : StrictMono g) : StrictMono fun x => f x * g x := fun a b ab =>
+theorem StrictMonoₓ.mul' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
+    (hf : StrictMonoₓ f) (hg : StrictMonoₓ g) : StrictMonoₓ fun x => f x * g x := fun a b ab =>
   mul_lt_mul_of_lt_of_lt (hf ab) (hg ab)
 
 /-- The product of two strictly monotone functions is strictly monotone. -/
 @[to_additive add "The sum of two strictly monotone functions is strictly monotone."]
-theorem StrictMonoOn.mul' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
-    (hf : StrictMonoOn f s) (hg : StrictMonoOn g s) : StrictMonoOn (fun x => f x * g x) s := fun a ha b hb ab =>
+theorem StrictMonoOnₓ.mul' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
+    (hf : StrictMonoOnₓ f s) (hg : StrictMonoOnₓ g s) : StrictMonoOnₓ (fun x => f x * g x) s := fun a ha b hb ab =>
   mul_lt_mul_of_lt_of_lt (hf ha hb ab) (hg ha hb ab)
 
 /-- The product of two strictly antitone functions is strictly antitone. -/
 @[to_additive add "The sum of two strictly antitone functions is strictly antitone."]
-theorem StrictAnti.mul' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
-    (hf : StrictAnti f) (hg : StrictAnti g) : StrictAnti fun x => f x * g x := fun a b ab =>
+theorem StrictAntiₓ.mul' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
+    (hf : StrictAntiₓ f) (hg : StrictAntiₓ g) : StrictAntiₓ fun x => f x * g x := fun a b ab =>
   mul_lt_mul_of_lt_of_lt (hf ab) (hg ab)
 
 /-- The product of two strictly antitone functions is strictly antitone. -/
 @[to_additive add "The sum of two strictly antitone functions is strictly antitone."]
-theorem StrictAntiOn.mul' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
-    (hf : StrictAntiOn f s) (hg : StrictAntiOn g s) : StrictAntiOn (fun x => f x * g x) s := fun a ha b hb ab =>
+theorem StrictAntiOnₓ.mul' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
+    (hf : StrictAntiOnₓ f s) (hg : StrictAntiOnₓ g s) : StrictAntiOnₓ (fun x => f x * g x) s := fun a ha b hb ab =>
   mul_lt_mul_of_lt_of_lt (hf ha hb ab) (hg ha hb ab)
 
 /-- The product of a monotone function and a strictly monotone function is strictly monotone. -/
 @[to_additive add_strict_mono "The sum of a monotone function and a strictly monotone function is strictly monotone."]
-theorem Monotone.mul_strict_mono' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
-    {f g : β → α} (hf : Monotone f) (hg : StrictMono g) : StrictMono fun x => f x * g x := fun x y h =>
+theorem Monotoneₓ.mul_strict_mono' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
+    {f g : β → α} (hf : Monotoneₓ f) (hg : StrictMonoₓ g) : StrictMonoₓ fun x => f x * g x := fun x y h =>
   mul_lt_mul_of_le_of_lt (hf h.le) (hg h)
 
 /-- The product of a monotone function and a strictly monotone function is strictly monotone. -/
 @[to_additive add_strict_mono "The sum of a monotone function and a strictly monotone function is strictly monotone."]
-theorem MonotoneOn.mul_strict_mono' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
-    {f g : β → α} (hf : MonotoneOn f s) (hg : StrictMonoOn g s) : StrictMonoOn (fun x => f x * g x) s :=
+theorem MonotoneOnₓ.mul_strict_mono' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
+    {f g : β → α} (hf : MonotoneOnₓ f s) (hg : StrictMonoOnₓ g s) : StrictMonoOnₓ (fun x => f x * g x) s :=
   fun x hx y hy h => mul_lt_mul_of_le_of_lt (hf hx hy h.le) (hg hx hy h)
 
 /-- The product of a antitone function and a strictly antitone function is strictly antitone. -/
 @[to_additive add_strict_anti "The sum of a antitone function and a strictly antitone function is strictly antitone."]
-theorem Antitone.mul_strict_anti' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
-    {f g : β → α} (hf : Antitone f) (hg : StrictAnti g) : StrictAnti fun x => f x * g x := fun x y h =>
+theorem Antitoneₓ.mul_strict_anti' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
+    {f g : β → α} (hf : Antitoneₓ f) (hg : StrictAntiₓ g) : StrictAntiₓ fun x => f x * g x := fun x y h =>
   mul_lt_mul_of_le_of_lt (hf h.le) (hg h)
 
 /-- The product of a antitone function and a strictly antitone function is strictly antitone. -/
 @[to_additive add_strict_anti "The sum of a antitone function and a strictly antitone function is strictly antitone."]
-theorem AntitoneOn.mul_strict_anti' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
-    {f g : β → α} (hf : AntitoneOn f s) (hg : StrictAntiOn g s) : StrictAntiOn (fun x => f x * g x) s :=
+theorem AntitoneOnₓ.mul_strict_anti' [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
+    {f g : β → α} (hf : AntitoneOnₓ f s) (hg : StrictAntiOnₓ g s) : StrictAntiOnₓ (fun x => f x * g x) s :=
   fun x hx y hy h => mul_lt_mul_of_le_of_lt (hf hx hy h.le) (hg hx hy h)
 
 variable [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
 
 /-- The product of a strictly monotone function and a monotone function is strictly monotone. -/
 @[to_additive add_monotone "The sum of a strictly monotone function and a monotone function is strictly monotone."]
-theorem StrictMono.mul_monotone' (hf : StrictMono f) (hg : Monotone g) : StrictMono fun x => f x * g x := fun x y h =>
-  mul_lt_mul_of_lt_of_le (hf h) (hg h.le)
+theorem StrictMonoₓ.mul_monotone' (hf : StrictMonoₓ f) (hg : Monotoneₓ g) : StrictMonoₓ fun x => f x * g x :=
+  fun x y h => mul_lt_mul_of_lt_of_le (hf h) (hg h.le)
 
 /-- The product of a strictly monotone function and a monotone function is strictly monotone. -/
 @[to_additive add_monotone "The sum of a strictly monotone function and a monotone function is strictly monotone."]
-theorem StrictMonoOn.mul_monotone' (hf : StrictMonoOn f s) (hg : MonotoneOn g s) :
-    StrictMonoOn (fun x => f x * g x) s := fun x hx y hy h => mul_lt_mul_of_lt_of_le (hf hx hy h) (hg hx hy h.le)
+theorem StrictMonoOnₓ.mul_monotone' (hf : StrictMonoOnₓ f s) (hg : MonotoneOnₓ g s) :
+    StrictMonoOnₓ (fun x => f x * g x) s := fun x hx y hy h => mul_lt_mul_of_lt_of_le (hf hx hy h) (hg hx hy h.le)
 
 /-- The product of a strictly antitone function and a antitone function is strictly antitone. -/
 @[to_additive add_antitone "The sum of a strictly antitone function and a antitone function is strictly antitone."]
-theorem StrictAnti.mul_antitone' (hf : StrictAnti f) (hg : Antitone g) : StrictAnti fun x => f x * g x := fun x y h =>
-  mul_lt_mul_of_lt_of_le (hf h) (hg h.le)
+theorem StrictAntiₓ.mul_antitone' (hf : StrictAntiₓ f) (hg : Antitoneₓ g) : StrictAntiₓ fun x => f x * g x :=
+  fun x y h => mul_lt_mul_of_lt_of_le (hf h) (hg h.le)
 
 /-- The product of a strictly antitone function and a antitone function is strictly antitone. -/
 @[to_additive add_antitone "The sum of a strictly antitone function and a antitone function is strictly antitone."]
-theorem StrictAntiOn.mul_antitone' (hf : StrictAntiOn f s) (hg : AntitoneOn g s) :
-    StrictAntiOn (fun x => f x * g x) s := fun x hx y hy h => mul_lt_mul_of_lt_of_le (hf hx hy h) (hg hx hy h.le)
+theorem StrictAntiOnₓ.mul_antitone' (hf : StrictAntiOnₓ f s) (hg : AntitoneOnₓ g s) :
+    StrictAntiOnₓ (fun x => f x * g x) s := fun x hx y hy h => mul_lt_mul_of_lt_of_le (hf hx hy h) (hg hx hy h.le)
 
 @[simp, to_additive cmp_add_left]
 theorem cmp_mul_left' {α : Type _} [Mul α] [LinearOrderₓ α] [CovariantClass α α (· * ·) (· < ·)] (a b c : α) :
     cmp (a * b) (a * c) = cmp b c :=
-  (strict_mono_id.const_mul' a).cmp_map_eq b c
+  (strict_mono_idₓ.const_mul' a).cmp_map_eq b c
 
 @[simp, to_additive cmp_add_right]
 theorem cmp_mul_right' {α : Type _} [Mul α] [LinearOrderₓ α] [CovariantClass α α (swap (· * ·)) (· < ·)] (a b c : α) :
     cmp (a * c) (b * c) = cmp a b :=
-  (strict_mono_id.mul_const' c).cmp_map_eq a b
+  (strict_mono_idₓ.mul_const' c).cmp_map_eq a b
 
 end Mono
 
@@ -1090,9 +1065,7 @@ protected theorem inj [Mul α] [PartialOrderₓ α] {a b c : α} (ha : MulLeCanc
 
 @[to_additive]
 protected theorem injective_left [CommSemigroupₓ α] [PartialOrderₓ α] {a : α} (ha : MulLeCancellable a) :
-    Injective (· * a) := fun b c h =>
-  ha.Injective <| by
-    rwa [mul_comm a, mul_comm a]
+    Injective (· * a) := fun b c h => ha.Injective <| by rwa [mul_comm a, mul_comm a]
 
 @[to_additive]
 protected theorem inj_left [CommSemigroupₓ α] [PartialOrderₓ α] {a b c : α} (hc : MulLeCancellable c) :
@@ -1108,34 +1081,25 @@ protected theorem mul_le_mul_iff_left [Mul α] [CovariantClass α α (· * ·) (
 
 @[to_additive]
 protected theorem mul_le_mul_iff_right [CommSemigroupₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b c : α}
-    (ha : MulLeCancellable a) : b * a ≤ c * a ↔ b ≤ c := by
-  rw [mul_comm b, mul_comm c, ha.mul_le_mul_iff_left]
+    (ha : MulLeCancellable a) : b * a ≤ c * a ↔ b ≤ c := by rw [mul_comm b, mul_comm c, ha.mul_le_mul_iff_left]
 
 @[to_additive]
 protected theorem le_mul_iff_one_le_right [MulOneClassₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
     (ha : MulLeCancellable a) : a ≤ a * b ↔ 1 ≤ b :=
-  Iff.trans
-    (by
-      rw [mul_oneₓ])
-    ha.mul_le_mul_iff_left
+  Iff.trans (by rw [mul_oneₓ]) ha.mul_le_mul_iff_left
 
 @[to_additive]
 protected theorem mul_le_iff_le_one_right [MulOneClassₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
     (ha : MulLeCancellable a) : a * b ≤ a ↔ b ≤ 1 :=
-  Iff.trans
-    (by
-      rw [mul_oneₓ])
-    ha.mul_le_mul_iff_left
+  Iff.trans (by rw [mul_oneₓ]) ha.mul_le_mul_iff_left
 
 @[to_additive]
 protected theorem le_mul_iff_one_le_left [CommMonoidₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
-    (ha : MulLeCancellable a) : a ≤ b * a ↔ 1 ≤ b := by
-  rw [mul_comm, ha.le_mul_iff_one_le_right]
+    (ha : MulLeCancellable a) : a ≤ b * a ↔ 1 ≤ b := by rw [mul_comm, ha.le_mul_iff_one_le_right]
 
 @[to_additive]
 protected theorem mul_le_iff_le_one_left [CommMonoidₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
-    (ha : MulLeCancellable a) : b * a ≤ a ↔ b ≤ 1 := by
-  rw [mul_comm, ha.mul_le_iff_le_one_right]
+    (ha : MulLeCancellable a) : b * a ≤ a ↔ b ≤ 1 := by rw [mul_comm, ha.mul_le_iff_le_one_right]
 
 end MulLeCancellable
 

@@ -37,9 +37,7 @@ We show in `well_powered_of_mono_over_essentially_small` and `mono_over_essentia
 that this is the case if and only if `mono_over X` is `v`-essentially small for every `X`.
 -/
 class WellPowered : Prop where
-  subobject_small : ∀ X : C, Small.{v} (Subobject X) := by
-    run_tac
-      tactic.apply_instance
+  subobject_small : ∀ X : C, Small.{v} (Subobject X) := by infer_instance
 
 instance small_subobject [WellPowered C] (X : C) : Small.{v} (Subobject X) :=
   WellPowered.subobject_small X
@@ -70,8 +68,7 @@ variable {D : Type u₂} [Category.{v} D]
 
 theorem well_powered_of_equiv (e : C ≌ D) [WellPowered C] : WellPowered D :=
   well_powered_of_essentially_small_mono_over fun X =>
-    (essentially_small_congr (MonoOver.congr X e.symm)).2 <| by
-      infer_instance
+    (essentially_small_congr (MonoOver.congr X e.symm)).2 <| by infer_instance
 
 /-- Being well-powered is preserved by equivalences, as long as the two categories involved have
     their morphisms in the same universe. -/

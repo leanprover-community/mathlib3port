@@ -124,10 +124,7 @@ See [MM92] Chapter III, Section 2, Equations (3,4).
 -/
 def ofGrothendieck (J : GrothendieckTopology C) : Pretopology C where
   Coverings := fun X R => Sieve.generate R ∈ J X
-  has_isos := fun X Y f i =>
-    J.covering_of_eq_top
-      (by
-        simp )
+  has_isos := fun X Y f i => J.covering_of_eq_top (by simp)
   pullbacks := fun X Y f R hR => by
     rw [Set.mem_def, sieve.pullback_arrows_comm]
     apply J.pullback_stable f hR
@@ -139,9 +136,7 @@ def ofGrothendieck (J : GrothendieckTopology C) : Pretopology C where
     apply J.pullback_stable g
     apply J.superset_covering _ (hTi _ hf)
     rintro Y g ⟨W, h, g, hg, rfl⟩
-    exact
-      ⟨_, h, _, ⟨_, _, _, hf, hg, rfl⟩, by
-        simp ⟩
+    exact ⟨_, h, _, ⟨_, _, _, hf, hg, rfl⟩, by simp⟩
 
 /-- We have a galois insertion from pretopologies to Grothendieck topologies. -/
 def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C) where
@@ -170,12 +165,7 @@ def trivial : Pretopology C where
     rintro ⟨Z, g, i, rfl⟩
     refine' ⟨pullback g f, pullback.snd, _, _⟩
     · skip
-      refine'
-        ⟨⟨pullback.lift (f ≫ inv g) (𝟙 _)
-              (by
-                simp ),
-            ⟨_, by
-              tidy⟩⟩⟩
+      refine' ⟨⟨pullback.lift (f ≫ inv g) (𝟙 _) (by simp), ⟨_, by tidy⟩⟩⟩
       apply pullback.hom_ext
       · rw [assoc, pullback.lift_fst, ← pullback.condition_assoc]
         simp

@@ -39,11 +39,11 @@ def yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁ where
     { obj := fun Y => unop Y ⟶ X, map := fun Y Y' f g => f.unop ≫ g,
       map_comp' := fun _ _ _ f g => by
         ext
-        dsimp'
+        dsimp
         erw [category.assoc],
       map_id' := fun Y => by
         ext
-        dsimp'
+        dsimp
         erw [category.id_comp] }
   map := fun X X' f => { app := fun Y g => g ≫ f }
 
@@ -57,7 +57,7 @@ def coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁ where
 namespace Yoneda
 
 theorem obj_map_id {X Y : C} (f : op X ⟶ op Y) : (yoneda.obj X).map f (𝟙 X) = (yoneda.map f.unop).app (op Y) (𝟙 Y) := by
-  dsimp'
+  dsimp
   simp
 
 @[simp]
@@ -76,8 +76,13 @@ instance yonedaFull : Full (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where preimage
 See <https://stacks.math.columbia.edu/tag/001P>.
 -/
 instance yoneda_faithful :
-    Faithful (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where map_injective' := fun X Y f g p => by
-    convert congr_fun (congr_app p (op X)) (𝟙 X) <;> dsimp' <;> simp
+    Faithful
+      (yoneda :
+        C ⥤
+          Cᵒᵖ ⥤
+            Type
+              v₁) where map_injective' := fun X Y f g p => by
+    convert congr_fun (congr_app p (op X)) (𝟙 X) <;> dsimp <;> simp
 
 /-- Extensionality via Yoneda. The typical usage would be
 ```
@@ -90,10 +95,7 @@ functions are inverses and natural in `Z`.
 def ext (X Y : C) (p : ∀ {Z : C}, (Z ⟶ X) → (Z ⟶ Y)) (q : ∀ {Z : C}, (Z ⟶ Y) → (Z ⟶ X))
     (h₁ : ∀ {Z : C} (f : Z ⟶ X), q (p f) = f) (h₂ : ∀ {Z : C} (f : Z ⟶ Y), p (q f) = f)
     (n : ∀ {Z Z' : C} (f : Z' ⟶ Z) (g : Z ⟶ X), p (f ≫ g) = f ≫ p g) : X ≅ Y :=
-  yoneda.preimageIso
-    (NatIso.ofComponents (fun Z => { Hom := p, inv := q })
-      (by
-        tidy))
+  yoneda.preimageIso (NatIso.ofComponents (fun Z => { Hom := p, inv := q }) (by tidy))
 
 /-- If `yoneda.map f` is an isomorphism, so was `f`.
 -/
@@ -123,9 +125,7 @@ theorem is_iso {X Y : Cᵒᵖ} (f : X ⟶ Y) [IsIso (coyoneda.map f)] : IsIso f 
 
 /-- The identity functor on `Type` is isomorphic to the coyoneda functor coming from `punit`. -/
 def punitIso : coyoneda.obj (Opposite.op PUnit) ≅ 𝟭 (Type v₁) :=
-  NatIso.ofComponents (fun X => { Hom := fun f => f ⟨⟩, inv := fun x _ => x })
-    (by
-      tidy)
+  NatIso.ofComponents (fun X => { Hom := fun f => f ⟨⟩, inv := fun x _ => x }) (by tidy)
 
 /-- Taking the `unop` of morphisms is a natural isomorphism. -/
 @[simps]
@@ -192,7 +192,7 @@ theorem repr_w_hom : F.reprW.Hom = F.reprF :=
 theorem repr_w_app_hom (X : Cᵒᵖ) (f : unop X ⟶ F.reprX) : (F.reprW.app X).Hom f = F.map f.op F.reprX := by
   change F.repr_f.app X f = (F.repr_f.app (op F.repr_X) ≫ F.map f.op) (𝟙 F.repr_X)
   rw [← F.repr_f.naturality]
-  dsimp'
+  dsimp
   simp
 
 end Representable
@@ -229,7 +229,7 @@ noncomputable def coreprW : coyoneda.obj (op F.coreprX) ≅ F :=
 theorem corepr_w_app_hom (X : C) (f : F.coreprX ⟶ X) : (F.coreprW.app X).Hom f = F.map f F.coreprX := by
   change F.corepr_f.app X f = (F.corepr_f.app F.corepr_X ≫ F.map f) (𝟙 F.corepr_X)
   rw [← F.corepr_f.naturality]
-  dsimp'
+  dsimp
   simp
 
 end Corepresentable
@@ -292,7 +292,7 @@ def yonedaLemma : yonedaPairing C ≅ yonedaEvaluation C where
       naturality' := by
         intro X Y f
         ext
-        dsimp'
+        dsimp
         erw [category.id_comp, ← functor_to_types.naturality]
         simp only [category.comp_id, yoneda_obj_map] }
   inv :=
@@ -301,22 +301,22 @@ def yonedaLemma : yonedaPairing C ≅ yonedaEvaluation C where
           naturality' := by
             intro X Y f
             ext
-            dsimp'
+            dsimp
             rw [functor_to_types.map_comp_apply] },
       naturality' := by
         intro X Y f
         ext
-        dsimp'
+        dsimp
         rw [← functor_to_types.naturality, functor_to_types.map_comp_apply] }
   hom_inv_id' := by
     ext
-    dsimp'
+    dsimp
     erw [← functor_to_types.naturality, obj_map_id]
     simp only [yoneda_map_app, Quiver.Hom.unop_op]
     erw [category.id_comp]
   inv_hom_id' := by
     ext
-    dsimp'
+    dsimp
     rw [functor_to_types.map_id_apply]
 
 variable {C}
@@ -348,7 +348,7 @@ theorem yoneda_equiv_naturality {X Y : C} {F : Cᵒᵖ ⥤ Type v₁} (f : yoned
     F.map g.op (yonedaEquiv f) = yonedaEquiv (yoneda.map g ≫ f) := by
   change (f.app (op X) ≫ F.map g.op) (𝟙 X) = f.app (op Y) (𝟙 Y ≫ g)
   rw [← f.naturality]
-  dsimp'
+  dsimp
   simp
 
 /-- When `C` is a small category, we can restate the isomorphism from `yoneda_sections`
@@ -373,26 +373,18 @@ attribute [local ext] Functor.ext
 /-- The curried version of yoneda lemma when `C` is small. -/
 def curriedYonedaLemma {C : Type u₁} [SmallCategory C] :
     (yoneda.op ⋙ coyoneda : Cᵒᵖ ⥤ (Cᵒᵖ ⥤ Type u₁) ⥤ Type u₁) ≅ evaluation Cᵒᵖ (Type u₁) :=
-  eqToIso
-      (by
-        tidy) ≪≫
+  eqToIso (by tidy) ≪≫
     curry.mapIso (yonedaLemma C ≪≫ isoWhiskerLeft (evaluationUncurried Cᵒᵖ (Type u₁)) uliftFunctorTrivial) ≪≫
-      eqToIso
-        (by
-          tidy)
+      eqToIso (by tidy)
 
 /-- The curried version of yoneda lemma when `C` is small. -/
 def curriedYonedaLemma' {C : Type u₁} [SmallCategory C] :
     yoneda ⋙ (whiskeringLeft Cᵒᵖ (Cᵒᵖ ⥤ Type u₁)ᵒᵖ (Type u₁)).obj yoneda.op ≅ 𝟭 (Cᵒᵖ ⥤ Type u₁) :=
-  eqToIso
-      (by
-        tidy) ≪≫
+  eqToIso (by tidy) ≪≫
     curry.mapIso
         (isoWhiskerLeft (prod.swap _ _)
           (yonedaLemma C ≪≫ isoWhiskerLeft (evaluationUncurried Cᵒᵖ (Type u₁)) uliftFunctorTrivial : _)) ≪≫
-      eqToIso
-        (by
-          tidy)
+      eqToIso (by tidy)
 
 end CategoryTheory
 

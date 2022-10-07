@@ -39,8 +39,7 @@ protected theorem Pairwiseₓ.nodup {l : List α} {r : α → α → Prop} [IsIr
   h.imp fun a b => ne_of_irrefl
 
 theorem rel_nodup {r : α → β → Prop} (hr : Relator.BiUnique r) : (Forall₂ r ⇒ (· ↔ ·)) Nodupₓ Nodupₓ
-  | _, _, forall₂.nil => by
-    simp only [nodup_nil]
+  | _, _, forall₂.nil => by simp only [nodup_nil]
   | _, _, forall₂.cons hab h => by
     simpa only [nodup_cons] using Relator.rel_and (Relator.rel_not (rel_mem hr hab h)) (rel_nodup h)
 
@@ -80,8 +79,7 @@ theorem nodup_iff_nth_le_inj {l : List α} : Nodupₓ l ↔ ∀ i j h₁ h₂, n
 
 theorem Nodupₓ.nth_le_inj_iff {l : List α} (h : Nodupₓ l) {i j : ℕ} (hi : i < l.length) (hj : j < l.length) :
     l.nthLe i hi = l.nthLe j hj ↔ i = j :=
-  ⟨nodup_iff_nth_le_inj.mp h _ _ _ _, by
-    simp (config := { contextual := true })⟩
+  ⟨nodup_iff_nth_le_inj.mp h _ _ _ _, by simp (config := { contextual := true })⟩
 
 theorem nodup_iff_nth_ne_nth {l : List α} : l.Nodup ↔ ∀ i j : ℕ, i < j → j < l.length → l.nth i ≠ l.nth j := by
   rw [nodup_iff_nth_le_inj]
@@ -103,7 +101,7 @@ theorem Nodupₓ.ne_singleton_iff {l : List α} (h : Nodupₓ l) (x : α) : l �
   · simp
     
   · specialize hl h.of_cons
-    by_cases' hx : tl = [x]
+    by_cases hx:tl = [x]
     · simpa [hx, And.comm, and_or_distrib_left] using h
       
     · rw [← Ne.def, hl] at hx
@@ -111,8 +109,7 @@ theorem Nodupₓ.ne_singleton_iff {l : List α} (h : Nodupₓ l) (x : α) : l �
       · simp
         
       · have : tl ≠ [] := ne_nil_of_mem hy
-        suffices ∃ (y : α)(H : y ∈ hd :: tl), y ≠ x by
-          simpa [ne_nil_of_mem hy]
+        suffices ∃ (y : α)(H : y ∈ hd :: tl), y ≠ x by simpa [ne_nil_of_mem hy]
         exact ⟨y, mem_cons_of_mem _ hy, hx⟩
         
       
@@ -135,10 +132,8 @@ theorem nodup_iff_count_le_one [DecidableEq α] {l : List α} : Nodupₓ l ↔ �
       (not_congr this).trans not_ltₓ
 
 theorem nodup_repeat (a : α) : ∀ {n : ℕ}, Nodupₓ (repeat a n) ↔ n ≤ 1
-  | 0 => by
-    simp [Nat.zero_leₓ]
-  | 1 => by
-    simp
+  | 0 => by simp [Nat.zero_leₓ]
+  | 1 => by simp
   | n + 2 =>
     iff_of_false (fun H => nodup_iff_sublist.1 H a ((repeat_sublist_repeat _).2 (Nat.le_add_leftₓ 2 n)))
       (not_le_of_ltₓ <| Nat.le_add_leftₓ 2 n)
@@ -161,13 +156,13 @@ theorem Nodupₓ.of_append_left : Nodupₓ (l₁ ++ l₂) → Nodupₓ l₁ :=
 theorem Nodupₓ.of_append_right : Nodupₓ (l₁ ++ l₂) → Nodupₓ l₂ :=
   Nodupₓ.sublist (sublist_append_right l₁ l₂)
 
-theorem nodup_append {l₁ l₂ : List α} : Nodupₓ (l₁ ++ l₂) ↔ Nodupₓ l₁ ∧ Nodupₓ l₂ ∧ Disjoint l₁ l₂ := by
+theorem nodup_append {l₁ l₂ : List α} : Nodupₓ (l₁ ++ l₂) ↔ Nodupₓ l₁ ∧ Nodupₓ l₂ ∧ Disjointₓ l₁ l₂ := by
   simp only [nodup, pairwise_append, disjoint_iff_ne]
 
-theorem disjoint_of_nodup_append {l₁ l₂ : List α} (d : Nodupₓ (l₁ ++ l₂)) : Disjoint l₁ l₂ :=
+theorem disjoint_of_nodup_append {l₁ l₂ : List α} (d : Nodupₓ (l₁ ++ l₂)) : Disjointₓ l₁ l₂ :=
   (nodup_append.1 d).2.2
 
-theorem Nodupₓ.append (d₁ : Nodupₓ l₁) (d₂ : Nodupₓ l₂) (dj : Disjoint l₁ l₂) : Nodupₓ (l₁ ++ l₂) :=
+theorem Nodupₓ.append (d₁ : Nodupₓ l₁) (d₂ : Nodupₓ l₂) (dj : Disjointₓ l₁ l₂) : Nodupₓ (l₁ ++ l₂) :=
   nodup_append.2 ⟨d₁, d₂, dj⟩
 
 theorem nodup_append_comm {l₁ l₂ : List α} : Nodupₓ (l₁ ++ l₂) ↔ Nodupₓ (l₂ ++ l₁) := by
@@ -220,24 +215,20 @@ attribute [protected] nodup.attach
 
 theorem Nodupₓ.pmap {p : α → Prop} {f : ∀ a, p a → β} {l : List α} {H} (hf : ∀ a ha b hb, f a ha = f b hb → a = b)
     (h : Nodupₓ l) : Nodupₓ (pmap f l H) := by
-  rw [pmap_eq_map_attach] <;>
-    exact
-      h.attach.map fun ⟨a, ha⟩ ⟨b, hb⟩ h => by
-        congr <;> exact hf a (H _ ha) b (H _ hb) h
+  rw [pmap_eq_map_attach] <;> exact h.attach.map fun ⟨a, ha⟩ ⟨b, hb⟩ h => by congr <;> exact hf a (H _ ha) b (H _ hb) h
 
 theorem Nodupₓ.filter (p : α → Prop) [DecidablePred p] {l} : Nodupₓ l → Nodupₓ (filterₓ p l) :=
   Pairwiseₓ.filter p
 
 @[simp]
 theorem nodup_reverse {l : List α} : Nodupₓ (reverse l) ↔ Nodupₓ l :=
-  pairwise_reverse.trans <| by
-    simp only [nodup, Ne.def, eq_comm]
+  pairwise_reverse.trans <| by simp only [nodup, Ne.def, eq_comm]
 
 theorem Nodupₓ.erase_eq_filter [DecidableEq α] {l} (d : Nodupₓ l) (a : α) : l.erase a = filterₓ (· ≠ a) l := by
   induction' d with b l m d IH
   · rfl
     
-  by_cases' b = a
+  by_cases b = a
   · subst h
     rw [erase_cons_head, filter_cons_of_neg]
     symm
@@ -250,7 +241,7 @@ theorem Nodupₓ.erase_eq_filter [DecidableEq α] {l} (d : Nodupₓ l) (a : α) 
     
 
 theorem Nodupₓ.erase [DecidableEq α] (a : α) : Nodupₓ l → Nodupₓ (l.erase a) :=
-  nodup.sublist <| erase_sublist _ _
+  nodup.sublist <| erase_sublistₓ _ _
 
 theorem Nodupₓ.diff [DecidableEq α] : l₁.Nodup → (l₁.diff l₂).Nodup :=
   nodup.sublist <| diff_sublist _ _
@@ -260,14 +251,13 @@ theorem Nodupₓ.mem_erase_iff [DecidableEq α] (d : Nodupₓ l) : a ∈ l.erase
 
 theorem Nodupₓ.not_mem_erase [DecidableEq α] (h : Nodupₓ l) : a ∉ l.erase a := fun H => (h.mem_erase_iff.1 H).1 rfl
 
-theorem nodup_join {L : List (List α)} : Nodupₓ (join L) ↔ (∀ l ∈ L, Nodupₓ l) ∧ Pairwiseₓ Disjoint L := by
+theorem nodup_join {L : List (List α)} : Nodupₓ (join L) ↔ (∀ l ∈ L, Nodupₓ l) ∧ Pairwiseₓ Disjointₓ L := by
   simp only [nodup, pairwise_join, disjoint_left.symm, forall_mem_ne]
 
 theorem nodup_bind {l₁ : List α} {f : α → List β} :
-    Nodupₓ (l₁.bind f) ↔ (∀ x ∈ l₁, Nodupₓ (f x)) ∧ Pairwiseₓ (fun a b : α => Disjoint (f a) (f b)) l₁ := by
+    Nodupₓ (l₁.bind f) ↔ (∀ x ∈ l₁, Nodupₓ (f x)) ∧ Pairwiseₓ (fun a b : α => Disjointₓ (f a) (f b)) l₁ := by
   simp only [List.bind, nodup_join, pairwise_map, and_comm, And.left_comm, mem_map, exists_imp_distrib, and_imp] <;>
-    rw
-      [show (∀ (l : List β) (x : α), f x = l → x ∈ l₁ → nodup l) ↔ ∀ x : α, x ∈ l₁ → nodup (f x) from
+    rw [show (∀ (l : List β) (x : α), f x = l → x ∈ l₁ → nodup l) ↔ ∀ x : α, x ∈ l₁ → nodup (f x) from
         forall_swap.trans <| forall_congrₓ fun _ => forall_eq']
 
 protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l₂.Nodup) : (l₁.product l₂).Nodup :=
@@ -302,12 +292,10 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
                  "by"
                  (Tactic.tacticSeq
                   (Tactic.tacticSeq1Indented
-                   [(group
-                     (Tactic.«tactic_<;>_»
-                      (Tactic.injection "injection" `h ["with" ["_" `h]])
-                      "<;>"
-                      (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))
-                     [])])))))])))
+                   [(Tactic.«tactic_<;>_»
+                     (Tactic.injection "injection" `h ["with" ["_" `h]])
+                     "<;>"
+                     (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))))])))
           ","
           (Term.app
            (Term.proj `d₁ "." `imp)
@@ -321,53 +309,51 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
                "by"
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented
-                 [(group
-                   (Std.Tactic.rcases
-                    "rcases"
-                    [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
-                    ["with"
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed
-                       [(Std.Tactic.RCases.rcasesPat.tuple
-                         "⟨"
-                         [(Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
-                           [])
-                          ","
-                          (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
-                           [])
-                          ","
-                          (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                           [])]
-                         "⟩")])
-                      [])])
-                   [])
-                  (group
-                   (Std.Tactic.rcases
-                    "rcases"
-                    [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
-                    ["with"
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed
-                       [(Std.Tactic.RCases.rcasesPat.tuple
-                         "⟨"
-                         [(Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
-                           [])
-                          ","
-                          (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
-                           [])
-                          ","
-                          (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
-                           [])]
-                         "⟩")])
-                      [])])
-                   [])
-                  (group (Tactic.exact "exact" (Term.app `n [`rfl])) [])])))))])]
+                 [(Std.Tactic.rcases
+                   "rcases"
+                   [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
+                   ["with"
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple
+                        "⟨"
+                        [(Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
+                          [])
+                         ","
+                         (Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
+                          [])
+                         ","
+                         (Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                          [])]
+                        "⟩")])
+                     [])])
+                  []
+                  (Std.Tactic.rcases
+                   "rcases"
+                   [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
+                   ["with"
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple
+                        "⟨"
+                        [(Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
+                          [])
+                         ","
+                         (Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
+                          [])
+                         ","
+                         (Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                          [])]
+                        "⟩")])
+                     [])])
+                  []
+                  (Tactic.exact "exact" (Term.app `n [`rfl]))])))))])]
          "⟩")])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
@@ -390,12 +376,10 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
                "by"
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented
-                 [(group
-                   (Tactic.«tactic_<;>_»
-                    (Tactic.injection "injection" `h ["with" ["_" `h]])
-                    "<;>"
-                    (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))
-                   [])])))))])))
+                 [(Tactic.«tactic_<;>_»
+                   (Tactic.injection "injection" `h ["with" ["_" `h]])
+                   "<;>"
+                   (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))))])))
         ","
         (Term.app
          (Term.proj `d₁ "." `imp)
@@ -409,53 +393,51 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
              "by"
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
-               [(group
-                 (Std.Tactic.rcases
-                  "rcases"
-                  [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
-                  ["with"
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed
-                     [(Std.Tactic.RCases.rcasesPat.tuple
-                       "⟨"
-                       [(Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
-                         [])
-                        ","
-                        (Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
-                         [])
-                        ","
-                        (Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                         [])]
-                       "⟩")])
-                    [])])
-                 [])
-                (group
-                 (Std.Tactic.rcases
-                  "rcases"
-                  [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
-                  ["with"
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed
-                     [(Std.Tactic.RCases.rcasesPat.tuple
-                       "⟨"
-                       [(Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
-                         [])
-                        ","
-                        (Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
-                         [])
-                        ","
-                        (Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
-                         [])]
-                       "⟩")])
-                    [])])
-                 [])
-                (group (Tactic.exact "exact" (Term.app `n [`rfl])) [])])))))])]
+               [(Std.Tactic.rcases
+                 "rcases"
+                 [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
+                 ["with"
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed
+                    [(Std.Tactic.RCases.rcasesPat.tuple
+                      "⟨"
+                      [(Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
+                        [])
+                       ","
+                       (Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
+                        [])
+                       ","
+                       (Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                        [])]
+                      "⟩")])
+                   [])])
+                []
+                (Std.Tactic.rcases
+                 "rcases"
+                 [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
+                 ["with"
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed
+                    [(Std.Tactic.RCases.rcasesPat.tuple
+                      "⟨"
+                      [(Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
+                        [])
+                       ","
+                       (Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
+                        [])
+                       ","
+                       (Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                        [])]
+                      "⟩")])
+                   [])])
+                []
+                (Tactic.exact "exact" (Term.app `n [`rfl]))])))))])]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
@@ -470,53 +452,51 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
            "by"
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
-             [(group
-               (Std.Tactic.rcases
-                "rcases"
-                [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
-                ["with"
-                 (Std.Tactic.RCases.rcasesPatLo
-                  (Std.Tactic.RCases.rcasesPatMed
-                   [(Std.Tactic.RCases.rcasesPat.tuple
-                     "⟨"
-                     [(Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                       [])]
-                     "⟩")])
-                  [])])
-               [])
-              (group
-               (Std.Tactic.rcases
-                "rcases"
-                [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
-                ["with"
-                 (Std.Tactic.RCases.rcasesPatLo
-                  (Std.Tactic.RCases.rcasesPatMed
-                   [(Std.Tactic.RCases.rcasesPat.tuple
-                     "⟨"
-                     [(Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
-                       [])]
-                     "⟩")])
-                  [])])
-               [])
-              (group (Tactic.exact "exact" (Term.app `n [`rfl])) [])])))))])
+             [(Std.Tactic.rcases
+               "rcases"
+               [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
+               ["with"
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed
+                  [(Std.Tactic.RCases.rcasesPat.tuple
+                    "⟨"
+                    [(Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                      [])]
+                    "⟩")])
+                 [])])
+              []
+              (Std.Tactic.rcases
+               "rcases"
+               [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
+               ["with"
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed
+                  [(Std.Tactic.RCases.rcasesPat.tuple
+                    "⟨"
+                    [(Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
+                      [])
+                     ","
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                      [])]
+                    "⟩")])
+                 [])])
+              []
+              (Tactic.exact "exact" (Term.app `n [`rfl]))])))))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -528,105 +508,101 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
          "by"
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
-           [(group
-             (Std.Tactic.rcases
-              "rcases"
-              [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
-              ["with"
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed
-                 [(Std.Tactic.RCases.rcasesPat.tuple
-                   "⟨"
-                   [(Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                     [])]
-                   "⟩")])
-                [])])
-             [])
-            (group
-             (Std.Tactic.rcases
-              "rcases"
-              [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
-              ["with"
-               (Std.Tactic.RCases.rcasesPatLo
-                (Std.Tactic.RCases.rcasesPatMed
-                 [(Std.Tactic.RCases.rcasesPat.tuple
-                   "⟨"
-                   [(Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
-                     [])
-                    ","
-                    (Std.Tactic.RCases.rcasesPatLo
-                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
-                     [])]
-                   "⟩")])
-                [])])
-             [])
-            (group (Tactic.exact "exact" (Term.app `n [`rfl])) [])])))))
+           [(Std.Tactic.rcases
+             "rcases"
+             [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
+             ["with"
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed
+                [(Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                    [])]
+                  "⟩")])
+               [])])
+            []
+            (Std.Tactic.rcases
+             "rcases"
+             [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
+             ["with"
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed
+                [(Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                    [])]
+                  "⟩")])
+               [])])
+            []
+            (Tactic.exact "exact" (Term.app `n [`rfl]))])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(group
-           (Std.Tactic.rcases
-            "rcases"
-            [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
-            ["with"
-             (Std.Tactic.RCases.rcasesPatLo
-              (Std.Tactic.RCases.rcasesPatMed
-               [(Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                   [])]
-                 "⟩")])
-              [])])
-           [])
-          (group
-           (Std.Tactic.rcases
-            "rcases"
-            [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
-            ["with"
-             (Std.Tactic.RCases.rcasesPatLo
-              (Std.Tactic.RCases.rcasesPatMed
-               [(Std.Tactic.RCases.rcasesPat.tuple
-                 "⟨"
-                 [(Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
-                   [])
-                  ","
-                  (Std.Tactic.RCases.rcasesPatLo
-                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
-                   [])]
-                 "⟩")])
-              [])])
-           [])
-          (group (Tactic.exact "exact" (Term.app `n [`rfl])) [])])))
+         [(Std.Tactic.rcases
+           "rcases"
+           [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
+           ["with"
+            (Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed
+              [(Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                  [])]
+                "⟩")])
+             [])])
+          []
+          (Std.Tactic.rcases
+           "rcases"
+           [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
+           ["with"
+            (Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed
+              [(Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                  [])]
+                "⟩")])
+             [])])
+          []
+          (Tactic.exact "exact" (Term.app `n [`rfl]))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `n [`rfl]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -639,7 +615,7 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.rcases
        "rcases"
        [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
@@ -672,7 +648,7 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.rcases
        "rcases"
        [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
@@ -751,12 +727,10 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
              "by"
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
-               [(group
-                 (Tactic.«tactic_<;>_»
-                  (Tactic.injection "injection" `h ["with" ["_" `h]])
-                  "<;>"
-                  (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))
-                 [])])))))])))
+               [(Tactic.«tactic_<;>_»
+                 (Tactic.injection "injection" `h ["with" ["_" `h]])
+                 "<;>"
+                 (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj (Term.app `d₂ [`a]) "." `map)
@@ -770,12 +744,10 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
            "by"
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
-             [(group
-               (Tactic.«tactic_<;>_»
-                (Tactic.injection "injection" `h ["with" ["_" `h]])
-                "<;>"
-                (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))
-               [])])))))])
+             [(Tactic.«tactic_<;>_»
+               (Tactic.injection "injection" `h ["with" ["_" `h]])
+               "<;>"
+               (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -787,23 +759,19 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
          "by"
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
-           [(group
-             (Tactic.«tactic_<;>_»
-              (Tactic.injection "injection" `h ["with" ["_" `h]])
-              "<;>"
-              (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))
-             [])])))))
+           [(Tactic.«tactic_<;>_»
+             (Tactic.injection "injection" `h ["with" ["_" `h]])
+             "<;>"
+             (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(group
-           (Tactic.«tactic_<;>_»
-            (Tactic.injection "injection" `h ["with" ["_" `h]])
-            "<;>"
-            (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))
-           [])])))
+         [(Tactic.«tactic_<;>_»
+           (Tactic.injection "injection" `h ["with" ["_" `h]])
+           "<;>"
+           (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
        (Tactic.injection "injection" `h ["with" ["_" `h]])
@@ -849,10 +817,8 @@ protected theorem Nodupₓ.concat (h : a ∉ l) (h' : l.Nodup) : (l.concat a).No
   rw [concat_eq_append] <;> exact h'.append (nodup_singleton _) (disjoint_singleton.2 h)
 
 theorem Nodupₓ.insert [DecidableEq α] (h : l.Nodup) : (insert a l).Nodup :=
-  if h' : a ∈ l then by
-    rw [insert_of_mem h'] <;> exact h
-  else by
-    rw [insert_of_not_mem h', nodup_cons] <;> constructor <;> assumption
+  if h' : a ∈ l then by rw [insert_of_mem h'] <;> exact h
+  else by rw [insert_of_not_mem h', nodup_cons] <;> constructor <;> assumption
 
 theorem Nodupₓ.union [DecidableEq α] (l₁ : List α) (h : Nodupₓ l₂) : (l₁ ∪ l₂).Nodup := by
   induction' l₁ with a l₁ ih generalizing l₂
@@ -883,8 +849,7 @@ theorem nodup_sublists_len (n : ℕ) (h : Nodupₓ l) : (sublistsLen n l).Nodup 
   h.sublists'.Sublist <| sublists_len_sublist_sublists' _ _
 
 theorem Nodupₓ.diff_eq_filter [DecidableEq α] : ∀ {l₁ l₂ : List α} (hl₁ : l₁.Nodup), l₁.diff l₂ = l₁.filter (· ∉ l₂)
-  | l₁, [], hl₁ => by
-    simp
+  | l₁, [], hl₁ => by simp
   | l₁, a :: l₂, hl₁ => by
     rw [diff_cons, (hl₁.erase _).diff_eq_filter, hl₁.erase_eq_filter, filter_filter]
     simp only [mem_cons_iff, not_or_distrib, And.comm]
@@ -908,7 +873,7 @@ theorem Nodupₓ.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : �
     
   rw [nodup_cons] at hl
   simp only [mem_cons_iff, map, ihl hl.2]
-  by_cases' H : hd = x
+  by_cases H:hd = x
   · subst hd
     simp [update_nth, hl.1]
     

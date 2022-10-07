@@ -75,8 +75,7 @@ notation3"⨍ "(...)" in "s", "r:(scoped f => f)" ∂"μ => average (Measure.res
 notation3"⨍ "(...)" in "s", "r:(scoped f => average Measure.restrict volume s f) => r
 
 @[simp]
-theorem average_zero : (⨍ x, (0 : E) ∂μ) = 0 := by
-  rw [average, integral_zero]
+theorem average_zero : (⨍ x, (0 : E) ∂μ) = 0 := by rw [average, integral_zero]
 
 @[simp]
 theorem average_zero_measure (f : α → E) : (⨍ x, f x ∂(0 : Measure α)) = 0 := by
@@ -93,7 +92,7 @@ theorem average_def' (f : α → E) : (⨍ x, f x ∂μ) = (μ Univ).toReal⁻¹
   rw [average_def, integral_smul_measure, Ennreal.to_real_inv]
 
 theorem average_eq_integral [IsProbabilityMeasure μ] (f : α → E) : (⨍ x, f x ∂μ) = ∫ x, f x ∂μ := by
-  rw [average, measure_univ, Ennreal.inv_one, one_smul]
+  rw [average, measure_univ, inv_one, one_smul]
 
 @[simp]
 theorem measure_smul_average [IsFiniteMeasure μ] (f : α → E) : ((μ Univ).toReal • ⨍ x, f x ∂μ) = ∫ x, f x ∂μ := by
@@ -155,7 +154,7 @@ theorem average_union_mem_open_segment {f : α → E} {s t : Set α} (hd : AeDis
 theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht : NullMeasurableSet t μ)
     (hsμ : μ s ≠ ∞) (htμ : μ t ≠ ∞) (hfs : IntegrableOn f s μ) (hft : IntegrableOn f t μ) :
     (⨍ x in s ∪ t, f x ∂μ) ∈ [⨍ x in s, f x ∂μ -[ℝ] ⨍ x in t, f x ∂μ] := by
-  by_cases' hse : μ s = 0
+  by_cases hse:μ s = 0
   · rw [← ae_eq_empty] at hse
     rw [restrict_congr_set (hse.union eventually_eq.rfl), empty_union]
     exact right_mem_segment _ _ _

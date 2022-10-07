@@ -27,8 +27,7 @@ variable {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
 /-- The kernel cone induced by the concrete kernel. -/
 def kernelCone : KernelFork f :=
-  KernelFork.ofι (asHom f.ker.Subtype) <| by
-    tidy
+  KernelFork.ofι (asHom f.ker.Subtype) <| by tidy
 
 /-- The kernel of a linear map is a kernel in the categorical sense. -/
 def kernelIsLimit : IsLimit (kernelCone f) :=
@@ -40,10 +39,7 @@ def kernelIsLimit : IsLimit (kernelCone f) :=
             has_zero_morphisms.comp_zero (fork.ι s) N]
           rfl)
     (fun s => LinearMap.subtype_comp_cod_restrict _ _ _) fun s m h =>
-    LinearMap.ext fun x =>
-      Subtype.ext_iff_val.2
-        (by
-          simpa [← h] )
+    LinearMap.ext fun x => Subtype.ext_iff_val.2 (by simpa [← h] )
 
 /-- The cokernel cocone induced by the projection onto the quotient. -/
 def cokernelCocone : CokernelCofork f :=

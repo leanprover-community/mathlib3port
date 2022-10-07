@@ -92,10 +92,9 @@ theorem is_nilpotent_add (hx : IsNilpotent x) (hy : IsNilpotent y) : IsNilpotent
   obtain ⟨m, hm⟩ := hy
   use n + m - 1
   rw [h_comm.add_pow']
-  apply Finset.sum_eq_zero
+  apply Finsetₓ.sum_eq_zero
   rintro ⟨i, j⟩ hij
-  suffices x ^ i * y ^ j = 0 by
-    simp only [this, nsmul_eq_mul, mul_zero]
+  suffices x ^ i * y ^ j = 0 by simp only [this, nsmul_eq_mul, mul_zero]
   cases' Nat.le_or_le_of_add_eq_add_pred (finset.nat.mem_antidiagonal.mp hij) with hi hj
   · rw [pow_eq_zero_of_le hi hn, zero_mul]
     
@@ -141,8 +140,7 @@ theorem mem_nilradical : x ∈ nilradical R ↔ IsNilpotent x :=
   Iff.rfl
 
 theorem nilradical_eq_Inf (R : Type _) [CommSemiringₓ R] : nilradical R = inf { J : Ideal R | J.IsPrime } :=
-  (Ideal.radical_eq_Inf ⊥).trans <| by
-    simp_rw [and_iff_right bot_le]
+  (Ideal.radical_eq_Inf ⊥).trans <| by simp_rw [and_iff_right bot_le]
 
 theorem nilpotent_iff_mem_prime : IsNilpotent x ↔ ∀ J : Ideal R, J.IsPrime → x ∈ J := by
   rw [← mem_nilradical, nilradical_eq_Inf, Submodule.mem_Inf]
@@ -199,7 +197,7 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type
   apply Nat.strong_induction_onₓ n
   clear n
   intro n H S _ I hI
-  by_cases' hI' : I = ⊥
+  by_cases hI':I = ⊥
   · subst hI'
     apply h₁
     rw [← Ideal.zero_eq_bot, zero_pow]
@@ -217,10 +215,7 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type
   apply h₂ (I ^ 2) _ (Ideal.pow_le_self two_ne_zero)
   · apply H n.succ _ (I ^ 2)
     · rw [← pow_mulₓ, eq_bot_iff, ← hI, Nat.succ_eq_add_one, Nat.succ_eq_add_one]
-      exact
-        Ideal.pow_le_pow
-          (by
-            linarith)
+      exact Ideal.pow_le_pow (by linarith)
       
     · exact le_reflₓ n.succ.succ
       

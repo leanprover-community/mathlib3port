@@ -29,11 +29,9 @@ us to access the numerators and denominators of a continued fraction.
 
 variable {α : Type _} {g : GeneralizedContinuedFraction α} {n : ℕ}
 
-theorem terminated_at_iff_s_terminated_at : g.TerminatedAt n ↔ g.s.TerminatedAt n := by
-  rfl
+theorem terminated_at_iff_s_terminated_at : g.TerminatedAt n ↔ g.s.TerminatedAt n := by rfl
 
-theorem terminated_at_iff_s_none : g.TerminatedAt n ↔ g.s.nth n = none := by
-  rfl
+theorem terminated_at_iff_s_none : g.TerminatedAt n ↔ g.s.nth n = none := by rfl
 
 theorem part_num_none_iff_s_none : g.partialNumerators.nth n = none ↔ g.s.nth n = none := by
   cases s_nth_eq : g.s.nth n <;> simp [partial_numerators, s_nth_eq]
@@ -54,12 +52,10 @@ theorem part_denom_eq_s_b {gp : Pair α} (s_nth_eq : g.s.nth n = some gp) : g.pa
   simp [partial_denominators, s_nth_eq]
 
 theorem exists_s_a_of_part_num {a : α} (nth_part_num_eq : g.partialNumerators.nth n = some a) :
-    ∃ gp, g.s.nth n = some gp ∧ gp.a = a := by
-  simpa [partial_numerators, Seqₓₓ.map_nth] using nth_part_num_eq
+    ∃ gp, g.s.nth n = some gp ∧ gp.a = a := by simpa [partial_numerators, Seqₓₓ.map_nth] using nth_part_num_eq
 
 theorem exists_s_b_of_part_denom {b : α} (nth_part_denom_eq : g.partialDenominators.nth n = some b) :
-    ∃ gp, g.s.nth n = some gp ∧ gp.b = b := by
-  simpa [partial_denominators, Seqₓₓ.map_nth] using nth_part_denom_eq
+    ∃ gp, g.s.nth n = some gp ∧ gp.b = b := by simpa [partial_denominators, Seqₓₓ.map_nth] using nth_part_denom_eq
 
 end General
 
@@ -91,12 +87,10 @@ theorem convergent_eq_conts_a_div_conts_b : g.convergents n = (g.continuants n).
   rfl
 
 theorem exists_conts_a_of_num {A : K} (nth_num_eq : g.numerators n = A) :
-    ∃ conts, g.continuants n = conts ∧ conts.a = A := by
-  simpa
+    ∃ conts, g.continuants n = conts ∧ conts.a = A := by simpa
 
 theorem exists_conts_b_of_denom {B : K} (nth_denom_eq : g.denominators n = B) :
-    ∃ conts, g.continuants n = conts ∧ conts.b = B := by
-  simpa
+    ∃ conts, g.continuants n = conts ∧ conts.b = B := by simpa
 
 @[simp]
 theorem zeroth_continuant_aux_eq_one_zero : g.continuantsAux 0 = ⟨1, 0⟩ :=
@@ -141,8 +135,7 @@ theorem zeroth_convergent'_aux_eq_zero {s : Seqₓₓ <| Pair K} : convergents'A
   rfl
 
 @[simp]
-theorem zeroth_convergent'_eq_h : g.convergents' 0 = g.h := by
-  simp [convergents']
+theorem zeroth_convergent'_eq_h : g.convergents' 0 = g.h := by simp [convergents']
 
 end WithDivisionRing
 

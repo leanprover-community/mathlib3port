@@ -52,22 +52,8 @@ attribute [local semireducible] reflected
 
 /-- `rat.reflect q` represents the rational number `q` as a numeral expression of type `ℚ`. -/
 unsafe instance rat.reflect : has_reflect ℚ :=
-  rat.mk_numeral (quote.1 ℚ)
-    (quote.1
-      (by
-        infer_instance : Zero ℚ))
-    (quote.1
-      (by
-        infer_instance : One ℚ))
-    (quote.1
-      (by
-        infer_instance : Add ℚ))
-    (quote.1
-      (by
-        infer_instance : Neg ℚ))
-    (quote.1
-      (by
-        infer_instance : Div ℚ))
+  rat.mk_numeral (quote.1 ℚ) (quote.1 (by infer_instance : Zero ℚ)) (quote.1 (by infer_instance : One ℚ))
+    (quote.1 (by infer_instance : Add ℚ)) (quote.1 (by infer_instance : Neg ℚ)) (quote.1 (by infer_instance : Div ℚ))
 
 end
 

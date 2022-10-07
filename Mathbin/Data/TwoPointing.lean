@@ -52,8 +52,7 @@ theorem swap_snd : p.swap.snd = p.fst :=
   rfl
 
 @[simp]
-theorem swap_swap : p.swap.swap = p := by
-  ext <;> rfl
+theorem swap_swap : p.swap.swap = p := by ext <;> rfl
 
 -- See note [reducible non instances]
 @[reducible]
@@ -76,9 +75,7 @@ variable (α) [Nonempty α]
 def pi : TwoPointing (α → β) where
   fst := fun _ => q.fst
   snd := fun _ => q.snd
-  fst_ne_snd := fun h =>
-    q.fst_ne_snd <| by
-      convert congr_fun h (Classical.arbitrary α)
+  fst_ne_snd := fun h => q.fst_ne_snd <| by convert congr_fun h (Classical.arbitrary α)
 
 @[simp]
 theorem pi_fst : (q.pi α).fst = const α q.fst :=

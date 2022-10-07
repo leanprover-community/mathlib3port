@@ -42,13 +42,9 @@ variable {A : Type _} [Category A] [Abelian A] {X : SimplicialObject A}
 
 theorem HigherFacesVanish.inclusion_of_Moore_complex_map (n : ℕ) :
     HigherFacesVanish (n + 1) ((inclusionOfMooreComplexMap X).f (n + 1)) := fun j hj => by
-  dsimp' [inclusion_of_Moore_complex_map]
-  rw [←
-    factor_thru_arrow _ _
-      (finset_inf_arrow_factors Finset.univ _ j
-        (by
-          simp only [Finset.mem_univ])),
-    assoc, kernel_subobject_arrow_comp, comp_zero]
+  dsimp [inclusion_of_Moore_complex_map]
+  rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finsetₓ.univ _ j (by simp only [Finsetₓ.mem_univ])), assoc,
+    kernel_subobject_arrow_comp, comp_zero]
 
 theorem factors_normalized_Moore_complex_P_infty (n : ℕ) :
     Subobject.Factors (NormalizedMooreComplex.objX X n) (pInfty.f n) := by
@@ -73,27 +69,24 @@ def pInftyToNormalizedMooreComplex (X : SimplicialObject A) : K[X] ⟶ N[X] :=
 
 @[simp, reassoc]
 theorem P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map (X : SimplicialObject A) :
-    pInftyToNormalizedMooreComplex X ≫ inclusionOfMooreComplexMap X = P_infty := by
-  tidy
+    pInftyToNormalizedMooreComplex X ≫ inclusionOfMooreComplexMap X = P_infty := by tidy
 
 @[simp, reassoc]
 theorem P_infty_to_normalized_Moore_complex_naturality {X Y : SimplicialObject A} (f : X ⟶ Y) :
     AlternatingFaceMapComplex.map f ≫ pInftyToNormalizedMooreComplex Y =
       pInftyToNormalizedMooreComplex X ≫ NormalizedMooreComplex.map f :=
-  by
-  tidy
+  by tidy
 
 @[simp, reassoc]
 theorem P_infty_comp_P_infty_to_normalized_Moore_complex (X : SimplicialObject A) :
-    P_infty ≫ pInftyToNormalizedMooreComplex X = pInftyToNormalizedMooreComplex X := by
-  tidy
+    P_infty ≫ pInftyToNormalizedMooreComplex X = pInftyToNormalizedMooreComplex X := by tidy
 
 @[simp, reassoc]
 theorem inclusion_of_Moore_complex_map_comp_P_infty (X : SimplicialObject A) :
     inclusionOfMooreComplexMap X ≫ P_infty = inclusionOfMooreComplexMap X := by
   ext n
   cases n
-  · dsimp'
+  · dsimp
     simp only [comp_id]
     
   · exact (higher_faces_vanish.inclusion_of_Moore_complex_map n).comp_P_eq_self
@@ -119,16 +112,8 @@ the functor `N₁ : simplicial_object A ⥤ karoubi (chain_complex A ℕ)` defin
 using `P_infty` identifies to the composition of the normalized Moore complex functor
 and the inclusion in the Karoubi envelope. -/
 def n₁IsoNormalizedMooreComplexCompToKaroubi : N₁ ≅ normalizedMooreComplex A ⋙ toKaroubi _ where
-  Hom :=
-    { app := fun X =>
-        { f := pInftyToNormalizedMooreComplex X,
-          comm := by
-            tidy } }
-  inv :=
-    { app := fun X =>
-        { f := inclusionOfMooreComplexMap X,
-          comm := by
-            tidy } }
+  Hom := { app := fun X => { f := pInftyToNormalizedMooreComplex X, comm := by tidy } }
+  inv := { app := fun X => { f := inclusionOfMooreComplexMap X, comm := by tidy } }
   hom_inv_id' := by
     ext X : 3
     simp only [P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map, nat_trans.comp_app,
@@ -138,7 +123,7 @@ def n₁IsoNormalizedMooreComplexCompToKaroubi : N₁ ≅ normalizedMooreComplex
     simp only [← cancel_mono (inclusion_of_Moore_complex_map X), nat_trans.comp_app, karoubi.comp, assoc,
       nat_trans.id_app, karoubi.id_eq, P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,
       inclusion_of_Moore_complex_map_comp_P_infty]
-    dsimp' only [functor.comp_obj, to_karoubi]
+    dsimp only [functor.comp_obj, to_karoubi]
     rw [id_comp]
 
 end DoldKan

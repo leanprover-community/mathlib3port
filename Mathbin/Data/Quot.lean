@@ -47,11 +47,9 @@ protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ �
   (Quot.hrecOn qa fun a => Quot.hrecOn qb (f a) fun b₁ b₂ pb => cb pb) fun a₁ a₂ pa =>
     (Quot.induction_on qb) fun b =>
       calc
-        HEq (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₁) (@cb _)) (f a₁ b) := by
-          simp [heq_self_iff_true]
+        HEq (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₁) (@cb _)) (f a₁ b) := by simp [heq_self_iff_true]
         HEq _ (f a₂ b) := ca pa
-        HEq _ (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₂) (@cb _)) := by
-          simp [heq_self_iff_true]
+        HEq _ (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₂) (@cb _)) := by simp [heq_self_iff_true]
         
 
 /-- Map a function `f : α → β` such that `ra x y` implies `rb (f x) (f y)`
@@ -326,9 +324,7 @@ instance piSetoid {ι : Sort _} {α : ι → Sort _} [∀ i, Setoidₓ (α i)] :
 /-- Given a function `f : Π i, quotient (S i)`, returns the class of functions `Π i, α i` sending
 each `i` to an element of the class `f i`. -/
 noncomputable def Quotientₓ.choice {ι : Type _} {α : ι → Type _} [S : ∀ i, Setoidₓ (α i)] (f : ∀ i, Quotientₓ (S i)) :
-    @Quotientₓ (∀ i, α i)
-      (by
-        infer_instance) :=
+    @Quotientₓ (∀ i, α i) (by infer_instance) :=
   ⟦fun i => (f i).out⟧
 
 @[simp]

@@ -32,12 +32,13 @@ variable [DecidableEq N] [Zero N] (f g : α →₀ N)
 
 /-- Given two finitely supported functions `f g : α →₀ N`, `finsupp.ne_locus f g` is the `finset`
 where `f` and `g` differ. This generalizes `(f - g).support` to situations without subtraction. -/
-def neLocus (f g : α →₀ N) : Finset α :=
+def neLocus (f g : α →₀ N) : Finsetₓ α :=
   (f.Support ∪ g.Support).filter fun x => f x ≠ g x
 
 @[simp]
 theorem mem_ne_locus {f g : α →₀ N} {a : α} : a ∈ f.neLocus g ↔ f a ≠ g a := by
-  simpa only [ne_locus, Finset.mem_filter, Finset.mem_union, mem_support_iff, and_iff_right_iff_imp] using Ne.ne_or_ne _
+  simpa only [ne_locus, Finsetₓ.mem_filter, Finsetₓ.mem_union, mem_support_iff, and_iff_right_iff_imp] using
+    Ne.ne_or_ne _
 
 theorem not_mem_ne_locus {f g : α →₀ N} {a : α} : a ∉ f.neLocus g ↔ f a = g a :=
   mem_ne_locus.Not.trans not_ne_iff
@@ -49,16 +50,14 @@ theorem coe_ne_locus : ↑(f.neLocus g) = { x | f x ≠ g x } := by
 
 @[simp]
 theorem ne_locus_eq_empty {f g : α →₀ N} : f.neLocus g = ∅ ↔ f = g :=
-  ⟨fun h => ext fun a => not_not.mp (mem_ne_locus.Not.mp (Finset.eq_empty_iff_forall_not_mem.mp h a)), fun h =>
-    h ▸ by
-      simp only [ne_locus, Ne.def, eq_self_iff_true, not_true, Finset.filter_false]⟩
+  ⟨fun h => ext fun a => not_not.mp (mem_ne_locus.Not.mp (Finsetₓ.eq_empty_iff_forall_not_mem.mp h a)), fun h =>
+    h ▸ by simp only [ne_locus, Ne.def, eq_self_iff_true, not_true, Finsetₓ.filter_false]⟩
 
 @[simp]
 theorem nonempty_ne_locus_iff {f g : α →₀ N} : (f.neLocus g).Nonempty ↔ f ≠ g :=
-  Finset.nonempty_iff_ne_empty.trans ne_locus_eq_empty.Not
+  Finsetₓ.nonempty_iff_ne_empty.trans ne_locus_eq_empty.Not
 
-theorem ne_locus_comm : f.neLocus g = g.neLocus f := by
-  simp_rw [ne_locus, Finset.union_comm, ne_comm]
+theorem ne_locus_comm : f.neLocus g = g.neLocus f := by simp_rw [ne_locus, Finsetₓ.union_comm, ne_comm]
 
 @[simp]
 theorem ne_locus_zero_right : f.neLocus 0 = f.Support := by

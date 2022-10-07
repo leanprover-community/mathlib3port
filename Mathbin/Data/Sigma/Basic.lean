@@ -52,8 +52,7 @@ instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableE
 
 -- sometimes the built-in injectivity support does not work
 @[simp, nolint simp_nf]
-theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} : Sigma.mk a₁ b₁ = ⟨a₂, b₂⟩ ↔ a₁ = a₂ ∧ HEq b₁ b₂ := by
-  simp
+theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} : Sigma.mk a₁ b₁ = ⟨a₂, b₂⟩ ↔ a₁ = a₂ ∧ HEq b₁ b₂ := by simp
 
 @[simp]
 theorem eta : ∀ x : Σa, β a, Sigma.mk x.1 x.2 = x
@@ -162,14 +161,13 @@ theorem Prod.snd_to_sigma {α β} (x : α × β) : (Prod.toSigma x).snd = x.snd 
 theorem Prod.to_sigma_mk {α β} (x : α) (y : β) : (x, y).toSigma = ⟨x, y⟩ :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]
 -- we generate this manually as `@[derive has_reflect]` fails
 @[instance]
 protected unsafe def sigma.reflect.{u, v} [reflected_univ.{u}] [reflected_univ.{v}] {α : Type u} (β : α → Type v)
     [reflected _ α] [reflected _ β] [hα : has_reflect α] [hβ : ∀ i, has_reflect (β i)] : has_reflect (Σa, β a) :=
   fun ⟨a, b⟩ =>
-  (by
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]" :
+  (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
         reflected _ @Sigma.mk.{u, v}).subst₄
     (quote.1 α) (quote.1 β) (quote.1 a) (quote.1 b)
 

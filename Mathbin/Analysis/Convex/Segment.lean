@@ -90,8 +90,7 @@ section MulActionWithZero
 variable (𝕜) [MulActionWithZero 𝕜 E]
 
 theorem left_mem_segment (x y : E) : x ∈ [x -[𝕜] y] :=
-  ⟨1, 0, zero_le_one, le_reflₓ 0, add_zeroₓ 1, by
-    rw [zero_smul, one_smul, add_zeroₓ]⟩
+  ⟨1, 0, zero_le_one, le_reflₓ 0, add_zeroₓ 1, by rw [zero_smul, one_smul, add_zeroₓ]⟩
 
 theorem right_mem_segment (x y : E) : y ∈ [x -[𝕜] y] :=
   segment_symm 𝕜 y x ▸ left_mem_segment 𝕜 y x
@@ -151,8 +150,8 @@ variable [Nontrivial 𝕜] [DenselyOrdered 𝕜]
 @[simp]
 theorem open_segment_same (x : E) : OpenSegment 𝕜 x x = {x} :=
   Set.ext fun z =>
-    ⟨fun ⟨a, b, ha, hb, hab, hz⟩ => by
-      simpa only [← add_smul, mem_singleton_iff, hab, one_smul, eq_comm] using hz, fun h : z = x => by
+    ⟨fun ⟨a, b, ha, hb, hab, hz⟩ => by simpa only [← add_smul, mem_singleton_iff, hab, one_smul, eq_comm] using hz,
+      fun h : z = x => by
       obtain ⟨a, ha₀, ha₁⟩ := DenselyOrdered.dense (0 : 𝕜) 1 zero_lt_one
       refine' ⟨a, 1 - a, ha₀, sub_pos_of_lt ha₁, add_sub_cancel'_right _ _, _⟩
       rw [← add_smul, add_sub_cancel'_right, one_smul, h]⟩
@@ -161,20 +160,12 @@ end DenselyOrdered
 
 theorem segment_eq_image (x y : E) : [x -[𝕜] y] = (fun θ : 𝕜 => (1 - θ) • x + θ • y) '' Icc (0 : 𝕜) 1 :=
   Set.ext fun z =>
-    ⟨fun ⟨a, b, ha, hb, hab, hz⟩ =>
-      ⟨b, ⟨hb, hab ▸ le_add_of_nonneg_left ha⟩,
-        hab ▸
-          hz ▸ by
-            simp only [add_sub_cancel]⟩,
+    ⟨fun ⟨a, b, ha, hb, hab, hz⟩ => ⟨b, ⟨hb, hab ▸ le_add_of_nonneg_left ha⟩, hab ▸ hz ▸ by simp only [add_sub_cancel]⟩,
       fun ⟨θ, ⟨hθ₀, hθ₁⟩, hz⟩ => ⟨1 - θ, θ, sub_nonneg.2 hθ₁, hθ₀, sub_add_cancel _ _, hz⟩⟩
 
 theorem open_segment_eq_image (x y : E) : OpenSegment 𝕜 x y = (fun θ : 𝕜 => (1 - θ) • x + θ • y) '' Ioo (0 : 𝕜) 1 :=
   Set.ext fun z =>
-    ⟨fun ⟨a, b, ha, hb, hab, hz⟩ =>
-      ⟨b, ⟨hb, hab ▸ lt_add_of_pos_left _ ha⟩,
-        hab ▸
-          hz ▸ by
-            simp only [add_sub_cancel]⟩,
+    ⟨fun ⟨a, b, ha, hb, hab, hz⟩ => ⟨b, ⟨hb, hab ▸ lt_add_of_pos_left _ ha⟩, hab ▸ hz ▸ by simp only [add_sub_cancel]⟩,
       fun ⟨θ, ⟨hθ₀, hθ₁⟩, hz⟩ => ⟨1 - θ, θ, sub_pos.2 hθ₁, hθ₀, sub_add_cancel _ _, hz⟩⟩
 
 theorem segment_eq_image' (x y : E) : [x -[𝕜] y] = (fun θ : 𝕜 => x + θ • (y - x)) '' Icc (0 : 𝕜) 1 := by
@@ -200,13 +191,11 @@ theorem open_segment_eq_image_line_map (x y : E) : OpenSegment 𝕜 x y = Affine
   exact AffineMap.line_map_apply_module _ _ _
 
 theorem segment_image (f : E →ₗ[𝕜] F) (a b : E) : f '' [a -[𝕜] b] = [f a -[𝕜] f b] :=
-  Set.ext fun x => by
-    simp_rw [segment_eq_image, mem_image, exists_exists_and_eq_and, map_add, map_smul]
+  Set.ext fun x => by simp_rw [segment_eq_image, mem_image, exists_exists_and_eq_and, map_add, map_smul]
 
 @[simp]
 theorem open_segment_image (f : E →ₗ[𝕜] F) (a b : E) : f '' OpenSegment 𝕜 a b = OpenSegment 𝕜 (f a) (f b) :=
-  Set.ext fun x => by
-    simp_rw [open_segment_eq_image, mem_image, exists_exists_and_eq_and, map_add, map_smul]
+  Set.ext fun x => by simp_rw [open_segment_eq_image, mem_image, exists_exists_and_eq_and, map_add, map_smul]
 
 theorem mem_segment_translate (a : E) {x b c} : a + x ∈ [a + b -[𝕜] a + c] ↔ x ∈ [b -[𝕜] c] := by
   rw [segment_eq_image', segment_eq_image']
@@ -293,9 +282,9 @@ theorem mem_segment_iff_div :
     rw [← add_div, div_self hab.ne']
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 theorem mem_open_segment_iff_div :
     x ∈ OpenSegment 𝕜 y z ↔ ∃ a b : 𝕜, 0 < a ∧ 0 < b ∧ (a / (a + b)) • y + (b / (a + b)) • z = x := by
   constructor
@@ -305,11 +294,11 @@ theorem mem_open_segment_iff_div :
     
   · rintro ⟨a, b, ha, hb, rfl⟩
     have hab : 0 < a + b := by
-      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]"
+      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
     refine'
       ⟨a / (a + b), b / (a + b), by
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]", by
-        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]", _, rfl⟩
+        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]", by
+        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]", _, rfl⟩
     rw [← add_div, div_self hab.ne']
     
 

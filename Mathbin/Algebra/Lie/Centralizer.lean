@@ -51,8 +51,7 @@ def centralizer : LieSubmodule R L M where
   add_mem' := fun m₁ m₂ hm₁ hm₂ x => by
     rw [lie_add]
     exact N.add_mem' (hm₁ x) (hm₂ x)
-  zero_mem' := fun x => by
-    simp
+  zero_mem' := fun x => by simp
   smul_mem' := fun t m hm x => by
     rw [lie_smul]
     exact N.smul_mem' t (hm x)
@@ -74,7 +73,7 @@ theorem centralizer_inf : (N₁ ⊓ N₂).Centralizer = N₁.Centralizer ⊓ N�
   simp [← forall_and_distrib]
 
 @[mono]
-theorem monotone_centalizer : Monotone (centralizer : LieSubmodule R L M → LieSubmodule R L M) := by
+theorem monotone_centalizer : Monotoneₓ (centralizer : LieSubmodule R L M → LieSubmodule R L M) := by
   intro N₁ N₂ h m hm
   rw [mem_centralizer] at hm⊢
   exact fun x => h (hm x)
@@ -159,8 +158,7 @@ theorem normalizer_eq_self_iff : H.normalizer = H ↔ (LieModule.maxTrivSubmodul
   rw [LieSubmodule.eq_bot_iff]
   refine' ⟨fun h => _, fun h => le_antisymmₓ (fun x hx => _) H.le_normalizer⟩
   · rintro ⟨x⟩ hx
-    suffices x ∈ H by
-      simpa
+    suffices x ∈ H by simpa
     rw [← h, H.mem_normalizer_iff']
     intro y hy
     replace hx : ⁅_, LieSubmodule.Quotient.mk' _ x⁆ = 0 := hx ⟨y, hy⟩

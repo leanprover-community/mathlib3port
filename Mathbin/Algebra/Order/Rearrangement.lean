@@ -40,7 +40,7 @@ file because it is easily deducible from the `monovary` API.
 -/
 
 
-open Equivₓ Equivₓ.Perm Finset Function OrderDual
+open Equivₓ Equivₓ.Perm Finsetₓ Function OrderDual
 
 open BigOperators
 
@@ -51,7 +51,7 @@ variable {ι α β : Type _}
 
 section Smul
 
-variable [LinearOrderedRing α] [LinearOrderedAddCommGroup β] [Module α β] [OrderedSmul α β] {s : Finset ι} {σ : Perm ι}
+variable [LinearOrderedRing α] [LinearOrderedAddCommGroup β] [Module α β] [OrderedSmul α β] {s : Finsetₓ ι} {σ : Perm ι}
   {f : ι → α} {g : ι → β}
 
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
@@ -60,8 +60,8 @@ theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s) (hσ 
     (∑ i in s, f i • g (σ i)) ≤ ∑ i in s, f i • g i := by
   classical
   revert hσ σ hfg
-  apply Finset.induction_on_max_value (fun i => toLex (g i, f i)) s
-  · simp only [le_rflₓ, Finset.sum_empty, implies_true_iff]
+  apply Finsetₓ.induction_on_max_value (fun i => toLex (g i, f i)) s
+  · simp only [le_rflₓ, Finsetₓ.sum_empty, implies_true_iff]
     
   intro a s has hamax hind σ hfg hσ
   set τ : perm ι := σ.trans (swap a (σ a)) with hτ
@@ -135,7 +135,7 @@ theorem MonovaryOn.sum_smul_comp_perm_eq_sum_smul_iff (hfg : MonovaryOn f g s) (
       
     simp only [← s.sum_erase_add _ hx, ← (s.erase x).sum_erase_add _ (mem_erase.2 ⟨hxy.symm, hy⟩), add_assocₓ,
       Equivₓ.coe_trans, Function.comp_app, swap_apply_right, swap_apply_left]
-    refine' add_lt_add_of_le_of_lt ((Finset.sum_congr rfl) fun z hz => _).le (smul_add_smul_lt_smul_add_smul hfxy hgxy)
+    refine' add_lt_add_of_le_of_lt ((Finsetₓ.sum_congr rfl) fun z hz => _).le (smul_add_smul_lt_smul_add_smul hfxy hgxy)
     simp_rw [mem_erase] at hz
     rw [swap_apply_of_ne_of_ne hz.2.1 hz.1]
     
@@ -154,11 +154,7 @@ theorem MonovaryOn.sum_smul_comp_perm_lt_sum_smul_iff (hfg : MonovaryOn f g s) (
 `f` and `g` monovary together. Stated by permuting the entries of `f`. -/
 theorem MonovaryOn.sum_comp_perm_smul_le_sum_smul (hfg : MonovaryOn f g s) (hσ : { x | σ x ≠ x } ⊆ s) :
     (∑ i in s, f (σ i) • g i) ≤ ∑ i in s, f i • g i := by
-  convert
-    hfg.sum_smul_comp_perm_le_sum_smul
-      (show { x | σ⁻¹ x ≠ x } ⊆ s by
-        simp only [set_support_inv_eq, hσ]) using
-    1
+  convert hfg.sum_smul_comp_perm_le_sum_smul (show { x | σ⁻¹ x ≠ x } ⊆ s by simp only [set_support_inv_eq, hσ]) using 1
   exact σ.sum_comp' s (fun i j => f i • g j) hσ
 
 /-- **Equality case of Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g`,
@@ -231,7 +227,7 @@ theorem AntivaryOn.sum_smul_lt_sum_comp_perm_smul_iff (hfg : AntivaryOn f g s) (
     ((∑ i in s, f i • g i) < ∑ i in s, f (σ i) • g i) ↔ ¬AntivaryOn (f ∘ σ) g s := by
   simp [← hfg.sum_smul_eq_sum_comp_perm_smul_iff hσ, eq_comm, lt_iff_le_and_neₓ, hfg.sum_smul_le_sum_comp_perm_smul hσ]
 
-variable [Fintype ι]
+variable [Fintypeₓ ι]
 
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
 `f` and `g` monovary together. Stated by permuting the entries of `g`. -/
@@ -320,7 +316,7 @@ Special cases of the above when scalar multiplication is actually multiplication
 
 section Mul
 
-variable [LinearOrderedRing α] {s : Finset ι} {σ : Perm ι} {f g : ι → α}
+variable [LinearOrderedRing α] {s : Finsetₓ ι} {σ : Perm ι} {f g : ι → α}
 
 /-- **Rearrangement Inequality**: Pointwise multiplication of `f` and `g` is maximized when `f` and
 `g` monovary together. Stated by permuting the entries of `g`. -/
@@ -402,7 +398,7 @@ theorem AntivaryOn.sum_mul_lt_sum_comp_perm_mul_iff (hfg : AntivaryOn f g s) (h�
     ((∑ i in s, f i * g i) < ∑ i in s, f (σ i) * g i) ↔ ¬AntivaryOn (f ∘ σ) g s :=
   hfg.sum_smul_lt_sum_comp_perm_smul_iff hσ
 
-variable [Fintype ι]
+variable [Fintypeₓ ι]
 
 /-- **Rearrangement Inequality**: Pointwise multiplication of `f` and `g` is maximized when `f` and
 `g` monovary together. Stated by permuting the entries of `g`. -/

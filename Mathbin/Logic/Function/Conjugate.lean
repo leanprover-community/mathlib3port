@@ -49,8 +49,7 @@ theorem id_right : Semiconj f id id := fun _ => rfl
 theorem id_left : Semiconj id ga ga := fun _ => rfl
 
 theorem inverses_right (h : Semiconj f ga gb) (ha : RightInverse ga' ga) (hb : LeftInverse gb' gb) :
-    Semiconj f ga' gb' := fun x => by
-  rw [← hb (f (ga' x)), ← h.eq, ha x]
+    Semiconj f ga' gb' := fun x => by rw [← hb (f (ga' x)), ← h.eq, ha x]
 
 theorem option_map {f : α → β} {ga : α → α} {gb : β → β} (h : Semiconj f ga gb) :
     Semiconj (Option.map f) (Option.map ga) (Option.map gb)
@@ -114,27 +113,20 @@ protected theorem comp_eq (h : Semiconj₂ f ga gb) : bicompr f ga = bicompl gb 
 theorem id_left (op : α → α → α) : Semiconj₂ id op op := fun _ _ => rfl
 
 theorem comp {f' : β → γ} {gc : γ → γ → γ} (hf' : Semiconj₂ f' gb gc) (hf : Semiconj₂ f ga gb) :
-    Semiconj₂ (f' ∘ f) ga gc := fun x y => by
-  simp only [hf'.eq, hf.eq, comp_app]
+    Semiconj₂ (f' ∘ f) ga gc := fun x y => by simp only [hf'.eq, hf.eq, comp_app]
 
 theorem is_associative_right [IsAssociative α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
     IsAssociative β gb :=
-  ⟨h_surj.forall₃.2 fun x₁ x₂ x₃ => by
-      simp only [← h.eq, @IsAssociative.assoc _ ga]⟩
+  ⟨h_surj.forall₃.2 fun x₁ x₂ x₃ => by simp only [← h.eq, @IsAssociative.assoc _ ga]⟩
 
 theorem is_associative_left [IsAssociative β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) : IsAssociative α ga :=
-  ⟨fun x₁ x₂ x₃ =>
-    h_inj <| by
-      simp only [h.eq, @IsAssociative.assoc _ gb]⟩
+  ⟨fun x₁ x₂ x₃ => h_inj <| by simp only [h.eq, @IsAssociative.assoc _ gb]⟩
 
 theorem is_idempotent_right [IsIdempotent α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) : IsIdempotent β gb :=
-  ⟨h_surj.forall.2 fun x => by
-      simp only [← h.eq, @IsIdempotent.idempotent _ ga]⟩
+  ⟨h_surj.forall.2 fun x => by simp only [← h.eq, @IsIdempotent.idempotent _ ga]⟩
 
 theorem is_idempotent_left [IsIdempotent β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) : IsIdempotent α ga :=
-  ⟨fun x =>
-    h_inj <| by
-      rw [h.eq, @IsIdempotent.idempotent _ gb]⟩
+  ⟨fun x => h_inj <| by rw [h.eq, @IsIdempotent.idempotent _ gb]⟩
 
 end Semiconj₂
 

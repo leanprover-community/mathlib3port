@@ -21,11 +21,17 @@ example of a proof needing to construct a sequence by induction in the middle of
 
 open Classical TopologicalSpace BigOperators
 
-open Filter Finset
+open Filter Finsetₓ
 
 -- mathport name: exprd
 local notation "d" => dist
 
+@[simp]
+theorem pos_div_pow_pos {α : Type _} [LinearOrderedSemifield α] {a b : α} (ha : 0 < a) (hb : 0 < b) (k : ℕ) :
+    0 < a / b ^ k :=
+  div_pos ha (pow_pos hb k)
+
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) (ε_pos : 0 < ε) {ϕ : X → ℝ}
     (cont : Continuous ϕ) (nonneg : ∀ y, 0 ≤ ϕ y) :
     ∃ ε' > 0, ∃ x' : X, ε' ≤ ε ∧ d x' x ≤ 2 * ε ∧ ε * ϕ x ≤ ε' * ϕ x' ∧ ∀ y, d x' y ≤ ε' → ϕ y ≤ 2 * ϕ x' := by
@@ -33,22 +39,12 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   have reformulation : ∀ (x') (k : ℕ), ε * ϕ x ≤ ε / 2 ^ k * ϕ x' ↔ 2 ^ k * ϕ x ≤ ϕ x' := by
     intro x' k
     rw [div_mul_eq_mul_div, le_div_iff, mul_assoc, mul_le_mul_left ε_pos, mul_comm]
-    exact
-      pow_pos
-        (by
-          norm_num)
-        k
+    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
   -- Now let's specialize to `ε/2^k`
   replace H : ∀ k : ℕ, ∀ x', d x' x ≤ 2 * ε ∧ 2 ^ k * ϕ x ≤ ϕ x' → ∃ y, d x' y ≤ ε / 2 ^ k ∧ 2 * ϕ x' < ϕ y
   · intro k x'
     push_neg  at H
-    simpa [reformulation] using
-      H (ε / 2 ^ k)
-        (by
-          simp [ε_pos, zero_lt_two])
-        x'
-        (by
-          simp [ε_pos, zero_lt_two, one_le_two])
+    simpa [reformulation] using H (ε / 2 ^ k) (by simp [ε_pos]) x' (by simp [ε_pos.le, one_le_two])
     
   clear reformulation
   haveI : Nonempty X := ⟨x⟩
@@ -100,13 +96,11 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   -- And ϕ ∘ u goes to +∞
   have lim_top : tendsto (ϕ ∘ u) at_top at_top := by
     let v := fun n => (ϕ ∘ u) (n + 1)
-    suffices tendsto v at_top at_top by
-      rwa [tendsto_add_at_top_iff_nat] at this
+    suffices tendsto v at_top at_top by rwa [tendsto_add_at_top_iff_nat] at this
     have hv₀ : 0 < v 0 := by
       have : 0 ≤ ϕ (u 0) := nonneg x
       calc
-        0 ≤ 2 * ϕ (u 0) := by
-          linarith
+        0 ≤ 2 * ϕ (u 0) := by linarith
         _ < ϕ (u (0 + 1)) := key₂ 0
         
     apply tendsto_at_top_of_geom_le hv₀ one_lt_two

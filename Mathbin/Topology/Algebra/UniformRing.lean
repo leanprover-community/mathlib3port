@@ -93,8 +93,7 @@ instance : Ringₓ (Completion α) :=
             (continuous_snd.comp continuous_snd))
           (Continuous.mul continuous_fst
             (Continuous.mul (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd))))
-        fun a b c => by
-        rw [← coe_mul, ← coe_mul, ← coe_mul, ← coe_mul, mul_assoc],
+        fun a b c => by rw [← coe_mul, ← coe_mul, ← coe_mul, ← coe_mul, mul_assoc],
     left_distrib := fun a b c =>
       Completion.induction_on₃ a b c
         (is_closed_eq
@@ -102,8 +101,7 @@ instance : Ringₓ (Completion α) :=
             (Continuous.add (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd)))
           (Continuous.add (Continuous.mul continuous_fst (continuous_fst.comp continuous_snd))
             (Continuous.mul continuous_fst (continuous_snd.comp continuous_snd))))
-        fun a b c => by
-        rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, mul_addₓ],
+        fun a b c => by rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, mul_addₓ],
     right_distrib := fun a b c =>
       Completion.induction_on₃ a b c
         (is_closed_eq
@@ -111,8 +109,7 @@ instance : Ringₓ (Completion α) :=
             (continuous_snd.comp continuous_snd))
           (Continuous.add (Continuous.mul continuous_fst (continuous_snd.comp continuous_snd))
             (Continuous.mul (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd))))
-        fun a b c => by
-        rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, add_mulₓ] }
+        fun a b c => by rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, add_mulₓ] }
 
 /-- The map from a uniform ring to its completion, as a ring homomorphism. -/
 def coeRingHom : α →+* Completion α :=
@@ -129,23 +126,18 @@ def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β
   have hf' : Continuous (f : α →+ β) := hf
   -- helping the elaborator
   have hf : UniformContinuous f := uniform_continuous_add_monoid_hom_of_continuous hf'
-  { toFun := Completion.extension f,
-    map_zero' := by
-      rw [← coe_zero, extension_coe hf, f.map_zero],
+  { toFun := Completion.extension f, map_zero' := by rw [← coe_zero, extension_coe hf, f.map_zero],
     map_add' := fun a b =>
       Completion.induction_on₂ a b
         (is_closed_eq (continuous_extension.comp continuous_add)
           ((continuous_extension.comp continuous_fst).add (continuous_extension.comp continuous_snd)))
-        fun a b => by
-        rw [← coe_add, extension_coe hf, extension_coe hf, extension_coe hf, f.map_add],
-    map_one' := by
-      rw [← coe_one, extension_coe hf, f.map_one],
+        fun a b => by rw [← coe_add, extension_coe hf, extension_coe hf, extension_coe hf, f.map_add],
+    map_one' := by rw [← coe_one, extension_coe hf, f.map_one],
     map_mul' := fun a b =>
       Completion.induction_on₂ a b
         (is_closed_eq (continuous_extension.comp continuous_mul)
           ((continuous_extension.comp continuous_fst).mul (continuous_extension.comp continuous_snd)))
-        fun a b => by
-        rw [← coe_mul, extension_coe hf, extension_coe hf, extension_coe hf, f.map_mul] }
+        fun a b => by rw [← coe_mul, extension_coe hf, extension_coe hf, extension_coe hf, f.map_mul] }
 
 instance top_ring_compl : TopologicalRing (Completion α) where
   continuous_add := continuous_add
@@ -193,8 +185,7 @@ instance : CommRingₓ (Completion R) :=
         rw [← coe_mul, ← coe_mul, mul_comm] }
 
 /-- A shortcut instance for the common case -/
-instance algebra' : Algebra R (Completion R) := by
-  infer_instance
+instance algebra' : Algebra R (Completion R) := by infer_instance
 
 end CommRingₓ
 
@@ -207,15 +198,10 @@ variable {α : Type _}
 theorem ring_sep_rel (α) [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     separationSetoid α = Submodule.quotientRel (Ideal.closure ⊥) :=
   Setoidₓ.ext fun x y =>
-    (add_group_separation_rel x y).trans <|
-      Iff.trans
-        (by
-          rfl)
-        (Submodule.quotient_rel_r_def _).symm
+    (add_group_separation_rel x y).trans <| Iff.trans (by rfl) (Submodule.quotient_rel_r_def _).symm
 
 theorem ring_sep_quot (α : Type u) [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
-    Quotientₓ (separationSetoid α) = (α ⧸ (⊥ : Ideal α).closure) := by
-  rw [@ring_sep_rel α r] <;> rfl
+    Quotientₓ (separationSetoid α) = (α ⧸ (⊥ : Ideal α).closure) := by rw [@ring_sep_rel α r] <;> rfl
 
 /-- Given a topological ring `α` equipped with a uniform structure that makes subtraction uniformly
 continuous, get an equivalence between the separated quotient of `α` and the quotient ring
@@ -223,22 +209,15 @@ corresponding to the closure of zero. -/
 def sepQuotEquivRingQuot (α) [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     Quotientₓ (separationSetoid α) ≃ α ⧸ (⊥ : Ideal α).closure :=
   Quotientₓ.congrRight fun x y =>
-    (add_group_separation_rel x y).trans <|
-      Iff.trans
-        (by
-          rfl)
-        (Submodule.quotient_rel_r_def _).symm
+    (add_group_separation_rel x y).trans <| Iff.trans (by rfl) (Submodule.quotient_rel_r_def _).symm
 
 -- TODO: use a form of transport a.k.a. lift definition a.k.a. transfer
 instance commRing [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
-    CommRingₓ (Quotientₓ (separationSetoid α)) := by
-  rw [ring_sep_quot α] <;> infer_instance
+    CommRingₓ (Quotientₓ (separationSetoid α)) := by rw [ring_sep_quot α] <;> infer_instance
 
 instance topological_ring [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     TopologicalRing (Quotientₓ (separationSetoid α)) := by
-  convert topological_ring_quotient (⊥ : Ideal α).closure <;>
-    try
-      apply ring_sep_rel
+  convert topological_ring_quotient (⊥ : Ideal α).closure <;> try apply ring_sep_rel
   simp [UniformSpace.commRing]
 
 end UniformSpace

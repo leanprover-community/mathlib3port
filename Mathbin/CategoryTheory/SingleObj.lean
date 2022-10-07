@@ -185,12 +185,9 @@ def toCat : Mon ⥤ Cat where
 
 instance toCatFull : Full toCat where
   Preimage := fun x y => (SingleObj.mapHom x y).invFun
-  witness' := fun x y => by
-    apply Equivₓ.right_inv
+  witness' := fun x y => by apply Equivₓ.right_inv
 
-instance to_Cat_faithful :
-    Faithful toCat where map_injective' := fun x y => by
-    apply Equivₓ.injective
+instance to_Cat_faithful : Faithful toCat where map_injective' := fun x y => by apply Equivₓ.injective
 
 end Mon
 

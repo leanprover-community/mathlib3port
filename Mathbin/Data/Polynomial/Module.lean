@@ -114,7 +114,7 @@ theorem monomial_smul_single (i : ℕ) (r : R) (j : ℕ) (m : M) : monomial i r 
   · rw [Function.iterate_succ, Function.comp_app, Nat.succ_eq_add_one, add_assocₓ, ← i_ih]
     congr 2
     ext a
-    dsimp' [single]
+    dsimp [single]
     rw [Finsupp.map_domain_single, Nat.succ_eq_one_add]
     
 
@@ -149,7 +149,7 @@ theorem smul_single_apply (i : ℕ) (f : R[X]) (m : M) (n : ℕ) :
     exacts[rfl, zero_addₓ 0]
     
   · rw [monomial_smul_single, single_apply, coeff_monomial, ite_smul, zero_smul]
-    by_cases' h : i ≤ n
+    by_cases h:i ≤ n
     · simp_rw [eq_tsub_iff_add_eq_of_le h, if_pos h]
       
     · rw [if_neg h, ite_eq_right_iff]
@@ -160,18 +160,18 @@ theorem smul_single_apply (i : ℕ) (f : R[X]) (m : M) (n : ℕ) :
     
 
 theorem smul_apply (f : R[X]) (g : PolynomialModule R M) (n : ℕ) :
-    (f • g) n = ∑ x in Finset.Nat.antidiagonal n, f.coeff x.1 • g x.2 := by
+    (f • g) n = ∑ x in Finsetₓ.Nat.antidiagonal n, f.coeff x.1 • g x.2 := by
   induction' f using Polynomial.induction_on' with p q hp hq
-  · rw [add_smul, Finsupp.add_apply, hp, hq, ← Finset.sum_add_distrib]
+  · rw [add_smul, Finsupp.add_apply, hp, hq, ← Finsetₓ.sum_add_distrib]
     congr
     ext
     rw [coeff_add, add_smul]
     
-  · rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ fun i j => (monomial f_n f_a).coeff i • g j, monomial_smul_apply]
-    dsimp' [monomial]
+  · rw [Finsetₓ.Nat.sum_antidiagonal_eq_sum_range_succ fun i j => (monomial f_n f_a).coeff i • g j, monomial_smul_apply]
+    dsimp [monomial]
     simp_rw [Finsupp.single_smul, Finsupp.single_apply]
-    rw [Finset.sum_ite_eq]
-    simp [Nat.lt_succ_iffₓ]
+    rw [Finsetₓ.sum_ite_eq]
+    simp [Nat.lt_succ_iff]
     
 
 /-- `polynomial R R` is isomorphic to `R[X]` as an `R[X]` module. -/
@@ -182,7 +182,7 @@ noncomputable def equivPolynomialSelf : PolynomialModule R R ≃ₗ[R[X]] R[X] :
       · simp_all only [add_smul, map_add, RingEquiv.to_fun_eq_coe]
         
       · ext i
-        dsimp'
+        dsimp
         rw [monomial_smul_apply, Polynomial.monomial_eq_C_mul_X, mul_assoc, Polynomial.coeff_C_mul,
           Polynomial.coeff_X_pow_mul', mul_ite, mul_zero]
         simp
@@ -238,6 +238,10 @@ def eval (r : R) : PolynomialModule R M →ₗ[R] M where
 @[simp]
 theorem eval_single (r : R) (i : ℕ) (m : M) : eval r (single R i m) = r ^ i • m :=
   Finsupp.sum_single_index (smul_zero _)
+
+@[simp]
+theorem eval_lsingle (r : R) (i : ℕ) (m : M) : eval r (lsingle R i m) = r ^ i • m :=
+  eval_single r i m
 
 theorem eval_smul (p : R[X]) (q : PolynomialModule R M) (r : R) : eval r (p • q) = p.eval r • eval r q := by
   apply induction_linear q

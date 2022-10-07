@@ -36,18 +36,12 @@ universe v v₂ u u₂
 /-- A `groupoid` is a category such that all morphisms are isomorphisms. -/
 class Groupoid (obj : Type u) extends Category.{v} obj : Type max u (v + 1) where
   inv : ∀ {X Y : obj}, (X ⟶ Y) → (Y ⟶ X)
-  inv_comp' : ∀ {X Y : obj} (f : X ⟶ Y), comp (inv f) f = id Y := by
-    run_tac
-      obviously
-  comp_inv' : ∀ {X Y : obj} (f : X ⟶ Y), comp f (inv f) = id X := by
-    run_tac
-      obviously
+  inv_comp' : ∀ {X Y : obj} (f : X ⟶ Y), comp (inv f) f = id Y := by obviously
+  comp_inv' : ∀ {X Y : obj} (f : X ⟶ Y), comp f (inv f) = id X := by obviously
 
 restate_axiom groupoid.inv_comp'
 
 restate_axiom groupoid.comp_inv'
-
-attribute [simp] groupoid.inv_comp groupoid.comp_inv
 
 /-- A `large_groupoid` is a groupoid
 where the objects live in `Type (u+1)` while the morphisms live in `Type u`.
@@ -67,8 +61,16 @@ variable {C : Type u} [Groupoid.{v} C] {X Y : C}
 
 -- see Note [lower instance priority]
 instance (priority := 100) IsIso.of_groupoid (f : X ⟶ Y) : IsIso f :=
-  ⟨⟨Groupoid.inv f, by
-      simp ⟩⟩
+  ⟨⟨Groupoid.inv f, Groupoid.comp_inv f, Groupoid.inv_comp f⟩⟩
+
+@[simp]
+theorem Groupoid.inv_eq_inv (f : X ⟶ Y) : Groupoid.inv f = inv f :=
+  is_iso.eq_inv_of_hom_inv_id <| Groupoid.comp_inv f
+
+/-- `groupoid.inv` is involutive. -/
+@[simps]
+def Groupoid.invEquiv : (X ⟶ Y) ≃ (Y ⟶ X) :=
+  ⟨Groupoid.inv, Groupoid.inv, fun f => by simp, fun f => by simp⟩
 
 variable (X Y)
 

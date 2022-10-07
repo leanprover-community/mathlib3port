@@ -53,30 +53,22 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
         compl_subset_compl.mpr <| image_subset _ <| compl_subset_compl.mpr <| image_subset _ hst }
   set s : Set α := F.lfp
   have hs : (g '' (f '' s)ᶜ)ᶜ = s := F.map_lfp
-  have hns : g '' (f '' s)ᶜ = sᶜ :=
-    compl_injective
-      (by
-        simp [hs])
+  have hns : g '' (f '' s)ᶜ = sᶜ := compl_injective (by simp [hs])
   set g' := inv_fun g
   have g'g : left_inverse g' g := left_inverse_inv_fun hg
-  have hg'ns : g' '' sᶜ = (f '' s)ᶜ := by
-    rw [← hns, g'g.image_image]
+  have hg'ns : g' '' sᶜ = (f '' s)ᶜ := by rw [← hns, g'g.image_image]
   set h : α → β := s.piecewise f g'
-  have : surjective h := by
-    rw [← range_iff_surjective, range_piecewise, hg'ns, union_compl_self]
+  have : surjective h := by rw [← range_iff_surjective, range_piecewise, hg'ns, union_compl_self]
   have : injective h := by
     refine' (injective_piecewise_iff _).2 ⟨hf.inj_on _, _, _⟩
     · intro x hx y hy hxy
-      obtain ⟨x', hx', rfl⟩ : x ∈ g '' (f '' s)ᶜ := by
-        rwa [hns]
-      obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by
-        rwa [hns]
+      obtain ⟨x', hx', rfl⟩ : x ∈ g '' (f '' s)ᶜ := by rwa [hns]
+      obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by rwa [hns]
       rw [g'g _, g'g _] at hxy
       rw [hxy]
       
     · intro x hx y hy hxy
-      obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by
-        rwa [hns]
+      obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by rwa [hns]
       rw [g'g _] at hxy
       exact hy' ⟨x, hx, hxy⟩
       
@@ -112,8 +104,7 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
   let ⟨i, e⟩ :=
     show ∃ i, ∀ y, ∃ x ∈ s, (x : ∀ i, β i) i = y from
       Classical.by_contradiction fun h =>
-        have h : ∀ i, ∃ y, ∀ x ∈ s, (x : ∀ i, β i) i ≠ y := by
-          simpa only [not_exists, not_forall] using h
+        have h : ∀ i, ∃ y, ∀ x ∈ s, (x : ∀ i, β i) i ≠ y := by simpa only [not_exists, not_forall] using h
         let ⟨f, hf⟩ := Classical.axiom_of_choice h
         have : f ∈ s :=
           have : insert f s ∈ sets := fun x hx y hy => by

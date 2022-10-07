@@ -68,10 +68,8 @@ def wPathCasesOn {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : 
     (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) : P.WPath ⟨a, f⟩ ⟹ α := by
   intro i x
   cases x
-  case W_path.root _ _ i c =>
-    exact g' i c
-  case W_path.child _ _ i j c =>
-    exact g j i c
+  case root _ _ i c => exact g' i c
+  case child _ _ i j c => exact g j i c
 
 /-- Specialized destructor on `W_path` -/
 def wPathDestLeft {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) : P.drop.B a ⟹ α :=
@@ -90,8 +88,7 @@ theorem W_path_dest_right_W_path_cases_on {α : Typevec n} {a : P.A} {f : P.last
   rfl
 
 theorem W_path_cases_on_eta {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) :
-    P.wPathCasesOn (P.wPathDestLeft h) (P.wPathDestRight h) = h := by
-  ext i x <;> cases x <;> rfl
+    P.wPathCasesOn (P.wPathDestLeft h) (P.wPathDestRight h) = h := by ext i x <;> cases x <;> rfl
 
 theorem comp_W_path_cases_on {α β : Typevec n} (h : α ⟹ β) {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
     (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) : h ⊚ P.wPathCasesOn g' g = P.wPathCasesOn (h ⊚ g') fun i => h ⊚ g i := by
@@ -110,8 +107,7 @@ def wp : Mvpfunctor n where
 def W (α : Typevec n) : Type _ :=
   P.wp.Obj α
 
-instance mvfunctorW : Mvfunctor P.W := by
-  delta' Mvpfunctor.W <;> infer_instance
+instance mvfunctorW : Mvfunctor P.W := by delta Mvpfunctor.W <;> infer_instance
 
 /-!
 First, describe operations on `W` as a polynomial functor.
@@ -169,9 +165,9 @@ theorem W_rec_eq {α : Typevec n} {C : Type _}
     (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) (a : P.A) (f' : P.drop.B a ⟹ α)
     (f : P.last.B a → P.W α) : P.wRec g (P.wMk a f' f) = g a f' f fun i => P.wRec g (f i) := by
   rw [W_mk, W_rec]
-  dsimp'
+  dsimp
   rw [Wp_rec_eq]
-  dsimp' only [W_path_dest_left_W_path_cases_on, W_path_dest_right_W_path_cases_on]
+  dsimp only [W_path_dest_left_W_path_cases_on, W_path_dest_right_W_path_cases_on]
   congr <;> ext1 i <;> cases f i <;> rfl
 
 /-- Induction principle for `W` -/
@@ -181,11 +177,11 @@ theorem W_ind {α : Typevec n} {C : P.W α → Prop}
   intro x
   cases' x with a f
   apply @Wp_ind n P α fun a f => C ⟨a, f⟩
-  dsimp'
+  dsimp
   intro a f f' ih'
-  dsimp' [W_mk]  at ih
+  dsimp [W_mk] at ih
   let ih'' := ih a (P.W_path_dest_left f') fun i => ⟨f i, P.W_path_dest_right f' i⟩
-  dsimp'  at ih''
+  dsimp at ih''
   rw [W_path_cases_on_eta] at ih''
   apply ih''
   apply ih'
@@ -206,7 +202,7 @@ theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B 
   show _ = P.W_mk a (g ⊚ f') (Mvfunctor.map g ∘ f)
   have : Mvfunctor.map g ∘ f = fun i => ⟨(f i).fst, g ⊚ (f i).snd⟩ := by
     ext i : 1
-    dsimp' [Function.comp]
+    dsimp [Function.comp]
     cases f i
     rfl
   rw [this]
@@ -215,7 +211,7 @@ theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B 
     cases f x
     rfl
   rw [this]
-  dsimp'
+  dsimp
   rw [W_mk_eq, W_mk_eq]
   have h := Mvpfunctor.map_eq P.Wp g
   rw [h, comp_W_path_cases_on]
@@ -250,8 +246,7 @@ def wDest' {α : Typevec.{u} n} : P.W α → P.Obj (α.Append1 (P.W α)) :=
   P.wRec fun a f' f _ => ⟨a, splitFun f' f⟩
 
 theorem W_dest'_W_mk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) :
-    P.wDest' (P.wMk a f' f) = ⟨a, splitFun f' f⟩ := by
-  rw [W_dest', W_rec_eq]
+    P.wDest' (P.wMk a f' f) = ⟨a, splitFun f' f⟩ := by rw [W_dest', W_rec_eq]
 
 theorem W_dest'_W_mk' {α : Typevec n} (x : P.Obj (α.Append1 (P.W α))) : P.wDest' (P.wMk' x) = x := by
   cases' x with a f <;> rw [W_mk', W_dest'_W_mk, split_drop_fun_last_fun]

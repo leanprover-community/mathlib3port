@@ -37,7 +37,7 @@ variable {ι X : Type _} [TopologicalSpace X] [NormalSpace X]
 
 namespace ShrinkingLemma
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∉ » carrier)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » carrier)
 -- the trivial refinement needs `u` to be a covering
 /-- Auxiliary definition for the proof of `shrinking_lemma`. A partial refinement of a covering
 `⋃ i, u i` of a set `s` is a map `v : ι → set X` and a set `carrier : set ι` such that
@@ -131,7 +131,7 @@ theorem find_apply_of_mem {c : Set (PartialRefinement u s)} (hc : IsChain (· �
     (hv : v ∈ c) (hi : i ∈ Carrier v) : find c Ne i i = v i :=
   apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 <| mem_Union₂.2 ⟨v, hv, hi⟩) hi
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c)
 /-- Least upper bound of a nonempty chain of partial refinements. -/
 def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty)
     (hfin : ∀ x ∈ s, { i | x ∈ u i }.Finite) (hU : s ⊆ ⋃ i, u i) : PartialRefinement u s := by
@@ -160,15 +160,15 @@ theorem le_chain_Sup {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·)
     (hfin : ∀ x ∈ s, { i | x ∈ u i }.Finite) (hU : s ⊆ ⋃ i, u i) {v} (hv : v ∈ c) : v ≤ chainSup c hc Ne hfin hU :=
   ⟨fun i hi => mem_bUnion hv hi, fun i hi => (find_apply_of_mem hc _ hv hi).symm⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If `s` is a closed set, `v` is a partial refinement, and `i` is an index such that
 `i ∉ v.carrier`, then there exists a partial refinement that is strictly greater than `v`. -/
 theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i ∉ v.Carrier) :
     ∃ v' : PartialRefinement u s, v < v' := by
   have I : (s ∩ ⋂ (j) (_ : j ≠ i), v jᶜ) ⊆ v i := by
-    simp only [subset_def, mem_inter_eq, mem_Inter, and_imp]
+    simp only [subset_def, mem_inter_iff, mem_Inter, and_imp]
     intro x hxs H
     rcases mem_Union.1 (v.subset_Union hxs) with ⟨j, hj⟩
     exact (em (j = i)).elim (fun h => h ▸ hj) fun h => (H j h hj).elim
@@ -177,7 +177,7 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
   rcases normal_exists_closure_subset C (v.is_open i) I with ⟨vi, ovi, hvi, cvi⟩
   refine' ⟨⟨update v i vi, insert i v.carrier, _, _, _, _⟩, _, _⟩
   · intro j
-    by_cases' h : j = i <;> simp [h, ovi, v.is_open]
+    by_cases h:j = i <;> simp [h, ovi, v.is_open]
     
   · refine' fun x hx => mem_Union.2 _
     rcases em (∃ (j : _)(_ : j ≠ i), x ∈ v j) with (⟨j, hji, hj⟩ | h)

@@ -87,11 +87,9 @@ variable (α β γ : Type u) (f : α → β) (g : β → γ)
 example : α → γ :=
   ↾f ≫ ↾g
 
-example [IsIso (↾f)] : Mono (↾f) := by
-  infer_instance
+example [IsIso (↾f)] : Mono (↾f) := by infer_instance
 
-example [IsIso (↾f)] : ↾f ≫ inv (↾f) = 𝟙 α := by
-  simp
+example [IsIso (↾f)] : ↾f ≫ inv (↾f) = 𝟙 α := by simp
 
 end
 
@@ -121,8 +119,7 @@ theorem map_comp_apply (f : X ⟶ Y) (g : Y ⟶ Z) (a : F.obj X) : (F.map (f ≫
   simp [types_comp]
 
 @[simp]
-theorem map_id_apply (a : F.obj X) : (F.map (𝟙 X)) a = a := by
-  simp [types_id]
+theorem map_id_apply (a : F.obj X) : (F.map (𝟙 X)) a = a := by simp [types_id]
 
 theorem naturality (f : X ⟶ Y) (x : F.obj X) : σ.app Y ((F.map f) x) = (G.map f) (σ.app X x) :=
   congr_fun (σ.naturality f) x
@@ -158,8 +155,7 @@ end FunctorToTypes
 /-- The isomorphism between a `Type` which has been `ulift`ed to the same universe,
 and the original type.
 -/
-def uliftTrivial (V : Type u) : ULift.{u} V ≅ V := by
-  tidy
+def uliftTrivial (V : Type u) : ULift.{u} V ≅ V := by tidy
 
 /-- The functor embedding `Type u` into `Type (max u v)`.
 Write this as `ulift_functor.{5 2}` to get `Type 2 ⥤ Type 5`.
@@ -182,9 +178,7 @@ instance ulift_functor_faithful :
 /-- The functor embedding `Type u` into `Type u` via `ulift` is isomorphic to the identity functor.
  -/
 def uliftFunctorTrivial : ulift_functor.{u, u} ≅ 𝟭 _ :=
-  NatIso.ofComponents uliftTrivial
-    (by
-      tidy)
+  NatIso.ofComponents uliftTrivial (by tidy)
 
 -- TODO We should connect this to a general story about concrete categories
 -- whose forgetful functor is representable.
@@ -192,8 +186,7 @@ def uliftFunctorTrivial : ulift_functor.{u, u} ≅ 𝟭 _ :=
 def homOfElement {X : Type u} (x : X) : PUnit ⟶ X := fun _ => x
 
 theorem hom_of_element_eq_iff {X : Type u} (x y : X) : homOfElement x = homOfElement y ↔ x = y :=
-  ⟨fun H => congr_fun H PUnit.unit, by
-    cc⟩
+  ⟨fun H => congr_fun H PUnit.unit, by cc⟩
 
 /-- A morphism in `Type` is a monomorphism if and only if it is injective.
 

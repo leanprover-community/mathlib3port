@@ -90,9 +90,7 @@ theorem exists_eq_mul_self [IsAlgClosed k] (x : k) : ∃ z, x = z * z := by
   exact ⟨z, sq z⟩
 
 theorem roots_eq_zero_iff [IsAlgClosed k] {p : k[X]} : p.roots = 0 ↔ p = Polynomial.c (p.coeff 0) := by
-  refine'
-    ⟨fun h => _, fun hp => by
-      rw [hp, roots_C]⟩
+  refine' ⟨fun h => _, fun hp => by rw [hp, roots_C]⟩
   cases' le_or_ltₓ (degree p) 0 with hd hd
   · exact eq_C_of_degree_le_zero hd
     
@@ -103,12 +101,8 @@ theorem roots_eq_zero_iff [IsAlgClosed k] {p : k[X]} : p.roots = 0 ↔ p = Polyn
 
 theorem exists_eval₂_eq_zero_of_injective {R : Type _} [Ringₓ R] [IsAlgClosed k] (f : R →+* k)
     (hf : Function.Injective f) (p : R[X]) (hp : p.degree ≠ 0) : ∃ x, p.eval₂ f x = 0 :=
-  let ⟨x, hx⟩ :=
-    exists_root (p.map f)
-      (by
-        rwa [degree_map_eq_of_injective hf])
-  ⟨x, by
-    rwa [eval₂_eq_eval_map, ← is_root]⟩
+  let ⟨x, hx⟩ := exists_root (p.map f) (by rwa [degree_map_eq_of_injective hf])
+  ⟨x, by rwa [eval₂_eq_eval_map, ← is_root]⟩
 
 theorem exists_eval₂_eq_zero {R : Type _} [Field R] [IsAlgClosed k] (f : R →+* k) (p : R[X]) (hp : p.degree ≠ 0) :
     ∃ x, p.eval₂ f x = 0 :=
@@ -208,12 +202,9 @@ theorem compat (h : E₁ ≤ E₂) : ∀ x, E₂.emb (inclusion h.fst x) = E₁.
 
 instance : Preorderₓ (SubfieldWithHom K L M hL) where
   le := (· ≤ ·)
-  le_refl := fun E =>
-    ⟨le_rflₓ, by
-      simp ⟩
+  le_refl := fun E => ⟨le_rflₓ, by simp⟩
   le_trans := fun E₁ E₂ E₃ h₁₂ h₂₃ =>
-    ⟨le_transₓ h₁₂.fst h₂₃.fst, fun _ => by
-      erw [← inclusion_inclusion h₁₂.fst h₂₃.fst, compat, compat]⟩
+    ⟨le_transₓ h₁₂.fst h₂₃.fst, fun _ => by erw [← inclusion_inclusion h₁₂.fst h₂₃.fst, compat, compat]⟩
 
 open Lattice
 
@@ -345,18 +336,14 @@ noncomputable instance (priority := 100) perfectRing (p : ℕ) [Fact p.Prime] [C
 instance (priority := 500) {K : Type _} [Field K] [IsAlgClosed K] : Infinite K := by
   apply Infinite.of_not_fintype
   intro hfin
-  set n := Fintype.card K with hn
+  set n := Fintypeₓ.card K with hn
   set f := (X : K[X]) ^ (n + 1) - 1 with hf
-  have hfsep : separable f :=
-    separable_X_pow_sub_C 1
-      (by
-        simp )
-      one_ne_zero
-  apply Nat.not_succ_le_selfₓ (Fintype.card K)
-  have hroot : n.succ = Fintype.card (f.root_set K) := by
+  have hfsep : separable f := separable_X_pow_sub_C 1 (by simp) one_ne_zero
+  apply Nat.not_succ_le_selfₓ (Fintypeₓ.card K)
+  have hroot : n.succ = Fintypeₓ.card (f.root_set K) := by
     erw [card_root_set_eq_nat_degree hfsep (IsAlgClosed.splits_domain _), nat_degree_X_pow_sub_C]
   rw [hroot]
-  exact Fintype.card_le_of_injective coe Subtype.coe_injective
+  exact Fintypeₓ.card_le_of_injective coe Subtype.coe_injective
 
 end IsAlgClosed
 
@@ -378,10 +365,7 @@ noncomputable def equiv : L ≃ₐ[R] M :=
   AlgEquiv.ofBijective f
     ⟨RingHom.injective f.toRingHom, by
       letI : Algebra L M := RingHom.toAlgebra f
-      letI : IsScalarTower R L M :=
-        IsScalarTower.of_algebra_map_eq
-          (by
-            simp [RingHom.algebra_map_to_algebra])
+      letI : IsScalarTower R L M := IsScalarTower.of_algebra_map_eq (by simp [RingHom.algebra_map_to_algebra])
       show Function.Surjective (algebraMap L M)
       exact
         IsAlgClosed.algebra_map_surjective_of_is_algebraic
@@ -407,10 +391,7 @@ noncomputable def equivOfAlgebraic' [Nontrivial S] [NoZeroSmulDivisors R S] (hRL
         exact
           Function.Injective.comp (NoZeroSmulDivisors.algebra_map_injective _ _)
             (NoZeroSmulDivisors.algebra_map_injective _ _))
-  letI : IsAlgClosure R L :=
-    { alg_closed := by
-        infer_instance,
-      algebraic := hRL }
+  letI : IsAlgClosure R L := { alg_closed := by infer_instance, algebraic := hRL }
   exact IsAlgClosure.equiv _ _ _
 
 /-- A (random) isomorphism between an algebraic closure of `K` and an algebraic closure
@@ -436,10 +417,7 @@ noncomputable def equivOfEquivAux (hSR : S ≃+* R) :
     exact is_algebraic_algebra_map _
   letI : Algebra R L := RingHom.toAlgebra ((algebraMap S L).comp (algebraMap R S))
   haveI : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq fun _ => rfl
-  haveI : IsScalarTower S R L :=
-    IsScalarTower.of_algebra_map_eq
-      (by
-        simp [RingHom.algebra_map_to_algebra])
+  haveI : IsScalarTower S R L := IsScalarTower.of_algebra_map_eq (by simp [RingHom.algebra_map_to_algebra])
   haveI : NoZeroSmulDivisors R S := NoZeroSmulDivisors.of_algebra_map_injective hSR.symm.injective
   refine'
     ⟨equiv_of_algebraic' R S L M
@@ -470,9 +448,7 @@ theorem equiv_of_equiv_algebra_map (hSR : S ≃+* R) (s : S) :
 @[simp]
 theorem equiv_of_equiv_symm_algebra_map (hSR : S ≃+* R) (r : R) :
     (equivOfEquiv L M hSR).symm (algebraMap R M r) = algebraMap S L (hSR.symm r) :=
-  (equivOfEquiv L M hSR).Injective
-    (by
-      simp )
+  (equivOfEquiv L M hSR).Injective (by simp)
 
 @[simp]
 theorem equiv_of_equiv_symm_comp_algebra_map (hSR : S ≃+* R) :

@@ -85,10 +85,7 @@ from `exterior_algebra R M` to `A`.
 -/
 @[simps symmApply]
 def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = 0 } ≃ (ExteriorAlgebra R M →ₐ[R] A) :=
-  Equivₓ.trans
-      (Equivₓ.subtypeEquiv (Equivₓ.refl _) <| by
-        simp ) <|
-    CliffordAlgebra.lift _
+  Equivₓ.trans (Equivₓ.subtypeEquiv (Equivₓ.refl _) <| by simp) <| CliffordAlgebra.lift _
 
 @[simp]
 theorem ι_comp_lift (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) : (lift R ⟨f, cond⟩).toLinearMap.comp (ι R) = f :=
@@ -125,15 +122,12 @@ theorem induction {C : ExteriorAlgebra R M → Prop} (h_grade0 : ∀ r, C (algeb
 
 /-- The left-inverse of `algebra_map`. -/
 def algebraMapInv : ExteriorAlgebra R M →ₐ[R] R :=
-  ExteriorAlgebra.lift R
-    ⟨(0 : M →ₗ[R] R), fun m => by
-      simp ⟩
+  ExteriorAlgebra.lift R ⟨(0 : M →ₗ[R] R), fun m => by simp⟩
 
 variable (M)
 
 theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| ExteriorAlgebra R M) := fun x =>
-  by
-  simp [algebra_map_inv]
+  by simp [algebra_map_inv]
 
 @[simp]
 theorem algebra_map_inj (x y : R) :
@@ -174,8 +168,7 @@ algebra structure. -/
 def ιInv : ExteriorAlgebra R M →ₗ[R] M :=
   (TrivSqZeroExt.sndHom R M).comp toTrivSqZeroExt.toLinearMap
 
-theorem ι_left_inverse : Function.LeftInverse ιInv (ι R : M → ExteriorAlgebra R M) := fun x => by
-  simp [ι_inv]
+theorem ι_left_inverse : Function.LeftInverse ιInv (ι R : M → ExteriorAlgebra R M) := fun x => by simp [ι_inv]
 
 variable (R)
 
@@ -186,8 +179,7 @@ theorem ι_inj (x y : M) : ι R x = ι R y ↔ x = y :=
 variable {R}
 
 @[simp]
-theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 := by
-  rw [← ι_inj R x 0, LinearMap.map_zero]
+theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 := by rw [← ι_inj R x 0, LinearMap.map_zero]
 
 @[simp]
 theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x = 0 ∧ r = 0 := by
@@ -217,8 +209,7 @@ theorem ι_range_disjoint_one :
 @[simp]
 theorem ι_add_mul_swap (x y : M) : ι R x * ι R y + ι R y * ι R x = 0 :=
   calc
-    _ = ι R (x + y) * ι R (x + y) := by
-      simp [mul_addₓ, add_mulₓ]
+    _ = ι R (x + y) * ι R (x + y) := by simp [mul_addₓ, add_mulₓ]
     _ = _ := ι_sq_zero _
     
 
@@ -228,7 +219,7 @@ theorem ι_mul_prod_list {n : ℕ} (f : Finₓ n → M) (i : Finₓ n) :
   · exact i.elim0
     
   · rw [List.of_fn_succ, List.prod_cons, ← mul_assoc]
-    by_cases' h : i = 0
+    by_cases h:i = 0
     · rw [h, ι_sq_zero, zero_mul]
       
     · replace hn := congr_arg ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Finₓ.succ i) (i.pred h))
@@ -258,7 +249,7 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
       · exact x.elim0
         
       · rw [List.of_fn_succ, List.prod_cons]
-        by_cases' hx : x = 0
+        by_cases hx:x = 0
         · rw [hx] at hfxy h
           rw [hfxy, ← Finₓ.succ_pred y (ne_of_ltₓ h).symm]
           exact ι_mul_prod_list (f ∘ Finₓ.succ) _
@@ -305,8 +296,7 @@ def toExterior : TensorAlgebra R M →ₐ[R] ExteriorAlgebra R M :=
   TensorAlgebra.lift R (ExteriorAlgebra.ι R : M →ₗ[R] ExteriorAlgebra R M)
 
 @[simp]
-theorem to_exterior_ι (m : M) : (TensorAlgebra.ι R m).toExterior = ExteriorAlgebra.ι R m := by
-  simp [to_exterior]
+theorem to_exterior_ι (m : M) : (TensorAlgebra.ι R m).toExterior = ExteriorAlgebra.ι R m := by simp [to_exterior]
 
 end TensorAlgebra
 

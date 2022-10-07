@@ -125,7 +125,7 @@ instance (priority := 10) exponential_ideal_of_preserves_binary_products
   apply _ ≫ (ir.hom_equiv _ _).symm ((exp.ev A).app (i.obj B))
   refine' prod_comparison L A _ ≫ limits.prod.map (𝟙 _) (ε.app _) ≫ inv (prod_comparison _ _ _)
   have : η.app (A ⟹ i.obj B) ≫ q = 𝟙 (A ⟹ i.obj B) := by
-    dsimp'
+    dsimp
     rw [← curry_natural_left, curry_eq_iff, uncurry_id_eq_ev, ← ir.hom_equiv_naturality_left, ir.hom_equiv_apply_eq,
       assoc, assoc, prod_comparison_natural_assoc, L.map_id, ← prod.map_id_comp_assoc, ir.left_triangle_components,
       prod.map_id_id, id_comp]
@@ -151,7 +151,7 @@ def cartesianClosedOfReflective :
                 apply as_iso (prod_comparison i B X)
                 
               · intro X Y f
-                dsimp'
+                dsimp
                 rw [prod_comparison_natural]
                 simp
                 
@@ -196,7 +196,7 @@ noncomputable def bijection (A B : C) (X : D) :
     
 
 theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = prodComparison _ _ _ := by
-  dsimp' [bijection]
+  dsimp [bijection]
   rw [comp_id, comp_id, comp_id, i.map_id, comp_id, unit_comp_partial_bijective_symm_apply,
     unit_comp_partial_bijective_symm_apply, uncurry_natural_left, uncurry_curry, uncurry_natural_left, uncurry_curry,
     prod.lift_map_assoc, comp_id, prod.lift_map_assoc, comp_id, prod.comp_lift_assoc, prod.lift_snd,
@@ -212,7 +212,7 @@ theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = 
 
 theorem bijection_natural (A B : C) (X X' : D) (f : (leftAdjoint i).obj (A ⨯ B) ⟶ X) (g : X ⟶ X') :
     bijection i _ _ _ (f ≫ g) = bijection i _ _ _ f ≫ g := by
-  dsimp' [bijection]
+  dsimp [bijection]
   apply i.map_injective
   rw [i.image_preimage, i.map_comp, i.image_preimage, comp_id, comp_id, comp_id, comp_id, comp_id, comp_id,
     adjunction.hom_equiv_naturality_right, ← assoc, curry_natural_right _ (i.map g),
@@ -226,8 +226,7 @@ theorem prod_comparison_iso (A B : C) : IsIso (prodComparison (leftAdjoint i) A 
   ⟨⟨bijection i _ _ _ (𝟙 _), by
       rw [← (bijection i _ _ _).Injective.eq_iff, bijection_natural, ← bijection_symm_apply_id, Equivₓ.apply_symm_apply,
         id_comp],
-      by
-      rw [← bijection_natural, id_comp, ← bijection_symm_apply_id, Equivₓ.apply_symm_apply]⟩⟩
+      by rw [← bijection_natural, id_comp, ← bijection_symm_apply_id, Equivₓ.apply_symm_apply]⟩⟩
 
 attribute [local instance] prod_comparison_iso
 
@@ -241,7 +240,7 @@ noncomputable def preservesBinaryProductsOfExponentialIdeal :
 
 /-- If a reflective subcategory is an exponential ideal, then the reflector preserves finite products.
 -/
-noncomputable def preservesFiniteProductsOfExponentialIdeal (J : Type) [Fintype J] :
+noncomputable def preservesFiniteProductsOfExponentialIdeal (J : Type) [Fintypeₓ J] :
     PreservesLimitsOfShape (Discrete J) (leftAdjoint i) := by
   letI := preserves_binary_products_of_exponential_ideal i
   letI := leftAdjointPreservesTerminalOfReflective.{0} i

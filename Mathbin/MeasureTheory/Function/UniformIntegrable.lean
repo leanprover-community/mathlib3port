@@ -133,9 +133,7 @@ protected theorem ae_eq (hf : UnifIntegrable f p μ) (hfg : ∀ n, f n =ᵐ[μ] 
 end UnifIntegrable
 
 theorem unif_integrable_zero_meas [MeasurableSpace α] {p : ℝ≥0∞} {f : ι → α → β} : UnifIntegrable f p (0 : Measure α) :=
-  fun ε hε =>
-  ⟨1, one_pos, fun i s hs hμs => by
-    simp ⟩
+  fun ε hε => ⟨1, one_pos, fun i s hs hμs => by simp⟩
 
 theorem unif_integrable_congr_ae {p : ℝ≥0∞} {f g : ι → α → β} (hfg : ∀ n, f n =ᵐ[μ] g n) :
     UnifIntegrable f p μ ↔ UnifIntegrable g p μ :=
@@ -183,11 +181,11 @@ theorem Memℒp.integral_indicator_norm_ge_le (hf : Memℒp f 1 μ) (hmeas : Str
     rfl
     
   · refine' fun n => univ_mem' (id fun x => _)
-    by_cases' hx : (n : ℝ) ≤ ∥f x∥
-    · dsimp'
+    by_cases hx:(n : ℝ) ≤ ∥f x∥
+    · dsimp
       rwa [indicator_of_mem]
       
-    · dsimp'
+    · dsimp
       rw [indicator_of_not_mem, norm_zero]
       · exact norm_nonneg _
         
@@ -201,8 +199,7 @@ which does not require measurability. -/
 theorem Memℒp.integral_indicator_norm_ge_nonneg_le_of_meas (hf : Memℒp f 1 μ) (hmeas : StronglyMeasurable f) {ε : ℝ}
     (hε : 0 < ε) : ∃ M : ℝ, 0 ≤ M ∧ (∫⁻ x, ∥{ x | M ≤ ∥f x∥₊ }.indicator f x∥₊ ∂μ) ≤ Ennreal.ofReal ε :=
   let ⟨M, hM⟩ := hf.integral_indicator_norm_ge_le μ hmeas hε
-  ⟨max M 0, le_max_rightₓ _ _, by
-    simpa⟩
+  ⟨max M 0, le_max_rightₓ _ _, by simpa⟩
 
 theorem Memℒp.integral_indicator_norm_ge_nonneg_le (hf : Memℒp f 1 μ) {ε : ℝ} (hε : 0 < ε) :
     ∃ M : ℝ, 0 ≤ M ∧ (∫⁻ x, ∥{ x | M ≤ ∥f x∥₊ }.indicator f x∥₊ ∂μ) ≤ Ennreal.ofReal ε := by
@@ -241,11 +238,11 @@ theorem Memℒp.snorm_ess_sup_indicator_norm_ge_eq_zero (hf : Memℒp f ∞ μ) 
 latter provides `0 < M`. -/
 theorem Memℒp.snorm_indicator_norm_ge_le (hf : Memℒp f p μ) (hmeas : StronglyMeasurable f) {ε : ℝ} (hε : 0 < ε) :
     ∃ M : ℝ, snorm ({ x | M ≤ ∥f x∥₊ }.indicator f) p μ ≤ Ennreal.ofReal ε := by
-  by_cases' hp_ne_zero : p = 0
+  by_cases hp_ne_zero:p = 0
   · refine' ⟨1, hp_ne_zero.symm ▸ _⟩
     simp [snorm_exponent_zero]
     
-  by_cases' hp_ne_top : p = ∞
+  by_cases hp_ne_top:p = ∞
   · subst hp_ne_top
     obtain ⟨M, hM⟩ := hf.snorm_ess_sup_indicator_norm_ge_eq_zero μ hmeas
     refine' ⟨M, _⟩
@@ -269,7 +266,7 @@ theorem Memℒp.snorm_indicator_norm_ge_le (hf : Memℒp f p μ) (hmeas : Strong
         (one_div_pos.2 <| Ennreal.to_real_pos hp_ne_zero hp_ne_top),
       ← Real.rpow_mul (norm_nonneg _), mul_one_div_cancel (Ennreal.to_real_pos hp_ne_zero hp_ne_top).Ne.symm,
       Real.rpow_one]
-  by_cases' hx : x ∈ { x : α | M ^ (1 / p.to_real) ≤ ∥f x∥₊ }
+  by_cases hx:x ∈ { x : α | M ^ (1 / p.to_real) ≤ ∥f x∥₊ }
   · rw [Set.indicator_of_mem hx, Set.indicator_of_mem, Real.nnnorm_of_nonneg]
     rfl
     change _ ≤ _
@@ -296,12 +293,12 @@ theorem Memℒp.snorm_indicator_norm_ge_pos_le (hf : Memℒp f p μ) (hmeas : St
 
 end
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error
 theorem snorm_indicator_le_of_bound {f : α → β} (hp_top : p ≠ ∞) {ε : ℝ} (hε : 0 < ε) {M : ℝ} (hf : ∀ x, ∥f x∥ < M) :
     ∃ (δ : ℝ)(hδ : 0 < δ),
       ∀ s, MeasurableSet s → μ s ≤ Ennreal.ofReal δ → snorm (s.indicator f) p μ ≤ Ennreal.ofReal ε :=
   by
-  by_cases' hM : M ≤ 0
+  by_cases hM:M ≤ 0
   · refine' ⟨1, zero_lt_one, fun s hs hμ => _⟩
     rw [(_ : f = 0)]
     · simp [hε.le]
@@ -313,13 +310,13 @@ theorem snorm_indicator_le_of_bound {f : α → β} (hp_top : p ≠ ∞) {ε : �
     
   rw [not_leₓ] at hM
   refine' ⟨(ε / M) ^ p.to_real, Real.rpow_pos_of_pos (div_pos hε hM) _, fun s hs hμ => _⟩
-  by_cases' hp : p = 0
+  by_cases hp:p = 0
   · simp [hp]
     
   rw [snorm_indicator_eq_snorm_restrict hs]
   have haebdd : ∀ᵐ x ∂μ.restrict s, ∥f x∥ ≤ M := by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     exact fun x => (hf x).le
   refine' le_transₓ (snorm_le_of_ae_bound haebdd) _
   rw [measure.restrict_apply MeasurableSet.univ, univ_inter, ←
@@ -364,7 +361,7 @@ theorem Memℒp.snorm_indicator_le' (hp_one : 1 ≤ p) (hp_top : p ≠ ∞) (hf 
         
       
     · ext x
-      by_cases' hx : M ≤ ∥f x∥
+      by_cases hx:M ≤ ∥f x∥
       · rw [Pi.add_apply, indicator_of_mem, indicator_of_not_mem, add_zeroₓ] <;> simpa
         
       · rw [Pi.add_apply, indicator_of_not_mem, indicator_of_mem, zero_addₓ] <;> simpa using hx
@@ -386,10 +383,7 @@ theorem Memℒp.snorm_indicator_le_of_meas (hp_one : 1 ≤ p) (hp_top : p ≠ �
   by
   obtain ⟨δ, hδpos, hδ⟩ := hf.snorm_indicator_le' μ hp_one hp_top hmeas (half_pos hε)
   refine' ⟨δ, hδpos, fun s hs hμs => le_transₓ (hδ s hs hμs) _⟩
-  rw [Ennreal.of_real_div_of_pos zero_lt_two,
-      (by
-        norm_num : Ennreal.ofReal 2 = 2),
-      Ennreal.mul_div_cancel'] <;>
+  rw [Ennreal.of_real_div_of_pos zero_lt_two, (by norm_num : Ennreal.ofReal 2 = 2), Ennreal.mul_div_cancel'] <;>
     norm_num
 
 theorem Memℒp.snorm_indicator_le (hp_one : 1 ≤ p) (hp_top : p ≠ ∞) (hf : Memℒp f p μ) {ε : ℝ} (hε : 0 < ε) :
@@ -415,7 +409,7 @@ theorem unif_integrable_const {g : α → β} (hp : 1 ≤ p) (hp_ne_top : p ≠ 
 theorem unif_integrable_subsingleton [Subsingleton ι] (hp_one : 1 ≤ p) (hp_top : p ≠ ∞) {f : ι → α → β}
     (hf : ∀ i, Memℒp (f i) p μ) : UnifIntegrable f p μ := by
   intro ε hε
-  by_cases' hι : Nonempty ι
+  by_cases hι:Nonempty ι
   · cases' hι with i
     obtain ⟨δ, hδpos, hδ⟩ := (hf i).snorm_indicator_le μ hp_one hp_top hε
     refine' ⟨δ, hδpos, fun j s hs hμs => _⟩
@@ -438,7 +432,7 @@ theorem unif_integrable_fin (hp_one : 1 ≤ p) (hp_top : p ≠ ∞) {n : ℕ} {f
   obtain ⟨δ₁, hδ₁pos, hδ₁⟩ := h hgLp hε
   obtain ⟨δ₂, hδ₂pos, hδ₂⟩ := (hfLp n).snorm_indicator_le μ hp_one hp_top hε
   refine' ⟨min δ₁ δ₂, lt_minₓ hδ₁pos hδ₂pos, fun i s hs hμs => _⟩
-  by_cases' hi : i.val < n
+  by_cases hi:i.val < n
   · rw [(_ : f i = g ⟨i.val, hi⟩)]
     · exact hδ₁ _ s hs (le_transₓ hμs <| Ennreal.of_real_le_of_real <| min_le_leftₓ _ _)
       
@@ -450,7 +444,7 @@ theorem unif_integrable_fin (hp_one : 1 ≤ p) (hp_top : p ≠ ∞) {n : ℕ} {f
     · exact hδ₂ _ hs (le_transₓ hμs <| Ennreal.of_real_le_of_real <| min_le_rightₓ _ _)
       
     · have hi' := Finₓ.is_lt i
-      rw [Nat.lt_succ_iffₓ] at hi'
+      rw [Nat.lt_succ_iff] at hi'
       rw [not_ltₓ] at hi
       simp [← le_antisymmₓ hi' hi]
       
@@ -474,12 +468,12 @@ end
 theorem snorm_sub_le_of_dist_bdd {p : ℝ≥0∞} (hp' : p ≠ ∞) {s : Set α} (hs : measurable_set[m] s) {f g : α → β} {c : ℝ}
     (hc : 0 ≤ c) (hf : ∀ x ∈ s, dist (f x) (g x) ≤ c) :
     snorm (s.indicator (f - g)) p μ ≤ Ennreal.ofReal c * μ s ^ (1 / p.toReal) := by
-  by_cases' hp : p = 0
+  by_cases hp:p = 0
   · simp [hp]
     
   have : ∀ x, ∥s.indicator (f - g) x∥ ≤ ∥s.indicator (fun x => c) x∥ := by
     intro x
-    by_cases' hx : x ∈ s
+    by_cases hx:x ∈ s
     · rw [indicator_of_mem hx, indicator_of_mem hx, Pi.sub_apply, ← dist_eq_norm, Real.norm_eq_abs, abs_of_nonneg hc]
       exact hf x hx
       
@@ -496,22 +490,15 @@ theorem tendsto_Lp_of_tendsto_ae_of_meas [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp
     (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) : Tendsto (fun n => snorm (f n - g) p μ) atTop (𝓝 0) := by
   rw [Ennreal.tendsto_at_top_zero]
   intro ε hε
-  by_cases' ε < ∞
+  by_cases ε < ∞
   swap
   · rw [not_ltₓ, top_le_iff] at h
-    exact
-      ⟨0, fun n hn => by
-        simp [h]⟩
+    exact ⟨0, fun n hn => by simp [h]⟩
     
-  by_cases' hμ : μ = 0
-  · exact
-      ⟨0, fun n hn => by
-        simp [hμ]⟩
+  by_cases hμ:μ = 0
+  · exact ⟨0, fun n hn => by simp [hμ]⟩
     
-  have hε' : 0 < ε.to_real / 3 :=
-    div_pos (Ennreal.to_real_pos (gt_iff_ltₓ.1 hε).Ne.symm h.ne)
-      (by
-        norm_num)
+  have hε' : 0 < ε.to_real / 3 := div_pos (Ennreal.to_real_pos (gt_iff_ltₓ.1 hε).Ne.symm h.ne) (by norm_num)
   have hdivp : 0 ≤ 1 / p.to_real := by
     refine' one_div_nonneg.2 _
     rw [← Ennreal.zero_to_real, Ennreal.to_real_le_to_real Ennreal.zero_ne_top hp']
@@ -523,11 +510,7 @@ theorem tendsto_Lp_of_tendsto_ae_of_meas [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp
   rw [Metric.tendsto_uniformly_on_iff] at ht₂
   specialize
     ht₂ (ε.to_real / (3 * measure_univ_nnreal μ ^ (1 / p.to_real)))
-      (div_pos (Ennreal.to_real_pos (gt_iff_ltₓ.1 hε).Ne.symm h.ne)
-        (mul_pos
-          (by
-            norm_num)
-          hpow))
+      (div_pos (Ennreal.to_real_pos (gt_iff_ltₓ.1 hε).Ne.symm h.ne) (mul_pos (by norm_num) hpow))
   obtain ⟨N, hN⟩ := eventually_at_top.1 ht₂
   clear ht₂
   refine' ⟨N, fun n hn => _⟩
@@ -577,11 +560,7 @@ theorem tendsto_Lp_of_tendsto_ae_of_meas [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp
       exact mul_nonneg hε'.le (one_div_nonneg.2 hpow.le)
       
   have : Ennreal.ofReal (ε.to_real / 3) = ε / 3 := by
-    rw
-      [Ennreal.of_real_div_of_pos
-        (show (0 : ℝ) < 3 by
-          norm_num),
-      Ennreal.of_real_to_real h.ne]
+    rw [Ennreal.of_real_div_of_pos (show (0 : ℝ) < 3 by norm_num), Ennreal.of_real_to_real h.ne]
     simp
   rw [this] at hnf hng hlt
   rw [snorm_neg, ← Ennreal.add_thirds ε, ← sub_eq_add_neg]
@@ -612,15 +591,12 @@ theorem unif_integrable_of_tendsto_Lp_zero (hp : 1 ≤ p) (hp' : p ≠ ∞) (hf 
     (hf_tendsto : Tendsto (fun n => snorm (f n) p μ) atTop (𝓝 0)) : UnifIntegrable f p μ := by
   intro ε hε
   rw [Ennreal.tendsto_at_top_zero] at hf_tendsto
-  obtain ⟨N, hN⟩ :=
-    hf_tendsto (Ennreal.ofReal ε)
-      (by
-        simpa)
+  obtain ⟨N, hN⟩ := hf_tendsto (Ennreal.ofReal ε) (by simpa)
   set F : Finₓ N → α → β := fun n => f n
   have hF : ∀ n, mem_ℒp (F n) p μ := fun n => hf n
   obtain ⟨δ₁, hδpos₁, hδ₁⟩ := unif_integrable_fin μ hp hp' hF hε
   refine' ⟨δ₁, hδpos₁, fun n s hs hμs => _⟩
-  by_cases' hn : n < N
+  by_cases hn:n < N
   · exact hδ₁ ⟨n, hn⟩ s hs hμs
     
   · exact (snorm_indicator_le _).trans (hN n (not_ltₓ.1 hn))
@@ -671,7 +647,7 @@ theorem unif_integrable_of' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → 
     (h : ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0, 0 < C ∧ ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε) :
     UnifIntegrable f p μ := by
   have hpzero := (lt_of_lt_of_leₓ Ennreal.zero_lt_one hp).Ne.symm
-  by_cases' hμ : μ Set.Univ = 0
+  by_cases hμ:μ Set.Univ = 0
   · rw [measure.measure_univ_eq_zero] at hμ
     exact hμ.symm ▸ unif_integrable_zero_meas
     
@@ -680,7 +656,7 @@ theorem unif_integrable_of' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → 
   refine'
     ⟨(ε / (2 * C)) ^ Ennreal.toReal p, Real.rpow_pos_of_pos (div_pos hε (mul_pos two_pos (Nnreal.coe_pos.2 hCpos))) _,
       fun i s hs hμs => _⟩
-  by_cases' hμs' : μ s = 0
+  by_cases hμs':μ s = 0
   · rw [(snorm_eq_zero_iff ((hf i).indicator hs).AeStronglyMeasurable hpzero).2 (indicator_meas_zero hμs')]
     norm_num
     
@@ -749,7 +725,7 @@ theorem unif_integrable_of (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → �
     intro i
     refine' le_transₓ (le_of_eqₓ <| snorm_congr_ae _) (hC i)
     filter_upwards [(Exists.some_spec <| hf i).2] with x hx
-    by_cases' hfx : x ∈ { x | C ≤ ∥f i x∥₊ }
+    by_cases hfx:x ∈ { x | C ≤ ∥f i x∥₊ }
     · rw [indicator_of_mem hfx, indicator_of_mem, hx]
       rwa [mem_set_of, hx] at hfx
       
@@ -796,17 +772,17 @@ theorem uniform_integrable_finite [Finite ι] (hp_one : 1 ≤ p) (hp_top : p ≠
     UniformIntegrable f p μ := by
   cases nonempty_fintype ι
   refine' ⟨fun n => (hf n).1, unif_integrable_finite μ hp_one hp_top hf, _⟩
-  by_cases' hι : Nonempty ι
+  by_cases hι:Nonempty ι
   · choose ae_meas hf using hf
     set C :=
       (finset.univ.image fun i : ι => snorm (f i) p μ).max'
-        ⟨snorm (f hι.some) p μ, Finset.mem_image.2 ⟨hι.some, Finset.mem_univ _, rfl⟩⟩
+        ⟨snorm (f hι.some) p μ, Finsetₓ.mem_image.2 ⟨hι.some, Finsetₓ.mem_univ _, rfl⟩⟩
     refine' ⟨C.to_nnreal, fun i => _⟩
     rw [Ennreal.coe_to_nnreal]
-    · exact Finset.le_max' _ _ (Finset.mem_image.2 ⟨i, Finset.mem_univ _, rfl⟩)
+    · exact Finsetₓ.le_max' _ _ (Finsetₓ.mem_image.2 ⟨i, Finsetₓ.mem_univ _, rfl⟩)
       
-    · refine' ne_of_ltₓ ((Finset.max'_lt_iff _ _).2 fun y hy => _)
-      rw [Finset.mem_image] at hy
+    · refine' ne_of_ltₓ ((Finsetₓ.max'_lt_iff _ _).2 fun y hy => _)
+      rw [Finsetₓ.mem_image] at hy
       obtain ⟨i, -, rfl⟩ := hy
       exact hf i
       
@@ -884,7 +860,7 @@ theorem uniform_integrable_of [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ �
   obtain ⟨C, hC⟩ := h ε hε
   refine' ⟨C, fun i => le_transₓ (le_of_eqₓ <| snorm_congr_ae _) (hC i)⟩
   filter_upwards [(Exists.some_spec <| hf i).2] with x hx
-  by_cases' hfx : x ∈ { x | C ≤ ∥f i x∥₊ }
+  by_cases hfx:x ∈ { x | C ≤ ∥f i x∥₊ }
   · rw [indicator_of_mem hfx, indicator_of_mem, hx]
     rwa [mem_set_of, hx] at hfx
     
@@ -937,7 +913,7 @@ theorem UniformIntegrable.spec (hp : p ≠ 0) (hp' : p ≠ ∞) (hfu : UniformIn
   obtain ⟨C, hC⟩ := hgunif.spec' hp hp' hgmeas hε
   refine' ⟨C, fun i => le_transₓ (le_of_eqₓ <| snorm_congr_ae _) (hC i)⟩
   filter_upwards [(Exists.some_spec <| hfu.1 i).2] with x hx
-  by_cases' hfx : x ∈ { x | C ≤ ∥f i x∥₊ }
+  by_cases hfx:x ∈ { x | C ≤ ∥f i x∥₊ }
   · rw [indicator_of_mem hfx, indicator_of_mem, hx]
     rwa [mem_set_of, hx] at hfx
     
@@ -956,17 +932,17 @@ theorem uniform_integrable_iff [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ 
 
 /-- The averaging of a uniformly integrable sequence is also uniformly integrable. -/
 theorem uniform_integrable_average (hp : 1 ≤ p) {f : ℕ → α → ℝ} (hf : UniformIntegrable f p μ) :
-    UniformIntegrable (fun n => (∑ i in Finset.range n, f i) / n) p μ := by
+    UniformIntegrable (fun n => (∑ i in Finsetₓ.range n, f i) / n) p μ := by
   obtain ⟨hf₁, hf₂, hf₃⟩ := hf
   refine' ⟨fun n => _, fun ε hε => _, _⟩
   · simp_rw [div_eq_mul_inv]
     exact
-      (Finset.ae_strongly_measurable_sum' _ fun i _ => hf₁ i).mul
+      (Finsetₓ.ae_strongly_measurable_sum' _ fun i _ => hf₁ i).mul
         (ae_strongly_measurable_const : ae_strongly_measurable (fun x => (↑n : ℝ)⁻¹) μ)
     
   · obtain ⟨δ, hδ₁, hδ₂⟩ := hf₂ hε
     refine' ⟨δ, hδ₁, fun n s hs hle => _⟩
-    simp_rw [div_eq_mul_inv, Finset.sum_mul, Set.indicator_finset_sum]
+    simp_rw [div_eq_mul_inv, Finsetₓ.sum_mul, Set.indicator_finset_sum]
     refine' le_transₓ (snorm_sum_le (fun i hi => ((hf₁ i).mul_const (↑n)⁻¹).indicator hs) hp) _
     have : ∀ i, s.indicator (f i * (↑n)⁻¹) = (↑n : ℝ)⁻¹ • s.indicator (f i) := by
       intro i
@@ -976,47 +952,45 @@ theorem uniform_integrable_average (hp : 1 ≤ p) {f : ℕ → α → ℝ} (hf :
         
       · rfl
         
-    simp_rw [this, snorm_const_smul, ← Finset.mul_sum, nnnorm_inv, Real.nnnorm_coe_nat]
-    by_cases' hn : (↑(↑n : ℝ≥0)⁻¹ : ℝ≥0∞) = 0
+    simp_rw [this, snorm_const_smul, ← Finsetₓ.mul_sum, nnnorm_inv, Real.nnnorm_coe_nat]
+    by_cases hn:(↑(↑n : ℝ≥0)⁻¹ : ℝ≥0∞) = 0
     · simp only [hn, zero_mul, zero_le]
       
     refine' le_transₓ _ (_ : ↑(↑n : ℝ≥0)⁻¹ * n • Ennreal.ofReal ε ≤ Ennreal.ofReal ε)
     · refine' (Ennreal.mul_le_mul_left hn Ennreal.coe_ne_top).2 _
-      conv_rhs => rw [← Finset.card_range n]
-      exact Finset.sum_le_card_nsmul _ _ _ fun i hi => hδ₂ _ _ hs hle
+      conv_rhs => rw [← Finsetₓ.card_range n]
+      exact Finsetₓ.sum_le_card_nsmul _ _ _ fun i hi => hδ₂ _ _ hs hle
       
     · simp only [Ennreal.coe_eq_zero, inv_eq_zero, Nat.cast_eq_zero] at hn
       rw [nsmul_eq_mul, ← mul_assoc, Ennreal.coe_inv, Ennreal.coe_nat, Ennreal.inv_mul_cancel _ (Ennreal.nat_ne_top _),
         one_mulₓ]
       · exact le_rflₓ
         
-      all_goals
-        simpa only [Ne.def, Nat.cast_eq_zero]
+      all_goals simpa only [Ne.def, Nat.cast_eq_zero]
       
     
   · obtain ⟨C, hC⟩ := hf₃
-    simp_rw [div_eq_mul_inv, Finset.sum_mul]
+    simp_rw [div_eq_mul_inv, Finsetₓ.sum_mul]
     refine' ⟨C, fun n => (snorm_sum_le (fun i hi => (hf₁ i).mul_const (↑n)⁻¹) hp).trans _⟩
     have : ∀ i, (fun ω => f i ω * (↑n)⁻¹) = (↑n : ℝ)⁻¹ • fun ω => f i ω := by
       intro i
       ext ω
       simp only [mul_comm, Pi.smul_apply, Algebra.id.smul_eq_mul]
-    simp_rw [this, snorm_const_smul, ← Finset.mul_sum, nnnorm_inv, Real.nnnorm_coe_nat]
-    by_cases' hn : (↑(↑n : ℝ≥0)⁻¹ : ℝ≥0∞) = 0
+    simp_rw [this, snorm_const_smul, ← Finsetₓ.mul_sum, nnnorm_inv, Real.nnnorm_coe_nat]
+    by_cases hn:(↑(↑n : ℝ≥0)⁻¹ : ℝ≥0∞) = 0
     · simp only [hn, zero_mul, zero_le]
       
     refine' le_transₓ _ (_ : ↑(↑n : ℝ≥0)⁻¹ * (n • C : ℝ≥0∞) ≤ C)
     · refine' (Ennreal.mul_le_mul_left hn Ennreal.coe_ne_top).2 _
-      conv_rhs => rw [← Finset.card_range n]
-      exact Finset.sum_le_card_nsmul _ _ _ fun i hi => hC i
+      conv_rhs => rw [← Finsetₓ.card_range n]
+      exact Finsetₓ.sum_le_card_nsmul _ _ _ fun i hi => hC i
       
     · simp only [Ennreal.coe_eq_zero, inv_eq_zero, Nat.cast_eq_zero] at hn
       rw [nsmul_eq_mul, ← mul_assoc, Ennreal.coe_inv, Ennreal.coe_nat, Ennreal.inv_mul_cancel _ (Ennreal.nat_ne_top _),
         one_mulₓ]
       · exact le_rflₓ
         
-      all_goals
-        simpa only [Ne.def, Nat.cast_eq_zero]
+      all_goals simpa only [Ne.def, Nat.cast_eq_zero]
       
     
 

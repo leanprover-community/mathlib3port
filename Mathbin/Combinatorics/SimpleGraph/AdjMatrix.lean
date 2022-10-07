@@ -39,7 +39,7 @@ properties to computational properties of the matrix.
 
 open BigOperators Matrix
 
-open Finset Matrix SimpleGraph
+open Finsetₓ Matrix SimpleGraph
 
 variable {V α β : Type _}
 
@@ -50,15 +50,9 @@ namespace Matrix
     (2) `A` is symmetric,
     (3) every diagonal entry of `A` is `0`. -/
 structure IsAdjMatrix [Zero α] [One α] (A : Matrix V V α) : Prop where
-  zero_or_one : ∀ i j, A i j = 0 ∨ A i j = 1 := by
-    run_tac
-      obviously
-  symm : A.IsSymm := by
-    run_tac
-      obviously
-  apply_diag : ∀ i, A i i = 0 := by
-    run_tac
-      obviously
+  zero_or_one : ∀ i j, A i j = 0 ∨ A i j = 1 := by obviously
+  symm : A.IsSymm := by obviously
+  apply_diag : ∀ i, A i i = 0 := by obviously
 
 namespace IsAdjMatrix
 
@@ -70,23 +64,19 @@ theorem apply_diag_ne [MulZeroOneClassₓ α] [Nontrivial α] (h : IsAdjMatrix A
 
 @[simp]
 theorem apply_ne_one_iff [MulZeroOneClassₓ α] [Nontrivial α] (h : IsAdjMatrix A) (i j : V) : ¬A i j = 1 ↔ A i j = 0 :=
-  by
-  obtain h | h := h.zero_or_one i j <;> simp [h]
+  by obtain h | h := h.zero_or_one i j <;> simp [h]
 
 @[simp]
 theorem apply_ne_zero_iff [MulZeroOneClassₓ α] [Nontrivial α] (h : IsAdjMatrix A) (i j : V) : ¬A i j = 0 ↔ A i j = 1 :=
-  by
-  rw [← apply_ne_one_iff h, not_not]
+  by rw [← apply_ne_one_iff h, not_not]
 
 /-- For `A : matrix V V α` and `h : is_adj_matrix A`,
     `h.to_graph` is the simple graph whose adjacency matrix is `A`. -/
 @[simps]
 def toGraph [MulZeroOneClassₓ α] [Nontrivial α] (h : IsAdjMatrix A) : SimpleGraph V where
   Adj := fun i j => A i j = 1
-  symm := fun i j hij => by
-    rwa [h.symm.apply i j]
-  loopless := fun i => by
-    simp [h]
+  symm := fun i j hij => by rwa [h.symm.apply i j]
+  loopless := fun i => by simp [h]
 
 instance [MulZeroOneClassₓ α] [Nontrivial α] [DecidableEq α] (h : IsAdjMatrix A) : DecidableRel h.toGraph.Adj := by
   simp only [to_graph]
@@ -104,8 +94,7 @@ section Compl
 variable [DecidableEq α] [DecidableEq V] (A : Matrix V V α)
 
 @[simp]
-theorem compl_apply_diag [Zero α] [One α] (i : V) : A.compl i i = 0 := by
-  simp [compl]
+theorem compl_apply_diag [Zero α] [One α] (i : V) : A.compl i i = 0 := by simp [compl]
 
 @[simp]
 theorem compl_apply [Zero α] [One α] (i j : V) : A.compl i j = 0 ∨ A.compl i j = 1 := by
@@ -119,8 +108,7 @@ theorem is_symm_compl [Zero α] [One α] (h : A.IsSymm) : A.compl.IsSymm := by
 
 @[simp]
 theorem is_adj_matrix_compl [Zero α] [One α] (h : A.IsSymm) : IsAdjMatrix A.compl :=
-  { symm := by
-      simp [h] }
+  { symm := by simp [h] }
 
 namespace IsAdjMatrix
 
@@ -132,7 +120,7 @@ theorem compl [Zero α] [One α] (h : IsAdjMatrix A) : IsAdjMatrix A.compl :=
 
 theorem to_graph_compl_eq [MulZeroOneClassₓ α] [Nontrivial α] (h : IsAdjMatrix A) : h.compl.toGraph = h.toGraphᶜ := by
   ext v w
-  cases' h.zero_or_one v w with h h <;> by_cases' hvw : v = w <;> simp [Matrix.compl, h, hvw]
+  cases' h.zero_or_one v w with h h <;> by_cases hvw:v = w <;> simp [Matrix.compl, h, hvw]
 
 end IsAdjMatrix
 
@@ -173,8 +161,7 @@ variable (α)
 /-- The adjacency matrix of `G` is an adjacency matrix. -/
 @[simp]
 theorem is_adj_matrix_adj_matrix [Zero α] [One α] : (G.adjMatrix α).IsAdjMatrix :=
-  { zero_or_one := fun i j => by
-      by_cases' G.adj i j <;> simp [h] }
+  { zero_or_one := fun i j => by by_cases G.adj i j <;> simp [h] }
 
 /-- The graph induced by the adjacency matrix of `G` is `G` itself. -/
 theorem to_graph_adj_matrix_eq [MulZeroOneClassₓ α] [Nontrivial α] : (G.is_adj_matrix_adj_matrix α).toGraph = G := by
@@ -182,7 +169,7 @@ theorem to_graph_adj_matrix_eq [MulZeroOneClassₓ α] [Nontrivial α] : (G.is_a
   simp only [is_adj_matrix.to_graph_adj, adj_matrix_apply, ite_eq_left_iff, zero_ne_one]
   apply not_not
 
-variable {α} [Fintype V]
+variable {α} [Fintypeₓ V]
 
 @[simp]
 theorem adj_matrix_dot_product [NonAssocSemiringₓ α] (v : V) (vec : V → α) :
@@ -192,12 +179,11 @@ theorem adj_matrix_dot_product [NonAssocSemiringₓ α] (v : V) (vec : V → α)
 @[simp]
 theorem dot_product_adj_matrix [NonAssocSemiringₓ α] (v : V) (vec : V → α) :
     dotProduct vec (G.adjMatrix α v) = ∑ u in G.neighborFinset v, vec u := by
-  simp [neighbor_finset_eq_filter, dot_product, sum_filter, Finset.sum_apply]
+  simp [neighbor_finset_eq_filter, dot_product, sum_filter, Finsetₓ.sum_apply]
 
 @[simp]
 theorem adj_matrix_mul_vec_apply [NonAssocSemiringₓ α] (v : V) (vec : V → α) :
-    ((G.adjMatrix α).mulVec vec) v = ∑ u in G.neighborFinset v, vec u := by
-  rw [mul_vec, adj_matrix_dot_product]
+    ((G.adjMatrix α).mulVec vec) v = ∑ u in G.neighborFinset v, vec u := by rw [mul_vec, adj_matrix_dot_product]
 
 @[simp]
 theorem adj_matrix_vec_mul_apply [NonAssocSemiringₓ α] (v : V) (vec : V → α) :
@@ -220,37 +206,33 @@ theorem mul_adj_matrix_apply [NonAssocSemiringₓ α] (M : Matrix V V α) (v w :
 variable (α)
 
 @[simp]
-theorem trace_adj_matrix [AddCommMonoidₓ α] [One α] : Matrix.trace (G.adjMatrix α) = 0 := by
-  simp [Matrix.trace]
+theorem trace_adj_matrix [AddCommMonoidₓ α] [One α] : Matrix.trace (G.adjMatrix α) = 0 := by simp [Matrix.trace]
 
 variable {α}
 
 theorem adj_matrix_mul_self_apply_self [NonAssocSemiringₓ α] (i : V) :
-    (G.adjMatrix α ⬝ G.adjMatrix α) i i = degree G i := by
-  simp [degree]
+    (G.adjMatrix α ⬝ G.adjMatrix α) i i = degree G i := by simp [degree]
 
 variable {G}
 
 @[simp]
 theorem adj_matrix_mul_vec_const_apply [Semiringₓ α] {a : α} {v : V} :
-    (G.adjMatrix α).mulVec (Function.const _ a) v = G.degree v * a := by
-  simp [degree]
+    (G.adjMatrix α).mulVec (Function.const _ a) v = G.degree v * a := by simp [degree]
 
 theorem adj_matrix_mul_vec_const_apply_of_regular [Semiringₓ α] {d : ℕ} {a : α} (hd : G.IsRegularOfDegree d) {v : V} :
-    (G.adjMatrix α).mulVec (Function.const _ a) v = d * a := by
-  simp [hd v]
+    (G.adjMatrix α).mulVec (Function.const _ a) v = d * a := by simp [hd v]
 
--- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:255:2: unsupported tactic unify_equations
+-- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:240:2: unsupported tactic unify_equations
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: unify_equations ... #[[ident hqp, ident hrp]]
 theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiringₓ α] (n : ℕ) (u v : V) :
-    (G.adjMatrix α ^ n) u v = Fintype.card { p : G.Walk u v | p.length = n } := by
+    (G.adjMatrix α ^ n) u v = Fintypeₓ.card { p : G.Walk u v | p.length = n } := by
   rw [card_set_walk_length_eq]
   induction' n with n ih generalizing u v
   · obtain rfl | h := eq_or_ne u v <;> simp [finset_walk_length, *]
     
-  · nth_rw 0[Nat.succ_eq_one_add]
+  · nth_rw 0 [Nat.succ_eq_one_add]
     simp only [pow_addₓ, pow_oneₓ, finset_walk_length, ih, mul_eq_mul, adj_matrix_mul_apply]
-    rw [Finset.card_bUnion]
+    rw [Finsetₓ.card_bUnion]
     · norm_cast
       rw [Set.sum_indicator_subset _ (subset_univ (G.neighbor_finset u))]
       congr 2
@@ -262,10 +244,9 @@ theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiringₓ α] (n : 
       split_ifs  at hp with hx hy <;>
         simp only [inf_eq_inter, empty_inter, inter_empty, not_mem_empty, mem_inter, mem_map,
             Function.Embedding.coe_fn_mk, exists_propₓ] at hp <;>
-          try
-            simpa using hp
+          try simpa using hp
       obtain ⟨⟨qx, hql, hqp⟩, ⟨rx, hrl, hrp⟩⟩ := hp
-      «./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:255:2: unsupported tactic unify_equations»
+      «./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:240:2: unsupported tactic unify_equations»
       exact absurd rfl hxy
       
     

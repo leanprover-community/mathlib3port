@@ -70,8 +70,7 @@ theorem embedding_of_subset_isometry (H : DenseRange x) : Isometry (embeddingOfS
       _ = 2 * dist a (x n) + (dist b (x n) - dist a (x n)) := by
         simp [dist_comm]
         ring
-      _ ≤ 2 * dist a (x n) + abs (dist b (x n) - dist a (x n)) := by
-        apply_rules [add_le_add_left, le_abs_self]
+      _ ≤ 2 * dist a (x n) + abs (dist b (x n) - dist a (x n)) := by apply_rules [add_le_add_left, le_abs_self]
       _ ≤ 2 * (e / 2) + abs (embedding_of_subset x b n - embedding_of_subset x a n) := by
         rw [C]
         apply_rules [add_le_add, mul_le_mul_of_nonneg_left, hn.le, le_reflₓ]
@@ -84,8 +83,7 @@ theorem embedding_of_subset_isometry (H : DenseRange x) : Isometry (embeddingOfS
           simpa [dist_eq_norm] using
             lp.norm_apply_le_norm Ennreal.top_ne_zero (embedding_of_subset x b - embedding_of_subset x a) n
         nlinarith
-      _ = dist (embedding_of_subset x b) (embedding_of_subset x a) + e := by
-        ring
+      _ = dist (embedding_of_subset x b) (embedding_of_subset x a) + e := by ring
       
   simpa [dist_comm] using this
 

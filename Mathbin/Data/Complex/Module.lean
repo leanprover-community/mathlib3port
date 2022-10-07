@@ -56,11 +56,9 @@ variable [HasSmul R ℝ]
 `restrict_scalars.module ℝ ℂ ℂ = complex.module` definitionally. -/
 instance : HasSmul R ℂ where smul := fun r x => ⟨r • x.re - 0 * x.im, r • x.im + 0 * x.re⟩
 
-theorem smul_re (r : R) (z : ℂ) : (r • z).re = r • z.re := by
-  simp [(· • ·)]
+theorem smul_re (r : R) (z : ℂ) : (r • z).re = r • z.re := by simp [(· • ·)]
 
-theorem smul_im (r : R) (z : ℂ) : (r • z).im = r • z.im := by
-  simp [(· • ·)]
+theorem smul_im (r : R) (z : ℂ) : (r • z).im = r • z.im := by simp [(· • ·)]
 
 @[simp]
 theorem real_smul {x : ℝ} {z : ℂ} : x • z = x * z :=
@@ -69,45 +67,33 @@ theorem real_smul {x : ℝ} {z : ℂ} : x • z = x * z :=
 end
 
 instance [HasSmul R ℝ] [HasSmul S ℝ] [SmulCommClass R S ℝ] :
-    SmulCommClass R S ℂ where smul_comm := fun r s x => by
-    ext <;> simp [smul_re, smul_im, smul_comm]
+    SmulCommClass R S ℂ where smul_comm := fun r s x => by ext <;> simp [smul_re, smul_im, smul_comm]
 
 instance [HasSmul R S] [HasSmul R ℝ] [HasSmul S ℝ] [IsScalarTower R S ℝ] :
-    IsScalarTower R S ℂ where smul_assoc := fun r s x => by
-    ext <;> simp [smul_re, smul_im, smul_assoc]
+    IsScalarTower R S ℂ where smul_assoc := fun r s x => by ext <;> simp [smul_re, smul_im, smul_assoc]
 
 instance [HasSmul R ℝ] [HasSmul Rᵐᵒᵖ ℝ] [IsCentralScalar R ℝ] :
-    IsCentralScalar R ℂ where op_smul_eq_smul := fun r x => by
-    ext <;> simp [smul_re, smul_im, op_smul_eq_smul]
+    IsCentralScalar R ℂ where op_smul_eq_smul := fun r x => by ext <;> simp [smul_re, smul_im, op_smul_eq_smul]
 
 instance [Monoidₓ R] [MulAction R ℝ] : MulAction R ℂ where
-  one_smul := fun x => by
-    ext <;> simp [smul_re, smul_im, one_smul]
-  mul_smul := fun r s x => by
-    ext <;> simp [smul_re, smul_im, mul_smul]
+  one_smul := fun x => by ext <;> simp [smul_re, smul_im, one_smul]
+  mul_smul := fun r s x => by ext <;> simp [smul_re, smul_im, mul_smul]
 
 instance [Semiringₓ R] [DistribMulAction R ℝ] : DistribMulAction R ℂ where
-  smul_add := fun r x y => by
-    ext <;> simp [smul_re, smul_im, smul_add]
-  smul_zero := fun r => by
-    ext <;> simp [smul_re, smul_im, smul_zero]
+  smul_add := fun r x y => by ext <;> simp [smul_re, smul_im, smul_add]
+  smul_zero := fun r => by ext <;> simp [smul_re, smul_im, smul_zero]
 
 instance [Semiringₓ R] [Module R ℝ] : Module R ℂ where
-  add_smul := fun r s x => by
-    ext <;> simp [smul_re, smul_im, add_smul]
-  zero_smul := fun r => by
-    ext <;> simp [smul_re, smul_im, zero_smul]
+  add_smul := fun r s x => by ext <;> simp [smul_re, smul_im, add_smul]
+  zero_smul := fun r => by ext <;> simp [smul_re, smul_im, zero_smul]
 
 instance [CommSemiringₓ R] [Algebra R ℝ] : Algebra R ℂ :=
   { Complex.ofReal.comp (algebraMap R ℝ) with smul := (· • ·),
-    smul_def' := fun r x => by
-      ext <;> simp [smul_re, smul_im, Algebra.smul_def],
-    commutes' := fun r ⟨xr, xi⟩ => by
-      ext <;> simp [smul_re, smul_im, Algebra.commutes] }
+    smul_def' := fun r x => by ext <;> simp [smul_re, smul_im, Algebra.smul_def],
+    commutes' := fun r ⟨xr, xi⟩ => by ext <;> simp [smul_re, smul_im, Algebra.commutes] }
 
 instance : StarModule ℝ ℂ :=
-  ⟨fun r x => by
-    simp only [star_def, star_trivial, real_smul, map_mul, conj_of_real]⟩
+  ⟨fun r x => by simp only [star_def, star_trivial, real_smul, map_mul, conj_of_real]⟩
 
 @[simp]
 theorem coe_algebra_map : (algebraMap ℝ ℂ : ℝ → ℂ) = coe :=
@@ -136,10 +122,7 @@ section
 open ComplexOrder
 
 protected theorem ordered_smul : OrderedSmul ℝ ℂ :=
-  OrderedSmul.mk' fun a b r hab hr =>
-    ⟨by
-      simp [hr, hab.1.le], by
-      simp [hab.2]⟩
+  OrderedSmul.mk' fun a b r hab hr => ⟨by simp [hr, hab.1.le], by simp [hab.2]⟩
 
 localized [ComplexOrder] attribute [instance] Complex.ordered_smul
 
@@ -151,16 +134,13 @@ open Submodule FiniteDimensional
 /-- `ℂ` has a basis over `ℝ` given by `1` and `I`. -/
 noncomputable def basisOneI : Basis (Finₓ 2) ℝ ℂ :=
   Basis.ofEquivFun
-    { toFun := fun z => ![z.re, z.im], invFun := fun c => c 0 + c 1 • I,
-      left_inv := fun z => by
-        simp ,
+    { toFun := fun z => ![z.re, z.im], invFun := fun c => c 0 + c 1 • I, left_inv := fun z => by simp,
       right_inv := fun c => by
         ext i
-        fin_cases i <;> simp ,
+        fin_cases i <;> simp,
       map_add' := fun z z' => by
-        simp ,-- why does `simp` not know how to apply `smul_cons`, which is a `@[simp]` lemma, here?
-      map_smul' := fun c z => by
-        simp [Matrix.smul_cons c z.re, Matrix.smul_cons c z.im] }
+        simp,-- why does `simp` not know how to apply `smul_cons`, which is a `@[simp]` lemma, here?
+      map_smul' := fun c z => by simp [Matrix.smul_cons c z.re, Matrix.smul_cons c z.im] }
 
 @[simp]
 theorem coe_basis_one_I_repr (z : ℂ) : ⇑(basisOneI.repr z) = ![z.re, z.im] :=
@@ -184,11 +164,10 @@ instance : FiniteDimensional ℝ ℂ :=
 
 @[simp]
 theorem finrank_real_complex : FiniteDimensional.finrank ℝ ℂ = 2 := by
-  rw [finrank_eq_card_basis basis_one_I, Fintype.card_fin]
+  rw [finrank_eq_card_basis basis_one_I, Fintypeₓ.card_fin]
 
 @[simp]
-theorem dim_real_complex : Module.rank ℝ ℂ = 2 := by
-  simp [← finrank_eq_dim, finrank_real_complex]
+theorem dim_real_complex : Module.rank ℝ ℂ = 2 := by simp [← finrank_eq_dim, finrank_real_complex]
 
 theorem dim_real_complex'.{u} : Cardinal.lift.{u} (Module.rank ℝ ℂ) = 2 := by
   simp [← finrank_eq_dim, finrank_real_complex, bit0]
@@ -211,6 +190,11 @@ instance Module.real_complex_tower (E : Type _) [AddCommGroupₓ E] [Module ℂ 
 @[simp, norm_cast]
 theorem Complex.coe_smul {E : Type _} [AddCommGroupₓ E] [Module ℂ E] (x : ℝ) (y : E) : (x : ℂ) • y = x • y :=
   rfl
+
+/-- The scalar action of `ℝ` on a `ℂ`-module `E` induced by `module.complex_to_real` commutes with
+another scalar action of `M` on `E` whenever the action of `ℂ` commutes with the action of `M`. -/
+instance (priority := 900) SmulCommClass.complex_to_real {M E : Type _} [AddCommGroupₓ E] [Module ℂ E] [HasSmul M E]
+    [SmulCommClass ℂ M E] : SmulCommClass ℝ M E where smul_comm := fun r _ _ => (smul_comm (r : ℂ) _ _ : _)
 
 instance (priority := 100) FiniteDimensional.complex_to_real (E : Type _) [AddCommGroupₓ E] [Module ℂ E]
     [FiniteDimensional ℂ E] : FiniteDimensional ℝ E :=
@@ -239,8 +223,7 @@ open ComplexConjugate
 def reLm : ℂ →ₗ[ℝ] ℝ where
   toFun := fun x => x.re
   map_add' := add_re
-  map_smul' := by
-    simp
+  map_smul' := by simp
 
 @[simp]
 theorem re_lm_coe : ⇑re_lm = re :=
@@ -250,8 +233,7 @@ theorem re_lm_coe : ⇑re_lm = re :=
 def imLm : ℂ →ₗ[ℝ] ℝ where
   toFun := fun x => x.im
   map_add' := add_im
-  map_smul' := by
-    simp
+  map_smul' := by simp
 
 @[simp]
 theorem im_lm_coe : ⇑im_lm = im :=
@@ -289,10 +271,7 @@ theorem to_matrix_conj_ae :
 
 /-- The identity and the complex conjugation are the only two `ℝ`-algebra homomorphisms of `ℂ`. -/
 theorem real_alg_hom_eq_id_or_conj (f : ℂ →ₐ[ℝ] ℂ) : f = AlgHom.id ℝ ℂ ∨ f = conj_ae := by
-  refine'
-      (eq_or_eq_neg_of_sq_eq_sq (f I) I <| by
-            rw [← map_pow, I_sq, map_neg, map_one]).imp
-        _ _ <;>
+  refine' (eq_or_eq_neg_of_sq_eq_sq (f I) I <| by rw [← map_pow, I_sq, map_neg, map_one]).imp _ _ <;>
     refine' fun h => alg_hom_ext _
   exacts[h, conj_I.symm ▸ h]
 
@@ -305,9 +284,7 @@ variable {A : Type _} [Ringₓ A] [Algebra ℝ A]
 See `complex.lift` for this as an equiv. -/
 def liftAux (I' : A) (hf : I' * I' = -1) : ℂ →ₐ[ℝ] A :=
   AlgHom.ofLinearMap ((Algebra.ofId ℝ A).toLinearMap.comp reLm + (LinearMap.toSpanSingleton _ _ I').comp imLm)
-    (show algebraMap ℝ A 1 + (0 : ℝ) • I' = 1 by
-      rw [RingHom.map_one, zero_smul, add_zeroₓ])
-    fun ⟨x₁, y₁⟩ ⟨x₂, y₂⟩ =>
+    (show algebraMap ℝ A 1 + (0 : ℝ) • I' = 1 by rw [RingHom.map_one, zero_smul, add_zeroₓ]) fun ⟨x₁, y₁⟩ ⟨x₂, y₂⟩ =>
     show
       algebraMap ℝ A (x₁ * x₂ - y₁ * y₂) + (x₁ * y₂ + y₁ * x₂) • I' =
         (algebraMap ℝ A x₁ + y₁ • I') * (algebraMap ℝ A x₂ + y₂ • I')
@@ -326,8 +303,7 @@ def liftAux (I' : A) (hf : I' * I' = -1) : ℂ →ₐ[ℝ] A :=
 theorem lift_aux_apply (I' : A) (hI') (z : ℂ) : liftAux I' hI' z = algebraMap ℝ A z.re + z.im • I' :=
   rfl
 
-theorem lift_aux_apply_I (I' : A) (hI') : liftAux I' hI' i = I' := by
-  simp
+theorem lift_aux_apply_I (I' : A) (hI') : liftAux I' hI' i = I' := by simp
 
 /-- A universal property of the complex numbers, providing a unique `ℂ →ₐ[ℝ] A` for every element
 of `A` which squares to `-1`.
@@ -338,9 +314,7 @@ This isomorphism is named to match the very similar `zsqrtd.lift`. -/
 @[simps (config := { simpRhs := true })]
 def lift : { I' : A // I' * I' = -1 } ≃ (ℂ →ₐ[ℝ] A) where
   toFun := fun I' => liftAux I' I'.Prop
-  invFun := fun F =>
-    ⟨F i, by
-      rw [← F.map_mul, I_mul_I, AlgHom.map_neg, AlgHom.map_one]⟩
+  invFun := fun F => ⟨F i, by rw [← F.map_mul, I_mul_I, AlgHom.map_neg, AlgHom.map_one]⟩
   left_inv := fun I' => Subtype.ext <| lift_aux_apply_I I' I'.Prop
   right_inv := fun F => alg_hom_ext <| lift_aux_apply_I _ _
 
@@ -431,11 +405,11 @@ theorem imaginary_part_I_smul (a : A) : ℑ (I • a) = ℜ a := by
   simp [smul_comm I, smul_smul I]
 
 theorem real_part_smul (z : ℂ) (a : A) : ℜ (z • a) = z.re • ℜ a - z.im • ℑ a := by
-  nth_rw 0[← re_add_im z]
+  nth_rw 0 [← re_add_im z]
   simp [-re_add_im, add_smul, ← smul_smul, sub_eq_add_neg]
 
 theorem imaginary_part_smul (z : ℂ) (a : A) : ℑ (z • a) = z.re • ℑ a + z.im • ℜ a := by
-  nth_rw 0[← re_add_im z]
+  nth_rw 0 [← re_add_im z]
   simp [-re_add_im, add_smul, ← smul_smul]
 
 end RealImaginaryPart

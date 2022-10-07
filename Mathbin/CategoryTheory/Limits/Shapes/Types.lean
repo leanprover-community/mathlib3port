@@ -60,12 +60,8 @@ theorem pi_map_π_apply {β : Type u} {f g : β → Type u} (α : ∀ j, f j ⟶
 
 /-- The category of types has `punit` as a terminal object. -/
 def terminalLimitCone : Limits.LimitCone (Functor.empty (Type u)) where
-  Cone :=
-    { x := PUnit,
-      π := by
-        tidy }
-  IsLimit := by
-    tidy
+  Cone := { x := PUnit, π := by tidy }
+  IsLimit := by tidy
 
 /-- The terminal object in `Type u` is `punit`. -/
 noncomputable def terminalIso : ⊤_ Type u ≅ PUnit :=
@@ -73,12 +69,8 @@ noncomputable def terminalIso : ⊤_ Type u ≅ PUnit :=
 
 /-- The category of types has `pempty` as an initial object. -/
 def initialColimitCocone : Limits.ColimitCocone (Functor.empty (Type u)) where
-  Cocone :=
-    { x := Pempty,
-      ι := by
-        tidy }
-  IsColimit := by
-    tidy
+  Cocone := { x := Pempty, ι := by tidy }
+  IsColimit := by tidy
 
 /-- The initial object in `Type u` is `pempty`. -/
 noncomputable def initialIso : ⊥_ Type u ≅ Pempty :=
@@ -292,10 +284,8 @@ def equalizerLimit : Limits.LimitCone (parallelPair g h) where
   Cone := Fork.ofι (Subtype.val : { x : Y // g x = h x } → Y) (funext Subtype.prop)
   IsLimit :=
     (Fork.IsLimit.mk' _) fun s =>
-      ⟨fun i =>
-        ⟨s.ι i, by
-          apply congr_fun s.condition i⟩,
-        rfl, fun m hm => funext fun x => Subtype.ext (congr_fun hm x)⟩
+      ⟨fun i => ⟨s.ι i, by apply congr_fun s.condition i⟩, rfl, fun m hm =>
+        funext fun x => Subtype.ext (congr_fun hm x)⟩
 
 variable (g h)
 
@@ -342,14 +332,13 @@ theorem coequalizer_preimage_image_eq_of_preimage_eq (π : Y ⟶ Z) (e : f ≫ �
     rintro _ _ ⟨x⟩
     change x ∈ f ⁻¹' U ↔ x ∈ g ⁻¹' U
     congr 2
-  have eqv : _root_.equivalence fun x y => x ∈ U ↔ y ∈ U := by
-    tidy
+  have eqv : _root_.equivalence fun x y => x ∈ U ↔ y ∈ U := by tidy
   ext
   constructor
   · rw [←
       show _ = π from h.comp_cocone_point_unique_up_to_iso_inv (coequalizer_colimit f g).2 walking_parallel_pair.one]
     rintro ⟨y, hy, e'⟩
-    dsimp'  at e'
+    dsimp at e'
     replace e' :=
       (mono_iff_injective (h.cocone_point_unique_up_to_iso (coequalizer_colimit f g).IsColimit).inv).mp inferInstance e'
     exact (eqv.eqv_gen_iff.mp (EqvGen.mono lem (Quot.exact _ e'))).mp hy
@@ -407,11 +396,7 @@ for given `f` and `g`.
 def pullbackLimitCone (f : X ⟶ Z) (g : Y ⟶ Z) : Limits.LimitCone (cospan f g) where
   Cone := pullbackCone f g
   IsLimit :=
-    PullbackCone.isLimitAux _ (fun s x => ⟨⟨s.fst x, s.snd x⟩, congr_fun s.condition x⟩)
-      (by
-        tidy)
-      (by
-        tidy)
+    PullbackCone.isLimitAux _ (fun s x => ⟨⟨s.fst x, s.snd x⟩, congr_fun s.condition x⟩) (by tidy) (by tidy)
       fun s m w =>
       funext fun x =>
         Subtype.ext <| Prod.extₓ (congr_fun (w WalkingCospan.left) x) (congr_fun (w WalkingCospan.right) x)

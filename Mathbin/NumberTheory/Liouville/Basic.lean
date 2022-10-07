@@ -107,7 +107,7 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N
   -- The maximum between `1 / ε` and `M` works
   refine' ⟨max (1 / ε) M, me0, fun z a => _⟩
   -- First, let's deal with the easy case in which we are far away from `α`
-  by_cases' dm1 : 1 ≤ dist α (j z a) * max (1 / ε) M
+  by_cases dm1:1 ≤ dist α (j z a) * max (1 / ε) M
   · exact one_le_mul_of_one_le_of_one_le (d0 a) dm1
     
   · -- `j z a = z / (a + 1)`: we prove that this ratio is close to `α`
@@ -164,10 +164,7 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
   -- 3: the weird inequality of Liouville type with powers of the denominators.
   · show 1 ≤ (a + 1 : ℝ) ^ f.nat_degree * abs (eval α fR - eval (z / (a + 1)) fR)
     rw [fa, zero_sub, abs_neg]
-    rw
-      [show (a + 1 : ℝ) = ((a + 1 : ℕ) : ℤ) by
-        norm_cast] at
-      hq⊢
+    rw [show (a + 1 : ℝ) = ((a + 1 : ℕ) : ℤ) by norm_cast] at hq⊢
     -- key observation: the right-hand side of the inequality is an *integer*.  Therefore,
     -- if its absolute value is not at least one, then it vanishes.  Proceed by contradiction
     refine' one_le_pow_mul_abs_eval_div (Int.coe_nat_succ_pos a) fun hy => _

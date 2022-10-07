@@ -72,7 +72,6 @@ theorem restrictScalars.smul_def {R : Type u₁} {S : Type u₂} [Ringₓ R] [Ri
     (r : R) (m : (restrictScalars f).obj M) : r • m = (f r • m : M) :=
   rfl
 
-@[simp]
 theorem restrictScalars.smul_def' {R : Type u₁} {S : Type u₂} [Ringₓ R] [Ringₓ S] (f : R →+* S) {M : ModuleCat.{v} S}
     (r : R) (m : M) : (r • m : (restrictScalars f).obj M) = (f r • m : M) :=
   rfl
@@ -80,9 +79,7 @@ theorem restrictScalars.smul_def' {R : Type u₁} {S : Type u₂} [Ringₓ R] [R
 instance (priority := 100) smul_comm_class_mk {R : Type u₁} {S : Type u₂} [Ringₓ R] [CommRingₓ S] (f : R →+* S)
     (M : Type v) [AddCommGroupₓ M] [Module S M] :
     @SmulCommClass R S M (RestrictScalars.obj' f (ModuleCat.mk M)).isModule.toHasSmul
-      _ where smul_comm := fun r s m =>
-    (by
-      simp [← mul_smul, mul_comm] : f r • s • m = s • f r • m)
+      _ where smul_comm := fun r s m => (by simp [← mul_smul, mul_comm] : f r • s • m = s • f r • m)
 
 namespace ExtendScalars
 
@@ -113,13 +110,13 @@ def obj' : ModuleCat S :=
 /-- Extension of scalars is a functor where an `R`-module `M` is sent to `S ⊗ M` and
 `l : M1 ⟶ M2` is sent to `s ⊗ m ↦ s ⊗ l m`
 -/
-def map' {M1 M2 : ModuleCat.{v} R} (l : M1 ⟶ M2) : obj' f M1 ⟶ obj' f M2 := by
-  -- The "by apply" part makes this require 75% fewer heartbeats to process (#16371).
+def map' {M1 M2 : ModuleCat.{v} R} (l : M1 ⟶ M2) : obj' f M1 ⟶ obj' f M2 :=
+  by-- The "by apply" part makes this require 75% fewer heartbeats to process (#16371).
   apply @LinearMap.baseChange R S M1 M2 _ _ ((algebraMap S _).comp f).toAlgebra _ _ _ _ l
 
 theorem map'_id {M : ModuleCat.{v} R} : map' f (𝟙 M) = 𝟙 _ :=
   LinearMap.ext fun x : obj' f M => by
-    dsimp' only [map', ModuleCat.id_apply]
+    dsimp only [map', ModuleCat.id_apply]
     induction' x using TensorProduct.induction_on with _ _ m s ihx ihy
     · simp only [map_zero]
       
@@ -131,7 +128,7 @@ theorem map'_id {M : ModuleCat.{v} R} : map' f (𝟙 M) = 𝟙 _ :=
 theorem map'_comp {M₁ M₂ M₃ : ModuleCat.{v} R} (l₁₂ : M₁ ⟶ M₂) (l₂₃ : M₂ ⟶ M₃) :
     map' f (l₁₂ ≫ l₂₃) = map' f l₁₂ ≫ map' f l₂₃ :=
   LinearMap.ext fun x : obj' f M₁ => by
-    dsimp' only [map']
+    dsimp only [map']
     induction' x using TensorProduct.induction_on with _ _ x y ihx ihy
     · rfl
       

@@ -47,8 +47,7 @@ open Emetric Set
 theorem to_lipschitz_with (hf : ContractingWith K f) : LipschitzWith K f :=
   hf.2
 
-theorem one_sub_K_pos' (hf : ContractingWith K f) : (0 : ℝ≥0∞) < 1 - K := by
-  simp [hf.1]
+theorem one_sub_K_pos' (hf : ContractingWith K f) : (0 : ℝ≥0∞) < 1 - K := by simp [hf.1]
 
 theorem one_sub_K_ne_zero (hf : ContractingWith K f) : (1 : ℝ≥0∞) - K ≠ 0 :=
   ne_of_gtₓ hf.one_sub_K_pos'
@@ -64,14 +63,12 @@ theorem edist_inequality (hf : ContractingWith K f) {x y} (h : edist x y ≠ ∞
       Ennreal.sub_mul fun _ _ => h, one_mulₓ, tsub_le_iff_right]
   calc
     edist x y ≤ edist x (f x) + edist (f x) (f y) + edist (f y) y := edist_triangle4 _ _ _ _
-    _ = edist x (f x) + edist y (f y) + edist (f x) (f y) := by
-      rw [edist_comm y, add_right_commₓ]
+    _ = edist x (f x) + edist y (f y) + edist (f x) (f y) := by rw [edist_comm y, add_right_commₓ]
     _ ≤ edist x (f x) + edist y (f y) + K * edist x y := add_le_add le_rflₓ (hf.2 _ _)
     
 
 theorem edist_le_of_fixed_point (hf : ContractingWith K f) {x y} (h : edist x y ≠ ∞) (hy : IsFixedPt f y) :
-    edist x y ≤ edist x (f x) / (1 - K) := by
-  simpa only [hy.eq, edist_self, add_zeroₓ] using hf.edist_inequality h
+    edist x y ≤ edist x (f x) / (1 - K) := by simpa only [hy.eq, edist_self, add_zeroₓ] using hf.edist_inequality h
 
 theorem eq_or_edist_eq_top_of_fixed_points (hf : ContractingWith K f) {x y} (hx : IsFixedPt f x) (hy : IsFixedPt f y) :
     x = y ∨ edist x y = ∞ := by
@@ -138,8 +135,7 @@ theorem edist_efixed_point_lt_top (hf : ContractingWith K f) {x : α} (hx : edis
 theorem efixed_point_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) {y : α}
     (hy : edist y (f y) ≠ ∞) (h : edist x y ≠ ∞) : efixedPoint f hf x hx = efixedPoint f hf y hy := by
   refine' (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_ltₓ _ h') <;>
-    try
-      apply efixed_point_is_fixed_pt
+    try apply efixed_point_is_fixed_pt
   change edist_lt_top_setoid.rel _ _
   trans x
   · symm
@@ -224,8 +220,7 @@ theorem efixed_point_eq_of_edist_lt_top' (hf : ContractingWith K f) {s : Set α}
     (hyt : y ∈ t) (hy : edist y (f y) ≠ ∞) (hxy : edist x y ≠ ∞) :
     efixedPoint' f hsc hsf hfs x hxs hx = efixedPoint' f htc htf hft y hyt hy := by
   refine' (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_ltₓ _ h') <;>
-    try
-      apply efixed_point_is_fixed_pt'
+    try apply efixed_point_is_fixed_pt'
   change edist_lt_top_setoid.rel _ _
   trans x
   · symm
@@ -270,8 +265,7 @@ theorem dist_fixed_point_fixed_point_of_dist_le' (g : α → α) {x y} (hx : IsF
   calc
     dist x y = dist y x := dist_comm x y
     _ ≤ dist y (f y) / (1 - K) := hf.dist_le_of_fixed_point y hx
-    _ = dist (f y) (g y) / (1 - K) := by
-      rw [hy.eq, dist_comm]
+    _ = dist (f y) (g y) / (1 - K) := by rw [hy.eq, dist_comm]
     _ ≤ C / (1 - K) := (div_le_div_right hf.one_sub_K_pos).2 (hfg y)
     
 

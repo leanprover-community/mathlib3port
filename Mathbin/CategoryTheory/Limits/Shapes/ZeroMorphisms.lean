@@ -47,12 +47,8 @@ variable (D : Type u') [Category.{v'} D]
 and compositions of zero morphisms with anything give the zero morphism. -/
 class HasZeroMorphisms where
   [HasZero : ∀ X Y : C, Zero (X ⟶ Y)]
-  comp_zero' : ∀ {X Y : C} (f : X ⟶ Y) (Z : C), f ≫ (0 : Y ⟶ Z) = (0 : X ⟶ Z) := by
-    run_tac
-      obviously
-  zero_comp' : ∀ (X : C) {Y Z : C} (f : Y ⟶ Z), (0 : X ⟶ Y) ≫ f = (0 : X ⟶ Z) := by
-    run_tac
-      obviously
+  comp_zero' : ∀ {X Y : C} (f : X ⟶ Y) (Z : C), f ≫ (0 : Y ⟶ Z) = (0 : X ⟶ Z) := by obviously
+  zero_comp' : ∀ (X : C) {Y Z : C} (f : Y ⟶ Z), (0 : X ⟶ Y) ≫ f = (0 : X ⟶ Z) := by obviously
 
 attribute [instance] has_zero_morphisms.has_zero
 
@@ -70,13 +66,9 @@ theorem comp_zero [HasZeroMorphisms C] {X Y : C} {f : X ⟶ Y} {Z : C} : f ≫ (
 theorem zero_comp [HasZeroMorphisms C] {X : C} {Y Z : C} {f : Y ⟶ Z} : (0 : X ⟶ Y) ≫ f = (0 : X ⟶ Z) :=
   HasZeroMorphisms.zero_comp X f
 
-instance hasZeroMorphismsPempty :
-    HasZeroMorphisms (Discrete Pempty) where HasZero := by
-    tidy
+instance hasZeroMorphismsPempty : HasZeroMorphisms (Discrete Pempty) where HasZero := by tidy
 
-instance hasZeroMorphismsPunit :
-    HasZeroMorphisms (Discrete PUnit) where HasZero := by
-    tidy
+instance hasZeroMorphismsPunit : HasZeroMorphisms (Discrete PUnit) where HasZero := by tidy
 
 namespace HasZeroMorphisms
 
@@ -165,24 +157,14 @@ theorem eq_zero_of_tgt {X Y : C} (o : IsZero Y) (f : X ⟶ Y) : f = 0 :=
 
 theorem iff_id_eq_zero (X : C) : IsZero X ↔ 𝟙 X = 0 :=
   ⟨fun h => h.eq_of_src _ _, fun h =>
-    ⟨fun Y =>
-      ⟨⟨⟨0⟩, fun f => by
-          rw [← id_comp f, ← id_comp default, h, zero_comp, zero_comp]⟩⟩,
-      fun Y =>
-      ⟨⟨⟨0⟩, fun f => by
-          rw [← comp_id f, ← comp_id default, h, comp_zero, comp_zero]⟩⟩⟩⟩
+    ⟨fun Y => ⟨⟨⟨0⟩, fun f => by rw [← id_comp f, ← id_comp default, h, zero_comp, zero_comp]⟩⟩, fun Y =>
+      ⟨⟨⟨0⟩, fun f => by rw [← comp_id f, ← comp_id default, h, comp_zero, comp_zero]⟩⟩⟩⟩
 
 theorem of_mono_zero (X Y : C) [Mono (0 : X ⟶ Y)] : IsZero X :=
-  (iff_id_eq_zero X).mpr
-    ((cancel_mono (0 : X ⟶ Y)).1
-      (by
-        simp ))
+  (iff_id_eq_zero X).mpr ((cancel_mono (0 : X ⟶ Y)).1 (by simp))
 
 theorem of_epi_zero (X Y : C) [Epi (0 : X ⟶ Y)] : IsZero Y :=
-  (iff_id_eq_zero Y).mpr
-    ((cancel_epi (0 : X ⟶ Y)).1
-      (by
-        simp ))
+  (iff_id_eq_zero Y).mpr ((cancel_epi (0 : X ⟶ Y)).1 (by simp))
 
 theorem of_mono_eq_zero {X Y : C} (f : X ⟶ Y) [Mono f] (h : f = 0) : IsZero X := by
   subst h
@@ -262,11 +244,11 @@ open ZeroObject
 def zeroMorphismsOfZeroObject : HasZeroMorphisms C where
   HasZero := fun X Y => { zero := (default : X ⟶ 0) ≫ default }
   zero_comp' := fun X Y Z f => by
-    dunfold Zero.zero
+    dsimp only [Zero.zero]
     rw [category.assoc]
     congr
   comp_zero' := fun X Y Z f => by
-    dunfold Zero.zero
+    dsimp only [Zero.zero]
     rw [← category.assoc]
     congr
 
@@ -275,36 +257,28 @@ section HasZeroMorphisms
 variable [HasZeroMorphisms C]
 
 @[simp]
-theorem zero_iso_is_initial_hom {X : C} (t : IsInitial X) : (zeroIsoIsInitial t).Hom = 0 := by
-  ext
+theorem zero_iso_is_initial_hom {X : C} (t : IsInitial X) : (zeroIsoIsInitial t).Hom = 0 := by ext
 
 @[simp]
-theorem zero_iso_is_initial_inv {X : C} (t : IsInitial X) : (zeroIsoIsInitial t).inv = 0 := by
-  ext
+theorem zero_iso_is_initial_inv {X : C} (t : IsInitial X) : (zeroIsoIsInitial t).inv = 0 := by ext
 
 @[simp]
-theorem zero_iso_is_terminal_hom {X : C} (t : IsTerminal X) : (zeroIsoIsTerminal t).Hom = 0 := by
-  ext
+theorem zero_iso_is_terminal_hom {X : C} (t : IsTerminal X) : (zeroIsoIsTerminal t).Hom = 0 := by ext
 
 @[simp]
-theorem zero_iso_is_terminal_inv {X : C} (t : IsTerminal X) : (zeroIsoIsTerminal t).inv = 0 := by
-  ext
+theorem zero_iso_is_terminal_inv {X : C} (t : IsTerminal X) : (zeroIsoIsTerminal t).inv = 0 := by ext
 
 @[simp]
-theorem zero_iso_initial_hom [HasInitial C] : zeroIsoInitial.Hom = (0 : 0 ⟶ ⊥_ C) := by
-  ext
+theorem zero_iso_initial_hom [HasInitial C] : zeroIsoInitial.Hom = (0 : 0 ⟶ ⊥_ C) := by ext
 
 @[simp]
-theorem zero_iso_initial_inv [HasInitial C] : zeroIsoInitial.inv = (0 : ⊥_ C ⟶ 0) := by
-  ext
+theorem zero_iso_initial_inv [HasInitial C] : zeroIsoInitial.inv = (0 : ⊥_ C ⟶ 0) := by ext
 
 @[simp]
-theorem zero_iso_terminal_hom [HasTerminal C] : zeroIsoTerminal.Hom = (0 : 0 ⟶ ⊤_ C) := by
-  ext
+theorem zero_iso_terminal_hom [HasTerminal C] : zeroIsoTerminal.Hom = (0 : 0 ⟶ ⊤_ C) := by ext
 
 @[simp]
-theorem zero_iso_terminal_inv [HasTerminal C] : zeroIsoTerminal.inv = (0 : ⊤_ C ⟶ 0) := by
-  ext
+theorem zero_iso_terminal_inv [HasTerminal C] : zeroIsoTerminal.inv = (0 : ⊤_ C ⟶ 0) := by ext
 
 end HasZeroMorphisms
 
@@ -340,26 +314,21 @@ variable [HasZeroObject C] [HasZeroMorphisms C]
 open ZeroObject
 
 @[simp]
-theorem id_zero : 𝟙 (0 : C) = (0 : 0 ⟶ 0) := by
-  ext
+theorem id_zero : 𝟙 (0 : C) = (0 : 0 ⟶ 0) := by ext
 
 -- This can't be a `simp` lemma because the left hand side would be a metavariable.
 /-- An arrow ending in the zero object is zero -/
-theorem zero_of_to_zero {X : C} (f : X ⟶ 0) : f = 0 := by
-  ext
+theorem zero_of_to_zero {X : C} (f : X ⟶ 0) : f = 0 := by ext
 
 theorem zero_of_target_iso_zero {X Y : C} (f : X ⟶ Y) (i : Y ≅ 0) : f = 0 := by
-  have h : f = f ≫ i.hom ≫ 𝟙 0 ≫ i.inv := by
-    simp only [iso.hom_inv_id, id_comp, comp_id]
+  have h : f = f ≫ i.hom ≫ 𝟙 0 ≫ i.inv := by simp only [iso.hom_inv_id, id_comp, comp_id]
   simpa using h
 
 /-- An arrow starting at the zero object is zero -/
-theorem zero_of_from_zero {X : C} (f : 0 ⟶ X) : f = 0 := by
-  ext
+theorem zero_of_from_zero {X : C} (f : 0 ⟶ X) : f = 0 := by ext
 
 theorem zero_of_source_iso_zero {X Y : C} (f : X ⟶ Y) (i : X ≅ 0) : f = 0 := by
-  have h : f = i.hom ≫ 𝟙 0 ≫ i.inv ≫ f := by
-    simp only [iso.hom_inv_id_assoc, id_comp, comp_id]
+  have h : f = i.hom ≫ 𝟙 0 ≫ i.inv ≫ f := by simp only [iso.hom_inv_id_assoc, id_comp, comp_id]
   simpa using h
 
 theorem zero_of_source_iso_zero' {X Y : C} (f : X ⟶ Y) (i : IsIsomorphic X 0) : f = 0 :=
@@ -369,12 +338,10 @@ theorem zero_of_target_iso_zero' {X Y : C} (f : X ⟶ Y) (i : IsIsomorphic Y 0) 
   zero_of_target_iso_zero f (Nonempty.some i)
 
 theorem mono_of_source_iso_zero {X Y : C} (f : X ⟶ Y) (i : X ≅ 0) : Mono f :=
-  ⟨fun Z g h w => by
-    rw [zero_of_target_iso_zero g i, zero_of_target_iso_zero h i]⟩
+  ⟨fun Z g h w => by rw [zero_of_target_iso_zero g i, zero_of_target_iso_zero h i]⟩
 
 theorem epi_of_target_iso_zero {X Y : C} (f : X ⟶ Y) (i : Y ≅ 0) : Epi f :=
-  ⟨fun Z g h w => by
-    rw [zero_of_source_iso_zero g i, zero_of_source_iso_zero h i]⟩
+  ⟨fun Z g h w => by rw [zero_of_source_iso_zero g i, zero_of_source_iso_zero h i]⟩
 
 /-- An object `X` has `𝟙 X = 0` if and only if it is isomorphic to the zero object.
 
@@ -383,10 +350,8 @@ Because `X ≅ 0` contains data (even if a subsingleton), we express this `↔` 
 def idZeroEquivIsoZero (X : C) : 𝟙 X = 0 ≃ (X ≅ 0) where
   toFun := fun h => { Hom := 0, inv := 0 }
   invFun := fun i => zero_of_target_iso_zero (𝟙 X) i
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  left_inv := by tidy
+  right_inv := by tidy
 
 @[simp]
 theorem id_zero_equiv_iso_zero_apply_hom (X : C) (h : 𝟙 X = 0) : ((idZeroEquivIsoZero X) h).Hom = 0 :=
@@ -401,20 +366,14 @@ theorem id_zero_equiv_iso_zero_apply_inv (X : C) (h : 𝟙 X = 0) : ((idZeroEqui
 def isoZeroOfMonoZero {X Y : C} (h : Mono (0 : X ⟶ Y)) : X ≅ 0 where
   Hom := 0
   inv := 0
-  hom_inv_id' :=
-    (cancel_mono (0 : X ⟶ Y)).mp
-      (by
-        simp )
+  hom_inv_id' := (cancel_mono (0 : X ⟶ Y)).mp (by simp)
 
 /-- If `0 : X ⟶ Y` is an epimorphism, then `Y ≅ 0`. -/
 @[simps]
 def isoZeroOfEpiZero {X Y : C} (h : Epi (0 : X ⟶ Y)) : Y ≅ 0 where
   Hom := 0
   inv := 0
-  hom_inv_id' :=
-    (cancel_epi (0 : X ⟶ Y)).mp
-      (by
-        simp )
+  hom_inv_id' := (cancel_epi (0 : X ⟶ Y)).mp (by simp)
 
 /-- If a monomorphism out of `X` is zero, then `X ≅ 0`. -/
 def isoZeroOfMonoEqZero {X Y : C} {f : X ⟶ Y} [Mono f] (h : f = 0) : X ≅ 0 := by
@@ -436,8 +395,7 @@ def isoOfIsIsomorphicZero {X : C} (P : IsIsomorphic X 0) : X ≅ 0 where
     rw [← P.hom_inv_id]
     rw [← category.id_comp P.inv]
     simp
-  inv_hom_id' := by
-    simp
+  inv_hom_id' := by simp
 
 end
 
@@ -455,19 +413,14 @@ def isIsoZeroEquiv (X Y : C) : IsIso (0 : X ⟶ Y) ≃ 𝟙 X = 0 ∧ 𝟙 Y = 0
     rw [← is_iso.hom_inv_id (0 : X ⟶ Y)]
     rw [← is_iso.inv_hom_id (0 : X ⟶ Y)]
     simp
-  invFun := fun h =>
-    ⟨⟨(0 : Y ⟶ X), by
-        tidy⟩⟩
-  left_inv := by
-    tidy
-  right_inv := by
-    tidy
+  invFun := fun h => ⟨⟨(0 : Y ⟶ X), by tidy⟩⟩
+  left_inv := by tidy
+  right_inv := by tidy
 
 /-- A zero morphism `0 : X ⟶ X` is an isomorphism if and only if
 the identity on `X` is zero.
 -/
-def isIsoZeroSelfEquiv (X : C) : IsIso (0 : X ⟶ X) ≃ 𝟙 X = 0 := by
-  simpa using is_iso_zero_equiv X X
+def isIsoZeroSelfEquiv (X : C) : IsIso (0 : X ⟶ X) ≃ 𝟙 X = 0 := by simpa using is_iso_zero_equiv X X
 
 variable [HasZeroObject C]
 
@@ -510,28 +463,19 @@ end IsIso
 
 /-- If there are zero morphisms, any initial object is a zero object. -/
 theorem has_zero_object_of_has_initial_object [HasZeroMorphisms C] [HasInitial C] : HasZeroObject C := by
-  refine'
-    ⟨⟨⊥_ C, fun X =>
-        ⟨⟨⟨0⟩, by
-            tidy⟩⟩,
-        fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩⟩
+  refine' ⟨⟨⊥_ C, fun X => ⟨⟨⟨0⟩, by tidy⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩⟩
   calc
     f = f ≫ 𝟙 _ := (category.comp_id _).symm
-    _ = f ≫ 0 := by
-      congr
+    _ = f ≫ 0 := by congr
     _ = 0 := has_zero_morphisms.comp_zero _ _
     
 
 /-- If there are zero morphisms, any terminal object is a zero object. -/
 theorem has_zero_object_of_has_terminal_object [HasZeroMorphisms C] [HasTerminal C] : HasZeroObject C := by
-  refine'
-    ⟨⟨⊤_ C, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X =>
-        ⟨⟨⟨0⟩, by
-            tidy⟩⟩⟩⟩
+  refine' ⟨⟨⊤_ C, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, by tidy⟩⟩⟩⟩
   calc
     f = 𝟙 _ ≫ f := (category.id_comp _).symm
-    _ = 0 ≫ f := by
-      congr
+    _ = 0 ≫ f := by congr
     _ = 0 := zero_comp
     
 
@@ -541,13 +485,11 @@ variable [HasZeroMorphisms C]
 
 theorem image_ι_comp_eq_zero {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [HasImage f] [Epi (factorThruImage f)]
     (h : f ≫ g = 0) : image.ι f ≫ g = 0 :=
-  zero_of_epi_comp (factorThruImage f) <| by
-    simp [h]
+  zero_of_epi_comp (factorThruImage f) <| by simp [h]
 
 theorem comp_factor_thru_image_eq_zero {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [HasImage g] (h : f ≫ g = 0) :
     f ≫ factorThruImage g = 0 :=
-  zero_of_comp_mono (image.ι g) <| by
-    simp [h]
+  zero_of_comp_mono (image.ι g) <| by simp [h]
 
 variable [HasZeroObject C]
 

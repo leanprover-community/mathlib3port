@@ -131,12 +131,16 @@ theorem map_div_le_add : f (x / y) ≤ f x + f y := by
   exact map_mul_le_add _ _ _
 
 @[to_additive]
-theorem map_div_rev : f (x / y) = f (y / x) := by
-  rw [← inv_div, map_inv_eq_map]
+theorem map_div_rev : f (x / y) = f (y / x) := by rw [← inv_div, map_inv_eq_map]
 
 @[to_additive]
 theorem le_map_add_map_div' : f x ≤ f y + f (y / x) := by
   simpa only [add_commₓ, map_div_rev, div_mul_cancel'] using map_mul_le_add f (x / y) y
+
+@[to_additive]
+theorem abs_sub_map_le_div : abs (f x - f y) ≤ f (x / y) := by
+  rw [abs_sub_le_iff, sub_le_iff_le_add', sub_le_iff_le_add']
+  exact ⟨le_map_add_map_div _ _ _, le_map_add_map_div' _ _ _⟩
 
 end GroupSeminormClass
 
@@ -186,8 +190,7 @@ variable [Groupₓ E] [Groupₓ F] [Groupₓ G] {p q : GroupSeminorm E}
 @[to_additive]
 instance groupSeminormClass : GroupSeminormClass (GroupSeminorm E) E where
   coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_one_eq_zero := fun f => f.map_one'
   map_mul_le_add := fun f => f.mul_le'
   map_inv_eq_map := fun f => f.inv'
@@ -196,6 +199,10 @@ instance groupSeminormClass : GroupSeminormClass (GroupSeminorm E) E where
 @[to_additive "Helper instance for when there's too many metavariables to apply\n`fun_like.has_coe_to_fun`. "]
 instance : CoeFun (GroupSeminorm E) fun _ => E → ℝ :=
   ⟨toFun⟩
+
+@[simp, to_additive]
+theorem to_fun_eq_coe : p.toFun = p :=
+  rfl
 
 @[ext, to_additive]
 theorem ext : (∀ x, p x = q x) → p = q :=
@@ -242,13 +249,10 @@ instance : Inhabited (GroupSeminorm E) :=
 @[to_additive]
 instance : Add (GroupSeminorm E) :=
   ⟨fun p q =>
-    { toFun := fun x => p x + q x,
-      map_one' := by
-        rw [map_one_eq_zero p, map_one_eq_zero q, zero_addₓ],
+    { toFun := fun x => p x + q x, map_one' := by rw [map_one_eq_zero p, map_one_eq_zero q, zero_addₓ],
       mul_le' := fun _ _ =>
         (add_le_add (map_mul_le_add p _ _) <| map_mul_le_add q _ _).trans_eq <| add_add_add_commₓ _ _ _ _,
-      inv' := fun x => by
-        rw [map_inv_eq_map p, map_inv_eq_map q] }⟩
+      inv' := fun x => by rw [map_inv_eq_map p, map_inv_eq_map q] }⟩
 
 @[simp, to_additive]
 theorem coe_add : ⇑(p + q) = p + q :=
@@ -261,16 +265,14 @@ theorem add_apply (x : E) : (p + q) x = p x + q x :=
 -- TODO: define `has_Sup` too, from the skeleton at
 -- https://github.com/leanprover-community/mathlib/pull/11329#issuecomment-1008915345
 @[to_additive]
-noncomputable instance : HasSup (GroupSeminorm E) :=
+instance : HasSup (GroupSeminorm E) :=
   ⟨fun p q =>
     { toFun := p ⊔ q,
-      map_one' := by
-        rw [Pi.sup_apply, ← map_one_eq_zero p, sup_eq_left, map_one_eq_zero p, map_one_eq_zero q],
+      map_one' := by rw [Pi.sup_apply, ← map_one_eq_zero p, sup_eq_left, map_one_eq_zero p, map_one_eq_zero q],
       mul_le' := fun x y =>
         sup_le ((map_mul_le_add p x y).trans <| add_le_add le_sup_left le_sup_left)
           ((map_mul_le_add q x y).trans <| add_le_add le_sup_right le_sup_right),
-      inv' := fun x => by
-        rw [Pi.sup_apply, Pi.sup_apply, map_inv_eq_map p, map_inv_eq_map q] }⟩
+      inv' := fun x => by rw [Pi.sup_apply, Pi.sup_apply, map_inv_eq_map p, map_inv_eq_map q] }⟩
 
 @[simp, to_additive]
 theorem coe_sup : ⇑(p ⊔ q) = p ⊔ q :=
@@ -281,7 +283,7 @@ theorem sup_apply (x : E) : (p ⊔ q) x = p x ⊔ q x :=
   rfl
 
 @[to_additive]
-noncomputable instance : SemilatticeSup (GroupSeminorm E) :=
+instance : SemilatticeSup (GroupSeminorm E) :=
   FunLike.coe_injective.SemilatticeSup _ coe_sup
 
 /-- Composition of a group seminorm with a monoid homomorphism as a group seminorm. -/
@@ -289,11 +291,9 @@ noncomputable instance : SemilatticeSup (GroupSeminorm E) :=
       "Composition of an additive group seminorm with an additive monoid homomorphism as an\nadditive group seminorm."]
 def comp (p : GroupSeminorm E) (f : F →* E) : GroupSeminorm F where
   toFun := fun x => p (f x)
-  map_one' := by
-    rw [f.map_one, map_one_eq_zero p]
+  map_one' := by rw [f.map_one, map_one_eq_zero p]
   mul_le' := fun _ _ => (congr_arg p <| f.map_mul _ _).trans_le <| map_mul_le_add p _ _
-  inv' := fun x => by
-    rw [map_inv, map_inv_eq_map p]
+  inv' := fun x => by rw [map_inv, map_inv_eq_map p]
 
 @[simp, to_additive]
 theorem coe_comp : ⇑(p.comp f) = p ∘ f :=
@@ -337,28 +337,31 @@ variable [CommGroupₓ E] [CommGroupₓ F] (p q : GroupSeminorm E) (x y : E)
 @[to_additive]
 theorem comp_mul_le (f g : F →* E) : p.comp (f * g) ≤ p.comp f + p.comp g := fun _ => map_mul_le_add p _ _
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 @[to_additive]
 theorem mul_bdd_below_range_add {p q : GroupSeminorm E} {x : E} : BddBelow (range fun y => p y + q (x / y)) :=
   ⟨0, by
     rintro _ ⟨x, rfl⟩
-    exact add_nonneg (map_nonneg p _) (map_nonneg q _)⟩
+    dsimp
+    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"⟩
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 @[to_additive]
 noncomputable instance : HasInf (GroupSeminorm E) :=
   ⟨fun p q =>
     { toFun := fun x => ⨅ y, p y + q (x / y),
       map_one' :=
-        cinfi_eq_of_forall_ge_of_forall_gt_exists_lt (fun x => add_nonneg (map_nonneg p _) (map_nonneg q _)) fun r hr =>
-          ⟨1, by
-            rwa [div_one, map_one_eq_zero p, map_one_eq_zero q, add_zeroₓ]⟩,
+        cinfi_eq_of_forall_ge_of_forall_gt_exists_lt
+          (fun x => by
+            trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]")
+          fun r hr => ⟨1, by rwa [div_one, map_one_eq_zero p, map_one_eq_zero q, add_zeroₓ]⟩,
       mul_le' := fun x y =>
         le_cinfi_add_cinfi fun u v => by
           refine' cinfi_le_of_le mul_bdd_below_range_add (u * v) _
           rw [mul_div_mul_comm, add_add_add_commₓ]
           exact add_le_add (map_mul_le_add p _ _) (map_mul_le_add q _ _),
       inv' := fun x =>
-        (inv_surjective.infi_comp _).symm.trans <| by
-          simp_rw [map_inv_eq_map p, ← inv_div', map_inv_eq_map q] }⟩
+        (inv_surjective.infi_comp _).symm.trans <| by simp_rw [map_inv_eq_map p, ← inv_div', map_inv_eq_map q] }⟩
 
 @[simp, to_additive]
 theorem inf_apply : (p ⊓ q) x = ⨅ y, p y + q (x / y) :=
@@ -368,11 +371,9 @@ theorem inf_apply : (p ⊓ q) x = ⨅ y, p y + q (x / y) :=
 noncomputable instance : Lattice (GroupSeminorm E) :=
   { GroupSeminorm.semilatticeSup with inf := (· ⊓ ·),
     inf_le_left := fun p q x =>
-      cinfi_le_of_le mul_bdd_below_range_add x <| by
-        rw [div_self', map_one_eq_zero q, add_zeroₓ],
+      cinfi_le_of_le mul_bdd_below_range_add x <| by rw [div_self', map_one_eq_zero q, add_zeroₓ],
     inf_le_right := fun p q x =>
-      cinfi_le_of_le mul_bdd_below_range_add (1 : E) <| by
-        simp only [div_one, map_one_eq_zero p, zero_addₓ],
+      cinfi_le_of_le mul_bdd_below_range_add (1 : E) <| by simp only [div_one, map_one_eq_zero p, zero_addₓ],
     le_inf := fun a b c hb hc x => le_cinfi fun u => (le_map_add_map_div a _ _).trans <| add_le_add (hb _) (hc _) }
 
 end CommGroupₓ
@@ -388,14 +389,13 @@ variable [AddGroupₓ E] [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R �
 instance [DecidableEq E] : One (AddGroupSeminorm E) :=
   ⟨{ toFun := fun x => if x = 0 then 0 else 1, map_zero' := if_pos rfl,
       add_le' := fun x y => by
-        by_cases' hx : x = 0
+        by_cases hx:x = 0
         · rw [if_pos hx, hx, zero_addₓ, zero_addₓ]
           
         · rw [if_neg hx]
           refine' le_add_of_le_of_nonneg _ _ <;> split_ifs <;> norm_num
           ,
-      neg' := fun x => by
-        simp_rw [neg_eq_zero] }⟩
+      neg' := fun x => by simp_rw [neg_eq_zero] }⟩
 
 @[simp]
 theorem apply_one [DecidableEq E] (x : E) : (1 : AddGroupSeminorm E) x = if x = 0 then 0 else 1 :=
@@ -405,13 +405,11 @@ theorem apply_one [DecidableEq E] (x : E) : (1 : AddGroupSeminorm E) x = if x = 
 instance : HasSmul R (AddGroupSeminorm E) :=
   ⟨fun r p =>
     { toFun := fun x => r • p x,
-      map_zero' := by
-        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul, map_zero, mul_zero],
+      map_zero' := by simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul, map_zero, mul_zero],
       add_le' := fun _ _ => by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         exact (mul_le_mul_of_nonneg_left (map_add_le_add _ _ _) <| Nnreal.coe_nonneg _).trans_eq (mul_addₓ _ _ _),
-      neg' := fun x => by
-        rw [map_neg_eq_map] }⟩
+      neg' := fun x => by rw [map_neg_eq_map] }⟩
 
 @[simp]
 theorem coe_smul (r : R) (p : AddGroupSeminorm E) : ⇑(r • p) = r • p :=
@@ -441,14 +439,13 @@ variable [Groupₓ E] [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ�
 instance [DecidableEq E] : One (GroupSeminorm E) :=
   ⟨{ toFun := fun x => if x = 1 then 0 else 1, map_one' := if_pos rfl,
       mul_le' := fun x y => by
-        by_cases' hx : x = 1
+        by_cases hx:x = 1
         · rw [if_pos hx, hx, one_mulₓ, zero_addₓ]
           
         · rw [if_neg hx]
           refine' le_add_of_le_of_nonneg _ _ <;> split_ifs <;> norm_num
           ,
-      inv' := fun x => by
-        simp_rw [inv_eq_one] }⟩
+      inv' := fun x => by simp_rw [inv_eq_one] }⟩
 
 @[simp, to_additive AddGroupSeminorm.apply_one]
 theorem apply_one [DecidableEq E] (x : E) : (1 : GroupSeminorm E) x = if x = 1 then 0 else 1 :=
@@ -464,8 +461,7 @@ instance : HasSmul R (GroupSeminorm E) :=
       mul_le' := fun _ _ => by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         exact (mul_le_mul_of_nonneg_left (map_mul_le_add p _ _) <| Nnreal.coe_nonneg _).trans_eq (mul_addₓ _ _ _),
-      inv' := fun x => by
-        rw [map_inv_eq_map p] }⟩
+      inv' := fun x => by rw [map_inv_eq_map p] }⟩
 
 @[to_additive AddGroupSeminorm.is_scalar_tower]
 instance [HasSmul R' ℝ] [HasSmul R' ℝ≥0] [IsScalarTower R' ℝ≥0 ℝ] [HasSmul R R'] [IsScalarTower R R' ℝ] :
@@ -501,8 +497,7 @@ variable [Groupₓ E] [Groupₓ F] [Groupₓ G] {p q : GroupNorm E}
 @[to_additive]
 instance groupNormClass : GroupNormClass (GroupNorm E) E where
   coe := fun f => f.toFun
-  coe_injective' := fun f g h => by
-    cases f <;> cases g <;> congr
+  coe_injective' := fun f g h => by cases f <;> cases g <;> congr
   map_one_eq_zero := fun f => f.map_one'
   map_mul_le_add := fun f => f.mul_le'
   map_inv_eq_map := fun f => f.inv'
@@ -513,6 +508,10 @@ directly. -/
 @[to_additive "Helper instance for when there's too many metavariables to apply\n`fun_like.has_coe_to_fun` directly. "]
 instance : CoeFun (GroupNorm E) fun _ => E → ℝ :=
   FunLike.hasCoeToFun
+
+@[simp, to_additive]
+theorem to_fun_eq_coe : p.toFun = p :=
+  rfl
 
 @[ext, to_additive]
 theorem ext : (∀ x, p x = q x) → p = q :=
@@ -557,7 +556,7 @@ theorem add_apply (x : E) : (p + q) x = p x + q x :=
 
 -- TODO: define `has_Sup`
 @[to_additive]
-noncomputable instance : HasSup (GroupNorm E) :=
+instance : HasSup (GroupNorm E) :=
   ⟨fun p q =>
     { p.toGroupSeminorm ⊔ q.toGroupSeminorm with
       eq_one_of_map_eq_zero' := fun x hx =>
@@ -572,7 +571,7 @@ theorem sup_apply (x : E) : (p ⊔ q) x = p x ⊔ q x :=
   rfl
 
 @[to_additive]
-noncomputable instance : SemilatticeSup (GroupNorm E) :=
+instance : SemilatticeSup (GroupNorm E) :=
   FunLike.coe_injective.SemilatticeSup _ coe_sup
 
 end Groupₓ

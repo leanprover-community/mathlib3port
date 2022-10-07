@@ -68,14 +68,13 @@ structure VonNeumannAlgebra (H : Type u) [InnerProductSpace ℂ H] [CompleteSpac
   double_commutant : Set.Centralizer (Set.Centralizer carrier) = carrier
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident von_neumann_algebra.to_star_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:667:43: in add_decl_doc #[[ident von_neumann_algebra.to_star_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace VonNeumannAlgebra
 
 variable (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H]
 
 instance : SetLike (VonNeumannAlgebra H) (H →L[ℂ] H) :=
-  ⟨VonNeumannAlgebra.Carrier, fun p q h => by
-    cases p <;> cases q <;> congr⟩
+  ⟨VonNeumannAlgebra.Carrier, fun p q h => by cases p <;> cases q <;> congr⟩
 
 end VonNeumannAlgebra
 

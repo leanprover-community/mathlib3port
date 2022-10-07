@@ -26,24 +26,24 @@ For example with three ideals : `I ⊔ J = I ⊔ K = J ⊔ K = ⊤ ↔ (I ⊓ J)
 
 When ideals are all of the form `I i = R ∙ s i`, this is equivalent to the
 `exists_sum_eq_one_iff_pairwise_coprime` lemma.-/
-theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι → Ideal R) :
+theorem supr_infi_eq_top_iff_pairwise {t : Finsetₓ ι} (h : t.Nonempty) (I : ι → Ideal R) :
     (⨆ i ∈ t, ⨅ (j) (hj : j ∈ t) (ij : j ≠ i), I j) = ⊤ ↔ (t : Set ι).Pairwise fun i j => I i ⊔ I j = ⊤ := by
   haveI : DecidableEq ι := Classical.decEq ι
   rw [eq_top_iff_one, Submodule.mem_supr_finset_iff_exists_sum]
   refine' h.cons_induction _ _ <;> clear t h
-  · simp only [Finset.sum_singleton, Finset.coe_singleton, Set.pairwise_singleton, iff_trueₓ]
+  · simp only [Finsetₓ.sum_singleton, Finsetₓ.coe_singleton, Set.pairwise_singleton, iff_trueₓ]
     refine' fun a => ⟨fun i => if h : i = a then ⟨1, _⟩ else 0, _⟩
     · rw [h]
-      simp only [Finset.mem_singleton, Ne.def, infi_infi_eq_left, eq_self_iff_true, not_true, infi_false]
+      simp only [Finsetₓ.mem_singleton, Ne.def, infi_infi_eq_left, eq_self_iff_true, not_true, infi_false]
       
     · simp only [dif_pos, dif_ctx_congr, Submodule.coe_mk, eq_self_iff_true]
       
     
   intro a t hat h ih
-  rw [Finset.coe_cons, Set.pairwise_insert_of_symmetric fun i j (h : I i ⊔ I j = ⊤) => sup_comm.trans h]
+  rw [Finsetₓ.coe_cons, Set.pairwise_insert_of_symmetric fun i j (h : I i ⊔ I j = ⊤) => sup_comm.trans h]
   constructor
   · rintro ⟨μ, hμ⟩
-    rw [Finset.sum_cons] at hμ
+    rw [Finsetₓ.sum_cons] at hμ
     refine' ⟨ih.mp ⟨Pi.single h.some ⟨μ a, _⟩ + fun i => ⟨μ i, _⟩, _⟩, fun b hb ab => _⟩
     · have := Submodule.coe_mem (μ a)
       rw [mem_infi] at this⊢
@@ -52,20 +52,20 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       specialize this i
       rw [mem_infi, mem_infi] at this⊢
       intro hi _
-      apply this (Finset.subset_cons _ hi)
+      apply this (Finsetₓ.subset_cons _ hi)
       rintro rfl
       exact hat hi
       
     · have := Submodule.coe_mem (μ i)
       simp only [mem_infi] at this⊢
       intro j hj ij
-      exact this _ (Finset.subset_cons _ hj) ij
+      exact this _ (Finsetₓ.subset_cons _ hj) ij
       
-    · rw [← @if_pos _ _ h.some_spec R (μ a) 0, ← Finset.sum_pi_single', ← Finset.sum_add_distrib] at hμ
+    · rw [← @if_pos _ _ h.some_spec R (μ a) 0, ← Finsetₓ.sum_pi_single', ← Finsetₓ.sum_add_distrib] at hμ
       convert hμ
       ext i
       rw [Pi.add_apply, Submodule.coe_add, Submodule.coe_mk]
-      by_cases' hi : i = h.some
+      by_cases hi:i = h.some
       · rw [hi, Pi.single_eq_same, Pi.single_eq_same, Submodule.coe_mk]
         
       · rw [Pi.single_eq_of_ne hi, Pi.single_eq_of_ne hi, Submodule.coe_zero]
@@ -77,13 +77,13 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       · refine' sum_mem _ fun x hx => _
         have := Submodule.coe_mem (μ x)
         simp only [mem_infi] at this
-        apply this _ (Finset.mem_cons_self _ _)
+        apply this _ (Finsetₓ.mem_cons_self _ _)
         rintro rfl
         exact hat hx
         
       · have := Submodule.coe_mem (μ a)
         simp only [mem_infi] at this
-        exact this _ (Finset.subset_cons _ hb) ab.symm
+        exact this _ (Finsetₓ.subset_cons _ hb) ab.symm
         
       
     
@@ -99,7 +99,7 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
     refine' ⟨fun i => if hi : i = a then ⟨v, _⟩ else ⟨u * μ i, _⟩, _⟩
     · simp only [mem_infi] at hv⊢
       intro j hj ij
-      rw [Finset.mem_cons, ← hi] at hj
+      rw [Finsetₓ.mem_cons, ← hi] at hj
       exact hv _ (hj.resolve_left ij)
       
     · have := Submodule.coe_mem (μ i)
@@ -111,11 +111,11 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       · exact mul_mem_left _ _ (this _ hj ij)
         
       
-    · rw [Finset.sum_cons, dif_pos rfl, add_commₓ]
+    · rw [Finsetₓ.sum_cons, dif_pos rfl, add_commₓ]
       rw [← mul_oneₓ u] at huv
-      rw [← huv, ← hμ, Finset.mul_sum]
+      rw [← huv, ← hμ, Finsetₓ.mul_sum]
       congr 1
-      apply Finset.sum_congr rfl
+      apply Finsetₓ.sum_congr rfl
       intro j hj
       rw [dif_neg]
       rfl
