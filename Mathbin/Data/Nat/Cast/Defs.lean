@@ -3,7 +3,7 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Gabriel Ebner
 -/
-import Mathbin.Algebra.Group.Basic
+import Mathlib.Algebra.Group.Basic
 
 /-!
 # Cast of natural numbers
@@ -135,14 +135,14 @@ theorem bin_cast_eq [AddMonoidWithOneₓ R] (n : ℕ) : (Nat.binCast n : R) = ((
   rw [Nat.binCast]
   apply binary_rec _ _ n
   · rw [binary_rec_zero, cast_zero]
-    
+
   · intro b k h
     rw [binary_rec_eq, h]
     · cases b <;> simp [bit, bit0, bit1]
-      
+
     · simp
-      
-    
+
+
 
 @[simp, norm_cast]
 theorem cast_bit0 [AddMonoidWithOneₓ R] (n : ℕ) : ((bit0 n : ℕ) : R) = bit0 n :=
