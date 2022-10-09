@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne
 -/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathbin.Analysis.Normed.Group.AddCircle
 import Mathbin.Algebra.CharZero.Quotient
 import Mathbin.Algebra.Order.ToIntervalMod
 import Mathbin.Topology.Instances.Sign
@@ -22,17 +23,13 @@ noncomputable section
 
 namespace Real
 
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℝ()
 /-- The type of angles -/
 def Angle : Type :=
-  ℝ ⧸ AddSubgroup.zmultiples (2 * π)deriving AddCommGroupₓ, TopologicalSpace, TopologicalAddGroup
+  AddCircle (2 * π)deriving NormedAddCommGroup, Inhabited,
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℝ()»
 
 namespace Angle
-
-instance : Inhabited Angle :=
-  ⟨0⟩
-
-instance : Coe ℝ Angle :=
-  ⟨QuotientAddGroup.mk' _⟩
 
 @[continuity]
 theorem continuous_coe : Continuous (coe : ℝ → Angle) :=

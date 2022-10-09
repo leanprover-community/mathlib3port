@@ -3,9 +3,10 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Int.Basic
-import Mathbin.Data.Nat.Gcd
-import Mathbin.Logic.Encodable.Basic
+import Mathbin.Data.Int.Cast
+import Mathbin.Data.Nat.Gcd.Basic
+import Mathbin.Data.Pnat.Basic
+import Mathbin.Tactic.NthRewrite.Default
 
 /-!
 # Basics for the Rational Numbers
@@ -66,11 +67,6 @@ instance : HasToString ℚ :=
 
 unsafe instance : has_to_format ℚ :=
   ⟨coe ∘ Ratₓ.repr⟩
-
-instance : Encodable ℚ :=
-  Encodable.ofEquiv (Σn : ℤ, { d : ℕ // 0 < d ∧ n.natAbs.Coprime d })
-    ⟨fun ⟨a, b, c, d⟩ => ⟨a, b, c, d⟩, fun ⟨a, b, c, d⟩ => ⟨a, b, c, d⟩, fun ⟨a, b, c, d⟩ => rfl, fun ⟨a, b, c, d⟩ =>
-      rfl⟩
 
 /-- Embed an integer as a rational number -/
 def ofInt (n : ℤ) : ℚ :=

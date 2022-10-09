@@ -114,6 +114,10 @@ def subtype (h : ↑P ≤ N) : Sylow p N :=
 theorem coe_subtype (h : ↑P ≤ N) : ↑(P.Subtype h) = Subgroup.comap N.Subtype ↑P :=
   rfl
 
+theorem subtype_injective {P Q : Sylow p G} {hP : ↑P ≤ N} {hQ : ↑Q ≤ N} (h : P.Subtype hP = Q.Subtype hQ) : P = Q := by
+  rw [SetLike.ext_iff] at h⊢
+  exact fun g => ⟨fun hg => (h ⟨g, hP hg⟩).mp hg, fun hg => (h ⟨g, hQ hg⟩).mpr hg⟩
+
 end Sylow
 
 /-- A generalization of **Sylow's first theorem**.
@@ -303,6 +307,26 @@ theorem Sylow.orbit_eq_top [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G) :
 
 theorem Sylow.stabilizer_eq_normalizer (P : Sylow p G) : stabilizer G P = (P : Subgroup G).normalizer :=
   ext fun g => Sylow.smul_eq_iff_mem_normalizer
+
+theorem Sylow.conj_eq_normalizer_conj_of_mem_centralizer [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G) (x g : G)
+    (hx : x ∈ (P : Subgroup G).Centralizer) (hy : g⁻¹ * x * g ∈ (P : Subgroup G).Centralizer) :
+    ∃ n ∈ (P : Subgroup G).normalizer, g⁻¹ * x * g = n⁻¹ * x * n := by
+  have h1 : ↑P ≤ (zpowers x).Centralizer := by rwa [le_centralizer_iff, zpowers_le]
+  have h2 : ↑(g • P) ≤ (zpowers x).Centralizer := by
+    rw [le_centralizer_iff, zpowers_le]
+    rintro - ⟨z, hz, rfl⟩
+    specialize hy z hz
+    rwa [← mul_assoc, ← eq_mul_inv_iff_mul_eq, mul_assoc, mul_assoc, mul_assoc, ← mul_assoc, eq_inv_mul_iff_mul_eq, ←
+      mul_assoc, ← mul_assoc] at hy
+  obtain ⟨h, hh⟩ := exists_smul_eq (zpowers x).Centralizer ((g • P).Subtype h2) (P.subtype h1)
+  simp_rw [Sylow.smul_subtype, smul_def, smul_smul] at hh
+  refine' ⟨h * g, sylow.smul_eq_iff_mem_normalizer.mp (Sylow.subtype_injective hh), _⟩
+  rw [← mul_assoc, Commute.right_comm (h.prop x (mem_zpowers x)), mul_inv_rev, inv_mul_cancel_right]
+
+theorem Sylow.conj_eq_normalizer_conj_of_mem [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)
+    [hP : (P : Subgroup G).IsCommutative] (x g : G) (hx : x ∈ P) (hy : g⁻¹ * x * g ∈ P) :
+    ∃ n ∈ (P : Subgroup G).normalizer, g⁻¹ * x * g = n⁻¹ * x * n :=
+  P.conj_eq_normalizer_conj_of_mem_centralizer x g (le_centralizer P hx) (le_centralizer P hy)
 
 /-- Sylow `p`-subgroups are in bijection with cosets of the normalizer of a Sylow `p`-subgroup -/
 noncomputable def Sylow.equivQuotientNormalizer [Fact p.Prime] [Fintypeₓ (Sylow p G)] (P : Sylow p G) :

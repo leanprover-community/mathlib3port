@@ -1,0 +1,147 @@
+/-
+Copyright (c) 2022 Paul A. Reichert. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Paul A. Reichert
+-/
+import Mathbin.Analysis.Convex.Basic
+import Mathbin.Analysis.NormedSpace.Basic
+import Mathbin.Data.Real.Nnreal
+import Mathbin.Data.Set.Pointwise
+import Mathbin.Topology.SubsetProperties
+
+/-!
+# convex bodies
+
+This file contains the definition of the type `convex_body V`
+consisting of
+convex, compact, nonempty subsets of a real normed space `V`.
+
+`convex_body V` is a module over the nonnegative reals (`nnreal`).
+
+TODOs:
+- endow it with the Hausdorff metric
+- define positive convex bodies, requiring the interior to be nonempty
+- introduce support sets
+
+## Tags
+
+convex, convex body
+-/
+
+
+open Pointwise
+
+open Nnreal
+
+variable (V : Type _) [SeminormedAddCommGroup V] [NormedSpace ℝ V]
+
+/-- Let `V` be a normed space. A subset of `V` is a convex body if and only if
+it is convex, compact, and nonempty.
+-/
+structure ConvexBody where
+  Carrier : Set V
+  convex' : Convex ℝ carrier
+  is_compact' : IsCompact carrier
+  nonempty' : carrier.Nonempty
+
+namespace ConvexBody
+
+variable {V}
+
+instance : SetLike (ConvexBody V) V where
+  coe := ConvexBody.Carrier
+  coe_injective' := fun K L h => by
+    cases K
+    cases L
+    congr
+
+theorem convex (K : ConvexBody V) : Convex ℝ (K : Set V) :=
+  K.convex'
+
+theorem is_compact (K : ConvexBody V) : IsCompact (K : Set V) :=
+  K.is_compact'
+
+theorem nonempty (K : ConvexBody V) : (K : Set V).Nonempty :=
+  K.nonempty'
+
+@[ext]
+protected theorem ext {K L : ConvexBody V} (h : (K : Set V) = L) : K = L :=
+  SetLike.ext' h
+
+@[simp]
+theorem coe_mk (s : Set V) (h₁ h₂ h₃) : (mk s h₁ h₂ h₃ : Set V) = s :=
+  rfl
+
+instance : AddMonoidₓ (ConvexBody V) where
+  -- we cannot write K + L to avoid reducibility issues with the set.has_add instance
+  add := fun K L =>
+    ⟨Set.Image2 (· + ·) K L, K.Convex.add L.Convex, K.IsCompact.add L.IsCompact, K.Nonempty.add L.Nonempty⟩
+  add_assoc := fun K L M => by
+    ext
+    simp only [coe_mk, Set.image2_add, add_assocₓ]
+  zero := ⟨0, convex_singleton 0, is_compact_singleton, Set.singleton_nonempty 0⟩
+  zero_add := fun K => by
+    ext
+    simp only [coe_mk, Set.image2_add, zero_addₓ]
+  add_zero := fun K => by
+    ext
+    simp only [coe_mk, Set.image2_add, add_zeroₓ]
+
+@[simp]
+theorem coe_add (K L : ConvexBody V) : (↑(K + L) : Set V) = (K : Set V) + L :=
+  rfl
+
+@[simp]
+theorem coe_zero : (↑(0 : ConvexBody V) : Set V) = 0 :=
+  rfl
+
+instance : Inhabited (ConvexBody V) :=
+  ⟨0⟩
+
+instance : AddCommMonoidₓ (ConvexBody V) :=
+  { ConvexBody.addMonoid with
+    add_comm := fun K L => by
+      ext
+      simp only [coe_add, add_commₓ] }
+
+instance :
+    HasSmul ℝ
+      (ConvexBody
+        V) where smul := fun c K => ⟨c • (K : Set V), K.Convex.smul _, K.IsCompact.smul _, K.Nonempty.smul_set⟩
+
+@[simp]
+theorem coe_smul (c : ℝ) (K : ConvexBody V) : (↑(c • K) : Set V) = c • (K : Set V) :=
+  rfl
+
+instance : DistribMulAction ℝ (ConvexBody V) where
+  toHasSmul := ConvexBody.hasSmul
+  one_smul := fun K => by
+    ext
+    simp only [coe_smul, one_smul]
+  mul_smul := fun c d K => by
+    ext
+    simp only [coe_smul, mul_smul]
+  smul_add := fun c K L => by
+    ext
+    simp only [coe_smul, coe_add, smul_add]
+  smul_zero := fun c => by
+    ext
+    simp only [coe_smul, coe_zero, smul_zero]
+
+@[simp]
+theorem coe_smul' (c : ℝ≥0) (K : ConvexBody V) : (↑(c • K) : Set V) = c • (K : Set V) :=
+  rfl
+
+/-- The convex bodies in a fixed space $V$ form a module over the nonnegative reals.
+-/
+instance : Module ℝ≥0 (ConvexBody V) where
+  add_smul := fun c d K => by
+    ext1
+    simp only [coe_smul, coe_add]
+    exact Convex.add_smul K.convex (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _)
+  zero_smul := fun K => by
+    ext1
+    exact Set.zero_smul_set K.nonempty
+
+end ConvexBody
+

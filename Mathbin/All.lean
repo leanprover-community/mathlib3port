@@ -88,6 +88,7 @@ import Mathbin.Algebra.CharP.Default
 import Mathbin.Algebra.CharP.ExpChar
 import Mathbin.Algebra.CharP.Invertible
 import Mathbin.Algebra.CharP.LocalRing
+import Mathbin.Algebra.CharP.MixedCharZero
 import Mathbin.Algebra.CharP.Pi
 import Mathbin.Algebra.CharP.Quotient
 import Mathbin.Algebra.CharP.Subring
@@ -126,7 +127,8 @@ import Mathbin.Algebra.Field.Basic
 import Mathbin.Algebra.Field.Opposite
 import Mathbin.Algebra.Free
 import Mathbin.Algebra.FreeAlgebra
-import Mathbin.Algebra.FreeMonoid
+import Mathbin.Algebra.FreeMonoid.Basic
+import Mathbin.Algebra.FreeMonoid.Count
 import Mathbin.Algebra.FreeNonUnitalNonAssocAlgebra
 import Mathbin.Algebra.GcdMonoid.Basic
 import Mathbin.Algebra.GcdMonoid.Finset
@@ -336,6 +338,7 @@ import Mathbin.AlgebraicGeometry.Limits
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace.HasColimits
 import Mathbin.AlgebraicGeometry.Morphisms.Basic
+import Mathbin.AlgebraicGeometry.Morphisms.FiniteType
 import Mathbin.AlgebraicGeometry.Morphisms.QuasiCompact
 import Mathbin.AlgebraicGeometry.Morphisms.RingHomProperties
 import Mathbin.AlgebraicGeometry.OpenImmersion
@@ -362,6 +365,7 @@ import Mathbin.AlgebraicTopology.DoldKan.Faces
 import Mathbin.AlgebraicTopology.DoldKan.FunctorN
 import Mathbin.AlgebraicTopology.DoldKan.Homotopies
 import Mathbin.AlgebraicTopology.DoldKan.HomotopyEquivalence
+import Mathbin.AlgebraicTopology.DoldKan.NReflectsIso
 import Mathbin.AlgebraicTopology.DoldKan.Normalized
 import Mathbin.AlgebraicTopology.DoldKan.Notations
 import Mathbin.AlgebraicTopology.DoldKan.PInfty
@@ -452,6 +456,7 @@ import Mathbin.Analysis.Complex.UpperHalfPlane.Metric
 import Mathbin.Analysis.Complex.UpperHalfPlane.Topology
 import Mathbin.Analysis.Convex.Basic
 import Mathbin.Analysis.Convex.Between
+import Mathbin.Analysis.Convex.Body
 import Mathbin.Analysis.Convex.Caratheodory
 import Mathbin.Analysis.Convex.Combination
 import Mathbin.Analysis.Convex.Complex
@@ -504,6 +509,7 @@ import Mathbin.Analysis.LocallyConvex.AbsConvex
 import Mathbin.Analysis.LocallyConvex.BalancedCoreHull
 import Mathbin.Analysis.LocallyConvex.Basic
 import Mathbin.Analysis.LocallyConvex.Bounded
+import Mathbin.Analysis.LocallyConvex.ContinuousOfBounded
 import Mathbin.Analysis.LocallyConvex.Polar
 import Mathbin.Analysis.LocallyConvex.WeakDual
 import Mathbin.Analysis.LocallyConvex.WithSeminorms
@@ -515,6 +521,7 @@ import Mathbin.Analysis.Normed.Field.UnitBall
 import Mathbin.Analysis.Normed.Group.SemiNormedGroup
 import Mathbin.Analysis.Normed.Group.SemiNormedGroup.Completion
 import Mathbin.Analysis.Normed.Group.SemiNormedGroup.Kernels
+import Mathbin.Analysis.Normed.Group.AddCircle
 import Mathbin.Analysis.Normed.Group.AddTorsor
 import Mathbin.Analysis.Normed.Group.BallSphere
 import Mathbin.Analysis.Normed.Group.Basic
@@ -729,10 +736,12 @@ import Mathbin.CategoryTheory.GlueData
 import Mathbin.CategoryTheory.GradedObject
 import Mathbin.CategoryTheory.Grothendieck
 import Mathbin.CategoryTheory.Groupoid
+import Mathbin.CategoryTheory.Groupoid.FreeGroupoid
 import Mathbin.CategoryTheory.Idempotents.Basic
 import Mathbin.CategoryTheory.Idempotents.Biproducts
 import Mathbin.CategoryTheory.Idempotents.FunctorCategories
 import Mathbin.CategoryTheory.Idempotents.FunctorExtension
+import Mathbin.CategoryTheory.Idempotents.HomologicalComplex
 import Mathbin.CategoryTheory.Idempotents.Karoubi
 import Mathbin.CategoryTheory.Idempotents.KaroubiKaroubi
 import Mathbin.CategoryTheory.Idempotents.SimplicialObject
@@ -759,6 +768,7 @@ import Mathbin.CategoryTheory.Limits.Constructions.Over.Default
 import Mathbin.CategoryTheory.Limits.Constructions.Over.Products
 import Mathbin.CategoryTheory.Limits.Constructions.Pullbacks
 import Mathbin.CategoryTheory.Limits.Constructions.WeaklyInitial
+import Mathbin.CategoryTheory.Limits.Constructions.ZeroObjects
 import Mathbin.CategoryTheory.Limits.Creates
 import Mathbin.CategoryTheory.Limits.EssentiallySmall
 import Mathbin.CategoryTheory.Limits.ExactFunctor
@@ -1012,6 +1022,7 @@ import Mathbin.Combinatorics.SimpleGraph.Subgraph
 import Mathbin.Combinatorics.SimpleGraph.Trails
 import Mathbin.Combinatorics.SimpleGraph.Triangle.Basic
 import Mathbin.Combinatorics.YoungDiagram
+import Mathbin.Combinatorics.YoungTableaux.Semistandard
 import Mathbin.Computability.DFA
 import Mathbin.Computability.NFA
 import Mathbin.Computability.Ackermann
@@ -1290,7 +1301,8 @@ import Mathbin.Data.Nat.Factorial.Cast
 import Mathbin.Data.Nat.Factorization.Basic
 import Mathbin.Data.Nat.Factorization.PrimePow
 import Mathbin.Data.Nat.Fib
-import Mathbin.Data.Nat.Gcd
+import Mathbin.Data.Nat.Gcd.Basic
+import Mathbin.Data.Nat.Gcd.BigOperators
 import Mathbin.Data.Nat.Interval
 import Mathbin.Data.Nat.Lattice
 import Mathbin.Data.Nat.Log
@@ -1392,6 +1404,7 @@ import Mathbin.Data.Rat.Cast
 import Mathbin.Data.Rat.Default
 import Mathbin.Data.Rat.Defs
 import Mathbin.Data.Rat.Denumerable
+import Mathbin.Data.Rat.Encodable
 import Mathbin.Data.Rat.Floor
 import Mathbin.Data.Rat.MetaDefs
 import Mathbin.Data.Rat.Nnrat
@@ -1723,6 +1736,7 @@ import Mathbin.LinearAlgebra.Matrix.Block
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
 import Mathbin.LinearAlgebra.Matrix.Charpoly.FiniteField
+import Mathbin.LinearAlgebra.Matrix.Charpoly.LinearMap
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Minpoly
 import Mathbin.LinearAlgebra.Matrix.Circulant
 import Mathbin.LinearAlgebra.Matrix.Default
@@ -1742,6 +1756,7 @@ import Mathbin.LinearAlgebra.Matrix.Orthogonal
 import Mathbin.LinearAlgebra.Matrix.Polynomial
 import Mathbin.LinearAlgebra.Matrix.PosDef
 import Mathbin.LinearAlgebra.Matrix.Reindex
+import Mathbin.LinearAlgebra.Matrix.SesquilinearForm
 import Mathbin.LinearAlgebra.Matrix.Spectrum
 import Mathbin.LinearAlgebra.Matrix.Symmetric
 import Mathbin.LinearAlgebra.Matrix.ToLin
@@ -1818,6 +1833,7 @@ import Mathbin.MeasureTheory.Constructions.Polish
 import Mathbin.MeasureTheory.Constructions.Prod
 import Mathbin.MeasureTheory.Covering.Besicovitch
 import Mathbin.MeasureTheory.Covering.BesicovitchVectorSpace
+import Mathbin.MeasureTheory.Covering.DensityTheorem
 import Mathbin.MeasureTheory.Covering.Differentiation
 import Mathbin.MeasureTheory.Covering.Vitali
 import Mathbin.MeasureTheory.Covering.VitaliFamily
@@ -1940,7 +1956,6 @@ import Mathbin.NumberTheory.ClassNumber.AdmissibleAbsoluteValue
 import Mathbin.NumberTheory.ClassNumber.AdmissibleCardPowDegree
 import Mathbin.NumberTheory.ClassNumber.Finite
 import Mathbin.NumberTheory.ClassNumber.FunctionField
-import Mathbin.NumberTheory.ClassNumber.NumberField
 import Mathbin.NumberTheory.Cyclotomic.Basic
 import Mathbin.NumberTheory.Cyclotomic.Discriminant
 import Mathbin.NumberTheory.Cyclotomic.Gal
@@ -1973,7 +1988,9 @@ import Mathbin.NumberTheory.Modular
 import Mathbin.NumberTheory.ModularForms.CongruenceSubgroups
 import Mathbin.NumberTheory.ModularForms.SlashActions
 import Mathbin.NumberTheory.Multiplicity
-import Mathbin.NumberTheory.NumberField
+import Mathbin.NumberTheory.NumberField.Basic
+import Mathbin.NumberTheory.NumberField.ClassNumber
+import Mathbin.NumberTheory.NumberField.Embeddings
 import Mathbin.NumberTheory.Padics.Default
 import Mathbin.NumberTheory.Padics.Hensel
 import Mathbin.NumberTheory.Padics.PadicIntegers
@@ -2011,6 +2028,7 @@ import Mathbin.Order.Category.DistribLattice
 import Mathbin.Order.Category.FinBoolAlg
 import Mathbin.Order.Category.FinPartialOrder
 import Mathbin.Order.Category.Frame
+import Mathbin.Order.Category.HeytAlg
 import Mathbin.Order.Category.Lattice
 import Mathbin.Order.Category.LinearOrder
 import Mathbin.Order.Category.NonemptyFinLinOrd
@@ -2163,6 +2181,7 @@ import Mathbin.RingTheory.DedekindDomain.Basic
 import Mathbin.RingTheory.DedekindDomain.Dvr
 import Mathbin.RingTheory.DedekindDomain.Ideal
 import Mathbin.RingTheory.DedekindDomain.IntegralClosure
+import Mathbin.RingTheory.DedekindDomain.SelmerGroup
 import Mathbin.RingTheory.Derivation
 import Mathbin.RingTheory.DiscreteValuationRing
 import Mathbin.RingTheory.Discriminant
@@ -2185,6 +2204,7 @@ import Mathbin.RingTheory.Henselian
 import Mathbin.RingTheory.Ideal.Basic
 import Mathbin.RingTheory.Ideal.Cotangent
 import Mathbin.RingTheory.Ideal.LocalRing
+import Mathbin.RingTheory.Ideal.MinimalPrime
 import Mathbin.RingTheory.Ideal.Operations
 import Mathbin.RingTheory.Ideal.Over
 import Mathbin.RingTheory.Ideal.Prod
@@ -2217,6 +2237,7 @@ import Mathbin.RingTheory.Multiplicity
 import Mathbin.RingTheory.MvPolynomial.Basic
 import Mathbin.RingTheory.MvPolynomial.Homogeneous
 import Mathbin.RingTheory.MvPolynomial.Symmetric
+import Mathbin.RingTheory.MvPolynomial.Tower
 import Mathbin.RingTheory.Nakayama
 import Mathbin.RingTheory.Nilpotent
 import Mathbin.RingTheory.Noetherian
@@ -2431,6 +2452,7 @@ import Mathbin.Tactic.PrettyCases
 import Mathbin.Tactic.ProjectDir
 import Mathbin.Tactic.Protected
 import Mathbin.Tactic.PushNeg
+import Mathbin.Tactic.Qify
 import Mathbin.Tactic.Rcases
 import Mathbin.Tactic.ReassocAxiom
 import Mathbin.Tactic.RenameVar
@@ -2516,6 +2538,7 @@ import Mathbin.Topology.Algebra.Order.ExtrClosure
 import Mathbin.Topology.Algebra.Order.Floor
 import Mathbin.Topology.Algebra.Order.IntermediateValue
 import Mathbin.Topology.Algebra.Order.LeftRight
+import Mathbin.Topology.Algebra.Order.LeftRightLim
 import Mathbin.Topology.Algebra.Order.LiminfLimsup
 import Mathbin.Topology.Algebra.Order.MonotoneContinuity
 import Mathbin.Topology.Algebra.Order.MonotoneConvergence
@@ -2565,6 +2588,7 @@ import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Topology.ContinuousFunction.Bounded
 import Mathbin.Topology.ContinuousFunction.CocompactMap
 import Mathbin.Topology.ContinuousFunction.Compact
+import Mathbin.Topology.ContinuousFunction.Ideals
 import Mathbin.Topology.ContinuousFunction.LocallyConstant
 import Mathbin.Topology.ContinuousFunction.Ordered
 import Mathbin.Topology.ContinuousFunction.Polynomial
@@ -2588,6 +2612,7 @@ import Mathbin.Topology.Homotopy.HomotopyGroup
 import Mathbin.Topology.Homotopy.Path
 import Mathbin.Topology.Homotopy.Product
 import Mathbin.Topology.Inseparable
+import Mathbin.Topology.Instances.AddCircle
 import Mathbin.Topology.Instances.Discrete
 import Mathbin.Topology.Instances.Ennreal
 import Mathbin.Topology.Instances.Ereal

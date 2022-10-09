@@ -62,13 +62,17 @@ theorem le_map_mul_map_div [Groupₓ α] [CommSemigroupₓ β] [LE β] [Submulti
     f a ≤ f b * f (a / b) := by simpa only [mul_comm, div_mul_cancel'] using map_mul_le_mul f (a / b) b
 
 @[to_additive]
+theorem le_map_add_map_div [Groupₓ α] [AddCommSemigroupₓ β] [LE β] [MulLeAddHomClass F α β] (f : F) (a b : α) :
+    f a ≤ f b + f (a / b) := by simpa only [add_commₓ, div_mul_cancel'] using map_mul_le_add f (a / b) b
+
+@[to_additive]
 theorem le_map_div_mul_map_div [Groupₓ α] [CommSemigroupₓ β] [LE β] [SubmultiplicativeHomClass F α β] (f : F)
     (a b c : α) : f (a / c) ≤ f (a / b) * f (b / c) := by
   simpa only [div_mul_div_cancel'] using map_mul_le_mul f (a / b) (b / c)
 
 @[to_additive]
-theorem le_map_add_map_div [Groupₓ α] [AddCommSemigroupₓ β] [LE β] [MulLeAddHomClass F α β] (f : F) (a b : α) :
-    f a ≤ f b + f (a / b) := by simpa only [add_commₓ, div_mul_cancel'] using map_mul_le_add f (a / b) b
+theorem le_map_div_add_map_div [Groupₓ α] [AddCommSemigroupₓ β] [LE β] [MulLeAddHomClass F α β] (f : F) (a b c : α) :
+    f (a / c) ≤ f (a / b) + f (b / c) := by simpa only [div_mul_div_cancel'] using map_mul_le_add f (a / b) (b / c)
 
 namespace Tactic
 

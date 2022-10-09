@@ -634,26 +634,19 @@ theorem root_set_finite (p : T[X]) (S : Type _) [CommRingₓ S] [IsDomain S] [Al
 is finite. -/
 theorem bUnion_roots_finite {R S : Type _} [Semiringₓ R] [CommRingₓ S] [IsDomain S] (m : R →+* S) (d : ℕ) {U : Set R}
     (h : U.Finite) :
-    (⋃ (f : R[X]) (hf : f.natDegree ≤ d ∧ ∀ i, f.coeff i ∈ U), ((f.map m).roots.toFinset : Set S)).Finite := by
-  refine' Set.Finite.bUnion _ _
-  · -- We prove that the set of polynomials under consideration is finite because its
-    -- image by the injective map `π` is finite
-    let π : R[X] → Finsetₓ.range (d + 1) → R := fun f i => f.coeff i
-    have h_inj : Set.InjOn π { f : R[X] | f.natDegree ≤ d ∧ ∀ i : ℕ, f.coeff i ∈ U } := by
-      intro x hx y hy hxy
-      rw [ext_iff_nat_degree_le hx.1 hy.1]
-      exact_mod_cast fun i hi => congr_fun hxy ⟨i, finset.mem_range_succ_iff.mpr hi⟩
-    have h_fin : (Set.Pi Set.Univ fun e : Finsetₓ.range (d + 1) => U).Finite := Set.Finite.pi fun e => h
-    refine' Set.Finite.of_finite_image (Set.Finite.subset h_fin _) h_inj
-    rw [Set.image_subset_iff]
-    intro f hf
-    rw [Set.mem_preimage, Set.mem_univ_pi]
-    exact fun i => hf.2 i
-    
-  · intro i hi
-    convert root_set_finite (i.map m) S
-    simp only [Algebra.id.map_eq_id, map_id]
-    
+    (⋃ (f : R[X]) (hf : f.natDegree ≤ d ∧ ∀ i, f.coeff i ∈ U), ((f.map m).roots.toFinset : Set S)).Finite :=
+  (Set.Finite.bUnion
+      (by
+        -- We prove that the set of polynomials under consideration is finite because its
+        -- image by the injective map `π` is finite
+        let π : R[X] → Finₓ (d + 1) → R := fun f i => f.coeff i
+        refine' ((Set.Finite.pi fun e => h).Subset <| _).of_finite_image (_ : Set.InjOn π _)
+        · exact Set.image_subset_iff.2 fun f hf i _ => hf.2 i
+          
+        · refine' fun x hx y hy hxy => (ext_iff_nat_degree_le hx.1 hy.1).2 fun i hi => _
+          exact id congr_fun hxy ⟨i, Nat.lt_succ_of_leₓ hi⟩
+          ))
+    fun i hi => Finsetₓ.finite_to_set _
 
 theorem mem_root_set_iff' {p : T[X]} {S : Type _} [CommRingₓ S] [IsDomain S] [Algebra T S]
     (hp : p.map (algebraMap T S) ≠ 0) (a : S) : a ∈ p.RootSet S ↔ (p.map (algebraMap T S)).eval a = 0 := by

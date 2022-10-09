@@ -512,6 +512,46 @@ def Set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ₜ s × t where
   continuous_to_fun := (continuous_subtype_coe.fst.subtype_mk _).prod_mk (continuous_subtype_coe.snd.subtype_mk _)
   continuous_inv_fun := (continuous_subtype_coe.fst'.prod_mk continuous_subtype_coe.snd').subtype_mk _
 
+section
+
+variable {ι : Type _}
+
+/-- The topological space `Π i, β i` can be split as a product by separating the indices in ι
+  depending on whether they satisfy a predicate p or not.-/
+@[simps]
+def piEquivPiSubtypeProd (p : ι → Prop) (β : ι → Type _) [∀ i, TopologicalSpace (β i)] [DecidablePred p] :
+    (∀ i, β i) ≃ₜ (∀ i : { x // p x }, β i) × ∀ i : { x // ¬p x }, β i where
+  toEquiv := Equivₓ.piEquivPiSubtypeProd p β
+  continuous_to_fun := by apply Continuous.prod_mk <;> exact continuous_pi fun j => continuous_apply j
+  continuous_inv_fun :=
+    continuous_pi fun j => by
+      dsimp only [Equivₓ.piEquivPiSubtypeProd]
+      split_ifs
+      exacts[(continuous_apply _).comp continuous_fst, (continuous_apply _).comp continuous_snd]
+
+variable [DecidableEq ι] (i : ι)
+
+/-- A product of topological spaces can be split as the binary product of one of the spaces and
+  the product of all the remaining spaces. -/
+@[simps]
+def piSplitAt (β : ι → Type _) [∀ j, TopologicalSpace (β j)] : (∀ j, β j) ≃ₜ β i × ∀ j : { j // j ≠ i }, β j where
+  toEquiv := Equivₓ.piSplitAt i β
+  continuous_to_fun := (continuous_apply i).prod_mk (continuous_pi fun j => continuous_apply j)
+  continuous_inv_fun :=
+    continuous_pi fun j => by
+      dsimp only [Equivₓ.piSplitAt]
+      split_ifs
+      subst h
+      exacts[continuous_fst, (continuous_apply _).comp continuous_snd]
+
+/-- A product of copies of a topological space can be split as the binary product of one copy and
+  the product of all the remaining copies. -/
+@[simps]
+def funSplitAt : (ι → β) ≃ₜ β × ({ j // j ≠ i } → β) :=
+  piSplitAt i _
+
+end
+
 end Homeomorph
 
 /-- An inducing equiv between topological spaces is a homeomorphism. -/

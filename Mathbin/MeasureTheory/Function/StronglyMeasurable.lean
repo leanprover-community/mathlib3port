@@ -1363,10 +1363,10 @@ theorem comp_measurable {γ : Type _} {mγ : MeasurableSpace γ} {mα : Measurab
     (hg : AeStronglyMeasurable g (Measure.map f μ)) (hf : Measurable f) : AeStronglyMeasurable (g ∘ f) μ :=
   hg.comp_ae_measurable hf.AeMeasurable
 
-theorem comp_measurable' {γ : Type _} {mγ : MeasurableSpace γ} {mα : MeasurableSpace α} {f : γ → α} {μ : Measure γ}
-    {ν : Measure α} (hg : AeStronglyMeasurable g ν) (hf : Measurable f) (h : μ.map f ≪ ν) :
+theorem comp_quasi_measure_preserving {γ : Type _} {mγ : MeasurableSpace γ} {mα : MeasurableSpace α} {f : γ → α}
+    {μ : Measure γ} {ν : Measure α} (hg : AeStronglyMeasurable g ν) (hf : QuasiMeasurePreserving f μ ν) :
     AeStronglyMeasurable (g ∘ f) μ :=
-  (hg.mono' h).comp_measurable hf
+  (hg.mono' hf.AbsolutelyContinuous).comp_measurable hf.Measurable
 
 theorem is_separable_ae_range (hf : AeStronglyMeasurable f μ) : ∃ t : Set β, IsSeparable t ∧ ∀ᵐ x ∂μ, f x ∈ t := by
   refine' ⟨range (hf.mk f), hf.strongly_measurable_mk.is_separable_range, _⟩

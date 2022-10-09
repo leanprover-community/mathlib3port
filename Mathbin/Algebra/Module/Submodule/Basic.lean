@@ -191,6 +191,10 @@ instance [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] : HasSmul S p :=
 instance [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] : IsScalarTower S R p :=
   p.toSubMulAction.IsScalarTower
 
+instance is_scalar_tower' {S' : Type _} [HasSmul S R] [HasSmul S M] [HasSmul S' R] [HasSmul S' M] [HasSmul S S']
+    [IsScalarTower S' R M] [IsScalarTower S S' M] [IsScalarTower S R M] : IsScalarTower S S' p :=
+  p.toSubMulAction.is_scalar_tower'
+
 instance [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M]
     [IsCentralScalar S M] : IsCentralScalar S p :=
   p.toSubMulAction.IsCentralScalar

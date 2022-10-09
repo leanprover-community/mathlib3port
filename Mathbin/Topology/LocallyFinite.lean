@@ -20,7 +20,9 @@ open Set Function Filter
 
 open TopologicalSpace Filter
 
-variable {ι ι' α X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {f g : ι → Set X}
+universe u
+
+variable {ι : Type u} {ι' α X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {f g : ι → Set X}
 
 /-- A family of sets in `set X` is locally finite if at every point `x : X`,
 there is a neighborhood of `x` which meets only finitely many sets in the family. -/
@@ -44,26 +46,22 @@ theorem comp_inj_on {g : ι' → ι} (hf : LocallyFinite f) (hg : InjOn g { i | 
   let ⟨t, htx, htf⟩ := hf x
   ⟨t, htx, htf.Preimage <| hg.mono fun i hi => hi.out.mono <| inter_subset_left _ _⟩
 
-theorem comp_injective {g : ι' → ι} (hf : LocallyFinite f) (hg : Function.Injective g) : LocallyFinite (f ∘ g) :=
+theorem comp_injective {g : ι' → ι} (hf : LocallyFinite f) (hg : Injective g) : LocallyFinite (f ∘ g) :=
   hf.comp_inj_on (hg.InjOn _)
 
-theorem eventually_finite (hf : LocallyFinite f) (x : X) : ∀ᶠ s in (𝓝 x).smallSets, { i | (f i ∩ s).Nonempty }.Finite :=
-  eventually_small_sets.2 <|
-    let ⟨s, hsx, hs⟩ := hf x
-    ⟨s, hsx, fun t hts => hs.Subset fun i hi => hi.out.mono <| inter_subset_inter_right _ hts⟩
+theorem _root_.locally_finite_iff_small_sets :
+    LocallyFinite f ↔ ∀ x, ∀ᶠ s in (𝓝 x).smallSets, { i | (f i ∩ s).Nonempty }.Finite :=
+  forall_congrₓ fun x =>
+    Iff.symm <| eventually_small_sets' fun s t hst ht => ht.Subset fun i hi => hi.mono <| inter_subset_inter_right _ hst
+
+protected theorem eventually_small_sets (hf : LocallyFinite f) (x : X) :
+    ∀ᶠ s in (𝓝 x).smallSets, { i | (f i ∩ s).Nonempty }.Finite :=
+  locally_finite_iff_small_sets.mp hf x
 
 theorem exists_mem_basis {ι' : Sort _} (hf : LocallyFinite f) {p : ι' → Prop} {s : ι' → Set X} {x : X}
     (hb : (𝓝 x).HasBasis p s) : ∃ (i : _)(hi : p i), { j | (f j ∩ s i).Nonempty }.Finite :=
-  let ⟨i, hpi, hi⟩ := hb.smallSets.eventually_iff.mp (hf.eventually_finite x)
+  let ⟨i, hpi, hi⟩ := hb.smallSets.eventually_iff.mp (hf.eventually_small_sets x)
   ⟨i, hpi, hi Subset.rfl⟩
-
-theorem sum_elim {g : ι' → Set X} (hf : LocallyFinite f) (hg : LocallyFinite g) : LocallyFinite (Sum.elim f g) := by
-  intro x
-  obtain ⟨s, hsx, hsf, hsg⟩ : ∃ s, s ∈ 𝓝 x ∧ { i | (f i ∩ s).Nonempty }.Finite ∧ { j | (g j ∩ s).Nonempty }.Finite
-  exact ((𝓝 x).frequently_small_sets_mem.and_eventually ((hf.eventually_finite x).And (hg.eventually_finite x))).exists
-  refine' ⟨s, hsx, _⟩
-  convert (hsf.image Sum.inl).union (hsg.image Sum.inr) using 1
-  ext (i | j) <;> simp
 
 protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => Closure (f i) := by
   intro x
@@ -142,4 +140,26 @@ theorem preimage_continuous {g : Y → X} (hf : LocallyFinite f) (hg : Continuou
   ⟨g ⁻¹' s, hg.ContinuousAt hsx, hs.Subset fun i ⟨y, hy⟩ => ⟨g y, hy⟩⟩
 
 end LocallyFinite
+
+@[simp]
+theorem Equivₓ.locally_finite_comp_iff (e : ι' ≃ ι) : LocallyFinite (f ∘ e) ↔ LocallyFinite f :=
+  ⟨fun h => by simpa only [(· ∘ ·), e.apply_symm_apply] using h.comp_injective e.symm.injective, fun h =>
+    h.comp_injective e.Injective⟩
+
+theorem locally_finite_sum {f : Sum ι ι' → Set X} :
+    LocallyFinite f ↔ LocallyFinite (f ∘ Sum.inl) ∧ LocallyFinite (f ∘ Sum.inr) := by
+  simp only [locally_finite_iff_small_sets, ← forall_and_distrib, ← finite_preimage_inl_and_inr, preimage_set_of_eq,
+    (· ∘ ·), eventually_and]
+
+theorem LocallyFinite.sum_elim {g : ι' → Set X} (hf : LocallyFinite f) (hg : LocallyFinite g) :
+    LocallyFinite (Sum.elim f g) :=
+  locally_finite_sum.mpr ⟨hf, hg⟩
+
+theorem locally_finite_option {f : Option ι → Set X} : LocallyFinite f ↔ LocallyFinite (f ∘ some) := by
+  simp only [← (Equivₓ.optionEquivSumPunit.{u} ι).symm.locally_finite_comp_iff, locally_finite_sum,
+    locally_finite_of_finite, and_trueₓ]
+  rfl
+
+theorem LocallyFinite.option_elim (hf : LocallyFinite f) (s : Set X) : LocallyFinite (Option.elimₓ s f) :=
+  locally_finite_option.2 hf
 

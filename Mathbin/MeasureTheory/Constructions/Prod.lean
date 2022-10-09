@@ -501,12 +501,12 @@ noncomputable def FiniteSpanningSetsIn.prod {ν : Measure β} {C : Set (Set α)}
   · simp_rw [Union_unpair_prod, hμ.spanning, hν.spanning, univ_prod_univ]
     
 
-theorem prod_fst_absolutely_continuous : map Prod.fst (μ.Prod ν) ≪ μ := by
-  refine' absolutely_continuous.mk fun s hs h2s => _
+theorem quasi_measure_preserving_fst : QuasiMeasurePreserving Prod.fst (μ.Prod ν) μ := by
+  refine' ⟨measurable_fst, absolutely_continuous.mk fun s hs h2s => _⟩
   rw [map_apply measurable_fst hs, ← prod_univ, prod_prod, h2s, zero_mul]
 
-theorem prod_snd_absolutely_continuous : map Prod.snd (μ.Prod ν) ≪ ν := by
-  refine' absolutely_continuous.mk fun s hs h2s => _
+theorem quasi_measure_preserving_snd : QuasiMeasurePreserving Prod.snd (μ.Prod ν) ν := by
+  refine' ⟨measurable_snd, absolutely_continuous.mk fun s hs h2s => _⟩
   rw [map_apply measurable_snd hs, ← univ_prod, prod_prod, h2s, mul_zero]
 
 variable [SigmaFinite μ]
@@ -540,6 +540,9 @@ theorem prod_swap : map Prod.swap (μ.Prod ν) = ν.Prod μ := by
   refine' (prod_eq _).symm
   intro s t hs ht
   simp_rw [map_apply measurable_swap (hs.prod ht), preimage_swap_prod, prod_prod, mul_comm]
+
+theorem measure_preserving_swap : MeasurePreserving Prod.swap (μ.Prod ν) (ν.Prod μ) :=
+  ⟨measurable_swap, prod_swap⟩
 
 theorem prod_apply_symm {s : Set (α × β)} (hs : MeasurableSet s) : μ.Prod ν s = ∫⁻ y, μ ((fun x => (x, y)) ⁻¹' s) ∂ν :=
   by
@@ -702,19 +705,19 @@ theorem MeasureTheory.AeStronglyMeasurable.prod_swap {γ : Type _} [TopologicalS
 
 theorem AeMeasurable.fst [SigmaFinite ν] {f : α → γ} (hf : AeMeasurable f μ) :
     AeMeasurable (fun z : α × β => f z.1) (μ.Prod ν) :=
-  hf.comp_measurable' measurable_fst prod_fst_absolutely_continuous
+  hf.comp_quasi_measure_preserving quasi_measure_preserving_fst
 
 theorem AeMeasurable.snd [SigmaFinite ν] {f : β → γ} (hf : AeMeasurable f ν) :
     AeMeasurable (fun z : α × β => f z.2) (μ.Prod ν) :=
-  hf.comp_measurable' measurable_snd prod_snd_absolutely_continuous
+  hf.comp_quasi_measure_preserving quasi_measure_preserving_snd
 
 theorem MeasureTheory.AeStronglyMeasurable.fst {γ} [TopologicalSpace γ] [SigmaFinite ν] {f : α → γ}
     (hf : AeStronglyMeasurable f μ) : AeStronglyMeasurable (fun z : α × β => f z.1) (μ.Prod ν) :=
-  hf.comp_measurable' measurable_fst prod_fst_absolutely_continuous
+  hf.comp_quasi_measure_preserving quasi_measure_preserving_fst
 
 theorem MeasureTheory.AeStronglyMeasurable.snd {γ} [TopologicalSpace γ] [SigmaFinite ν] {f : β → γ}
     (hf : AeStronglyMeasurable f ν) : AeStronglyMeasurable (fun z : α × β => f z.2) (μ.Prod ν) :=
-  hf.comp_measurable' measurable_snd prod_snd_absolutely_continuous
+  hf.comp_quasi_measure_preserving quasi_measure_preserving_snd
 
 /-- The Bochner integral is a.e.-measurable.
   This shows that the integrand of (the right-hand-side of) Fubini's theorem is a.e.-measurable. -/
@@ -905,11 +908,7 @@ theorem Integrable.integral_norm_prod_right [SigmaFinite μ] ⦃f : α × β →
 theorem integrable_prod_mul {f : α → ℝ} {g : β → ℝ} (hf : Integrable f μ) (hg : Integrable g ν) :
     Integrable (fun z : α × β => f z.1 * g z.2) (μ.Prod ν) := by
   refine' (integrable_prod_iff _).2 ⟨_, _⟩
-  · apply ae_strongly_measurable.mul
-    · exact (hf.1.mono' prod_fst_absolutely_continuous).comp_measurable measurable_fst
-      
-    · exact (hg.1.mono' prod_snd_absolutely_continuous).comp_measurable measurable_snd
-      
+  · exact hf.1.fst.mul hg.1.snd
     
   · exact eventually_of_forall fun x => hg.const_mul (f x)
     

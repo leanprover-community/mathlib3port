@@ -329,6 +329,23 @@ theorem mem_pi (x : ι → α) : x ∈ I.pi ι ↔ ∀ i, x i ∈ I :=
 
 end Pi
 
+theorem Inf_is_prime_of_is_chain {s : Set (Ideal α)} (hs : s.Nonempty) (hs' : IsChain (· ≤ ·) s)
+    (H : ∀ p ∈ s, Ideal.IsPrime p) : (inf s).IsPrime :=
+  ⟨fun e =>
+    let ⟨x, hx⟩ := hs
+    (H x hx).ne_top (eq_top_iff.mpr (e.symm.trans_le (Inf_le hx))),
+    fun x y e =>
+    or_iff_not_imp_left.mpr fun hx => by
+      rw [Ideal.mem_Inf] at hx e⊢
+      push_neg  at hx
+      obtain ⟨I, hI, hI'⟩ := hx
+      intro J hJ
+      cases hs'.total hI hJ
+      · exact h (((H I hI).mem_or_mem (e hI)).resolve_left hI')
+        
+      · exact ((H J hJ).mem_or_mem (e hJ)).resolve_left fun x => hI' <| h x
+        ⟩
+
 end Ideal
 
 end Semiringₓ
@@ -533,6 +550,11 @@ theorem eq_bot_or_top : I = ⊥ ∨ I = ⊤ := by
   · simpa
     
   simpa [H, h1] using I.mul_mem_left r⁻¹ hr
+
+/-- Ideals of a `division_ring` are a simple order. Thanks to the way abbreviations work, this
+automatically gives a `is_simple_module K` instance. -/
+instance : IsSimpleOrder (Ideal K) :=
+  ⟨eq_bot_or_top⟩
 
 theorem eq_bot_of_prime [h : I.IsPrime] : I = ⊥ :=
   or_iff_not_imp_right.mp I.eq_bot_or_top h.1

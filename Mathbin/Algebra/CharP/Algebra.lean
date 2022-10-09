@@ -51,8 +51,42 @@ theorem char_zero_of_injective_algebra_map {R A : Type _} [CommSemiringₓ R] [S
       rw [IsScalarTower.algebra_map_apply ℕ R A y] at hxy
       exact CharZero.cast_injective (h hxy) }
 
+/-!
+As an application, a `ℚ`-algebra has characteristic zero.
+-/
+
+
 -- `char_p.char_p_to_char_zero A _ (char_p_of_injective_algebra_map h 0)` does not work
 -- here as it would require `ring A`.
+section QAlgebra
+
+variable (R : Type _) [Nontrivial R]
+
+/-- A nontrivial `ℚ`-algebra has `char_p` equal to zero.
+
+This cannot be a (local) instance because it would immediately form a loop with the
+instance `algebra_rat`. It's probably easier to go the other way: prove `char_zero R` and
+automatically receive an `algebra ℚ R` instance.
+-/
+theorem algebraRat.char_p_zero [Semiringₓ R] [Algebra ℚ R] : CharP R 0 :=
+  char_p_of_injective_algebra_map (algebraMap ℚ R).Injective 0
+
+/-- A nontrivial `ℚ`-algebra has characteristic zero.
+
+This cannot be a (local) instance because it would immediately form a loop with the
+instance `algebra_rat`. It's probably easier to go the other way: prove `char_zero R` and
+automatically receive an `algebra ℚ R` instance.
+-/
+theorem algebraRat.char_zero [Ringₓ R] [Algebra ℚ R] : CharZero R :=
+  @CharP.char_p_to_char_zero R _ (algebraRat.char_p_zero R)
+
+end QAlgebra
+
+/-!
+An algebra over a field has the same characteristic as the field.
+-/
+
+
 section
 
 variable (K L : Type _) [Field K] [CommSemiringₓ L] [Nontrivial L] [Algebra K L]

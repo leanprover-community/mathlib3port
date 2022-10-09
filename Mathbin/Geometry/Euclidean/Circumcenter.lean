@@ -87,21 +87,19 @@ circumradius) pair for the set with `p` added, in the span of the
 subspace with `p` added. -/
 theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpace s.direction] {ps : Set P}
     (hnps : ps.Nonempty) {p : P} (hps : ps ⊆ s) (hp : p ∉ s)
-    (hu : ∃! cccr : P × ℝ, cccr.fst ∈ s ∧ ∀ p1 ∈ ps, dist p1 cccr.fst = cccr.snd) :
-    ∃! cccr₂ : P × ℝ,
-      cccr₂.fst ∈ affineSpan ℝ (insert p (s : Set P)) ∧ ∀ p1 ∈ insert p ps, dist p1 cccr₂.fst = cccr₂.snd :=
-  by
+    (hu : ∃! cs : Sphere P, cs.Center ∈ s ∧ ps ⊆ (cs : Set P)) :
+    ∃! cs₂ : Sphere P, cs₂.Center ∈ affineSpan ℝ (insert p (s : Set P)) ∧ insert p ps ⊆ (cs₂ : Set P) := by
   haveI : Nonempty s := Set.Nonempty.to_subtype (hnps.mono hps)
   rcases hu with ⟨⟨cc, cr⟩, ⟨hcc, hcr⟩, hcccru⟩
-  simp only [Prod.fst, Prod.snd] at hcc hcr hcccru
+  simp only at hcc hcr hcccru
   let x := dist cc (orthogonalProjection s p)
   let y := dist p (orthogonalProjection s p)
   have hy0 : y ≠ 0 := dist_orthogonal_projection_ne_zero_of_not_mem hp
   let ycc₂ := (x * x + y * y - cr * cr) / (2 * y)
   let cc₂ := (ycc₂ / y) • (p -ᵥ orthogonalProjection s p : V) +ᵥ cc
   let cr₂ := Real.sqrt (cr * cr + ycc₂ * ycc₂)
-  use (cc₂, cr₂)
-  simp only [Prod.fst, Prod.snd]
+  use ⟨cc₂, cr₂⟩
+  simp only
   have hpo : p = (1 : ℝ) • (p -ᵥ orthogonalProjection s p : V) +ᵥ orthogonalProjection s p := by simp
   constructor
   · constructor
@@ -112,7 +110,7 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
           (vsub_mem_vector_span ℝ (Set.mem_insert _ _) (Set.mem_insert_of_mem _ (orthogonal_projection_mem _)))
       
     · intro p1 hp1
-      rw [← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
+      rw [sphere.mem_coe, mem_sphere, ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
         Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _))]
       cases hp1
       · rw [hp1]
@@ -124,39 +122,39 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
         ring
         
       · rw [dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq _ (hps hp1),
-          orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc, Subtype.coe_mk, hcr _ hp1,
-          dist_eq_norm_vsub V cc₂ cc, vadd_vsub, norm_smul, ← dist_eq_norm_vsub V, Real.norm_eq_abs, abs_div,
-          abs_of_nonneg dist_nonneg, div_mul_cancel _ hy0, abs_mul_abs_self]
+          orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc, Subtype.coe_mk,
+          dist_of_mem_subset_mk_sphere hp1 hcr, dist_eq_norm_vsub V cc₂ cc, vadd_vsub, norm_smul, ← dist_eq_norm_vsub V,
+          Real.norm_eq_abs, abs_div, abs_of_nonneg dist_nonneg, div_mul_cancel _ hy0, abs_mul_abs_self]
         
       
     
   · rintro ⟨cc₃, cr₃⟩ ⟨hcc₃, hcr₃⟩
-    simp only [Prod.fst, Prod.snd] at hcc₃ hcr₃
+    simp only at hcc₃ hcr₃
     obtain ⟨t₃, cc₃', hcc₃', hcc₃''⟩ :
       ∃ (r : ℝ)(p0 : P)(hp0 : p0 ∈ s), cc₃ = r • (p -ᵥ ↑((orthogonalProjection s) p)) +ᵥ p0 := by
       rwa [mem_affine_span_insert_iff (orthogonal_projection_mem p)] at hcc₃
-    have hcr₃' : ∃ r, ∀ p1 ∈ ps, dist p1 cc₃ = r := ⟨cr₃, fun p1 hp1 => hcr₃ p1 (Set.mem_insert_of_mem _ hp1)⟩
+    have hcr₃' : ∃ r, ∀ p1 ∈ ps, dist p1 cc₃ = r :=
+      ⟨cr₃, fun p1 hp1 => dist_of_mem_subset_mk_sphere (Set.mem_insert_of_mem _ hp1) hcr₃⟩
     rw [exists_dist_eq_iff_exists_dist_orthogonal_projection_eq hps cc₃, hcc₃'',
       orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc₃'] at hcr₃'
     cases' hcr₃' with cr₃' hcr₃'
-    have hu := hcccru (cc₃', cr₃')
-    simp only [Prod.fst, Prod.snd] at hu
+    have hu := hcccru ⟨cc₃', cr₃'⟩
+    simp only at hu
     replace hu := hu ⟨hcc₃', hcr₃'⟩
-    rw [Prod.ext_iffₓ] at hu
-    simp only [Prod.fst, Prod.snd] at hu
     cases' hu with hucc hucr
     substs hucc hucr
     have hcr₃val : cr₃ = Real.sqrt (cr₃' * cr₃' + t₃ * y * (t₃ * y)) := by
       cases' hnps with p0 hp0
       have h' : ↑(⟨cc₃', hcc₃'⟩ : s) = cc₃' := rfl
-      rw [← hcr₃ p0 (Set.mem_insert_of_mem _ hp0), hcc₃'', ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
+      rw [← dist_of_mem_subset_mk_sphere (Set.mem_insert_of_mem _ hp0) hcr₃, hcc₃'', ←
+        mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
         Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)),
         dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq _ (hps hp0),
-        orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc₃', h', hcr p0 hp0,
+        orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc₃', h', dist_of_mem_subset_mk_sphere hp0 hcr,
         dist_eq_norm_vsub V _ cc₃', vadd_vsub, norm_smul, ← dist_eq_norm_vsub V p, Real.norm_eq_abs, ← mul_assoc,
         mul_comm _ (abs t₃), ← mul_assoc, abs_mul_abs_self]
       ring
-    replace hcr₃ := hcr₃ p (Set.mem_insert _ _)
+    replace hcr₃ := dist_of_mem_subset_mk_sphere (Set.mem_insert _ _) hcr₃
     rw [hpo, hcc₃'', hcr₃val, ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
       dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd (orthogonal_projection_mem p) hcc₃' _ _
         (vsub_orthogonal_projection_mem_direction_orthogonal s p),
@@ -182,7 +180,7 @@ there is a unique (circumcenter, circumradius) pair for those points
 in the affine subspace they span. -/
 theorem _root_.affine_independent.exists_unique_dist_eq {ι : Type _} [hne : Nonempty ι] [Fintypeₓ ι] {p : ι → P}
     (ha : AffineIndependent ℝ p) :
-    ∃! cccr : P × ℝ, cccr.fst ∈ affineSpan ℝ (Set.Range p) ∧ ∀ i, dist (p i) cccr.fst = cccr.snd := by
+    ∃! cs : Sphere P, cs.Center ∈ affineSpan ℝ (Set.Range p) ∧ Set.Range p ⊆ (cs : Set P) := by
   induction' hn : Fintypeₓ.card ι with m hm generalizing ι
   · exfalso
     have h := Fintypeₓ.card_pos_iff.2 hne
@@ -193,22 +191,18 @@ theorem _root_.affine_independent.exists_unique_dist_eq {ι : Type _} [hne : Non
     · rw [Fintypeₓ.card_eq_one_iff] at hn
       cases' hn with i hi
       haveI : Unique ι := ⟨⟨i⟩, hi⟩
-      use (p i, 0)
-      simp only [Prod.fst, Prod.snd, Set.range_unique, AffineSubspace.mem_affine_span_singleton]
+      use ⟨p i, 0⟩
+      simp only [Set.range_unique, AffineSubspace.mem_affine_span_singleton]
       constructor
-      · simp_rw [hi default]
-        use rfl
-        intro i1
-        rw [hi i1]
-        exact dist_self _
+      · simp_rw [hi default, Set.singleton_subset_iff, sphere.mem_coe, mem_sphere, dist_self]
+        exact ⟨rfl, rfl⟩
         
       · rintro ⟨cc, cr⟩
-        simp only [Prod.fst, Prod.snd]
+        simp only
         rintro ⟨rfl, hdist⟩
-        rw [hi default]
-        congr
-        rw [← hdist default]
-        exact dist_self _
+        simp_rw [Set.singleton_subset_iff, sphere.mem_coe, mem_sphere, dist_self] at hdist
+        rw [hi default, hdist]
+        exact ⟨rfl, rfl⟩
         
       
     · have i := hne.some
@@ -231,25 +225,7 @@ theorem _root_.affine_independent.exists_unique_dist_eq {ι : Type _} [hne : Non
         rw [← Set.image_eq_range, ← Set.image_univ, ← Set.image_insert_eq]
         congr with j
         simp [Classical.em]
-      change ∃! cccr : P × ℝ, _ ∧ ∀ i2, (fun q => dist q cccr.fst = cccr.snd) (p i2)
-      conv =>
-      congr
-      ext
-      conv =>
-      congr
-      skip
-      rw [← Set.forall_range_iff]
-      dsimp only
-      rw [hr]
-      change ∃! cccr : P × ℝ, _ ∧ ∀ i2 : ι2, (fun q => dist q cccr.fst = cccr.snd) (p i2) at hm
-      conv at hm =>
-      congr
-      ext
-      conv =>
-      congr
-      skip
-      rw [← Set.forall_range_iff]
-      rw [← affine_span_insert_affine_span]
+      rw [hr, ← affine_span_insert_affine_span]
       refine' exists_unique_dist_eq_of_insert (Set.range_nonempty _) (subset_span_points ℝ _) _ hm
       convert ha.not_mem_affine_span_diff i Set.Univ
       change (Set.Range fun i2 : { x | x ≠ i } => p i2) = _
@@ -272,37 +248,44 @@ variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [No
 
 include V
 
-/-- The pair (circumcenter, circumradius) of a simplex. -/
-def circumcenterCircumradius {n : ℕ} (s : Simplex ℝ P n) : P × ℝ :=
+/-- The circumsphere of a simplex. -/
+def circumsphere {n : ℕ} (s : Simplex ℝ P n) : Sphere P :=
   s.Independent.exists_unique_dist_eq.some
 
-/-- The property satisfied by the (circumcenter, circumradius) pair. -/
-theorem circumcenter_circumradius_unique_dist_eq {n : ℕ} (s : Simplex ℝ P n) :
-    (s.circumcenterCircumradius.fst ∈ affineSpan ℝ (Set.Range s.points) ∧
-        ∀ i, dist (s.points i) s.circumcenterCircumradius.fst = s.circumcenterCircumradius.snd) ∧
-      ∀ cccr : P × ℝ,
-        (cccr.fst ∈ affineSpan ℝ (Set.Range s.points) ∧ ∀ i, dist (s.points i) cccr.fst = cccr.snd) →
-          cccr = s.circumcenterCircumradius :=
+/-- The property satisfied by the circumsphere. -/
+theorem circumsphere_unique_dist_eq {n : ℕ} (s : Simplex ℝ P n) :
+    (s.circumsphere.Center ∈ affineSpan ℝ (Set.Range s.points) ∧ Set.Range s.points ⊆ s.circumsphere) ∧
+      ∀ cs : Sphere P, cs.Center ∈ affineSpan ℝ (Set.Range s.points) ∧ Set.Range s.points ⊆ cs → cs = s.circumsphere :=
   s.Independent.exists_unique_dist_eq.some_spec
 
 /-- The circumcenter of a simplex. -/
 def circumcenter {n : ℕ} (s : Simplex ℝ P n) : P :=
-  s.circumcenterCircumradius.fst
+  s.circumsphere.Center
 
 /-- The circumradius of a simplex. -/
 def circumradius {n : ℕ} (s : Simplex ℝ P n) : ℝ :=
-  s.circumcenterCircumradius.snd
+  s.circumsphere.radius
+
+/-- The center of the circumsphere is the circumcenter. -/
+@[simp]
+theorem circumsphere_center {n : ℕ} (s : Simplex ℝ P n) : s.circumsphere.Center = s.circumcenter :=
+  rfl
+
+/-- The radius of the circumsphere is the circumradius. -/
+@[simp]
+theorem circumsphere_radius {n : ℕ} (s : Simplex ℝ P n) : s.circumsphere.radius = s.circumradius :=
+  rfl
 
 /-- The circumcenter lies in the affine span. -/
 theorem circumcenter_mem_affine_span {n : ℕ} (s : Simplex ℝ P n) : s.circumcenter ∈ affineSpan ℝ (Set.Range s.points) :=
-  s.circumcenter_circumradius_unique_dist_eq.1.1
+  s.circumsphere_unique_dist_eq.1.1
 
 /-- All points have distance from the circumcenter equal to the
 circumradius. -/
 @[simp]
-theorem dist_circumcenter_eq_circumradius {n : ℕ} (s : Simplex ℝ P n) :
-    ∀ i, dist (s.points i) s.circumcenter = s.circumradius :=
-  s.circumcenter_circumradius_unique_dist_eq.1.2
+theorem dist_circumcenter_eq_circumradius {n : ℕ} (s : Simplex ℝ P n) (i : Finₓ (n + 1)) :
+    dist (s.points i) s.circumcenter = s.circumradius :=
+  dist_of_mem_subset_sphere (Set.mem_range_self _) s.circumsphere_unique_dist_eq.1.2
 
 /-- All points have distance to the circumcenter equal to the
 circumradius. -/
@@ -317,16 +300,18 @@ theorem dist_circumcenter_eq_circumradius' {n : ℕ} (s : Simplex ℝ P n) :
 equidistant, that point is the circumcenter. -/
 theorem eq_circumcenter_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P} (hp : p ∈ affineSpan ℝ (Set.Range s.points))
     {r : ℝ} (hr : ∀ i, dist (s.points i) p = r) : p = s.circumcenter := by
-  have h := s.circumcenter_circumradius_unique_dist_eq.2 (p, r)
-  simp only [hp, hr, forall_const, eq_self_iff_true, and_selfₓ, Prod.ext_iffₓ] at h
+  have h := s.circumsphere_unique_dist_eq.2 ⟨p, r⟩
+  simp only [hp, hr, forall_const, eq_self_iff_true, subset_sphere, sphere.ext_iff, Set.forall_range_iff, mem_sphere,
+    true_andₓ] at h
   exact h.1
 
 /-- Given a point in the affine span from which all the points are
 equidistant, that distance is the circumradius. -/
 theorem eq_circumradius_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P} (hp : p ∈ affineSpan ℝ (Set.Range s.points))
     {r : ℝ} (hr : ∀ i, dist (s.points i) p = r) : r = s.circumradius := by
-  have h := s.circumcenter_circumradius_unique_dist_eq.2 (p, r)
-  simp only [hp, hr, forall_const, eq_self_iff_true, and_selfₓ, Prod.ext_iffₓ] at h
+  have h := s.circumsphere_unique_dist_eq.2 ⟨p, r⟩
+  simp only [hp, hr, forall_const, eq_self_iff_true, subset_sphere, sphere.ext_iff, Set.forall_range_iff, mem_sphere,
+    true_andₓ] at h
   exact h.2
 
 /-- The circumradius is non-negative. -/

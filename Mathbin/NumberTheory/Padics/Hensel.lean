@@ -170,15 +170,14 @@ private theorem calc_deriv_dist {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) (hz1 : �
 
 private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n z)
     (h1 : ∥(↑(F.eval z) : ℚ_[p]) / ↑(F.derivative.eval z)∥ ≤ 1) (hzeq : z1 = ⟨_, h1⟩) :
-    { q : ℤ_[p] // F.eval z' = q * z1 ^ 2 } :=
-  have hdzne' : (↑(F.derivative.eval z) : ℚ_[p]) ≠ 0 :=
-    have hdzne : F.derivative.eval z ≠ 0 := mt norm_eq_zero.2 (by rw [hz.1] <;> apply deriv_norm_ne_zero <;> assumption)
-    fun h => hdzne <| Subtype.ext_iff_val.2 h
-  let ⟨q, hq⟩ := F.binomExpansion z (-z1)
+    { q : ℤ_[p] // F.eval z' = q * z1 ^ 2 } := by
+  have hdzne : F.derivative.eval z ≠ 0 := mt norm_eq_zero.2 (by rw [hz.1] <;> apply deriv_norm_ne_zero <;> assumption)
+  have hdzne' : (↑(F.derivative.eval z) : ℚ_[p]) ≠ 0 := fun h => hdzne (Subtype.ext_iff_val.2 h)
+  obtain ⟨q, hq⟩ := F.binom_expansion z (-z1)
   have : ∥(↑(F.derivative.eval z) * (↑(F.eval z) / ↑(F.derivative.eval z)) : ℚ_[p])∥ ≤ 1 := by
     rw [padicNormE.mul]
     exact mul_le_one (PadicInt.norm_le_one _) (norm_nonneg _) h1
-  have : F.derivative.eval z * -z1 = -F.eval z :=
+  have : F.derivative.eval z * -z1 = -F.eval z := by
     calc
       F.derivative.eval z * -z1 = F.derivative.eval z * -⟨↑(F.eval z) / ↑(F.derivative.eval z), h1⟩ := by rw [hzeq]
       _ = -(F.derivative.eval z * ⟨↑(F.eval z) / ↑(F.derivative.eval z), h1⟩) := mul_neg _ _
@@ -186,9 +185,7 @@ private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n 
         Subtype.ext <| by simp only [PadicInt.coe_neg, PadicInt.coe_mul, Subtype.coe_mk]
       _ = -F.eval z := by simp only [mul_div_cancel' _ hdzne', Subtype.coe_eta]
       
-  have heq : F.eval z' = q * z1 ^ 2 := by
-    simpa only [sub_eq_add_neg, this, hz', add_right_negₓ, neg_sq, zero_addₓ] using hq
-  ⟨q, HEq⟩
+  exact ⟨q, by simpa only [sub_eq_add_neg, this, hz', add_right_negₓ, neg_sq, zero_addₓ] using hq⟩
 
 private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F.eval z' = q * z1 ^ 2)
     (h1 : ∥(↑(F.eval z) : ℚ_[p]) / ↑(F.derivative.eval z)∥ ≤ 1) (hzeq : z1 = ⟨_, h1⟩) :

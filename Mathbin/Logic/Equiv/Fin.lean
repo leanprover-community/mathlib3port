@@ -181,6 +181,61 @@ theorem fin_succ_equiv_symm_coe {n : ℕ} (m : Finₓ n) : (finSuccEquiv n).symm
 theorem fin_succ_equiv'_zero {n : ℕ} : finSuccEquiv' (0 : Finₓ (n + 1)) = finSuccEquiv n :=
   rfl
 
+theorem fin_succ_equiv'_last_apply {n : ℕ} {i : Finₓ (n + 1)} (h : i ≠ Finₓ.last n) :
+    finSuccEquiv' (Finₓ.last n) i =
+      Finₓ.castLt i (lt_of_le_of_neₓ (Finₓ.le_last _) (Finₓ.coe_injective.ne_iff.2 h) : ↑i < n) :=
+  by
+  have h' : ↑i < n := lt_of_le_of_neₓ (Finₓ.le_last _) (fin.coe_injective.ne_iff.2 h)
+  conv_lhs => rw [← Finₓ.cast_succ_cast_lt i h']
+  convert fin_succ_equiv'_below _
+  rw [Finₓ.cast_succ_cast_lt i h']
+  exact h'
+
+theorem fin_succ_equiv'_ne_last_apply {i j : Finₓ (n + 1)} (hi : i ≠ Finₓ.last n) (hj : j ≠ i) :
+    finSuccEquiv' i j =
+      (i.cast_lt (lt_of_le_of_neₓ (Finₓ.le_last _) (Finₓ.coe_injective.ne_iff.2 hi) : ↑i < n)).predAbove j :=
+  by
+  rw [Finₓ.predAbove]
+  have hi' : ↑i < n := lt_of_le_of_neₓ (Finₓ.le_last _) (fin.coe_injective.ne_iff.2 hi)
+  rcases hj.lt_or_lt with (hij | hij)
+  · simp only [hij.not_lt, Finₓ.cast_succ_cast_lt, not_false_iff, dif_neg]
+    convert fin_succ_equiv'_below _
+    · simp
+      
+    · exact hij
+      
+    
+  · simp only [hij, Finₓ.cast_succ_cast_lt, dif_pos]
+    convert fin_succ_equiv'_above _
+    · simp
+      
+    · simp [Finₓ.le_cast_succ_iff, hij]
+      
+    
+
+/-- `succ_above` as an order isomorphism between `fin n` and `{x : fin (n + 1) // x ≠ p}`. -/
+def finSuccAboveEquiv (p : Finₓ (n + 1)) : Finₓ n ≃o { x : Finₓ (n + 1) // x ≠ p } :=
+  { Equivₓ.optionSubtype p ⟨(finSuccEquiv' p).symm, rfl⟩ with map_rel_iff' := fun _ _ => p.succAbove.map_rel_iff' }
+
+theorem fin_succ_above_equiv_apply (p : Finₓ (n + 1)) (i : Finₓ n) :
+    finSuccAboveEquiv p i = ⟨p.succAbove i, p.succ_above_ne i⟩ :=
+  rfl
+
+theorem fin_succ_above_equiv_symm_apply_last (x : { x : Finₓ (n + 1) // x ≠ Finₓ.last n }) :
+    (finSuccAboveEquiv (Finₓ.last n)).symm x =
+      Finₓ.castLt (x : Finₓ (n + 1)) (lt_of_le_of_neₓ (Finₓ.le_last _) (Finₓ.coe_injective.ne_iff.2 x.property)) :=
+  by
+  rw [← Option.some_inj, ← Option.coe_def]
+  simpa [finSuccAboveEquiv, OrderIso.symm] using fin_succ_equiv'_last_apply x.property
+
+theorem fin_succ_above_equiv_symm_apply_ne_last {p : Finₓ (n + 1)} (h : p ≠ Finₓ.last n)
+    (x : { x : Finₓ (n + 1) // x ≠ p }) :
+    (finSuccAboveEquiv p).symm x =
+      (p.cast_lt (lt_of_le_of_neₓ (Finₓ.le_last _) (Finₓ.coe_injective.ne_iff.2 h))).predAbove x :=
+  by
+  rw [← Option.some_inj, ← Option.coe_def]
+  simpa [finSuccAboveEquiv, OrderIso.symm] using fin_succ_equiv'_ne_last_apply h x.property
+
 /-- `equiv` between `fin (n + 1)` and `option (fin n)` sending `fin.last n` to `none` -/
 def finSuccEquivLast {n : ℕ} : Finₓ (n + 1) ≃ Option (Finₓ n) :=
   finSuccEquiv' (Finₓ.last n)

@@ -364,7 +364,8 @@ theorem tail_cons (a : α) (s) : tail (cons a s) = s := by
 theorem nth_tail (s : Seqₓₓ α) (n) : nth (tail s) n = nth s (n + 1) :=
   rfl
 
-def casesOn {C : Seqₓₓ α → Sort v} (s : Seqₓₓ α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) : C s := by
+/-- Recursion principle for sequences, compare with `list.rec_on`. -/
+def recOn {C : Seqₓₓ α → Sort v} (s : Seqₓₓ α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) : C s := by
   induction' H : destruct s with v v
   · rw [destruct_eq_nil H]
     apply h1
@@ -387,7 +388,7 @@ theorem mem_rec_on {C : Seqₓₓ α → Prop} {a s} (M : a ∈ s) (h1 : ∀ b s
     apply h1 _ _ (Or.inl rfl)
     
   revert e
-  apply s.cases_on _ fun b s' => _ <;> intro e
+  apply s.rec_on _ fun b s' => _ <;> intro e
   · injection e
     
   · have h_eq : (cons b s').val (Nat.succ k) = s'.val k := by cases s' <;> rfl
@@ -477,7 +478,7 @@ theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s
         And.impₓ id (fun r => ⟨tail s, tail s', by cases s <;> rfl, by cases s' <;> rfl, r⟩) this
       have := bisim r
       revert r this
-      apply cases_on s _ _ <;> intros <;> apply cases_on s' _ _ <;> intros <;> intro r this
+      apply rec_on s _ _ <;> intros <;> apply rec_on s' _ _ <;> intros <;> intro r this
       · constructor
         rfl
         assumption
@@ -712,7 +713,7 @@ theorem nil_append (s : Seqₓₓ α) : append nil s = s := by
   dsimp [append]
   rw [corec_eq]
   dsimp [append]
-  apply cases_on s _ _
+  apply rec_on s _ _
   · trivial
     
   · intro x s
@@ -735,7 +736,7 @@ theorem cons_append (a : α) (s t) : append (cons a s) t = cons a (append s t) :
 theorem append_nil (s : Seqₓₓ α) : append s nil = s := by
   apply coinduction2 s
   intro s
-  apply cases_on s _ _
+  apply rec_on s _ _
   · trivial
     
   · intro x s
@@ -751,9 +752,9 @@ theorem append_assoc (s t u : Seqₓₓ α) : append (append s t) u = append s (
     exact
       match s1, s2, h with
       | _, _, ⟨s, t, u, rfl, rfl⟩ => by
-        apply cases_on s <;> simp
-        · apply cases_on t <;> simp
-          · apply cases_on u <;> simp
+        apply rec_on s <;> simp
+        · apply rec_on t <;> simp
+          · apply rec_on u <;> simp
             · intro x u
               refine' ⟨nil, nil, u, _, _⟩ <;> simp
               
@@ -801,8 +802,8 @@ theorem map_append (f : α → β) (s t) : map f (append s t) = append (map f s)
   exact
     match s1, s2, h with
     | _, _, ⟨s, t, rfl, rfl⟩ => by
-      apply cases_on s <;> simp
-      · apply cases_on t <;> simp
+      apply rec_on s <;> simp
+      · apply rec_on t <;> simp
         · intro x t
           refine' ⟨nil, t, _, _⟩ <;> simp
           
@@ -842,7 +843,7 @@ theorem join_cons (a : α) (s S) : join (cons (a, s) S) = cons a (append s (join
   exact
     match s1, s2, h with
     | _, _, Or.inl <| Eq.refl s => by
-      apply cases_on s
+      apply rec_on s
       · trivial
         
       · intro x s
@@ -850,7 +851,7 @@ theorem join_cons (a : α) (s S) : join (cons (a, s) S) = cons a (append s (join
         exact ⟨rfl, Or.inl rfl⟩
         
     | _, _, Or.inr ⟨a, s, S, rfl, rfl⟩ => by
-      apply cases_on s
+      apply rec_on s
       · simp
         
       · intro x s
@@ -865,9 +866,9 @@ theorem join_append (S T : Seqₓₓ (Seq1 α)) : join (append S T) = append (jo
     exact
       match s1, s2, h with
       | _, _, ⟨s, S, T, rfl, rfl⟩ => by
-        apply cases_on s <;> simp
-        · apply cases_on S <;> simp
-          · apply cases_on T
+        apply rec_on s <;> simp
+        · apply rec_on S <;> simp
+          · apply rec_on T
             · simp
               
             · intro s T
@@ -942,7 +943,7 @@ theorem of_mem_append {s₁ s₂ : Seqₓₓ α} {a : α} (h : a ∈ append s₁
   revert s₁
   apply mem_rec_on h _
   intro b s' o s₁
-  apply s₁.cases_on _ fun c t₁ => _ <;> intro m e <;> have := congr_arg destruct e
+  apply s₁.rec_on _ fun c t₁ => _ <;> intro m e <;> have := congr_arg destruct e
   · apply Or.inr
     simpa using m
     
@@ -1016,7 +1017,7 @@ def bind (s : Seq1 α) (f : α → Seq1 β) : Seq1 β :=
 
 @[simp]
 theorem join_map_ret (s : Seqₓₓ α) : Seqₓₓ.join (Seqₓₓ.map ret s) = s := by
-  apply coinduction2 s <;> intro s <;> apply cases_on s <;> simp [ret]
+  apply coinduction2 s <;> intro s <;> apply rec_on s <;> simp [ret]
 
 @[simp]
 theorem bind_ret (f : α → β) : ∀ s, bind s (ret ∘ f) = map f s
@@ -1030,7 +1031,7 @@ theorem bind_ret (f : α → β) : ∀ s, bind s (ret ∘ f) = map f s
 theorem ret_bind (a : α) (f : α → Seq1 β) : bind (ret a) f = f a := by
   simp [ret, bind, map]
   cases' f a with a s
-  apply cases_on s <;> intros <;> simp
+  apply rec_on s <;> intros <;> simp
 
 @[simp]
 theorem map_join' (f : α → β) (S) : Seqₓₓ.map f (Seqₓₓ.join S) = Seqₓₓ.join (Seqₓₓ.map (map f) S) := by
@@ -1041,8 +1042,8 @@ theorem map_join' (f : α → β) (S) : Seqₓₓ.map f (Seqₓₓ.join S) = Seq
     exact
       match s1, s2, h with
       | _, _, ⟨s, S, rfl, rfl⟩ => by
-        apply cases_on s <;> simp
-        · apply cases_on S <;> simp
+        apply rec_on s <;> simp
+        · apply rec_on S <;> simp
           · intro x S
             cases' x with a s <;> simp [map]
             exact ⟨_, _, rfl, rfl⟩
@@ -1057,7 +1058,7 @@ theorem map_join' (f : α → β) (S) : Seqₓₓ.map f (Seqₓₓ.join S) = Seq
 
 @[simp]
 theorem map_join (f : α → β) : ∀ S, map f (join S) = join (map (map f) S)
-  | ((a, s), S) => by apply cases_on s <;> intros <;> simp [map]
+  | ((a, s), S) => by apply rec_on s <;> intros <;> simp [map]
 
 @[simp]
 theorem join_join (SS : Seqₓₓ (Seq1 (Seq1 α))) : Seqₓₓ.join (Seqₓₓ.join SS) = Seqₓₓ.join (Seqₓₓ.map join SS) := by
@@ -1068,11 +1069,11 @@ theorem join_join (SS : Seqₓₓ (Seq1 (Seq1 α))) : Seqₓₓ.join (Seqₓₓ.
     exact
       match s1, s2, h with
       | _, _, ⟨s, SS, rfl, rfl⟩ => by
-        apply cases_on s <;> simp
-        · apply cases_on SS <;> simp
+        apply rec_on s <;> simp
+        · apply rec_on SS <;> simp
           · intro S SS
             cases' S with s S <;> cases' s with x s <;> simp [map]
-            apply cases_on s <;> simp
+            apply rec_on s <;> simp
             · exact ⟨_, _, rfl, rfl⟩
               
             · intro x s
@@ -1097,9 +1098,9 @@ theorem bind_assoc (s : Seq1 α) (f : α → Seq1 β) (g : β → Seq1 γ) :
   rw [map_comp _ join]
   generalize Seqₓₓ.map (map g ∘ f) s = SS
   rcases map g (f a) with ⟨⟨a, s⟩, S⟩
-  apply cases_on s <;> intros <;> apply cases_on S <;> intros <;> simp
+  apply rec_on s <;> intros <;> apply rec_on S <;> intros <;> simp
   · cases' x with x t
-    apply cases_on t <;> intros <;> simp
+    apply rec_on t <;> intros <;> simp
     
   · cases' x_1 with y t <;> simp
     

@@ -190,7 +190,7 @@ open Classical
 /-- The pairs of parts of a partition `P` which are not `ε`-uniform in a graph `G`. Note that we
 dismiss the diagonal. We do not care whether `s` is `ε`-uniform with itself. -/
 noncomputable def nonUniforms (ε : 𝕜) : Finsetₓ (Finsetₓ α × Finsetₓ α) :=
-  P.parts.offDiag.filter fun uv => ¬G.IsUniform ε uv.1 uv.2
+  P.parts.OffDiag.filter fun uv => ¬G.IsUniform ε uv.1 uv.2
 
 theorem mk_mem_non_uniforms_iff (u v : Finsetₓ α) (ε : 𝕜) :
     (u, v) ∈ P.nonUniforms G ε ↔ u ∈ P.parts ∧ v ∈ P.parts ∧ u ≠ v ∧ ¬G.IsUniform ε u v := by

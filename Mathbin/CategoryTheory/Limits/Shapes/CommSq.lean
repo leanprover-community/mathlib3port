@@ -4,13 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
 -/
 import Mathbin.CategoryTheory.CommSq
+import Mathbin.CategoryTheory.Limits.Opposites
+import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Opposites
+import Mathbin.CategoryTheory.Limits.Constructions.ZeroObjects
 
 /-!
-# Pullback and pushout squares
+# Pullback and pushout squares, and bicartesian squares
 
 We provide another API for pullbacks and pushouts.
 
@@ -35,8 +37,7 @@ for the usual `pullback f g` provided by the `has_limit` API.
 We don't attempt to restate everything we know about pullbacks in this language,
 but do restate the pasting lemmas.
 
-## Future work
-Bicartesian squares, and
+We define bicartesian squares, and
 show that the pullback and pushout squares for a biproduct are bicartesian.
 -/
 
@@ -52,6 +53,8 @@ universe v₁ v₂ u₁ u₂
 namespace CategoryTheory
 
 variable {C : Type u₁} [Category.{v₁} C]
+
+attribute [simp] comm_sq.mk
 
 namespace CommSq
 
@@ -107,7 +110,7 @@ end CommSq
   Y ---g---> Z
 
 ```
-is a pullback square.
+is a pullback square. (Also known as a fibered product or cartesian square.)
 -/
 structure IsPullback {P X Y Z : C} (fst : P ⟶ X) (snd : P ⟶ Y) (f : X ⟶ Z) (g : Y ⟶ Z) extends CommSq fst snd f g :
   Prop where
@@ -123,11 +126,33 @@ structure IsPullback {P X Y Z : C} (fst : P ⟶ X) (snd : P ⟶ Y) (f : X ⟶ Z)
   Y --inr--> P
 
 ```
-is a pushout square.
+is a pushout square. (Also known as a fiber coproduct or cocartesian square.)
 -/
 structure IsPushout {Z X Y P : C} (f : Z ⟶ X) (g : Z ⟶ Y) (inl : X ⟶ P) (inr : Y ⟶ P) extends CommSq f g inl inr :
   Prop where
   is_colimit' : Nonempty (IsColimit (PushoutCocone.mk _ _ w))
+
+section
+
+/-- A *bicartesian* square is a commutative square
+```
+  W ---f---> X
+  |          |
+  g          h
+  |          |
+  v          v
+  Y ---i---> Z
+
+```
+that is both a pullback square and a pushout square.
+-/
+structure BicartesianSq {W X Y Z : C} (f : W ⟶ X) (g : W ⟶ Y) (h : X ⟶ Z) (i : Y ⟶ Z) extends IsPullback f g h i,
+  IsPushout f g h i : Prop
+
+-- Lean should make these parent projections as `lemma`, not `def`.
+attribute [nolint def_lemma doc_blame] bicartesian_sq.to_is_pullback bicartesian_sq.to_is_pushout
+
+end
 
 /-!
 We begin by providing some glue between `is_pullback` and the `is_limit` and `has_limit` APIs.
@@ -177,6 +202,11 @@ theorem of_is_product {c : BinaryFan X Y} (h : Limits.IsLimit c) (t : IsTerminal
               · dsimp
                 simp
                 ))))
+
+/-- A variant of `of_is_product` that is more useful with `apply`. -/
+theorem of_is_product' (h : Limits.IsLimit (BinaryFan.mk fst snd)) (t : IsTerminal Z) :
+    IsPullback fst snd (t.from _) (t.from _) :=
+  of_is_product h t
 
 variable (X Y)
 
@@ -275,6 +305,11 @@ theorem of_is_coproduct {c : BinaryCofan X Y} (h : Limits.IsColimit c) (t : IsIn
                 simp
                 ))))
 
+/-- A variant of `of_is_coproduct` that is more useful with `apply`. -/
+theorem of_is_coproduct' (h : Limits.IsColimit (BinaryCofan.mk inl inr)) (t : IsInitial Z) :
+    IsPushout (t.to _) (t.to _) inl inr :=
+  of_is_coproduct h t
+
 variable (X Y)
 
 theorem of_has_binary_coproduct' [HasBinaryCoproduct X Y] [HasInitial C] :
@@ -334,6 +369,7 @@ variable [HasZeroObject C] [HasZeroMorphisms C]
 open ZeroObject
 
 /-- The square with `0 : 0 ⟶ 0` on the left and `𝟙 X` on the right is a pullback square. -/
+@[simp]
 theorem zero_left (X : C) : IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ 0) (𝟙 X) (0 : 0 ⟶ X) :=
   { w := by simp,
     is_limit' :=
@@ -344,8 +380,19 @@ theorem zero_left (X : C) : IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ 0) (𝟙 X) (0 :
                 (by simpa using (pullback_cone.condition s).symm) }⟩ }
 
 /-- The square with `0 : 0 ⟶ 0` on the top and `𝟙 X` on the bottom is a pullback square. -/
+@[simp]
 theorem zero_top (X : C) : IsPullback (0 : 0 ⟶ 0) (0 : 0 ⟶ X) (0 : 0 ⟶ X) (𝟙 X) :=
   (zero_left X).flip
+
+/-- The square with `0 : 0 ⟶ 0` on the right and `𝟙 X` on the left is a pullback square. -/
+@[simp]
+theorem zero_right (X : C) : IsPullback (0 : X ⟶ 0) (𝟙 X) (0 : 0 ⟶ 0) (0 : X ⟶ 0) :=
+  of_iso_pullback (by simp) ((zeroProdIso X).symm ≪≫ (pullbackZeroZeroIso _ _).symm) (by simp) (by simp)
+
+/-- The square with `0 : 0 ⟶ 0` on the bottom and `𝟙 X` on the top is a pullback square. -/
+@[simp]
+theorem zero_bot (X : C) : IsPullback (𝟙 X) (0 : X ⟶ 0) (0 : X ⟶ 0) (0 : 0 ⟶ 0) :=
+  (zero_right X).flip
 
 end
 
@@ -378,6 +425,77 @@ theorem of_right {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ 
     (p : h₁₁ ≫ v₁₂ = v₁₁ ≫ h₂₁) (t : IsPullback h₁₂ v₁₂ v₁₃ h₂₂) : IsPullback h₁₁ v₁₁ v₁₂ h₂₁ :=
   (of_bot s.flip p.symm t.flip).flip
 
+section
+
+variable [HasZeroObject C] [HasZeroMorphisms C]
+
+open ZeroObject
+
+theorem of_is_bilimit {b : BinaryBicone X Y} (h : b.IsBilimit) : IsPullback b.fst b.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) := by
+  convert is_pullback.of_is_product' h.is_limit has_zero_object.zero_is_terminal
+
+@[simp]
+theorem of_has_biproduct (X Y : C) [HasBinaryBiproduct X Y] :
+    IsPullback biprod.fst biprod.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) :=
+  of_is_bilimit (BinaryBiproduct.isBilimit X Y)
+
+theorem inl_snd' {b : BinaryBicone X Y} (h : b.IsBilimit) : IsPullback b.inl (0 : X ⟶ 0) b.snd (0 : 0 ⟶ Y) := by
+  refine' of_right _ (by simp) (of_is_bilimit h)
+  simp
+
+/-- The square
+```
+  X --inl--> X ⊞ Y
+  |            |
+  0           snd
+  |            |
+  v            v
+  0 ---0-----> Y
+```
+is a pullback square.
+-/
+@[simp]
+theorem inl_snd (X Y : C) [HasBinaryBiproduct X Y] : IsPullback biprod.inl (0 : X ⟶ 0) biprod.snd (0 : 0 ⟶ Y) :=
+  inl_snd' (BinaryBiproduct.isBilimit X Y)
+
+theorem inr_fst' {b : BinaryBicone X Y} (h : b.IsBilimit) : IsPullback b.inr (0 : Y ⟶ 0) b.fst (0 : 0 ⟶ X) := by
+  apply flip
+  refine' of_bot _ (by simp) (of_is_bilimit h)
+  simp
+
+/-- The square
+```
+  Y --inr--> X ⊞ Y
+  |            |
+  0           fst
+  |            |
+  v            v
+  0 ---0-----> X
+```
+is a pullback square.
+-/
+@[simp]
+theorem inr_fst (X Y : C) [HasBinaryBiproduct X Y] : IsPullback biprod.inr (0 : Y ⟶ 0) biprod.fst (0 : 0 ⟶ X) :=
+  inr_fst' (BinaryBiproduct.isBilimit X Y)
+
+theorem of_is_bilimit' {b : BinaryBicone X Y} (h : b.IsBilimit) : IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ Y) b.inl b.inr := by
+  refine' is_pullback.of_right _ (by simp) (is_pullback.inl_snd' h).flip
+  simp
+
+theorem of_has_binary_biproduct (X Y : C) [HasBinaryBiproduct X Y] :
+    IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ Y) biprod.inl biprod.inr :=
+  of_is_bilimit' (BinaryBiproduct.isBilimit X Y)
+
+instance has_pullback_biprod_fst_biprod_snd [HasBinaryBiproduct X Y] :
+    HasPullback (biprod.inl : X ⟶ _) (biprod.inr : Y ⟶ _) :=
+  HasLimit.mk ⟨_, (of_has_binary_biproduct X Y).IsLimit⟩
+
+/-- The pullback of `biprod.inl` and `biprod.inr` is the zero object. -/
+def pullbackBiprodInlBiprodInr [HasBinaryBiproduct X Y] : pullback (biprod.inl : X ⟶ _) (biprod.inr : Y ⟶ _) ≅ 0 :=
+  limit.isoLimitCone ⟨_, (of_has_binary_biproduct X Y).IsLimit⟩
+
+end
+
 theorem op (h : IsPullback fst snd f g) : IsPushout g.op f.op snd.op fst.op :=
   IsPushout.of_is_colimit
     (IsColimit.ofIsoColimit (Limits.PullbackCone.isLimitEquivIsColimitOp h.flip.Cone h.flip.IsLimit)
@@ -408,6 +526,7 @@ variable [HasZeroObject C] [HasZeroMorphisms C]
 open ZeroObject
 
 /-- The square with `0 : 0 ⟶ 0` on the right and `𝟙 X` on the left is a pushout square. -/
+@[simp]
 theorem zero_right (X : C) : IsPushout (0 : X ⟶ 0) (𝟙 X) (0 : 0 ⟶ 0) (0 : X ⟶ 0) :=
   { w := by simp,
     is_colimit' :=
@@ -420,8 +539,19 @@ theorem zero_right (X : C) : IsPushout (0 : X ⟶ 0) (𝟙 X) (0 : 0 ⟶ 0) (0 :
             simpa using c }⟩ }
 
 /-- The square with `0 : 0 ⟶ 0` on the bottom and `𝟙 X` on the top is a pushout square. -/
+@[simp]
 theorem zero_bot (X : C) : IsPushout (𝟙 X) (0 : X ⟶ 0) (0 : X ⟶ 0) (0 : 0 ⟶ 0) :=
   (zero_right X).flip
+
+/-- The square with `0 : 0 ⟶ 0` on the right left `𝟙 X` on the right is a pushout square. -/
+@[simp]
+theorem zero_left (X : C) : IsPushout (0 : 0 ⟶ X) (0 : 0 ⟶ 0) (𝟙 X) (0 : 0 ⟶ X) :=
+  of_iso_pushout (by simp) ((coprodZeroIso X).symm ≪≫ (pushoutZeroZeroIso _ _).symm) (by simp) (by simp)
+
+/-- The square with `0 : 0 ⟶ 0` on the top and `𝟙 X` on the bottom is a pushout square. -/
+@[simp]
+theorem zero_top (X : C) : IsPushout (0 : 0 ⟶ 0) (0 : 0 ⟶ X) (0 : 0 ⟶ X) (𝟙 X) :=
+  (zero_left X).flip
 
 end
 
@@ -454,6 +584,74 @@ theorem of_right {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ 
     (p : h₁₂ ≫ v₁₃ = v₁₂ ≫ h₂₂) (t : IsPushout h₁₁ v₁₁ v₁₂ h₂₁) : IsPushout h₁₂ v₁₂ v₁₃ h₂₂ :=
   (of_bot s.flip p.symm t.flip).flip
 
+section
+
+variable [HasZeroObject C] [HasZeroMorphisms C]
+
+open ZeroObject
+
+theorem of_is_bilimit {b : BinaryBicone X Y} (h : b.IsBilimit) : IsPushout (0 : 0 ⟶ X) (0 : 0 ⟶ Y) b.inl b.inr := by
+  convert is_pushout.of_is_coproduct' h.is_colimit has_zero_object.zero_is_initial
+
+@[simp]
+theorem of_has_biproduct (X Y : C) [HasBinaryBiproduct X Y] : IsPushout (0 : 0 ⟶ X) (0 : 0 ⟶ Y) biprod.inl biprod.inr :=
+  of_is_bilimit (BinaryBiproduct.isBilimit X Y)
+
+theorem inl_snd' {b : BinaryBicone X Y} (h : b.IsBilimit) : IsPushout b.inl (0 : X ⟶ 0) b.snd (0 : 0 ⟶ Y) := by
+  apply flip
+  refine' of_right _ (by simp) (of_is_bilimit h)
+  simp
+
+/-- The square
+```
+  X --inl--> X ⊞ Y
+  |            |
+  0           snd
+  |            |
+  v            v
+  0 ---0-----> Y
+```
+is a pushout square.
+-/
+theorem inl_snd (X Y : C) [HasBinaryBiproduct X Y] : IsPushout biprod.inl (0 : X ⟶ 0) biprod.snd (0 : 0 ⟶ Y) :=
+  inl_snd' (BinaryBiproduct.isBilimit X Y)
+
+theorem inr_fst' {b : BinaryBicone X Y} (h : b.IsBilimit) : IsPushout b.inr (0 : Y ⟶ 0) b.fst (0 : 0 ⟶ X) := by
+  refine' of_bot _ (by simp) (of_is_bilimit h)
+  simp
+
+/-- The square
+```
+  Y --inr--> X ⊞ Y
+  |            |
+  0           fst
+  |            |
+  v            v
+  0 ---0-----> X
+```
+is a pushout square.
+-/
+theorem inr_fst (X Y : C) [HasBinaryBiproduct X Y] : IsPushout biprod.inr (0 : Y ⟶ 0) biprod.fst (0 : 0 ⟶ X) :=
+  inr_fst' (BinaryBiproduct.isBilimit X Y)
+
+theorem of_is_bilimit' {b : BinaryBicone X Y} (h : b.IsBilimit) : IsPushout b.fst b.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) := by
+  refine' is_pushout.of_right _ (by simp) (is_pushout.inl_snd' h)
+  simp
+
+theorem of_has_binary_biproduct (X Y : C) [HasBinaryBiproduct X Y] :
+    IsPushout biprod.fst biprod.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) :=
+  of_is_bilimit' (BinaryBiproduct.isBilimit X Y)
+
+instance has_pushout_biprod_fst_biprod_snd [HasBinaryBiproduct X Y] :
+    HasPushout (biprod.fst : _ ⟶ X) (biprod.snd : _ ⟶ Y) :=
+  HasColimit.mk ⟨_, (of_has_binary_biproduct X Y).IsColimit⟩
+
+/-- The pushout of `biprod.fst` and `biprod.snd` is the zero object. -/
+def pushoutBiprodFstBiprodSnd [HasBinaryBiproduct X Y] : pushout (biprod.fst : _ ⟶ X) (biprod.snd : _ ⟶ Y) ≅ 0 :=
+  colimit.isoColimitCocone ⟨_, (of_has_binary_biproduct X Y).IsColimit⟩
+
+end
+
 theorem op (h : IsPushout f g inl inr) : IsPullback inr.op inl.op g.op f.op :=
   IsPullback.of_is_limit
     (IsLimit.ofIsoLimit (Limits.PushoutCocone.isColimitEquivIsLimitOp h.flip.Cocone h.flip.IsColimit)
@@ -475,6 +673,76 @@ theorem of_vert_is_iso [IsIso g] [IsIso inl] (sq : CommSq f g inl inr) : IsPusho
   (of_horiz_is_iso sq.flip).flip
 
 end IsPushout
+
+namespace BicartesianSq
+
+variable {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
+
+theorem of_is_pullback_is_pushout (p₁ : IsPullback f g h i) (p₂ : IsPushout f g h i) : BicartesianSq f g h i :=
+  BicartesianSq.mk p₁.to_comm_sq ⟨p₁.IsLimit⟩ ⟨p₂.IsColimit⟩
+
+theorem flip (p : BicartesianSq f g h i) : BicartesianSq g f i h :=
+  of_is_pullback_is_pushout p.to_is_pullback.flip p.to_is_pushout.flip
+
+variable [HasZeroObject C] [HasZeroMorphisms C]
+
+open ZeroObject
+
+/-- ```
+ X ⊞ Y --fst--> X
+   |            |
+  snd           0
+   |            |
+   v            v
+   Y -----0---> 0
+```
+is a bicartesian square.
+-/
+theorem of_is_biproduct₁ {b : BinaryBicone X Y} (h : b.IsBilimit) : BicartesianSq b.fst b.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) :=
+  of_is_pullback_is_pushout (IsPullback.of_is_bilimit h) (IsPushout.of_is_bilimit' h)
+
+/-- ```
+   0 -----0---> X
+   |            |
+   0           inl
+   |            |
+   v            v
+   Y --inr--> X ⊞ Y
+```
+is a bicartesian square.
+-/
+theorem of_is_biproduct₂ {b : BinaryBicone X Y} (h : b.IsBilimit) : BicartesianSq (0 : 0 ⟶ X) (0 : 0 ⟶ Y) b.inl b.inr :=
+  of_is_pullback_is_pushout (IsPullback.of_is_bilimit' h) (IsPushout.of_is_bilimit h)
+
+/-- ```
+ X ⊞ Y --fst--> X
+   |            |
+  snd           0
+   |            |
+   v            v
+   Y -----0---> 0
+```
+is a bicartesian square.
+-/
+@[simp]
+theorem of_has_biproduct₁ [HasBinaryBiproduct X Y] : BicartesianSq biprod.fst biprod.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) := by
+  convert of_is_biproduct₁ (binary_biproduct.is_bilimit X Y)
+
+/-- ```
+   0 -----0---> X
+   |            |
+   0           inl
+   |            |
+   v            v
+   Y --inr--> X ⊞ Y
+```
+is a bicartesian square.
+-/
+@[simp]
+theorem of_has_biproduct₂ [HasBinaryBiproduct X Y] : BicartesianSq (0 : 0 ⟶ X) (0 : 0 ⟶ Y) biprod.inl biprod.inr := by
+  convert of_is_biproduct₂ (binary_biproduct.is_bilimit X Y)
+
+end BicartesianSq
 
 namespace Functor
 

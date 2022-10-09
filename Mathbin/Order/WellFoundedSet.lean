@@ -6,6 +6,7 @@ Authors: Aaron Anderson
 import Mathbin.Order.Antichain
 import Mathbin.Order.OrderIsoNat
 import Mathbin.Order.WellFounded
+import Mathbin.Tactic.Tfae
 
 /-!
 # Well-founded sets
@@ -96,6 +97,31 @@ protected theorem mono (h : t.WellFoundedOn r') (hle : r ≤ r') (hst : s ⊆ t)
 
 theorem subset (h : t.WellFoundedOn r) (hst : s ⊆ t) : s.WellFoundedOn r :=
   h.mono le_rflₓ hst
+
+open Relation
+
+/-- `a` is accessible under the relation `r` iff `r` is well-founded on the downward transitive
+  closure of `a` under `r` (including `a` or not). -/
+theorem acc_iff_well_founded_on {α} {r : α → α → Prop} {a : α} :
+    [Acc r a, { b | ReflTransGen r b a }.WellFoundedOn r, { b | TransGen r b a }.WellFoundedOn r].Tfae := by
+  tfae_have 1 → 2
+  · refine' fun h => ⟨fun b => _⟩
+    apply InvImage.accessibleₓ
+    rw [← acc_trans_gen_iff] at h⊢
+    obtain h' | h' := refl_trans_gen_iff_eq_or_trans_gen.1 b.2
+    · rwa [h'] at h
+      
+    · exact h.inv h'
+      
+    
+  tfae_have 2 → 3
+  · exact fun h => h.Subset fun _ => trans_gen.to_refl
+    
+  tfae_have 3 → 1
+  · refine' fun h => Acc.intro _ fun b hb => (h.apply ⟨b, trans_gen.single hb⟩).of_fibration Subtype.val _
+    exact fun ⟨c, hc⟩ d h => ⟨⟨d, trans_gen.head h hc⟩, h, rfl⟩
+    
+  tfae_finish
 
 end WellFoundedOn
 

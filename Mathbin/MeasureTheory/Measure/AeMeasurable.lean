@@ -141,9 +141,9 @@ theorem comp_measurable {f : α → δ} {g : δ → β} (hg : AeMeasurable g (μ
     AeMeasurable (g ∘ f) μ :=
   hg.comp_ae_measurable hf.AeMeasurable
 
-theorem comp_measurable' {ν : Measureₓ δ} {f : α → δ} {g : δ → β} (hg : AeMeasurable g ν) (hf : Measurable f)
-    (h : μ.map f ≪ ν) : AeMeasurable (g ∘ f) μ :=
-  (hg.mono' h).comp_measurable hf
+theorem comp_quasi_measure_preserving {ν : Measureₓ δ} {f : α → δ} {g : δ → β} (hg : AeMeasurable g ν)
+    (hf : QuasiMeasurePreserving f μ ν) : AeMeasurable (g ∘ f) μ :=
+  (hg.mono' hf.AbsolutelyContinuous).comp_measurable hf.Measurable
 
 theorem map_map_of_ae_measurable {g : β → γ} {f : α → β} (hg : AeMeasurable g (Measure.map f μ))
     (hf : AeMeasurable f μ) : (μ.map f).map g = μ.map (g ∘ f) := by

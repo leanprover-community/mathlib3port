@@ -61,7 +61,7 @@ variable [CommRingₓ R] [CommRingₓ A] [Algebra R A]
 variable (𝒜 : ℕ → Submodule R A) [GradedAlgebra 𝒜]
 
 -- mathport name: «exprat »
-local notation "at " x => HomogeneousLocalization 𝒜 x.asHomogeneousIdeal.toIdeal
+local notation "at " x => HomogeneousLocalization.AtPrime 𝒜 x.asHomogeneousIdeal.toIdeal
 
 namespace ProjectiveSpectrum.StructureSheaf
 
@@ -123,7 +123,7 @@ theorem add_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x 
     obtain ⟨nin2, hy2⟩ := wb (opens.inf_le_right Va Vb y)
     dsimp only at hy1 hy2
     erw [hy1, hy2]
-    simpa only [val_mk', add_mk, ← Subtype.val_eq_coe, add_commₓ]
+    simpa only [val_mk', add_mk, ← Subtype.val_eq_coe, add_commₓ, mul_comm sa sb]
     
 
 theorem neg_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a : ∀ x : unop U, at x.1)
@@ -272,7 +272,7 @@ theorem stalk_to_fiber_ring_hom_germ (U : Opens (ProjectiveSpectrum.top 𝒜)) (
 theorem HomogeneousLocalization.mem_basic_open (x : ProjectiveSpectrum.top 𝒜) (f : at x) :
     x ∈ ProjectiveSpectrum.basicOpen 𝒜 f.denom := by
   rw [ProjectiveSpectrum.mem_basic_open]
-  exact HomogeneousLocalization.denom_not_mem _
+  exact f.denom_mem
 
 variable (𝒜)
 
@@ -281,9 +281,9 @@ such that, for any `f` in the homogeneous localization at `x`, it returns the ob
 basic open set `D(f.denom)`-/
 def sectionInBasicOpen (x : ProjectiveSpectrum.top 𝒜) :
     ∀ f : at x, (Proj.structureSheaf 𝒜).1.obj (op (ProjectiveSpectrum.basicOpen 𝒜 f.denom)) := fun f =>
-  ⟨fun y => Quotientₓ.mk' ⟨f.deg, ⟨f.num, f.num_mem⟩, ⟨f.denom, f.denom_mem⟩, y.2⟩, fun y =>
+  ⟨fun y => Quotientₓ.mk' ⟨f.deg, ⟨f.num, f.num_mem_deg⟩, ⟨f.denom, f.denom_mem_deg⟩, y.2⟩, fun y =>
     ⟨ProjectiveSpectrum.basicOpen 𝒜 f.denom, y.2,
-      ⟨𝟙 _, ⟨f.deg, ⟨⟨f.num, f.num_mem⟩, ⟨f.denom, f.denom_mem⟩, fun z => ⟨z.2, rfl⟩⟩⟩⟩⟩⟩
+      ⟨𝟙 _, ⟨f.deg, ⟨⟨f.num, f.num_mem_deg⟩, ⟨f.denom, f.denom_mem_deg⟩, fun z => ⟨z.2, rfl⟩⟩⟩⟩⟩⟩
 
 /-- Given any point `x` and `f` in the homogeneous localization at `x`, there is an element in the
 stalk at `x` obtained by `section_in_basic_open`. This is the inverse of `stalk_to_fiber_ring_hom`.

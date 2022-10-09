@@ -3,9 +3,11 @@ Copyright (c) 2021 Alex Kontorovich, Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth
 -/
+import Mathbin.Data.Real.Nnreal
 import Mathbin.Topology.Algebra.Constructions
 import Mathbin.Topology.Homeomorph
 import Mathbin.GroupTheory.GroupAction.Basic
+import Mathbin.Topology.Bases
 
 /-!
 # Monoid actions continuous in the second variable
@@ -38,7 +40,7 @@ Hausdorff, discrete group, properly discontinuous, quotient space
 
 open TopologicalSpace Pointwise
 
-open Filter Set
+open Filter Set TopologicalSpace
 
 attribute [local instance] MulAction.orbitRel
 
@@ -108,6 +110,10 @@ instance [HasSmul M β] [HasContinuousConstSmul M β] : HasContinuousConstSmul M
 instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [∀ i, HasSmul M (γ i)]
     [∀ i, HasContinuousConstSmul M (γ i)] : HasContinuousConstSmul M (∀ i, γ i) :=
   ⟨fun _ => continuous_pi fun i => (continuous_apply i).const_smul _⟩
+
+theorem IsCompact.smul {α β} [HasSmul α β] [TopologicalSpace β] [HasContinuousConstSmul α β] (a : α) {s : Set β}
+    (hs : IsCompact s) : IsCompact (a • s) :=
+  hs.Image (continuous_id'.const_smul a)
 
 end HasSmul
 
@@ -341,8 +347,9 @@ export ProperlyDiscontinuousSmul (finite_disjoint_inter_image)
 
 export ProperlyDiscontinuousVadd (finite_disjoint_inter_image)
 
-/-- The quotient map by a group action is open. -/
-@[to_additive "The quotient map by a group action is open."]
+/-- The quotient map by a group action is open, i.e. the quotient by a group action is an open
+  quotient. -/
+@[to_additive "The quotient map by a group action is open, i.e. the quotient by a group \naction is an open quotient. "]
 theorem is_open_map_quotient_mk_mul [HasContinuousConstSmul Γ T] :
     IsOpenMap (Quotientₓ.mk : T → Quotientₓ (MulAction.orbitRel Γ T)) := by
   intro U hU
@@ -383,6 +390,12 @@ instance (priority := 100) t2_space_of_properly_discontinuous_smul_of_t2_space [
     simp only [image_smul, not_not, mem_set_of_eq, Ne.def] at H
     exact eq_empty_iff_forall_not_mem.mp H (γ • x) ⟨mem_image_of_mem _ x_in_K₀, h'⟩
     
+
+/-- The quotient of a second countable space by a group action is second countable. -/
+@[to_additive "The quotient of a second countable space by an additive group action is second\ncountable."]
+theorem HasContinuousConstSmul.second_countable_topology [SecondCountableTopology T] [HasContinuousConstSmul Γ T] :
+    SecondCountableTopology (Quotientₓ (MulAction.orbitRel Γ T)) :=
+  TopologicalSpace.Quotient.second_countable_topology is_open_map_quotient_mk_mul
 
 section nhds
 

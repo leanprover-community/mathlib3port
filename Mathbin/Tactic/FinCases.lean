@@ -82,26 +82,27 @@ for example, to display nats as `n.succ` instead of `n+1`.
 These should be defeq to and in the same order as the terms in the enumeration of `α`.
 -/
 unsafe def fin_cases_at (nm : Option Name) : ∀ (with_list : Option pexpr) (e : expr), tactic Unit
-  | with_list, e => do
-    let ty ← try_core <| guard_mem_fin e
-    match ty with
-      | none =>-- Deal with `x : A`, where `[fintype A]` is available:
-      do
-        let ty ← infer_type e
-        let i ← to_expr (pquote.1 (Fintypeₓ (%%ₓty))) >>= mk_instance <|> fail "Failed to find `fintype` instance."
-        let t ← to_expr (pquote.1 ((%%ₓe) ∈ @Fintypeₓ.elems (%%ₓty) (%%ₓi)))
-        let v ← to_expr (pquote.1 (@Fintypeₓ.complete (%%ₓty) (%%ₓi) (%%ₓe)))
-        let h ← assertv (nm `this) t v
-        fin_cases_at with_list h
-      | some ty =>-- Deal with `x ∈ A` hypotheses:
-      do
-        let with_list ←
-          match with_list with
-            | some e => do
-              let e ← to_expr (pquote.1 (%%ₓe : List (%%ₓty)))
-              expr_list_to_list_expr e
-            | none => return []
-        fin_cases_at_aux with_list e
+  | with_list, e =>
+    focus1 <| do
+      let ty ← try_core <| guard_mem_fin e
+      match ty with
+        | none =>-- Deal with `x : A`, where `[fintype A]` is available:
+        do
+          let ty ← infer_type e
+          let i ← to_expr (pquote.1 (Fintypeₓ (%%ₓty))) >>= mk_instance <|> fail "Failed to find `fintype` instance."
+          let t ← to_expr (pquote.1 ((%%ₓe) ∈ @Fintypeₓ.elems (%%ₓty) (%%ₓi)))
+          let v ← to_expr (pquote.1 (@Fintypeₓ.complete (%%ₓty) (%%ₓi) (%%ₓe)))
+          let h ← assertv (nm `this) t v
+          fin_cases_at with_list h
+        | some ty =>-- Deal with `x ∈ A` hypotheses:
+        do
+          let with_list ←
+            match with_list with
+              | some e => do
+                let e ← to_expr (pquote.1 (%%ₓe : List (%%ₓty)))
+                expr_list_to_list_expr e
+              | none => return []
+          fin_cases_at_aux with_list e
 
 namespace Interactive
 
@@ -156,17 +157,16 @@ produces three goals with hypotheses
 `ha : a = 0`, `ha : a = 1`, and `ha : a = 2`.
 -/
 unsafe def fin_cases : parse hyp → parse (tk "with" *> texpr)? → parse (tk "using" *> ident)? → tactic Unit
-  | none, none, nm =>
-    focus1 <| do
-      let ctx ← local_context
-      ctx (fin_cases_at nm none) <|>
-          fail
-            ("No hypothesis of the forms `x ∈ A`, where " ++
-              "`A : finset X`, `A : list X`, or `A : multiset X`, or `x : A`, with `[fintype A]`.")
+  | none, none, nm => do
+    let ctx ← local_context
+    ctx (fin_cases_at nm none) <|>
+        fail
+          ("No hypothesis of the forms `x ∈ A`, where " ++
+            "`A : finset X`, `A : list X`, or `A : multiset X`, or `x : A`, with `[fintype A]`.")
   | none, some _, _ => fail "Specify a single hypothesis when using a `with` argument."
   | some n, with_list, nm => do
     let h ← get_local n
-    focus1 <| fin_cases_at nm with_list h
+    fin_cases_at nm with_list h
 
 end Interactive
 

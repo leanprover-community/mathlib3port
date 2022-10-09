@@ -258,6 +258,8 @@ end LinearOrderedSemifield
 
 namespace Tactic
 
+section OrderedSmul
+
 variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] {a : R} {b : M}
 
 private theorem smul_nonneg_of_pos_of_nonneg (ha : 0 < a) (hb : 0 ≤ b) : 0 ≤ a • b :=
@@ -266,13 +268,27 @@ private theorem smul_nonneg_of_pos_of_nonneg (ha : 0 < a) (hb : 0 ≤ b) : 0 ≤
 private theorem smul_nonneg_of_nonneg_of_pos (ha : 0 ≤ a) (hb : 0 < b) : 0 ≤ a • b :=
   smul_nonneg ha hb.le
 
+end OrderedSmul
+
+section NoZeroSmulDivisors
+
+variable [Zero R] [Zero M] [HasSmul R M] [NoZeroSmulDivisors R M] {a : R} {b : M}
+
+private theorem smul_ne_zero_of_pos_of_ne_zero [Preorderₓ R] (ha : 0 < a) (hb : b ≠ 0) : a • b ≠ 0 :=
+  smul_ne_zero ha.ne' hb
+
+private theorem smul_ne_zero_of_ne_zero_of_pos [Preorderₓ M] (ha : a ≠ 0) (hb : 0 < b) : a • b ≠ 0 :=
+  smul_ne_zero ha hb.ne'
+
+end NoZeroSmulDivisors
+
 open Positivity
 
-/-- Extension for the `positivity` tactic: scalar multiplication is nonnegative if both sides are
-nonnegative, and strictly positive if both sides are. -/
+/-- Extension for the `positivity` tactic: scalar multiplication is nonnegative/positive/nonzero if
+both sides are. -/
 @[positivity]
 unsafe def positivity_smul : expr → tactic strictness
-  | quote.1 ((%%ₓa) • %%ₓb) => do
+  | e@(quote.1 ((%%ₓa) • %%ₓb)) => do
     let strictness_a ← core a
     let strictness_b ← core b
     match strictness_a, strictness_b with
@@ -280,7 +296,11 @@ unsafe def positivity_smul : expr → tactic strictness
       | positive pa, nonnegative pb => nonnegative <$> mk_app `` smul_nonneg_of_pos_of_nonneg [pa, pb]
       | nonnegative pa, positive pb => nonnegative <$> mk_app `` smul_nonneg_of_nonneg_of_pos [pa, pb]
       | nonnegative pa, nonnegative pb => nonnegative <$> mk_app `` smul_nonneg [pa, pb]
-  | _ => failed
+      | positive pa, nonzero pb => nonzero <$> to_expr (pquote.1 (smul_ne_zero_of_pos_of_ne_zero (%%ₓpa) (%%ₓpb)))
+      | nonzero pa, positive pb => nonzero <$> to_expr (pquote.1 (smul_ne_zero_of_ne_zero_of_pos (%%ₓpa) (%%ₓpb)))
+      | nonzero pa, nonzero pb => nonzero <$> to_expr (pquote.1 (smul_ne_zero (%%ₓpa) (%%ₓpb)))
+      | sa@_, sb@_ => positivity_fail e a b sa sb
+  | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a • b`"
 
 end Tactic
 

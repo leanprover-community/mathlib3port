@@ -189,6 +189,12 @@ theorem _root_.alg_hom.ker_ker_sqare_lift (f : A →ₐ[R] B) :
     exact hx
     
 
+/-- The quotient ring of `I ⧸ I ^ 2` is `R ⧸ I`. -/
+def quotCotangent : (R ⧸ I ^ 2) ⧸ I.cotangentIdeal ≃+* R ⧸ I := by
+  refine' (Ideal.quotEquivOfEq (Ideal.map_eq_submodule_map _ _).symm).trans _
+  refine' (DoubleQuot.quotQuotEquivQuotSup _ _).trans _
+  exact Ideal.quotEquivOfEq (sup_eq_right.mpr <| Ideal.pow_le_self two_ne_zero)
+
 end Ideal
 
 namespace LocalRing

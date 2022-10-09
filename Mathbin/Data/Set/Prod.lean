@@ -16,6 +16,7 @@ type.
 * `set.prod`: Binary product of sets. For `s : set α`, `t : set β`, we have
   `s.prod t : set (α × β)`.
 * `set.diagonal`: Diagonal of a type. `set.diagonal α = {(x, x) | x : α}`.
+* `set.off_diag`: Off-diagonal. `s ×ˢ s` without the diagonal.
 * `set.pi`: Arbitrary product of sets.
 -/
 
@@ -490,6 +491,86 @@ theorem diag_preimage_prod_self (s : Set α) : (fun x => (x, x)) ⁻¹' s ×ˢ s
   inter_self s
 
 end Diagonal
+
+section OffDiag
+
+variable {α : Type _} {s t : Set α} {x : α × α} {a : α}
+
+/-- The off-diagonal of a set `s` is the set of pairs `(a, b)` with `a, b ∈ s` and `a ≠ b`. -/
+def OffDiag (s : Set α) : Set (α × α) :=
+  { x | x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 }
+
+@[simp]
+theorem mem_off_diag : x ∈ s.OffDiag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 :=
+  Iff.rfl
+
+theorem off_diag_mono : Monotoneₓ (OffDiag : Set α → Set (α × α)) := fun s t h x =>
+  And.impₓ (@h _) <| And.imp_left <| @h _
+
+@[simp]
+theorem off_diag_nonempty : s.OffDiag.Nonempty ↔ s.Nontrivial := by simp [off_diag, Set.Nonempty, Set.Nontrivial]
+
+@[simp]
+theorem off_diag_eq_empty : s.OffDiag = ∅ ↔ s.Subsingleton := by
+  rw [← not_nonempty_iff_eq_empty, ← not_nontrivial_iff, off_diag_nonempty.not]
+
+alias off_diag_nonempty ↔ _ nontrivial.off_diag_nonempty
+
+alias off_diag_nonempty ↔ _ subsingleton.off_diag_eq_empty
+
+variable (s t)
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem off_diag_subset_prod : s.OffDiag ⊆ s ×ˢ s := fun x hx => ⟨hx.1, hx.2.1⟩
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem off_diag_eq_sep_prod : s.OffDiag = { x ∈ s ×ˢ s | x.1 ≠ x.2 } :=
+  ext fun _ => And.assoc.symm
+
+@[simp]
+theorem off_diag_empty : (∅ : Set α).OffDiag = ∅ := by simp
+
+@[simp]
+theorem off_diag_singleton (a : α) : ({a} : Set α).OffDiag = ∅ := by simp
+
+@[simp]
+theorem off_diag_univ : (Univ : Set α).OffDiag = Diagonal αᶜ :=
+  ext <| by simp
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+@[simp]
+theorem prod_sdiff_diagonal : s ×ˢ s \ Diagonal α = s.OffDiag :=
+  ext fun _ => And.assoc
+
+@[simp]
+theorem disjoint_diagonal_off_diag : Disjoint (Diagonal α) s.OffDiag := fun x hx => hx.2.2.2 hx.1
+
+theorem off_diag_inter : (s ∩ t).OffDiag = s.OffDiag ∩ t.OffDiag :=
+  ext fun x => by
+    simp only [mem_off_diag, mem_inter_iff]
+    tauto
+
+variable {s t}
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem off_diag_union (h : Disjoint s t) : (s ∪ t).OffDiag = s.OffDiag ∪ t.OffDiag ∪ s ×ˢ t ∪ t ×ˢ s := by
+  rw [off_diag_eq_sep_prod, union_prod, prod_union, prod_union, union_comm _ (t ×ˢ t), union_assoc,
+    union_left_comm (s ×ˢ t), ← union_assoc, sep_union, sep_union, ← off_diag_eq_sep_prod, ← off_diag_eq_sep_prod,
+    sep_eq_self_iff_mem_true.2, ← union_assoc]
+  simp only [mem_union, mem_prod, Ne.def, Prod.forallₓ]
+  rintro i j (⟨hi, hj⟩ | ⟨hi, hj⟩) rfl <;> exact h ⟨‹_›, ‹_›⟩
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem off_diag_insert (ha : a ∉ s) : (insert a s).OffDiag = s.OffDiag ∪ {a} ×ˢ s ∪ s ×ˢ {a} := by
+  rw [insert_eq, union_comm, off_diag_union, off_diag_singleton, union_empty, union_right_comm]
+  rintro b ⟨hb, rfl : b = a⟩
+  exact ha hb
+
+end OffDiag
 
 /-! ### Cartesian set-indexed product of sets -/
 

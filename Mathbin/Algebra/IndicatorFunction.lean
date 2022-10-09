@@ -218,6 +218,30 @@ theorem mul_indicator_preimage (s : Set α) (f : α → M) (B : Set M) :
   piecewise_preimage s f 1 B
 
 @[to_additive]
+theorem mul_indicator_one_preimage (s : Set M) : t.mulIndicator 1 ⁻¹' s ∈ ({Set.Univ, ∅} : Set (Set α)) := by
+  classical
+  rw [mul_indicator_one', preimage_one]
+  split_ifs <;> simp
+
+@[to_additive]
+theorem mul_indicator_const_preimage_eq_union (U : Set α) (s : Set M) (a : M) [Decidable (a ∈ s)]
+    [Decidable ((1 : M) ∈ s)] :
+    (U.mulIndicator fun x => a) ⁻¹' s = (if a ∈ s then U else ∅) ∪ if (1 : M) ∈ s then Uᶜ else ∅ := by
+  rw [mul_indicator_preimage, preimage_one, preimage_const]
+  split_ifs <;> simp [← compl_eq_univ_diff]
+
+@[to_additive]
+theorem mul_indicator_const_preimage (U : Set α) (s : Set M) (a : M) :
+    (U.mulIndicator fun x => a) ⁻¹' s ∈ ({Set.Univ, U, Uᶜ, ∅} : Set (Set α)) := by
+  classical
+  rw [mul_indicator_const_preimage_eq_union]
+  split_ifs <;> simp
+
+theorem indicator_one_preimage [Zero M] (U : Set α) (s : Set M) :
+    U.indicator 1 ⁻¹' s ∈ ({Set.Univ, U, Uᶜ, ∅} : Set (Set α)) :=
+  indicator_const_preimage _ _ 1
+
+@[to_additive]
 theorem mul_indicator_preimage_of_not_mem (s : Set α) (f : α → M) {t : Set M} (ht : (1 : M) ∉ t) :
     mulIndicator s f ⁻¹' t = f ⁻¹' t ∩ s := by
   simp [mul_indicator_preimage, Pi.one_def, Set.preimage_const_of_not_mem ht]

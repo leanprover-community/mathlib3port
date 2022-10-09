@@ -441,6 +441,16 @@ theorem total_apply_of_mem_supported {l : α →₀ R} {s : Finsetₓ α} (hs : 
 theorem total_single (c : R) (a : α) : Finsupp.total α M R v (single a c) = c • v a := by
   simp [total_apply, sum_single_index]
 
+theorem total_zero_apply (x : α →₀ R) : (Finsupp.total α M R 0) x = 0 := by simp [Finsupp.total_apply]
+
+variable (α M)
+
+@[simp]
+theorem total_zero : Finsupp.total α M R 0 = 0 :=
+  LinearMap.ext (total_zero_apply R)
+
+variable {α M}
+
 theorem apply_total (f : M →ₗ[R] M') (v) (l : α →₀ R) : f (Finsupp.total α M R v l) = Finsupp.total α M' R (f ∘ v) l :=
   by apply Finsupp.induction_linear l <;> simp (config := { contextual := true })
 

@@ -181,6 +181,10 @@ attribute [mono] neg_subset_neg
 theorem inv_singleton (a : α) : ({a} : Finsetₓ α)⁻¹ = {a⁻¹} :=
   image_singleton _ _
 
+@[simp, to_additive]
+theorem inv_insert (a : α) (s : Finsetₓ α) : (insert a s)⁻¹ = insert a⁻¹ s⁻¹ :=
+  image_insert _ _ _
+
 end Inv
 
 open Pointwise

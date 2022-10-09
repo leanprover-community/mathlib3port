@@ -1166,6 +1166,21 @@ theorem sup_eq_of_range_eq {ι ι'} {f : ι → Ordinal} {g : ι' → Ordinal} (
     sup.{u, max v w} f = sup.{v, max u w} g :=
   (sup_le_of_range_subset h.le).antisymm (sup_le_of_range_subset.{v, u, w} h.Ge)
 
+@[simp]
+theorem sup_sum {α : Type u} {β : Type v} (f : Sum α β → Ordinal) :
+    sup.{max u v, w} f = max (sup.{u, max v w} fun a => f (Sum.inl a)) (sup.{v, max u w} fun b => f (Sum.inr b)) := by
+  apply (sup_le_iff.2 _).antisymm (max_le_iff.2 ⟨_, _⟩)
+  · rintro (i | i)
+    · exact le_max_of_le_left (le_sup _ i)
+      
+    · exact le_max_of_le_right (le_sup _ i)
+      
+    
+  all_goals
+  apply sup_le_of_range_subset.{_, max u v, w}
+  rintro i ⟨a, rfl⟩
+  apply mem_range_self
+
 theorem unbounded_range_of_sup_ge {α β : Type u} (r : α → α → Prop) [IsWellOrder α r] (f : β → α)
     (h : type r ≤ sup.{u, u} (typein r ∘ f)) : Unbounded r (Range f) :=
   (not_bounded_iff _).1 fun ⟨x, hx⟩ =>
@@ -1432,6 +1447,11 @@ theorem lsub_le_of_range_subset {ι ι'} {f : ι → Ordinal} {g : ι' → Ordin
 theorem lsub_eq_of_range_eq {ι ι'} {f : ι → Ordinal} {g : ι' → Ordinal} (h : Set.Range f = Set.Range g) :
     lsub.{u, max v w} f = lsub.{v, max u w} g :=
   (lsub_le_of_range_subset h.le).antisymm (lsub_le_of_range_subset.{v, u, w} h.Ge)
+
+@[simp]
+theorem lsub_sum {α : Type u} {β : Type v} (f : Sum α β → Ordinal) :
+    lsub.{max u v, w} f = max (lsub.{u, max v w} fun a => f (Sum.inl a)) (lsub.{v, max u w} fun b => f (Sum.inr b)) :=
+  sup_sum _
 
 theorem lsub_not_mem_range {ι} (f : ι → Ordinal) : lsub f ∉ Set.Range f := fun ⟨i, h⟩ => h.not_lt (lt_lsub f i)
 
@@ -2275,6 +2295,11 @@ theorem add_log_le_log_mul {x y : Ordinal} (b : Ordinal) (hx : x ≠ 0) (hy : y 
 
 /-! ### Casting naturals into ordinals, compatibility with operations -/
 
+
+@[simp]
+theorem one_add_nat_cast (m : ℕ) : 1 + (m : Ordinal) = succ m := by
+  rw [← Nat.cast_oneₓ, ← Nat.cast_addₓ, add_commₓ]
+  rfl
 
 @[simp, norm_cast]
 theorem nat_cast_mul (m : ℕ) : ∀ n : ℕ, ((m * n : ℕ) : Ordinal) = m * n

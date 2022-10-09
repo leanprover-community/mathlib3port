@@ -36,7 +36,7 @@ namespace Monadₓ
 /-- An Eilenberg-Moore algebra for a monad `T`.
     cf Definition 5.2.3 in [Riehl][riehl2017]. -/
 structure Algebra (T : Monad C) : Type max u₁ v₁ where
-  a : C
+  A : C
   a : (T : C ⥤ C).obj A ⟶ A
   unit' : T.η.app A ≫ a = 𝟙 A := by obviously
   assoc' : T.μ.app A ≫ a = (T : C ⥤ C).map a ≫ a := by obviously
@@ -54,7 +54,7 @@ variable {T : Monad C}
 /-- A morphism of Eilenberg–Moore algebras for the monad `T`. -/
 @[ext]
 structure Hom (A B : Algebra T) where
-  f : A.a ⟶ B.a
+  f : A.A ⟶ B.A
   h' : (T : C ⥤ C).map f ≫ B.a = A.a ≫ f := by obviously
 
 restate_axiom hom.h'
@@ -64,7 +64,7 @@ attribute [simp, reassoc] hom.h
 namespace Hom
 
 /-- The identity homomorphism for an Eilenberg–Moore algebra. -/
-def id (A : Algebra T) : Hom A A where f := 𝟙 A.a
+def id (A : Algebra T) : Hom A A where f := 𝟙 A.A
 
 instance (A : Algebra T) : Inhabited (Hom A A) :=
   ⟨{ f := 𝟙 _ }⟩
@@ -88,7 +88,7 @@ theorem id_eq_id (A : Algebra T) : Algebra.Hom.id A = 𝟙 A :=
   rfl
 
 @[simp]
-theorem id_f (A : Algebra T) : (𝟙 A : A ⟶ A).f = 𝟙 A.a :=
+theorem id_f (A : Algebra T) : (𝟙 A : A ⟶ A).f = 𝟙 A.A :=
   rfl
 
 @[simp]
@@ -103,7 +103,7 @@ instance eilenbergMoore : Category (Algebra T) where
 commutes with the structure morphisms.
 -/
 @[simps]
-def isoMk {A B : Algebra T} (h : A.a ≅ B.a) (w : (T : C ⥤ C).map h.Hom ≫ B.a = A.a ≫ h.Hom) : A ≅ B where
+def isoMk {A B : Algebra T} (h : A.A ≅ B.A) (w : (T : C ⥤ C).map h.Hom ≫ B.a = A.a ≫ h.Hom) : A ≅ B where
   Hom := { f := h.Hom }
   inv :=
     { f := h.inv,
@@ -118,13 +118,13 @@ variable (T : Monad C)
 /-- The forgetful functor from the Eilenberg-Moore category, forgetting the algebraic structure. -/
 @[simps]
 def forget : Algebra T ⥤ C where
-  obj := fun A => A.a
+  obj := fun A => A.A
   map := fun A B f => f.f
 
 /-- The free functor from the Eilenberg-Moore category, constructing an algebra for any object. -/
 @[simps]
 def free : C ⥤ Algebra T where
-  obj := fun X => { a := T.obj X, a := T.μ.app X, assoc' := (T.assoc _).symm }
+  obj := fun X => { A := T.obj X, a := T.μ.app X, assoc' := (T.assoc _).symm }
   map := fun X Y f => { f := T.map f, h' := T.μ.naturality _ }
 
 instance [Inhabited C] : Inhabited (Algebra T) :=
@@ -193,7 +193,7 @@ theorem of_right_adjoint_forget : Adjunction.ofRightAdjoint T.forget = T.adj :=
 @[simps]
 def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra T₁ ⥤ Algebra T₂ where
   obj := fun A =>
-    { a := A.a, a := h.app A.a ≫ A.a,
+    { A := A.A, a := h.app A.A ≫ A.a,
       unit' := by
         dsimp
         simp [A.unit],
@@ -275,7 +275,7 @@ namespace Comonad
 /-- An Eilenberg-Moore coalgebra for a comonad `T`. -/
 @[nolint has_nonempty_instance]
 structure Coalgebra (G : Comonad C) : Type max u₁ v₁ where
-  a : C
+  A : C
   a : A ⟶ (G : C ⥤ C).obj A
   counit' : a ≫ G.ε.app A = 𝟙 A := by obviously
   coassoc' : a ≫ G.δ.app A = a ≫ G.map a := by obviously
@@ -293,7 +293,7 @@ variable {G : Comonad C}
 /-- A morphism of Eilenberg-Moore coalgebras for the comonad `G`. -/
 @[ext, nolint has_nonempty_instance]
 structure Hom (A B : Coalgebra G) where
-  f : A.a ⟶ B.a
+  f : A.A ⟶ B.A
   h' : A.a ≫ (G : C ⥤ C).map f = f ≫ B.a := by obviously
 
 restate_axiom hom.h'
@@ -303,7 +303,7 @@ attribute [simp, reassoc] hom.h
 namespace Hom
 
 /-- The identity homomorphism for an Eilenberg–Moore coalgebra. -/
-def id (A : Coalgebra G) : Hom A A where f := 𝟙 A.a
+def id (A : Coalgebra G) : Hom A A where f := 𝟙 A.A
 
 /-- Composition of Eilenberg–Moore coalgebra homomorphisms. -/
 def comp {P Q R : Coalgebra G} (f : Hom P Q) (g : Hom Q R) : Hom P R where f := f.f ≫ g.f
@@ -325,7 +325,7 @@ theorem id_eq_id (A : Coalgebra G) : Coalgebra.Hom.id A = 𝟙 A :=
   rfl
 
 @[simp]
-theorem id_f (A : Coalgebra G) : (𝟙 A : A ⟶ A).f = 𝟙 A.a :=
+theorem id_f (A : Coalgebra G) : (𝟙 A : A ⟶ A).f = 𝟙 A.A :=
   rfl
 
 @[simp]
@@ -339,7 +339,7 @@ instance eilenbergMoore : Category (Coalgebra G) where
 commutes with the structure morphisms.
 -/
 @[simps]
-def isoMk {A B : Coalgebra G} (h : A.a ≅ B.a) (w : A.a ≫ (G : C ⥤ C).map h.Hom = h.Hom ≫ B.a) : A ≅ B where
+def isoMk {A B : Coalgebra G} (h : A.A ≅ B.A) (w : A.a ≫ (G : C ⥤ C).map h.Hom = h.Hom ≫ B.a) : A ≅ B where
   Hom := { f := h.Hom }
   inv :=
     { f := h.inv,
@@ -355,14 +355,14 @@ variable (G : Comonad C)
 structure. -/
 @[simps]
 def forget : Coalgebra G ⥤ C where
-  obj := fun A => A.a
+  obj := fun A => A.A
   map := fun A B f => f.f
 
 /-- The cofree functor from the Eilenberg-Moore category, constructing a coalgebra for any
 object. -/
 @[simps]
 def cofree : C ⥤ Coalgebra G where
-  obj := fun X => { a := G.obj X, a := G.δ.app X, coassoc' := (G.coassoc _).symm }
+  obj := fun X => { A := G.obj X, a := G.δ.app X, coassoc' := (G.coassoc _).symm }
   map := fun X Y f => { f := G.map f, h' := (G.δ.naturality _).symm }
 
 -- The other two `simps` projection lemmas can be derived from these two, so `simp_nf` complains if

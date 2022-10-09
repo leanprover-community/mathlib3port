@@ -5,6 +5,7 @@ Authors: Patrick Massot
 -/
 import Mathbin.Topology.Algebra.UniformRing
 import Mathbin.Topology.Algebra.Field
+import Mathbin.FieldTheory.Subfield
 
 /-!
 # Completion of topological fields
@@ -173,4 +174,37 @@ instance : TopologicalDivisionRing (hat K) :=
 end Completion
 
 end UniformSpace
+
+variable (L : Type _) [Field L] [UniformSpace L] [CompletableTopField L]
+
+instance Subfield.completable_top_field (K : Subfield L) : CompletableTopField K :=
+  { Subtype.separated_space (K : Set L) with
+    nice := by
+      intro F F_cau inf_F
+      let i : K →+* L := K.subtype
+      have hi : UniformInducing i := uniform_embedding_subtype_coe.to_uniform_inducing
+      rw [← hi.cauchy_map_iff] at F_cau⊢
+      rw [map_comm
+          (show (i ∘ fun x => x⁻¹) = (fun x => x⁻¹) ∘ i by
+            ext
+            rfl)]
+      apply CompletableTopField.nice _ F_cau
+      rw [← Filter.push_pull', ← map_zero i, ← hi.inducing.nhds_eq_comap, inf_F, Filter.map_bot] }
+
+instance (priority := 100) completable_top_field_of_complete (L : Type _) [Field L] [UniformSpace L]
+    [TopologicalDivisionRing L] [SeparatedSpace L] [CompleteSpace L] : CompletableTopField L :=
+  { ‹SeparatedSpace L› with
+    nice := fun F cau_F hF => by
+      haveI : ne_bot F := cau_F.1
+      rcases CompleteSpace.complete cau_F with ⟨x, hx⟩
+      have hx' : x ≠ 0 := by
+        rintro rfl
+        rw [inf_eq_right.mpr hx] at hF
+        exact cau_F.1.Ne hF
+      exact
+        Filter.Tendsto.cauchy_map
+          (calc
+            map (fun x => x⁻¹) F ≤ map (fun x => x⁻¹) (𝓝 x) := map_mono hx
+            _ ≤ 𝓝 x⁻¹ := continuous_at_inv₀ hx'
+            ) }
 

@@ -329,6 +329,23 @@ theorem eq_symm_comp {α : Type _} (e : M ≃* N) (f : α → M) (g : α → N) 
 theorem symm_comp_eq {α : Type _} (e : M ≃* N) (f : α → M) (g : α → N) : e.symm ∘ g = f ↔ g = e ∘ f :=
   e.toEquiv.symm_comp_eq f g
 
+@[simp, to_additive]
+theorem symm_trans_self (e : M ≃* N) : e.symm.trans e = refl N :=
+  FunLike.ext _ _ e.apply_symm_apply
+
+@[simp, to_additive]
+theorem self_trans_symm (e : M ≃* N) : e.trans e.symm = refl M :=
+  FunLike.ext _ _ e.symm_apply_apply
+
+@[to_additive, simp]
+theorem coe_monoid_hom_refl {M} [MulOneClassₓ M] : (refl M : M →* M) = MonoidHom.id M :=
+  rfl
+
+@[to_additive, simp]
+theorem coe_monoid_hom_trans {M N P} [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (e₁ : M ≃* N) (e₂ : N ≃* P) :
+    (e₁.trans e₂ : M →* P) = (e₂ : N →* P).comp ↑e₁ :=
+  rfl
+
 /-- Two multiplicative isomorphisms agree if they are defined by the
     same underlying function. -/
 @[ext, to_additive "Two additive isomorphisms agree if they are defined by the same underlying function."]

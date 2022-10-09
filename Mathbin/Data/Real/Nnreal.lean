@@ -95,6 +95,9 @@ noncomputable def _root_.real.to_nnreal (r : ℝ) : ℝ≥0 :=
 theorem _root_.real.coe_to_nnreal (r : ℝ) (hr : 0 ≤ r) : (Real.toNnreal r : ℝ) = r :=
   max_eq_leftₓ hr
 
+theorem _root_.real.to_nnreal_of_nonneg {r : ℝ} (hr : 0 ≤ r) : r.toNnreal = ⟨r, hr⟩ := by
+  simp_rw [Real.toNnreal, max_eq_leftₓ hr]
+
 theorem _root_.real.le_coe_to_nnreal (r : ℝ) : r ≤ Real.toNnreal r :=
   le_max_leftₓ r 0
 
@@ -936,7 +939,7 @@ unsafe def positivity_coe_nnreal_real : expr → tactic strictness
     let strictness_a ← core a
     match strictness_a with
       | positive p => positive <$> mk_app `` nnreal_coe_pos [p]
-      | nonnegative _ => nonnegative <$> mk_app `` Nnreal.coe_nonneg [a]
+      | _ => nonnegative <$> mk_app `` Nnreal.coe_nonneg [a]
   | e => pp e >>= fail ∘ format.bracket "The expression " " is not of the form `(r : ℝ)` for `r : ℝ≥0`"
 
 end Tactic

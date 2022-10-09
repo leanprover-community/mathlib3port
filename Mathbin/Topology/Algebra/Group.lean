@@ -1209,6 +1209,11 @@ instance QuotientGroup.has_continuous_smul [LocallyCompactSpace G] :
       refine' continuous_coinduced_rng.comp continuous_mul
     exact QuotientMap.continuous_lift_prod_right quotient_map_quotient_mk H
 
+/-- The quotient of a second countable topological group by a subgroup is second countable. -/
+@[to_additive "The quotient of a second countable additive topological group by a subgroup is second\ncountable."]
+instance QuotientGroup.second_countable_topology [SecondCountableTopology G] : SecondCountableTopology (G ⧸ Γ) :=
+  HasContinuousConstSmul.second_countable_topology
+
 end Quotientₓ
 
 namespace Units

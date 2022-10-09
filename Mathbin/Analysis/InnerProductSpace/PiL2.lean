@@ -52,7 +52,7 @@ For consequences in infinite dimension (Hilbert bases, etc.), see the file
 -/
 
 
-open Real Set Filter IsROrC Submodule
+open Real Set Filter IsROrC Submodule Function
 
 open BigOperators uniformity TopologicalSpace Nnreal Ennreal ComplexConjugate DirectSum
 
@@ -78,6 +78,7 @@ we use instead `pi_Lp 2 f` for the product space, which is endowed with the `L^2
 -/
 instance PiLp.innerProductSpace {ι : Type _} [Fintypeₓ ι] (f : ι → Type _) [∀ i, InnerProductSpace 𝕜 (f i)] :
     InnerProductSpace 𝕜 (PiLp 2 f) where
+  toNormedAddCommGroup := inferInstance
   inner := fun x y => ∑ i, inner (x i) (y i)
   norm_sq_eq_inner := fun x => by simp only [PiLp.norm_sq_eq_of_L2, AddMonoidHom.map_sum, ← norm_sq_eq_inner, one_div]
   conj_sym := by
@@ -602,6 +603,25 @@ theorem _root_.orthonormal.exists_orthonormal_basis_extension (hv : Orthonormal 
   · simpa using hu₀s
     
   · simp
+    
+
+theorem _root_.orthonormal.exists_orthonormal_basis_extension_of_card_eq {ι : Type _} [Fintypeₓ ι]
+    (card_ι : finrank 𝕜 E = Fintypeₓ.card ι) {v : ι → E} {s : Set ι} (hv : Orthonormal 𝕜 (s.restrict v)) :
+    ∃ b : OrthonormalBasis ι 𝕜 E, ∀ i ∈ s, b i = v i := by
+  have hsv : injective (s.restrict v) := hv.linear_independent.injective
+  have hX : Orthonormal 𝕜 (coe : Set.Range (s.restrict v) → E) := by rwa [orthonormal_subtype_range hsv]
+  obtain ⟨Y, b₀, hX, hb₀⟩ := hX.exists_orthonormal_basis_extension
+  have hιY : Fintypeₓ.card ι = Y.card := by
+    refine' card_ι.symm.trans _
+    exact FiniteDimensional.finrank_eq_card_finset_basis b₀.to_basis
+  have hvsY : s.maps_to v Y := (s.maps_to_image v).mono_right (by rwa [← range_restrict])
+  have hsv' : Set.InjOn v s := by
+    rw [Set.inj_on_iff_injective]
+    exact hsv
+  obtain ⟨g, hg⟩ := hvsY.exists_equiv_extend_of_card_eq hιY hsv'
+  use b₀.reindex g.symm
+  intro i hi
+  · simp [hb₀, hg i hi]
     
 
 variable (𝕜 E)

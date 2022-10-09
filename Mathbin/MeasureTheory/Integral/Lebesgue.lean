@@ -1291,7 +1291,7 @@ theorem set_lintegral_congr_fun {f g : α → ℝ≥0∞} {s : Set α} (hs : Mea
   rw [eventually_eq]
   rwa [ae_restrict_iff' hs]
 
-theorem lintegral_to_real_le_lintegral_nnnorm (f : α → ℝ) : (∫⁻ x, Ennreal.ofReal (f x) ∂μ) ≤ ∫⁻ x, ∥f x∥₊ ∂μ := by
+theorem lintegral_of_real_le_lintegral_nnnorm (f : α → ℝ) : (∫⁻ x, Ennreal.ofReal (f x) ∂μ) ≤ ∫⁻ x, ∥f x∥₊ ∂μ := by
   simp_rw [← of_real_norm_eq_coe_nnnorm]
   refine' lintegral_mono fun x => Ennreal.of_real_le_of_real _
   rw [Real.norm_eq_abs]

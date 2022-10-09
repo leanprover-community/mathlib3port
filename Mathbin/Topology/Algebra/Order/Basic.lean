@@ -2860,5 +2860,48 @@ theorem Monotoneₓ.tendsto_nhds_within_Ioi {α β : Type _} [LinearOrderₓ α]
 
 end ConditionallyCompleteLinearOrder
 
+section NhdsWithPos
+
+section LinearOrderedAddCommGroup
+
+variable [LinearOrderedAddCommGroup α] [TopologicalSpace α] [OrderTopology α]
+
+theorem eventually_nhds_within_pos_mem_Ioo {ε : α} (h : 0 < ε) : ∀ᶠ x in 𝓝[>] 0, x ∈ Ioo 0 ε := by
+  rw [eventually_iff, mem_nhds_within]
+  exact ⟨Ioo (-ε) ε, is_open_Ioo, by simp [h], fun x hx => ⟨hx.2, hx.1.2⟩⟩
+
+theorem eventually_nhds_within_pos_mem_Ioc {ε : α} (h : 0 < ε) : ∀ᶠ x in 𝓝[>] 0, x ∈ Ioc 0 ε :=
+  (eventually_nhds_within_pos_mem_Ioo h).mono Ioo_subset_Ioc_self
+
+end LinearOrderedAddCommGroup
+
+section LinearOrderedField
+
+variable [LinearOrderedField α] [TopologicalSpace α] [OrderTopology α]
+
+theorem nhds_within_pos_comap_mul_left {x : α} (hx : 0 < x) : comap (fun ε => x * ε) (𝓝[>] 0) = 𝓝[>] 0 := by
+  suffices ∀ {x : α} (hx : 0 < x), 𝓝[>] 0 ≤ comap (fun ε => x * ε) (𝓝[>] 0) by
+    refine' le_antisymmₓ _ (this hx)
+    have hr : 𝓝[>] (0 : α) = ((𝓝[>] (0 : α)).comap fun ε => x⁻¹ * ε).comap fun ε => x * ε := by
+      simp [comap_comap, inv_mul_cancel hx.ne.symm, comap_id, one_mul_eq_id]
+    conv_rhs => rw [hr]
+    rw [comap_le_comap_iff (by convert univ_mem <;> exact (mul_left_surjective₀ hx.ne.symm).range_eq)]
+    exact this (inv_pos.mpr hx)
+  intro x hx
+  convert nhds_within_le_comap (continuous_mul_left x).ContinuousWithinAt
+  · exact (mul_zero _).symm
+    
+  · rw [image_const_mul_Ioi_zero hx]
+    
+
+theorem eventually_nhds_within_pos_mul_left {x : α} (hx : 0 < x) {p : α → Prop} (h : ∀ᶠ ε in 𝓝[>] 0, p ε) :
+    ∀ᶠ ε in 𝓝[>] 0, p (x * ε) := by
+  convert h.comap fun ε => x * ε
+  exact (nhds_within_pos_comap_mul_left hx).symm
+
+end LinearOrderedField
+
+end NhdsWithPos
+
 end OrderTopology
 

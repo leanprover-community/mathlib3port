@@ -88,8 +88,8 @@ theorem central_moment_one [IsProbabilityMeasure μ] : centralMoment X 1 μ = 0 
     rw [integral_undef this]
     
 
-@[simp]
-theorem central_moment_two_eq_variance : centralMoment X 2 μ = variance X μ :=
+theorem central_moment_two_eq_variance [IsFiniteMeasure μ] (hX : Memℒp X 2 μ) : centralMoment X 2 μ = variance X μ := by
+  rw [hX.variance_eq]
   rfl
 
 section MomentGeneratingFunction

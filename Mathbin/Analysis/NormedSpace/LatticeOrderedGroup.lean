@@ -61,12 +61,6 @@ instance (priority := 100) normedLatticeAddCommGroupToOrderedAddCommGroup {α : 
     [h : NormedLatticeAddCommGroup α] : OrderedAddCommGroup α :=
   { h with }
 
--- see Note [lower instance priority]
-/-- Let `α` be a normed group with a partial order. Then the order dual is also a normed group.
--/
-instance (priority := 100) {α : Type _} : ∀ [NormedAddCommGroup α], NormedAddCommGroup αᵒᵈ :=
-  id
-
 variable {α : Type _} [NormedLatticeAddCommGroup α]
 
 open LatticeOrderedCommGroup
@@ -84,9 +78,8 @@ theorem dual_solid (a b : α) (h : b ⊓ -b ≤ a ⊓ -a) : ∥a∥ ≤ ∥b∥ 
 /-- Let `α` be a normed lattice ordered group, then the order dual is also a
 normed lattice ordered group.
 -/
-instance (priority := 100) : NormedLatticeAddCommGroup αᵒᵈ where
-  add_le_add_left := fun a b => add_le_add_left
-  solid := dual_solid
+instance (priority := 100) : NormedLatticeAddCommGroup αᵒᵈ :=
+  { OrderDual.orderedAddCommGroup, OrderDual.normedAddCommGroup with solid := dual_solid }
 
 theorem norm_abs_eq_norm (a : α) : ∥|a|∥ = ∥a∥ :=
   (solid (abs_abs a).le).antisymm (solid (abs_abs a).symm.le)

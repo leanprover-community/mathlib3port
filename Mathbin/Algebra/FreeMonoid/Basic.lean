@@ -115,6 +115,20 @@ theorem comp_lift (g : M →* N) (f : α → M) : g.comp (lift f) = lift (g ∘ 
 theorem hom_map_lift (g : M →* N) (f : α → M) (x : FreeMonoid α) : g (lift f x) = lift (g ∘ f) x :=
   MonoidHom.ext_iff.1 (comp_lift g f) x
 
+/-- Define a multiplicative action of `free_monoid α` on `β`. -/
+@[to_additive "Define an additive action of `free_add_monoid α` on `β`."]
+def mkMulAction (f : α → β → β) : MulAction (FreeMonoid α) β where
+  smul := fun l b => List.foldr f b l
+  one_smul := fun x => rfl
+  mul_smul := fun xs ys b => List.foldr_appendₓ _ _ _ _
+
+@[simp, to_additive]
+theorem of_smul (f : α → β → β) (x : α) (y : β) :
+    (haveI := mk_mul_action f
+      of x • y) =
+      f x y :=
+  rfl
+
 /-- The unique monoid homomorphism `free_monoid α →* free_monoid β` that sends
 each `of x` to `of (f x)`. -/
 @[to_additive
@@ -134,6 +148,10 @@ theorem lift_of_comp_eq_map (f : α → β) : (lift fun x => of (f x)) = map f :
 
 @[to_additive]
 theorem map_comp (g : β → γ) (f : α → β) : map (g ∘ f) = (map g).comp (map f) :=
+  hom_eq fun x => rfl
+
+@[simp, to_additive]
+theorem map_id : map (@id α) = MonoidHom.id (FreeMonoid α) :=
   hom_eq fun x => rfl
 
 end FreeMonoid

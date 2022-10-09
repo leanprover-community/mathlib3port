@@ -243,6 +243,10 @@ theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakDual
     (h : ∀ y, Continuous fun a => (g a) y) : Continuous g :=
   continuous_induced_rng.2 (continuous_pi_iff.mpr h)
 
+instance [T2Space 𝕜] : T2Space (WeakDual 𝕜 E) :=
+  Embedding.t2_space <|
+    WeakBilin.embedding <| show Function.Injective (topDualPairing 𝕜 E) from ContinuousLinearMap.coe_injective
+
 end WeakDual
 
 -- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] 𝕜

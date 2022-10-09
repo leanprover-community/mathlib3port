@@ -80,8 +80,9 @@ def destruct : Wseq α → Computation (Option (α × Wseq α)) :=
     | some (none, s') => Sum.inr s'
     | some (some a, s') => Sum.inl (some (a, s'))
 
-def casesOn {C : Wseq α → Sort v} (s : Wseq α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) (h3 : ∀ s, C (think s)) : C s :=
-  Seqₓₓ.casesOn s h1 fun o => Option.casesOn o h3 h2
+/-- Recursion principle for weak sequences, compare with `list.rec_on`. -/
+def recOn {C : Wseq α → Sort v} (s : Wseq α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) (h3 : ∀ s, C (think s)) : C s :=
+  Seqₓₓ.recOn s h1 fun o => Option.recOn o h3 h2
 
 protected def Mem (a : α) (s : Wseq α) :=
   Seqₓₓ.Mem (some a) s
@@ -593,7 +594,7 @@ theorem destruct_flatten (c : Computation (Wseq α)) : destruct (flatten c) = c 
     match c1, c2, h with
     | _, _, Or.inl <| Eq.refl c => by cases c.destruct <;> simp
     | _, _, Or.inr ⟨c, rfl, rfl⟩ => by
-      apply c.cases_on (fun a => _) fun c' => _ <;> repeat' simp
+      apply c.rec_on (fun a => _) fun c' => _ <;> repeat' simp
       · cases (destruct a).destruct <;> simp
         
       · exact Or.inr ⟨c', rfl, rfl⟩
@@ -798,7 +799,7 @@ theorem eq_or_mem_iff_mem {s : Wseq α} {a a' s'} : some (a', s') ∈ destruct s
   revert s
   apply Computation.memRecOn h _ fun c IH => _ <;>
     intro s <;>
-      apply s.cases_on _ (fun x s => _) fun s => _ <;>
+      apply s.rec_on _ (fun x s => _) fun s => _ <;>
         intro m <;> have := congr_arg Computation.destruct m <;> simp at this <;> cases' this with i1 i2
   · rw [i1, i2]
     cases' s' with f al
@@ -836,7 +837,7 @@ theorem mem_of_mem_tail {s : Wseq α} {a} : a ∈ tail s → a ∈ s := by
   revert s
   simp [Streamₓ.nth]
   induction' n with n IH <;>
-    intro s <;> apply s.cases_on _ (fun x s => _) fun s => _ <;> repeat' simp <;> intro m e <;> injections
+    intro s <;> apply s.rec_on _ (fun x s => _) fun s => _ <;> repeat' simp <;> intro m e <;> injections
   · exact Or.inr m
     
   · exact Or.inr m
@@ -1097,7 +1098,7 @@ theorem length_eq_map (s : Wseq α) : length s = Computation.map List.length (to
   intro s1 s2 h
   rcases h with ⟨l, s, h⟩
   rw [h.left, h.right]
-  apply s.cases_on _ (fun a s => _) fun s => _ <;> repeat' simp [to_list, nil, cons, think, length]
+  apply s.rec_on _ (fun a s => _) fun s => _ <;> repeat' simp [to_list, nil, cons, think, length]
   · refine' ⟨a::l, s, _, _⟩ <;> simp
     
   · refine' ⟨l, s, _, _⟩ <;> simp
@@ -1140,7 +1141,7 @@ theorem to_list'_map (l : List α) (s : Wseq α) : corec ToList._match2 (l, s) =
   intro s1 s2 h
   rcases h with ⟨l', s, h⟩
   rw [h.left, h.right]
-  apply s.cases_on _ (fun a s => _) fun s => _ <;> repeat' simp [to_list, nil, cons, think, length]
+  apply s.rec_on _ (fun a s => _) fun s => _ <;> repeat' simp [to_list, nil, cons, think, length]
   · refine' ⟨a::l', s, _, _⟩ <;> simp
     
   · refine' ⟨l', s, _, _⟩ <;> simp
@@ -1174,7 +1175,7 @@ theorem head_of_seq (s : Seqₓₓ α) : head (ofSeq s) = return s.head := by si
 @[simp]
 theorem tail_of_seq (s : Seqₓₓ α) : tail (ofSeq s) = ofSeq s.tail := by
   simp [tail]
-  apply s.cases_on _ fun x s => _ <;> simp [of_seq]
+  apply s.rec_on _ fun x s => _ <;> simp [of_seq]
   · rfl
     
   rw [Seqₓₓ.head_cons, Seqₓₓ.tail_cons]
@@ -1241,7 +1242,7 @@ theorem exists_of_mem_join {a : α} : ∀ {S : Wseq (Wseq α)}, a ∈ join S →
     from fun S h => (this _ h nil S (by simp) (by simp [h])).resolve_left (not_mem_nil _)
   intro ss h
   apply mem_rec_on h (fun b ss o => _) fun ss IH => _ <;> intro s S
-  · refine' s.cases_on (S.cases_on _ (fun s S => _) fun S => _) (fun b' s => _) fun s => _ <;>
+  · refine' s.rec_on (S.rec_on _ (fun s S => _) fun S => _) (fun b' s => _) fun s => _ <;>
       intro ej m <;>
         simp at ej <;> have := congr_arg Seqₓₓ.destruct ej <;> simp at this <;> try cases this <;> try contradiction
     substs b' ss
@@ -1254,7 +1255,7 @@ theorem exists_of_mem_join {a : α} : ∀ {S : Wseq (Wseq α)}, a ∈ join S →
       
     exact Or.imp_left Or.inr (IH _ _ rfl m)
     
-  · refine' s.cases_on (S.cases_on _ (fun s S => _) fun S => _) (fun b' s => _) fun s => _ <;>
+  · refine' s.rec_on (S.rec_on _ (fun s S => _) fun S => _) (fun b' s => _) fun s => _ <;>
       intro ej m <;>
         simp at ej <;>
           have := congr_arg Seqₓₓ.destruct ej <;>
@@ -1294,7 +1295,7 @@ theorem destruct_map (f : α → β) (s : Wseq α) :
   · intro c1 c2 h
     cases' h with s h
     rw [h.left, h.right]
-    apply s.cases_on _ (fun a s => _) fun s => _ <;> simp
+    apply s.rec_on _ (fun a s => _) fun s => _ <;> simp
     exact ⟨s, rfl, rfl⟩
     
   · exact ⟨s, rfl, rfl⟩
@@ -1335,8 +1336,8 @@ theorem destruct_append (s t : Wseq α) : destruct (append s t) = (destruct s).b
   intro c1 c2 h
   rcases h with ⟨s, t, h⟩
   rw [h.left, h.right]
-  apply s.cases_on _ (fun a s => _) fun s => _ <;> simp
-  · apply t.cases_on _ (fun b t => _) fun t => _ <;> simp
+  apply s.rec_on _ (fun a s => _) fun s => _ <;> simp
+  · apply t.rec_on _ (fun b t => _) fun t => _ <;> simp
     · refine' ⟨nil, t, _, _⟩ <;> simp
       
     
@@ -1357,7 +1358,7 @@ theorem destruct_join (S : Wseq (Wseq α)) : destruct (join S) = (destruct S).bi
     match c1, c2, h with
     | _, _, Or.inl <| Eq.refl c => by cases c.destruct <;> simp
     | _, _, Or.inr ⟨S, rfl, rfl⟩ => by
-      apply S.cases_on _ (fun s S => _) fun S => _ <;> simp
+      apply S.rec_on _ (fun s S => _) fun S => _ <;> simp
       · refine' Or.inr ⟨S, rfl, rfl⟩
         
 
@@ -1509,7 +1510,7 @@ theorem join_map_ret (s : Wseq α) : join (map ret s) ~ s := by
         clear h _match
         have : ∀ s, ∃ s' : Wseq α, (map ret s).join.destruct = (map ret s').join.destruct ∧ destruct s = s'.destruct :=
           fun s => ⟨s, rfl, rfl⟩
-        apply s.cases_on _ (fun a s => _) fun s => _ <;> simp [ret, ret_mem, this, Option.exists]
+        apply s.rec_on _ (fun a s => _) fun s => _ <;> simp [ret, ret_mem, this, Option.exists]
     
   · exact ⟨s, rfl, rfl⟩
     
@@ -1534,9 +1535,9 @@ theorem join_append (S T : Wseq (Wseq α)) : join (append S T) ~ append (join S)
     match c1, c2, h with
     | _, _, ⟨s, S, T, rfl, rfl⟩ => by
       clear _match h h
-      apply Wseq.casesOn s _ (fun a s => _) fun s => _ <;> simp
-      · apply Wseq.casesOn S _ (fun s S => _) fun S => _ <;> simp
-        · apply Wseq.casesOn T _ (fun s T => _) fun T => _ <;> simp
+      apply Wseq.recOn s _ (fun a s => _) fun s => _ <;> simp
+      · apply Wseq.recOn S _ (fun s S => _) fun S => _ <;> simp
+        · apply Wseq.recOn T _ (fun s T => _) fun T => _ <;> simp
           · refine' ⟨s, nil, T, _, _⟩ <;> simp
             
           · refine' ⟨nil, nil, T, _, _⟩ <;> simp
@@ -1571,8 +1572,8 @@ theorem map_join (f : α → β) (S) : map f (join S) = join (map (map f) S) := 
     exact
       match s1, s2, h with
       | _, _, ⟨s, S, rfl, rfl⟩ => by
-        apply Wseq.casesOn s _ (fun a s => _) fun s => _ <;> simp
-        · apply Wseq.casesOn S _ (fun s S => _) fun S => _ <;> simp
+        apply Wseq.recOn s _ (fun a s => _) fun s => _ <;> simp
+        · apply Wseq.recOn S _ (fun s S => _) fun S => _ <;> simp
           · exact ⟨map f s, S, rfl, rfl⟩
             
           · refine' ⟨nil, S, _, _⟩ <;> simp
@@ -1608,9 +1609,9 @@ theorem join_join (SS : Wseq (Wseq (Wseq α))) : join (join SS) ~ join (map join
     match c1, c2, h with
     | _, _, ⟨s, S, SS, rfl, rfl⟩ => by
       clear _match h h
-      apply Wseq.casesOn s _ (fun a s => _) fun s => _ <;> simp
-      · apply Wseq.casesOn S _ (fun s S => _) fun S => _ <;> simp
-        · apply Wseq.casesOn SS _ (fun S SS => _) fun SS => _ <;> simp
+      apply Wseq.recOn s _ (fun a s => _) fun s => _ <;> simp
+      · apply Wseq.recOn S _ (fun s S => _) fun S => _ <;> simp
+        · apply Wseq.recOn SS _ (fun S SS => _) fun SS => _ <;> simp
           · refine' ⟨nil, S, SS, _, _⟩ <;> simp
             
           · refine' ⟨nil, nil, SS, _, _⟩ <;> simp

@@ -5,6 +5,7 @@ Authors: Joseph Myers
 -/
 import Mathbin.Analysis.Convex.Segment
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
+import Mathbin.Tactic.FieldSimp
 
 /-!
 # Betweenness in affine spaces
@@ -249,10 +250,18 @@ theorem not_sbtw_self_right (x y : P) : ¬Sbtw R x y y := fun h => h.ne_right rf
 
 variable {R}
 
-theorem Sbtw.left_ne_right {x y z : P} (h : Sbtw R x y z) : x ≠ z := by
+theorem Wbtw.left_ne_right_of_ne_left {x y z : P} (h : Wbtw R x y z) (hne : y ≠ x) : x ≠ z := by
   rintro rfl
-  rw [Sbtw, wbtw_self_iff] at h
-  exact h.2.1 h.1
+  rw [wbtw_self_iff] at h
+  exact hne h
+
+theorem Wbtw.left_ne_right_of_ne_right {x y z : P} (h : Wbtw R x y z) (hne : y ≠ z) : x ≠ z := by
+  rintro rfl
+  rw [wbtw_self_iff] at h
+  exact hne h
+
+theorem Sbtw.left_ne_right {x y z : P} (h : Sbtw R x y z) : x ≠ z :=
+  h.Wbtw.left_ne_right_of_ne_left h.2.1
 
 theorem sbtw_iff_mem_image_Ioo_and_ne [NoZeroSmulDivisors R V] {x y z : P} :
     Sbtw R x y z ↔ y ∈ lineMap x z '' Set.Ioo (0 : R) 1 ∧ x ≠ z := by
@@ -352,6 +361,39 @@ theorem Sbtw.trans_right [NoZeroSmulDivisors R V] {w x y z : P} (h₁ : Sbtw R w
   h₁.Wbtw.trans_sbtw_right h₂
 
 end OrderedRing
+
+section OrderedCommRing
+
+variable [OrderedCommRing R] [AddCommGroupₓ V] [Module R V] [AddTorsor V P]
+
+include V
+
+variable {R}
+
+theorem Wbtw.same_ray_vsub {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (z -ᵥ y) := by
+  rcases h with ⟨t, ⟨ht0, ht1⟩, rfl⟩
+  simp_rw [line_map_apply]
+  rcases ht0.lt_or_eq with (ht0' | rfl)
+  swap
+  · simp
+    
+  rcases ht1.lt_or_eq with (ht1' | rfl)
+  swap
+  · simp
+    
+  refine' Or.inr (Or.inr ⟨1 - t, t, sub_pos.2 ht1', ht0', _⟩)
+  simp [vsub_vadd_eq_vsub_sub, smul_sub, smul_smul, ← sub_smul]
+  ring_nf
+
+theorem Wbtw.same_ray_vsub_left {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (z -ᵥ x) := by
+  rcases h with ⟨t, ⟨ht0, ht1⟩, rfl⟩
+  simpa [line_map_apply] using same_ray_nonneg_smul_left (z -ᵥ x) ht0
+
+theorem Wbtw.same_ray_vsub_right {x y z : P} (h : Wbtw R x y z) : SameRay R (z -ᵥ x) (z -ᵥ y) := by
+  rcases h with ⟨t, ⟨ht0, ht1⟩, rfl⟩
+  simpa [line_map_apply, vsub_vadd_eq_vsub_sub, sub_smul] using same_ray_nonneg_smul_right (z -ᵥ x) (sub_nonneg.2 ht1)
+
+end OrderedCommRing
 
 section LinearOrderedField
 
@@ -453,7 +495,7 @@ theorem Wbtw.collinear {x y z : P} (h : Wbtw R x y z) : Collinear R ({x, y, z} :
 
 theorem Collinear.wbtw_or_wbtw_or_wbtw {x y z : P} (h : Collinear R ({x, y, z} : Set P)) :
     Wbtw R x y z ∨ Wbtw R y z x ∨ Wbtw R z x y := by
-  rw [collinear_iff_of_mem R (Set.mem_insert _ _)] at h
+  rw [collinear_iff_of_mem (Set.mem_insert _ _)] at h
   rcases h with ⟨v, h⟩
   simp_rw [Set.mem_insert_iff, Set.mem_singleton_iff] at h
   have hy := h y (Or.inr (Or.inl rfl))
@@ -482,6 +524,28 @@ theorem Collinear.wbtw_or_wbtw_or_wbtw {x y z : P} (h : Collinear R ({x, y, z} :
       rw [← or_assocₓ]
       exact Or.inl (wbtw_or_wbtw_smul_vadd_of_nonneg _ _ hy0.le hz0.le)
       
+    
+
+theorem wbtw_iff_same_ray_vsub {x y z : P} : Wbtw R x y z ↔ SameRay R (y -ᵥ x) (z -ᵥ y) := by
+  refine' ⟨Wbtw.same_ray_vsub, fun h => _⟩
+  rcases h with (h | h | ⟨r₁, r₂, hr₁, hr₂, h⟩)
+  · rw [vsub_eq_zero_iff_eq] at h
+    simp [h]
+    
+  · rw [vsub_eq_zero_iff_eq] at h
+    simp [h]
+    
+  · refine'
+      ⟨r₂ / (r₁ + r₂),
+        ⟨div_nonneg hr₂.le (add_nonneg hr₁.le hr₂.le),
+          div_le_one_of_le (le_add_of_nonneg_left hr₁.le) (add_nonneg hr₁.le hr₂.le)⟩,
+        _⟩
+    have h' : z = r₂⁻¹ • r₁ • (y -ᵥ x) +ᵥ y := by simp [h, hr₂.ne']
+    rw [eq_comm]
+    simp only [line_map_apply, h', vadd_vsub_assoc, smul_smul, ← add_smul, eq_vadd_iff_vsub_eq, smul_add]
+    convert (one_smul _ _).symm
+    field_simp [(add_pos hr₁ hr₂).ne', hr₂.ne']
+    ring
     
 
 end LinearOrderedField

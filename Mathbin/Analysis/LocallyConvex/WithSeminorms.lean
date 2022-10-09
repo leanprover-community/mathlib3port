@@ -18,9 +18,23 @@ bounded by a finite number of seminorms in `E`.
 
 ## Main statements
 
-* `continuous_from_bounded`: A bounded linear map `f : E →ₗ[𝕜] F` is continuous.
 * `seminorm_family.to_locally_convex_space`: A space equipped with a family of seminorms is locally
 convex.
+
+## Continuity of semilinear maps
+
+If `E` and `F` are topological vector space with the topology induced by a family of seminorms, then
+we have a direct method to prove that a linear map is continuous:
+* `seminorm.continuous_from_bounded`: A bounded linear map `f : E →ₗ[𝕜] F` is continuous.
+
+If the topology of a space `E` is induced by a family of seminorms, then we can characterize von
+Neumann boundedness in terms of that seminorm family. Together with
+`linear_map.continuous_of_locally_bounded` this gives general criterion for continuity.
+
+* `with_seminorms.is_vonN_bounded_iff_finset_seminorm_bounded`
+* `with_seminorms.is_vonN_bounded_iff_seminorm_bounded`
+* `with_seminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded`
+* `with_seminorms.image_is_vonN_bounded_iff_seminorm_bounded`
 
 ## Tags
 
@@ -230,7 +244,7 @@ variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [Nonempty ι]
 structure WithSeminorms (p : SeminormFamily 𝕜 E ι) [t : TopologicalSpace E] : Prop where
   topology_eq_with_seminorms : t = p.ModuleFilterBasis.topology
 
-theorem SeminormFamily.with_seminorms_eq {p : SeminormFamily 𝕜 E ι} [t : TopologicalSpace E] (hp : WithSeminorms p) :
+theorem WithSeminorms.with_seminorms_eq {p : SeminormFamily 𝕜 E ι} [t : TopologicalSpace E] (hp : WithSeminorms p) :
     t = p.ModuleFilterBasis.topology :=
   hp.1
 
@@ -284,7 +298,7 @@ section NormedSpace
 theorem norm_with_seminorms (𝕜 E) [NormedField 𝕜] [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] :
     WithSeminorms fun _ : Finₓ 1 => normSeminorm 𝕜 E := by
   let p : SeminormFamily 𝕜 E (Finₓ 1) := fun _ => normSeminorm 𝕜 E
-  refine' ⟨TopologicalAddGroup.ext normed_top_group p.add_group_filter_basis.is_topological_add_group _⟩
+  refine' ⟨seminormed_add_comm_group.to_topological_add_group.ext p.add_group_filter_basis.is_topological_add_group _⟩
   refine' Filter.HasBasis.eq_of_same_basis Metric.nhds_basis_ball _
   rw [← ball_norm_seminorm 𝕜 E]
   refine'
@@ -334,7 +348,11 @@ theorem WithSeminorms.is_vonN_bounded_iff_finset_seminorm_bounded {s : Set E} (h
   refine' Absorbs.mono_right _ h'
   exact (Finsetₓ.sup I p).ball_zero_absorbs_ball_zero hr
 
-theorem Bornology.is_vonN_bounded_iff_seminorm_bounded {s : Set E} (hp : WithSeminorms p) :
+theorem WithSeminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded (f : G → E) {s : Set G} (hp : WithSeminorms p) :
+    Bornology.IsVonNBounded 𝕜 (f '' s) ↔ ∀ I : Finsetₓ ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, I.sup p (f x) < r := by
+  simp_rw [hp.is_vonN_bounded_iff_finset_seminorm_bounded, Set.ball_image_iff]
+
+theorem WithSeminorms.is_vonN_bounded_iff_seminorm_bounded {s : Set E} (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 s ↔ ∀ i : ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, p i x < r := by
   rw [hp.is_vonN_bounded_iff_finset_seminorm_bounded]
   constructor
@@ -355,6 +373,10 @@ theorem Bornology.is_vonN_bounded_iff_seminorm_bounded {s : Set E} (hp : WithSem
     
   simp only [finset.not_nonempty_iff_eq_empty.mp hI, Finsetₓ.sup_empty, coe_bot, Pi.zero_apply, exists_propₓ]
   exact ⟨1, zero_lt_one, fun _ _ => zero_lt_one⟩
+
+theorem WithSeminorms.image_is_vonN_bounded_iff_seminorm_bounded (f : G → E) {s : Set G} (hp : WithSeminorms p) :
+    Bornology.IsVonNBounded 𝕜 (f '' s) ↔ ∀ i : ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, p i (f x) < r := by
+  simp_rw [hp.is_vonN_bounded_iff_seminorm_bounded, Set.ball_image_iff]
 
 end NontriviallyNormedField
 
@@ -425,7 +447,7 @@ open LocallyConvexSpace
 variable [Nonempty ι] [NormedField 𝕜] [NormedSpace ℝ 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [Module ℝ E]
   [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
 
-theorem SeminormFamily.to_locally_convex_space {p : SeminormFamily 𝕜 E ι} (hp : WithSeminorms p) :
+theorem WithSeminorms.to_locally_convex_space {p : SeminormFamily 𝕜 E ι} (hp : WithSeminorms p) :
     LocallyConvexSpace ℝ E := by
   apply of_basis_zero ℝ E id fun s => s ∈ p.basis_sets
   · rw [hp.1, AddGroupFilterBasis.nhds_eq _, AddGroupFilterBasis.N_zero]
@@ -448,7 +470,7 @@ variable (𝕜) [NormedField 𝕜] [NormedSpace ℝ 𝕜] [SeminormedAddCommGrou
 slightly weaker instance version. -/
 theorem NormedSpace.to_locally_convex_space' [NormedSpace 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] :
     LocallyConvexSpace ℝ E :=
-  SeminormFamily.to_locally_convex_space (norm_with_seminorms 𝕜 E)
+  (norm_with_seminorms 𝕜 E).to_locally_convex_space
 
 /-- See `normed_space.to_locally_convex_space'` for a slightly stronger version which is not an
 instance. -/
@@ -490,4 +512,23 @@ theorem Inducing.with_seminorms [hι : Nonempty ι] {q : SeminormFamily 𝕜 F �
   exact f.with_seminorms_induced hq
 
 end TopologicalConstructions
+
+section TopologicalProperties
+
+variable [NontriviallyNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [Nonempty ι] [Countable ι]
+
+variable {p : SeminormFamily 𝕜 E ι}
+
+variable [UniformSpace E] [UniformAddGroup E]
+
+/-- If the topology of a space is induced by a countable family of seminorms, then the topology
+is first countable. -/
+theorem WithSeminorms.first_countable (hp : WithSeminorms p) : TopologicalSpace.FirstCountableTopology E := by
+  have : (𝓝 (0 : E)).IsCountablyGenerated := by
+    rw [p.with_seminorms_iff_nhds_eq_infi.mp hp]
+    exact Filter.Infi.is_countably_generated _
+  haveI : (uniformity E).IsCountablyGenerated := UniformAddGroup.uniformity_countably_generated
+  exact UniformSpace.first_countable_topology E
+
+end TopologicalProperties
 

@@ -65,6 +65,10 @@ def toIocMod (a : α) {b : α} (hb : 0 < b) (x : α) : α :=
 theorem to_Ico_mod_mem_Ico (a : α) {b : α} (hb : 0 < b) (x : α) : toIcoMod a hb x ∈ Set.Ico a (a + b) :=
   add_to_Ico_div_zsmul_mem_Ico a hb x
 
+theorem to_Ico_mod_mem_Ico' {b : α} (hb : 0 < b) (x : α) : toIcoMod 0 hb x ∈ Set.Ico 0 b := by
+  convert to_Ico_mod_mem_Ico 0 hb x
+  exact (zero_addₓ b).symm
+
 theorem to_Ioc_mod_mem_Ioc (a : α) {b : α} (hb : 0 < b) (x : α) : toIocMod a hb x ∈ Set.Ioc a (a + b) :=
   add_to_Ioc_div_zsmul_mem_Ioc a hb x
 
@@ -378,8 +382,6 @@ section LinearOrderedField
 
 variable {α : Type _} [LinearOrderedField α] [FloorRing α]
 
-attribute [local instance] FloorRing.archimedean
-
 theorem to_Ico_div_eq_neg_floor (a : α) {b : α} (hb : 0 < b) (x : α) : toIcoDiv a hb x = -⌊(x - a) / b⌋ := by
   refine' (eq_to_Ico_div_of_add_zsmul_mem_Ico hb _).symm
   rw [Set.mem_Ico, zsmul_eq_mul, Int.cast_neg, neg_mul, ← sub_nonneg, add_commₓ, add_sub_assoc, add_commₓ, ←
@@ -402,6 +404,9 @@ theorem to_Ico_mod_eq_add_fract_mul (a : α) {b : α} (hb : 0 < b) (x : α) :
   rw [toIcoMod, to_Ico_div_eq_neg_floor, Int.fract]
   field_simp [hb.ne.symm]
   ring
+
+theorem to_Ico_mod_eq_fract_mul {b : α} (hb : 0 < b) (x : α) : toIcoMod 0 hb x = Int.fract (x / b) * b := by
+  simp [to_Ico_mod_eq_add_fract_mul]
 
 theorem to_Ioc_mod_eq_sub_fract_mul (a : α) {b : α} (hb : 0 < b) (x : α) :
     toIocMod a hb x = a + b - Int.fract ((a + b - x) / b) * b := by

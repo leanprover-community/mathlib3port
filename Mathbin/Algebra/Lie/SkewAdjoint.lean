@@ -120,7 +120,7 @@ def skewAdjointMatricesLieSubalgebraEquiv (P : Matrix n n R) (h : Invertible P) 
       suffices P.lie_conj h A ∈ skewAdjointMatricesSubmodule J ↔ A ∈ skewAdjointMatricesSubmodule (Pᵀ ⬝ J ⬝ P) by
         simp only [LieSubalgebra.mem_coe, Submodule.mem_map_equiv, LieSubalgebra.mem_map_submodule, coe_coe]
         exact this
-      simp [Matrix.IsSkewAdjoint, J.is_adjoint_pair_equiv _ _ P (is_unit_of_invertible P)])
+      simp [Matrix.IsSkewAdjoint, J.is_adjoint_pair_equiv' _ _ P (is_unit_of_invertible P)])
 
 theorem skew_adjoint_matrices_lie_subalgebra_equiv_apply (P : Matrix n n R) (h : Invertible P)
     (A : skewAdjointMatricesLieSubalgebra J) : ↑(skewAdjointMatricesLieSubalgebraEquiv J P h A) = P⁻¹ ⬝ ↑A ⬝ P := by

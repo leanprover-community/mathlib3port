@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Order.Category.BoundedDistribLattice
+import Mathbin.Order.Category.HeytAlg
 
 /-!
 # The category of boolean algebras
@@ -58,8 +58,18 @@ instance : ConcreteCategory BoolAlg :=
 instance hasForgetToBoundedDistribLattice : HasForget₂ BoolAlg BoundedDistribLattice :=
   InducedCategory.hasForget₂ toBoundedDistribLattice
 
-/-- Constructs an equivalence between boolean algebras from an order isomorphism
-between them. -/
+section
+
+attribute [local instance] BoundedLatticeHomClass.toBiheytingHomClass
+
+@[simps]
+instance hasForgetToHeytAlg :
+    HasForget₂ BoolAlg
+      HeytAlg where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => show BoundedLatticeHom X Y from f }
+
+end
+
+/-- Constructs an equivalence between Boolean algebras from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : BoolAlg.{u}} (e : α ≃o β) : α ≅ β where
   Hom := (e : BoundedLatticeHom α β)

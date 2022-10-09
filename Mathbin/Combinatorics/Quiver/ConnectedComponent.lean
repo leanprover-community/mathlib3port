@@ -39,19 +39,106 @@ variable (V : Type u) [Quiver.{v + 1} V]
 class HasReverse where
   reverse' : ∀ {a b : V}, (a ⟶ b) → (b ⟶ a)
 
-instance : HasReverse (Symmetrify V) :=
-  ⟨fun a b e => e.swap⟩
+/-- Reverse the direction of an arrow. -/
+def reverse {V} [Quiver.{v + 1} V] [HasReverse V] {a b : V} : (a ⟶ b) → (b ⟶ a) :=
+  has_reverse.reverse'
+
+/-- A quiver `has_involutive_reverse` if reversing twice is the identity.`-/
+class HasInvolutiveReverse extends HasReverse V where
+  inv' : ∀ {a b : V} (f : a ⟶ b), reverse (reverse f) = f
+
+@[simp]
+theorem reverse_reverse {V} [Quiver.{v + 1} V] [h : HasInvolutiveReverse V] {a b : V} (f : a ⟶ b) :
+    reverse (reverse f) = f := by apply h.inv'
 
 variable {V}
 
-/-- Reverse the direction of an arrow. -/
-def reverse [HasReverse V] {a b : V} : (a ⟶ b) → (b ⟶ a) :=
-  has_reverse.reverse'
+instance : HasReverse (Symmetrify V) :=
+  ⟨fun a b e => e.swap⟩
+
+instance : HasInvolutiveReverse (Symmetrify V) where
+  toHasReverse := ⟨fun a b e => e.swap⟩
+  inv' := fun a b e => congr_fun Sum.swap_swap_eq e
 
 /-- Reverse the direction of a path. -/
+@[simp]
 def Path.reverseₓ [HasReverse V] {a : V} : ∀ {b}, Path a b → Path b a
   | a, path.nil => Path.nil
   | b, path.cons p e => (reverse e).toPath.comp p.reverse
+
+@[simp]
+theorem Path.reverse_to_path [HasReverse V] {a b : V} (f : a ⟶ b) : f.toPath.reverse = (reverse f).toPath :=
+  rfl
+
+@[simp]
+theorem Path.reverse_comp [HasReverse V] {a b c : V} (p : Path a b) (q : Path b c) :
+    (p.comp q).reverse = q.reverse.comp p.reverse := by
+  induction q
+  · simp
+    
+  · simp [q_ih]
+    
+
+@[simp]
+theorem Path.reverse_reverse [h : HasInvolutiveReverse V] {a b : V} (p : Path a b) : p.reverse.reverse = p := by
+  induction p
+  · simp
+    
+  · simp only [path.reverse, path.reverse_comp, path.reverse_to_path, reverse_reverse, p_ih]
+    rfl
+    
+
+/-- The inclusion of a quiver in its symmetrification -/
+def Symmetrify.of : Prefunctor V (Symmetrify V) where
+  obj := id
+  map := fun X Y f => Sum.inl f
+
+/-- Given a quiver `V'` with reversible arrows, a prefunctor to `V'` can be lifted to one from
+    `symmetrify V` to `V'` -/
+def Symmetrify.lift {V' : Type _} [Quiver V'] [HasReverse V'] (φ : Prefunctor V V') : Prefunctor (Symmetrify V) V' where
+  obj := φ.obj
+  map := fun X Y f => Sum.rec (fun fwd => φ.map fwd) (fun bwd => reverse (φ.map bwd)) f
+
+theorem Symmetrify.lift_spec (V' : Type _) [Quiver V'] [HasReverse V'] (φ : Prefunctor V V') :
+    Symmetrify.of.comp (Symmetrify.lift φ) = φ := by
+  fapply Prefunctor.ext
+  · rintro X
+    rfl
+    
+  · rintro X Y f
+    rfl
+    
+
+theorem Symmetrify.lift_reverse (V' : Type _) [Quiver V'] [h : HasInvolutiveReverse V'] (φ : Prefunctor V V')
+    {X Y : Symmetrify V} (f : X ⟶ Y) :
+    (Symmetrify.lift φ).map (Quiver.reverse f) = Quiver.reverse ((Symmetrify.lift φ).map f) := by
+  dsimp [symmetrify.lift]
+  cases f
+  · simp only
+    rfl
+    
+  · simp only
+    rw [h.inv']
+    rfl
+    
+
+/-- `lift φ` is the only prefunctor extending `φ` and preserving reverses. -/
+theorem Symmetrify.lift_spec_unique (V' : Type _) [Quiver V'] [HasReverse V'] (φ : Prefunctor V V')
+    (Φ : Prefunctor (Symmetrify V) V') (hΦ : Symmetrify.of.comp Φ = φ)
+    (hΦinv : ∀ {X Y : V} (f : X ⟶ Y), Φ.map (reverse f) = reverse (Φ.map f)) : Φ = Symmetrify.lift φ := by
+  subst_vars
+  fapply Prefunctor.ext
+  · rintro X
+    rfl
+    
+  · rintro X Y f
+    cases f
+    · rfl
+      
+    · dsimp [symmetrify.lift, symmetrify.of]
+      convert hΦinv (Sum.inl f)
+      
+    
 
 variable (V)
 

@@ -950,6 +950,12 @@ theorem eventually_true (f : Filter α) : ∀ᶠ x in f, True :=
 theorem eventually_of_forall {p : α → Prop} {f : Filter α} (hp : ∀ x, p x) : ∀ᶠ x in f, p x :=
   univ_mem' hp
 
+theorem forall_eventually_of_eventually_forall {f : Filter α} {p : α → β → Prop} (h : ∀ᶠ x in f, ∀ y, p x y) :
+    ∀ y, ∀ᶠ x in f, p x y := by
+  intro y
+  filter_upwards [h]
+  tauto
+
 @[simp]
 theorem eventually_false_iff_eq_bot {f : Filter α} : (∀ᶠ x in f, False) ↔ f = ⊥ :=
   empty_mem_iff_bot

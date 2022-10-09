@@ -2,10 +2,21 @@
 Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
-
-Computational realization of filters (experimental).
 -/
 import Mathbin.Order.Filter.Cofinite
+
+/-!
+# Computational realization of filters (experimental)
+
+This file provides infrastructure to compute with filters.
+
+## Main declarations
+
+* `cfilter`: Realization of a filter base. Note that this is in the generality of filters on
+  lattices, while `filter` is filters of sets (so corresponding to `cfilter (set α) σ`).
+* `filter.realizer`: Realization of a `filter`. `cfilter` that generates the given filter.
+-/
+
 
 open Set Filter
 
@@ -20,6 +31,10 @@ structure Cfilter (α σ : Type _) [PartialOrderₓ α] where
   inf_le_right : ∀ a b : σ, f (inf a b) ≤ f b
 
 variable {α : Type _} {β : Type _} {σ : Type _} {τ : Type _}
+
+instance [Inhabited α] [SemilatticeInf α] : Inhabited (Cfilter α α) :=
+  ⟨{ f := id, pt := default, inf := (· ⊓ ·), inf_le_left := fun _ _ => inf_le_left,
+      inf_le_right := fun _ _ => inf_le_right }⟩
 
 namespace Cfilter
 
@@ -67,6 +82,7 @@ structure Filter.Realizer (f : Filter α) where
   f : Cfilter (Set α) σ
   Eq : F.toFilter = f
 
+/-- A `cfilter` realizes the filter it generates. -/
 protected def Cfilter.toRealizer (F : Cfilter (Set α) σ) : F.toFilter.Realizer :=
   ⟨σ, F, rfl⟩
 
@@ -74,7 +90,8 @@ namespace Filter.Realizer
 
 theorem mem_sets {f : Filter α} (F : f.Realizer) {a : Set α} : a ∈ f ↔ ∃ b, F.f b ⊆ a := by cases F <;> subst f <;> simp
 
--- Used because it has better definitional equalities than the eq.rec proof
+/-- Transfer a realizer along an equality of filter. This has better definitional equalities than
+the `eq.rec` proof. -/
 def ofEq {f g : Filter α} (e : f = g) (F : f.Realizer) : g.Realizer :=
   ⟨F.σ, F.f, F.Eq.trans e⟩
 
@@ -114,6 +131,9 @@ theorem principal_σ (s : Set α) : (Realizer.principal s).σ = Unit :=
 @[simp]
 theorem principal_F (s : Set α) (u : Unit) : (Realizer.principal s).f u = s :=
   rfl
+
+instance (s : Set α) : Inhabited (principal s).Realizer :=
+  ⟨Realizer.principal s⟩
 
 /-- `unit` is a realizer for the top filter -/
 protected def top : (⊤ : Filter α).Realizer :=

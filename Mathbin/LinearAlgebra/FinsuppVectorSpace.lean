@@ -210,3 +210,37 @@ theorem cardinal_lt_aleph_0_of_finite_dimensional [Finite K] [FiniteDimensional 
 
 end Module
 
+namespace Basis
+
+variable {R M n : Type _}
+
+variable [DecidableEq n] [Fintypeₓ n]
+
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+
+theorem _root_.finset.sum_single_ite (a : R) (i : n) :
+    (Finsetₓ.univ.Sum fun x : n => Finsupp.single x (ite (i = x) a 0)) = Finsupp.single i a := by
+  rw [Finsetₓ.sum_congr_set {i} (fun x : n => Finsupp.single x (ite (i = x) a 0)) fun _ => Finsupp.single i a]
+  · simp
+    
+  · intro x hx
+    rw [Set.mem_singleton_iff] at hx
+    simp [hx]
+    
+  intro x hx
+  have hx' : ¬i = x := by
+    refine' ne_comm.mp _
+    rwa [mem_singleton_iff] at hx
+  simp [hx']
+
+@[simp]
+theorem equiv_fun_symm_std_basis (b : Basis n R M) (i : n) :
+    b.equivFun.symm (LinearMap.stdBasis R (fun _ => R) i 1) = b i := by
+  have := EquivLike.injective b.repr
+  apply_fun b.repr
+  simp only [equiv_fun_symm_apply, std_basis_apply', LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ, RingHom.id_apply,
+    repr_self, Finsupp.smul_single', boole_mul]
+  exact Finsetₓ.sum_single_ite 1 i
+
+end Basis
+

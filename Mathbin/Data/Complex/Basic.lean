@@ -731,13 +731,15 @@ theorem abs_pow (z : ℂ) (n : ℕ) : abs (z ^ n) = abs z ^ n :=
 theorem abs_zpow (z : ℂ) (n : ℤ) : abs (z ^ n) = abs z ^ n :=
   map_zpow₀ abs z n
 
-theorem abs_re_le_abs (z : ℂ) : abs z.re ≤ abs z := by
-  rw [mul_self_le_mul_self_iff (abs_nonneg z.re) (abs.nonneg _), abs_mul_abs_self, mul_self_abs]
-  apply re_sq_le_norm_sq
+theorem abs_re_le_abs (z : ℂ) : abs z.re ≤ abs z :=
+  Real.abs_le_sqrt <| by
+    rw [norm_sq_apply, ← sq]
+    exact le_add_of_nonneg_right (mul_self_nonneg _)
 
-theorem abs_im_le_abs (z : ℂ) : abs z.im ≤ abs z := by
-  rw [mul_self_le_mul_self_iff (abs_nonneg z.im) (abs.nonneg _), abs_mul_abs_self, mul_self_abs] <;>
-    apply im_sq_le_norm_sq
+theorem abs_im_le_abs (z : ℂ) : abs z.im ≤ abs z :=
+  Real.abs_le_sqrt <| by
+    rw [norm_sq_apply, ← sq, ← sq]
+    exact le_add_of_nonneg_left (sq_nonneg _)
 
 theorem re_le_abs (z : ℂ) : z.re ≤ abs z :=
   (abs_le.1 (abs_re_le_abs _)).2

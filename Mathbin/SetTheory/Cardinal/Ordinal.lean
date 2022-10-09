@@ -392,6 +392,9 @@ theorem beth_strict_mono : StrictMonoₓ beth := by
     exact le_csupr (bdd_above_of_small _) (⟨_, hb.succ_lt h⟩ : Iio b)
     
 
+theorem beth_mono : Monotoneₓ beth :=
+  beth_strict_mono.Monotone
+
 @[simp]
 theorem beth_lt {o₁ o₂ : Ordinal} : beth o₁ < beth o₂ ↔ o₁ < o₂ :=
   beth_strict_mono.lt_iff_lt
@@ -421,6 +424,12 @@ theorem beth_pos (o : Ordinal) : 0 < beth o :=
 
 theorem beth_ne_zero (o : Ordinal) : beth o ≠ 0 :=
   (beth_pos o).ne'
+
+theorem beth_normal : IsNormal.{u} fun o => (beth o).ord :=
+  (is_normal_iff_strict_mono_limit _).2
+    ⟨ord_strict_mono.comp beth_strict_mono, fun o ho a ha => by
+      rw [beth_limit ho, ord_le]
+      exact csupr_le' fun b => ord_le.1 (ha _ b.2)⟩
 
 /-! ### Properties of `mul` -/
 

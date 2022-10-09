@@ -67,6 +67,10 @@ instance [HasInvolutiveInv α] : HasInvolutiveInv (WithOne α) :=
     inv_inv := fun a => (Option.map_mapₓ _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
 
 @[to_additive]
+instance [Inv α] : InvOneClass (WithOne α) :=
+  { WithOne.hasOne, WithOne.hasInv with inv_one := rfl }
+
+@[to_additive]
 instance : Inhabited (WithOne α) :=
   ⟨1⟩
 
@@ -363,6 +367,9 @@ instance [HasInvolutiveInv α] : HasInvolutiveInv (WithZero α) :=
   { WithZero.hasInv with
     inv_inv := fun a => (Option.map_mapₓ _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
 
+instance [InvOneClass α] : InvOneClass (WithZero α) :=
+  { WithZero.hasOne, WithZero.hasInv with inv_one := show ((1⁻¹ : α) : WithZero α) = 1 by simp }
+
 instance [Div α] : Div (WithZero α) :=
   ⟨fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a / b) o₂⟩
 
@@ -403,6 +410,9 @@ instance [DivInvMonoidₓ α] : DivInvMonoidₓ (WithZero α) :=
       | none => rfl
       | some x => congr_arg some <| DivInvMonoidₓ.zpow_neg' _ _ }
 
+instance [DivInvOneMonoid α] : DivInvOneMonoid (WithZero α) :=
+  { WithZero.divInvMonoid, WithZero.invOneClass with }
+
 instance [DivisionMonoid α] : DivisionMonoid (WithZero α) :=
   { WithZero.divInvMonoid, WithZero.hasInvolutiveInv with
     mul_inv_rev := fun a b =>
@@ -424,10 +434,6 @@ instance [DivisionCommMonoid α] : DivisionCommMonoid (WithZero α) :=
 section Groupₓ
 
 variable [Groupₓ α]
-
-@[simp]
-theorem inv_one : (1 : WithZero α)⁻¹ = 1 :=
-  show ((1⁻¹ : α) : WithZero α) = 1 by simp
 
 /-- if `G` is a group then `with_zero G` is a group with zero. -/
 instance : GroupWithZeroₓ (WithZero α) :=

@@ -733,10 +733,17 @@ theorem coe_bot : ((⊥ : Subgroup G) : Set G) = {1} :=
 instance : Unique (⊥ : Subgroup G) :=
   ⟨⟨1⟩, fun g => Subtype.ext g.2⟩
 
+@[simp, to_additive]
+theorem top_to_submonoid : (⊤ : Subgroup G).toSubmonoid = ⊤ :=
+  rfl
+
+@[simp, to_additive]
+theorem bot_to_submonoid : (⊥ : Subgroup G).toSubmonoid = ⊥ :=
+  rfl
+
 @[to_additive]
-theorem eq_bot_iff_forall : H = ⊥ ↔ ∀ x ∈ H, x = (1 : G) := by
-  rw [SetLike.ext'_iff]
-  simp only [coe_bot, Set.eq_singleton_iff_unique_mem, SetLike.mem_coe, H.one_mem, true_andₓ]
+theorem eq_bot_iff_forall : H = ⊥ ↔ ∀ x ∈ H, x = (1 : G) :=
+  to_submonoid_injective.eq_iff.symm.trans <| Submonoid.eq_bot_iff_forall _
 
 @[to_additive]
 theorem eq_bot_of_subsingleton [Subsingleton H] : H = ⊥ := by
@@ -1259,6 +1266,14 @@ theorem map_equiv_eq_comap_symm (f : G ≃* N) (K : Subgroup G) : K.map f.toMono
 @[to_additive]
 theorem comap_equiv_eq_map_symm (f : N ≃* G) (K : Subgroup G) : K.comap f.toMonoidHom = K.map f.symm.toMonoidHom :=
   (map_equiv_eq_comap_symm f.symm K).symm
+
+@[to_additive]
+theorem map_symm_eq_iff_map_eq {H : Subgroup N} {e : G ≃* N} : H.map ↑e.symm = K ↔ K.map ↑e = H := by
+  constructor <;> rintro rfl
+  · rw [map_map, ← MulEquiv.coe_monoid_hom_trans, MulEquiv.symm_trans_self, MulEquiv.coe_monoid_hom_refl, map_id]
+    
+  · rw [map_map, ← MulEquiv.coe_monoid_hom_trans, MulEquiv.self_trans_symm, MulEquiv.coe_monoid_hom_refl, map_id]
+    
 
 @[to_additive]
 theorem map_le_iff_le_comap {f : G →* N} {K : Subgroup G} {H : Subgroup N} : K.map f ≤ H ↔ K ≤ H.comap f :=
@@ -2706,6 +2721,10 @@ theorem mem_zpowers_iff {g h : G} : h ∈ zpowers g ↔ ∃ k : ℤ, g ^ k = h :
   Iff.rfl
 
 @[simp]
+theorem zpow_mem_zpowers (g : G) (k : ℤ) : g ^ k ∈ zpowers g :=
+  mem_zpowers_iff.mpr ⟨k, rfl⟩
+
+@[simp]
 theorem forall_zpowers {x : G} {p : zpowers x → Prop} : (∀ g, p g) ↔ ∀ m : ℤ, p ⟨x ^ m, m, rfl⟩ :=
   Set.forall_subtype_range_iff
 
@@ -2743,6 +2762,8 @@ attribute [to_additive AddSubgroup.zmultiples_subset] Subgroup.zpowers_subset
 
 attribute [to_additive AddSubgroup.mem_zmultiples_iff] Subgroup.mem_zpowers_iff
 
+attribute [to_additive AddSubgroup.zsmul_mem_zmultiples] Subgroup.zpow_mem_zpowers
+
 attribute [to_additive AddSubgroup.forall_zmultiples] Subgroup.forall_zpowers
 
 attribute [to_additive AddSubgroup.forall_mem_zmultiples] Subgroup.forall_mem_zpowers
@@ -2750,6 +2771,20 @@ attribute [to_additive AddSubgroup.forall_mem_zmultiples] Subgroup.forall_mem_zp
 attribute [to_additive AddSubgroup.exists_zmultiples] Subgroup.exists_zpowers
 
 attribute [to_additive AddSubgroup.exists_mem_zmultiples] Subgroup.exists_mem_zpowers
+
+section Ringₓ
+
+variable {R : Type _} [Ringₓ R] (r : R) (k : ℤ)
+
+@[simp]
+theorem int_cast_mul_mem_zmultiples : ↑(k : ℤ) * r ∈ zmultiples r := by
+  simpa only [← zsmul_eq_mul] using zsmul_mem_zmultiples r k
+
+@[simp]
+theorem int_cast_mem_zmultiples_one : ↑(k : ℤ) ∈ zmultiples (1 : R) :=
+  mem_zmultiples_iff.mp ⟨k, by simp⟩
+
+end Ringₓ
 
 end AddSubgroup
 

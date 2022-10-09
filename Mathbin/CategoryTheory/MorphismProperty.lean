@@ -3,7 +3,7 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
+import Mathbin.CategoryTheory.Limits.Shapes.Diagonal
 import Mathbin.CategoryTheory.Arrow
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
 
@@ -360,6 +360,50 @@ def FunctorsInverting (W : MorphismProperty C) (D : Type _) [Category D] :=
 def FunctorsInverting.mk {W : MorphismProperty C} {D : Type _} [Category D] (F : C ⥤ D) (hF : W.IsInvertedBy F) :
     W.FunctorsInverting D :=
   ⟨F, hF⟩
+
+section Diagonal
+
+variable [HasPullbacks C] {P : MorphismProperty C}
+
+/-- For `P : morphism_property C`, `P.diagonal` is a morphism property that holds for `f : X ⟶ Y`
+whenever `P` holds for `X ⟶ Y xₓ Y`. -/
+def Diagonal (P : MorphismProperty C) : MorphismProperty C := fun X Y f => P (pullback.diagonal f)
+
+theorem diagonal_iff {X Y : C} {f : X ⟶ Y} : P.Diagonal f ↔ P (pullback.diagonal f) :=
+  Iff.rfl
+
+theorem RespectsIso.diagonal (hP : P.RespectsIso) : P.Diagonal.RespectsIso := by
+  constructor
+  · introv H
+    rwa [diagonal_iff, pullback.diagonal_comp, hP.cancel_left_is_iso, hP.cancel_left_is_iso, ←
+      hP.cancel_right_is_iso _ _, ← pullback.condition, hP.cancel_left_is_iso]
+    infer_instance
+    
+  · introv H
+    delta diagonal
+    rwa [pullback.diagonal_comp, hP.cancel_right_is_iso]
+    
+
+theorem StableUnderComposition.diagonal (hP : StableUnderComposition P) (hP' : RespectsIso P)
+    (hP'' : StableUnderBaseChange P) : P.Diagonal.StableUnderComposition := by
+  introv X h₁ h₂
+  rw [diagonal_iff, pullback.diagonal_comp]
+  apply hP
+  · assumption
+    
+  rw [hP'.cancel_left_is_iso]
+  apply hP''.snd
+  assumption
+
+theorem StableUnderBaseChange.diagonal (hP : StableUnderBaseChange P) (hP' : RespectsIso P) :
+    P.Diagonal.StableUnderBaseChange :=
+  StableUnderBaseChange.mk hP'.Diagonal
+    (by
+      introv h
+      rw [diagonal_iff, diagonal_pullback_fst, hP'.cancel_left_is_iso, hP'.cancel_right_is_iso]
+      convert hP.base_change_map f _ _ <;> simp <;> assumption)
+
+end Diagonal
 
 end MorphismProperty
 

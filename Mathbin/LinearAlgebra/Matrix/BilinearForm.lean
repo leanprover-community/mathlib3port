@@ -8,6 +8,7 @@ import Mathbin.LinearAlgebra.Matrix.Nondegenerate
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 import Mathbin.LinearAlgebra.Matrix.ToLinearEquiv
 import Mathbin.LinearAlgebra.BilinearForm
+import Mathbin.LinearAlgebra.Matrix.SesquilinearForm
 
 /-!
 # Bilinear form
@@ -256,19 +257,6 @@ noncomputable def Matrix.toBilin : Matrix n n R₂ ≃ₗ[R₂] BilinForm R₂ M
   (BilinForm.toMatrix b).symm
 
 @[simp]
-theorem Basis.equiv_fun_symm_std_basis (i : n) : b.equivFun.symm (stdBasis R₂ (fun _ => R₂) i 1) = b i := by
-  rw [b.equiv_fun_symm_apply, Finsetₓ.sum_eq_single i]
-  · rw [std_basis_same, one_smul]
-    
-  · rintro j - hj
-    rw [std_basis_ne _ _ _ _ hj, zero_smul]
-    
-  · intro
-    have := mem_univ i
-    contradiction
-    
-
-@[simp]
 theorem BilinForm.to_matrix_apply (B : BilinForm R₂ M₂) (i j : n) : BilinForm.toMatrix b B i j = B (b i) (b j) := by
   rw [BilinForm.toMatrix, LinearEquiv.trans_apply, BilinForm.to_matrix'_apply, congr_apply, b.equiv_fun_symm_std_basis,
     b.equiv_fun_symm_std_basis]
@@ -382,21 +370,6 @@ variable (b : Basis n R₃ M₃)
 
 variable (J J₃ A A' : Matrix n n R₃)
 
-/-- The condition for the square matrices `A`, `A'` to be an adjoint pair with respect to the square
-matrices `J`, `J₃`. -/
-def Matrix.IsAdjointPair :=
-  Aᵀ ⬝ J₃ = J ⬝ A'
-
-/-- The condition for a square matrix `A` to be self-adjoint with respect to the square matrix
-`J`. -/
-def Matrix.IsSelfAdjoint :=
-  Matrix.IsAdjointPair J J A A
-
-/-- The condition for a square matrix `A` to be skew-adjoint with respect to the square matrix
-`J`. -/
-def Matrix.IsSkewAdjoint :=
-  Matrix.IsAdjointPair J J A (-A)
-
 @[simp]
 theorem is_adjoint_pair_to_bilin' [DecidableEq n] :
     BilinForm.IsAdjointPair (Matrix.toBilin' J) (Matrix.toBilin' J₃) (Matrix.toLin' A) (Matrix.toLin' A') ↔
@@ -431,7 +404,7 @@ theorem is_adjoint_pair_to_bilin [DecidableEq n] :
     LinearMap.to_matrix_to_lin, BilinForm.to_matrix_to_bilin, BilinForm.to_matrix_to_bilin]
   rfl
 
-theorem Matrix.is_adjoint_pair_equiv [DecidableEq n] (P : Matrix n n R₃) (h : IsUnit P) :
+theorem Matrix.is_adjoint_pair_equiv' [DecidableEq n] (P : Matrix n n R₃) (h : IsUnit P) :
     (Pᵀ ⬝ J ⬝ P).IsAdjointPair (Pᵀ ⬝ J ⬝ P) A A' ↔ J.IsAdjointPair J (P ⬝ A ⬝ P⁻¹) (P ⬝ A' ⬝ P⁻¹) := by
   have h' : IsUnit P.det := P.is_unit_iff_is_unit_det.mp h
   let u := P.nonsing_inv_unit h'
@@ -464,47 +437,30 @@ variable [DecidableEq n]
 
 /-- The submodule of pair-self-adjoint matrices with respect to bilinear forms corresponding to
 given matrices `J`, `J₂`. -/
-def pairSelfAdjointMatricesSubmodule : Submodule R₃ (Matrix n n R₃) :=
+def pairSelfAdjointMatricesSubmodule' : Submodule R₃ (Matrix n n R₃) :=
   (BilinForm.isPairSelfAdjointSubmodule (Matrix.toBilin' J) (Matrix.toBilin' J₃)).map
     ((LinearMap.toMatrix' : ((n → R₃) →ₗ[R₃] n → R₃) ≃ₗ[R₃] Matrix n n R₃) :
       ((n → R₃) →ₗ[R₃] n → R₃) →ₗ[R₃] Matrix n n R₃)
 
-@[simp]
-theorem mem_pair_self_adjoint_matrices_submodule :
+theorem mem_pair_self_adjoint_matrices_submodule' :
     A ∈ pairSelfAdjointMatricesSubmodule J J₃ ↔ Matrix.IsAdjointPair J J₃ A A := by
-  simp only [pairSelfAdjointMatricesSubmodule, LinearEquiv.coe_coe, LinearMap.to_matrix'_apply, Submodule.mem_map,
-    BilinForm.mem_is_pair_self_adjoint_submodule]
-  constructor
-  · rintro ⟨f, hf, hA⟩
-    have hf' : f = A.to_lin' := by rw [← hA, Matrix.to_lin'_to_matrix']
-    rw [hf'] at hf
-    rw [← is_adjoint_pair_to_bilin']
-    exact hf
-    
-  · intro h
-    refine' ⟨A.to_lin', _, LinearMap.to_matrix'_to_lin' _⟩
-    exact (is_adjoint_pair_to_bilin' _ _ _ _).mpr h
-    
+  simp only [mem_pair_self_adjoint_matrices_submodule]
 
 /-- The submodule of self-adjoint matrices with respect to the bilinear form corresponding to
 the matrix `J`. -/
-def selfAdjointMatricesSubmodule : Submodule R₃ (Matrix n n R₃) :=
+def selfAdjointMatricesSubmodule' : Submodule R₃ (Matrix n n R₃) :=
   pairSelfAdjointMatricesSubmodule J J
 
-@[simp]
-theorem mem_self_adjoint_matrices_submodule : A ∈ selfAdjointMatricesSubmodule J ↔ J.IsSelfAdjoint A := by
-  erw [mem_pair_self_adjoint_matrices_submodule]
-  rfl
+theorem mem_self_adjoint_matrices_submodule' : A ∈ selfAdjointMatricesSubmodule J ↔ J.IsSelfAdjoint A := by
+  simp only [mem_self_adjoint_matrices_submodule]
 
 /-- The submodule of skew-adjoint matrices with respect to the bilinear form corresponding to
 the matrix `J`. -/
-def skewAdjointMatricesSubmodule : Submodule R₃ (Matrix n n R₃) :=
+def skewAdjointMatricesSubmodule' : Submodule R₃ (Matrix n n R₃) :=
   pairSelfAdjointMatricesSubmodule (-J) J
 
-@[simp]
-theorem mem_skew_adjoint_matrices_submodule : A ∈ skewAdjointMatricesSubmodule J ↔ J.IsSkewAdjoint A := by
-  erw [mem_pair_self_adjoint_matrices_submodule]
-  simp [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair]
+theorem mem_skew_adjoint_matrices_submodule' : A ∈ skewAdjointMatricesSubmodule J ↔ J.IsSkewAdjoint A := by
+  simp only [mem_skew_adjoint_matrices_submodule]
 
 end MatrixAdjoints
 

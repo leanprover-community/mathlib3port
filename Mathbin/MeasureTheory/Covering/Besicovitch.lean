@@ -1215,7 +1215,8 @@ theorem ae_tendsto_measure_inter_div_of_measurable_set (μ : Measureₓ β) [IsL
 to `1` when `r` tends to `0`, for almost every `x` in `s`.
 This shows that almost every point of `s` is a Lebesgue density point for `s`.
 A stronger version holds for measurable sets, see `ae_tendsto_measure_inter_div_of_measurable_set`.
--/
+
+See also `is_doubling_measure.ae_tendsto_measure_inter_div`. -/
 theorem ae_tendsto_measure_inter_div (μ : Measureₓ β) [IsLocallyFiniteMeasure μ] (s : Set β) :
     ∀ᵐ x ∂μ.restrict s, Tendsto (fun r => μ (s ∩ ClosedBall x r) / μ (ClosedBall x r)) (𝓝[>] 0) (𝓝 1) := by
   haveI : second_countable_topology β := Emetric.second_countable_of_sigma_compact β

@@ -525,16 +525,13 @@ theorem Monotoneₓ.cauchy_seq_series_mul_of_tendsto_zero_of_bounded (hfa : Mono
   apply
     (NormedField.tendsto_zero_smul_of_tendsto_zero_of_bounded hf0
           ⟨b, eventually_map.mpr <| eventually_of_forall fun n => hgb <| n + 1⟩).CauchySeq.add
-  apply (cauchy_seq_range_of_norm_bounded _ _ (_ : ∀ n, _ ≤ b * abs (f (n + 1) - f n))).neg
-  · exact normed_uniform_group
-    
+  refine' (cauchy_seq_range_of_norm_bounded _ _ (fun n => _ : ∀ n, _ ≤ b * abs (f (n + 1) - f n))).neg
   · simp_rw [abs_of_nonneg (sub_nonneg_of_le (hfa (Nat.le_succₓ _))), ← mul_sum]
     apply real.uniform_continuous_const_mul.comp_cauchy_seq
     simp_rw [sum_range_sub, sub_eq_add_neg]
     exact (tendsto.cauchy_seq hf0).AddConst
     
-  · intro n
-    rw [norm_smul, mul_comm]
+  · rw [norm_smul, mul_comm]
     exact mul_le_mul_of_nonneg_right (hgb _) (abs_nonneg _)
     
 

@@ -1,0 +1,81 @@
+/-
+Copyright (c) 2022 Yuyang Zhao. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yuyang Zhao
+-/
+import Mathbin.Algebra.Algebra.Tower
+import Mathbin.Data.MvPolynomial.Basic
+
+/-!
+# Algebra towers for multivariate polynomial
+
+This file proves some basic results about the algebra tower structure for the type
+`mv_polynomial σ R`.
+
+This structure itself is provided elsewhere as `mv_polynomial.is_scalar_tower`
+
+When you update this file, you can also try to make a corresponding update in
+`ring_theory.polynomial.tower`.
+-/
+
+
+variable (R A B : Type _) {σ : Type _}
+
+namespace MvPolynomial
+
+section Semiringₓ
+
+variable [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B]
+
+variable [Algebra R A] [Algebra A B] [Algebra R B]
+
+variable [IsScalarTower R A B]
+
+variable {R B}
+
+theorem aeval_map_algebra_map (x : σ → B) (p : MvPolynomial σ R) : aeval x (map (algebraMap R A) p) = aeval x p := by
+  rw [aeval_def, aeval_def, eval₂_map, IsScalarTower.algebra_map_eq R A B]
+
+end Semiringₓ
+
+section CommSemiringₓ
+
+variable [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B]
+
+variable [Algebra R A] [Algebra A B] [Algebra R B] [IsScalarTower R A B]
+
+variable {R A}
+
+theorem aeval_algebra_map_apply (x : σ → A) (p : MvPolynomial σ R) :
+    aeval (algebraMap A B ∘ x) p = algebraMap A B (MvPolynomial.aeval x p) := by
+  rw [aeval_def, aeval_def, ← coe_eval₂_hom, ← coe_eval₂_hom, map_eval₂_hom, ← IsScalarTower.algebra_map_eq]
+
+theorem aeval_algebra_map_eq_zero_iff [NoZeroSmulDivisors A B] [Nontrivial B] (x : σ → A) (p : MvPolynomial σ R) :
+    aeval (algebraMap A B ∘ x) p = 0 ↔ aeval x p = 0 := by
+  rw [aeval_algebra_map_apply, Algebra.algebra_map_eq_smul_one, smul_eq_zero, iff_false_intro (@one_ne_zero B _ _),
+    or_falseₓ]
+
+theorem aeval_algebra_map_eq_zero_iff_of_injective {x : σ → A} {p : MvPolynomial σ R}
+    (h : Function.Injective (algebraMap A B)) : aeval (algebraMap A B ∘ x) p = 0 ↔ aeval x p = 0 := by
+  rw [aeval_algebra_map_apply, ← (algebraMap A B).map_zero, h.eq_iff]
+
+end CommSemiringₓ
+
+end MvPolynomial
+
+namespace Subalgebra
+
+open MvPolynomial
+
+section CommSemiringₓ
+
+variable {R A} [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A]
+
+@[simp]
+theorem mv_polynomial_aeval_coe (S : Subalgebra R A) (x : σ → S) (p : MvPolynomial σ R) :
+    aeval (fun i => (x i : A)) p = aeval x p := by convert aeval_algebra_map_apply A x p
+
+end CommSemiringₓ
+
+end Subalgebra
+

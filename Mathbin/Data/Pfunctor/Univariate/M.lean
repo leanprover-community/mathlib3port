@@ -302,7 +302,9 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x := by
   congr
   · ext a
     dsimp only [children]
-    h_generalize! hh : a = a''
+    generalize hh : cast _ a = a''
+    rw [cast_eq_iff_heq] at hh
+    revert a''
     rw [h]
     intros
     cases hh

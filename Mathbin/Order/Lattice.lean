@@ -695,7 +695,7 @@ instance (priority := 100) LinearOrderₓ.toLattice {α : Type u} [o : LinearOrd
 
 section LinearOrderₓ
 
-variable [LinearOrderₓ α] {a b c : α}
+variable [LinearOrderₓ α] {a b c d : α}
 
 theorem sup_eq_max : a ⊔ b = max a b :=
   rfl
@@ -736,6 +736,14 @@ theorem inf_lt_iff : b ⊓ c < a ↔ b < a ∨ c < a :=
 @[simp]
 theorem lt_inf_iff : a < b ⊓ c ↔ a < b ∧ a < c :=
   @sup_lt_iff αᵒᵈ _ _ _ _
+
+variable (a b c d)
+
+theorem max_max_max_comm : max (max a b) (max c d) = max (max a c) (max b d) :=
+  sup_sup_sup_comm _ _ _ _
+
+theorem min_min_min_comm : min (min a b) (min c d) = min (min a c) (min b d) :=
+  inf_inf_inf_comm _ _ _ _
 
 end LinearOrderₓ
 

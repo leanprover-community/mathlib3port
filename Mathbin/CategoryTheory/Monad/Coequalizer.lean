@@ -40,18 +40,18 @@ Show that any algebra is a coequalizer of free algebras.
 
 /-- The top map in the coequalizer diagram we will construct. -/
 @[simps]
-def FreeCoequalizer.topMap : (Monad.free T).obj (T.obj X.a) ⟶ (Monad.free T).obj X.a :=
+def FreeCoequalizer.topMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A :=
   (Monad.free T).map X.a
 
 /-- The bottom map in the coequalizer diagram we will construct. -/
 @[simps]
-def FreeCoequalizer.bottomMap : (Monad.free T).obj (T.obj X.a) ⟶ (Monad.free T).obj X.a where
-  f := T.μ.app X.a
-  h' := T.assoc X.a
+def FreeCoequalizer.bottomMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A where
+  f := T.μ.app X.A
+  h' := T.assoc X.A
 
 /-- The cofork map in the coequalizer diagram we will construct. -/
 @[simps]
-def FreeCoequalizer.π : (Monad.free T).obj X.a ⟶ X where
+def FreeCoequalizer.π : (Monad.free T).obj X.A ⟶ X where
   f := X.a
   h' := X.assoc.symm
 
@@ -117,7 +117,7 @@ def beckCoequalizer : IsColimit (beckCofork X) :=
   (beckSplitCoequalizer X).isCoequalizer
 
 @[simp]
-theorem beck_coequalizer_desc (s : Cofork (T.toFunctor.map X.a) (T.μ.app X.a)) :
+theorem beck_coequalizer_desc (s : Cofork (T.toFunctor.map X.a) (T.μ.app X.A)) :
     (beckCoequalizer X).desc s = T.η.app _ ≫ s.π :=
   rfl
 

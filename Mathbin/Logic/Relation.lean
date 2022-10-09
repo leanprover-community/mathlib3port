@@ -145,6 +145,34 @@ theorem flip_comp : flip (r ∘r p) = flip p ∘r flip r := by
 
 end Comp
 
+section Fibration
+
+variable (rα : α → α → Prop) (rβ : β → β → Prop) (f : α → β)
+
+/-- A function `f : α → β` is a fibration between the relation `rα` and `rβ` if for all
+  `a : α` and `b : β`, whenever `b : β` and `f a` are related by `rβ`, `b` is the image
+  of some `a' : α` under `f`, and `a'` and `a` are related by `rα`. -/
+def Fibration :=
+  ∀ ⦃a b⦄, rβ b (f a) → ∃ a', rα a' a ∧ f a' = b
+
+variable {rα rβ}
+
+/-- If `f : α → β` is a fibration between relations `rα` and `rβ`, and `a : α` is
+  accessible under `rα`, then `f a` is accessible under `rβ`. -/
+theorem _root_.acc.of_fibration (fib : Fibration rα rβ f) {a} (ha : Acc rα a) : Acc rβ (f a) := by
+  induction' ha with a ha ih
+  refine' Acc.intro (f a) fun b hr => _
+  obtain ⟨a', hr', rfl⟩ := fib hr
+  exact ih a' hr'
+
+theorem _root_.acc.of_downward_closed (dc : ∀ {a b}, rβ b (f a) → ∃ c, f c = b) (a : α) (ha : Acc (InvImage rβ f) a) :
+    Acc rβ (f a) :=
+  ha.of_fibration f fun a b h =>
+    let ⟨a', he⟩ := dc h
+    ⟨a', he.substr h, he⟩
+
+end Fibration
+
 /-- The map of a relation `r` through a pair of functions pushes the
 relation to the codomains of the functions.  The resulting relation is
 defined by having pairs of terms related if they have preimages
@@ -349,13 +377,16 @@ theorem head'_iff : TransGen r a c ↔ ∃ b, r a b ∧ ReflTransGen r b c := by
 
 end TransGen
 
-theorem _root_.acc.trans_gen {α} {r : α → α → Prop} {a : α} (h : Acc r a) : Acc (TransGen r) a := by
+theorem _root_.acc.trans_gen (h : Acc r a) : Acc (TransGen r) a := by
   induction' h with x _ H
   refine' Acc.intro x fun y hy => _
   cases' hy with _ hyx z _ hyz hzx
   exacts[H y hyx, (H z hzx).inv hyz]
 
-theorem _root_.well_founded.trans_gen {α} {r : α → α → Prop} (h : WellFounded r) : WellFounded (TransGen r) :=
+theorem _root_.acc_trans_gen_iff : Acc (TransGen r) a ↔ Acc r a :=
+  ⟨Subrelation.accessibleₓ fun _ _ => TransGen.single, Acc.trans_gen⟩
+
+theorem _root_.well_founded.trans_gen (h : WellFounded r) : WellFounded (TransGen r) :=
   ⟨fun a => (h.apply a).TransGen⟩
 
 section TransGen

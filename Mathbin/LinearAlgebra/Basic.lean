@@ -884,6 +884,25 @@ theorem map_strict_mono_of_injective : StrictMonoₓ (map f) :=
 
 end GaloisCoinsertion
 
+section OrderIso
+
+omit sc
+
+include σ₁₂ σ₂₁
+
+variable [SemilinearEquivClass F σ₁₂ M M₂]
+
+/-- A linear isomorphism induces an order isomorphism of submodules. -/
+@[simps symmApply apply]
+def orderIsoMapComap (f : F) : Submodule R M ≃o Submodule R₂ M₂ where
+  toFun := map f
+  invFun := comap f
+  left_inv := comap_map_eq_of_injective <| EquivLike.injective f
+  right_inv := map_comap_eq_of_surjective <| EquivLike.surjective f
+  map_rel_iff' := map_le_map_iff_of_injective <| EquivLike.injective f
+
+end OrderIso
+
 --TODO(Mario): is there a way to prove this from order properties?
 theorem map_inf_eq_map_inf_comap [RingHomSurjective σ₁₂] {f : F} {p : Submodule R M} {p' : Submodule R₂ M₂} :
     map f p ⊓ p' = map f (p ⊓ comap f p') :=
@@ -2223,6 +2242,17 @@ theorem map_equiv_eq_comap_symm (e : M ≃ₛₗ[τ₁₂] M₂) (K : Submodule 
 theorem comap_equiv_eq_map_symm (e : M ≃ₛₗ[τ₁₂] M₂) (K : Submodule R₂ M₂) :
     K.comap (e : M →ₛₗ[τ₁₂] M₂) = K.map (e.symm : M₂ →ₛₗ[τ₂₁] M) :=
   (map_equiv_eq_comap_symm e.symm K).symm
+
+include τ₂₁
+
+theorem order_iso_map_comap_apply' (e : M ≃ₛₗ[τ₁₂] M₂) (p : Submodule R M) : orderIsoMapComap e p = comap e.symm p :=
+  p.map_equiv_eq_comap_symm _
+
+theorem order_iso_map_comap_symm_apply' (e : M ≃ₛₗ[τ₁₂] M₂) (p : Submodule R₂ M₂) :
+    (orderIsoMapComap e).symm p = map e.symm p :=
+  p.comap_equiv_eq_map_symm _
+
+omit τ₂₁
 
 theorem comap_le_comap_smul (fₗ : N →ₗ[R] N₂) (c : R) : comap fₗ qₗ ≤ comap (c • fₗ) qₗ := by
   rw [SetLike.le_def]

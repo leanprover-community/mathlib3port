@@ -5,7 +5,7 @@ Authors: Mario Carneiro
 -/
 import Mathbin.Data.Num.Bitwise
 import Mathbin.Data.Int.CharZero
-import Mathbin.Data.Nat.Gcd
+import Mathbin.Data.Nat.Gcd.Basic
 import Mathbin.Data.Nat.Psub
 
 /-!

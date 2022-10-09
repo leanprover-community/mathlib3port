@@ -32,7 +32,7 @@ variable {α : Type _} [DecidableEq α] {s t : Finsetₓ α} {a b : α}
 theorem is_diag_mk_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag ⟦a⟧ :=
   (Sym2.is_diag_iff_proj_eq _).2 ((mem_diag _ _).1 h).2
 
-theorem not_is_diag_mk_of_mem_off_diag {a : α × α} (h : a ∈ s.offDiag) : ¬Sym2.IsDiag ⟦a⟧ := by
+theorem not_is_diag_mk_of_mem_off_diag {a : α × α} (h : a ∈ s.OffDiag) : ¬Sym2.IsDiag ⟦a⟧ := by
   rw [Sym2.is_diag_iff_proj_eq]
   exact ((mem_off_diag _ _).1 h).2.2
 
@@ -84,7 +84,7 @@ theorem diag_mem_sym2_iff : Sym2.diag a ∈ s.Sym2 ↔ a ∈ s :=
 @[simp]
 theorem sym2_mono (h : s ⊆ t) : s.Sym2 ⊆ t.Sym2 := fun m he => mem_sym2_iff.2 fun a ha => h <| mem_sym2_iff.1 he _ ha
 
-theorem image_diag_union_image_off_diag : s.diag.Image Quotientₓ.mk ∪ s.offDiag.Image Quotientₓ.mk = s.Sym2 := by
+theorem image_diag_union_image_off_diag : s.diag.Image Quotientₓ.mk ∪ s.OffDiag.Image Quotientₓ.mk = s.Sym2 := by
   rw [← image_union, diag_union_off_diag]
   rfl
 

@@ -3,7 +3,7 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Joachim Breitner
 -/
-import Mathbin.Algebra.FreeMonoid
+import Mathbin.Algebra.FreeMonoid.Basic
 import Mathbin.GroupTheory.Congruence
 import Mathbin.GroupTheory.IsFreeGroup
 import Mathbin.GroupTheory.Subgroup.Pointwise

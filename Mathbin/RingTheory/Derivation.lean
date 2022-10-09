@@ -5,6 +5,7 @@ Authors: Nicolò Cavalleri, Andrew Yang
 -/
 import Mathbin.RingTheory.Adjoin.Basic
 import Mathbin.Algebra.Lie.OfAssociative
+import Mathbin.RingTheory.Ideal.Cotangent
 import Mathbin.RingTheory.TensorProduct
 import Mathbin.RingTheory.Ideal.Cotangent
 
@@ -248,7 +249,7 @@ section PushForward
 
 variable {N : Type _} [AddCommMonoidₓ N] [Module A N] [Module R N] [IsScalarTower R A M] [IsScalarTower R A N]
 
-variable (f : M →ₗ[A] N)
+variable (f : M →ₗ[A] N) (e : M ≃ₗ[A] N)
 
 /-- We can push forward derivations using linear maps, i.e., the composition of a derivation with a
 linear map is a derivation. Furthermore, this operation is linear on the spaces of derivations. -/
@@ -275,6 +276,7 @@ theorem coe_comp : (f.compDer D : A → N) = (f : M →ₗ[R] N).comp (D : A →
   rfl
 
 /-- The composition of a derivation with a linear map as a bilinear map -/
+@[simps]
 def llcomp : (M →ₗ[A] N) →ₗ[A] Derivation R A M →ₗ[R] Derivation R A N where
   toFun := fun f => f.compDer
   map_add' := fun f₁ f₂ => by
@@ -283,6 +285,16 @@ def llcomp : (M →ₗ[A] N) →ₗ[A] Derivation R A M →ₗ[R] Derivation R A
   map_smul' := fun r D => by
     ext
     rfl
+
+/-- Pushing a derivation foward through a linear equivalence is an equivalence. -/
+def _root_.linear_equiv.comp_der : Derivation R A M ≃ₗ[R] Derivation R A N :=
+  { e.toLinearMap.compDer with invFun := e.symm.toLinearMap.compDer,
+    left_inv := fun D => by
+      ext a
+      exact e.symm_apply_apply (D a),
+    right_inv := fun D => by
+      ext a
+      exact e.apply_symm_apply (D a) }
 
 end PushForward
 
@@ -442,7 +454,7 @@ section ToSquareZero
 
 universe u v w
 
-variable {R : Type u} {A : Type u} {B : Type w} [CommSemiringₓ R] [CommSemiringₓ A] [CommRingₓ B]
+variable {R : Type u} {A : Type v} {B : Type w} [CommSemiringₓ R] [CommSemiringₓ A] [CommRingₓ B]
 
 variable [Algebra R A] [Algebra R B] (I : Ideal B) (hI : I ^ 2 = ⊥)
 
@@ -834,6 +846,83 @@ def KaehlerDifferential.linearMapEquivDerivation : (Ω[S⁄R] →ₗ[S] M) ≃�
   { Derivation.llcomp.flip <| KaehlerDifferential.d R S with invFun := Derivation.liftKaehlerDifferential,
     left_inv := fun f => Derivation.lift_kaehler_differential_unique _ _ (Derivation.lift_kaehler_differential_comp _),
     right_inv := Derivation.lift_kaehler_differential_comp }
+
+/-- The quotient ring of `S ⊗ S ⧸ J ^ 2` by `Ω[S⁄R]` is isomorphic to `S`. -/
+def KaehlerDifferential.quotientCotangentIdealRingEquiv :
+    (S ⊗ S ⧸ KaehlerDifferential.ideal R S ^ 2) ⧸ (KaehlerDifferential.ideal R S).cotangentIdeal ≃+* S := by
+  have :
+    Function.RightInverse tensor_product.include_left (↑(tensor_product.lmul' R : S ⊗[R] S →ₐ[R] S) : S ⊗[R] S →+* S) :=
+    by
+    intro x
+    rw [AlgHom.coe_to_ring_hom, ← AlgHom.comp_apply, tensor_product.lmul'_comp_include_left]
+    rfl
+  refine' (Ideal.quotCotangent _).trans _
+  refine' (Ideal.quotEquivOfEq _).trans (RingHom.quotientKerEquivOfRightInverse this)
+  ext
+  rfl
+
+/-- The quotient ring of `S ⊗ S ⧸ J ^ 2` by `Ω[S⁄R]` is isomorphic to `S` as an `S`-algebra. -/
+def KaehlerDifferential.quotientCotangentIdeal :
+    ((S ⊗ S ⧸ KaehlerDifferential.ideal R S ^ 2) ⧸ (KaehlerDifferential.ideal R S).cotangentIdeal) ≃ₐ[S] S :=
+  { KaehlerDifferential.quotientCotangentIdealRingEquiv R S with
+    commutes' := (KaehlerDifferential.quotientCotangentIdealRingEquiv R S).apply_symm_apply }
+
+theorem KaehlerDifferential.End_equiv_aux (f : S →ₐ[R] S ⊗ S ⧸ KaehlerDifferential.ideal R S ^ 2) :
+    (Ideal.Quotient.mkₐ R (KaehlerDifferential.ideal R S).cotangentIdeal).comp f = IsScalarTower.toAlgHom R S _ ↔
+      (TensorProduct.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift.comp f = AlgHom.id R S :=
+  by
+  rw [AlgHom.ext_iff, AlgHom.ext_iff]
+  apply forall_congrₓ
+  intro x
+  have e₁ :
+    (tensor_product.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift (f x) =
+      KaehlerDifferential.quotientCotangentIdealRingEquiv R S
+        (Ideal.Quotient.mk (KaehlerDifferential.ideal R S).cotangentIdeal <| f x) :=
+    by
+    generalize f x = y
+    obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
+    rfl
+  have e₂ : x = KaehlerDifferential.quotientCotangentIdealRingEquiv R S (IsScalarTower.toAlgHom R S _ x) :=
+    ((tensor_product.lmul'_apply_tmul x 1).trans (mul_oneₓ x)).symm
+  constructor
+  · intro e
+    exact
+      (e₁.trans
+            (@RingEquiv.congr_arg _ _ _ _ _ _ (KaehlerDifferential.quotientCotangentIdealRingEquiv R S) _ _ e)).trans
+        e₂.symm
+    
+  · intro e
+    apply (KaehlerDifferential.quotientCotangentIdealRingEquiv R S).Injective
+    exact e₁.symm.trans (e.trans e₂)
+    
+
+-- This has type
+-- `derivation R S Ω[ S / R ] ≃ₗ[R] derivation R S (kaehler_differential.ideal R S).cotangent_ideal`
+-- But lean times-out if this is given explicitly.
+/-- Derivations into `Ω[S⁄R]` is equivalent to derivations
+into `(kaehler_differential.ideal R S).cotangent_ideal` -/
+noncomputable def KaehlerDifferential.endEquivDerivation' :=
+  @LinearEquiv.compDer R _ _ _ _ (Ω[S⁄R]) _ _ _ _ _ _ _ _ _
+    ((KaehlerDifferential.ideal R S).cotangentEquivIdeal.restrictScalars S)
+
+/-- (Implementation) An `equiv` version of `kaehler_differential.End_equiv_aux`.
+Used in `kaehler_differential.End_equiv`. -/
+def KaehlerDifferential.endEquivAuxEquiv :
+    { f //
+        (Ideal.Quotient.mkₐ R (KaehlerDifferential.ideal R S).cotangentIdeal).comp f = IsScalarTower.toAlgHom R S _ } ≃
+      { f // (TensorProduct.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift.comp f = AlgHom.id R S } :=
+  (Equivₓ.refl _).subtypeEquiv (KaehlerDifferential.End_equiv_aux R S)
+
+/-- The endomorphisms of `Ω[S⁄R]` corresponds to sections of the surjection `S ⊗[R] S ⧸ J ^ 2 →ₐ[R] S`,
+with `J` being the kernel of the multiplication map `S ⊗[R] S →ₐ[R] S`.
+-/
+noncomputable def KaehlerDifferential.endEquiv :
+    Module.End S (Ω[S⁄R]) ≃ { f // (TensorProduct.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift.comp f = AlgHom.id R S } :=
+  (KaehlerDifferential.linearMapEquivDerivation R S).toEquiv.trans <|
+    (KaehlerDifferential.endEquivDerivation' R S).toEquiv.trans <|
+      (derivationToSquareZeroEquivLift (KaehlerDifferential.ideal R S).cotangentIdeal
+            (KaehlerDifferential.ideal R S).cotangent_ideal_square).trans <|
+        KaehlerDifferential.endEquivAuxEquiv R S
 
 end KaehlerDifferential
 

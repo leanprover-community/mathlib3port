@@ -102,9 +102,12 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
       
     
 
-theorem finite_is_local : PropertyIsLocal @FiniteType :=
+theorem finite_type_is_local : PropertyIsLocal @FiniteType :=
   ⟨localization_finite_type, finite_type_of_localization_span_target, finite_type_stable_under_composition,
     finite_type_holds_for_localization_away⟩
+
+theorem finite_type_respects_iso : RingHom.RespectsIso @RingHom.FiniteType :=
+  RingHom.finite_type_is_local.RespectsIso
 
 end RingHom
 

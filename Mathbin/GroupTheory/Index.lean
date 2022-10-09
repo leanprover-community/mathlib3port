@@ -3,8 +3,8 @@ Copyright (c) 2021 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
+import Mathbin.Data.Finite.Card
 import Mathbin.GroupTheory.QuotientGroup
-import Mathbin.SetTheory.Cardinal.Finite
 
 /-!
 # Index of a Subgroup
@@ -33,7 +33,7 @@ Several theorems proved in this file are known as Lagrange's theorem.
 
 namespace Subgroup
 
-open Cardinal
+open BigOperators Cardinal
 
 variable {G : Type _} [Groupₓ G] (H K L : Subgroup G)
 
@@ -229,11 +229,7 @@ theorem relindex_eq_zero_of_le_left (hHK : H ≤ K) (hKL : K.relindex L = 0) : H
 
 @[to_additive]
 theorem relindex_eq_zero_of_le_right (hKL : K ≤ L) (hHK : H.relindex K = 0) : H.relindex L = 0 :=
-  Cardinal.to_nat_apply_of_aleph_0_le
-    (le_transₓ
-      (le_of_not_ltₓ fun h =>
-        Cardinal.mk_ne_zero _ ((Cardinal.cast_to_nat_of_lt_aleph_0 h).symm.trans (Cardinal.nat_cast_inj.mpr hHK)))
-      (quotientSubgroupOfEmbeddingOfLe H hKL).cardinal_le)
+  Finite.card_eq_zero_of_embedding (quotientSubgroupOfEmbeddingOfLe H hKL) hHK
 
 @[to_additive]
 theorem relindex_le_of_le_left (hHK : H ≤ K) (hHL : H.relindex L ≠ 0) : K.relindex L ≤ H.relindex L :=
@@ -241,8 +237,7 @@ theorem relindex_le_of_le_left (hHK : H ≤ K) (hHL : H.relindex L ≠ 0) : K.re
 
 @[to_additive]
 theorem relindex_le_of_le_right (hKL : K ≤ L) (hHL : H.relindex L ≠ 0) : H.relindex K ≤ H.relindex L :=
-  Cardinal.to_nat_le_of_le_of_lt_aleph_0 (lt_of_not_geₓ (mt Cardinal.to_nat_apply_of_aleph_0_le hHL))
-    (Cardinal.mk_le_of_injective (quotientSubgroupOfEmbeddingOfLe H hKL).2)
+  Finite.card_le_of_embedding' (quotientSubgroupOfEmbeddingOfLe H hKL) fun h => (hHL h).elim
 
 @[to_additive]
 theorem relindex_ne_zero_trans (hHK : H.relindex K ≠ 0) (hKL : K.relindex L ≠ 0) : H.relindex L ≠ 0 := fun h =>
@@ -272,6 +267,32 @@ theorem relindex_inf_le : (H ⊓ K).relindex L ≤ H.relindex L * K.relindex L :
 
 @[to_additive]
 theorem index_inf_le : (H ⊓ K).index ≤ H.index * K.index := by simp_rw [← relindex_top_right, relindex_inf_le]
+
+@[to_additive]
+theorem relindex_infi_ne_zero {ι : Type _} [hι : Finite ι] {f : ι → Subgroup G} (hf : ∀ i, (f i).relindex L ≠ 0) :
+    (⨅ i, f i).relindex L ≠ 0 :=
+  haveI := Fintypeₓ.ofFinite ι
+  (finset.prod_ne_zero_iff.mpr fun i hi => hf i) ∘
+    nat.card_pi.symm.trans ∘ Finite.card_eq_zero_of_embedding (quotient_infi_embedding f L)
+
+@[to_additive]
+theorem relindex_infi_le {ι : Type _} [Fintypeₓ ι] (f : ι → Subgroup G) :
+    (⨅ i, f i).relindex L ≤ ∏ i, (f i).relindex L :=
+  le_of_le_of_eqₓ
+    (Finite.card_le_of_embedding' (quotientInfiEmbedding f L) fun h =>
+      let ⟨i, hi, h⟩ := Finsetₓ.prod_eq_zero_iff.mp (Nat.card_pi.symm.trans h)
+      relindex_eq_zero_of_le_left (infi_le f i) h)
+    Nat.card_pi
+
+@[to_additive]
+theorem index_infi_ne_zero {ι : Type _} [Finite ι] {f : ι → Subgroup G} (hf : ∀ i, (f i).index ≠ 0) :
+    (⨅ i, f i).index ≠ 0 := by
+  simp_rw [← relindex_top_right] at hf⊢
+  exact relindex_infi_ne_zero hf
+
+@[to_additive]
+theorem index_infi_le {ι : Type _} [Fintypeₓ ι] (f : ι → Subgroup G) : (⨅ i, f i).index ≤ ∏ i, (f i).index := by
+  simp_rw [← relindex_top_right, relindex_infi_le]
 
 @[simp, to_additive index_eq_one]
 theorem index_eq_one : H.index = 1 ↔ H = ⊤ :=

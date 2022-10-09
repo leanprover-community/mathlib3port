@@ -479,5 +479,125 @@ theorem IsLocal.stable_under_base_change {P : AffineTargetMorphismProperty} (hP 
 
 end AffineTargetMorphismProperty
 
+/-- The `affine_target_morphism_property` associated to `(target_affine_locally P).diagonal`.
+See `diagonal_target_affine_locally_eq_target_affine_locally`.
+-/
+def AffineTargetMorphismProperty.Diagonal (P : AffineTargetMorphismProperty) : AffineTargetMorphismProperty :=
+  fun X Y f hf =>
+  ∀ {U₁ U₂ : Scheme} (f₁ : U₁ ⟶ X) (f₂ : U₂ ⟶ X) [IsAffine U₁] [IsAffine U₂] [IsOpenImmersion f₁] [IsOpenImmersion f₂],
+    P (pullback.map_desc f₁ f₂ f)
+
+theorem AffineTargetMorphismProperty.diagonal_respects_iso (P : AffineTargetMorphismProperty)
+    (hP : P.ToProperty.RespectsIso) : P.Diagonal.ToProperty.RespectsIso := by
+  delta affine_target_morphism_property.diagonal
+  apply affine_target_morphism_property.respects_iso_mk
+  · introv H _ _
+    skip
+    rw [pullback.map_desc_comp, affine_cancel_left_is_iso hP, affine_cancel_right_is_iso hP]
+    apply H
+    
+  · introv H _ _
+    skip
+    rw [pullback.map_desc_comp, affine_cancel_right_is_iso hP]
+    apply H
+    
+
+theorem diagonal_target_affine_locally_of_open_cover (P : AffineTargetMorphismProperty) (hP : P.IsLocal)
+    {X Y : Scheme.{u}} (f : X ⟶ Y) (𝒰 : Scheme.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)]
+    (𝒰' : ∀ i, Scheme.OpenCover.{u} (pullback f (𝒰.map i))) [∀ i j, IsAffine ((𝒰' i).obj j)]
+    (h𝒰' : ∀ i j k, P (pullback.mapDesc ((𝒰' i).map j) ((𝒰' i).map k) pullback.snd)) :
+    (TargetAffineLocally P).Diagonal f := by
+  refine' (hP.affine_open_cover_iff _ _).mpr _
+  · exact
+      (Scheme.pullback.open_cover_of_base 𝒰 f f).bind fun i =>
+        Scheme.Pullback.openCoverOfLeftRight.{u, u} (𝒰' i) (𝒰' i) pullback.snd pullback.snd
+    
+  · intro i
+    dsimp at *
+    infer_instance
+    
+  · rintro ⟨i, j, k⟩
+    dsimp
+    convert
+      (affine_cancel_left_is_iso hP.1 (pullback_diagonal_map_iso _ _ ((𝒰' i).map j) ((𝒰' i).map k)).inv pullback.snd).mp
+        _
+    pick_goal 3
+    · convert h𝒰' i j k
+      apply pullback.hom_ext <;> simp
+      
+    all_goals
+      apply pullback.hom_ext <;>
+        simp only [category.assoc, pullback.lift_fst, pullback.lift_snd, pullback.lift_fst_assoc,
+          pullback.lift_snd_assoc]
+    
+
+theorem AffineTargetMorphismProperty.diagonal_of_target_affine_locally (P : AffineTargetMorphismProperty)
+    (hP : P.IsLocal) {X Y U : Scheme.{u}} (f : X ⟶ Y) (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g]
+    (H : (TargetAffineLocally P).Diagonal f) : P.Diagonal (pullback.snd : pullback f g ⟶ _) := by
+  rintro U V f₁ f₂ _ _ _ _
+  skip
+  replace H := ((hP.affine_open_cover_tfae (pullback.diagonal f)).out 0 3).mp H
+  let g₁ :=
+    pullback.map (f₁ ≫ pullback.snd) (f₂ ≫ pullback.snd) f f (f₁ ≫ pullback.fst) (f₂ ≫ pullback.fst) g
+      (by rw [category.assoc, category.assoc, pullback.condition])
+      (by rw [category.assoc, category.assoc, pullback.condition])
+  let g₂ : pullback f₁ f₂ ⟶ pullback f g := pullback.fst ≫ f₁
+  specialize H g₁
+  rw [← affine_cancel_left_is_iso hP.1 (pullback_diagonal_map_iso f _ f₁ f₂).Hom]
+  convert H
+  · apply pullback.hom_ext <;>
+      simp only [category.assoc, pullback.lift_fst, pullback.lift_snd, pullback.lift_fst_assoc, pullback.lift_snd_assoc,
+        category.comp_id, pullback_diagonal_map_iso_hom_fst, pullback_diagonal_map_iso_hom_snd]
+    
+
+theorem AffineTargetMorphismProperty.IsLocal.diagonal_affine_open_cover_tfae {P : AffineTargetMorphismProperty}
+    (hP : P.IsLocal) {X Y : Scheme.{u}} (f : X ⟶ Y) :
+    Tfae
+      [(TargetAffineLocally P).Diagonal f,
+        ∃ (𝒰 : Scheme.OpenCover.{u} Y)(_ : ∀ i, IsAffine (𝒰.obj i)),
+          ∀ i : 𝒰.J, P.diagonal (pullback.snd : pullback f (𝒰.map i) ⟶ _),
+        ∀ (𝒰 : Scheme.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)] (i : 𝒰.J),
+          P.diagonal (pullback.snd : pullback f (𝒰.map i) ⟶ _),
+        ∀ {U : Scheme} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g], P.diagonal (pullback.snd : pullback f g ⟶ _),
+        ∃ (𝒰 : Scheme.OpenCover.{u} Y)(_ : ∀ i, IsAffine (𝒰.obj i))(𝒰' :
+          ∀ i, Scheme.OpenCover.{u} (pullback f (𝒰.map i)))(_ : ∀ i j, IsAffine ((𝒰' i).obj j)),
+          ∀ i j k, P (pullback.map_desc ((𝒰' i).map j) ((𝒰' i).map k) pullback.snd)] :=
+  by
+  tfae_have 1 → 4
+  · introv H hU hg _ _
+    skip
+    apply P.diagonal_of_target_affine_locally <;> assumption
+    
+  tfae_have 4 → 3
+  · introv H h𝒰
+    skip
+    apply H
+    
+  tfae_have 3 → 2
+  · exact fun H => ⟨Y.affine_cover, inferInstance, H Y.affine_cover⟩
+    
+  tfae_have 2 → 5
+  · rintro ⟨𝒰, h𝒰, H⟩
+    skip
+    refine' ⟨𝒰, inferInstance, fun _ => Scheme.affine_cover _, inferInstance, _⟩
+    intro i j k
+    apply H
+    
+  tfae_have 5 → 1
+  · rintro ⟨𝒰, _, 𝒰', _, H⟩
+    exact diagonal_target_affine_locally_of_open_cover P hP f 𝒰 𝒰' H
+    
+  tfae_finish
+
+theorem AffineTargetMorphismProperty.IsLocal.diagonal {P : AffineTargetMorphismProperty} (hP : P.IsLocal) :
+    P.Diagonal.IsLocal :=
+  AffineTargetMorphismProperty.is_local_of_open_cover_imply P.Diagonal (P.diagonal_respects_iso hP.1) fun _ _ f =>
+    ((hP.diagonal_affine_open_cover_tfae f).out 1 3).mp
+
+theorem diagonal_target_affine_locally_eq_target_affine_locally (P : AffineTargetMorphismProperty) (hP : P.IsLocal) :
+    (TargetAffineLocally P).Diagonal = TargetAffineLocally P.Diagonal := by
+  ext _ _ f
+  exact ((hP.diagonal_affine_open_cover_tfae f).out 0 1).trans ((hP.diagonal.affine_open_cover_tfae f).out 1 0)
+
 end AlgebraicGeometry
 

@@ -123,6 +123,9 @@ instance : Unique (R ⧸ (⊤ : Ideal R)) :=
 
 theorem mk_surjective : Function.Surjective (mk I) := fun y => Quotientₓ.induction_on' y fun x => Exists.introₓ x rfl
 
+instance : RingHomSurjective (mk I) :=
+  ⟨mk_surjective⟩
+
 /-- If `I` is an ideal of a commutative ring `R`, if `q : R → R/I` is the quotient map, and if
 `s ⊆ R` is a subset, then `q⁻¹(q(s)) = ⋃ᵢ(i + s)`, the union running over all `i ∈ I`. -/
 theorem quotient_ring_saturate (I : Ideal R) (s : Set R) : mk I ⁻¹' (mk I '' s) = ⋃ x : I, (fun y => x.1 + y) '' s := by

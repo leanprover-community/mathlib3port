@@ -424,15 +424,19 @@ omit module_M₃
 theorem refl_symm [Module R M] : (refl R M).symm = LinearEquiv.refl R M :=
   rfl
 
+include re₁₂ re₂₁ module_M₁ module_M₂
+
 @[simp]
-theorem self_trans_symm [Module R M] [Module R M₂] (f : M ≃ₗ[R] M₂) : f.trans f.symm = LinearEquiv.refl R M := by
+theorem self_trans_symm (f : M₁ ≃ₛₗ[σ₁₂] M₂) : f.trans f.symm = LinearEquiv.refl R₁ M₁ := by
   ext x
   simp
 
 @[simp]
-theorem symm_trans_self [Module R M] [Module R M₂] (f : M ≃ₗ[R] M₂) : f.symm.trans f = LinearEquiv.refl R M₂ := by
+theorem symm_trans_self (f : M₁ ≃ₛₗ[σ₁₂] M₂) : f.symm.trans f = LinearEquiv.refl R₂ M₂ := by
   ext x
   simp
+
+omit re₁₂ re₂₁ module_M₁ module_M₂
 
 @[simp, norm_cast]
 theorem refl_to_linear_map [Module R M] : (LinearEquiv.refl R M : M →ₗ[R] M) = LinearMap.id :=

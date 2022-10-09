@@ -6,6 +6,7 @@ Authors: Aaron Anderson
 import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.NumberTheory.Divisors
 import Mathbin.Data.Nat.Squarefree
+import Mathbin.Data.Nat.Gcd.BigOperators
 import Mathbin.Algebra.Invertible
 import Mathbin.Data.Nat.Factorization.Basic
 

@@ -2167,7 +2167,7 @@ theorem nontrivial_of_exists_ne {x} (hx : x ∈ s) (h : ∃ y ∈ s, y ≠ x) : 
   let ⟨y, hy, hyx⟩ := h
   ⟨y, hy, x, hx, hyx⟩
 
-theorem Nontrivial.exists_ne {z} (hs : s.Nontrivial) : ∃ x ∈ s, x ≠ z := by
+theorem Nontrivial.exists_ne (hs : s.Nontrivial) (z) : ∃ x ∈ s, x ≠ z := by
   by_contra H
   push_neg  at H
   rcases hs with ⟨x, hx, y, hy, hxy⟩
@@ -2175,7 +2175,7 @@ theorem Nontrivial.exists_ne {z} (hs : s.Nontrivial) : ∃ x ∈ s, x ≠ z := b
   exact hxy rfl
 
 theorem nontrivial_iff_exists_ne {x} (hx : x ∈ s) : s.Nontrivial ↔ ∃ y ∈ s, y ≠ x :=
-  ⟨fun H => H.exists_ne, nontrivial_of_exists_ne hx⟩
+  ⟨fun H => H.exists_ne _, nontrivial_of_exists_ne hx⟩
 
 theorem nontrivial_of_lt [Preorderₓ α] {x y} (hx : x ∈ s) (hy : y ∈ s) (hxy : x < y) : s.Nontrivial :=
   ⟨x, hx, y, hy, ne_of_ltₓ hxy⟩
@@ -2191,14 +2191,14 @@ theorem Nontrivial.exists_lt [LinearOrderₓ α] (hs : s.Nontrivial) : ∃ (x y 
   Or.elim (lt_or_gt_of_neₓ hxy) (fun H => ⟨x, hx, y, hy, H⟩) fun H => ⟨y, hy, x, hx, H⟩
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:555:2: warning: expanding binder collection (x y «expr ∈ » s)
-theorem Nontrivial.iff_exists_lt [LinearOrderₓ α] : s.Nontrivial ↔ ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s), x < y :=
+theorem nontrivial_iff_exists_lt [LinearOrderₓ α] : s.Nontrivial ↔ ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s), x < y :=
   ⟨Nontrivial.exists_lt, nontrivial_of_exists_lt⟩
 
-theorem Nontrivial.nonempty (hs : s.Nontrivial) : s.Nonempty :=
+protected theorem Nontrivial.nonempty (hs : s.Nontrivial) : s.Nonempty :=
   let ⟨x, hx, _⟩ := hs
   ⟨x, hx⟩
 
-theorem Nontrivial.ne_empty (hs : s.Nontrivial) : s ≠ ∅ :=
+protected theorem Nontrivial.ne_empty (hs : s.Nontrivial) : s ≠ ∅ :=
   hs.Nonempty.ne_empty
 
 theorem Nontrivial.not_subset_empty (hs : s.Nontrivial) : ¬s ⊆ ∅ :=
@@ -2561,6 +2561,11 @@ theorem compl_range_inl : Range (Sum.inl : α → Sum α β)ᶜ = Range (Sum.inr
 @[simp]
 theorem compl_range_inr : Range (Sum.inr : β → Sum α β)ᶜ = Range (Sum.inl : α → Sum α β) :=
   IsCompl.compl_eq is_compl_range_inl_range_inr.symm
+
+theorem image_preimage_inl_union_image_preimage_inr (s : Set (Sum α β)) :
+    Sum.inl '' (Sum.inl ⁻¹' s) ∪ Sum.inr '' (Sum.inr ⁻¹' s) = s := by
+  rw [image_preimage_eq_inter_range, image_preimage_eq_inter_range, ← inter_distrib_left, range_inl_union_range_inr,
+    inter_univ]
 
 @[simp]
 theorem range_quot_mk (r : α → α → Prop) : Range (Quot.mk r) = univ :=

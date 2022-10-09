@@ -1061,6 +1061,92 @@ theorem affine_span_singleton_union_vadd_eq_top_of_span_eq_top {s : Set V} (p : 
 
 variable (k)
 
+/-- The `vector_span` of two points is the span of their difference. -/
+theorem vector_span_pair (p₁ p₂ : P) : vectorSpan k ({p₁, p₂} : Set P) = k ∙ p₁ -ᵥ p₂ := by
+  rw [vector_span_eq_span_vsub_set_left k (mem_insert p₁ _), image_pair, vsub_self, Submodule.span_insert_zero]
+
+/-- The `vector_span` of two points is the span of their difference (reversed). -/
+theorem vector_span_pair_rev (p₁ p₂ : P) : vectorSpan k ({p₁, p₂} : Set P) = k ∙ p₂ -ᵥ p₁ := by
+  rw [pair_comm, vector_span_pair]
+
+/-- The difference between two points lies in their `vector_span`. -/
+theorem vsub_mem_vector_span_pair (p₁ p₂ : P) : p₁ -ᵥ p₂ ∈ vectorSpan k ({p₁, p₂} : Set P) :=
+  vsub_mem_vector_span _ (Set.mem_insert _ _) (Set.mem_insert_of_mem _ (Set.mem_singleton _))
+
+/-- The difference between two points (reversed) lies in their `vector_span`. -/
+theorem vsub_rev_mem_vector_span_pair (p₁ p₂ : P) : p₂ -ᵥ p₁ ∈ vectorSpan k ({p₁, p₂} : Set P) :=
+  vsub_mem_vector_span _ (Set.mem_insert_of_mem _ (Set.mem_singleton _)) (Set.mem_insert _ _)
+
+variable {k}
+
+/-- A multiple of the difference between two points lies in their `vector_span`. -/
+theorem smul_vsub_mem_vector_span_pair (r : k) (p₁ p₂ : P) : r • (p₁ -ᵥ p₂) ∈ vectorSpan k ({p₁, p₂} : Set P) :=
+  Submodule.smul_mem _ _ (vsub_mem_vector_span_pair k p₁ p₂)
+
+/-- A multiple of the difference between two points (reversed) lies in their `vector_span`. -/
+theorem smul_vsub_rev_mem_vector_span_pair (r : k) (p₁ p₂ : P) : r • (p₂ -ᵥ p₁) ∈ vectorSpan k ({p₁, p₂} : Set P) :=
+  Submodule.smul_mem _ _ (vsub_rev_mem_vector_span_pair k p₁ p₂)
+
+/-- A vector lies in the `vector_span` of two points if and only if it is a multiple of their
+difference. -/
+theorem mem_vector_span_pair {p₁ p₂ : P} {v : V} : v ∈ vectorSpan k ({p₁, p₂} : Set P) ↔ ∃ r : k, r • (p₁ -ᵥ p₂) = v :=
+  by rw [vector_span_pair, Submodule.mem_span_singleton]
+
+/-- A vector lies in the `vector_span` of two points if and only if it is a multiple of their
+difference (reversed). -/
+theorem mem_vector_span_pair_rev {p₁ p₂ : P} {v : V} :
+    v ∈ vectorSpan k ({p₁, p₂} : Set P) ↔ ∃ r : k, r • (p₂ -ᵥ p₁) = v := by
+  rw [vector_span_pair_rev, Submodule.mem_span_singleton]
+
+variable (k)
+
+/-- The first of two points lies in their affine span. -/
+theorem left_mem_affine_span_pair (p₁ p₂ : P) : p₁ ∈ affineSpan k ({p₁, p₂} : Set P) :=
+  mem_affine_span _ (Set.mem_insert _ _)
+
+/-- The second of two points lies in their affine span. -/
+theorem right_mem_affine_span_pair (p₁ p₂ : P) : p₂ ∈ affineSpan k ({p₁, p₂} : Set P) :=
+  mem_affine_span _ (Set.mem_insert_of_mem _ (Set.mem_singleton _))
+
+variable {k}
+
+/-- A combination of two points expressed with `line_map` lies in their affine span. -/
+theorem AffineMap.line_map_mem_affine_span_pair (r : k) (p₁ p₂ : P) :
+    AffineMap.lineMap p₁ p₂ r ∈ affineSpan k ({p₁, p₂} : Set P) :=
+  AffineMap.line_map_mem _ (left_mem_affine_span_pair _ _ _) (right_mem_affine_span_pair _ _ _)
+
+/-- A combination of two points expressed with `line_map` (with the two points reversed) lies in
+their affine span. -/
+theorem AffineMap.line_map_rev_mem_affine_span_pair (r : k) (p₁ p₂ : P) :
+    AffineMap.lineMap p₂ p₁ r ∈ affineSpan k ({p₁, p₂} : Set P) :=
+  AffineMap.line_map_mem _ (right_mem_affine_span_pair _ _ _) (left_mem_affine_span_pair _ _ _)
+
+/-- A multiple of the difference of two points added to the first point lies in their affine
+span. -/
+theorem smul_vsub_vadd_mem_affine_span_pair (r : k) (p₁ p₂ : P) :
+    r • (p₂ -ᵥ p₁) +ᵥ p₁ ∈ affineSpan k ({p₁, p₂} : Set P) :=
+  AffineMap.line_map_mem_affine_span_pair _ _ _
+
+/-- A multiple of the difference of two points added to the second point lies in their affine
+span. -/
+theorem smul_vsub_rev_vadd_mem_affine_span_pair (r : k) (p₁ p₂ : P) :
+    r • (p₁ -ᵥ p₂) +ᵥ p₂ ∈ affineSpan k ({p₁, p₂} : Set P) :=
+  AffineMap.line_map_rev_mem_affine_span_pair _ _ _
+
+/-- A vector added to the first point lies in the affine span of two points if and only if it is
+a multiple of their difference. -/
+theorem vadd_left_mem_affine_span_pair {p₁ p₂ : P} {v : V} :
+    v +ᵥ p₁ ∈ affineSpan k ({p₁, p₂} : Set P) ↔ ∃ r : k, r • (p₂ -ᵥ p₁) = v := by
+  rw [vadd_mem_iff_mem_direction _ (left_mem_affine_span_pair _ _ _), direction_affine_span, mem_vector_span_pair_rev]
+
+/-- A vector added to the second point lies in the affine span of two points if and only if it is
+a multiple of their difference. -/
+theorem vadd_right_mem_affine_span_pair {p₁ p₂ : P} {v : V} :
+    v +ᵥ p₂ ∈ affineSpan k ({p₁, p₂} : Set P) ↔ ∃ r : k, r • (p₁ -ᵥ p₂) = v := by
+  rw [vadd_mem_iff_mem_direction _ (right_mem_affine_span_pair _ _ _), direction_affine_span, mem_vector_span_pair]
+
+variable (k)
+
 /-- `affine_span` is monotone. -/
 @[mono]
 theorem affine_span_mono {s₁ s₂ : Set P} (h : s₁ ⊆ s₂) : affineSpan k s₁ ≤ affineSpan k s₂ :=
@@ -1079,6 +1165,14 @@ theorem affine_span_insert_eq_affine_span {p : P} {ps : Set P} (h : p ∈ affine
     affineSpan k (insert p ps) = affineSpan k ps := by
   rw [← mem_coe] at h
   rw [← affine_span_insert_affine_span, Set.insert_eq_of_mem h, affine_span_coe]
+
+variable {k}
+
+/-- If a point is in the affine span of a set, adding it to that set
+does not change the vector span. -/
+theorem vector_span_insert_eq_vector_span {p : P} {ps : Set P} (h : p ∈ affineSpan k ps) :
+    vectorSpan k (insert p ps) = vectorSpan k ps := by
+  simp_rw [← direction_affine_span, affine_span_insert_eq_affine_span _ h]
 
 end AffineSpace'
 

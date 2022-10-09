@@ -50,7 +50,7 @@ which are lattices with only two elements, and related ideas.
 -/
 
 
-variable {α : Type _}
+variable {α β : Type _}
 
 section Atoms
 
@@ -610,37 +610,109 @@ theorem is_simple_order_Ici_iff_is_coatom [PartialOrderₓ α] [OrderTop α] {a 
 
 end Set
 
+namespace OrderEmbedding
+
+variable [PartialOrderₓ α] [PartialOrderₓ β]
+
+theorem is_atom_of_map_bot_of_image [OrderBot α] [OrderBot β] (f : β ↪o α) (hbot : f ⊥ = ⊥) {b : β}
+    (hb : IsAtom (f b)) : IsAtom b := by
+  simp only [← bot_covby_iff] at hb⊢
+  exact Covby.of_image f (hbot.symm ▸ hb)
+
+theorem is_coatom_of_map_top_of_image [OrderTop α] [OrderTop β] (f : β ↪o α) (htop : f ⊤ = ⊤) {b : β}
+    (hb : IsCoatom (f b)) : IsCoatom b :=
+  f.dual.is_atom_of_map_bot_of_image htop hb
+
+end OrderEmbedding
+
+namespace GaloisInsertion
+
+variable [PartialOrderₓ α] [PartialOrderₓ β]
+
+theorem is_atom_of_u_bot [OrderBot α] [OrderBot β] {l : α → β} {u : β → α} (gi : GaloisInsertion l u) (hbot : u ⊥ = ⊥)
+    {b : β} (hb : IsAtom (u b)) : IsAtom b :=
+  OrderEmbedding.is_atom_of_map_bot_of_image ⟨⟨u, gi.u_injective⟩, @GaloisInsertion.u_le_u_iff _ _ _ _ _ _ gi⟩ hbot hb
+
+theorem is_atom_iff [OrderBot α] [IsAtomic α] [OrderBot β] {l : α → β} {u : β → α} (gi : GaloisInsertion l u)
+    (hbot : u ⊥ = ⊥) (h_atom : ∀ a, IsAtom a → u (l a) = a) (a : α) : IsAtom (l a) ↔ IsAtom a := by
+  refine' ⟨fun hla => _, fun ha => gi.is_atom_of_u_bot hbot ((h_atom a ha).symm ▸ ha)⟩
+  obtain ⟨a', ha', hab'⟩ := (eq_bot_or_exists_atom_le (u (l a))).resolve_left (hbot ▸ fun h => hla.1 (gi.u_injective h))
+  have :=
+    (hla.le_iff.mp <| (gi.l_u_eq (l a) ▸ gi.gc.monotone_l hab' : l a' ≤ l a)).resolve_left fun h =>
+      ha'.1 (hbot ▸ h_atom a' ha' ▸ congr_arg u h)
+  have haa' : a = a' :=
+    (ha'.le_iff.mp <| (gi.gc.le_u_l a).trans_eq (h_atom a' ha' ▸ congr_arg u this.symm)).resolve_left
+      (mt (congr_arg l) (gi.gc.l_bot.symm ▸ hla.1))
+  exact haa'.symm ▸ ha'
+
+theorem is_atom_iff' [OrderBot α] [IsAtomic α] [OrderBot β] {l : α → β} {u : β → α} (gi : GaloisInsertion l u)
+    (hbot : u ⊥ = ⊥) (h_atom : ∀ a, IsAtom a → u (l a) = a) (b : β) : IsAtom (u b) ↔ IsAtom b := by
+  rw [← gi.is_atom_iff hbot h_atom, gi.l_u_eq]
+
+theorem is_coatom_of_image [OrderTop α] [OrderTop β] {l : α → β} {u : β → α} (gi : GaloisInsertion l u) {b : β}
+    (hb : IsCoatom (u b)) : IsCoatom b :=
+  OrderEmbedding.is_coatom_of_map_top_of_image ⟨⟨u, gi.u_injective⟩, @GaloisInsertion.u_le_u_iff _ _ _ _ _ _ gi⟩
+    gi.gc.u_top hb
+
+theorem is_coatom_iff [OrderTop α] [IsCoatomic α] [OrderTop β] {l : α → β} {u : β → α} (gi : GaloisInsertion l u)
+    (h_coatom : ∀ a : α, IsCoatom a → u (l a) = a) (b : β) : IsCoatom (u b) ↔ IsCoatom b := by
+  refine' ⟨fun hb => gi.is_coatom_of_image hb, fun hb => _⟩
+  obtain ⟨a, ha, hab⟩ :=
+    (eq_top_or_exists_le_coatom (u b)).resolve_left fun h =>
+      hb.1 <| (gi.gc.u_top ▸ gi.l_u_eq ⊤ : l ⊤ = ⊤) ▸ gi.l_u_eq b ▸ congr_arg l h
+  have : l a = b :=
+    (hb.le_iff.mp (gi.l_u_eq b ▸ gi.gc.monotone_l hab : b ≤ l a)).resolve_left fun hla =>
+      ha.1 (gi.gc.u_top ▸ h_coatom a ha ▸ congr_arg u hla)
+  exact this ▸ (h_coatom a ha).symm ▸ ha
+
+end GaloisInsertion
+
+namespace GaloisCoinsertion
+
+variable [PartialOrderₓ α] [PartialOrderₓ β]
+
+theorem is_coatom_of_l_top [OrderTop α] [OrderTop β] {l : α → β} {u : β → α} (gi : GaloisCoinsertion l u)
+    (hbot : l ⊤ = ⊤) {a : α} (hb : IsCoatom (l a)) : IsCoatom a :=
+  gi.dual.is_atom_of_u_bot hbot hb.dual
+
+theorem is_coatom_iff [OrderTop α] [OrderTop β] [IsCoatomic β] {l : α → β} {u : β → α} (gi : GaloisCoinsertion l u)
+    (htop : l ⊤ = ⊤) (h_coatom : ∀ b, IsCoatom b → l (u b) = b) (b : β) : IsCoatom (u b) ↔ IsCoatom b :=
+  gi.dual.is_atom_iff htop h_coatom b
+
+theorem is_coatom_iff' [OrderTop α] [OrderTop β] [IsCoatomic β] {l : α → β} {u : β → α} (gi : GaloisCoinsertion l u)
+    (htop : l ⊤ = ⊤) (h_coatom : ∀ b, IsCoatom b → l (u b) = b) (a : α) : IsCoatom (l a) ↔ IsCoatom a :=
+  gi.dual.is_atom_iff' htop h_coatom a
+
+theorem is_atom_of_image [OrderBot α] [OrderBot β] {l : α → β} {u : β → α} (gi : GaloisCoinsertion l u) {a : α}
+    (hb : IsAtom (l a)) : IsAtom a :=
+  gi.dual.is_coatom_of_image hb.dual
+
+theorem is_atom_iff [OrderBot α] [OrderBot β] [IsAtomic β] {l : α → β} {u : β → α} (gi : GaloisCoinsertion l u)
+    (h_atom : ∀ b, IsAtom b → l (u b) = b) (a : α) : IsAtom (l a) ↔ IsAtom a :=
+  gi.dual.is_coatom_iff h_atom a
+
+end GaloisCoinsertion
+
 namespace OrderIso
 
-variable {β : Type _}
+variable [PartialOrderₓ α] [PartialOrderₓ β]
 
 @[simp]
-theorem is_atom_iff [PartialOrderₓ α] [OrderBot α] [PartialOrderₓ β] [OrderBot β] (f : α ≃o β) (a : α) :
-    IsAtom (f a) ↔ IsAtom a :=
-  and_congrₓ (not_congr ⟨fun h => f.Injective (f.map_bot.symm ▸ h), fun h => f.map_bot ▸ congr rfl h⟩)
-    ⟨fun h b hb => f.Injective ((h (f b) ((f : α ↪o β).lt_iff_lt.2 hb)).trans f.map_bot.symm), fun h b hb =>
-      f.symm.Injective
-        (by
-          rw [f.symm.map_bot]
-          apply h
-          rw [← f.symm_apply_apply a]
-          exact (f.symm : β ↪o α).lt_iff_lt.2 hb)⟩
+theorem is_atom_iff [OrderBot α] [OrderBot β] (f : α ≃o β) (a : α) : IsAtom (f a) ↔ IsAtom a :=
+  ⟨f.toGaloisCoinsertion.is_atom_of_image, fun ha =>
+    f.toGaloisInsertion.is_atom_of_u_bot (map_bot f.symm) <| (f.symm_apply_apply a).symm ▸ ha⟩
 
 @[simp]
-theorem is_coatom_iff [PartialOrderₓ α] [OrderTop α] [PartialOrderₓ β] [OrderTop β] (f : α ≃o β) (a : α) :
-    IsCoatom (f a) ↔ IsCoatom a :=
+theorem is_coatom_iff [OrderTop α] [OrderTop β] (f : α ≃o β) (a : α) : IsCoatom (f a) ↔ IsCoatom a :=
   f.dual.is_atom_iff a
 
-theorem is_simple_order_iff [PartialOrderₓ α] [BoundedOrder α] [PartialOrderₓ β] [BoundedOrder β] (f : α ≃o β) :
-    IsSimpleOrder α ↔ IsSimpleOrder β := by
+theorem is_simple_order_iff [BoundedOrder α] [BoundedOrder β] (f : α ≃o β) : IsSimpleOrder α ↔ IsSimpleOrder β := by
   rw [is_simple_order_iff_is_atom_top, is_simple_order_iff_is_atom_top, ← f.is_atom_iff ⊤, f.map_top]
 
-theorem is_simple_order [PartialOrderₓ α] [BoundedOrder α] [PartialOrderₓ β] [BoundedOrder β] [h : IsSimpleOrder β]
-    (f : α ≃o β) : IsSimpleOrder α :=
+theorem is_simple_order [BoundedOrder α] [BoundedOrder β] [h : IsSimpleOrder β] (f : α ≃o β) : IsSimpleOrder α :=
   f.is_simple_order_iff.mpr h
 
-theorem is_atomic_iff [PartialOrderₓ α] [OrderBot α] [PartialOrderₓ β] [OrderBot β] (f : α ≃o β) :
-    IsAtomic α ↔ IsAtomic β := by
+theorem is_atomic_iff [OrderBot α] [OrderBot β] (f : α ≃o β) : IsAtomic α ↔ IsAtomic β := by
   suffices : (∀ b : α, b = ⊥ ∨ ∃ a : α, IsAtom a ∧ a ≤ b) ↔ ∀ b : β, b = ⊥ ∨ ∃ a : β, IsAtom a ∧ a ≤ b
   exact ⟨fun ⟨p⟩ => ⟨this.mp p⟩, fun ⟨p⟩ => ⟨this.mpr p⟩⟩
   apply f.to_equiv.forall_congr
@@ -658,8 +730,7 @@ theorem is_atomic_iff [PartialOrderₓ α] [OrderBot α] [PartialOrderₓ β] [O
       
     
 
-theorem is_coatomic_iff [PartialOrderₓ α] [OrderTop α] [PartialOrderₓ β] [OrderTop β] (f : α ≃o β) :
-    IsCoatomic α ↔ IsCoatomic β := by
+theorem is_coatomic_iff [OrderTop α] [OrderTop β] (f : α ≃o β) : IsCoatomic α ↔ IsCoatomic β := by
   rw [← is_atomic_dual_iff_is_coatomic, ← is_atomic_dual_iff_is_coatomic]
   exact f.dual.is_atomic_iff
 

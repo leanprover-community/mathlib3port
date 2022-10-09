@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
 import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
-import Mathbin.NumberTheory.NumberField
+import Mathbin.NumberTheory.NumberField.Basic
 import Mathbin.Algebra.CharP.Algebra
 import Mathbin.FieldTheory.Galois
 

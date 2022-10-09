@@ -3,7 +3,7 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Sean Leather
 -/
-import Mathbin.Algebra.FreeMonoid
+import Mathbin.Algebra.FreeMonoid.Basic
 import Mathbin.Algebra.Opposites
 import Mathbin.Control.Traversable.Instances
 import Mathbin.Control.Traversable.Lemmas

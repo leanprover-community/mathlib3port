@@ -26,6 +26,11 @@ variable {f : I → Type v}
 -- The family of types already equipped with instances
 variable (x y : ∀ i, f i) (i : I)
 
+@[to_additive]
+theorem Set.preimage_one {α β : Type _} [One β] (s : Set β) [Decidable ((1 : β) ∈ s)] :
+    (1 : α → β) ⁻¹' s = if (1 : β) ∈ s then Set.Univ else ∅ :=
+  Set.preimage_const 1 s
+
 namespace Pi
 
 @[to_additive]

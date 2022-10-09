@@ -147,6 +147,7 @@ theorem norm_diagonal [DecidableEq n] (v : n → α) : ∥diagonalₓ v∥ = ∥
   congr_arg coe <| nnnorm_diagonal v
 
 /-- Note this is safe as an instance as it carries no data. -/
+@[nolint fails_quickly]
 instance [Nonempty n] [DecidableEq n] [One α] [NormOneClass α] : NormOneClass (Matrix n n α) :=
   ⟨(norm_diagonal _).trans <| norm_one⟩
 

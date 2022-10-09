@@ -44,13 +44,13 @@ variable {α : Type _}
 
 /-- The element of `sym_alg α` that represents `a : α`. -/
 @[matchPattern, pp_nodot]
-def sym : α → αˢʸᵐ :=
-  id
+def sym : α ≃ αˢʸᵐ :=
+  Equivₓ.refl _
 
 /-- The element of `α` represented by `x : αˢʸᵐ`. -/
 @[pp_nodot]
-def unsym : αˢʸᵐ → α :=
-  id
+def unsym : αˢʸᵐ ≃ α :=
+  Equivₓ.refl _
 
 @[simp]
 theorem unsym_sym (a : α) : unsym (sym a) = a :=
@@ -68,28 +68,31 @@ theorem sym_comp_unsym : (sym : α → αˢʸᵐ) ∘ unsym = id :=
 theorem unsym_comp_sym : (unsym : αˢʸᵐ → α) ∘ Sym = id :=
   rfl
 
-/-- The canonical bijection between `α` and `αˢʸᵐ`. -/
-@[simps (config := { fullyApplied := false }) apply symmApply]
-def symEquiv : α ≃ αˢʸᵐ :=
-  ⟨sym, unsym, unsym_sym, sym_unsym⟩
+@[simp]
+theorem sym_symm : (@sym α).symm = unsym :=
+  rfl
+
+@[simp]
+theorem unsym_symm : (@unsym α).symm = Sym :=
+  rfl
 
 theorem sym_bijective : Bijective (sym : α → αˢʸᵐ) :=
-  symEquiv.Bijective
+  sym.Bijective
 
 theorem unsym_bijective : Bijective (unsym : αˢʸᵐ → α) :=
-  symEquiv.symm.Bijective
+  unsym.symm.Bijective
 
 theorem sym_injective : Injective (sym : α → αˢʸᵐ) :=
-  sym_bijective.Injective
+  sym.Injective
 
 theorem sym_surjective : Surjective (sym : α → αˢʸᵐ) :=
-  sym_bijective.Surjective
+  sym.Surjective
 
 theorem unsym_injective : Injective (unsym : αˢʸᵐ → α) :=
-  unsym_bijective.Injective
+  unsym.Injective
 
 theorem unsym_surjective : Surjective (unsym : αˢʸᵐ → α) :=
-  unsym_bijective.Surjective
+  unsym.Surjective
 
 @[simp]
 theorem sym_inj {a b : α} : sym a = sym b ↔ a = b :=

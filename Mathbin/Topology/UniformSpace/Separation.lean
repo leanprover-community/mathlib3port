@@ -193,6 +193,9 @@ instance (priority := 100) separated_t3 [SeparatedSpace α] : T3Space α :=
   haveI := separated_iff_t2.mp ‹_›
   ⟨⟩
 
+instance Subtype.separated_space [SeparatedSpace α] (s : Set α) : SeparatedSpace s :=
+  separated_iff_t2.mpr Subtype.t2_space
+
 theorem is_closed_of_spaced_out [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α) {s : Set α}
     (hs : s.Pairwise fun x y => (x, y) ∉ V₀) : IsClosed s := by
   rcases comp_symm_mem_uniformity_sets V₀_in with ⟨V₁, V₁_in, V₁_symm, h_comp⟩

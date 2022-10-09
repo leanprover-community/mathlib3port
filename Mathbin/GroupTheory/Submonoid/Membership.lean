@@ -6,7 +6,7 @@ Amelia Livingston, Yury Kudryashov
 -/
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Algebra.FreeMonoid
+import Mathbin.Algebra.FreeMonoid.Basic
 import Mathbin.Data.Finset.NoncommProd
 
 /-!
@@ -273,9 +273,12 @@ theorem mem_closure_singleton_self {y : M} : y ∈ closure ({y} : Set M) :=
 theorem closure_singleton_one : closure ({1} : Set M) = ⊥ := by simp [eq_bot_iff_forall, mem_closure_singleton]
 
 @[to_additive]
+theorem _root_.free_monoid.mrange_lift {α} (f : α → M) : (FreeMonoid.lift f).mrange = closure (Set.Range f) := by
+  rw [mrange_eq_map, ← FreeMonoid.closure_range_of, map_mclosure, ← Set.range_comp, FreeMonoid.lift_comp_of]
+
+@[to_additive]
 theorem closure_eq_mrange (s : Set M) : closure s = (FreeMonoid.lift (coe : s → M)).mrange := by
-  rw [mrange_eq_map, ← FreeMonoid.closure_range_of, map_mclosure, ← Set.range_comp, FreeMonoid.lift_comp_of,
-    Subtype.range_coe]
+  rw [FreeMonoid.mrange_lift, Subtype.range_coe]
 
 @[to_additive]
 theorem closure_eq_image_prod (s : Set M) : (closure s : Set M) = List.prod '' { l : List M | ∀ x ∈ l, x ∈ s } := by

@@ -28,7 +28,7 @@ namespace Finpartition
 /-- The energy of a partition, also known as index. Auxiliary quantity for Szemerédi's regularity
 lemma.  -/
 def energy : ℚ :=
-  (∑ uv in P.parts.offDiag, G.edgeDensity uv.1 uv.2 ^ 2) / P.parts.card ^ 2
+  (∑ uv in P.parts.OffDiag, G.edgeDensity uv.1 uv.2 ^ 2) / P.parts.card ^ 2
 
 theorem energy_nonneg : 0 ≤ P.energy G :=
   div_nonneg (Finsetₓ.sum_nonneg fun _ _ => sq_nonneg _) <| sq_nonneg _
@@ -36,10 +36,10 @@ theorem energy_nonneg : 0 ≤ P.energy G :=
 theorem energy_le_one : P.energy G ≤ 1 :=
   div_le_of_nonneg_of_le_mul (sq_nonneg _) zero_le_one <|
     calc
-      (∑ uv in P.parts.offDiag, G.edgeDensity uv.1 uv.2 ^ 2) ≤ P.parts.offDiag.card • 1 :=
+      (∑ uv in P.parts.OffDiag, G.edgeDensity uv.1 uv.2 ^ 2) ≤ P.parts.OffDiag.card • 1 :=
         (sum_le_card_nsmul _ _ 1) fun uv _ =>
           (sq_le_one_iff <| G.edge_density_nonneg _ _).2 <| G.edge_density_le_one _ _
-      _ = P.parts.offDiag.card := Nat.smul_one_eq_coe _
+      _ = P.parts.OffDiag.card := Nat.smul_one_eq_coe _
       _ ≤ _ := by
         rw [off_diag_card, one_mulₓ, ← Nat.cast_powₓ, Nat.cast_le, sq]
         exact tsub_le_self

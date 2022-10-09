@@ -5,6 +5,7 @@ Authors: Aaron Anderson
 -/
 import Mathbin.LinearAlgebra.Span
 import Mathbin.Order.Atoms
+import Mathbin.LinearAlgebra.Isomorphisms
 
 /-!
 # Simple Modules
@@ -48,10 +49,18 @@ theorem IsSimpleModule.nontrivial [IsSimpleModule R M] : Nontrivial M :=
 
 variable {R} {M} {m : Submodule R M} {N : Type _} [AddCommGroupₓ N] [Module R N]
 
+theorem IsSimpleModule.congr (l : M ≃ₗ[R] N) [IsSimpleModule R N] : IsSimpleModule R M :=
+  (Submodule.orderIsoMapComap l).IsSimpleOrder
+
 theorem is_simple_module_iff_is_atom : IsSimpleModule R m ↔ IsAtom m := by
   rw [← Set.is_simple_order_Iic_iff_is_atom]
   apply OrderIso.is_simple_order_iff
   exact Submodule.MapSubtype.relIso m
+
+theorem is_simple_module_iff_is_coatom : IsSimpleModule R (M ⧸ m) ↔ IsCoatom m := by
+  rw [← Set.is_simple_order_Ici_iff_is_coatom]
+  apply OrderIso.is_simple_order_iff
+  exact Submodule.ComapMkq.relIso m
 
 namespace IsSimpleModule
 
@@ -115,6 +124,11 @@ theorem bijective_or_eq_zero [IsSimpleModule R M] [IsSimpleModule R N] (f : M �
 theorem bijective_of_ne_zero [IsSimpleModule R M] [IsSimpleModule R N] {f : M →ₗ[R] N} (h : f ≠ 0) :
     Function.Bijective f :=
   f.bijective_or_eq_zero.resolve_right h
+
+theorem is_coatom_ker_of_surjective [IsSimpleModule R N] {f : M →ₗ[R] N} (hf : Function.Surjective f) :
+    IsCoatom f.ker := by
+  rw [← is_simple_module_iff_is_coatom]
+  exact IsSimpleModule.congr (f.quot_ker_equiv_of_surjective hf)
 
 /-- Schur's Lemma makes the endomorphism ring of a simple module a division ring. -/
 noncomputable instance _root_.module.End.division_ring [DecidableEq (Module.End R M)] [IsSimpleModule R M] :

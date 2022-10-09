@@ -291,6 +291,32 @@ def isoBinaryCofanMk {X Y : C} (c : BinaryCofan X Y) : c ≅ BinaryCofan.mk c.in
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]" <;>
       cases j <;> tidy
 
+/-- This is a more convenient formulation to show that a `binary_fan` constructed using
+`binary_fan.mk` is a limit cone.
+-/
+def BinaryFan.isLimitMk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (lift : ∀ s : BinaryFan X Y, s.x ⟶ W)
+    (fac_left : ∀ s : BinaryFan X Y, lift s ≫ fst = s.fst) (fac_right : ∀ s : BinaryFan X Y, lift s ≫ snd = s.snd)
+    (uniq : ∀ (s : BinaryFan X Y) (m : s.x ⟶ W) (w_fst : m ≫ fst = s.fst) (w_snd : m ≫ snd = s.snd), m = lift s) :
+    IsLimit (BinaryFan.mk fst snd) :=
+  { lift,
+    fac' := fun s j => by
+      rcases j with ⟨⟨⟩⟩
+      exacts[fac_left s, fac_right s],
+    uniq' := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
+
+/-- This is a more convenient formulation to show that a `binary_cofan` constructed using
+`binary_cofan.mk` is a colimit cocone.
+-/
+def BinaryCofan.isColimitMk {W : C} {inl : X ⟶ W} {inr : Y ⟶ W} (desc : ∀ s : BinaryCofan X Y, W ⟶ s.x)
+    (fac_left : ∀ s : BinaryCofan X Y, inl ≫ desc s = s.inl) (fac_right : ∀ s : BinaryCofan X Y, inr ≫ desc s = s.inr)
+    (uniq : ∀ (s : BinaryCofan X Y) (m : W ⟶ s.x) (w_inl : inl ≫ m = s.inl) (w_inr : inr ≫ m = s.inr), m = desc s) :
+    IsColimit (BinaryCofan.mk inl inr) :=
+  { desc,
+    fac' := fun s j => by
+      rcases j with ⟨⟨⟩⟩
+      exacts[fac_left s, fac_right s],
+    uniq' := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
+
 /-- If `s` is a limit binary fan over `X` and `Y`, then every pair of morphisms `f : W ⟶ X` and
     `g : W ⟶ Y` induces a morphism `l : W ⟶ s.X` satisfying `l ≫ s.fst = f` and `l ≫ s.snd = g`.
     -/

@@ -161,6 +161,10 @@ theorem map_div_right_eq_self (μ : Measure G) [IsMulRightInvariant μ] (g : G) 
 
 variable [HasMeasurableMul G]
 
+@[to_additive]
+theorem measure_preserving_div_right (μ : Measure G) [IsMulRightInvariant μ] (g : G) : MeasurePreserving (· / g) μ μ :=
+  by simp_rw [div_eq_mul_inv, measure_preserving_mul_right μ g⁻¹]
+
 /-- We shorten this from `measure_preimage_mul_left`, since left invariant is the preferred option
   for measures in this formalization. -/
 @[simp,

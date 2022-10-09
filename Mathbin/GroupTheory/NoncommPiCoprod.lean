@@ -6,6 +6,7 @@ Authors: Joachim Breitner
 import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.Data.Finset.NoncommProd
 import Mathbin.Data.Fintype.Card
+import Mathbin.Data.Nat.Gcd.BigOperators
 
 /-!
 # Canonical homomorphism from a finite family of monoids

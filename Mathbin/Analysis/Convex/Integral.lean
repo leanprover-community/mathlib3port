@@ -303,10 +303,10 @@ theorem ae_eq_const_or_norm_average_lt_of_norm_le_const [StrictConvexSpace ℝ E
     
   by_cases hfi:integrable f μ
   swap
-  · simp [average_def', integral_undef hfi, hC0, Ennreal.to_real_pos_iff]
+  · simp [average_eq, integral_undef hfi, hC0, Ennreal.to_real_pos_iff]
     
   cases' (le_top : μ univ ≤ ∞).eq_or_lt with hμt hμt
-  · simp [average_def', hμt, hC0]
+  · simp [average_eq, hμt, hC0]
     
   haveI : is_finite_measure μ := ⟨hμt⟩
   replace h_le : ∀ᵐ x ∂μ, f x ∈ closed_ball (0 : E) C
@@ -326,7 +326,7 @@ theorem ae_eq_const_or_norm_integral_lt_of_norm_le_const [StrictConvexSpace ℝ 
     
   have hμ : 0 < (μ univ).toReal := by simp [Ennreal.to_real_pos_iff, pos_iff_ne_zero, h₀, measure_lt_top]
   refine' (ae_eq_const_or_norm_average_lt_of_norm_le_const h_le).imp_right fun H => _
-  rwa [average_def', norm_smul, norm_inv, Real.norm_eq_abs, abs_of_pos hμ, ← div_eq_inv_mul, div_lt_iff' hμ] at H
+  rwa [average_eq, norm_smul, norm_inv, Real.norm_eq_abs, abs_of_pos hμ, ← div_eq_inv_mul, div_lt_iff' hμ] at H
 
 /-- If `E` is a strictly convex normed space and `f : α → E` is a function such that `∥f x∥ ≤ C`
 a.e. on a set `t` of finite measure, then either this function is a.e. equal to its average value on

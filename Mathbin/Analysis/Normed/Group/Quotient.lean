@@ -100,6 +100,10 @@ variable {M N : Type _} [SeminormedAddCommGroup M] [SeminormedAddCommGroup N]
 noncomputable instance normOnQuotient (S : AddSubgroup M) :
     HasNorm (M ⧸ S) where norm := fun x => inf (norm '' { m | mk' S m = x })
 
+theorem AddSubgroup.quotient_norm_eq {S : AddSubgroup M} (x : M ⧸ S) :
+    ∥x∥ = inf (norm '' { m : M | (m : M ⧸ S) = x }) :=
+  rfl
+
 theorem image_norm_nonempty {S : AddSubgroup M} : ∀ x : M ⧸ S, (norm '' { m | mk' S m = x }).Nonempty := by
   rintro ⟨m⟩
   rw [Set.nonempty_image_iff]

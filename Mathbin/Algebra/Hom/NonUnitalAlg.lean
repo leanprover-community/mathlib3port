@@ -72,6 +72,14 @@ attribute [nolint dangerous_instance] NonUnitalAlgHomClass.toMulHomClass
 
 namespace NonUnitalAlgHomClass
 
+-- `R` becomes a metavariable but that's fine because it's an `out_param`
+-- See note [lower instance priority]
+@[nolint dangerous_instance]
+instance (priority := 100) NonUnitalAlgHomClass.toNonUnitalRingHomClass {F R A B : Type _} [Monoidₓ R]
+    [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A] [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B]
+    [NonUnitalAlgHomClass F R A B] : NonUnitalRingHomClass F A B :=
+  { ‹NonUnitalAlgHomClass F R A B› with coe := coeFn }
+
 variable [Semiringₓ R] [NonUnitalNonAssocSemiringₓ A] [Module R A] [NonUnitalNonAssocSemiringₓ B] [Module R B]
 
 -- see Note [lower instance priority]

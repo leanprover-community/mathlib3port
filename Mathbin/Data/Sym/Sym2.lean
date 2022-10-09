@@ -677,7 +677,7 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finsetₓ α) :
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finsetₓ α) :
-    (((s ×ˢ s).Image Quotientₓ.mk).filter fun a : Sym2 α => ¬a.IsDiag) = s.offDiag.Image Quotientₓ.mk := by
+    (((s ×ˢ s).Image Quotientₓ.mk).filter fun a : Sym2 α => ¬a.IsDiag) = s.OffDiag.Image Quotientₓ.mk := by
   ext z
   induction z using Quotientₓ.induction_on
   rcases z with ⟨x, y⟩

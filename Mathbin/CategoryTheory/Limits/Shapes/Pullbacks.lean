@@ -1042,6 +1042,11 @@ abbrev pullback.map {W X Y Z S T : C} (f₁ : W ⟶ S) (f₂ : X ⟶ S) [HasPull
     pullback f₁ f₂ ⟶ pullback g₁ g₂ :=
   pullback.lift (pullback.fst ≫ i₁) (pullback.snd ≫ i₂) (by simp [← eq₁, ← eq₂, pullback.condition_assoc])
 
+/-- The canonical map `X ×ₛ Y ⟶ X ×ₜ Y` given `S ⟶ T`. -/
+abbrev pullback.mapDesc {X Y S T : C} (f : X ⟶ S) (g : Y ⟶ S) (i : S ⟶ T) [HasPullback f g]
+    [HasPullback (f ≫ i) (g ≫ i)] : pullback f g ⟶ pullback (f ≫ i) (g ≫ i) :=
+  pullback.map f g (f ≫ i) (g ≫ i) (𝟙 _) (𝟙 _) i (Category.id_comp _).symm (Category.id_comp _).symm
+
 /-- Given such a diagram, then there is a natural morphism `W ⨿ₛ X ⟶ Y ⨿ₜ Z`.
 
         W  ⟶  Y
@@ -1058,6 +1063,11 @@ abbrev pushout.map {W X Y Z S T : C} (f₁ : S ⟶ W) (f₂ : S ⟶ X) [HasPusho
     (by
       simp only [← category.assoc, eq₁, eq₂]
       simp [pushout.condition])
+
+/-- The canonical map `X ⨿ₛ Y ⟶ X ⨿ₜ Y` given `S ⟶ T`. -/
+abbrev pushout.mapLift {X Y S T : C} (f : T ⟶ X) (g : T ⟶ Y) (i : S ⟶ T) [HasPushout f g] [HasPushout (i ≫ f) (i ≫ g)] :
+    pushout (i ≫ f) (i ≫ g) ⟶ pushout f g :=
+  pushout.map (i ≫ f) (i ≫ g) f g (𝟙 _) (𝟙 _) i (Category.comp_id _) (Category.comp_id _)
 
 /-- Two morphisms into a pullback are equal if their compositions with the pullback morphisms are
     equal -/
@@ -1166,6 +1176,13 @@ instance pushout.map_is_iso {W X Y Z S T : C} (f₁ : S ⟶ W) (f₂ : S ⟶ X) 
     
   tidy
 
+theorem pullback.map_desc_comp {X Y S T S' : C} (f : X ⟶ T) (g : Y ⟶ T) (i : T ⟶ S) (i' : S ⟶ S') [HasPullback f g]
+    [HasPullback (f ≫ i) (g ≫ i)] [HasPullback (f ≫ i ≫ i') (g ≫ i ≫ i')] [HasPullback ((f ≫ i) ≫ i') ((g ≫ i) ≫ i')] :
+    pullback.mapDesc f g (i ≫ i') =
+      pullback.mapDesc f g i ≫
+        pullback.mapDesc _ _ i' ≫ (pullback.congrHom (Category.assoc _ _ _) (Category.assoc _ _ _)).Hom :=
+  by ext <;> simp
+
 /-- If `f₁ = f₂` and `g₁ = g₂`, we may construct a canonical
 isomorphism `pushout f₁ g₁ ≅ pullback f₂ g₂` -/
 @[simps Hom]
@@ -1188,6 +1205,13 @@ theorem pushout.congr_hom_inv {X Y Z : C} {f₁ f₂ : X ⟶ Y} {g₁ g₂ : X �
     erw [pushout.inr_desc]
     rw [category.id_comp]
     
+
+theorem pushout.map_lift_comp {X Y S T S' : C} (f : T ⟶ X) (g : T ⟶ Y) (i : S ⟶ T) (i' : S' ⟶ S) [HasPushout f g]
+    [HasPushout (i ≫ f) (i ≫ g)] [HasPushout (i' ≫ i ≫ f) (i' ≫ i ≫ g)] [HasPushout ((i' ≫ i) ≫ f) ((i' ≫ i) ≫ g)] :
+    pushout.mapLift f g (i' ≫ i) =
+      (pushout.congrHom (Category.assoc _ _ _) (Category.assoc _ _ _)).Hom ≫
+        pushout.mapLift _ _ i' ≫ pushout.mapLift f g i :=
+  by ext <;> simp
 
 section
 

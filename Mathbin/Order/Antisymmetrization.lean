@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathbin.Order.Hom.Basic
+import Mathbin.Logic.Relation
 
 /-!
 # Turning a preorder into a partial order
@@ -125,6 +126,26 @@ instance : PartialOrderₓ (Antisymmetrization α (· ≤ ·)) where
   le_trans := fun a b c => (Quotientₓ.induction_on₃' a b c) fun a b c => le_transₓ
   lt_iff_le_not_le := fun a b => (Quotientₓ.induction_on₂' a b) fun a b => lt_iff_le_not_leₓ
   le_antisymm := fun a b => (Quotientₓ.induction_on₂' a b) fun a b hab hba => Quotientₓ.sound' ⟨hab, hba⟩
+
+theorem antisymmetrization_fibration : Relation.Fibration (· < ·) (· < ·) (@toAntisymmetrization α (· ≤ ·) _) := by
+  rintro a ⟨b⟩ h
+  exact ⟨b, h, rfl⟩
+
+theorem acc_antisymmetrization_iff : Acc (· < ·) (toAntisymmetrization (· ≤ ·) a) ↔ Acc (· < ·) a :=
+  ⟨fun h =>
+    haveI := InvImage.accessibleₓ _ h
+    this,
+    Acc.of_fibration _ antisymmetrization_fibration⟩
+
+theorem well_founded_antisymmetrization_iff :
+    WellFounded (@LT.lt (Antisymmetrization α (· ≤ ·)) _) ↔ WellFounded (@LT.lt α _) :=
+  ⟨fun h => ⟨fun a => acc_antisymmetrization_iff.1 <| h.apply _⟩, fun h =>
+    ⟨by
+      rintro ⟨a⟩
+      exact acc_antisymmetrization_iff.2 (h.apply a)⟩⟩
+
+instance [WellFoundedLt α] : WellFoundedLt (Antisymmetrization α (· ≤ ·)) :=
+  ⟨well_founded_antisymmetrization_iff.2 IsWellFounded.wf⟩
 
 instance [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)] [IsTotal α (· ≤ ·)] :
     LinearOrderₓ (Antisymmetrization α (· ≤ ·)) :=

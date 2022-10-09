@@ -5,7 +5,6 @@ Authors: Junyan Xu
 -/
 import Mathbin.Data.Multiset.Basic
 import Mathbin.Order.GameAdd
-import Mathbin.Order.WellFounded
 
 /-!
 # Termination of a hydra game
@@ -24,9 +23,7 @@ valid "moves" of the game are modelled by the relation `cut_expand r` on `multis
 `cut_expand r s' s` is true iff `s'` is obtained by removing one head `a ∈ s` and
 adding back an arbitrary multiset `t` of heads such that all `a' ∈ t` satisfy `r a' a`.
 
-To prove this theorem, we follow the proof by Peter LeFanu Lumsdaine at
-https://mathoverflow.net/a/229084/3332, and along the way we introduce the notion of `fibration`
-of relations.
+We follow the proof by Peter LeFanu Lumsdaine at https://mathoverflow.net/a/229084/3332.
 
 TODO: formalize the relations corresponding to more powerful (e.g. Kirby–Paris and Buchholz)
 hydras, and prove their well-foundedness.
@@ -35,39 +32,9 @@ hydras, and prove their well-foundedness.
 
 namespace Relation
 
-variable {α β : Type _}
-
-section Fibration
-
-variable (rα : α → α → Prop) (rβ : β → β → Prop) (f : α → β)
-
-/-- A function `f : α → β` is a fibration between the relation `rα` and `rβ` if for all
-  `a : α` and `b : β`, whenever `b : β` and `f a` are related by `rβ`, `b` is the image
-  of some `a' : α` under `f`, and `a'` and `a` are related by `rα`. -/
-def Fibration :=
-  ∀ ⦃a b⦄, rβ b (f a) → ∃ a', rα a' a ∧ f a' = b
-
-variable {rα rβ}
-
-/-- If `f : α → β` is a fibration between relations `rα` and `rβ`, and `a : α` is
-  accessible under `rα`, then `f a` is accessible under `rβ`. -/
-theorem _root_.acc.of_fibration (fib : Fibration rα rβ f) {a} (ha : Acc rα a) : Acc rβ (f a) := by
-  induction' ha with a ha ih
-  refine' Acc.intro (f a) fun b hr => _
-  obtain ⟨a', hr', rfl⟩ := fib hr
-  exact ih a' hr'
-
-theorem _root_.acc.of_downward_closed (dc : ∀ {a b}, rβ b (f a) → b ∈ Set.Range f) (a : α)
-    (ha : Acc (InvImage rβ f) a) : Acc rβ (f a) :=
-  ha.of_fibration f fun a b h =>
-    let ⟨a', he⟩ := dc h
-    ⟨a', he.substr h, he⟩
-
-end Fibration
-
-section Hydra
-
 open Multiset Prod
+
+variable {α β : Type _}
 
 /-- The relation that specifies valid moves in our hydra game. `cut_expand r s' s`
   means that `s'` is obtained by removing one head `a ∈ s` and adding back an arbitrary
@@ -166,8 +133,6 @@ theorem _root_.acc.cut_expand [IsIrrefl α r] {a : α} (hacc : Acc r a) : Acc (C
 theorem _root_.well_founded.cut_expand (hr : WellFounded r) : WellFounded (CutExpand r) :=
   ⟨letI h := hr.is_irrefl
     fun s => acc_of_singleton fun a _ => (hr.apply a).CutExpand⟩
-
-end Hydra
 
 end Relation
 

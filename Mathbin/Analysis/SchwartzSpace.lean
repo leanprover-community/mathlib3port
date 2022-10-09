@@ -21,7 +21,7 @@ natural numbers `k` and `n` we have uniform bounds `∥x∥^k * ∥iterated_fder
 This approach completely avoids using partial derivatives as well as polynomials.
 We construct the topology on the Schwartz space by a family of seminorms, which are the best
 constants in the above estimates, which is by abstract theory from
-`seminorm_family.module_filter_basis` and `seminorm_family.to_locally_convex_space` turns the
+`seminorm_family.module_filter_basis` and `with_seminorms.to_locally_convex_space` turns the
 Schwartz space into a locally convex topological vector space.
 
 ## Main definitions
@@ -386,20 +386,20 @@ theorem _root_.schwartz_with_seminorms : WithSeminorms (schwartzSeminormFamily �
 variable {𝕜 E F}
 
 instance : HasContinuousSmul 𝕜 𝓢(E, F) := by
-  rw [SeminormFamily.with_seminorms_eq (schwartz_with_seminorms 𝕜 E F)]
+  rw [(schwartz_with_seminorms 𝕜 E F).with_seminorms_eq]
   exact (schwartzSeminormFamily 𝕜 E F).ModuleFilterBasis.HasContinuousSmul
 
 instance : TopologicalAddGroup 𝓢(E, F) :=
-  (schwartzSeminormFamily ℝ E F).ModuleFilterBasis.toAddGroupFilterBasis.is_topological_add_group
+  (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.is_topological_add_group
 
 instance : UniformSpace 𝓢(E, F) :=
-  (schwartzSeminormFamily ℝ E F).ModuleFilterBasis.toAddGroupFilterBasis.UniformSpace
+  (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.UniformSpace
 
 instance : UniformAddGroup 𝓢(E, F) :=
-  (schwartzSeminormFamily ℝ E F).ModuleFilterBasis.toAddGroupFilterBasis.UniformAddGroup
+  (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.UniformAddGroup
 
 instance : LocallyConvexSpace ℝ 𝓢(E, F) :=
-  SeminormFamily.to_locally_convex_space (schwartz_with_seminorms ℝ E F)
+  (schwartz_with_seminorms ℝ E F).to_locally_convex_space
 
 end Topology
 

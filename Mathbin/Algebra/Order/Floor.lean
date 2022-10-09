@@ -1152,6 +1152,7 @@ unsafe def positivity_floor : expr → tactic strictness
     match strictness_a with
       | positive p => nonnegative <$> mk_app `` int_floor_nonneg_of_pos [p]
       | nonnegative p => nonnegative <$> mk_app `` int_floor_nonneg [p]
+      | _ => failed
   | e => pp e >>= fail ∘ format.bracket "The expression `" "` is not of the form `⌊a⌋`"
 
 private theorem nat_ceil_pos [LinearOrderedSemiring α] [FloorSemiring α] {a : α} : 0 < a → 0 < ⌈a⌉₊ :=
@@ -1174,6 +1175,7 @@ unsafe def positivity_ceil : expr → tactic strictness
     match strictness_a with
       | positive p => positive <$> mk_app `` int_ceil_pos [p]
       | nonnegative p => nonnegative <$> mk_app `` Int.ceil_nonneg [p]
+      | _ => failed
   | e => pp e >>= fail ∘ format.bracket "The expression `" "` is not of the form `⌈a⌉₊` nor `⌈a⌉`"
 
 end Tactic

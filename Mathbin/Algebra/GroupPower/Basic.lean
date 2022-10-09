@@ -70,6 +70,10 @@ theorem pow_two (a : M) : a ^ 2 = a * a := by rw [pow_succₓ, pow_oneₓ]
 
 alias pow_two ← sq
 
+theorem pow_three' (a : M) : a ^ 3 = a * a * a := by rw [pow_succ'ₓ, pow_two]
+
+theorem pow_three (a : M) : a ^ 3 = a * (a * a) := by rw [pow_succₓ, pow_two]
+
 @[to_additive]
 theorem pow_mul_comm' (a : M) (n : ℕ) : a ^ n * a = a * a ^ n :=
   Commute.pow_self a n

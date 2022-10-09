@@ -134,6 +134,9 @@ instance hasSmul' : HasSmul S p where smul := fun c x => ⟨c • x.1, smul_of_t
 
 instance : IsScalarTower S R p where smul_assoc := fun s r x => Subtype.ext <| smul_assoc s r ↑x
 
+instance is_scalar_tower' {S' : Type _} [HasSmul S' R] [HasSmul S' S] [HasSmul S' M] [IsScalarTower S' R M]
+    [IsScalarTower S' S M] : IsScalarTower S' S p where smul_assoc := fun s r x => Subtype.ext <| smul_assoc s r ↑x
+
 @[simp, norm_cast]
 theorem coe_smul_of_tower (s : S) (x : p) : ((s • x : p) : M) = s • ↑x :=
   rfl

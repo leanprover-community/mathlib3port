@@ -2115,6 +2115,7 @@ unsafe def prove_rpow (a b : expr) : tactic strictness := do
   match strictness_a with
     | nonnegative p => nonnegative <$> mk_app `` Real.rpow_nonneg_of_nonneg [p, b]
     | positive p => positive <$> mk_app `` Real.rpow_pos_of_pos [p, b]
+    | _ => failed
 
 private theorem nnrpow_pos {a : ℝ≥0} (ha : 0 < a) (b : ℝ) : 0 < a ^ b :=
   Nnreal.rpow_pos ha

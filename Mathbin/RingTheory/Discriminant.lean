@@ -5,7 +5,7 @@ Authors: Riccardo Brasca
 -/
 import Mathbin.RingTheory.Trace
 import Mathbin.RingTheory.Norm
-import Mathbin.NumberTheory.NumberField
+import Mathbin.NumberTheory.NumberField.Basic
 
 /-!
 # Discriminant of a family of vectors

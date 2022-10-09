@@ -459,3 +459,28 @@ end EquivOfEquiv
 
 end IsAlgClosure
 
+/-- Let `A` be an algebraically closed field and let `x ∈ K`, with `K/F` an algebraic extension
+  of fields. Then the images of `x` by the `F`-algebra morphisms from `K` to `A` are exactly
+  the roots in `A` of the minimal polynomial of `x` over `F`. -/
+theorem Algebra.IsAlgebraic.range_eval_eq_root_set_minpoly {F K} (A) [Field F] [Field K] [Field A] [IsAlgClosed A]
+    [Algebra F K] (hK : Algebra.IsAlgebraic F K) [Algebra F A] (x : K) :
+    (Set.Range fun ψ : K →ₐ[F] A => ψ x) = (minpoly F x).RootSet A := by
+  have := Algebra.is_algebraic_iff_is_integral.1 hK
+  ext a
+  rw [mem_root_set_iff (minpoly.ne_zero <| this x) a]
+  refine' ⟨_, fun ha => _⟩
+  · rintro ⟨ψ, rfl⟩
+    rw [aeval_alg_hom_apply ψ x, minpoly.aeval, map_zero]
+    
+  let Fx := AdjoinRoot (minpoly F x)
+  have hx : aeval x (minpoly F x) = 0 := minpoly.aeval F x
+  letI : Algebra Fx A := (AdjoinRoot.lift (algebraMap F A) a ha).toAlgebra
+  letI : Algebra Fx K := (AdjoinRoot.lift (algebraMap F K) x hx).toAlgebra
+  haveI : IsScalarTower F Fx A := IsScalarTower.of_ring_hom (AdjoinRoot.liftHom _ a ha)
+  haveI : IsScalarTower F Fx K := IsScalarTower.of_ring_hom (AdjoinRoot.liftHom _ x hx)
+  haveI : Fact (Irreducible <| minpoly F x) := ⟨minpoly.irreducible <| this x⟩
+  let ψ₀ : K →ₐ[Fx] A := IsAlgClosed.lift (Algebra.is_algebraic_of_larger_base F Fx hK)
+  exact
+    ⟨ψ₀.restrict_scalars F,
+      (congr_arg ψ₀ (AdjoinRoot.lift_root hx).symm).trans <| (ψ₀.commutes _).trans <| AdjoinRoot.lift_root ha⟩
+

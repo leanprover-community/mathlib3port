@@ -418,6 +418,8 @@ instance (priority := 100) IsScalarTower.has_continuous_const_smul {R A : Type _
 implies continuous scalar multiplication by constants.
 
 Notably, this instances applies when `R = Aᵐᵒᵖ` -/
+@[to_additive
+      "If the action of `R` on `A` commutes with left-addition, then\ncontinuous addition implies continuous affine addition by constants.\n\nNotably, this instances applies when `R = Aᵃᵒᵖ`. "]
 instance (priority := 100) SmulCommClass.has_continuous_const_smul {R A : Type _} [Monoidₓ A] [HasSmul R A]
     [SmulCommClass R A A] [TopologicalSpace A] [HasContinuousMul A] :
     HasContinuousConstSmul R A where continuous_const_smul := fun q => by

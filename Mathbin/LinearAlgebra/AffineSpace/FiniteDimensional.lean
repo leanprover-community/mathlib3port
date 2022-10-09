@@ -280,16 +280,34 @@ def Collinear (s : Set P) : Prop :=
 theorem collinear_iff_dim_le_one (s : Set P) : Collinear k s ↔ Module.rank k (vectorSpan k s) ≤ 1 :=
   Iff.rfl
 
+variable {k}
+
 /-- A set of points, whose `vector_span` is finite-dimensional, is
 collinear if and only if their `vector_span` has dimension at most
 `1`. -/
-theorem collinear_iff_finrank_le_one (s : Set P) [FiniteDimensional k (vectorSpan k s)] :
+theorem collinear_iff_finrank_le_one {s : Set P} [FiniteDimensional k (vectorSpan k s)] :
     Collinear k s ↔ finrank k (vectorSpan k s) ≤ 1 := by
   have h := collinear_iff_dim_le_one k s
   rw [← finrank_eq_dim] at h
   exact_mod_cast h
 
-variable (P)
+alias collinear_iff_finrank_le_one ↔ Collinear.finrank_le_one _
+
+/-- A subset of a collinear set is collinear. -/
+theorem Collinear.subset {s₁ s₂ : Set P} (hs : s₁ ⊆ s₂) (h : Collinear k s₂) : Collinear k s₁ :=
+  (dim_le_of_submodule (vectorSpan k s₁) (vectorSpan k s₂) (vector_span_mono k hs)).trans h
+
+/-- The `vector_span` of collinear points is finite-dimensional. -/
+theorem Collinear.finite_dimensional_vector_span {s : Set P} (h : Collinear k s) :
+    FiniteDimensional k (vectorSpan k s) :=
+  IsNoetherian.iff_fg.1 (IsNoetherian.iff_dim_lt_aleph_0.2 (lt_of_le_of_ltₓ h Cardinal.one_lt_aleph_0))
+
+/-- The direction of the affine span of collinear points is finite-dimensional. -/
+theorem Collinear.finite_dimensional_direction_affine_span {s : Set P} (h : Collinear k s) :
+    FiniteDimensional k (affineSpan k s).direction :=
+  (direction_affine_span k s).symm ▸ h.finite_dimensional_vector_span
+
+variable (k P)
 
 /-- The empty set is collinear. -/
 theorem collinear_empty : Collinear k (∅ : Set P) := by
@@ -302,6 +320,8 @@ variable {P}
 theorem collinear_singleton (p : P) : Collinear k ({p} : Set P) := by
   rw [collinear_iff_dim_le_one, vector_span_singleton]
   simp
+
+variable {k}
 
 /-- Given a point `p₀` in a set of points, that set is collinear if and
 only if the points can all be expressed as multiples of the same
@@ -342,7 +362,7 @@ theorem collinear_iff_exists_forall_eq_smul_vadd (s : Set P) :
   rcases Set.eq_empty_or_nonempty s with (rfl | ⟨⟨p₁, hp₁⟩⟩)
   · simp [collinear_empty]
     
-  · rw [collinear_iff_of_mem k hp₁]
+  · rw [collinear_iff_of_mem hp₁]
     constructor
     · exact fun h => ⟨p₁, h⟩
       
@@ -355,6 +375,8 @@ theorem collinear_iff_exists_forall_eq_smul_vadd (s : Set P) :
       simp [vadd_vadd, ← add_smul]
       
     
+
+variable (k)
 
 /-- Two points are collinear. -/
 theorem collinear_pair (p₁ p₂ : P) : Collinear k ({p₁, p₂} : Set P) := by
@@ -370,14 +392,16 @@ theorem collinear_pair (p₁ p₂ : P) : Collinear k ({p₁, p₂} : Set P) := b
     simp [hp]
     
 
+variable {k}
+
 /-- Three points are affinely independent if and only if they are not
 collinear. -/
-theorem affine_independent_iff_not_collinear (p : Finₓ 3 → P) : AffineIndependent k p ↔ ¬Collinear k (Set.Range p) := by
+theorem affine_independent_iff_not_collinear {p : Finₓ 3 → P} : AffineIndependent k p ↔ ¬Collinear k (Set.Range p) := by
   rw [collinear_iff_finrank_le_one, affine_independent_iff_not_finrank_vector_span_le k p (Fintypeₓ.card_fin 3)]
 
 /-- Three points are collinear if and only if they are not affinely
 independent. -/
-theorem collinear_iff_not_affine_independent (p : Finₓ 3 → P) : Collinear k (Set.Range p) ↔ ¬AffineIndependent k p := by
+theorem collinear_iff_not_affine_independent {p : Finₓ 3 → P} : Collinear k (Set.Range p) ↔ ¬AffineIndependent k p := by
   rw [collinear_iff_finrank_le_one, finrank_vector_span_le_iff_not_affine_independent k p (Fintypeₓ.card_fin 3)]
 
 end AffineSpace'

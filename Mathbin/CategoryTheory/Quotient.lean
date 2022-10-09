@@ -149,6 +149,33 @@ def lift : Quotient r ⥤ D where
     rintro a b c ⟨f⟩ ⟨g⟩
     exact F.map_comp f g
 
+theorem lift_spec : functor r ⋙ lift r F H = F := by
+  apply Functor.ext
+  rotate_left
+  · rintro X
+    rfl
+    
+  · rintro X Y f
+    simp
+    
+
+theorem lift_spec_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = lift r F H := by
+  subst_vars
+  apply functor.hext
+  · rintro X
+    dsimp [lift, Functor]
+    congr
+    ext
+    rfl
+    
+  · rintro X Y f
+    dsimp [lift, Functor]
+    apply Quot.induction_on f
+    rintro ff
+    simp only [Quot.lift_on_mk, functor.comp_map]
+    congr <;> ext <;> rfl
+    
+
 /-- The original functor factors through the induced functor. -/
 def lift.isLift : functor r ⋙ lift r F H ≅ F :=
   NatIso.ofComponents (fun X => Iso.refl _) (by tidy)

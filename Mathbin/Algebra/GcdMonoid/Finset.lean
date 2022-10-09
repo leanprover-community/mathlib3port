@@ -93,6 +93,13 @@ theorem lcm_mono_fun {g : β → α} (h : ∀ b ∈ s, f b ∣ g b) : s.lcm f �
 theorem lcm_mono (h : s₁ ⊆ s₂) : s₁.lcm f ∣ s₂.lcm f :=
   lcm_dvd fun b hb => dvd_lcm (h hb)
 
+theorem lcm_image [DecidableEq β] {g : γ → β} (s : Finsetₓ γ) : (s.Image g).lcm f = s.lcm (f ∘ g) := by
+  classical
+  induction' s using Finsetₓ.induction with c s hc ih <;> simp [*]
+
+theorem lcm_eq_lcm_image [DecidableEq α] : s.lcm f = (s.Image f).lcm id :=
+  Eq.symm <| lcm_image _
+
 theorem lcm_eq_zero_iff [Nontrivial α] : s.lcm f = 0 ↔ 0 ∈ f '' s := by
   simp only [Multiset.mem_map, lcm_def, Multiset.lcm_eq_zero_iff, Set.mem_image, mem_coe, ← Finsetₓ.mem_def]
 
@@ -155,11 +162,12 @@ theorem gcd_mono_fun {g : β → α} (h : ∀ b ∈ s, f b ∣ g b) : s.gcd f �
 theorem gcd_mono (h : s₁ ⊆ s₂) : s₂.gcd f ∣ s₁.gcd f :=
   dvd_gcd fun b hb => gcd_dvd (h hb)
 
-theorem gcd_image {g : γ → β} (s : Finsetₓ γ) [DecidableEq β] [IsIdempotent α GcdMonoid.gcd] :
-    (s.Image g).gcd f = s.gcd (f ∘ g) := by simp [gcd, fold_image_idem]
+theorem gcd_image [DecidableEq β] {g : γ → β} (s : Finsetₓ γ) : (s.Image g).gcd f = s.gcd (f ∘ g) := by
+  classical
+  induction' s using Finsetₓ.induction with c s hc ih <;> simp [*]
 
-theorem gcd_eq_gcd_image [DecidableEq α] [IsIdempotent α GcdMonoid.gcd] : s.gcd f = (s.Image f).gcd id :=
-  (@gcd_image _ _ _ _ _ id _ _ _ _).symm
+theorem gcd_eq_gcd_image [DecidableEq α] : s.gcd f = (s.Image f).gcd id :=
+  Eq.symm <| gcd_image _
 
 theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 := by
   rw [gcd_def, Multiset.gcd_eq_zero_iff]

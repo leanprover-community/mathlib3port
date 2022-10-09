@@ -1445,7 +1445,7 @@ theorem coe_fn_abs (f : α →ᵇ β) : ⇑(abs f) = abs f :=
   rfl
 
 instance : NormedLatticeAddCommGroup (α →ᵇ β) :=
-  { BoundedContinuousFunction.lattice with
+  { BoundedContinuousFunction.lattice, BoundedContinuousFunction.seminormedAddCommGroup with
     add_le_add_left := by
       intro f g h₁ h t
       simp only [coe_to_continuous_fun, Pi.add_apply, add_le_add_iff_left, coe_add, ContinuousMap.to_fun_eq_coe]

@@ -230,6 +230,10 @@ theorem inv_subset : s⁻¹ ⊆ t ↔ s ⊆ t⁻¹ := by rw [← inv_subset_inv,
 @[simp, to_additive]
 theorem inv_singleton (a : α) : ({a} : Set α)⁻¹ = {a⁻¹} := by rw [← image_inv, image_singleton]
 
+@[simp, to_additive]
+theorem inv_insert (a : α) (s : Set α) : (insert a s)⁻¹ = insert a⁻¹ s⁻¹ := by
+  rw [insert_eq, union_inv, inv_singleton, insert_eq]
+
 @[to_additive]
 theorem inv_range {ι : Sort _} {f : ι → α} : (Range f)⁻¹ = Range fun i => (f i)⁻¹ := by
   rw [← image_inv]

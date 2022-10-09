@@ -1304,64 +1304,6 @@ unsafe def prove_nat_succ (ic : instance_cache) : expr → tactic (instance_cach
     let p ← mk_eq_refl e
     return (ic, n, e, p)
 
-theorem nat_div (a b q r m : ℕ) (hm : q * b = m) (h : r + m = a) (h₂ : r < b) : a / b = q := by
-  rw [← h, ← hm, Nat.add_mul_div_rightₓ _ _ (lt_of_le_of_ltₓ (Nat.zero_leₓ _) h₂), Nat.div_eq_of_ltₓ h₂, zero_addₓ]
-
-theorem int_div (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) : a / b = q := by
-  rw [← h, ← hm, Int.add_mul_div_right _ _ (ne_of_gtₓ (lt_of_le_of_ltₓ h₁ h₂)), Int.div_eq_zero_of_ltₓ h₁ h₂, zero_addₓ]
-
-theorem nat_mod (a b q r m : ℕ) (hm : q * b = m) (h : r + m = a) (h₂ : r < b) : a % b = r := by
-  rw [← h, ← hm, Nat.add_mul_mod_self_rightₓ, Nat.mod_eq_of_ltₓ h₂]
-
-theorem int_mod (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) : a % b = r := by
-  rw [← h, ← hm, Int.add_mul_mod_self, Int.mod_eq_of_ltₓ h₁ h₂]
-
-theorem int_div_neg (a b c' c : ℤ) (h : a / b = c') (h₂ : -c' = c) : a / -b = c :=
-  h₂ ▸ h ▸ Int.div_negₓ _ _
-
-theorem int_mod_neg (a b c : ℤ) (h : a % b = c) : a % -b = c :=
-  (Int.mod_negₓ _ _).trans h
-
-/-- Given `a`,`b` numerals in `nat` or `int`,
-  * `prove_div_mod ic a b ff` returns `(c, ⊢ a / b = c)`
-  * `prove_div_mod ic a b tt` returns `(c, ⊢ a % b = c)`
--/
-unsafe def prove_div_mod (ic : instance_cache) : expr → expr → Bool → tactic (instance_cache × expr × expr)
-  | a, b, mod =>
-    match match_neg b with
-    | some b => do
-      let (ic, c', p) ← prove_div_mod a b mod
-      if mod then return (ic, c', (quote.1 int_mod_neg).mk_app [a, b, c', p])
-        else do
-          let (ic, c, p₂) ← prove_neg ic c'
-          return (ic, c, (quote.1 int_div_neg).mk_app [a, b, c', c, p, p₂])
-    | none => do
-      let nb ← b.toNat
-      let na ← a.to_int
-      let nq := na / nb
-      let nr := na % nb
-      let nm := nq * nr
-      let (ic, q) ← ic.ofInt nq
-      let (ic, r) ← ic.ofInt nr
-      let (ic, m, pm) ← prove_mul_rat ic q b (Ratₓ.ofInt nq) (Ratₓ.ofInt nb)
-      let (ic, p) ← prove_add_rat ic r m a (Ratₓ.ofInt nr) (Ratₓ.ofInt nm) (Ratₓ.ofInt na)
-      let (ic, p') ← prove_lt_nat ic r b
-      if ic = quote.1 Nat then
-          if mod then return (ic, r, (quote.1 nat_mod).mk_app [a, b, q, r, m, pm, p, p'])
-          else return (ic, q, (quote.1 nat_div).mk_app [a, b, q, r, m, pm, p, p'])
-        else
-          if ic = quote.1 Int then do
-            let (ic, p₀) ← prove_nonneg ic r
-            if mod then return (ic, r, (quote.1 int_mod).mk_app [a, b, q, r, m, pm, p, p₀, p'])
-              else return (ic, q, (quote.1 int_div).mk_app [a, b, q, r, m, pm, p, p₀, p'])
-          else failed
-
-theorem dvd_eq_nat (a b c : ℕ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
-  (propext <| by rw [← h₁, Nat.dvd_iff_mod_eq_zeroₓ]).trans h₂
-
-theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
-  (propext <| by rw [← h₁, Int.dvd_iff_mod_eq_zeroₓ]).trans h₂
-
 theorem int_to_nat_pos (a : ℤ) (b : ℕ)
     (h :
       (haveI := @Nat.castCoe ℤ
@@ -1396,29 +1338,12 @@ theorem neg_succ_of_nat (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
         c) :
     -[1 + a] = -c := by rw [← h₂, ← h₁] <;> rfl
 
-/-- Evaluates some extra numeric operations on `nat` and `int`, specifically
-`nat.succ`, `/` and `%`, and `∣` (divisibility). -/
-unsafe def eval_nat_int_ext : expr → tactic (expr × expr)
+/-- Evaluates `nat.succ`, `int.to_nat`, `int.nat_abs`, `int.neg_succ_of_nat`. -/
+unsafe def eval_nat_int : expr → tactic (expr × expr)
   | e@(quote.1 (Nat.succ _)) => do
     let ic ← mk_instance_cache (quote.1 ℕ)
     let (_, _, ep) ← prove_nat_succ ic e
     return ep
-  | quote.1 ((%%ₓa) / %%ₓb) => do
-    let c ← infer_type a >>= mk_instance_cache
-    Prod.snd <$> prove_div_mod c a b ff
-  | quote.1 ((%%ₓa) % %%ₓb) => do
-    let c ← infer_type a >>= mk_instance_cache
-    Prod.snd <$> prove_div_mod c a b tt
-  | quote.1 ((%%ₓa) ∣ %%ₓb) => do
-    let α ← infer_type a
-    let ic ← mk_instance_cache α
-    let th ←
-      if α = quote.1 Nat then return (quote.1 dvd_eq_nat : expr)
-        else if α = quote.1 Int then return (quote.1 dvd_eq_int) else failed
-    let (ic, c, p₁) ← prove_div_mod ic b a true
-    let (ic, z) ← ic.mk_app `` Zero.zero []
-    let (e', p₂) ← mk_app `` Eq [c, z] >>= eval_ineq
-    return (e', th [a, b, c, e', p₁, p₂])
   | quote.1 (Int.toNat (%%ₓa)) => do
     let n ← a.to_int
     let ic ← mk_instance_cache (quote.1 ℤ)
@@ -1504,7 +1429,7 @@ unsafe def eval_cast : expr → tactic (expr × expr)
 
 /-- This version of `derive` does not fail when the input is already a numeral -/
 unsafe def derive.step (e : expr) : tactic (expr × expr) :=
-  eval_field e <|> eval_pow e <|> eval_ineq e <|> eval_cast e <|> eval_nat_int_ext e
+  eval_field e <|> eval_pow e <|> eval_ineq e <|> eval_cast e <|> eval_nat_int e
 
 /-- An attribute for adding additional extensions to `norm_num`. To use this attribute, put
 `@[norm_num]` on a tactic of type `expr → tactic (expr × expr)`; the tactic will be called on
@@ -1788,4 +1713,94 @@ add_tactic_doc
     tags := ["simplification", "arithmetic", "decision procedure"] }
 
 end Tactic
+
+namespace NormNum
+
+section ElementaryNumberTheory
+
+open Tactic
+
+theorem nat_div (a b q r m : ℕ) (hm : q * b = m) (h : r + m = a) (h₂ : r < b) : a / b = q := by
+  rw [← h, ← hm, Nat.add_mul_div_rightₓ _ _ (lt_of_le_of_ltₓ (Nat.zero_leₓ _) h₂), Nat.div_eq_of_ltₓ h₂, zero_addₓ]
+
+theorem int_div (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) : a / b = q := by
+  rw [← h, ← hm, Int.add_mul_div_right _ _ (ne_of_gtₓ (lt_of_le_of_ltₓ h₁ h₂)), Int.div_eq_zero_of_ltₓ h₁ h₂, zero_addₓ]
+
+theorem nat_mod (a b q r m : ℕ) (hm : q * b = m) (h : r + m = a) (h₂ : r < b) : a % b = r := by
+  rw [← h, ← hm, Nat.add_mul_mod_self_rightₓ, Nat.mod_eq_of_ltₓ h₂]
+
+theorem int_mod (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) : a % b = r := by
+  rw [← h, ← hm, Int.add_mul_mod_self, Int.mod_eq_of_ltₓ h₁ h₂]
+
+theorem int_div_neg (a b c' c : ℤ) (h : a / b = c') (h₂ : -c' = c) : a / -b = c :=
+  h₂ ▸ h ▸ Int.div_negₓ _ _
+
+theorem int_mod_neg (a b c : ℤ) (h : a % b = c) : a % -b = c :=
+  (Int.mod_negₓ _ _).trans h
+
+/-- Given `a`,`b` numerals in `nat` or `int`,
+  * `prove_div_mod ic a b ff` returns `(c, ⊢ a / b = c)`
+  * `prove_div_mod ic a b tt` returns `(c, ⊢ a % b = c)`
+-/
+unsafe def prove_div_mod (ic : instance_cache) : expr → expr → Bool → tactic (instance_cache × expr × expr)
+  | a, b, mod =>
+    match match_neg b with
+    | some b => do
+      let (ic, c', p) ← prove_div_mod a b mod
+      if mod then return (ic, c', (quote.1 int_mod_neg).mk_app [a, b, c', p])
+        else do
+          let (ic, c, p₂) ← prove_neg ic c'
+          return (ic, c, (quote.1 int_div_neg).mk_app [a, b, c', c, p, p₂])
+    | none => do
+      let nb ← b.toNat
+      let na ← a.to_int
+      let nq := na / nb
+      let nr := na % nb
+      let nm := nq * nr
+      let (ic, q) ← ic.ofInt nq
+      let (ic, r) ← ic.ofInt nr
+      let (ic, m, pm) ← prove_mul_rat ic q b (Ratₓ.ofInt nq) (Ratₓ.ofInt nb)
+      let (ic, p) ← prove_add_rat ic r m a (Ratₓ.ofInt nr) (Ratₓ.ofInt nm) (Ratₓ.ofInt na)
+      let (ic, p') ← prove_lt_nat ic r b
+      if ic = quote.1 Nat then
+          if mod then return (ic, r, (quote.1 nat_mod).mk_app [a, b, q, r, m, pm, p, p'])
+          else return (ic, q, (quote.1 nat_div).mk_app [a, b, q, r, m, pm, p, p'])
+        else
+          if ic = quote.1 Int then do
+            let (ic, p₀) ← prove_nonneg ic r
+            if mod then return (ic, r, (quote.1 int_mod).mk_app [a, b, q, r, m, pm, p, p₀, p'])
+              else return (ic, q, (quote.1 int_div).mk_app [a, b, q, r, m, pm, p, p₀, p'])
+          else failed
+
+theorem dvd_eq_nat (a b c : ℕ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
+  (propext <| by rw [← h₁, Nat.dvd_iff_mod_eq_zeroₓ]).trans h₂
+
+theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
+  (propext <| by rw [← h₁, Int.dvd_iff_mod_eq_zeroₓ]).trans h₂
+
+/-- Evaluates some extra numeric operations on `nat` and `int`, specifically
+`/` and `%`, and `∣` (divisibility). -/
+@[norm_num]
+unsafe def eval_nat_int_ext : expr → tactic (expr × expr)
+  | quote.1 ((%%ₓa) / %%ₓb) => do
+    let c ← infer_type a >>= mk_instance_cache
+    Prod.snd <$> prove_div_mod c a b ff
+  | quote.1 ((%%ₓa) % %%ₓb) => do
+    let c ← infer_type a >>= mk_instance_cache
+    Prod.snd <$> prove_div_mod c a b tt
+  | quote.1 ((%%ₓa) ∣ %%ₓb) => do
+    let α ← infer_type a
+    let ic ← mk_instance_cache α
+    let th ←
+      if α = quote.1 Nat then return (quote.1 dvd_eq_nat : expr)
+        else if α = quote.1 Int then return (quote.1 dvd_eq_int) else failed
+    let (ic, c, p₁) ← prove_div_mod ic b a true
+    let (ic, z) ← ic.mk_app `` Zero.zero []
+    let (e', p₂) ← mk_app `` Eq [c, z] >>= eval_ineq
+    return (e', th [a, b, c, e', p₁, p₂])
+  | _ => failed
+
+end ElementaryNumberTheory
+
+end NormNum
 

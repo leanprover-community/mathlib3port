@@ -1,0 +1,30 @@
+/-
+Copyright (c) 2014 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Leonardo de Moura
+-/
+import Mathbin.Data.Nat.Gcd.Basic
+import Mathbin.Algebra.BigOperators.Basic
+
+/-! # Lemmas about coprimality with big products.
+
+These lemmas are kept separate from `data.nat.gcd.basic` in order to minimize imports.
+-/
+
+
+namespace Nat
+
+open BigOperators
+
+/-- See `is_coprime.prod_left` for the corresponding lemma about `is_coprime` -/
+theorem coprime_prod_left {ι : Type _} {x : ℕ} {s : ι → ℕ} {t : Finsetₓ ι} :
+    (∀ i : ι, i ∈ t → Coprime (s i) x) → Coprime (∏ i : ι in t, s i) x :=
+  Finsetₓ.prod_induction s (fun y => y.Coprime x) (fun a b => Coprime.mul) (by simp)
+
+/-- See `is_coprime.prod_right` for the corresponding lemma about `is_coprime` -/
+theorem coprime_prod_right {ι : Type _} {x : ℕ} {s : ι → ℕ} {t : Finsetₓ ι} :
+    (∀ i : ι, i ∈ t → Coprime x (s i)) → Coprime x (∏ i : ι in t, s i) :=
+  Finsetₓ.prod_induction s (fun y => x.Coprime y) (fun a b => Coprime.mul_right) (by simp)
+
+end Nat
+

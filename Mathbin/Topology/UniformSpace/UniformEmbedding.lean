@@ -50,6 +50,10 @@ theorem UniformInducing.basis_uniformity {f : α → β} (hf : UniformInducing f
     {s : ι → Set (β × β)} (H : (𝓤 β).HasBasis p s) : (𝓤 α).HasBasis p fun i => Prod.map f f ⁻¹' s i :=
   hf.1 ▸ H.comap _
 
+theorem UniformInducing.cauchy_map_iff {f : α → β} (hf : UniformInducing f) {F : Filter α} :
+    Cauchy (map f F) ↔ Cauchy F := by
+  simp only [Cauchy, map_ne_bot_iff, prod_map_map_eq, map_le_iff_le_comap, ← hf.comap_uniformity]
+
 theorem uniform_inducing_of_compose {f : α → β} {g : β → γ} (hf : UniformContinuous f) (hg : UniformContinuous g)
     (hgf : UniformInducing (g ∘ f)) : UniformInducing f := by
   refine' ⟨le_antisymmₓ _ hf.le_comap⟩

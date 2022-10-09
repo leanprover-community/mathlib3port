@@ -54,6 +54,8 @@ instance Lex.partialOrder [PartialOrderₓ N] : PartialOrderₓ (Lex (α →₀ 
   PartialOrderₓ.lift (fun x => toLex ⇑(ofLex x)) Finsupp.coe_fn_injective
 
 --fun_like.coe_injective
+section LinearOrderₓ
+
 variable [LinearOrderₓ N]
 
 /-- Auxiliary helper to case split computably. There is no need for this to be public, as it
@@ -91,8 +93,18 @@ instance Lex.linearOrder : LinearOrderₓ (Lex (α →₀ N)) :=
     le_total := ltTrichotomyRec (fun f g h => Or.inl h.le) (fun f g h => Or.inl h.le) fun f g h => Or.inr h.le,
     decidableLt := by infer_instance, decidableLe := by infer_instance, DecidableEq := by infer_instance }
 
+end LinearOrderₓ
+
+variable [PartialOrderₓ N]
+
 theorem Lex.le_of_forall_le {a b : Lex (α →₀ N)} (h : ∀ i, ofLex a i ≤ ofLex b i) : a ≤ b :=
-  le_of_not_ltₓ fun ⟨i, hi⟩ => (h i).not_lt hi.2
+  le_of_lt_or_eqₓ <|
+    or_iff_not_imp_right.2 fun hne => by
+      classical <;>
+        exact
+          ⟨Finsetₓ.min' _ (nonempty_ne_locus_iff.2 hne), fun j hj =>
+            not_mem_ne_locus.1 fun h => (Finsetₓ.min'_le _ _ h).not_lt hj,
+            (h _).lt_of_ne (mem_ne_locus.1 <| Finsetₓ.min'_mem _ _)⟩
 
 theorem Lex.le_of_of_lex_le {a b : Lex (α →₀ N)} (h : ofLex a ≤ ofLex b) : a ≤ b :=
   Lex.le_of_forall_le h
@@ -111,7 +123,9 @@ variable [LinearOrderₓ α] [AddMonoidₓ N] [LinearOrderₓ N]
 /-!  We are about to sneak in a hypothesis that might appear to be too strong.
 We assume `covariant_class` with *strict* inequality `<` also when proving the one with the
 *weak* inequality `≤`.  This is actually necessary: addition on `lex (α →₀ N)` may fail to be
-monotone, when it is "just" monotone on `N`. -/
+monotone, when it is "just" monotone on `N`.
+
+See `counterexamples.zero_divisors_in_add_monoid_algebras` for a counterexample. -/
 
 
 section Left

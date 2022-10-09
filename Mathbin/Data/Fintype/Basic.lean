@@ -139,6 +139,10 @@ instance : OrderTop (Finsetₓ α) where
   top := univ
   le_top := subset_univ
 
+@[simp]
+theorem top_eq_univ : (⊤ : Finsetₓ α) = univ :=
+  rfl
+
 section BooleanAlgebra
 
 variable [DecidableEq α] {a : α}
@@ -164,6 +168,18 @@ theorem coe_compl (s : Finsetₓ α) : ↑(sᶜ) = (↑s : Set α)ᶜ :=
 @[simp]
 theorem compl_empty : (∅ : Finsetₓ α)ᶜ = univ :=
   compl_bot
+
+@[simp]
+theorem compl_univ : (univ : Finsetₓ α)ᶜ = ∅ :=
+  compl_top
+
+@[simp]
+theorem compl_eq_empty_iff (s : Finsetₓ α) : sᶜ = ∅ ↔ s = univ :=
+  compl_eq_bot
+
+@[simp]
+theorem compl_eq_univ_iff (s : Finsetₓ α) : sᶜ = univ ↔ s = ∅ :=
+  compl_eq_top
 
 @[simp]
 theorem union_compl (s : Finsetₓ α) : s ∪ sᶜ = univ :=
@@ -1485,6 +1501,48 @@ end Function.Embedding
 @[simp]
 theorem Finsetₓ.univ_map_embedding {α : Type _} [Fintypeₓ α] (e : α ↪ α) : univ.map e = univ := by
   rw [← e.equiv_of_fintype_self_embedding_to_embedding, univ_map_equiv_to_embedding]
+
+/-- Any injection from a finset `s` in a fintype `α` to a finset `t` of the same cardinality as `α`
+can be extended to a bijection between `α` and `t`. -/
+theorem Finsetₓ.exists_equiv_extend_of_card_eq [Fintypeₓ α] {t : Finsetₓ β} (hαt : Fintypeₓ.card α = t.card)
+    {s : Finsetₓ α} {f : α → β} (hfst : s.Image f ⊆ t) (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i :=
+  by
+  classical
+  induction' s using Finsetₓ.induction with a s has H generalizing f
+  · obtain ⟨e⟩ : Nonempty (α ≃ ↥t) := by rwa [← Fintypeₓ.card_eq, Fintypeₓ.card_coe]
+    use e
+    simp
+    
+  have hfst' : Finsetₓ.image f s ⊆ t := (Finsetₓ.image_mono _ (s.subset_insert a)).trans hfst
+  have hfs' : Set.InjOn f s := hfs.mono (s.subset_insert a)
+  obtain ⟨g', hg'⟩ := H hfst' hfs'
+  have hfat : f a ∈ t := hfst (mem_image_of_mem _ (s.mem_insert_self a))
+  use g'.trans (Equivₓ.swap (⟨f a, hfat⟩ : t) (g' a))
+  simp_rw [mem_insert]
+  rintro i (rfl | hi)
+  · simp
+    
+  rw [Equivₓ.trans_apply, Equivₓ.swap_apply_of_ne_of_ne, hg' _ hi]
+  · exact
+      ne_of_apply_ne Subtype.val
+        (ne_of_eq_of_ne (hg' _ hi) <|
+          hfs.ne (subset_insert _ _ hi) (mem_insert_self _ _) <| ne_of_mem_of_not_memₓ hi has)
+    
+  · exact g'.injective.ne (ne_of_mem_of_not_memₓ hi has)
+    
+
+/-- Any injection from a set `s` in a fintype `α` to a finset `t` of the same cardinality as `α`
+can be extended to a bijection between `α` and `t`. -/
+theorem Set.MapsTo.exists_equiv_extend_of_card_eq [Fintypeₓ α] {t : Finsetₓ β} (hαt : Fintypeₓ.card α = t.card)
+    {s : Set α} {f : α → β} (hfst : s.MapsTo f t) (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by
+  classical
+  let s' : Finsetₓ α := s.to_finset
+  have hfst' : s'.image f ⊆ t := by simpa [← Finsetₓ.coe_subset] using hfst
+  have hfs' : Set.InjOn f s' := by simpa using hfs
+  obtain ⟨g, hg⟩ := Finsetₓ.exists_equiv_extend_of_card_eq hαt hfst' hfs'
+  refine' ⟨g, fun i hi => _⟩
+  apply hg
+  simpa using hi
 
 namespace Fintypeₓ
 

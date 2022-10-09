@@ -41,6 +41,9 @@ theorem card_eq_fintype_card [Fintypeₓ α] : Nat.card α = Fintypeₓ.card α 
 theorem card_eq_zero_of_infinite [Infinite α] : Nat.card α = 0 :=
   mk_to_nat_of_infinite
 
+theorem finite_of_card_ne_zero (h : Nat.card α ≠ 0) : Finite α :=
+  not_infinite_iff_finite.mp <| h ∘ @Nat.card_eq_zero_of_infinite α
+
 theorem card_congr (f : α ≃ β) : Nat.card α = Nat.card β :=
   Cardinal.to_nat_congr f
 
@@ -85,6 +88,10 @@ theorem card_plift (α : Type _) : Nat.card (Plift α) = Nat.card α :=
 
 theorem card_pi {β : α → Type _} [Fintypeₓ α] : Nat.card (∀ a, β a) = ∏ a, Nat.card (β a) := by
   simp_rw [Nat.card, mk_pi, prod_eq_of_fintype, to_nat_lift, to_nat_finset_prod]
+
+theorem card_fun [Finite α] : Nat.card (α → β) = Nat.card β ^ Nat.card α := by
+  haveI := Fintypeₓ.ofFinite α
+  rw [Nat.card_pi, Finsetₓ.prod_const, Finsetₓ.card_univ, ← Nat.card_eq_fintype_card]
 
 @[simp]
 theorem card_zmod (n : ℕ) : Nat.card (Zmod n) = n := by

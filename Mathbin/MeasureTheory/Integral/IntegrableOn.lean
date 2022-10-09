@@ -229,7 +229,7 @@ theorem integrable_on_Lp_of_measure_ne_top {E} [NormedAddCommGroup E] {p : ℝ�
 
 theorem Integrable.lintegral_lt_top {f : α → ℝ} (hf : Integrable f μ) : (∫⁻ x, Ennreal.ofReal (f x) ∂μ) < ∞ :=
   calc
-    (∫⁻ x, Ennreal.ofReal (f x) ∂μ) ≤ ∫⁻ x, ↑∥f x∥₊ ∂μ := lintegral_to_real_le_lintegral_nnnorm f
+    (∫⁻ x, Ennreal.ofReal (f x) ∂μ) ≤ ∫⁻ x, ↑∥f x∥₊ ∂μ := lintegral_of_real_le_lintegral_nnnorm f
     _ < ∞ := hf.2
     
 

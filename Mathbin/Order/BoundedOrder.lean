@@ -888,6 +888,8 @@ instance [PartialOrderₓ α] : PartialOrderₓ (WithBot α) :=
         rw [le_antisymmₓ h₁' h₂']
          }
 
+theorem coe_strict_mono [Preorderₓ α] : StrictMonoₓ (coe : α → WithBot α) := fun a b => some_lt_some.2
+
 theorem map_le_iff [Preorderₓ α] [Preorderₓ β] (f : α → β) (mono_iff : ∀ {a b}, f a ≤ f b ↔ a ≤ b) :
     ∀ a b : WithBot α, a.map f ≤ b.map f ↔ a ≤ b
   | ⊥, _ => by simp only [map_bot, bot_le]
@@ -1471,6 +1473,8 @@ instance [PartialOrderₓ α] : PartialOrderₓ (WithTop α) :=
     le_antisymm := fun _ _ => by
       simp_rw [← to_dual_le_to_dual_iff]
       exact Function.swap le_antisymmₓ }
+
+theorem coe_strict_mono [Preorderₓ α] : StrictMonoₓ (coe : α → WithTop α) := fun a b => some_lt_some.2
 
 theorem map_le_iff [Preorderₓ α] [Preorderₓ β] (f : α → β) (a b : WithTop α) (mono_iff : ∀ {a b}, f a ≤ f b ↔ a ≤ b) :
     a.map f ≤ b.map f ↔ a ≤ b := by
@@ -2234,11 +2238,14 @@ section Nontrivial
 
 variable [PartialOrderₓ α] [BoundedOrder α] [Nontrivial α]
 
-theorem bot_ne_top : (⊥ : α) ≠ ⊤ := fun H => not_nontrivial_iff_subsingleton.mpr (subsingleton_of_bot_eq_top H) ‹_›
+@[simp]
+theorem bot_ne_top : (⊥ : α) ≠ ⊤ := fun h => not_subsingleton _ <| subsingleton_of_bot_eq_top h
 
+@[simp]
 theorem top_ne_bot : (⊤ : α) ≠ ⊥ :=
   bot_ne_top.symm
 
+@[simp]
 theorem bot_lt_top : (⊥ : α) < ⊤ :=
   lt_top_iff_ne_top.2 bot_ne_top
 

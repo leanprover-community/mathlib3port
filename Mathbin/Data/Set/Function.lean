@@ -414,6 +414,11 @@ theorem inj_on_singleton (f : α → β) (a : α) : InjOn f {a} :=
 theorem InjOn.eq_iff {x y} (h : InjOn f s) (hx : x ∈ s) (hy : y ∈ s) : f x = f y ↔ x = y :=
   ⟨h hx hy, fun h => h ▸ rfl⟩
 
+theorem InjOn.ne_iff {x y} (h : InjOn f s) (hx : x ∈ s) (hy : y ∈ s) : f x ≠ f y ↔ x ≠ y :=
+  (h.eq_iff hx hy).Not
+
+alias inj_on.ne_iff ↔ _ inj_on.ne
+
 theorem InjOn.congr (h₁ : InjOn f₁ s) (h : EqOn f₁ f₂ s) : InjOn f₂ s := fun x hx y hy => h hx ▸ h hy ▸ h₁ hx hy
 
 theorem EqOn.inj_on_iff (H : EqOn f₁ f₂ s) : InjOn f₁ s ↔ InjOn f₂ s :=

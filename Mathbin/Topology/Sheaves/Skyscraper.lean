@@ -242,5 +242,167 @@ def skyscraperSheafFunctor [HasProducts.{u} C] : C ⥤ Sheaf C X where
   map_id' := fun c => Sheaf.Hom.ext _ _ <| (skyscraperPresheafFunctor p₀).map_id _
   map_comp' := fun _ _ _ f g => Sheaf.Hom.ext _ _ <| (skyscraperPresheafFunctor p₀).map_comp _ _
 
+namespace StalkSkyscraperPresheafAdjunctionAuxs
+
+variable [HasColimits C]
+
+/-- If `f : 𝓕.stalk p₀ ⟶ c`, then a natural transformation `𝓕 ⟶ skyscraper_presheaf p₀ c` can be
+defined by: `𝓕.germ p₀ ≫ f : 𝓕(U) ⟶ c` if `p₀ ∈ U` and the unique morphism to a terminal object
+if `p₀ ∉ U`.
+-/
+@[simps]
+def toSkyscraperPresheaf {𝓕 : Presheaf C X} {c : C} (f : 𝓕.stalk p₀ ⟶ c) : 𝓕 ⟶ skyscraperPresheaf p₀ c where
+  app := fun U =>
+    if h : p₀ ∈ U.unop then 𝓕.germ ⟨p₀, h⟩ ≫ f ≫ eqToHom (if_pos h).symm
+    else ((if_neg h).symm.rec terminalIsTerminal).from _
+  naturality' := fun U V inc => by
+    dsimp
+    by_cases hV:p₀ ∈ V.unop
+    · have hU : p₀ ∈ U.unop := le_of_hom inc.unop hV
+      split_ifs
+      erw [← category.assoc, 𝓕.germ_res inc.unop, category.assoc, category.assoc, eq_to_hom_trans]
+      rfl
+      
+    · split_ifs
+      apply ((if_neg hV).symm.rec terminal_is_terminal).hom_ext
+      
+
+/-- If `f : 𝓕 ⟶ skyscraper_presheaf p₀ c` is a natural transformation, then there is a morphism
+`𝓕.stalk p₀ ⟶ c` defined as the morphism from colimit to cocone at `c`.
+-/
+def fromStalk {𝓕 : Presheaf C X} {c : C} (f : 𝓕 ⟶ skyscraperPresheaf p₀ c) : 𝓕.stalk p₀ ⟶ c :=
+  let χ : Cocone ((OpenNhds.inclusion p₀).op ⋙ 𝓕) :=
+    Cocone.mk c <|
+      { app := fun U => f.app (op U.unop.1) ≫ eqToHom (if_pos U.unop.2),
+        naturality' := fun U V inc => by
+          dsimp
+          erw [category.comp_id, ← category.assoc, comp_eq_to_hom_iff, category.assoc, eq_to_hom_trans, f.naturality,
+            skyscraper_presheaf_map]
+          have hV : p₀ ∈ (open_nhds.inclusion p₀).obj V.unop := V.unop.2
+          split_ifs
+          simpa only [comp_eq_to_hom_iff, category.assoc, eq_to_hom_trans, eq_to_hom_refl, category.comp_id] }
+  colimit.desc _ χ
+
+theorem to_skyscraper_from_stalk {𝓕 : Presheaf C X} {c : C} (f : 𝓕 ⟶ skyscraperPresheaf p₀ c) :
+    toSkyscraperPresheaf p₀ (fromStalk _ f) = f :=
+  NatTrans.ext _ _ <|
+    funext fun U =>
+      ((em (p₀ ∈ U.unop)).elim fun h => by
+          dsimp
+          split_ifs
+          erw [← category.assoc, colimit.ι_desc, category.assoc, eq_to_hom_trans, eq_to_hom_refl, category.comp_id]
+          rfl)
+        fun h => by
+        dsimp
+        split_ifs
+        apply ((if_neg h).symm.rec terminal_is_terminal).hom_ext
+
+theorem from_stalk_to_skyscraper {𝓕 : Presheaf C X} {c : C} (f : 𝓕.stalk p₀ ⟶ c) :
+    fromStalk p₀ (toSkyscraperPresheaf _ f) = f :=
+  colimit.hom_ext fun U => by
+    erw [colimit.ι_desc]
+    dsimp
+    rw [dif_pos U.unop.2]
+    rw [category.assoc, category.assoc, eq_to_hom_trans, eq_to_hom_refl, category.comp_id, presheaf.germ]
+    congr 3
+    apply_fun Opposite.unop using unop_injective
+    rw [unop_op]
+    ext
+    rfl
+
+/-- The unit in `presheaf.stalk ⊣ skyscraper_presheaf_functor`
+-/
+@[simps]
+protected def unit : 𝟭 (Presheaf C X) ⟶ Presheaf.stalkFunctor C p₀ ⋙ skyscraperPresheafFunctor p₀ where
+  app := fun 𝓕 => toSkyscraperPresheaf _ <| 𝟙 _
+  naturality' := fun 𝓕 𝓖 f => by
+    ext U
+    dsimp
+    split_ifs
+    · simp only [category.id_comp, ← category.assoc]
+      rw [comp_eq_to_hom_iff]
+      simp only [category.assoc, eq_to_hom_trans, eq_to_hom_refl, category.comp_id]
+      erw [colimit.ι_map]
+      rfl
+      
+    · apply ((if_neg h).symm.rec terminal_is_terminal).hom_ext
+      
+
+/-- The counit in `presheaf.stalk ⊣ skyscraper_presheaf_functor`
+-/
+@[simps]
+protected def counit : skyscraperPresheafFunctor p₀ ⋙ (Presheaf.stalkFunctor C p₀ : Presheaf C X ⥤ C) ⟶ 𝟭 C where
+  app := fun c => (skyscraperPresheafStalkOfSpecializes p₀ c specializes_rfl).Hom
+  naturality' := fun x y f =>
+    colimit.hom_ext fun U => by
+      erw [← category.assoc, colimit.ι_map, colimit.iso_colimit_cocone_ι_hom_assoc,
+        skyscraper_presheaf_cocone_of_specializes_ι_app, category.assoc, colimit.ι_desc, whiskering_left_obj_map,
+        whisker_left_app, SkyscraperPresheafFunctor.map'_app, dif_pos U.unop.2,
+        skyscraper_presheaf_cocone_of_specializes_ι_app, comp_eq_to_hom_iff, category.assoc, eq_to_hom_comp_iff, ←
+        category.assoc, eq_to_hom_trans, eq_to_hom_refl, category.id_comp, comp_eq_to_hom_iff, category.assoc,
+        eq_to_hom_trans, eq_to_hom_refl, category.comp_id, CategoryTheory.Functor.id_map]
+
+end StalkSkyscraperPresheafAdjunctionAuxs
+
+section
+
+open StalkSkyscraperPresheafAdjunctionAuxs
+
+/-- `skyscraper_presheaf_functor` is the right adjoint of `presheaf.stalk_functor`
+-/
+def skyscraperPresheafStalkAdjunction [HasColimits C] :
+    (Presheaf.stalkFunctor C p₀ : Presheaf C X ⥤ C) ⊣ skyscraperPresheafFunctor p₀ where
+  homEquiv := fun c 𝓕 =>
+    { toFun := toSkyscraperPresheaf _, invFun := fromStalk _, left_inv := from_stalk_to_skyscraper _,
+      right_inv := to_skyscraper_from_stalk _ }
+  Unit := StalkSkyscraperPresheafAdjunctionAuxs.unit _
+  counit := StalkSkyscraperPresheafAdjunctionAuxs.counit _
+  hom_equiv_unit' := fun 𝓕 c α => by
+    ext U
+    simp only [Equivₓ.coe_fn_mk, to_skyscraper_presheaf_app, nat_trans.comp_app, SkyscraperPresheafFunctor.map'_app,
+      skyscraper_presheaf_functor_map, unit_app]
+    split_ifs
+    · erw [category.id_comp, ← category.assoc, comp_eq_to_hom_iff, category.assoc, category.assoc, category.assoc,
+        category.assoc, eq_to_hom_trans, eq_to_hom_refl, category.comp_id, ← category.assoc _ _ α, eq_to_hom_trans,
+        eq_to_hom_refl, category.id_comp]
+      
+    · apply ((if_neg h).symm.rec terminal_is_terminal).hom_ext
+      
+  hom_equiv_counit' := fun 𝓕 c α => by
+    ext U
+    simp only [Equivₓ.coe_fn_symm_mk, counit_app]
+    erw [colimit.ι_desc, ← category.assoc, colimit.ι_map, whisker_left_app, category.assoc, colimit.ι_desc]
+    rfl
+
+instance [HasColimits C] : IsRightAdjoint (skyscraperPresheafFunctor p₀ : C ⥤ Presheaf C X) :=
+  ⟨_, skyscraperPresheafStalkAdjunction _⟩
+
+instance [HasColimits C] : IsLeftAdjoint (Presheaf.stalkFunctor C p₀) :=
+  ⟨_, skyscraperPresheafStalkAdjunction _⟩
+
+/-- Taking stalks of a sheaf is the left adjoint functor to `skyscraper_sheaf_functor`
+-/
+def stalkSkyscraperSheafAdjunction [HasColimits C] [HasProducts.{u} C] :
+    Sheaf.forget C X ⋙ Presheaf.stalkFunctor _ p₀ ⊣ skyscraperSheafFunctor p₀ where
+  homEquiv := fun 𝓕 c =>
+    ⟨fun f => ⟨toSkyscraperPresheaf p₀ f⟩, fun g => fromStalk p₀ g.1, from_stalk_to_skyscraper p₀, fun g => by
+      ext1
+      apply to_skyscraper_from_stalk⟩
+  Unit :=
+    { app := fun 𝓕 => ⟨(StalkSkyscraperPresheafAdjunctionAuxs.unit p₀).app 𝓕.1⟩,
+      naturality' := fun 𝓐 𝓑 ⟨f⟩ => by
+        ext1
+        apply (StalkSkyscraperPresheafAdjunctionAuxs.unit p₀).naturality }
+  counit := StalkSkyscraperPresheafAdjunctionAuxs.counit p₀
+  hom_equiv_unit' := fun 𝓐 c f => by
+    ext1
+    exact (skyscraperPresheafStalkAdjunction p₀).hom_equiv_unit
+  hom_equiv_counit' := fun 𝓐 c f => (skyscraperPresheafStalkAdjunction p₀).hom_equiv_counit
+
+instance [HasColimits C] [HasProducts.{u} C] : IsRightAdjoint (skyscraperSheafFunctor p₀ : C ⥤ Sheaf C X) :=
+  ⟨_, stalkSkyscraperSheafAdjunction _⟩
+
+end
+
 end
 

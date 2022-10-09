@@ -328,6 +328,9 @@ theorem is_unit (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) : IsUnit ζ := by
 theorem pow_ne_one_of_pos_of_lt (h0 : 0 < l) (hl : l < k) : ζ ^ l ≠ 1 :=
   mt (Nat.le_of_dvdₓ h0 ∘ h.dvd_of_pow_eq_one _) <| not_le_of_ltₓ hl
 
+theorem ne_one (hk : 1 < k) : ζ ≠ 1 :=
+  h.pow_ne_one_of_pos_of_lt zero_lt_one hk ∘ (pow_oneₓ ζ).trans
+
 theorem pow_inj (h : IsPrimitiveRoot ζ k) ⦃i j : ℕ⦄ (hi : i < k) (hj : j < k) (H : ζ ^ i = ζ ^ j) : i = j := by
   wlog hij : i ≤ j
   apply le_antisymmₓ hij
@@ -600,6 +603,18 @@ theorem neg_one (p : ℕ) [Nontrivial R] [h : CharP R p] (hp : p ≠ 2) : IsPrim
   convert IsPrimitiveRoot.order_of (-1 : R)
   rw [order_of_neg_one, if_neg]
   rwa [ring_char.eq_iff.mpr h]
+
+/-- If `1 < k` then `(∑ i in range k, ζ ^ i) = 0`. -/
+theorem geom_sum_eq_zero [IsDomain R] {ζ : R} (hζ : IsPrimitiveRoot ζ k) (hk : 1 < k) : (∑ i in range k, ζ ^ i) = 0 :=
+  by
+  refine' eq_zero_of_ne_zero_of_mul_left_eq_zero (sub_ne_zero_of_ne (hζ.ne_one hk).symm) _
+  rw [mul_neg_geom_sum, hζ.pow_eq_one, sub_self]
+
+/-- If `1 < k`, then `ζ ^ k.pred = -(∑ i in range k.pred, ζ ^ i)`. -/
+theorem pow_sub_one_eq [IsDomain R] {ζ : R} (hζ : IsPrimitiveRoot ζ k) (hk : 1 < k) :
+    ζ ^ k.pred = -∑ i in range k.pred, ζ ^ i := by
+  rw [eq_neg_iff_add_eq_zero, add_commₓ, ← sum_range_succ, ← Nat.succ_eq_add_one,
+    Nat.succ_pred_eq_of_posₓ (pos_of_gt hk), hζ.geom_sum_eq_zero hk]
 
 /-- The (additive) monoid equivalence between `zmod k`
 and the powers of a primitive root of unity `ζ`. -/

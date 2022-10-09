@@ -1820,6 +1820,30 @@ def piEquivPiSubtypeProd {α : Type _} (p : α → Prop) (β : α → Type _) [D
         rfl
         
 
+/-- A product of types can be split as the binary product of one of the types and the product
+  of all the remaining types. -/
+@[simps]
+def piSplitAt {α : Type _} [DecidableEq α] (i : α) (β : α → Type _) : (∀ j, β j) ≃ β i × ∀ j : { j // j ≠ i }, β j where
+  toFun := fun f => ⟨f i, fun j => f j⟩
+  invFun := fun f j => if h : j = i then h.symm.rec f.1 else f.2 ⟨j, h⟩
+  right_inv := fun f => by
+    ext
+    exacts[dif_pos rfl, (dif_neg x.2).trans (by cases x <;> rfl)]
+  left_inv := fun f => by
+    ext
+    dsimp only
+    split_ifs
+    · subst h
+      
+    · rfl
+      
+
+/-- A product of copies of a type can be split as the binary product of one copy and the product
+  of all the remaining copies. -/
+@[simps]
+def funSplitAt {α : Type _} [DecidableEq α] (i : α) (β : Type _) : (α → β) ≃ β × ({ j // j ≠ i } → β) :=
+  piSplitAt i _
+
 end
 
 section SubtypeEquivCodomain

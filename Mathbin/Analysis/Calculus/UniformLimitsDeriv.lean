@@ -110,7 +110,7 @@ in a neighborhood of `x`. -/
 theorem uniform_cauchy_seq_on_filter_of_tendsto_uniformly_on_filter_fderiv (hf' : UniformCauchySeqOnFilter f' l (𝓝 x))
     (hf : ∀ᶠ n : ι × E in l ×ᶠ 𝓝 x, HasFderivAt (f n.1) (f' n.1 n.2) n.2) (hfg : Tendsto (fun n => f n x) l (𝓝 (g x))) :
     UniformCauchySeqOnFilter f l (𝓝 x) := by
-  rw [NormedAddCommGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero] at hf'⊢
+  rw [SeminormedAddGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero] at hf'⊢
   suffices
     TendstoUniformlyOnFilter (fun (n : ι × ι) (z : E) => f n.1 z - f n.2 z - (f n.1 x - f n.2 x)) 0 (l ×ᶠ l) (𝓝 x) ∧
       TendstoUniformlyOnFilter (fun (n : ι × ι) (z : E) => f n.1 x - f n.2 x) 0 (l ×ᶠ l) (𝓝 x)
@@ -173,7 +173,7 @@ theorem uniform_cauchy_seq_on_ball_of_tendsto_uniformly_on_ball_fderiv {r : ℝ}
     (hf' : UniformCauchySeqOn f' l (Metric.Ball x r))
     (hf : ∀ n : ι, ∀ y : E, y ∈ Metric.Ball x r → HasFderivAt (f n) (f' n y) y)
     (hfg : Tendsto (fun n => f n x) l (𝓝 (g x))) : UniformCauchySeqOn f l (Metric.Ball x r) := by
-  rw [NormedAddCommGroup.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_zero] at hf'⊢
+  rw [SeminormedAddGroup.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_zero] at hf'⊢
   suffices
     TendstoUniformlyOn (fun (n : ι × ι) (z : E) => f n.1 z - f n.2 z - (f n.1 x - f n.2 x)) 0 (l ×ᶠ l)
         (Metric.Ball x r) ∧
@@ -226,10 +226,10 @@ theorem difference_quotients_converge_uniformly (hf' : TendstoUniformlyOnFilter 
   refine'
     UniformCauchySeqOnFilter.tendsto_uniformly_on_filter_of_tendsto _
       ((hfg.and (eventually_const.mpr hfg.self_of_nhds)).mono fun y hy => (hy.1.sub hy.2).const_smul _)
-  rw [NormedAddCommGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero]
+  rw [SeminormedAddGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero]
   rw [Metric.tendsto_uniformly_on_filter_iff]
   have hfg' := hf'.uniform_cauchy_seq_on_filter
-  rw [NormedAddCommGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero] at hfg'
+  rw [SeminormedAddGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero] at hfg'
   rw [Metric.tendsto_uniformly_on_filter_iff] at hfg'
   intro ε hε
   obtain ⟨q, hqpos, hqε⟩ := exists_pos_rat_lt hε
@@ -413,7 +413,7 @@ theorem UniformCauchySeqOnFilter.one_smul_right {l' : Filter 𝕜} (hf' : Unifor
   -- The tricky part of this proof is that operator norms are written in terms of `≤` whereas
   -- metrics are written in terms of `<`. So we need to shrink `ε` utilizing the archimedean
   -- property of `ℝ`
-  rw [NormedAddCommGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero,
+  rw [SeminormedAddGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero,
     Metric.tendsto_uniformly_on_filter_iff] at hf'⊢
   intro ε hε
   obtain ⟨q, hq, hq'⟩ := exists_between hε.lt

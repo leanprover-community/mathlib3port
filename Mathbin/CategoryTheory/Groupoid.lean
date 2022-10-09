@@ -6,6 +6,9 @@ Authors: Reid Barton, Scott Morrison, David Wärn
 import Mathbin.CategoryTheory.FullSubcategory
 import Mathbin.CategoryTheory.Products.Basic
 import Mathbin.CategoryTheory.Pi.Basic
+import Mathbin.CategoryTheory.Category.Basic
+import Mathbin.Tactic.NthRewrite.Default
+import Mathbin.Combinatorics.Quiver.ConnectedComponent
 
 /-!
 # Groupoids
@@ -71,6 +74,12 @@ theorem Groupoid.inv_eq_inv (f : X ⟶ Y) : Groupoid.inv f = inv f :=
 @[simps]
 def Groupoid.invEquiv : (X ⟶ Y) ≃ (Y ⟶ X) :=
   ⟨Groupoid.inv, Groupoid.inv, fun f => by simp, fun f => by simp⟩
+
+instance (priority := 100) groupoidHasInvolutiveReverse : Quiver.HasInvolutiveReverse C where
+  reverse' := fun X Y f => Groupoid.inv f
+  inv' := fun X Y f => by
+    dsimp [Quiver.reverse]
+    simp
 
 variable (X Y)
 

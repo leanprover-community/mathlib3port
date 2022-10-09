@@ -326,7 +326,8 @@ theorem IsBoundedBilinearMap.is_O_comp {α : Type _} (H : IsBoundedBilinearMap �
   H.IsO.comp_tendsto le_top
 
 protected theorem IsBoundedBilinearMap.is_O' (h : IsBoundedBilinearMap 𝕜 f) : f =O[⊤] fun p : E × F => ∥p∥ * ∥p∥ :=
-  h.IsO.trans (Asymptotics.is_O_fst_prod'.norm_norm.mul Asymptotics.is_O_snd_prod'.norm_norm)
+  h.IsO.trans <|
+    (@Asymptotics.is_O_fst_prod' _ E F _ _ _ _).norm_norm.mul (@Asymptotics.is_O_snd_prod' _ E F _ _ _ _).norm_norm
 
 theorem IsBoundedBilinearMap.map_sub_left (h : IsBoundedBilinearMap 𝕜 f) {x y : E} {z : F} :
     f (x - y, z) = f (x, z) - f (y, z) :=

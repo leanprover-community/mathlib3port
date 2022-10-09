@@ -465,6 +465,10 @@ theorem integrable_smul_measure {f : α → β} {c : ℝ≥0∞} (h₁ : c ≠ 0
     simpa only [smul_smul, Ennreal.inv_mul_cancel h₁ h₂, one_smul] using h.smul_measure (Ennreal.inv_ne_top.2 h₁),
     fun h => h.smul_measure h₂⟩
 
+theorem integrable_inv_smul_measure {f : α → β} {c : ℝ≥0∞} (h₁ : c ≠ 0) (h₂ : c ≠ ∞) :
+    Integrable f (c⁻¹ • μ) ↔ Integrable f μ :=
+  integrable_smul_measure (by simpa using h₂) (by simpa using h₁)
+
 theorem Integrable.to_average {f : α → β} (h : Integrable f μ) : Integrable f ((μ Univ)⁻¹ • μ) := by
   rcases eq_or_ne μ 0 with (rfl | hne)
   · rwa [smul_zero]

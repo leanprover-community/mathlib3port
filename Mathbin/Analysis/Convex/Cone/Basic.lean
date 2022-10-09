@@ -400,6 +400,34 @@ theorem coe_zero : ((0 : ConvexCone 𝕜 E) : Set E) = 0 :=
 
 theorem pointed_zero : (0 : ConvexCone 𝕜 E).Pointed := by rw [pointed, mem_zero]
 
+instance : Add (ConvexCone 𝕜 E) :=
+  ⟨fun K₁ K₂ =>
+    { Carrier := { z | ∃ x y : E, x ∈ K₁ ∧ y ∈ K₂ ∧ x + y = z },
+      smul_mem' := by
+        rintro c hc _ ⟨x, y, hx, hy, rfl⟩
+        rw [smul_add]
+        use c • x, c • y, K₁.smul_mem hc hx, K₂.smul_mem hc hy,
+      add_mem' := by
+        rintro _ ⟨x₁, x₂, hx₁, hx₂, rfl⟩ y ⟨y₁, y₂, hy₁, hy₂, rfl⟩
+        use x₁ + y₁, x₂ + y₂, K₁.add_mem hx₁ hy₁, K₂.add_mem hx₂ hy₂
+        abel }⟩
+
+@[simp]
+theorem mem_add {K₁ K₂ : ConvexCone 𝕜 E} {a : E} : a ∈ K₁ + K₂ ↔ ∃ x y : E, x ∈ K₁ ∧ y ∈ K₂ ∧ x + y = a :=
+  Iff.rfl
+
+instance : AddZeroClassₓ (ConvexCone 𝕜 E) :=
+  ⟨0, Add.add, fun _ => by
+    ext
+    simp, fun _ => by
+    ext
+    simp⟩
+
+instance : AddCommSemigroupₓ (ConvexCone 𝕜 E) where
+  add := Add.add
+  add_assoc := fun _ _ _ => SetLike.coe_injective <| Set.addCommSemigroup.add_assoc _ _ _
+  add_comm := fun _ _ => SetLike.coe_injective <| Set.addCommSemigroup.add_comm _ _
+
 end Module
 
 end OrderedSemiring

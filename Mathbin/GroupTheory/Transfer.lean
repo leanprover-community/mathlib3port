@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
 import Mathbin.GroupTheory.Complement
-import Mathbin.GroupTheory.GroupAction.Basic
-import Mathbin.GroupTheory.Index
+import Mathbin.GroupTheory.Sylow
 
 /-!
 # The Transfer Homomorphism
@@ -173,6 +172,32 @@ noncomputable def transferCenterPow' (h : (center G).index ≠ 0) : G →* cente
 theorem transfer_center_pow'_apply (h : (center G).index ≠ 0) (g : G) :
     ↑(transferCenterPow' h g) = g ^ (center G).index :=
   rfl
+
+section BurnsideTransfer
+
+variable {p : ℕ} (P : Sylow p G) (hP : (P : Subgroup G).normalizer ≤ (P : Subgroup G).Centralizer)
+
+include hP
+
+/-- The homomorphism `G →* P` in Burnside's transfer theorem. -/
+noncomputable def transferSylow [Fintypeₓ (G ⧸ (P : Subgroup G))] : G →* (P : Subgroup G) :=
+  @transfer G _ P P (@Subgroup.IsCommutative.commGroup G _ P ⟨⟨fun a b => Subtype.ext (hP (le_normalizer b.2) a a.2)⟩⟩)
+    (MonoidHom.id P) _
+
+/-- Auxillary lemma in order to state `transfer_sylow_eq_pow`. -/
+theorem transfer_sylow_eq_pow_aux [Fact p.Prime] [Finite (Sylow p G)] (g : G) (hg : g ∈ P) (k : ℕ) (g₀ : G)
+    (h : g₀⁻¹ * g ^ k * g₀ ∈ P) : g₀⁻¹ * g ^ k * g₀ = g ^ k := by
+  haveI : (P : Subgroup G).IsCommutative := ⟨⟨fun a b => Subtype.ext (hP (le_normalizer b.2) a a.2)⟩⟩
+  replace hg := (P : Subgroup G).pow_mem hg k
+  obtain ⟨n, hn, h⟩ := P.conj_eq_normalizer_conj_of_mem (g ^ k) g₀ hg h
+  exact h.trans (Commute.inv_mul_cancel (hP hn (g ^ k) hg).symm)
+
+theorem transfer_sylow_eq_pow [Fact p.Prime] [Finite (Sylow p G)] [Fintypeₓ (G ⧸ (P : Subgroup G))]
+    (hP : P.1.normalizer ≤ P.1.Centralizer) (g : G) (hg : g ∈ P) :
+    transferSylow P hP g = ⟨g ^ (P : Subgroup G).index, transfer_eq_pow_aux g (transfer_sylow_eq_pow_aux P hP g hg)⟩ :=
+  by apply transfer_eq_pow
+
+end BurnsideTransfer
 
 end MonoidHom
 

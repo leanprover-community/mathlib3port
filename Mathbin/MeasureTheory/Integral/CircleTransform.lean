@@ -125,6 +125,7 @@ theorem continuous_on_abs_circle_transform_bounding_function {R r : ℝ} (hr : r
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' : 0 ≤ r) (z : ℂ) :
     ∃ x : ClosedBall z r ×ˢ [0, 2 * π],
       ∀ y : ClosedBall z r ×ˢ [0, 2 * π],
@@ -133,14 +134,15 @@ theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' 
   have cts := continuous_on_abs_circle_transform_bounding_function hr z
   have comp : IsCompact (closed_ball z r ×ˢ [0, 2 * π]) := by
     apply_rules [IsCompact.prod, ProperSpace.is_compact_closed_ball z r, is_compact_interval]
-  have none := (nonempty_closed_ball.2 hr').Prod nonempty_interval
-  simpa using
+  have none : (closed_ball z r ×ˢ [0, 2 * π]).Nonempty := (nonempty_closed_ball.2 hr').Prod nonempty_interval
+  have :=
     IsCompact.exists_forall_ge comp none
       (cts.mono
         (by
           intro z
-          simp
+          simp only [mem_prod, mem_closed_ball, mem_univ, and_trueₓ, and_imp]
           tauto))
+  simpa only [SetCoe.forall, Subtype.coe_mk, SetCoe.exists]
 
 /-- The derivative of a `circle_transform` is locally bounded. -/
 theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ → ℂ} (hx : x ∈ Ball z R)

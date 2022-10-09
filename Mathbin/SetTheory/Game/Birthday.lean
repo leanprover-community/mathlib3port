@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
 import Mathbin.SetTheory.Game.Ordinal
+import Mathbin.SetTheory.Ordinal.NaturalOps
 
 /-!
 # Birthdays of games
@@ -27,7 +28,7 @@ universe u
 
 open Ordinal
 
-open Pgame
+open NaturalOps Pgame
 
 namespace Pgame
 
@@ -95,15 +96,7 @@ theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, x ≡r y → birthda
       
 
 @[simp]
-theorem birthday_add_zero (x : Pgame) : birthday (x + 0) = birthday x :=
-  (addZeroRelabelling x).birthday_congr
-
-@[simp]
-theorem birthday_zero_add (x : Pgame) : birthday (0 + x) = birthday x :=
-  (zeroAddRelabelling x).birthday_congr
-
-@[simp]
-theorem birthday_eq_zero (x : Pgame) : birthday x = 0 ↔ IsEmpty x.LeftMoves ∧ IsEmpty x.RightMoves := by
+theorem birthday_eq_zero {x : Pgame} : birthday x = 0 ↔ IsEmpty x.LeftMoves ∧ IsEmpty x.RightMoves := by
   rw [birthday_def, max_eq_zero, lsub_eq_zero_iff, lsub_eq_zero_iff]
 
 @[simp]
@@ -139,9 +132,51 @@ theorem le_birthday : ∀ x : Pgame, x ≤ x.birthday.toPgame
     le_def.2
       ⟨fun i => Or.inl ⟨toLeftMovesToPgame ⟨_, birthday_move_left_lt i⟩, by simp [le_birthday (xL i)]⟩, isEmptyElim⟩
 
-theorem neg_birthday_le (x : Pgame) : -x.birthday.toPgame ≤ x := by
-  let h := le_birthday (-x)
-  rwa [neg_birthday, neg_le_iff] at h
+variable (a b x : Pgame.{u})
+
+theorem neg_birthday_le : -x.birthday.toPgame ≤ x := by simpa only [neg_birthday, ← neg_le_iff] using le_birthday (-x)
+
+@[simp]
+theorem birthday_add : ∀ x y : Pgame.{u}, (x + y).birthday = x.birthday ♯ y.birthday
+  | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩ => by
+    rw [birthday_def, nadd_def]
+    simp only [birthday_add, lsub_sum, mk_add_move_left_inl, move_left_mk, mk_add_move_left_inr, mk_add_move_right_inl,
+      move_right_mk, mk_add_move_right_inr]
+    rw [max_max_max_comm]
+    congr <;> apply le_antisymmₓ
+    any_goals
+      exact
+        max_le_iff.2
+          ⟨lsub_le_iff.2 fun i => lt_blsub _ _ (birthday_move_left_lt i),
+            lsub_le_iff.2 fun i => lt_blsub _ _ (birthday_move_right_lt i)⟩
+    all_goals
+    apply blsub_le_iff.2 fun i hi => _
+    rcases lt_birthday_iff.1 hi with (⟨j, hj⟩ | ⟨j, hj⟩)
+    · exact lt_max_of_lt_left ((nadd_le_nadd_right hj _).trans_lt (lt_lsub _ _))
+      
+    · exact lt_max_of_lt_right ((nadd_le_nadd_right hj _).trans_lt (lt_lsub _ _))
+      
+    · exact lt_max_of_lt_left ((nadd_le_nadd_left hj _).trans_lt (lt_lsub _ _))
+      
+    · exact lt_max_of_lt_right ((nadd_le_nadd_left hj _).trans_lt (lt_lsub _ _))
+      
+
+theorem birthday_add_zero : (a + 0).birthday = a.birthday := by simp
+
+theorem birthday_zero_add : (0 + a).birthday = a.birthday := by simp
+
+theorem birthday_add_one : (a + 1).birthday = Order.succ a.birthday := by simp
+
+theorem birthday_one_add : (1 + a).birthday = Order.succ a.birthday := by simp
+
+@[simp]
+theorem birthday_nat_cast : ∀ n : ℕ, birthday n = n
+  | 0 => birthday_zero
+  | n + 1 => by simp [birthday_nat_cast]
+
+theorem birthday_add_nat (n : ℕ) : (a + n).birthday = a.birthday + n := by simp
+
+theorem birthday_nat_add (n : ℕ) : (↑n + a).birthday = a.birthday + n := by simp
 
 end Pgame
 

@@ -102,11 +102,14 @@ protected theorem prop (a : Finₓ n) : a.val < n :=
   a.2
 
 @[simp]
-theorem is_lt (a : Finₓ n) : (a : Nat) < n :=
+theorem is_lt (a : Finₓ n) : (a : ℕ) < n :=
   a.2
 
+protected theorem pos (i : Finₓ n) : 0 < n :=
+  lt_of_le_of_ltₓ (Nat.zero_leₓ _) i.is_lt
+
 theorem pos_iff_nonempty {n : ℕ} : 0 < n ↔ Nonempty (Finₓ n) :=
-  ⟨fun h => ⟨⟨0, h⟩⟩, fun ⟨i⟩ => lt_of_le_of_ltₓ (Nat.zero_leₓ _) i.2⟩
+  ⟨fun h => ⟨⟨0, h⟩⟩, fun ⟨i⟩ => i.Pos⟩
 
 /-- Equivalence between `fin n` and `{ i // i < n }`. -/
 @[simps apply symmApply]
@@ -324,27 +327,68 @@ theorem eq_zero_or_eq_succ {n : ℕ} (i : Finₓ (n + 1)) : i = 0 ∨ ∃ j : Fi
     exact ⟨⟨j, Nat.lt_of_succ_lt_succₓ h⟩, rfl⟩
     
 
+theorem eq_succ_of_ne_zero {n : ℕ} {i : Finₓ (n + 1)} (hi : i ≠ 0) : ∃ j : Finₓ n, i = j.succ :=
+  (eq_zero_or_eq_succ i).resolve_left hi
+
 /-- The antitone involution `fin n → fin n` given by `i ↦ n-(i+1)`. -/
-def rev {n : ℕ} (i : Finₓ n) : Finₓ n :=
-  ⟨n - (i + 1), by
-    cases n
-    · exfalso
-      exact Nat.not_lt_zeroₓ _ i.is_lt
-      
-    · simpa only [Nat.succ_sub_succ_eq_sub n i, Nat.lt_succ_iff] using tsub_le_self
-      ⟩
+def rev : Equivₓ.Perm (Finₓ n) :=
+  (Involutive.toPerm fun i => ⟨n - (i + 1), tsub_lt_self i.Pos (Nat.succ_posₓ _)⟩) fun i =>
+    ext <| by
+      rw [coe_mk, coe_mk, ← tsub_tsub, tsub_tsub_cancel_of_le (Nat.add_one_le_iff.2 i.is_lt), add_tsub_cancel_right]
+
+@[simp]
+theorem coe_rev (i : Finₓ n) : (i.rev : ℕ) = n - (i + 1) :=
+  rfl
+
+theorem rev_involutive : Involutive (@rev n) :=
+  Involutive.to_perm_involutive _
+
+theorem rev_injective : Injective (@rev n) :=
+  rev_involutive.Injective
+
+theorem rev_surjective : Surjective (@rev n) :=
+  rev_involutive.Surjective
+
+theorem rev_bijective : Bijective (@rev n) :=
+  rev_involutive.Bijective
+
+@[simp]
+theorem rev_inj {i j : Finₓ n} : i.rev = j.rev ↔ i = j :=
+  rev_injective.eq_iff
+
+@[simp]
+theorem rev_rev (i : Finₓ n) : i.rev.rev = i :=
+  rev_involutive _
+
+@[simp]
+theorem rev_symm : (@rev n).symm = rev :=
+  rfl
 
 theorem rev_eq {n a : ℕ} (i : Finₓ (n + 1)) (h : n = a + i) : i.rev = ⟨a, Nat.lt_succ_iff.mpr (Nat.Le.intro h.symm)⟩ :=
   by
   ext
-  dsimp [Finₓ.rev]
+  dsimp
   conv_lhs =>
   congr
   rw [h]
   rw [add_assocₓ, add_tsub_cancel_right]
 
-theorem eq_succ_of_ne_zero {n : ℕ} {i : Finₓ (n + 1)} (hi : i ≠ 0) : ∃ j : Finₓ n, i = j.succ :=
-  (eq_zero_or_eq_succ i).resolve_left hi
+@[simp]
+theorem rev_le_rev {i j : Finₓ n} : i.rev ≤ j.rev ↔ j ≤ i := by
+  simp only [le_iff_coe_le_coe, coe_rev, tsub_le_tsub_iff_left (Nat.add_one_le_iff.2 j.is_lt), add_le_add_iff_right]
+
+@[simp]
+theorem rev_lt_rev {i j : Finₓ n} : i.rev < j.rev ↔ j < i :=
+  lt_iff_lt_of_le_iff_leₓ rev_le_rev
+
+/-- `fin.rev n` as an order-reversing isomorphism. -/
+@[simps apply toEquiv]
+def revOrderIso {n} : (Finₓ n)ᵒᵈ ≃o Finₓ n :=
+  ⟨OrderDual.ofDual.trans rev, fun i j => rev_le_rev⟩
+
+@[simp]
+theorem rev_order_iso_symm_apply (i : Finₓ n) : revOrderIso.symm i = OrderDual.toDual i.rev :=
+  rfl
 
 /-- The greatest value of `fin (n+1)` -/
 def last (n : ℕ) : Finₓ (n + 1) :=
@@ -1189,7 +1233,7 @@ theorem coe_div_nat (i : Finₓ (m * n)) : (i.divNat : ℕ) = i / n :=
 
 /-- Compute `i % n`, where `n` is a `nat` and inferred the type of `i`. -/
 def modNat (i : Finₓ (m * n)) : Finₓ n :=
-  ⟨i % n, Nat.mod_ltₓ _ <| pos_of_mul_pos_right ((Nat.zero_leₓ i).trans_lt i.is_lt) m.zero_le⟩
+  ⟨i % n, Nat.mod_ltₓ _ <| pos_of_mul_pos_right i.Pos m.zero_le⟩
 
 @[simp]
 theorem coe_mod_nat (i : Finₓ (m * n)) : (i.modNat : ℕ) = i % n :=
@@ -1428,7 +1472,7 @@ open Nat Int
 
 /-- Negation on `fin n` -/
 instance (n : ℕ) : Neg (Finₓ n) :=
-  ⟨fun a => ⟨(n - a) % n, Nat.mod_ltₓ _ (lt_of_le_of_ltₓ (Nat.zero_leₓ _) a.2)⟩⟩
+  ⟨fun a => ⟨(n - a) % n, Nat.mod_ltₓ _ a.Pos⟩⟩
 
 /-- Abelian group structure on `fin (n+1)`. -/
 instance (n : ℕ) : AddCommGroupₓ (Finₓ (n + 1)) :=
@@ -1511,28 +1555,12 @@ theorem le_sub_one_iff {n : ℕ} {k : Finₓ (n + 1)} : k ≤ k - 1 ↔ k = 0 :=
   rw [← lt_sub_one_iff, le_iff_lt_or_eqₓ, lt_sub_one_iff, or_iff_left_iff_imp, eq_comm, sub_eq_iff_eq_add]
   simp
 
-theorem sub_one_lt_iff {n : ℕ} {k : Finₓ (n + 1)} : k - 1 < k ↔ 0 < k := by
-  rw [← not_iff_not]
-  simp
+@[simp]
+theorem sub_one_lt_iff {n : ℕ} {k : Finₓ (n + 1)} : k - 1 < k ↔ 0 < k :=
+  not_iff_not.1 <| by simp only [not_ltₓ, le_sub_one_iff, le_zero_iff]
 
-/-- By sending `x` to `last n - x`, `fin n` is order-equivalent to its `order_dual`. -/
-def _root_.order_iso.fin_equiv : ∀ {n}, (Finₓ n)ᵒᵈ ≃o Finₓ n
-  | 0 => ⟨⟨elim0, elim0, elim0, elim0⟩, elim0⟩
-  | n + 1 =>
-    OrderIso.symm <|
-      { toFun := fun x => OrderDual.toDual (last n - x), invFun := fun x => last n - x.ofDual,
-        left_inv := sub_sub_cancel _, right_inv := sub_sub_cancel _,
-        map_rel_iff' := fun a b => by
-          simp only [Equivₓ.coe_fn_mk, OrderDual.to_dual_le_to_dual]
-          rw [le_iff_coe_le_coe, coe_sub_iff_le.mpr (le_last b), coe_sub_iff_le.mpr (le_last _), tsub_le_tsub_iff_left,
-            le_iff_coe_le_coe]
-          exact le_last _ }
-
-theorem _root_.order_iso.fin_equiv_apply (a) : OrderIso.finEquiv a = last n - a.ofDual :=
-  rfl
-
-theorem _root_.order_iso.fin_equiv_symm_apply (a) : OrderIso.finEquiv.symm a = OrderDual.toDual (last n - a) :=
-  rfl
+theorem last_sub (i : Finₓ (n + 1)) : last n - i = i.rev :=
+  ext <| by rw [coe_sub_iff_le.2 i.le_last, coe_last, coe_rev, Nat.succ_sub_succ_eq_sub]
 
 end AddGroupₓ
 

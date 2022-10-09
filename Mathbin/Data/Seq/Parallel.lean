@@ -304,7 +304,7 @@ theorem map_parallel (f : α → β) (S) : map f (parallel S) = parallel (S.map 
       simp [parallel.aux1]
       rw [this]
       cases' parallel.aux2 l with a l' <;> simp
-      apply S.cases_on _ (fun c S => _) fun S => _ <;> simp <;> simp [parallel.aux1] <;> exact ⟨_, _, rfl, rfl⟩
+      apply S.rec_on _ (fun c S => _) fun S => _ <;> simp <;> simp [parallel.aux1] <;> exact ⟨_, _, rfl, rfl⟩
 
 theorem parallel_empty (S : Wseq (Computation α)) (h : S.head ~> none) : parallel S = empty _ :=
   eq_empty_of_not_terminates fun ⟨⟨a, m⟩⟩ => by

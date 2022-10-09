@@ -200,6 +200,21 @@ theorem eventually_filter_at_mem_sets (x : α) : ∀ᶠ a in v.filterAt x, a ∈
     implies_true_iff]
   exact ⟨1, zero_lt_one⟩
 
+theorem eventually_filter_at_subset_closed_ball (x : α) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ a : Set α in v.filterAt x, a ⊆ ClosedBall x ε := by
+  simp only [v.eventually_filter_at_iff]
+  exact ⟨ε, hε, fun a ha ha' => ha'⟩
+
+theorem tendsto_filter_at_iff {ι : Type _} {l : Filter ι} {f : ι → Set α} {x : α} :
+    Tendsto f l (v.filterAt x) ↔ (∀ᶠ i in l, f i ∈ v.SetsAt x) ∧ ∀ ε > (0 : ℝ), ∀ᶠ i in l, f i ⊆ ClosedBall x ε := by
+  refine'
+    ⟨fun H =>
+      ⟨H.Eventually <| v.eventually_filter_at_mem_sets x, fun ε hε =>
+        H.Eventually <| v.eventually_filter_at_subset_closed_ball x hε⟩,
+      fun H s hs => (_ : ∀ᶠ i in l, f i ∈ s)⟩
+  obtain ⟨ε, εpos, hε⟩ := v.mem_filter_at_iff.mp hs
+  filter_upwards [H.1, H.2 ε εpos] with i hi hiε using hε _ hi hiε
+
 theorem eventually_filter_at_measurable_set (x : α) : ∀ᶠ a in v.filterAt x, MeasurableSet a := by
   filter_upwards [v.eventually_filter_at_mem_sets x] with _ ha using v.measurable_set' _ _ ha
 

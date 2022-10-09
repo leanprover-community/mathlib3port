@@ -32,6 +32,11 @@ class NormedAddTorsor (V : outParam <| Type _) (P : Type _) [outParam <| Seminor
   [PseudoMetricSpace P] extends AddTorsor V P where
   dist_eq_norm' : ∀ x y : P, dist x y = ∥(x -ᵥ y : V)∥
 
+/-- Shortcut instance to help typeclass inference out. -/
+instance (priority := 100) NormedAddTorsor.toAddTorsor' {V P : Type _} [NormedAddCommGroup V] [MetricSpace P]
+    [NormedAddTorsor V P] : AddTorsor V P :=
+  NormedAddTorsor.toAddTorsor
+
 variable {α V P W Q : Type _} [SeminormedAddCommGroup V] [PseudoMetricSpace P] [NormedAddTorsor V P]
   [NormedAddCommGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
 

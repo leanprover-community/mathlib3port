@@ -844,10 +844,19 @@ theorem Orthonormal.comp {ι' : Type _} {v : ι → E} (hv : Orthonormal 𝕜 v)
   convert hv (f i) (f j) using 1
   simp [hf.eq_iff]
 
+/-- An injective family `v : ι → E` is orthonormal if and only if `coe : (range v) → E` is
+orthonormal. -/
+theorem orthonormal_subtype_range {v : ι → E} (hv : Function.Injective v) :
+    Orthonormal 𝕜 (coe : Set.Range v → E) ↔ Orthonormal 𝕜 v := by
+  let f : ι ≃ Set.Range v := Equivₓ.ofInjective v hv
+  refine' ⟨fun h => h.comp f f.injective, fun h => _⟩
+  rw [← Equivₓ.self_comp_of_injective_symm hv]
+  exact h.comp f.symm f.symm.injective
+
 /-- If `v : ι → E` is an orthonormal family, then `coe : (range v) → E` is an orthonormal
 family. -/
-theorem Orthonormal.coe_range {v : ι → E} (hv : Orthonormal 𝕜 v) : Orthonormal 𝕜 (coe : Set.Range v → E) := by
-  simpa using hv.comp _ (Set.range_splitting_injective v)
+theorem Orthonormal.to_subtype_range {v : ι → E} (hv : Orthonormal 𝕜 v) : Orthonormal 𝕜 (coe : Set.Range v → E) :=
+  (orthonormal_subtype_range hv.LinearIndependent.Injective).2 hv
 
 /-- A linear combination of some subset of an orthonormal set is orthogonal to other members of the
 set. -/
@@ -1777,6 +1786,7 @@ end BesselsInequality
 
 /-- A field `𝕜` satisfying `is_R_or_C` is itself a `𝕜`-inner product space. -/
 instance IsROrC.innerProductSpace : InnerProductSpace 𝕜 𝕜 where
+  toNormedAddCommGroup := NonUnitalNormedRing.toNormedAddCommGroup
   inner := fun x y => conj x * y
   norm_sq_eq_inner := fun x => by
     unfold inner
@@ -1794,7 +1804,8 @@ theorem IsROrC.inner_apply (x y : 𝕜) : ⟪x, y⟫ = conj x * y :=
 
 /-- Induced inner product on a submodule. -/
 instance Submodule.innerProductSpace (W : Submodule 𝕜 E) : InnerProductSpace 𝕜 W :=
-  { Submodule.normedSpace W with inner := fun x y => ⟪(x : E), (y : E)⟫, conj_sym := fun _ _ => inner_conj_sym _ _,
+  { Submodule.normedSpace W with toNormedAddCommGroup := Submodule.normedAddCommGroup _,
+    inner := fun x y => ⟪(x : E), (y : E)⟫, conj_sym := fun _ _ => inner_conj_sym _ _,
     norm_sq_eq_inner := fun _ => norm_sq_eq_inner _, add_left := fun _ _ _ => inner_add_left,
     smul_left := fun _ _ _ => inner_smul_left }
 
@@ -2043,7 +2054,8 @@ registered as an instance since it creates problems with the case `𝕜 = ℝ`, 
 proof to obtain a real inner product space structure from a given `𝕜`-inner product space
 structure. -/
 def InnerProductSpace.isROrCToReal : InnerProductSpace ℝ E :=
-  { HasInner.isROrCToReal 𝕜 E, NormedSpace.restrictScalars ℝ 𝕜 E with norm_sq_eq_inner := norm_sq_eq_inner,
+  { HasInner.isROrCToReal 𝕜 E, NormedSpace.restrictScalars ℝ 𝕜 E with
+    toNormedAddCommGroup := InnerProductSpace.toNormedAddCommGroup 𝕜, norm_sq_eq_inner := norm_sq_eq_inner,
     conj_sym := fun x y => inner_re_symm,
     add_left := fun x y z => by
       change re ⟪x + y, z⟫ = re ⟪x, z⟫ + re ⟪y, z⟫
@@ -2316,6 +2328,7 @@ protected theorem Continuous.inner {α : Type _} [TopologicalSpace α] {f g : α
   UniformSpace.Completion.continuous_inner.comp (hf.prod_mk hg : _)
 
 instance : InnerProductSpace 𝕜 (Completion E) where
+  toNormedAddCommGroup := inferInstance
   norm_sq_eq_inner := fun x =>
     Completion.induction_on x
       (is_closed_eq (continuous_norm.pow 2) (continuous_re.comp (Continuous.inner continuous_id' continuous_id')))

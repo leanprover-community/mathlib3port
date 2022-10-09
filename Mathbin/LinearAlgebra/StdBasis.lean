@@ -51,6 +51,12 @@ def stdBasis : ∀ i : ι, φ i →ₗ[R] ∀ i, φ i :=
 theorem std_basis_apply (i : ι) (b : φ i) : stdBasis R φ i b = update 0 i b :=
   rfl
 
+@[simp]
+theorem std_basis_apply' (i i' : ι) : (stdBasis R (fun _x : ι => R) i) 1 i' = ite (i = i') 1 0 := by
+  rw [LinearMap.std_basis_apply, Function.update_applyₓ, Pi.zero_apply]
+  congr 1
+  rw [eq_iff_iff, eq_comm]
+
 theorem coe_std_basis (i : ι) : ⇑(stdBasis R φ i) = Pi.single i :=
   rfl
 

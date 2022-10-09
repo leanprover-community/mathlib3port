@@ -47,9 +47,21 @@ instance : StarRing (FreeAlgebra R X) where
   star_involutive := fun x => by
     unfold HasStar.star
     simp only [Function.comp_applyₓ]
-    refine' FreeAlgebra.induction R X _ _ _ _ x <;> intros <;> simp [*]
-  star_mul := fun a b => by simp
-  star_add := fun a b => by simp
+    refine' FreeAlgebra.induction R X _ _ _ _ x
+    · intros
+      simp only [AlgHom.commutes, MulOpposite.algebra_map_apply, MulOpposite.unop_op]
+      
+    · intros
+      simp only [lift_ι_apply, MulOpposite.unop_op]
+      
+    · intros
+      simp only [*, map_mul, MulOpposite.unop_mul]
+      
+    · intros
+      simp only [*, map_add, MulOpposite.unop_add]
+      
+  star_mul := fun a b => by simp only [Function.comp_app, map_mul, MulOpposite.unop_mul]
+  star_add := fun a b => by simp only [Function.comp_app, map_add, MulOpposite.unop_add]
 
 @[simp]
 theorem star_ι (x : X) : star (ι R x) = ι R x := by simp [star, HasStar.star]

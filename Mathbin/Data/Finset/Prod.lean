@@ -216,7 +216,7 @@ end Prod
 
 section Diag
 
-variable (s t : Finsetₓ α) [DecidableEq α]
+variable [DecidableEq α] (s t : Finsetₓ α)
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given a finite set `s`, the diagonal, `s.diag` is the set of pairs of the form `(a, a)` for
@@ -238,9 +238,13 @@ theorem mem_diag (x : α × α) : x ∈ s.diag ↔ x.1 ∈ s ∧ x.1 = x.2 := by
   exact h.1
 
 @[simp]
-theorem mem_off_diag (x : α × α) : x ∈ s.offDiag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 := by
+theorem mem_off_diag (x : α × α) : x ∈ s.OffDiag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 := by
   simp only [off_diag, mem_filter, mem_product]
   constructor <;> intro h <;> simp only [h, Ne.def, not_false_iff, and_selfₓ]
+
+@[simp, norm_cast]
+theorem coe_off_diag : (s.OffDiag : Set (α × α)) = (s : Set α).OffDiag :=
+  Set.ext <| mem_off_diag _
 
 @[simp]
 theorem diag_card : (diag s).card = s.card := by
@@ -269,30 +273,46 @@ theorem off_diag_card : (offDiag s).card = s.card * s.card - s.card := by
   rw [← card_product]
   apply filter_card_add_filter_neg_card_eq_card
 
+@[mono]
+theorem diag_mono : Monotoneₓ (diag : Finsetₓ α → Finsetₓ (α × α)) := fun s t h x hx =>
+  (mem_diag _ _).2 <| And.imp_left (@h _) <| (mem_diag _ _).1 hx
+
+@[mono]
+theorem off_diag_mono : Monotoneₓ (offDiag : Finsetₓ α → Finsetₓ (α × α)) := fun s t h x hx =>
+  (mem_off_diag _ _).2 <| And.impₓ (@h _) (And.imp_left <| @h _) <| (mem_off_diag _ _).1 hx
+
 @[simp]
 theorem diag_empty : (∅ : Finsetₓ α).diag = ∅ :=
   rfl
 
 @[simp]
-theorem off_diag_empty : (∅ : Finsetₓ α).offDiag = ∅ :=
+theorem off_diag_empty : (∅ : Finsetₓ α).OffDiag = ∅ :=
   rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem diag_union_off_diag : s.diag ∪ s.offDiag = s ×ˢ s :=
+theorem diag_union_off_diag : s.diag ∪ s.OffDiag = s ×ˢ s :=
   filter_union_filter_neg_eq _ _
 
 @[simp]
-theorem disjoint_diag_off_diag : Disjoint s.diag s.offDiag :=
+theorem disjoint_diag_off_diag : Disjoint s.diag s.OffDiag :=
   disjoint_filter_filter_neg _ _
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem product_sdiff_diag : s ×ˢ s \ s.diag = s.offDiag := by
+theorem product_sdiff_diag : s ×ˢ s \ s.diag = s.OffDiag := by
   rw [← diag_union_off_diag, union_comm, union_sdiff_self, sdiff_eq_self_of_disjoint (disjoint_diag_off_diag _).symm]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem product_sdiff_off_diag : s ×ˢ s \ s.offDiag = s.diag := by
+theorem product_sdiff_off_diag : s ×ˢ s \ s.OffDiag = s.diag := by
   rw [← diag_union_off_diag, union_sdiff_self, sdiff_eq_self_of_disjoint (disjoint_diag_off_diag _)]
+
+theorem diag_inter : (s ∩ t).diag = s.diag ∩ t.diag :=
+  ext fun x => by simpa only [mem_diag, mem_inter] using and_and_distrib_right _ _ _
+
+theorem off_diag_inter : (s ∩ t).OffDiag = s.OffDiag ∩ t.OffDiag :=
+  coe_injective <| by
+    push_cast
+    exact Set.off_diag_inter _ _
 
 theorem diag_union : (s ∪ t).diag = s.diag ∪ t.diag := by
   ext ⟨i, j⟩
@@ -302,23 +322,15 @@ variable {s t}
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
--- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem off_diag_union (h : Disjoint s t) : (s ∪ t).offDiag = s.offDiag ∪ t.offDiag ∪ s ×ˢ t ∪ t ×ˢ s := by
-  rw [off_diag, union_product, product_union, product_union, union_comm _ (t ×ˢ t), union_assoc,
-    union_left_comm (s ×ˢ t), ← union_assoc, filter_union, filter_union, ← off_diag, ← off_diag, filter_true_of_mem, ←
-    union_assoc]
-  simp only [mem_union, mem_product, Ne.def, Prod.forallₓ]
-  rintro i j (⟨hi, hj⟩ | ⟨hi, hj⟩)
-  · exact h.forall_ne_finset hi hj
-    
-  · exact h.symm.forall_ne_finset hi hj
-    
+theorem off_diag_union (h : Disjoint s t) : (s ∪ t).OffDiag = s.OffDiag ∪ t.OffDiag ∪ s ×ˢ t ∪ t ×ˢ s :=
+  coe_injective <| by
+    push_cast
+    exact Set.off_diag_union (disjoint_coe.2 h)
 
 variable (a : α)
 
 @[simp]
-theorem off_diag_singleton : ({a} : Finsetₓ α).offDiag = ∅ := by simp [← Finsetₓ.card_eq_zero]
+theorem off_diag_singleton : ({a} : Finsetₓ α).OffDiag = ∅ := by simp [← Finsetₓ.card_eq_zero]
 
 theorem diag_singleton : ({a} : Finsetₓ α).diag = {(a, a)} := by
   rw [← product_sdiff_off_diag, off_diag_singleton, sdiff_empty, singleton_product_singleton]
@@ -328,7 +340,7 @@ theorem diag_insert : (insert a s).diag = insert (a, a) s.diag := by
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem off_diag_insert (has : a ∉ s) : (insert a s).offDiag = s.offDiag ∪ {a} ×ˢ s ∪ s ×ˢ {a} := by
+theorem off_diag_insert (has : a ∉ s) : (insert a s).OffDiag = s.OffDiag ∪ {a} ×ˢ s ∪ s ×ˢ {a} := by
   rw [insert_eq, union_comm, off_diag_union (disjoint_singleton_right.2 has), off_diag_singleton, union_empty,
     union_right_comm]
 

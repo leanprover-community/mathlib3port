@@ -126,11 +126,9 @@ theorem exists_forall_norm_le [ProperSpace R] (p : R[X]) : ∃ x, ∀ y, ∥p.ev
 
 section Roots
 
-open Polynomial
+open Polynomial Nnreal
 
-open Nnreal
-
-variable {F K : Type _} [Field F] [NormedField K]
+variable {F K : Type _} [CommRingₓ F] [NormedField K]
 
 open Multiset
 
@@ -139,64 +137,37 @@ theorem eq_one_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (hB : B < 0) (h1
   h1.nat_degree_eq_zero_iff_eq_one.mp
     (by
       contrapose! hB
-      rw [nat_degree_eq_card_roots h2] at hB
-      obtain ⟨z, hz⟩ := multiset.card_pos_iff_exists_mem.mp (zero_lt_iff.mpr hB)
+      rw [← h1.nat_degree_map f, nat_degree_eq_card_roots' h2] at hB
+      obtain ⟨z, hz⟩ := card_pos_iff_exists_mem.mp (zero_lt_iff.mpr hB)
       exact le_transₓ (norm_nonneg _) (h3 z hz))
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 : p.Monic) (h2 : Splits f p)
     (h3 : ∀ z ∈ (map f p).roots, ∥z∥ ≤ B) : ∥(map f p).coeff i∥ ≤ B ^ (p.natDegree - i) * p.natDegree.choose i := by
-  have hcd : card (map f p).roots = p.nat_degree := (nat_degree_eq_card_roots h2).symm
-  obtain hB | hB := le_or_ltₓ 0 B
-  · by_cases hi:i ≤ p.nat_degree
-    · rw [eq_prod_roots_of_splits h2, monic.def.mp h1, RingHom.map_one, RingHom.map_one, one_mulₓ]
-      rw [prod_X_sub_C_coeff]
-      swap
-      rwa [hcd]
-      rw [norm_mul, (by norm_num : ∥(-1 : K) ^ (card (map f p).roots - i)∥ = 1), one_mulₓ]
-      apply le_transₓ (le_sum_of_subadditive norm _ _ _)
-      rotate_left
-      exact norm_zero
-      exact norm_add_le
-      rw [Multiset.map_map]
-      suffices
-        ∀ r ∈ Multiset.map (normHom ∘ Prod) (powerset_len (card (map f p).roots - i) (map f p).roots),
-          r ≤ B ^ (p.nat_degree - i)
-        by
-        convert sum_le_sum_map _ this
-        simp only [hi, hcd, Multiset.map_const, card_map, card_powerset_len, Nat.choose_symm, sum_repeat, nsmul_eq_mul,
-          mul_comm]
-      · intro r hr
-        obtain ⟨t, ht⟩ := multiset.mem_map.mp hr
-        have hbounds : ∀ x ∈ Multiset.map normHom t, 0 ≤ x ∧ x ≤ B := by
-          intro x hx
-          obtain ⟨z, hz⟩ := multiset.mem_map.mp hx
-          rw [← hz.right]
-          exact ⟨norm_nonneg z, h3 z (mem_of_le (mem_powerset_len.mp ht.left).left hz.left)⟩
-        lift B to ℝ≥0 using hB
-        lift Multiset.map normHom t to Multiset ℝ≥0 using fun x hx => (hbounds x hx).left with normt hn
-        rw [(by rw_mod_cast [← ht.right, Function.comp_applyₓ, ← prod_hom t normHom, ← hn] : r = normt.prod)]
-        convert Multiset.prod_le_pow_card normt _ _
-        · rw [(_ : card normt = card (Multiset.map coe normt))]
-          rwa [hn, ← hcd, card_map, (mem_powerset_len.mp ht.left).right.symm]
-          rwa [card_map]
-          
-        · intro x hx
-          have xmem : (x : ℝ) ∈ Multiset.map coe normt := mem_map_of_mem _ hx
-          exact (hbounds x xmem).right
-          
-        
-      
-    · push_neg  at hi
-      rw [Nat.choose_eq_zero_of_lt hi, coeff_eq_zero_of_nat_degree_lt, norm_zero]
-      rw_mod_cast [mul_zero]
-      · rwa [monic.nat_degree_map h1]
-        infer_instance
-        
-      
-    
+  obtain hB | hB := lt_or_leₓ B 0
   · rw [eq_one_of_roots_le hB h1 h2 h3, Polynomial.map_one, nat_degree_one, zero_tsub, pow_zeroₓ, one_mulₓ, coeff_one]
     split_ifs <;> norm_num [h]
     
+  rw [← h1.nat_degree_map f]
+  obtain hi | hi := lt_or_leₓ (map f p).natDegree i
+  · rw [coeff_eq_zero_of_nat_degree_lt hi, norm_zero]
+    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]"
+    
+  rw [coeff_eq_esymm_roots_of_splits ((splits_id_iff_splits f).2 h2) hi, (h1.map _).leadingCoeff, one_mulₓ, norm_mul,
+    norm_pow, norm_neg, norm_one, one_pow, one_mulₓ]
+  apply ((norm_multiset_sum_le _).trans <| (sum_le_card_nsmul _ _) fun r hr => _).trans
+  · rw [Multiset.map_map, card_map, card_powerset_len, ← nat_degree_eq_card_roots' h2, Nat.choose_symm hi, mul_comm,
+      nsmul_eq_mul]
+    
+  simp_rw [Multiset.mem_map] at hr
+  obtain ⟨_, ⟨s, hs, rfl⟩, rfl⟩ := hr
+  rw [mem_powerset_len] at hs
+  lift B to ℝ≥0 using hB
+  rw [← coe_nnnorm, ← Nnreal.coe_pow, Nnreal.coe_le_coe, ← nnnorm_hom_apply, ← MonoidHom.coe_coe,
+    MonoidHom.map_multiset_prod]
+  refine' ((prod_le_pow_card _ B) fun x hx => _).trans_eq (by rw [card_map, hs.2])
+  obtain ⟨z, hz, rfl⟩ := Multiset.mem_map.1 hx
+  exact h3 z (mem_of_le hs.1 hz)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `positivity #[]
 /-- The coefficients of the monic polynomials of bounded degree with bounded roots are

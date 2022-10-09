@@ -91,28 +91,32 @@ noncomputable instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, Li
   @linearOrderOfSTO (Πₗ i, β i) (· < ·) { to_is_trichotomous := is_trichotomous_lex _ _ IsWellFounded.wf }
     (Classical.decRel _)
 
-theorem Lex.le_of_forall_le [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] {a b : Lex (∀ i, β i)}
-    (h : ∀ i, a i ≤ b i) : a ≤ b :=
-  le_of_not_ltₓ fun ⟨i, hi⟩ => (h i).not_lt hi.2
+theorem Lex.le_of_forall_le [LinearOrderₓ ι] [hwf : IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)]
+    {a b : Lex (∀ i, β i)} (h : ∀ i, a i ≤ b i) : a ≤ b :=
+  or_iff_not_imp_left.2 fun hne =>
+    let ⟨i, hi, hl⟩ := hwf.to_is_well_founded.wf.has_min { i | a i ≠ b i } (Function.ne_iff.1 hne)
+    ⟨i, fun j hj => by
+      contrapose! hl
+      exact ⟨j, hl, hj⟩, (h i).lt_of_ne hi⟩
 
-theorem Lex.le_of_of_lex_le [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] {a b : Lex (∀ i, β i)}
+theorem Lex.le_of_of_lex_le [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)] {a b : Lex (∀ i, β i)}
     (h : ofLex a ≤ ofLex b) : a ≤ b :=
   Lex.le_of_forall_le h
 
-theorem to_lex_monotone [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] :
+theorem to_lex_monotone [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)] :
     Monotoneₓ (@toLex (∀ i, β i)) := fun _ _ => Lex.le_of_forall_le
 
-instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] [∀ a, OrderBot (β a)] :
+instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)] [∀ a, OrderBot (β a)] :
     OrderBot (Lex (∀ a, β a)) where
   bot := toLex ⊥
   bot_le := fun f => Lex.le_of_of_lex_le bot_le
 
-instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] [∀ a, OrderTop (β a)] :
+instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)] [∀ a, OrderTop (β a)] :
     OrderTop (Lex (∀ a, β a)) where
   top := toLex ⊤
   le_top := fun f => Lex.le_of_of_lex_le le_top
 
-instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] [∀ a, BoundedOrder (β a)] :
+instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, PartialOrderₓ (β a)] [∀ a, BoundedOrder (β a)] :
     BoundedOrder (Lex (∀ a, β a)) :=
   { Pi.Lex.orderBot, Pi.Lex.orderTop with }
 

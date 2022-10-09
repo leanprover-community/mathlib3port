@@ -104,7 +104,7 @@ and essentially surjective when `R` is reflective.
 @[simps]
 def Monad.comparison (h : L ⊣ R) : D ⥤ h.toMonad.Algebra where
   obj := fun X =>
-    { a := R.obj X, a := R.map (h.counit.app X),
+    { A := R.obj X, a := R.map (h.counit.app X),
       assoc' := by
         dsimp
         rw [← R.map_comp, ← adjunction.counit_naturality, R.map_comp]
@@ -136,7 +136,7 @@ instance (T : Monad C) :
     EssSurj
       (Monad.comparison
         T.adj) where mem_ess_image := fun X =>
-    ⟨{ a := X.a, a := X.a, unit' := by simpa using X.unit, assoc' := by simpa using X.assoc },
+    ⟨{ A := X.A, a := X.a, unit' := by simpa using X.unit, assoc' := by simpa using X.assoc },
       ⟨Monad.Algebra.isoMk (Iso.refl _) (by simp)⟩⟩
 
 /-- Gven any adjunction `L ⊣ R`, there is a comparison functor `category_theory.comonad.comparison L`
@@ -146,7 +146,7 @@ sending objects `X : C` to Eilenberg-Moore coalgebras for `L ⋙ R` with underly
 @[simps]
 def Comonad.comparison (h : L ⊣ R) : C ⥤ h.toComonad.Coalgebra where
   obj := fun X =>
-    { a := L.obj X, a := L.map (h.Unit.app X),
+    { A := L.obj X, a := L.map (h.Unit.app X),
       coassoc' := by
         dsimp
         rw [← L.map_comp, ← adjunction.unit_naturality, L.map_comp]
@@ -179,7 +179,7 @@ instance (G : Comonad C) :
     EssSurj
       (Comonad.comparison
         G.adj) where mem_ess_image := fun X =>
-    ⟨{ a := X.a, a := X.a, counit' := by simpa using X.counit, coassoc' := by simpa using X.coassoc },
+    ⟨{ A := X.A, a := X.a, counit' := by simpa using X.counit, coassoc' := by simpa using X.coassoc },
       ⟨Comonad.Coalgebra.isoMk (Iso.refl _) (by simp)⟩⟩
 
 /-- A right adjoint functor `R : D ⥤ C` is *monadic* if the comparison functor `monad.comparison R`
@@ -212,7 +212,7 @@ attribute [instance] comonadic_left_adjoint.eqv
 namespace Reflective
 
 instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
-    IsIso ((Adjunction.ofRightAdjoint R).Unit.app X.a) :=
+    IsIso ((Adjunction.ofRightAdjoint R).Unit.app X.A) :=
   ⟨⟨X.a,
       ⟨X.Unit, by
         dsimp only [functor.id_obj]
@@ -223,7 +223,7 @@ instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
         simp⟩⟩⟩
 
 instance comparison_ess_surj [Reflective R] : EssSurj (Monad.comparison (Adjunction.ofRightAdjoint R)) := by
-  refine' ⟨fun X => ⟨(left_adjoint R).obj X.a, ⟨_⟩⟩⟩
+  refine' ⟨fun X => ⟨(left_adjoint R).obj X.A, ⟨_⟩⟩⟩
   symm
   refine' monad.algebra.iso_mk _ _
   · exact as_iso ((adjunction.of_right_adjoint R).Unit.app X.A)

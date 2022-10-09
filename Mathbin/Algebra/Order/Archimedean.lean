@@ -334,8 +334,9 @@ noncomputable def Archimedean.floorRing (α) [LinearOrderedRing α] [Archimedean
   FloorRing.ofFloor α (fun a => Classical.choose (exists_floor a)) fun z a =>
     (Classical.choose_spec (exists_floor a) z).symm
 
+-- see Note [lower instance priority]
 /-- A linear ordered field that is a floor ring is archimedean. -/
-theorem FloorRing.archimedean (α) [LinearOrderedField α] [FloorRing α] : Archimedean α := by
+instance (priority := 100) FloorRing.archimedean (α) [LinearOrderedField α] [FloorRing α] : Archimedean α := by
   rw [archimedean_iff_int_le]
   exact fun x => ⟨⌈x⌉, Int.le_ceil x⟩
 

@@ -117,6 +117,18 @@ protected theorem id_comp (F : C ⥤ D) : 𝟭 C ⋙ F = F := by cases F <;> rfl
 theorem map_dite (F : C ⥤ D) {X Y : C} {P : Prop} [Decidable P] (f : P → (X ⟶ Y)) (g : ¬P → (X ⟶ Y)) :
     F.map (if h : P then f h else g h) = if h : P then F.map (f h) else F.map (g h) := by split_ifs <;> rfl
 
+@[simp]
+theorem to_prefunctor_obj (F : C ⥤ D) (X : C) : F.toPrefunctor.obj X = F.obj X :=
+  rfl
+
+@[simp]
+theorem to_prefunctor_map (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) : F.toPrefunctor.map f = F.map f :=
+  rfl
+
+@[simp]
+theorem to_prefunctor_comp (F : C ⥤ D) (G : D ⥤ E) : F.toPrefunctor.comp G.toPrefunctor = (F ⋙ G).toPrefunctor :=
+  rfl
+
 end
 
 end Functor

@@ -767,6 +767,51 @@ instance [SecondCountableTopology α] [SecondCountableTopology β] : SecondCount
 
 end Sum
 
+section Quotientₓ
+
+variable {X : Type _} [TopologicalSpace X] {Y : Type _} [TopologicalSpace Y] {π : X → Y}
+
+omit t
+
+/-- The image of a topological basis under an open quotient map is a topological basis. -/
+theorem IsTopologicalBasis.quotient_map {V : Set (Set X)} (hV : IsTopologicalBasis V) (h' : QuotientMap π)
+    (h : IsOpenMap π) : IsTopologicalBasis (Set.Image π '' V) := by
+  apply is_topological_basis_of_open_of_nhds
+  · rintro - ⟨U, U_in_V, rfl⟩
+    apply h U (hV.is_open U_in_V)
+    
+  · intro y U y_in_U U_open
+    obtain ⟨x, rfl⟩ := h'.surjective y
+    let W := π ⁻¹' U
+    have x_in_W : x ∈ W := y_in_U
+    have W_open : IsOpen W := U_open.preimage h'.continuous
+    obtain ⟨Z, Z_in_V, x_in_Z, Z_in_W⟩ := hV.exists_subset_of_mem_open x_in_W W_open
+    have πZ_in_U : π '' Z ⊆ U := (Set.image_subset _ Z_in_W).trans (image_preimage_subset π U)
+    exact ⟨π '' Z, ⟨Z, Z_in_V, rfl⟩, ⟨x, x_in_Z, rfl⟩, πZ_in_U⟩
+    
+
+/-- A second countable space is mapped by an open quotient map to a second countable space. -/
+theorem QuotientMap.second_countable_topology [SecondCountableTopology X] (h' : QuotientMap π) (h : IsOpenMap π) :
+    SecondCountableTopology Y :=
+  { is_open_generated_countable := by
+      obtain ⟨V, V_countable, V_no_empty, V_generates⟩ := exists_countable_basis X
+      exact ⟨Set.Image π '' V, V_countable.image (Set.Image π), (V_generates.quotient_map h' h).eq_generate_from⟩ }
+
+variable {S : Setoidₓ X}
+
+/-- The image of a topological basis "downstairs" in an open quotient is a topological basis. -/
+theorem IsTopologicalBasis.quotient {V : Set (Set X)} (hV : IsTopologicalBasis V)
+    (h : IsOpenMap (Quotientₓ.mk : X → Quotientₓ S)) :
+    IsTopologicalBasis (Set.Image (Quotientₓ.mk : X → Quotientₓ S) '' V) :=
+  hV.QuotientMap quotient_map_quotient_mk h
+
+/-- An open quotient of a second countable space is second countable. -/
+theorem Quotient.second_countable_topology [SecondCountableTopology X]
+    (h : IsOpenMap (Quotientₓ.mk : X → Quotientₓ S)) : SecondCountableTopology (Quotientₓ S) :=
+  quotient_map_quotient_mk.SecondCountableTopology h
+
+end Quotientₓ
+
 end TopologicalSpace
 
 open TopologicalSpace

@@ -141,6 +141,12 @@ theorem inv_val_c_app {X Y : Scheme} (f : X ⟶ Y) [IsIso f] (U : Opens X.Carrie
   rw [Scheme.congr_app (is_iso.hom_inv_id f), Scheme.id_app, ← functor.map_comp, eq_to_hom_trans, eq_to_hom_op]
   rfl
 
+/-- Given a morphism of schemes `f : X ⟶ Y`, and open sets `U ⊆ Y`, `V ⊆ f ⁻¹' U`,
+this is the induced map `Γ(Y, U) ⟶ Γ(X, V)`. -/
+abbrev Hom.appLe {X Y : Scheme} (f : X ⟶ Y) {V : Opens X.Carrier} {U : Opens Y.Carrier}
+    (e : V ≤ (Opens.map f.1.base).obj U) : Y.Presheaf.obj (op U) ⟶ X.Presheaf.obj (op V) :=
+  f.1.c.app (op U) ≫ X.Presheaf.map (homOfLe e).op
+
 /-- The spectrum of a commutative ring, as a scheme.
 -/
 def specObj (R : CommRingₓₓ) : Scheme where

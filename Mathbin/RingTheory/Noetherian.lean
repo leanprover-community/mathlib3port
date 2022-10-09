@@ -360,6 +360,26 @@ theorem fg_restrict_scalars {R S M : Type _} [CommSemiringₓ R] [Semiringₓ S]
   use X
   exact Submodule.span_eq_restrict_scalars R S M X h
 
+theorem Fg.stablizes_of_supr_eq {M' : Submodule R M} (hM' : M'.Fg) (N : ℕ →o Submodule R M) (H : supr N = M') :
+    ∃ n, M' = N n := by
+  obtain ⟨S, hS⟩ := hM'
+  have : ∀ s : S, ∃ n, (s : M) ∈ N n := fun s =>
+    (Submodule.mem_supr_of_chain N s).mp
+      (by
+        rw [H, ← hS]
+        exact Submodule.subset_span s.2)
+  choose f hf
+  use S.attach.sup f
+  apply le_antisymmₓ
+  · conv_lhs => rw [← hS]
+    rw [Submodule.span_le]
+    intro s hs
+    exact N.2 (Finsetₓ.le_sup <| S.mem_attach ⟨s, hs⟩) (hf _)
+    
+  · rw [← H]
+    exact le_supr _ _
+    
+
 /-- Finitely generated submodules are precisely compact elements in the submodule lattice. -/
 theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactElement s := by
   classical

@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 -/
 import Mathbin.Algebra.GroupPower.Order
-import Mathbin.Algebra.BigOperators.Basic
 
 /-!
 # Definitions and properties of `gcd`, `lcm`, and `coprime`
@@ -469,22 +468,6 @@ theorem gcd_mul_of_coprime_of_dvd {a b c : ℕ} (hac : Coprime a c) (b_dvd_c : b
   rw [gcd_mul_right]
   convert one_mulₓ b
   exact coprime.coprime_mul_right_right hac
-
-section BigOperators
-
-open BigOperators
-
-/-- See `is_coprime.prod_left` for the corresponding lemma about `is_coprime` -/
-theorem coprime_prod_left {ι : Type _} {x : ℕ} {s : ι → ℕ} {t : Finsetₓ ι} :
-    (∀ i : ι, i ∈ t → Coprime (s i) x) → Coprime (∏ i : ι in t, s i) x :=
-  Finsetₓ.prod_induction s (fun y => y.Coprime x) (fun a b => Coprime.mul) (by simp)
-
-/-- See `is_coprime.prod_right` for the corresponding lemma about `is_coprime` -/
-theorem coprime_prod_right {ι : Type _} {x : ℕ} {s : ι → ℕ} {t : Finsetₓ ι} :
-    (∀ i : ι, i ∈ t → Coprime x (s i)) → Coprime x (∏ i : ι in t, s i) :=
-  Finsetₓ.prod_induction s (fun y => x.Coprime y) (fun a b => Coprime.mul_right) (by simp)
-
-end BigOperators
 
 theorem Coprime.eq_of_mul_eq_zero {m n : ℕ} (h : m.Coprime n) (hmn : m * n = 0) : m = 0 ∧ n = 1 ∨ m = 1 ∧ n = 0 :=
   (Nat.eq_zero_of_mul_eq_zero hmn).imp (fun hm => ⟨hm, n.coprime_zero_left.mp <| hm ▸ h⟩) fun hn =>

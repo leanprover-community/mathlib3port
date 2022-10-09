@@ -172,6 +172,32 @@ theorem sum_smul_const_vsub_eq_sub_weighted_vsub_of_point (w : ι → k) (p₂ :
     (∑ i in s, w i • (p₁ -ᵥ p₂ i)) = (∑ i in s, w i) • (p₁ -ᵥ b) - s.weightedVsubOfPoint p₂ b w := by
   rw [sum_smul_vsub_eq_weighted_vsub_of_point_sub, weighted_vsub_of_point_apply_const]
 
+/-- A weighted sum may be split into such sums over two subsets. -/
+theorem weighted_vsub_of_point_sdiff [DecidableEq ι] {s₂ : Finsetₓ ι} (h : s₂ ⊆ s) (w : ι → k) (p : ι → P) (b : P) :
+    (s \ s₂).weightedVsubOfPoint p b w + s₂.weightedVsubOfPoint p b w = s.weightedVsubOfPoint p b w := by
+  simp_rw [weighted_vsub_of_point_apply, sum_sdiff h]
+
+/-- A weighted sum may be split into a subtraction of such sums over two subsets. -/
+theorem weighted_vsub_of_point_sdiff_sub [DecidableEq ι] {s₂ : Finsetₓ ι} (h : s₂ ⊆ s) (w : ι → k) (p : ι → P) (b : P) :
+    (s \ s₂).weightedVsubOfPoint p b w - s₂.weightedVsubOfPoint p b (-w) = s.weightedVsubOfPoint p b w := by
+  rw [map_neg, sub_neg_eq_add, s.weighted_vsub_of_point_sdiff h]
+
+/-- A weighted sum over `s.subtype pred` equals one over `s.filter pred`. -/
+theorem weighted_vsub_of_point_subtype_eq_filter (w : ι → k) (p : ι → P) (b : P) (pred : ι → Prop)
+    [DecidablePred pred] :
+    ((s.Subtype pred).weightedVsubOfPoint (fun i => p i) b fun i => w i) = (s.filter pred).weightedVsubOfPoint p b w :=
+  by rw [weighted_vsub_of_point_apply, weighted_vsub_of_point_apply, ← sum_subtype_eq_sum_filter]
+
+/-- A weighted sum over `s.filter pred` equals one over `s` if all the weights at indices in `s`
+not satisfying `pred` are zero. -/
+theorem weighted_vsub_of_point_filter_of_ne (w : ι → k) (p : ι → P) (b : P) {pred : ι → Prop} [DecidablePred pred]
+    (h : ∀ i ∈ s, w i ≠ 0 → pred i) : (s.filter pred).weightedVsubOfPoint p b w = s.weightedVsubOfPoint p b w := by
+  rw [weighted_vsub_of_point_apply, weighted_vsub_of_point_apply, sum_filter_of_ne]
+  intro i hi hne
+  refine' h i hi _
+  intro hw
+  simpa [hw] using hne
+
 /-- A weighted sum of the results of subtracting a default base point
 from the given points, as a linear map on the weights.  This is
 intended to be used when the sum of the weights is 0; that condition
@@ -236,6 +262,27 @@ sum of the weights is 0. -/
 theorem sum_smul_const_vsub_eq_neg_weighted_vsub (w : ι → k) (p₂ : ι → P) (p₁ : P) (h : (∑ i in s, w i) = 0) :
     (∑ i in s, w i • (p₁ -ᵥ p₂ i)) = -s.weightedVsub p₂ w := by
   rw [sum_smul_vsub_eq_weighted_vsub_sub, s.weighted_vsub_apply_const _ _ h, zero_sub]
+
+/-- A weighted sum may be split into such sums over two subsets. -/
+theorem weighted_vsub_sdiff [DecidableEq ι] {s₂ : Finsetₓ ι} (h : s₂ ⊆ s) (w : ι → k) (p : ι → P) :
+    (s \ s₂).weightedVsub p w + s₂.weightedVsub p w = s.weightedVsub p w :=
+  s.weighted_vsub_of_point_sdiff h _ _ _
+
+/-- A weighted sum may be split into a subtraction of such sums over two subsets. -/
+theorem weighted_vsub_sdiff_sub [DecidableEq ι] {s₂ : Finsetₓ ι} (h : s₂ ⊆ s) (w : ι → k) (p : ι → P) :
+    (s \ s₂).weightedVsub p w - s₂.weightedVsub p (-w) = s.weightedVsub p w :=
+  s.weighted_vsub_of_point_sdiff_sub h _ _ _
+
+/-- A weighted sum over `s.subtype pred` equals one over `s.filter pred`. -/
+theorem weighted_vsub_subtype_eq_filter (w : ι → k) (p : ι → P) (pred : ι → Prop) [DecidablePred pred] :
+    ((s.Subtype pred).weightedVsub (fun i => p i) fun i => w i) = (s.filter pred).weightedVsub p w :=
+  s.weighted_vsub_of_point_subtype_eq_filter _ _ _ _
+
+/-- A weighted sum over `s.filter pred` equals one over `s` if all the weights at indices in `s`
+not satisfying `pred` are zero. -/
+theorem weighted_vsub_filter_of_ne (w : ι → k) (p : ι → P) {pred : ι → Prop} [DecidablePred pred]
+    (h : ∀ i ∈ s, w i ≠ 0 → pred i) : (s.filter pred).weightedVsub p w = s.weightedVsub p w :=
+  s.weighted_vsub_of_point_filter_of_ne _ _ _ h
 
 /-- A weighted sum of the results of subtracting a default base point
 from the given points, added to that base point, as an affine map on
@@ -371,6 +418,38 @@ sum of the weights is 1. -/
 theorem sum_smul_const_vsub_eq_vsub_affine_combination (w : ι → k) (p₂ : ι → P) (p₁ : P) (h : (∑ i in s, w i) = 1) :
     (∑ i in s, w i • (p₁ -ᵥ p₂ i)) = p₁ -ᵥ s.affineCombination p₂ w := by
   rw [sum_smul_vsub_eq_affine_combination_vsub, affine_combination_apply_const _ _ _ h]
+
+/-- A weighted sum may be split into a subtraction of affine combinations over two subsets. -/
+theorem affine_combination_sdiff_sub [DecidableEq ι] {s₂ : Finsetₓ ι} (h : s₂ ⊆ s) (w : ι → k) (p : ι → P) :
+    (s \ s₂).affineCombination p w -ᵥ s₂.affineCombination p (-w) = s.weightedVsub p w := by
+  simp_rw [affine_combination_apply, vadd_vsub_vadd_cancel_right]
+  exact s.weighted_vsub_sdiff_sub h _ _
+
+/-- If a weighted sum is zero and one of the weights is `-1`, the corresponding point is
+the affine combination of the other points with the given weights. -/
+theorem affine_combination_eq_of_weighted_vsub_eq_zero_of_eq_neg_one {w : ι → k} {p : ι → P}
+    (hw : s.weightedVsub p w = (0 : V)) {i : ι} [DecidablePred (· ≠ i)] (his : i ∈ s) (hwi : w i = -1) :
+    (s.filter (· ≠ i)).affineCombination p w = p i := by
+  classical
+  rw [← @vsub_eq_zero_iff_eq V, ← hw, ← s.affine_combination_sdiff_sub (singleton_subset_iff.2 his),
+    sdiff_singleton_eq_erase, ← filter_ne']
+  congr
+  refine' (affine_combination_of_eq_one_of_eq_zero _ _ _ (mem_singleton_self _) _ _).symm
+  · simp [hwi]
+    
+  · simp
+    
+
+/-- An affine combination over `s.subtype pred` equals one over `s.filter pred`. -/
+theorem affine_combination_subtype_eq_filter (w : ι → k) (p : ι → P) (pred : ι → Prop) [DecidablePred pred] :
+    ((s.Subtype pred).affineCombination (fun i => p i) fun i => w i) = (s.filter pred).affineCombination p w := by
+  rw [affine_combination_apply, affine_combination_apply, weighted_vsub_of_point_subtype_eq_filter]
+
+/-- An affine combination over `s.filter pred` equals one over `s` if all the weights at indices
+in `s` not satisfying `pred` are zero. -/
+theorem affine_combination_filter_of_ne (w : ι → k) (p : ι → P) {pred : ι → Prop} [DecidablePred pred]
+    (h : ∀ i ∈ s, w i ≠ 0 → pred i) : (s.filter pred).affineCombination p w = s.affineCombination p w := by
+  rw [affine_combination_apply, affine_combination_apply, s.weighted_vsub_of_point_filter_of_ne _ _ _ h]
 
 variable {V}
 

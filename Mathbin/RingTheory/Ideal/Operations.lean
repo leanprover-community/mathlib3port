@@ -1320,6 +1320,12 @@ theorem mem_map_iff_of_surjective {I : Ideal R} {y} : y ∈ map f I ↔ ∃ x, x
 theorem le_map_of_comap_le_of_surjective : comap f K ≤ I → K ≤ map f I := fun h =>
   map_comap_of_surjective f hf K ▸ map_mono h
 
+omit hf
+
+theorem map_eq_submodule_map (f : R →+* S) [h : RingHomSurjective f] (I : Ideal R) :
+    I.map f = Submodule.map f.toSemilinearMap I :=
+  Submodule.ext fun x => mem_map_iff_of_surjective f h.1
+
 end Surjective
 
 section Injective

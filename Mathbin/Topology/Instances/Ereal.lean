@@ -3,6 +3,7 @@ Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
+import Mathbin.Data.Rat.Encodable
 import Mathbin.Data.Real.Ereal
 import Mathbin.Topology.Algebra.Order.MonotoneContinuity
 import Mathbin.Topology.Instances.Ennreal

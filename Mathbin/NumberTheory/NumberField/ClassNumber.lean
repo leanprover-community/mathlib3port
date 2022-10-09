@@ -5,7 +5,7 @@ Authors: Anne Baanen
 -/
 import Mathbin.NumberTheory.ClassNumber.AdmissibleAbs
 import Mathbin.NumberTheory.ClassNumber.Finite
-import Mathbin.NumberTheory.NumberField
+import Mathbin.NumberTheory.NumberField.Basic
 
 /-!
 # Class numbers of number fields

@@ -5,7 +5,7 @@ Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
 import Mathbin.Data.List.Prime
 import Mathbin.Data.List.Sort
-import Mathbin.Data.Nat.Gcd
+import Mathbin.Data.Nat.Gcd.Basic
 import Mathbin.Data.Nat.SqrtNormNum
 import Mathbin.Data.Set.Finite
 import Mathbin.Tactic.Wlog

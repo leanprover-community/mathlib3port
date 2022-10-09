@@ -52,7 +52,7 @@ theorem inversion_dist_center (c x : P) : inversion c (dist x c) x = x := by
     rwa [dist_ne_zero]
     
 
-theorem inversion_of_mem_sphere (h : x ∈ Sphere c R) : inversion c R x = x :=
+theorem inversion_of_mem_sphere (h : x ∈ Metric.Sphere c R) : inversion c R x = x :=
   h.out ▸ inversion_dist_center c x
 
 /-- Distance from the image of a point under inversion to the center. This formula accidentally

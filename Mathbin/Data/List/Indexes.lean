@@ -51,6 +51,14 @@ theorem map_with_index_cons {α β} (l : List α) (f : ℕ → α → β) (a : �
   simp [map_with_index_eq_enum_map, enum_eq_zip_range, map_uncurry_zip_eq_zip_with, range_succ_eq_map,
     zip_with_map_left]
 
+theorem map_with_index_append {α} (K L : List α) (f : ℕ → α → β) :
+    (K ++ L).mapWithIndex f = K.mapWithIndex f ++ L.mapWithIndex fun i a => f (i + K.length) a := by
+  induction' K with a J IH generalizing f
+  · simp
+    
+  · simp [IH fun i => f (i + 1), add_assocₓ]
+    
+
 @[simp]
 theorem length_map_with_index {α β} (l : List α) (f : ℕ → α → β) : (l.mapWithIndex f).length = l.length := by
   induction' l with hd tl IH generalizing f

@@ -141,7 +141,7 @@ variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ
 variable [Nonempty ι] [NormedSpace ℝ 𝕜] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
 
 instance {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} : LocallyConvexSpace ℝ (WeakBilin B) :=
-  SeminormFamily.to_locally_convex_space B.weak_bilin_with_seminorms
+  B.weak_bilin_with_seminorms.to_locally_convex_space
 
 end LocallyConvex
 

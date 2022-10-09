@@ -6,7 +6,7 @@ Authors: Julian Kuelshammer
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.Algebra.Category.Semigroup.Basic
 import Mathbin.Algebra.Group.WithOne
-import Mathbin.Algebra.FreeMonoid
+import Mathbin.Algebra.FreeMonoid.Basic
 
 /-!
 # Adjunctions regarding the category of monoids

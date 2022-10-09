@@ -474,7 +474,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         apply sum_le_sum fun j hj => _
         refine' mul_le_mul_of_nonneg_left _ (inv_nonneg.2 (sq_nonneg _))
         rw [(hident j).truncation.variance_eq]
-        exact variance_le_expectation_sq
+        exact variance_le_expectation_sq (hX 0).truncation
       _ ≤ 2 * 𝔼[X 0] := sum_variance_truncation_le hint (hnonneg 0) K
       
   let C := c ^ 5 * (c - 1)⁻¹ ^ 3 * (2 * 𝔼[X 0])

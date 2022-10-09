@@ -6,12 +6,33 @@ Authors: Andrew Yang
 import Mathbin.RingTheory.Noetherian
 import Mathbin.RingTheory.ReesAlgebra
 import Mathbin.RingTheory.Finiteness
+import Mathbin.Data.Polynomial.Module
+import Mathbin.Order.Hom.CompleteLattice
 
 /-!
 
 # `I`-filtrations of modules
 
 This file contains the definitions and basic results around (stable) `I`-filtrations of modules.
+
+## Main results
+
+- `ideal.filtration`: An `I`-filtration on the module `M` is a sequence of decreasing submodules
+  `N i` such that `I • N ≤ I (i + 1)`. Note that we do not require the filtration to start from `⊤`.
+- `ideal.filtration.stable`: An `I`-filtration is stable if `I • (N i) = N (i + 1)` for large
+  enough `i`.
+- `ideal.filtration.submodule`: The associated module `⨁ Nᵢ` of a filtration, implemented as a
+  submodule of `M[X]`.
+- `ideal.filtration.submodule_fg_iff_stable`: If `F.N i` are all finitely generated, then
+  `F.stable` iff `F.submodule.fg`.
+- `ideal.filtration.stable.of_le`: In a finite module over a noetherian ring,
+  if `F' ≤ F`, then `F.stable → F'.stable`.
+- `ideal.exists_pow_inf_eq_pow_smul`: **Artin-Rees lemma**.
+  given `N ≤ M`, there exists a `k` such that `IⁿM ⊓ N = Iⁿ⁻ᵏ(IᵏM ⊓ N)` for all `n ≥ k`.
+- `ideal.infi_pow_eq_bot_of_local_ring`:
+  **Krull's intersection theorem** (`⨅ i, I ^ i = ⊥`) for noetherian local rings.
+- `ideal.infi_pow_eq_bot_of_is_domain`:
+  **Krull's intersection theorem** (`⨅ i, I ^ i = ⊥`) for noetherian domains.
 
 -/
 
@@ -25,7 +46,7 @@ open Polynomial
 open Polynomial BigOperators
 
 /-- An `I`-filtration on the module `M` is a sequence of decreasing submodules `N i` such that
-`I • N ≤ I (i + 1)`. Note that we do not require the filtration to start from `⊤`. -/
+`I • (N i) ≤ N (i + 1)`. Note that we do not require the filtration to start from `⊤`. -/
 @[ext]
 structure Ideal.Filtration (M : Type u) [AddCommGroupₓ M] [Module R M] where
   n : ℕ → Submodule R M
@@ -214,5 +235,239 @@ theorem Stable.bounded_difference (h : F.Stable) (h' : F'.Stable) (e : F.n 0 = F
   intro n
   refine' ⟨(F.antitone _).trans (h₁ n), (F'.antitone _).trans (h₂ n)⟩ <;> simp
 
+open PolynomialModule
+
+variable (F F')
+
+/-- The `R[IX]`-submodule of `M[X]` associated with an `I`-filtration. -/
+protected def submodule : Submodule (reesAlgebra I) (PolynomialModule R M) where
+  Carrier := { f | ∀ i, f i ∈ F.n i }
+  add_mem' := fun f g hf hg i => Submodule.add_mem _ (hf i) (hg i)
+  zero_mem' := fun i => Submodule.zero_mem _
+  smul_mem' := fun r f hf i => by
+    rw [Subalgebra.smul_def, PolynomialModule.smul_apply]
+    apply Submodule.sum_mem
+    rintro ⟨j, k⟩ e
+    rw [Finsetₓ.Nat.mem_antidiagonal] at e
+    subst e
+    exact F.pow_smul_le j k (Submodule.smul_mem_smul (r.2 j) (hf k))
+
+@[simp]
+theorem mem_submodule (f : PolynomialModule R M) : f ∈ F.Submodule ↔ ∀ i, f i ∈ F.n i :=
+  Iff.rfl
+
+theorem inf_submodule : (F ⊓ F').Submodule = F.Submodule ⊓ F'.Submodule := by
+  ext
+  exact forall_and_distrib
+
+variable (I M)
+
+/-- `ideal.filtration.submodule` as an `inf_hom` -/
+def submoduleInfHom : InfHom (I.Filtration M) (Submodule (reesAlgebra I) (PolynomialModule R M)) where
+  toFun := Ideal.Filtration.submodule
+  map_inf' := inf_submodule
+
+variable {I M}
+
+theorem submodule_closure_single :
+    AddSubmonoid.closure (⋃ i, single R i '' (F.n i : Set M)) = F.Submodule.toAddSubmonoid := by
+  apply le_antisymmₓ
+  · rw [AddSubmonoid.closure_le, Set.Union_subset_iff]
+    rintro i _ ⟨m, hm, rfl⟩ j
+    rw [single_apply]
+    split_ifs
+    · rwa [← h]
+      
+    · exact (F.N j).zero_mem
+      
+    
+  · intro f hf
+    rw [← f.sum_single]
+    apply AddSubmonoid.sum_mem _ _
+    rintro c -
+    exact AddSubmonoid.subset_closure (Set.subset_Union _ c <| Set.mem_image_of_mem _ (hf c))
+    
+
+theorem submodule_span_single : Submodule.span (reesAlgebra I) (⋃ i, single R i '' (F.n i : Set M)) = F.Submodule := by
+  rw [← Submodule.span_closure, submodule_closure_single]
+  simp
+
+theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
+    F.Submodule = Submodule.span _ (⋃ i ≤ n₀, single R i '' (F.n i : Set M)) ↔ ∀ n ≥ n₀, I • F.n n = F.n (n + 1) := by
+  rw [← submodule_span_single, ← LE.le.le_iff_eqₓ, Submodule.span_le, Set.Union_subset_iff]
+  swap
+  · exact Submodule.span_mono (Set.Union₂_subset_Union _ _)
+    
+  constructor
+  · intro H n hn
+    refine' (F.smul_le n).antisymm _
+    intro x hx
+    obtain ⟨l, hl⟩ := (Finsupp.mem_span_iff_total _ _ _).mp (H _ ⟨x, hx, rfl⟩)
+    replace hl := congr_arg (fun f : ℕ →₀ M => f (n + 1)) hl
+    dsimp only at hl
+    erw [Finsupp.single_eq_same] at hl
+    rw [← hl, Finsupp.total_apply, Finsupp.sum_apply]
+    apply Submodule.sum_mem _ _
+    rintro ⟨_, _, ⟨n', rfl⟩, _, ⟨hn', rfl⟩, m, hm, rfl⟩ -
+    dsimp only [Subtype.coe_mk]
+    rw [Subalgebra.smul_def, smul_single_apply, if_pos (show n' ≤ n + 1 by linarith)]
+    have e : n' ≤ n := by linarith
+    have := F.pow_smul_le_pow_smul (n - n') n' 1
+    rw [tsub_add_cancel_of_le e, pow_oneₓ, add_commₓ _ 1, ← add_tsub_assoc_of_le e, add_commₓ] at this
+    exact this (Submodule.smul_mem_smul ((l _).2 <| n + 1 - n') hm)
+    
+  · let F' := Submodule.span (reesAlgebra I) (⋃ i ≤ n₀, single R i '' (F.N i : Set M))
+    intro hF i
+    have : ∀ i ≤ n₀, single R i '' (F.N i : Set M) ⊆ F' := fun i hi =>
+      Set.Subset.trans (Set.subset_Union₂ i hi) Submodule.subset_span
+    induction' i with j hj
+    · exact this _ (zero_le _)
+      
+    by_cases hj':j.succ ≤ n₀
+    · exact this _ hj'
+      
+    simp only [not_leₓ, Nat.lt_succ_iff] at hj'
+    rw [Nat.succ_eq_add_one, ← hF _ hj']
+    rintro _ ⟨m, hm, rfl⟩
+    apply Submodule.smul_induction_on hm
+    · intro r hr m' hm'
+      rw [add_commₓ, ← monomial_smul_single]
+      exact F'.smul_mem ⟨_, rees_algebra.monomial_mem.mpr (by rwa [pow_oneₓ])⟩ (hj <| Set.mem_image_of_mem _ hm')
+      
+    · intro x y hx hy
+      rw [map_add]
+      exact F'.add_mem hx hy
+      
+    
+
+/-- If the components of a filtration are finitely generated, then the filtration is stable iff
+its associated submodule of is finitely generated.  -/
+theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).Fg) : F.Submodule.Fg ↔ F.Stable := by
+  classical
+  delta Ideal.Filtration.Stable
+  simp_rw [← F.submodule_eq_span_le_iff_stable_ge]
+  constructor
+  · rintro H
+    apply H.stablizes_of_supr_eq ⟨fun n₀ => Submodule.span _ (⋃ (i : ℕ) (H : i ≤ n₀), single R i '' ↑(F.N i)), _⟩
+    · dsimp
+      rw [← Submodule.span_Union, ← submodule_span_single]
+      congr 1
+      ext
+      simp only [Set.mem_Union, Set.mem_image, SetLike.mem_coe, exists_propₓ]
+      constructor
+      · rintro ⟨-, i, -, e⟩
+        exact ⟨i, e⟩
+        
+      · rintro ⟨i, e⟩
+        exact ⟨i, i, le_reflₓ i, e⟩
+        
+      
+    · intro n m e
+      rw [Submodule.span_le, Set.Union₂_subset_iff]
+      intro i hi
+      refine' (Set.Subset.trans _ (Set.subset_Union₂ i (hi.trans e : _))).trans Submodule.subset_span
+      rfl
+      
+    
+  · rintro ⟨n, hn⟩
+    rw [hn]
+    simp_rw [Submodule.span_Union₂, ← Finsetₓ.mem_range_succ_iff, supr_subtype']
+    apply Submodule.fg_supr
+    rintro ⟨i, hi⟩
+    obtain ⟨s, hs⟩ := hF' i
+    have :
+      Submodule.span (reesAlgebra I) (s.image (lsingle R i) : Set (PolynomialModule R M)) =
+        Submodule.span _ (single R i '' (F.N i : Set M)) :=
+      by
+      rw [Finsetₓ.coe_image, ← Submodule.span_span_of_tower R, ← Submodule.map_span, hs]
+      rfl
+    rw [Subtype.coe_mk, ← this]
+    exact ⟨_, rfl⟩
+    
+
+variable {F}
+
+theorem Stable.of_le [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable) {F' : I.Filtration M} (hf : F' ≤ F) :
+    F'.Stable := by
+  haveI := is_noetherian_of_fg_of_noetherian' h.1
+  rw [← submodule_fg_iff_stable] at hF⊢
+  any_goals
+  intro i
+  exact IsNoetherian.noetherian _
+  have := is_noetherian_of_fg_of_noetherian _ hF
+  rw [is_noetherian_submodule] at this
+  exact this _ (OrderHomClass.mono (submodule_inf_hom M I) hf)
+
+theorem Stable.inter_right [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable) : (F ⊓ F').Stable :=
+  hF.ofLe inf_le_left
+
+theorem Stable.inter_left [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable) : (F' ⊓ F).Stable :=
+  hF.ofLe inf_le_right
+
 end Ideal.Filtration
+
+variable (I)
+
+/-- **Artin-Rees lemma** -/
+theorem Ideal.exists_pow_inf_eq_pow_smul [IsNoetherianRing R] [h : Module.Finite R M] (N : Submodule R M) :
+    ∃ k : ℕ, ∀ n ≥ k, I ^ n • ⊤ ⊓ N = I ^ (n - k) • (I ^ k • ⊤ ⊓ N) :=
+  ((I.stable_filtration_stable ⊤).inter_right (I.trivialFiltration N)).exists_pow_smul_eq_of_ge
+
+theorem Ideal.mem_infi_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.Finite R M] (x : M) :
+    x ∈ (⨅ i : ℕ, I ^ i • ⊤ : Submodule R M) ↔ ∃ r : I, (r : R) • x = x := by
+  let N := (⨅ i : ℕ, I ^ i • ⊤ : Submodule R M)
+  have hN : ∀ k, (I.stable_filtration ⊤ ⊓ I.trivial_filtration N).n k = N := by
+    intro k
+    exact inf_eq_right.mpr ((infi_le _ k).trans <| le_of_eqₓ <| by simp)
+  constructor
+  · haveI := is_noetherian_of_fg_of_noetherian' hM.out
+    obtain ⟨r, hr₁, hr₂⟩ := Submodule.exists_mem_and_smul_eq_self_of_fg_of_le_smul I N (IsNoetherian.noetherian N) _
+    · intro H
+      exact ⟨⟨r, hr₁⟩, hr₂ _ H⟩
+      
+    obtain ⟨k, hk⟩ := (I.stable_filtration_stable ⊤).inter_right (I.trivial_filtration N)
+    have := hk k (le_reflₓ _)
+    rw [hN, hN] at this
+    exact le_of_eqₓ this.symm
+    
+  · rintro ⟨r, eq⟩
+    rw [Submodule.mem_infi]
+    intro i
+    induction' i with i hi
+    · simp
+      
+    · rw [Nat.succ_eq_one_add, pow_addₓ, ← smul_smul, pow_oneₓ, ← Eq]
+      exact Submodule.smul_mem_smul r.prop hi
+      
+    
+
+theorem Ideal.infi_pow_smul_eq_bot_of_local_ring [IsNoetherianRing R] [LocalRing R] [Module.Finite R M] (h : I ≠ ⊤) :
+    (⨅ i : ℕ, I ^ i • ⊤ : Submodule R M) = ⊥ := by
+  rw [eq_bot_iff]
+  intro x hx
+  obtain ⟨r, hr⟩ := (I.mem_infi_smul_pow_eq_bot_iff x).mp hx
+  have := LocalRing.is_unit_one_sub_self_of_mem_nonunits _ (LocalRing.le_maximal_ideal h r.prop)
+  apply this.smul_left_cancel.mp
+  swap
+  · infer_instance
+    
+  simp [sub_smul, hr]
+
+/-- **Krull's intersection theorem** for noetherian local rings. -/
+theorem Ideal.infi_pow_eq_bot_of_local_ring [IsNoetherianRing R] [LocalRing R] (h : I ≠ ⊤) : (⨅ i : ℕ, I ^ i) = ⊥ := by
+  convert I.infi_pow_smul_eq_bot_of_local_ring h
+  ext i
+  rw [smul_eq_mul, ← Ideal.one_eq_top, mul_oneₓ]
+  infer_instance
+
+/-- **Krull's intersection theorem** for noetherian domains. -/
+theorem Ideal.infi_pow_eq_bot_of_is_domain [IsNoetherianRing R] [IsDomain R] (h : I ≠ ⊤) : (⨅ i : ℕ, I ^ i) = ⊥ := by
+  rw [eq_bot_iff]
+  intro x hx
+  by_contra hx'
+  have := Ideal.mem_infi_smul_pow_eq_bot_iff I x
+  simp_rw [smul_eq_mul, ← Ideal.one_eq_top, mul_oneₓ] at this
+  obtain ⟨r, hr⟩ := this.mp hx
+  have := mul_right_cancel₀ hx' (hr.trans (one_mulₓ x).symm)
+  exact I.eq_top_iff_one.not.mp h (this ▸ r.prop)
 

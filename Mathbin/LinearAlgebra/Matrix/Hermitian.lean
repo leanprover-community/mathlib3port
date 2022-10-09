@@ -141,7 +141,17 @@ end Ringₓ
 
 section IsROrC
 
+open IsROrC
+
 variable [IsROrC α] [IsROrC β]
+
+/-- The diagonal elements of a complex hermitian matrix are real. -/
+theorem IsHermitian.coe_re_apply_self {A : Matrix n n α} (h : A.IsHermitian) (i : n) : (re (A i i) : α) = A i i := by
+  rw [← eq_conj_iff_re, ← star_def, ← conj_transpose_apply, h.eq]
+
+/-- The diagonal elements of a complex hermitian matrix are real. -/
+theorem IsHermitian.coe_re_diag {A : Matrix n n α} (h : A.IsHermitian) : (fun i => (re (A.diag i) : α)) = A.diag :=
+  funext h.coe_re_apply_self
 
 /-- A matrix is hermitian iff the corresponding linear map is self adjoint. -/
 theorem is_hermitian_iff_is_symmetric [Fintypeₓ n] [DecidableEq n] {A : Matrix n n α} :

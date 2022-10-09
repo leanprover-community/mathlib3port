@@ -244,9 +244,13 @@ theorem const_div [Div γ] [HasMeasurableDiv γ] (h : IdentDistrib f g μ ν) (c
     IdentDistrib (fun x => c / f x) (fun x => c / g x) μ ν :=
   h.comp (HasMeasurableDiv.measurable_const_div c)
 
-theorem variance_eq {f : α → ℝ} {g : β → ℝ} (h : IdentDistrib f g μ ν) : variance f μ = variance g ν := by
-  convert (h.sub_const (∫ x, f x ∂μ)).sq.integral_eq
+theorem evariance_eq {f : α → ℝ} {g : β → ℝ} (h : IdentDistrib f g μ ν) : evariance f μ = evariance g ν := by
+  convert (h.sub_const (∫ x, f x ∂μ)).nnnorm.coe_nnreal_ennreal.sq.lintegral_eq
   rw [h.integral_eq]
+  rfl
+
+theorem variance_eq {f : α → ℝ} {g : β → ℝ} (h : IdentDistrib f g μ ν) : variance f μ = variance g ν := by
+  rw [variance, h.evariance_eq]
   rfl
 
 end IdentDistrib

@@ -22,7 +22,7 @@ namespace List
 
 section Countp
 
-variable (p : α → Prop) [DecidablePred p]
+variable (p q : α → Prop) [DecidablePred p] [DecidablePred q]
 
 @[simp]
 theorem countp_nil : countpₓ p [] = 0 :=
@@ -56,13 +56,19 @@ theorem countp_le_length : countpₓ p l ≤ l.length := by
 theorem countp_append (l₁ l₂) : countpₓ p (l₁ ++ l₂) = countpₓ p l₁ + countpₓ p l₂ := by
   simp only [countp_eq_length_filter, filter_append, length_append]
 
+theorem countp_join : ∀ l : List (List α), countpₓ p l.join = (l.map (countpₓ p)).Sum
+  | [] => rfl
+  | a :: l => by rw [join, countp_append, map_cons, sum_cons, countp_join]
+
 theorem countp_pos {l} : 0 < countpₓ p l ↔ ∃ a ∈ l, p a := by
   simp only [countp_eq_length_filter, length_pos_iff_exists_mem, mem_filter, exists_propₓ]
 
+@[simp]
 theorem countp_eq_zero {l} : countpₓ p l = 0 ↔ ∀ a ∈ l, ¬p a := by
   rw [← not_iff_not, ← Ne.def, ← pos_iff_ne_zero, countp_pos]
   simp
 
+@[simp]
 theorem countp_eq_length {l} : countpₓ p l = l.length ↔ ∀ a ∈ l, p a := by
   rw [countp_eq_length_filter, filter_length_eq_length]
 
@@ -73,14 +79,35 @@ theorem Sublist.countp_le (s : l₁ <+ l₂) : countpₓ p l₁ ≤ countpₓ p 
   simpa only [countp_eq_length_filter] using length_le_of_sublist (s.filter p)
 
 @[simp]
-theorem countp_filter {q} [DecidablePred q] (l : List α) : countpₓ p (filterₓ q l) = countpₓ (fun a => p a ∧ q a) l :=
-  by simp only [countp_eq_length_filter, filter_filter]
+theorem countp_filter (l : List α) : countpₓ p (filterₓ q l) = countpₓ (fun a => p a ∧ q a) l := by
+  simp only [countp_eq_length_filter, filter_filter]
 
 @[simp]
-theorem countp_true : (l.countp fun _ => True) = l.length := by simp [countp_eq_length_filter]
+theorem countp_true : (l.countp fun _ => True) = l.length := by simp
 
 @[simp]
-theorem countp_false : (l.countp fun _ => False) = 0 := by simp [countp_eq_length_filter]
+theorem countp_false : (l.countp fun _ => False) = 0 := by simp
+
+@[simp]
+theorem countp_map (p : β → Prop) [DecidablePred p] (f : α → β) : ∀ l, countpₓ p (map f l) = countpₓ (p ∘ f) l
+  | [] => rfl
+  | a :: l => by rw [map_cons, countp_cons, countp_cons, countp_map]
+
+variable {p q}
+
+theorem countp_mono_left (h : ∀ x ∈ l, p x → q x) : countpₓ p l ≤ countpₓ q l := by
+  induction' l with a l ihl
+  · rfl
+    
+  rw [forall_mem_cons] at h
+  cases' h with ha hl
+  rw [countp_cons, countp_cons]
+  refine' add_le_add (ihl hl) _
+  split_ifs <;> try simp only [le_rflₓ, zero_le]
+  exact absurd (ha ‹_›) ‹_›
+
+theorem countp_congr (h : ∀ x ∈ l, p x ↔ q x) : countpₓ p l = countpₓ q l :=
+  le_antisymmₓ (countp_mono_left fun x hx => (h x hx).1) (countp_mono_left fun x hx => (h x hx).2)
 
 end Countp
 
@@ -135,6 +162,9 @@ theorem count_singleton' (a b : α) : countₓ a [b] = ite (a = b) 1 0 :=
 theorem count_append (a : α) : ∀ l₁ l₂, countₓ a (l₁ ++ l₂) = countₓ a l₁ + countₓ a l₂ :=
   countp_append _
 
+theorem count_join (l : List (List α)) (a : α) : l.join.count a = (l.map (countₓ a)).Sum :=
+  countp_join _ _
+
 theorem count_concat (a : α) (l : List α) : countₓ a (concat l a) = succ (countₓ a l) := by simp [-add_commₓ]
 
 @[simp]
@@ -151,10 +181,13 @@ theorem count_eq_zero_of_not_mem {a : α} {l : List α} (h : a ∉ l) : countₓ
 
 theorem not_mem_of_count_eq_zero {a : α} {l : List α} (h : countₓ a l = 0) : a ∉ l := fun h' => (count_pos.2 h').ne' h
 
+@[simp]
 theorem count_eq_zero {a : α} {l} : countₓ a l = 0 ↔ a ∉ l :=
   ⟨not_mem_of_count_eq_zero, count_eq_zero_of_not_mem⟩
 
-theorem count_eq_length {a : α} {l} : countₓ a l = l.length ↔ ∀ b ∈ l, a = b := by rw [count, countp_eq_length]
+@[simp]
+theorem count_eq_length {a : α} {l} : countₓ a l = l.length ↔ ∀ b ∈ l, a = b :=
+  countp_eq_length _
 
 @[simp]
 theorem count_repeat (a : α) (n : ℕ) : countₓ a (repeat a n) = n := by
@@ -181,31 +214,16 @@ theorem count_filter {p} [DecidablePred p] {a} {l : List α} (h : p a) : count�
       constructor <;> cc]
 
 theorem count_bind {α β} [DecidableEq β] (l : List α) (f : α → List β) (x : β) :
-    countₓ x (l.bind f) = sum (map (countₓ x ∘ f) l) := by
-  induction' l with hd tl IH
-  · simp
-    
-  · simpa
-    
+    countₓ x (l.bind f) = sum (map (countₓ x ∘ f) l) := by rw [List.bind, count_join, map_map]
 
 @[simp]
 theorem count_map_of_injective {α β} [DecidableEq α] [DecidableEq β] (l : List α) (f : α → β)
     (hf : Function.Injective f) (x : α) : countₓ (f x) (map f l) = countₓ x l := by
-  induction' l with y l IH generalizing x
-  · simp
-    
-  · simp [map_cons, count_cons', IH, hf.eq_iff]
-    
+  simp only [count, countp_map, (· ∘ ·), hf.eq_iff]
 
 theorem count_le_count_map [DecidableEq β] (l : List α) (f : α → β) (x : α) : countₓ x l ≤ countₓ (f x) (map f l) := by
-  induction' l with a as IH
-  · simp
-    
-  rcases eq_or_ne x a with (rfl | hxa)
-  · simp [succ_le_succ IH]
-    
-  · simp [hxa, le_add_right IH, count_cons']
-    
+  rw [count, count, countp_map]
+  exact countp_mono_left fun y hyl => congr_arg f
 
 @[simp]
 theorem count_erase_self (a : α) : ∀ s : List α, countₓ a (List.eraseₓ s a) = pred (countₓ a s)

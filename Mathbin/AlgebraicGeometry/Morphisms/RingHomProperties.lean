@@ -170,8 +170,7 @@ theorem affine_locally_respects_iso (h : RingHom.RespectsIso @P) : (AffineLocall
 
 theorem affine_locally_iff_affine_opens_le (hP : RingHom.RespectsIso @P) {X Y : Scheme} (f : X ⟶ Y) :
     AffineLocally (@P) f ↔
-      ∀ (U : Y.AffineOpens) (V : X.AffineOpens) (e : V.1 ≤ (Opens.map f.1.base).obj U.1),
-        P (f.1.c.app (op U) ≫ X.Presheaf.map (homOfLe e).op) :=
+      ∀ (U : Y.AffineOpens) (V : X.AffineOpens) (e : V.1 ≤ (Opens.map f.1.base).obj U.1), P (f.appLe e) :=
   by
   apply forall_congrₓ
   intro U
@@ -533,6 +532,36 @@ theorem affine_locally_of_is_open_immersion (hP : RingHom.PropertyIsLocal @P) {X
   · intro i
     exact H
     
+
+theorem affine_locally_of_comp
+    (H :
+      ∀ {R S T : Type u} [CommRingₓ R] [CommRingₓ S] [CommRingₓ T], ∀ (f : R →+* S) (g : S →+* T), P (g.comp f) → P g)
+    {X Y Z : Scheme} {f : X ⟶ Y} {g : Y ⟶ Z} (h : AffineLocally (@P) (f ≫ g)) : AffineLocally (@P) f := by
+  let 𝒰 : ∀ i, ((Z.affine_cover.pullback_cover (f ≫ g)).obj i).OpenCover := by
+    intro i
+    refine' Scheme.open_cover.bind _ fun i => Scheme.affine_cover _
+    apply Scheme.open_cover.pushforward_iso _ (pullback_right_pullback_fst_iso g (Z.affine_cover.map i) f).Hom
+    apply Scheme.pullback.open_cover_of_right
+    exact (pullback g (Z.affine_cover.map i)).affineCover
+  have h𝒰 : ∀ i j, is_affine ((𝒰 i).obj j) := by
+    dsimp
+    infer_instance
+  let 𝒰' := (Z.affine_cover.pullback_cover g).bind fun i => Scheme.affine_cover _
+  have h𝒰' : ∀ i, is_affine (𝒰'.obj i) := by
+    dsimp
+    infer_instance
+  rw [hP.affine_open_cover_iff f 𝒰' fun i => Scheme.affine_cover _]
+  rw [hP.affine_open_cover_iff (f ≫ g) Z.affine_cover 𝒰] at h
+  rintro ⟨i, j⟩ k
+  dsimp at i j k
+  specialize h i ⟨j, k⟩
+  dsimp only [Scheme.open_cover.bind_map, Scheme.open_cover.pushforward_iso_obj,
+    Scheme.pullback.open_cover_of_right_obj, Scheme.open_cover.pushforward_iso_map,
+    Scheme.pullback.open_cover_of_right_map, Scheme.open_cover.bind_obj, Scheme.open_cover.pullback_cover_obj,
+    Scheme.open_cover.pullback_cover_map] at h⊢
+  rw [category.assoc, category.assoc, pullback_right_pullback_fst_iso_hom_snd, pullback.lift_snd_assoc, category.assoc,
+    ← category.assoc, op_comp, functor.map_comp] at h
+  exact H _ _ h
 
 theorem affine_locally_stable_under_composition : (AffineLocally @P).StableUnderComposition := by
   intro X Y S f g hf hg

@@ -709,11 +709,11 @@ theorem IsO.prod_left (hf : f' =O[l] k') (hg : g' =O[l] k') : (fun x => (f' x, g
   let ⟨c', hg⟩ := hg.IsOWith
   (hf.prodLeft hg).IsO
 
-theorem IsO.prod_left_fst (h : (fun x => (f' x, g' x)) =O[l] k') : f' =O[l] k' :=
-  is_O_fst_prod.trans h
+theorem IsO.prod_left_fst : (fun x => (f' x, g' x)) =O[l] k' → f' =O[l] k' :=
+  IsO.trans is_O_fst_prod
 
-theorem IsO.prod_left_snd (h : (fun x => (f' x, g' x)) =O[l] k') : g' =O[l] k' :=
-  is_O_snd_prod.trans h
+theorem IsO.prod_left_snd : (fun x => (f' x, g' x)) =O[l] k' → g' =O[l] k' :=
+  IsO.trans is_O_snd_prod
 
 @[simp]
 theorem is_O_prod_left : (fun x => (f' x, g' x)) =O[l] k' ↔ f' =O[l] k' ∧ g' =O[l] k' :=
@@ -722,11 +722,11 @@ theorem is_O_prod_left : (fun x => (f' x, g' x)) =O[l] k' ↔ f' =O[l] k' ∧ g'
 theorem IsOₓ.prod_left (hf : f' =o[l] k') (hg : g' =o[l] k') : (fun x => (f' x, g' x)) =o[l] k' :=
   is_o.of_is_O_with fun c hc => (hf.forall_is_O_with hc).prod_left_same (hg.forall_is_O_with hc)
 
-theorem IsOₓ.prod_left_fst (h : (fun x => (f' x, g' x)) =o[l] k') : f' =o[l] k' :=
-  is_O_fst_prod.trans_is_o h
+theorem IsOₓ.prod_left_fst : (fun x => (f' x, g' x)) =o[l] k' → f' =o[l] k' :=
+  IsO.trans_is_o is_O_fst_prod
 
-theorem IsOₓ.prod_left_snd (h : (fun x => (f' x, g' x)) =o[l] k') : g' =o[l] k' :=
-  is_O_snd_prod.trans_is_o h
+theorem IsOₓ.prod_left_snd : (fun x => (f' x, g' x)) =o[l] k' → g' =o[l] k' :=
+  IsO.trans_is_o is_O_snd_prod
 
 @[simp]
 theorem is_o_prod_left : (fun x => (f' x, g' x)) =o[l] k' ↔ f' =o[l] k' ∧ g' =o[l] k' :=

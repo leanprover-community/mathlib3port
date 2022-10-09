@@ -304,6 +304,11 @@ theorem compl₂_apply (g : Q →ₛₗ[σ₄₂] N) (m : M) (q : Q) : f.compl�
 
 omit σ₄₃
 
+@[simp]
+theorem compl₂_id : f.compl₂ LinearMap.id = f := by
+  ext
+  rw [compl₂_apply, id_coe, id.def]
+
 /-- Composing linear maps `Q → M` and `Q' → N` with a bilinear map `M → N → P` to
 form a bilinear map `Q → Q' → P`. -/
 def compl₁₂ (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Qₗ →ₗ[R] Mₗ) (g' : Qₗ' →ₗ[R] Nₗ) : Qₗ →ₗ[R] Qₗ' →ₗ[R] Pₗ :=
@@ -313,6 +318,11 @@ def compl₁₂ (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Qₗ →ₗ[R] M�
 theorem compl₁₂_apply (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Qₗ →ₗ[R] Mₗ) (g' : Qₗ' →ₗ[R] Nₗ) (x : Qₗ) (y : Qₗ') :
     f.compl₁₂ g g' x y = f (g x) (g' y) :=
   rfl
+
+@[simp]
+theorem compl₁₂_id_id (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) : f.compl₁₂ LinearMap.id LinearMap.id = f := by
+  ext
+  simp_rw [compl₁₂_apply, id_coe, id.def]
 
 theorem compl₁₂_inj {f₁ f₂ : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} {g : Qₗ →ₗ[R] Mₗ} {g' : Qₗ' →ₗ[R] Nₗ} (hₗ : Function.Surjective g)
     (hᵣ : Function.Surjective g') : f₁.compl₁₂ g g' = f₂.compl₁₂ g g' ↔ f₁ = f₂ := by
@@ -357,17 +367,53 @@ section CommRingₓ
 
 variable {R R₂ S S₂ M N P : Type _}
 
+variable {Mₗ Nₗ Pₗ : Type _}
+
 variable [CommRingₓ R] [CommRingₓ S] [CommRingₓ R₂] [CommRingₓ S₂]
 
-variable [AddCommGroupₓ M] [AddCommGroupₓ N] [AddCommGroupₓ P]
+section AddCommMonoidₓ
+
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P]
+
+variable [AddCommMonoidₓ Mₗ] [AddCommMonoidₓ Nₗ] [AddCommMonoidₓ Pₗ]
 
 variable [Module R M] [Module S N] [Module R₂ P] [Module S₂ P]
+
+variable [Module R Mₗ] [Module R Nₗ] [Module R Pₗ]
 
 variable [SmulCommClass S₂ R₂ P]
 
 variable {ρ₁₂ : R →+* R₂} {σ₁₂ : S →+* S₂}
 
-variable (b₁ : Basis ι₁ R M) (b₂ : Basis ι₂ S N)
+variable (b₁ : Basis ι₁ R M) (b₂ : Basis ι₂ S N) (b₁' : Basis ι₁ R Mₗ) (b₂' : Basis ι₂ R Nₗ)
+
+/-- Two bilinear maps are equal when they are equal on all basis vectors. -/
+theorem ext_basis {B B' : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (h : ∀ i j, B (b₁ i) (b₂ j) = B' (b₁ i) (b₂ j)) : B = B' :=
+  b₁.ext fun i => b₂.ext fun j => h i j
+
+/-- Write out `B x y` as a sum over `B (b i) (b j)` if `b` is a basis.
+
+Version for semi-bilinear maps, see `sum_repr_mul_repr_mul` for the bilinear version. -/
+theorem sum_repr_mul_repr_mulₛₗ {B : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (x y) :
+    ((b₁.repr x).Sum fun i xi => (b₂.repr y).Sum fun j yj => ρ₁₂ xi • σ₁₂ yj • B (b₁ i) (b₂ j)) = B x y := by
+  conv_rhs => rw [← b₁.total_repr x, ← b₂.total_repr y]
+  simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, LinearMap.map_smulₛₗ₂, LinearMap.map_smulₛₗ]
+
+/-- Write out `B x y` as a sum over `B (b i) (b j)` if `b` is a basis.
+
+Version for bilinear maps, see `sum_repr_mul_repr_mulₛₗ` for the semi-bilinear version. -/
+theorem sum_repr_mul_repr_mul {B : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} (x y) :
+    ((b₁'.repr x).Sum fun i xi => (b₂'.repr y).Sum fun j yj => xi • yj • B (b₁' i) (b₂' j)) = B x y := by
+  conv_rhs => rw [← b₁'.total_repr x, ← b₂'.total_repr y]
+  simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, LinearMap.map_smul₂, LinearMap.map_smul]
+
+end AddCommMonoidₓ
+
+section AddCommGroupₓ
+
+variable [AddCommGroupₓ M] [AddCommGroupₓ N] [AddCommGroupₓ P]
+
+variable [Module R M] [Module S N] [Module R₂ P] [Module S₂ P]
 
 theorem lsmul_injective [NoZeroSmulDivisors R M] {x : R} (hx : x ≠ 0) : Function.Injective (lsmul R M x) :=
   smul_right_injective _ hx
@@ -375,15 +421,7 @@ theorem lsmul_injective [NoZeroSmulDivisors R M] {x : R} (hx : x ≠ 0) : Functi
 theorem ker_lsmul [NoZeroSmulDivisors R M] {a : R} (ha : a ≠ 0) : (LinearMap.lsmul R M a).ker = ⊥ :=
   LinearMap.ker_eq_bot_of_injective (LinearMap.lsmul_injective ha)
 
-/-- Two bilinear maps are equal when they are equal on all basis vectors. -/
-theorem ext_basis {B B' : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (h : ∀ i j, B (b₁ i) (b₂ j) = B' (b₁ i) (b₂ j)) : B = B' :=
-  b₁.ext fun i => b₂.ext fun j => h i j
-
-/-- Write out `B x y` as a sum over `B (b i) (b j)` if `b` is a basis. -/
-theorem sum_repr_mul_repr_mul {B : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (x y) :
-    ((b₁.repr x).Sum fun i xi => (b₂.repr y).Sum fun j yj => ρ₁₂ xi • σ₁₂ yj • B (b₁ i) (b₂ j)) = B x y := by
-  conv_rhs => rw [← b₁.total_repr x, ← b₂.total_repr y]
-  simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, LinearMap.map_smulₛₗ₂, LinearMap.map_smulₛₗ]
+end AddCommGroupₓ
 
 end CommRingₓ
 

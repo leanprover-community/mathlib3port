@@ -232,12 +232,18 @@ theorem symm_mk (f : R → S) (g h₁ h₂ h₃ h₄) :
 protected def trans (e₁ : R ≃+* S) (e₂ : S ≃+* S') : R ≃+* S' :=
   { e₁.toMulEquiv.trans e₂.toMulEquiv, e₁.toAddEquiv.trans e₂.toAddEquiv with }
 
-@[simp]
 theorem trans_apply (e₁ : R ≃+* S) (e₂ : S ≃+* S') (a : R) : e₁.trans e₂ a = e₂ (e₁ a) :=
   rfl
 
 @[simp]
+theorem coe_trans (e₁ : R ≃+* S) (e₂ : S ≃+* S') : (e₁.trans e₂ : R → S') = e₂ ∘ e₁ :=
+  rfl
+
+@[simp]
 theorem symm_trans_apply (e₁ : R ≃+* S) (e₂ : S ≃+* S') (a : S') : (e₁.trans e₂).symm a = e₁.symm (e₂.symm a) :=
+  rfl
+
+theorem symm_trans (e₁ : R ≃+* S) (e₂ : S ≃+* S') : (e₁.trans e₂).symm = e₂.symm.trans e₁.symm :=
   rfl
 
 protected theorem bijective (e : R ≃+* S) : Function.Bijective e :=
@@ -259,6 +265,14 @@ theorem symm_apply_apply (e : R ≃+* S) : ∀ x, e.symm (e x) = x :=
 
 theorem image_eq_preimage (e : R ≃+* S) (s : Set R) : e '' s = e.symm ⁻¹' s :=
   e.toEquiv.image_eq_preimage s
+
+@[simp]
+theorem coe_mul_equiv_trans (e₁ : R ≃+* S) (e₂ : S ≃+* S') : (e₁.trans e₂ : R ≃* S') = (e₁ : R ≃* S).trans ↑e₂ :=
+  rfl
+
+@[simp]
+theorem coe_add_equiv_trans (e₁ : R ≃+* S) (e₂ : S ≃+* S') : (e₁.trans e₂ : R ≃+ S') = (e₁ : R ≃+ S).trans ↑e₂ :=
+  rfl
 
 end Basic
 
@@ -379,6 +393,40 @@ protected theorem map_eq_one_iff : f x = 1 ↔ x = 1 :=
 
 theorem map_ne_one_iff : f x ≠ 1 ↔ x ≠ 1 :=
   MulEquivClass.map_ne_one_iff f
+
+theorem coe_monoid_hom_refl : (RingEquiv.refl R : R →* R) = MonoidHom.id R :=
+  rfl
+
+@[simp]
+theorem coe_add_monoid_hom_refl : (RingEquiv.refl R : R →+ R) = AddMonoidHom.id R :=
+  rfl
+
+/-! `ring_equiv.coe_mul_equiv_refl` and `ring_equiv.coe_add_equiv_refl` are proved above
+in higher generality -/
+
+
+@[simp]
+theorem coe_ring_hom_refl : (RingEquiv.refl R : R →* R) = RingHom.id R :=
+  rfl
+
+@[simp]
+theorem coe_monoid_hom_trans [NonAssocSemiringₓ S'] (e₁ : R ≃+* S) (e₂ : S ≃+* S') :
+    (e₁.trans e₂ : R →* S') = (e₂ : S →* S').comp ↑e₁ :=
+  rfl
+
+@[simp]
+theorem coe_add_monoid_hom_trans [NonAssocSemiringₓ S'] (e₁ : R ≃+* S) (e₂ : S ≃+* S') :
+    (e₁.trans e₂ : R →+ S') = (e₂ : S →+ S').comp ↑e₁ :=
+  rfl
+
+/-! `ring_equiv.coe_mul_equiv_trans` and `ring_equiv.coe_add_equiv_trans` are proved above
+in higher generality -/
+
+
+@[simp]
+theorem coe_ring_hom_trans [NonAssocSemiringₓ S'] (e₁ : R ≃+* S) (e₂ : S ≃+* S') :
+    (e₁.trans e₂ : R →+* S') = (e₂ : S →+* S').comp ↑e₁ :=
+  rfl
 
 end Semiringₓ
 

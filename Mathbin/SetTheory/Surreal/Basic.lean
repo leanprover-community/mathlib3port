@@ -54,8 +54,7 @@ The branch `surreal_mul` contains some progress on this proof.
 
 universe u
 
--- mathport name: «expr ⧏ »
-local infixl:50 " ⧏ " => Pgame.Lf
+open Pgame
 
 namespace Pgame
 
@@ -99,6 +98,21 @@ theorem numeric_rec {C : Pgame → Prop}
           (∀ i, Numeric (L i)) → (∀ i, Numeric (R i)) → (∀ i, C (L i)) → (∀ i, C (R i)) → C ⟨l, r, L, R⟩) :
     ∀ x, Numeric x → C x
   | ⟨l, r, L, R⟩, ⟨h, hl, hr⟩ => H _ _ _ _ h hl hr (fun i => numeric_rec _ (hl i)) fun i => numeric_rec _ (hr i)
+
+theorem Relabelling.numeric_imp {x y : Pgame} (r : x ≡r y) (ox : Numeric x) : Numeric y := by
+  induction' x using Pgame.moveRecOn with x IHl IHr generalizing y
+  apply numeric.mk (fun i j => _) (fun i => _) fun j => _
+  · rw [← lt_congr (r.move_left_symm i).Equiv (r.move_right_symm j).Equiv]
+    apply ox.left_lt_right
+    
+  · exact IHl _ (ox.move_left _) (r.move_left_symm i)
+    
+  · exact IHr _ (ox.move_right _) (r.move_right_symm j)
+    
+
+/-- Relabellings preserve being numeric. -/
+theorem Relabelling.numeric_congr {x y : Pgame} (r : x ≡r y) : Numeric x ↔ Numeric y :=
+  ⟨r.numeric_imp, r.symm.numeric_imp⟩
 
 theorem lf_asymm {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y → ¬y ⧏ x := by
   refine' numeric_rec (fun xl xr xL xR hx oxl oxr IHxl IHxr => _) x ox y oy
@@ -158,7 +172,7 @@ theorem lt_def {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
 theorem not_fuzzy {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : ¬Fuzzy x y := fun h =>
   not_lf.2 ((lf_of_fuzzy h).le ox oy) h.2
 
-theorem lt_or_equiv_or_gt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x < y ∨ x ≈ y ∨ y < x :=
+theorem lt_or_equiv_or_gt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x < y ∨ (x ≈ y) ∨ y < x :=
   ((lf_or_equiv_or_gf x y).imp fun h => h.lt ox oy) <| Or.imp_right fun h => h.lt oy ox
 
 theorem numeric_of_is_empty (x : Pgame) [IsEmpty x.LeftMoves] [IsEmpty x.RightMoves] : Numeric x :=

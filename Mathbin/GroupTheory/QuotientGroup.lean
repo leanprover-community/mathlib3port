@@ -215,6 +215,53 @@ theorem map_comp_map {I : Type _} [Groupₓ I] (M : Subgroup H) (O : Subgroup I)
 
 omit nN
 
+section congr
+
+variable (G' : Subgroup G) (H' : Subgroup H) [Subgroup.Normal G'] [Subgroup.Normal H']
+
+/-- `quotient_group.congr` lifts the isomorphism `e : G ≃ H` to `G ⧸ G' ≃ H ⧸ H'`,
+given that `e` maps `G` to `H`. -/
+@[to_additive
+      "`quotient_add_group.congr` lifts the isomorphism `e : G ≃ H` to `G ⧸ G' ≃ H ⧸ H'`,\ngiven that `e` maps `G` to `H`."]
+def congr (e : G ≃* H) (he : G'.map ↑e = H') : G ⧸ G' ≃* H ⧸ H' :=
+  { -- `simp` doesn't like this lemma...
+      -- `simp` doesn't like this lemma...
+      map
+      G' H' (↑e) (he ▸ G'.le_comap_map e) with
+    toFun := map G' H' (↑e) (he ▸ G'.le_comap_map e),
+    invFun := map H' G' (↑e.symm) (he ▸ (G'.map_equiv_eq_comap_symm e).le),
+    left_inv := fun x => by
+      rw [map_map] <;>
+        simp only [map_map, ← MulEquiv.coe_monoid_hom_trans, MulEquiv.self_trans_symm, MulEquiv.coe_monoid_hom_refl,
+          map_id_apply],
+    right_inv := fun x => by
+      rw [map_map] <;>
+        simp only [← MulEquiv.coe_monoid_hom_trans, MulEquiv.symm_trans_self, MulEquiv.coe_monoid_hom_refl,
+          map_id_apply] }
+
+@[simp]
+theorem congr_mk (e : G ≃* H) (he : G'.map ↑e = H') (x) : congr G' H' e he (mk x) = e x :=
+  map_mk' G' _ _ (he ▸ G'.le_comap_map e) _
+
+theorem congr_mk' (e : G ≃* H) (he : G'.map ↑e = H') (x) : congr G' H' e he (mk' G' x) = mk' H' (e x) :=
+  map_mk' G' _ _ (he ▸ G'.le_comap_map e) _
+
+@[simp]
+theorem congr_apply (e : G ≃* H) (he : G'.map ↑e = H') (x : G) : congr G' H' e he x = mk' H' (e x) :=
+  map_mk' G' _ _ (he ▸ G'.le_comap_map e) _
+
+@[simp]
+theorem congr_refl (he : G'.map (MulEquiv.refl G : G →* G) = G' := Subgroup.map_id G') :
+    congr G' G' (MulEquiv.refl G) he = MulEquiv.refl (G ⧸ G') := by
+  ext x <;> refine' induction_on' x fun x' => _ <;> simp
+
+@[simp]
+theorem congr_symm (e : G ≃* H) (he : G'.map ↑e = H') :
+    (congr G' H' e he).symm = congr H' G' e.symm ((Subgroup.map_symm_eq_iff_map_eq _).mpr he) :=
+  rfl
+
+end congr
+
 variable (φ : G →* H)
 
 open Function MonoidHom
